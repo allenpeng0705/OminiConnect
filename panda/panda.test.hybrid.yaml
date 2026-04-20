@@ -1,0 +1,31 @@
+# Test config for hybrid inference integration
+listen: 127.0.0.1:8089
+default_backend: "http://127.0.0.1:5023"
+
+# Enable hybrid inference
+hybrid_inference:
+  enabled: true
+  local_llm:
+    enabled: true
+    endpoint: "http://127.0.0.1:11434/v1/chat/completions"
+    model: "llama3"
+    timeout_ms: 30000
+  targets:
+    - name: openai
+      provider: openai
+      upstream: "https://api.openai.com/v1"
+      api_key_name: "OPENAI_API_KEY"
+  cloud_fallback:
+    enabled: true
+    target: "openai"
+  rules:
+    - name: sensitive_data
+      priority: 1
+      conditions:
+        - type: content_contains_pii
+      action: route_to_local
+
+routes:
+  - path_prefix: /v1/chat
+    backend_base: "http://127.0.0.1:5023"
+    type: openai
