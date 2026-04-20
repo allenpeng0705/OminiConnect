@@ -1,6 +1,6 @@
 //! DingTalk MCP Server binary
 
-use omni_connector_dingtalk::{DingTalkApiClient, DingTalkMcpServer, JsonRpcRequest};
+use omni_connector_dingtalk::{DingTalkApiClient, DingTalkMcpServer, JsonRpcRequest, TokenVaultAccess};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use axum::{
@@ -25,16 +25,10 @@ async fn handle_mcp(
 
 #[tokio::main]
 async fn main() {
-    let app_key = std::env::var("DINGTALK_APP_KEY").unwrap_or_default();
-    let app_secret = std::env::var("DINGTALK_APP_SECRET").unwrap_or_default();
+    let api_client = DingTalkApiClient::new();
+    let vault = Arc::new(MockTokenVault::new());
 
-    let api_client = DingTalkApiClient::new(
-        Arc::new(MockTokenVault),
-        app_key,
-        app_secret,
-    );
-
-    let server = DingTalkMcpServer::new(api_client);
+    let server = DingTalkMcpServer::new(api_client, vault);
 
     let state = AppState {
         server: Arc::new(RwLock::new(server)),
@@ -56,10 +50,22 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-struct MockTokenVault;
+/// Mock token vault for standalone server
+/// In production, this would be replaced with a real OAuthVault from oauth_vault
+struct MockTokenVault {
+    token: String,
+}
 
-impl omni_connector_dingtalk::api::TokenVaultAccess for MockTokenVault {
+impl MockTokenVault {
+    fn new() -> Self {
+        Self {
+            token: "mock_token".to_string(),
+        }
+    }
+}
+
+impl TokenVaultAccess for MockTokenVault {
     fn get_token(&self, _platform: &str, _subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>> {
-        Box::pin(async { Ok("mock_token".to_string()) })
+        Box::pin(async { Ok(self.token.clone()) })
     }
 }

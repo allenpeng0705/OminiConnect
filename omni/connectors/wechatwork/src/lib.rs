@@ -17,12 +17,10 @@
 //!       remote_mcp_url: http://localhost:8092/mcp
 //! ```
 
-use std::sync::Arc;
-
 pub mod api;
 pub mod server;
 pub mod tools;
 
-pub use api::{WeChatWorkApiClient, TokenVaultAccess};
-pub use server::{WeChatWorkMcpServer, JsonRpcRequest, JsonRpcResponse};
+pub use api::WeChatWorkApiClient;
+pub use server::{WeChatWorkMcpServer, JsonRpcRequest, JsonRpcResponse, TokenVaultAccess};
 pub use tools::WeChatWorkTool;

@@ -190,7 +190,7 @@ mcp:
 - [x] Fork Panda into OmniConnect structure
 - [x] Build OAuth2 vault (token storage + refresh)
 - [x] Implement Feishu connector (Bitable, Calendar, Messaging)
-- [ ] Basic compliance Wasm (PII scrub, keyword filter)
+- [x] Basic compliance Wasm (PII scrub, keyword filter)
 
 ### Phase 2: Tool Expansion (Weeks 5-8)
 - [x] DingTalk connector (OAuth2 + MCP server)

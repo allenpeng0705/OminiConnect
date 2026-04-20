@@ -2,7 +2,7 @@
 //!
 //! Run as: cargo run -p omni-connector-feishu --bin feishu_server
 
-use omni_connector_feishu::{FeishuApiClient, FeishuMcpServer, JsonRpcRequest};
+use omni_connector_feishu::{FeishuApiClient, FeishuMcpServer, JsonRpcRequest, TokenVaultAccess};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use axum::{
@@ -30,13 +30,10 @@ async fn main() {
     let app_id = std::env::var("FEISHU_APP_ID").unwrap_or_default();
     let app_secret = std::env::var("FEISHU_APP_SECRET").unwrap_or_default();
 
-    let api_client = FeishuApiClient::new(
-        Arc::new(MockTokenVault),
-        app_id,
-        app_secret,
-    );
+    let api_client = FeishuApiClient::new(app_id, app_secret);
+    let vault = Arc::new(MockTokenVault::new());
 
-    let server = FeishuMcpServer::new(api_client);
+    let server = FeishuMcpServer::new(api_client, vault);
 
     let state = AppState {
         server: Arc::new(RwLock::new(server)),
@@ -59,10 +56,21 @@ async fn main() {
 }
 
 /// Mock token vault for standalone server
-struct MockTokenVault;
+/// In production, this would be replaced with a real OAuthVault from oauth_vault
+struct MockTokenVault {
+    token: String,
+}
 
-impl omni_connector_feishu::api::TokenVaultAccess for MockTokenVault {
+impl MockTokenVault {
+    fn new() -> Self {
+        Self {
+            token: "mock_token".to_string(),
+        }
+    }
+}
+
+impl TokenVaultAccess for MockTokenVault {
     fn get_token(&self, _platform: &str, _subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>> {
-        Box::pin(async { Ok("mock_token".to_string()) })
+        Box::pin(async { Ok(self.token.clone()) })
     }
 }

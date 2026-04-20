@@ -8,6 +8,11 @@ use serde_json::{json, Value};
 use crate::api::WeChatWorkApiClient;
 use crate::tools::WeChatWorkTool;
 
+/// Token vault access trait for connector
+pub trait TokenVaultAccess: Send + Sync {
+    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>>;
+}
+
 /// MCP JSON-RPC request
 #[derive(Debug, serde::Deserialize)]
 pub struct JsonRpcRequest {
@@ -55,13 +60,15 @@ impl JsonRpcResponse {
 /// WeChat Work MCP Server
 pub struct WeChatWorkMcpServer {
     api_client: Arc<RwLock<WeChatWorkApiClient>>,
+    vault: Arc<dyn TokenVaultAccess>,
     tools: Vec<WeChatWorkTool>,
 }
 
 impl WeChatWorkMcpServer {
-    pub fn new(api_client: WeChatWorkApiClient) -> Self {
+    pub fn new(api_client: WeChatWorkApiClient, vault: Arc<dyn TokenVaultAccess>) -> Self {
         Self {
             api_client: Arc::new(RwLock::new(api_client)),
+            vault,
             tools: WeChatWorkTool::all_tools(),
         }
     }
@@ -99,8 +106,8 @@ impl WeChatWorkMcpServer {
                     .map(serde_json::Value::Object)
                     .unwrap_or(json!({}));
 
-                let api = self.api_client.read().await;
-                let token_result = api.get_access_token().await;
+                // Get token from vault
+                let token_result = self.vault.get_token("wechatwork", "tenant").await;
 
                 let token = match token_result {
                     Ok(t) => t,
@@ -109,6 +116,7 @@ impl WeChatWorkMcpServer {
                     }
                 };
 
+                let api = self.api_client.read().await;
                 let result = self.call_tool_internal(&api, &token, tool_name, arguments).await;
 
                 match result {

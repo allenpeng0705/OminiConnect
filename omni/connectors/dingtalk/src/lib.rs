@@ -17,12 +17,10 @@
 //!       remote_mcp_url: http://localhost:8091/mcp
 //! ```
 
-use std::sync::Arc;
-
 pub mod api;
 pub mod server;
 pub mod tools;
 
-pub use api::{DingTalkApiClient, TokenVaultAccess};
-pub use server::{DingTalkMcpServer, JsonRpcRequest, JsonRpcResponse};
+pub use api::DingTalkApiClient;
+pub use server::{DingTalkMcpServer, JsonRpcRequest, JsonRpcResponse, TokenVaultAccess};
 pub use tools::DingTalkTool;

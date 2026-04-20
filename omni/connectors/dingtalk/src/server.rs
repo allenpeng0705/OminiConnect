@@ -8,6 +8,11 @@ use serde_json::{json, Value};
 use crate::api::DingTalkApiClient;
 use crate::tools::DingTalkTool;
 
+/// Token vault access trait for connector
+pub trait TokenVaultAccess: Send + Sync {
+    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>>;
+}
+
 /// MCP JSON-RPC request
 #[derive(Debug, serde::Deserialize)]
 pub struct JsonRpcRequest {
@@ -55,13 +60,15 @@ impl JsonRpcResponse {
 /// DingTalk MCP Server
 pub struct DingTalkMcpServer {
     api_client: Arc<RwLock<DingTalkApiClient>>,
+    vault: Arc<dyn TokenVaultAccess>,
     tools: Vec<DingTalkTool>,
 }
 
 impl DingTalkMcpServer {
-    pub fn new(api_client: DingTalkApiClient) -> Self {
+    pub fn new(api_client: DingTalkApiClient, vault: Arc<dyn TokenVaultAccess>) -> Self {
         Self {
             api_client: Arc::new(RwLock::new(api_client)),
+            vault,
             tools: DingTalkTool::all_tools(),
         }
     }
@@ -99,16 +106,17 @@ impl DingTalkMcpServer {
                     .map(serde_json::Value::Object)
                     .unwrap_or(json!({}));
 
-                let api = self.api_client.read().await;
-                let token_result = api.get_access_token().await;
+                // Get token from vault
+                let token_result = self.vault.get_token("dingtalk", "tenant").await;
 
                 let token = match token_result {
                     Ok(t) => t,
                     Err(e) => {
-                        return JsonRpcResponse::error(req.id, 500, e.to_string());
+                        return JsonRpcResponse::error(req.id, 500, format!("Failed to get token: {}", e));
                     }
                 };
 
+                let api = self.api_client.read().await;
                 let result = self.call_tool_internal(&api, &token, tool_name, arguments).await;
 
                 match result {

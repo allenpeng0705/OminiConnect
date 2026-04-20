@@ -1,17 +1,9 @@
-//! Feishu API client with OAuth2 token management.
+//! Feishu API client.
 
-use serde_json::{json, Value};
-use std::sync::Arc;
-
-/// Token vault access trait for connector
-pub trait TokenVaultAccess: Send + Sync {
-    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>>;
-}
+use serde_json::Value;
 
 /// Feishu API client
 pub struct FeishuApiClient {
-    /// OAuth vault for token management
-    oauth_vault: Arc<dyn TokenVaultAccess>,
     /// Base URL for Feishu API
     base_url: String,
     /// App ID
@@ -21,29 +13,25 @@ pub struct FeishuApiClient {
 }
 
 impl FeishuApiClient {
-    pub fn new(
-        oauth_vault: Arc<dyn TokenVaultAccess>,
-        app_id: String,
-        app_secret: String,
-    ) -> Self {
+    pub fn new(app_id: String, app_secret: String) -> Self {
         Self {
-            oauth_vault,
             base_url: "https://open.feishu.cn".to_string(),
             app_id,
             app_secret,
         }
     }
 
-    /// Get tenant access token
-    pub async fn get_tenant_token(&self) -> Result<String, anyhow::Error> {
-        let url = format!("{}/open-apis/auth/v3/tenant_access_token/internal", self.base_url);
+    /// Exchange authorization code for access token
+    pub async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<String, anyhow::Error> {
+        let url = format!("{}/open-apis/authen/v1/oid/connect/tenant_access_token", self.base_url);
 
         let client = reqwest::Client::new();
         let resp = client
             .post(&url)
             .json(&serde_json::json!({
-                "app_id": self.app_id,
-                "app_secret": self.app_secret
+                "grant_type": "authorization_code",
+                "code": code,
+                "redirect_uri": redirect_uri,
             }))
             .send()
             .await?;

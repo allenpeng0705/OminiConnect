@@ -27,12 +27,10 @@
 //!       remote_mcp_egress_profile: feishu
 //! ```
 
-use std::sync::Arc;
-
 pub mod api;
 pub mod server;
 pub mod tools;
 
-pub use api::{FeishuApiClient, TokenVaultAccess};
-pub use server::{FeishuMcpServer, JsonRpcRequest, JsonRpcResponse};
+pub use api::FeishuApiClient;
+pub use server::{FeishuMcpServer, JsonRpcRequest, JsonRpcResponse, TokenVaultAccess};
 pub use tools::FeishuTool;
