@@ -1,23 +1,23 @@
 //! # OmniConnect Compliance Wasm Policies
 //!
-//! Wasm-based compliance policies for Chinese enterprise requirements.
+//! Combined Wasm policy for Chinese enterprise compliance requirements.
 //!
-//! ## Policies
-//!
-//! - **pii_scrubber**: PII detection and redaction for Chinese IDs, phone numbers, emails
-//! - **keyword_filter**: Sensitive keyword blocking for outgoing messages
-//! - **data_residency**: Data residency checks before API calls
+//! This module combines PII scrubbing, keyword filtering, and data residency checks
+//! into a single Wasm plugin for Panda's plugin system.
 //!
 //! ## Building
 //!
 //! ```bash
-//! # Build individual policy
+//! # Build for host (testing)
+//! cargo build -p omni-wasm_policies
+//!
+//! # Build for Wasm (production)
 //! cargo build -p omni-wasm_policies --target wasm32-unknown-unknown --release
 //!
 //! # Copy to plugins directory
-//! cp target/wasm32-unknown-unknown/release/omni_policy_pii.wasm plugins/
+//! cp target/wasm32-unknown-unknown/release/libomni_wasm_policies.wasm plugins/omni_policy.wasm
 //! ```
 
-pub mod pii_scrubber;
-pub mod keyword_filter;
-pub mod data_residency;
+mod combined_policy;
+
+pub use combined_policy::*;

@@ -8,18 +8,19 @@
 use panda_pdk::{set_header, PANDA_WASM_ABI_VERSION, RC_ALLOW, RC_REJECT_POLICY_DENIED};
 
 // Common restricted keywords (configurable in production)
-static BLOCKED_KEYWORDS: &[&[u8]] = &[
-    b"机密",
-    b"秘密",
-    b"绝密",
-    b"反动",
-    b"暴力",
-    b"赌博",
-    b"毒品",
-    b"诈骗",
-    b"邪教",
-    b"分裂",
-    b"恐怖",
+// Using string literals to support UTF-8 Chinese characters
+static BLOCKED_KEYWORDS: &[&str] = &[
+    "机密",     // classified
+    "秘密",     // secret
+    "绝密",     // top secret
+    "反动",     // reactionary
+    "暴力",     // violence
+    "赌博",     // gambling
+    "毒品",     // drugs
+    "诈骗",     // fraud
+    "邪教",     // cult
+    "分裂",     // separatism
+    "恐怖",     // terrorism
 ];
 
 #[no_mangle]
@@ -50,32 +51,12 @@ pub extern "C" fn panda_on_request_body(ptr: i32, len: i32) -> i32 {
 }
 
 fn contains_blocked_keyword(content: &[u8]) -> bool {
-    let content_lower = to_lower(content);
+    let content_str = std::str::from_utf8(content).ok();
 
     for keyword in BLOCKED_KEYWORDS {
-        if contains_ascii_ci(&content_lower, keyword) {
+        if content_str.map_or(false, |s| s.contains(keyword)) {
             return true;
         }
-    }
-    false
-}
-
-fn to_lower(input: &[u8]) -> Vec<u8> {
-    input.iter().map(|c| c.to_ascii_lowercase()).collect()
-}
-
-fn contains_ascii_ci(haystack: &[u8], needle: &[u8]) -> bool {
-    if needle.is_empty() {
-        return false;
-    }
-
-    'outer: for i in 0..=haystack.len().saturating_sub(needle.len()) {
-        for j in 0..needle.len() {
-            if haystack[i + j].to_ascii_lowercase() != needle[j].to_ascii_lowercase() {
-                continue 'outer;
-            }
-        }
-        return true;
     }
     false
 }
@@ -86,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_keyword_blocking() {
-        assert!(contains_blocked_keyword(b"这是机密信息"));
-        assert!(contains_blocked_keyword(b"包含秘密内容"));
+        assert!(contains_blocked_keyword("这是机密信息".as_bytes()));
+        assert!(contains_blocked_keyword("包含秘密内容".as_bytes()));
     }
 }

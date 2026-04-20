@@ -18,20 +18,15 @@ fn test_return_codes() {
 // Keyword filter tests
 #[test]
 fn test_keyword_filter_blocked_words() {
-    let blocked_keywords = [
-        "机密",
-        "秘密",
-        "绝密",
-    ];
+    // Test content contains "机密" (classified)
+    let test_content = "这是一份机密文件";
+    let content_bytes = test_content.as_bytes();
 
-    // These keywords should be blocked
-    let test_content = b"这是一份机密文件";
-    let content_lower: Vec<u8> = test_content.iter().map(|c| c.to_ascii_lowercase()).collect();
-
-    for keyword in blocked_keywords.iter() {
-        let keyword_lower: Vec<u8> = keyword.as_bytes().iter().map(|c| c.to_ascii_lowercase()).collect();
-        assert!(content_lower.windows(keyword_lower.len()).any(|w| w == &keyword_lower[..]));
-    }
+    // Check that "机密" is present
+    let keyword = "机密";
+    let keyword_bytes = keyword.as_bytes();
+    assert!(content_bytes.windows(keyword_bytes.len()).any(|w| w == keyword_bytes),
+        "Keyword '{}' not found in content", keyword);
 }
 
 // PII detection test (simplified - actual regex would be in wasm)

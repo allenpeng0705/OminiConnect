@@ -1,0 +1,73 @@
+# OmniConnect Configuration Example
+#
+# This shows how to configure Panda to connect to OmniConnect MCP connector servers.
+# The connector servers (feishu, dingtalk, wechatwork) must be started first:
+#   - Feishu:     cargo run -p omni-connector-feishu --bin feishu_server
+#   - DingTalk:   cargo run -p omni-connector-dingtalk --bin dingtalk_server
+#   - WeChatWork: cargo run -p omni-connector-wechatwork --bin wechatwork_server
+#
+# Build the Wasm compliance policy:
+#   cargo build -p omni-wasm_policies --target wasm32-unknown-unknown --release
+#   mkdir -p plugins && cp target/wasm32-unknown-unknown/release/libomni_wasm_policies.wasm plugins/omni_policy.wasm
+#
+# Then start Panda with this config to expose their tools to LLMs:
+#   cargo run -p panda-server -- --config omni_connect.yaml
+
+listen: "127.0.0.1:8080"
+default_backend: "http://127.0.0.1:5023"
+
+# Enable API gateway egress for remote MCP connections
+api_gateway:
+  egress:
+    enabled: true
+    timeout_ms: 30000
+    # Allowlist for connector server URLs (must cover all remote_mcp_url hosts)
+    allowlist:
+      allow_hosts:
+        - "127.0.0.1"
+        - "localhost"
+      allow_path_prefixes:
+        - "/mcp"
+    # For production, use actual hostnames and enable TLS:
+    # corporate:
+    #   default_base: "http://127.0.0.1"
+    # allowlist:
+    #   allow_hosts:
+    #     - "feishu.connector.internal"
+    #     - "dingtalk.connector.internal"
+    #     - "wechatwork.connector.internal"
+
+# MCP gateway - connect to OmniConnect connector servers
+mcp:
+  enabled: true
+  advertise_tools: true
+  fail_open: true
+  tool_timeout_ms: 30000
+  max_tool_rounds: 4
+
+  servers:
+    # Feishu (Lark) Connector
+    - name: feishu
+      enabled: true
+      remote_mcp_url: "http://127.0.0.1:8090/mcp"
+
+    # DingTalk Connector
+    - name: dingtalk
+      enabled: true
+      remote_mcp_url: "http://127.0.0.1:8091/mcp"
+
+    # WeChat Work Connector
+    - name: wechatwork
+      enabled: true
+      remote_mcp_url: "http://127.0.0.1:8092/mcp"
+
+# Wasm compliance policies (keyword filtering, PII scrubbing, data residency)
+plugins:
+  directory: "./plugins"
+  max_request_body_bytes: 262144
+  execution_timeout_ms: 25
+  fail_closed: false
+  hot_reload: true
+  reload_interval_ms: 5000
+  reload_debounce_ms: 500
+  max_reloads_per_minute: 30

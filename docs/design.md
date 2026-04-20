@@ -132,19 +132,69 @@ OmniConnect/
 4. Clean result returned to LLM
 ```
 
+### 5.4 Connector Integration with Panda
+
+OmniConnect connectors run as standalone MCP HTTP servers. Panda connects to them via `remote_mcp_url`:
+
+```
+┌─────────┐     ┌─────────────────┐     ┌──────────────────┐
+│   LLM   │────▶│     Panda       │────▶│  Connector HTTP   │
+│         │◀────│  (MCP Gateway)  │◀────│    Servers        │
+└─────────┘     └─────────────────┘     └──────────────────┘
+                      │                        │
+                      │  remote_mcp_url:       │
+                      │  http://host:8090/mcp  │
+                      │  http://host:8091/mcp  │
+                      │  http://host:8092/mcp  │
+                      ▼                        ▼
+              api_gateway.egress          OAuth2 Vault
+              (allowlist config)          (per-connector)
+```
+
+**Configuration (`omni_connect.yaml`):**
+```yaml
+api_gateway:
+  egress:
+    enabled: true
+    allowlist:
+      allow_hosts: ["127.0.0.1"]
+
+mcp:
+  enabled: true
+  servers:
+    - name: feishu
+      remote_mcp_url: "http://127.0.0.1:8090/mcp"
+    - name: dingtalk
+      remote_mcp_url: "http://127.0.0.1:8091/mcp"
+    - name: wechatwork
+      remote_mcp_url: "http://127.0.0.1:8092/mcp"
+```
+
+**Running the System:**
+1. Start each connector server:
+   ```bash
+   cargo run -p omni-connector-feishu --bin feishu_server --port=8090
+   cargo run -p omni-connector-dingtalk --bin dingtalk_server --port=8091
+   cargo run -p omni-connector-wechatwork --bin wechatwork_server --port=8092
+   ```
+2. Start Panda with the OmniConnect configuration:
+   ```bash
+   cargo run -p panda-server -- --config omni_connect.yaml
+   ```
+
 ---
 
 ## 6. Priority Roadmap
 
 ### Phase 1: Foundation (Weeks 1-4)
 - [x] Fork Panda into OmniConnect structure
-- [ ] Build OAuth2 vault (token storage + refresh)
-- [ ] Implement Feishu connector (Bitable, Calendar)
-- [ ] Basic compliance Wasm (PII scrub)
+- [x] Build OAuth2 vault (token storage + refresh)
+- [x] Implement Feishu connector (Bitable, Calendar, Messaging)
+- [ ] Basic compliance Wasm (PII scrub, keyword filter)
 
 ### Phase 2: Tool Expansion (Weeks 5-8)
-- [ ] DingTalk connector
-- [ ] WeChat Work connector
+- [x] DingTalk connector (OAuth2 + MCP server)
+- [x] WeChat Work connector (OAuth2 + MCP server)
 - [ ] Schema registry for LLM tool discovery
 - [ ] Documentation auto-generation
 
