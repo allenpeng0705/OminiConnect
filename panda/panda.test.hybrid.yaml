@@ -11,13 +11,13 @@ hybrid_inference:
     model: "llama3"
     timeout_ms: 30000
   targets:
-    - name: openai
-      provider: openai
-      upstream: "https://api.openai.com/v1"
-      api_key_name: "OPENAI_API_KEY"
+    - name: minimax
+      provider: openai_compatible
+      upstream: "https://api.minimax.chat/v1"
+      api_key_name: "MINIMAX_API_KEY"
   cloud_fallback:
     enabled: true
-    target: "openai"
+    target: "minimax"
   rules:
     - name: sensitive_data
       priority: 1
@@ -28,7 +28,7 @@ hybrid_inference:
       priority: 0
       conditions:
         - type: always
-      action: route_to_local
+      action: route_to_cloud
 
 routes:
   - path_prefix: /v1/chat
