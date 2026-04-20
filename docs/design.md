@@ -66,7 +66,9 @@ OmniConnect/
 │   │   └── wechatwork/ # WeChat Work API connector
 │   └── wasm_policies/  # Compliance Wasm modules
 │   └── audit_logger/   # Audit logging for PIPL compliance
-└── dashboard/          # Management UI (future)
+│   └── sdk/            # Developer SDK
+│   └── skills/         # Skill marketplace
+└── dashboard/          # Monitoring dashboard
 ```
 
 ---
@@ -207,9 +209,9 @@ mcp:
 - [x] Audit logging + export
 
 ### Phase 4: Scaling & Ecosystem (Ongoing)
-- [ ] Developer SDK
-- [ ] Skill marketplace (pre-packaged MCP tool sets)
-- [ ] Monitoring dashboard
+- [x] Developer SDK
+- [x] Skill marketplace (pre-packaged MCP tool sets)
+- [x] Monitoring dashboard
 
 ---
 
@@ -355,6 +357,10 @@ OmniConnect/
 | `omni-connector-dingtalk` | New | DingTalk API connector |
 | `omni-connector-wechatwork` | New | WeChat Work API connector |
 | `omni-wasm_policies` | New | Compliance Wasm policies |
+| `omni-audit_logger` | New | Audit logging for PIPL compliance |
+| `omni-sdk` | New | Developer SDK |
+| `omni-skills` | New | Skill marketplace |
+| `omni-dashboard` | New | Monitoring dashboard |
 
 ### 11.3 Update Strategy
 
