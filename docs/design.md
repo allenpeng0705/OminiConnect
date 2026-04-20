@@ -65,6 +65,7 @@ OmniConnect/
 │   │   ├── dingtalk/   # DingTalk API connector
 │   │   └── wechatwork/ # WeChat Work API connector
 │   └── wasm_policies/  # Compliance Wasm modules
+│   └── audit_logger/   # Audit logging for PIPL compliance
 └── dashboard/          # Management UI (future)
 ```
 
@@ -100,6 +101,7 @@ OmniConnect/
 | `connectors/dingtalk` | DingTalk MCP connector (Workflow, Messaging) |
 | `connectors/wechatwork` | WeChat Work MCP connector (Customer Management) |
 | `wasm_policies` | Compliance modules (PII scrub, keyword filter, data residency) |
+| `audit_logger` | Audit logging for PIPL compliance |
 
 ---
 
@@ -196,13 +198,13 @@ mcp:
 - [x] DingTalk connector (OAuth2 + MCP server)
 - [x] WeChat Work connector (OAuth2 + MCP server)
 - [x] Schema registry for LLM tool discovery
-- [ ] Documentation auto-generation
+- [x] Documentation auto-generation
 
 ### Phase 3: Advanced Features & Compliance (Weeks 9-12)
-- [ ] Data localization (PIPL compliance)
-- [ ] Content moderation Wasm
+- [x] Data localization (PIPL compliance)
+- [x] Content moderation Wasm
 - [ ] Hybrid inference (local LLM for sensitive tasks)
-- [ ] Audit logging + export
+- [x] Audit logging + export
 
 ### Phase 4: Scaling & Ecosystem (Ongoing)
 - [ ] Developer SDK
