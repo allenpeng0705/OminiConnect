@@ -24,6 +24,11 @@ hybrid_inference:
       conditions:
         - type: content_contains_pii
       action: route_to_local
+    - name: catch_all
+      priority: 0
+      conditions:
+        - type: always
+      action: route_to_local
 
 routes:
   - path_prefix: /v1/chat

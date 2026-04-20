@@ -7446,7 +7446,8 @@ async fn forward_to_upstream(
         || (tpm_on && cl.is_none())
         || rate_fallback_needs_buffer
         || context_mgmt_needs_buffer
-        || model_failover_needs_buffer;
+        || model_failover_needs_buffer
+        || state.hybrid_router.is_some();
 
     let mut semantic_route_outcome = semantic_routing::SemanticRouteOutcome::default();
 
