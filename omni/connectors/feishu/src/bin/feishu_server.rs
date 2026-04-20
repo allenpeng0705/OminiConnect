@@ -27,10 +27,7 @@ async fn handle_mcp(
 
 #[tokio::main]
 async fn main() {
-    let app_id = std::env::var("FEISHU_APP_ID").unwrap_or_default();
-    let app_secret = std::env::var("FEISHU_APP_SECRET").unwrap_or_default();
-
-    let api_client = FeishuApiClient::new(app_id, app_secret);
+    let api_client = FeishuApiClient::new();
     let vault = Arc::new(MockTokenVault::new());
 
     let server = FeishuMcpServer::new(api_client, vault);

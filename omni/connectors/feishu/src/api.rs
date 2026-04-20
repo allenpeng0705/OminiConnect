@@ -6,43 +6,13 @@ use serde_json::Value;
 pub struct FeishuApiClient {
     /// Base URL for Feishu API
     base_url: String,
-    /// App ID
-    app_id: String,
-    /// App secret
-    app_secret: String,
 }
 
 impl FeishuApiClient {
-    pub fn new(app_id: String, app_secret: String) -> Self {
+    pub fn new() -> Self {
         Self {
             base_url: "https://open.feishu.cn".to_string(),
-            app_id,
-            app_secret,
         }
-    }
-
-    /// Exchange authorization code for access token
-    pub async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<String, anyhow::Error> {
-        let url = format!("{}/open-apis/authen/v1/oid/connect/tenant_access_token", self.base_url);
-
-        let client = reqwest::Client::new();
-        let resp = client
-            .post(&url)
-            .json(&serde_json::json!({
-                "grant_type": "authorization_code",
-                "code": code,
-                "redirect_uri": redirect_uri,
-            }))
-            .send()
-            .await?;
-
-        let body: Value = resp.json().await?;
-
-        if body["code"].as_i64().unwrap_or(-1) != 0 {
-            anyhow::bail!("Feishu auth failed: {:?}", body["msg"]);
-        }
-
-        Ok(body["tenant_access_token"].as_str().unwrap().to_string())
     }
 
     /// Make an API call with authorization
@@ -73,5 +43,11 @@ impl FeishuApiClient {
         }
 
         Ok(body)
+    }
+}
+
+impl Default for FeishuApiClient {
+    fn default() -> Self {
+        Self::new()
     }
 }
