@@ -205,7 +205,7 @@ mcp:
 ### Phase 3: Advanced Features & Compliance (Weeks 9-12)
 - [x] Data localization (PIPL compliance)
 - [x] Content moderation Wasm
-- [ ] Hybrid inference (local LLM for sensitive tasks)
+- [x] Hybrid inference (local LLM for sensitive tasks)
 - [x] Audit logging + export
 
 ### Phase 4: Scaling & Ecosystem (Ongoing)
@@ -333,11 +333,16 @@ OmniConnect/
 │   └── panda.example.yaml   # Example configuration
 ├── omni/                     # OmniConnect value layer
 │   ├── oauth_vault/         # OAuth2 token storage + refresh
+│   ├── schema_registry/     # Tool schema registry
 │   ├── connectors/
 │   │   ├── feishu/          # Feishu (Lark) MCP connector
-│   │   ├── dingtalk/         # DingTalk MCP connector
-│   │   └── wechatwork/     # WeChat Work MCP connector
-│   └── wasm_policies/       # Compliance Wasm modules
+│   │   ├── dingtalk/        # DingTalk MCP connector
+│   │   └── wechatwork/      # WeChat Work MCP connector
+│   ├── wasm_policies/       # Compliance Wasm modules
+│   ├── audit_logger/        # Audit logging for PIPL
+│   ├── sdk/                 # Developer SDK
+│   └── skills/              # Skill marketplace
+├── dashboard/                # Monitoring dashboard
 ├── docs/
 │   └── design.md            # This document
 ├── Cargo.toml               # Workspace manifest
@@ -357,6 +362,11 @@ OmniConnect/
 | `omni-connector-dingtalk` | New | DingTalk API connector |
 | `omni-connector-wechatwork` | New | WeChat Work API connector |
 | `omni-wasm_policies` | New | Compliance Wasm policies |
+| `omni-schema_registry` | New | Tool schema registry |
+| `omni-audit_logger` | New | Audit logging for PIPL compliance |
+| `omni-sdk` | New | Developer SDK |
+| `omni-skills` | New | Skill marketplace |
+| `omni-dashboard` | New | Monitoring dashboard |
 | `omni-audit_logger` | New | Audit logging for PIPL compliance |
 | `omni-sdk` | New | Developer SDK |
 | `omni-skills` | New | Skill marketplace |
