@@ -23,7 +23,7 @@
 use std::path::Path;
 
 use http::header::HeaderName;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 fn format_listen_address(addr: &str, port: u16) -> String {
     if addr.contains(':') && !addr.starts_with('[') {
@@ -1600,6 +1600,117 @@ impl Default for RoutingConfig {
     }
 }
 
+/// Hybrid inference configuration for routing sensitive requests to local LLM.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HybridInferenceConfig {
+    /// Enable hybrid inference
+    #[serde(default)]
+    pub enabled: bool,
+    /// Local LLM settings
+    #[serde(default)]
+    pub local_llm: HybridLocalLlmConfig,
+    /// Routing targets (cloud LLM endpoints)
+    #[serde(default)]
+    pub targets: Vec<HybridTargetConfig>,
+    /// Cloud fallback configuration
+    #[serde(default)]
+    pub cloud_fallback: HybridCloudFallbackConfig,
+    /// Routing rules (evaluated in priority order)
+    #[serde(default)]
+    pub rules: Vec<HybridRuleConfig>,
+}
+
+impl Default for HybridInferenceConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            local_llm: HybridLocalLlmConfig::default(),
+            targets: Vec::new(),
+            cloud_fallback: HybridCloudFallbackConfig::default(),
+            rules: Vec::new(),
+        }
+    }
+}
+
+/// Local LLM configuration for hybrid inference
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HybridLocalLlmConfig {
+    /// Enable local LLM
+    #[serde(default)]
+    pub enabled: bool,
+    /// Endpoint (Ollama/vLLM)
+    #[serde(default)]
+    pub endpoint: String,
+    /// Model name
+    #[serde(default)]
+    pub model: String,
+    /// Request timeout in milliseconds
+    #[serde(default = "default_hybrid_timeout_ms")]
+    pub timeout_ms: u64,
+}
+
+impl Default for HybridLocalLlmConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            endpoint: "http://localhost:11434/v1/chat/completions".to_string(),
+            model: "qwen2.5:7b-instruct".to_string(),
+            timeout_ms: 30000,
+        }
+    }
+}
+
+fn default_hybrid_timeout_ms() -> u64 {
+    30000
+}
+
+/// Routing target (cloud LLM) for hybrid inference
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HybridTargetConfig {
+    /// Unique target name
+    pub name: String,
+    /// Provider type
+    #[serde(default)]
+    pub provider: String,
+    /// Upstream endpoint
+    pub upstream: String,
+    /// Environment variable name for API key
+    pub api_key_name: String,
+}
+
+/// Cloud fallback configuration for hybrid inference
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HybridCloudFallbackConfig {
+    /// Enable fallback
+    #[serde(default)]
+    pub enabled: bool,
+    /// Target name to use for fallback
+    #[serde(default)]
+    pub target: String,
+}
+
+impl Default for HybridCloudFallbackConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            target: "general".to_string(),
+        }
+    }
+}
+
+/// Routing rule configuration for hybrid inference
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HybridRuleConfig {
+    /// Rule name
+    pub name: String,
+    /// Priority (higher = evaluated first)
+    pub priority: u8,
+    /// Conditions that must match (JSON)
+    pub conditions: Vec<serde_json::Value>,
+    /// Action to take (JSON)
+    pub action: serde_json::Value,
+}
+
 /// Panda built-in API gateway (ingress / egress). Phase A: flags and config surface only; see
 /// `docs/design_api_gateway_and_mcp_gateway.md` and `docs/implementation_plan_mcp_api_gateway.md`.
 #[derive(Debug, Clone, Deserialize)]
@@ -2749,6 +2860,8 @@ pub struct PandaConfig {
     pub routing: RoutingConfig,
     #[serde(default)]
     pub agent_sessions: AgentSessionsConfig,
+    #[serde(default)]
+    pub hybrid_inference: HybridInferenceConfig,
 }
 
 impl PandaConfig {

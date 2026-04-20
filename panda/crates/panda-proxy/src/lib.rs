@@ -169,6 +169,8 @@ pub struct ProxyState {
     pub console_oidc: Option<Arc<console_oidc::ConsoleOidcRuntime>>,
     /// Embedding-based semantic upstream selection (optional).
     semantic_routing: Option<Arc<semantic_routing::SemanticRoutingRuntime>>,
+    /// Hybrid inference router for sensitive request routing to local LLM (optional).
+    hybrid_router: Option<Arc<omni_hybrid_inference::Router>>,
     /// Built-in API gateway flags (`api_gateway` YAML); ingress/egress wired when enabled in config.
     pub api_gateway: api_gateway::ApiGatewayState,
     /// Corporate HTTP egress when `api_gateway.egress.enabled`.
@@ -1909,6 +1911,28 @@ pub async fn run(config: Arc<PandaConfig>) -> anyhow::Result<()> {
             }
         };
 
+    let hybrid_router = if config.hybrid_inference.enabled {
+        match omni_hybrid_inference::Router::new(
+            omni_hybrid_inference::HybridConfig::from_json(
+                &serde_json::to_string(&config.hybrid_inference).unwrap_or_default(),
+            )
+            .unwrap_or_else(|_| omni_hybrid_inference::HybridConfig::default()),
+        )
+        .await
+        {
+            Ok(router) => {
+                eprintln!("panda: hybrid inference enabled");
+                Some(Arc::new(router))
+            }
+            Err(e) => {
+                eprintln!("panda: hybrid inference disabled (init failed): {e:#}");
+                None
+            }
+        }
+    } else {
+        None
+    };
+
     let ingress_router = api_gateway::ingress::IngressRouter::try_new(&config.api_gateway.ingress);
 
     let control_plane_api_keys_redis = connect_control_plane_api_keys_redis(config.as_ref()).await;
@@ -1934,6 +1958,7 @@ pub async fn run(config: Arc<PandaConfig>) -> anyhow::Result<()> {
         budget_hierarchy,
         console_oidc,
         semantic_routing,
+        hybrid_router,
         api_gateway: api_gateway::ApiGatewayState::from_config(config.as_ref()),
         egress: egress_client,
         ingress_router,
@@ -4993,6 +5018,104 @@ fn is_openai_chat_streaming_request(raw: &[u8]) -> bool {
     v.get("stream").and_then(|s| s.as_bool()).unwrap_or(false)
 }
 
+/// Extract chat messages from OpenAI chat completions request body for hybrid inference.
+fn extract_openai_chat_messages(raw: &[u8]) -> Vec<omni_hybrid_inference::ChatMessage> {
+    let Ok(v) = serde_json::from_slice::<serde_json::Value>(raw) else {
+        return Vec::new();
+    };
+    let messages = match v.get("messages").and_then(|m| m.as_array()) {
+        Some(arr) => arr,
+        None => return Vec::new(),
+    };
+    messages
+        .iter()
+        .filter_map(|msg| {
+            Some(omni_hybrid_inference::ChatMessage {
+                role: msg.get("role")?.as_str()?.to_string(),
+                content: msg.get("content")?.as_str().unwrap_or("").to_string(),
+            })
+        })
+        .collect()
+}
+
+/// Extract tool names from OpenAI chat completions request body for hybrid inference routing.
+fn extract_tool_names(raw: &[u8]) -> Vec<String> {
+    let Ok(v) = serde_json::from_slice::<serde_json::Value>(raw) else {
+        return Vec::new();
+    };
+    v.get("tools")
+        .and_then(|t| t.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|tool| {
+                    tool.get("function")
+                        .and_then(|f| f.get("name"))
+                        .and_then(|n| n.as_str())
+                        .map(String::from)
+                })
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Construct an OpenAI-compatible response from a hybrid inference local LLM response.
+fn construct_hybrid_local_response(
+    content: omni_hybrid_inference::ResponseContent,
+    correlation_id: &str,
+    config: &PandaConfig,
+) -> Result<Response<BoxBody>, ProxyError> {
+    match content {
+        omni_hybrid_inference::ResponseContent::Local(local) => {
+            let openai_response = serde_json::json!({
+                "id": local.id,
+                "object": "chat.completion",
+                "created": std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs() as u64,
+                "model": local.model,
+                "choices": [{
+                    "index": 0,
+                    "message": { "role": "assistant", "content": local.content },
+                    "finish_reason": "stop"
+                }],
+                "usage": {
+                    "prompt_tokens": local.usage.prompt_tokens,
+                    "completion_tokens": local.usage.completion_tokens,
+                    "total_tokens": local.usage.total_tokens
+                }
+            });
+            let mut out = Response::builder()
+                .status(StatusCode::OK)
+                .header("content-type", "application/json; charset=utf-8")
+                .header("x-panda-hybrid-inference", "local")
+                .body(
+                    Full::new(bytes::Bytes::from(openai_response.to_string()))
+                        .map_err(|never: std::convert::Infallible| match never {})
+                        .boxed_unsync(),
+                )
+                .map_err(|e| ProxyError::Upstream(anyhow::anyhow!("hybrid response: {e}")))?;
+            // Add correlation ID header
+            let corr_name = http::header::HeaderName::from_bytes(
+                config.observability.correlation_header.as_bytes(),
+            )
+            .map_err(|_| {
+                ProxyError::Upstream(anyhow::anyhow!("correlation header name"))
+            })?;
+            out.headers_mut().insert(
+                corr_name,
+                http::header::HeaderValue::from_str(correlation_id).map_err(|_| {
+                    ProxyError::Upstream(anyhow::anyhow!("correlation id header value"))
+                })?,
+            );
+            Ok(out)
+        }
+        omni_hybrid_inference::ResponseContent::Cloud(_) => Err(ProxyError::Upstream(
+            anyhow::anyhow!("cloud response in hybrid local path"),
+        )),
+    }
+}
+
 fn ensure_openai_chat_stream_true(body: &[u8]) -> anyhow::Result<Vec<u8>> {
     let mut v: serde_json::Value = serde_json::from_slice(body)?;
     if let Some(obj) = v.as_object_mut() {
@@ -7438,6 +7561,53 @@ async fn forward_to_upstream(
             .await?;
         }
 
+        // Hybrid inference routing (before semantic routing - decides Local vs Cloud)
+        if let Some(ref router) = state.hybrid_router {
+            if !is_openai_chat_streaming_request(&next_bytes) {
+                // Extract messages from request body
+                let messages = extract_openai_chat_messages(&next_bytes);
+                if !messages.is_empty() {
+                    // Build request context for hybrid inference
+                    let hybrid_ctx = omni_hybrid_inference::RequestContext {
+                        content: semantic_routing::extract_openai_chat_text_for_routing(
+                            &next_bytes,
+                            4096,
+                        ),
+                        tools: extract_tool_names(&next_bytes),
+                        tenant_id: ctx.tenant.clone(),
+                        user_id: ctx.subject.clone(),
+                        user_groups: Vec::new(),
+                        wasm_sensitivity_score: None,
+                        pii_types: std::collections::HashSet::new(),
+                        keyword_categories: std::collections::HashSet::new(),
+                    };
+
+                    match router.route(hybrid_ctx, messages).await {
+                        Ok(response) => {
+                            match response.target {
+                                omni_hybrid_inference::RouteTarget::Local => {
+                                    // Return local response directly (bypass upstream and semantic routing)
+                                    return construct_hybrid_local_response(
+                                        response.content,
+                                        &ctx.correlation_id,
+                                        state.config.as_ref(),
+                                    );
+                                }
+                                omni_hybrid_inference::RouteTarget::Cloud(_) => {
+                                    // Log and continue with normal flow
+                                    tracing::debug!("hybrid inference routed to cloud");
+                                }
+                            }
+                        }
+                        Err(e) => {
+                            tracing::warn!("hybrid inference routing failed: {e}");
+                            // Continue with normal flow on error
+                        }
+                    }
+                }
+            }
+        }
+
         let mut effective_backend_base = resolve_profile_upstream_base(
             &static_upstream_base,
             path,
@@ -9633,6 +9803,7 @@ mod tests {
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -10549,6 +10720,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let mut ctx = RequestContext::default();
@@ -10633,6 +10805,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let mut ctx = RequestContext {
@@ -10726,6 +10899,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let mut ctx = RequestContext::default();
@@ -10827,6 +11001,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         };
         let mut headers = HeaderMap::new();
         std::env::set_var("PANDA_TEST_OPS_SECRET", "s3cr3t");
@@ -10875,6 +11050,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let hub = Arc::new(ConsoleEventHub::new(DEFAULT_CONSOLE_CHANNEL_CAPACITY));
         let state = Arc::new(ProxyState {
@@ -10898,6 +11074,7 @@ agent_sessions:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11020,6 +11197,7 @@ agent_sessions:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = Arc::new(ProxyState {
             config: Arc::clone(&cfg),
@@ -11042,6 +11220,7 @@ agent_sessions:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11168,6 +11347,7 @@ control_plane:
                 enabled: true,
                 ..Default::default()
             },
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = Arc::new(ProxyState {
             config: Arc::clone(&cfg),
@@ -11190,6 +11370,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11323,6 +11504,7 @@ control_plane:
                 additional_admin_secret_envs: vec![EXTRA.to_string()],
                 ..Default::default()
             },
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = Arc::new(ProxyState {
             config: Arc::clone(&cfg),
@@ -11345,6 +11527,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11512,6 +11695,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let tpm = Arc::new(TpmCounters::connect(None).await.unwrap());
         tpm.add_prompt_tokens("anonymous", 30).await;
@@ -11536,6 +11720,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11614,6 +11799,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions,
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let tpm = Arc::new(TpmCounters::connect(None).await.unwrap());
         let state = ProxyState {
@@ -11637,6 +11823,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11692,6 +11879,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -11714,6 +11902,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -11918,6 +12107,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -11940,6 +12130,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12063,6 +12254,7 @@ control_plane:
                 ..Default::default()
             },
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -12085,6 +12277,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12177,6 +12370,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -12199,6 +12393,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12250,6 +12445,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -12272,6 +12468,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12328,6 +12525,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -12350,6 +12548,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12398,6 +12597,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = ProxyState {
             config: cfg,
@@ -12420,6 +12620,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12558,6 +12759,7 @@ control_plane:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
 
         let runtime = PluginRuntime::load_optional(
@@ -12597,6 +12799,7 @@ control_plane:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12741,6 +12944,7 @@ mcp:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -12904,6 +13108,7 @@ mcp:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -13067,6 +13272,7 @@ mcp:
             budget_hierarchy: None,
             console_oidc: None,
             semantic_routing: None,
+            hybrid_router: None,
             api_gateway: Default::default(),
             egress: None,
             ingress_router: None,
@@ -13159,6 +13365,7 @@ mcp:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let headers = HeaderMap::new();
@@ -13244,6 +13451,7 @@ mcp:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
 
@@ -13327,6 +13535,7 @@ mcp:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let err = validate_bearer_jwt(&headers, "/v1/chat", &state)
@@ -13412,6 +13621,7 @@ mcp:
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let exchanged = maybe_exchange_agent_token(&headers, &state)
@@ -13673,6 +13883,7 @@ data: [DONE]
             routing: Default::default(),
             agent_sessions: Default::default(),
             control_plane: Default::default(),
+            hybrid_inference: panda_config::HybridInferenceConfig::default(),
         });
         let state = test_proxy_state(Arc::clone(&cfg)).await;
         let err = validate_bearer_jwt(&headers, "/v1/admin/users", &state)
