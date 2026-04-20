@@ -27,6 +27,9 @@ pub enum RouterError {
 
     #[error("Configuration error: {0}")]
     Config(String),
+
+    #[error("Invalid JSON response from {target}: {message}")]
+    InvalidJsonResponse { target: String, message: String },
 }
 
 /// Routing destination
@@ -228,7 +231,14 @@ impl Router {
             return Err(RouterError::Request(response.error_for_status().unwrap_err()));
         }
 
-        let json: serde_json::Value = response.json().await?;
+        // Parse response body as JSON
+        let body_text = response.text().await?;
+        let json: serde_json::Value = serde_json::from_str(&body_text).map_err(|e| {
+            RouterError::InvalidJsonResponse {
+                target: target.name.clone(),
+                message: format!("{}: {}", e, &body_text[..body_text.len().min(200)]),
+            }
+        })?;
 
         Ok(RouterResponse {
             target: RouteTarget::Cloud(Box::leak(target_name.to_string().into_boxed_str())),
@@ -271,7 +281,14 @@ impl Router {
             return Err(RouterError::Request(response.error_for_status().unwrap_err()));
         }
 
-        let json: serde_json::Value = response.json().await?;
+        // Parse response body as JSON
+        let body_text = response.text().await?;
+        let json: serde_json::Value = serde_json::from_str(&body_text).map_err(|e| {
+            RouterError::InvalidJsonResponse {
+                target: fallback_target_name.clone(),
+                message: format!("{}: {}", e, &body_text[..body_text.len().min(200)]),
+            }
+        })?;
 
         Ok(RouterResponse {
             target: RouteTarget::Cloud(Box::leak(fallback_target_name.to_string().into_boxed_str())),
