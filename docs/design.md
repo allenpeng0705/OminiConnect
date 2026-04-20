@@ -186,6 +186,102 @@ mcp:
    cargo run -p panda-server -- --config omni_connect.yaml
    ```
 
+### 5.5 Hybrid Inference Configuration
+
+OmniConnect supports hybrid inference routing to route sensitive requests to local LLM (Ollama/vLLM) while forwarding general requests to cloud providers. This is configured via the `hybrid_inference` section in Panda's configuration.
+
+**Request Flow:**
+```
+Request → Hybrid Router (evaluates rules) → Local LLM or Cloud Provider
+```
+
+**Configuration Options:**
+
+#### Cloud-Only Mode
+```yaml
+hybrid_inference:
+  enabled: true
+  local_llm:
+    enabled: false
+  targets:
+    - name: openai
+      provider: openai
+      upstream: "https://api.openai.com/v1"
+      api_key_name: "OPENAI_API_KEY"
+  cloud_fallback:
+    enabled: true
+    target: "openai"
+  rules:
+    - name: cloud_only
+      priority: 1
+      conditions:
+        - type: always
+      action: route_to_cloud
+```
+
+#### Local-Only Mode
+```yaml
+hybrid_inference:
+  enabled: true
+  local_llm:
+    enabled: true
+    endpoint: "http://127.0.0.1:11434/v1/chat/completions"
+    model: "llama3"
+    timeout_ms: 30000
+  cloud_fallback:
+    enabled: false
+  rules:
+    - name: local_only
+      priority: 1
+      conditions:
+        - type: always
+      action: route_to_local
+```
+
+#### Hybrid Mode (Both Local and Cloud)
+```yaml
+hybrid_inference:
+  enabled: true
+  local_llm:
+    enabled: true
+    endpoint: "http://127.0.0.1:11434/v1/chat/completions"
+    model: "llama3"
+  targets:
+    - name: openai
+      provider: openai
+      upstream: "https://api.openai.com/v1"
+      api_key_name: "OPENAI_API_KEY"
+  cloud_fallback:
+    enabled: true
+    target: "openai"
+  rules:
+    - name: sensitive_data
+      priority: 1
+      conditions:
+        - type: content_contains_pii
+      action: route_to_local
+    - name: general
+      priority: 0
+      conditions:
+        - type: always
+      action: route_to_cloud
+```
+
+**Rule Conditions:**
+- `content_contains_pii` - Content contains PII (email, phone, etc.)
+- `content_matches` - Content matches keyword or regex patterns
+- `tool_is` - Request uses specific tool(s)
+- `tenant_is` - Request from specific tenant(s)
+- `user_in_group` - User in specific group(s)
+- `wasm_sensitivity_score_gte` - Wasm sensitivity score >= threshold
+- `always` - Always match
+
+**Rule Actions:**
+- `route_to_local` - Route to local LLM
+- `route_to_cloud` - Route to cloud target
+- `route_to_target` - Route to specific named target
+- `ask_wasm_policy` - Defer to Wasm policy decision
+
 ---
 
 ## 6. Priority Roadmap
