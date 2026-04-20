@@ -195,7 +195,7 @@ mcp:
 ### Phase 2: Tool Expansion (Weeks 5-8)
 - [x] DingTalk connector (OAuth2 + MCP server)
 - [x] WeChat Work connector (OAuth2 + MCP server)
-- [ ] Schema registry for LLM tool discovery
+- [x] Schema registry for LLM tool discovery
 - [ ] Documentation auto-generation
 
 ### Phase 3: Advanced Features & Compliance (Weeks 9-12)

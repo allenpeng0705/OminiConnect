@@ -28,9 +28,11 @@
 //! ```
 
 pub mod api;
+pub mod docs;
 pub mod server;
 pub mod tools;
 
 pub use api::FeishuApiClient;
+pub use docs::{generate_markdown, generate_summary};
 pub use server::{FeishuMcpServer, JsonRpcRequest, JsonRpcResponse, TokenVaultAccess};
 pub use tools::FeishuTool;
