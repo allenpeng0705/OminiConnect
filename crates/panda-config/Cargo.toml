@@ -1,0 +1,20 @@
+[package]
+name = "panda-config"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Configuration types and YAML loading for Panda"
+
+[dependencies]
+anyhow = "1"
+http = "1"
+regex = "1"
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+rustls-pemfile = "2"
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+webpki-roots = "1"
+
+[dev-dependencies]
+tempfile = "3"

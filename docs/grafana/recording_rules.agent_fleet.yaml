@@ -1,0 +1,64 @@
+# Prometheus recording rules + commented alert examples for Panda agent-fleet operations.
+# Copy the `groups` block into your Prometheus rules path or use as a reference.
+# Tune thresholds and `for:` windows per environment.
+#
+# Metric names match panda-proxy /metrics export (see docs/runbooks/agent_fleet_oncall.md).
+
+groups:
+  - name: panda_agent_fleet_recordings
+    interval: 30s
+    rules:
+      - record: panda:tpm_rejects:rate5m
+        expr: sum by (bucket_class) (rate(panda_tpm_budget_rejected_total[5m]))
+
+      - record: panda:mcp_max_rounds_exceeded:hourly
+        expr: sum(increase(panda_mcp_agent_max_rounds_exceeded_total[1h]))
+
+      - record: panda:mcp_intent_filtered:hourly
+        expr: sum(increase(panda_mcp_agent_intent_tools_filtered_total[1h]))
+
+      - record: panda:mcp_intent_enforce_denied:hourly
+        expr: sum(increase(panda_mcp_agent_intent_call_enforce_denied_total[1h]))
+
+      - record: panda:tool_cache_bypass:rate5m
+        expr: sum(rate(panda_mcp_tool_cache_bypass_total[5m]))
+
+      - record: panda:tool_cache_hit:rate5m
+        expr: sum(rate(panda_mcp_tool_cache_hit_total[5m]))
+
+      - record: panda:semantic_cache:hit_rate1h
+        expr: sum(increase(panda_semantic_cache_hit_total[1h]))
+
+      - record: panda:semantic_cache:miss_rate1h
+        expr: sum(increase(panda_semantic_cache_miss_total[1h]))
+
+      - record: panda:model_failover_midstream_retry:hourly
+        expr: sum(increase(panda_model_failover_midstream_retry_total[1h]))
+
+  # Uncomment and place in a separate group or merge with your alertmanager routes.
+  # - name: panda_agent_fleet_alerts
+  #   rules:
+  #     - alert: PandaTpmRejectsSpike
+  #       expr: sum(panda:tpm_rejects:rate5m) > 0.5
+  #       for: 10m
+  #       labels:
+  #         severity: warning
+  #       annotations:
+  #         summary: "Elevated TPM budget reject rate on Panda"
+  #         description: "Investigate bucket_class breakdown and /tpm/status for affected principals."
+  #
+  #     - alert: PandaMcpMaxRoundsExceeded
+  #       expr: panda:mcp_max_rounds_exceeded:hourly > 0
+  #       for: 5m
+  #       labels:
+  #         severity: info
+  #       annotations:
+  #         summary: "MCP tool-followup hit max_tool_rounds (last hour)"
+  #
+  #     - alert: PandaToolCacheBypassBurst
+  #       expr: panda:tool_cache_bypass:rate5m > 1
+  #       for: 15m
+  #       labels:
+  #         severity: warning
+  #       annotations:
+  #         summary: "High tool-result cache bypass rate"

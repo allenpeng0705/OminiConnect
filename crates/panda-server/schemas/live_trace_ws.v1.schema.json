@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panda.dev/schemas/live_trace_ws.v1.json",
+  "title": "Panda Live Trace WebSocket message (v1)",
+  "description": "Each WebSocket text frame is one JSON object emitted on GET /console/ws when PANDA_DEV_CONSOLE_ENABLED=true. Messages share a common envelope; payload shape depends on `kind`.",
+  "type": "object",
+  "required": ["version", "request_id", "ts_unix_ms", "stage", "kind", "method", "route"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "v1",
+      "description": "Schema version; bump when breaking wire format."
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Correlation / request id (often matches x-request-id)."
+    },
+    "trace_id": {
+      "type": ["string", "null"],
+      "description": "Optional distributed trace id when available."
+    },
+    "ts_unix_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Server timestamp in milliseconds since Unix epoch."
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["ingress", "brain", "egress", "mcp", "adapter"],
+      "description": "Logical pipeline stage that produced the event."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "request_started",
+        "request_finished",
+        "request_failed",
+        "mcp_call",
+        "llm_trace"
+      ],
+      "description": "Event type; drives optional payload interpretation."
+    },
+    "method": {
+      "type": "string",
+      "description": "HTTP method of the proxied request (uppercased)."
+    },
+    "route": {
+      "type": "string",
+      "description": "Ingress path or truncated route label."
+    },
+    "status": {
+      "type": ["integer", "null"],
+      "minimum": 100,
+      "maximum": 599,
+      "description": "HTTP status when applicable."
+    },
+    "elapsed_ms": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Elapsed milliseconds for the hop when applicable."
+    },
+    "payload": {
+      "description": "Event-specific JSON; omitted when null/absent.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "description": "mcp_call: tool invocation lifecycle",
+          "required": ["phase"],
+          "properties": {
+            "phase": { "type": "string", "enum": ["start", "finish"] },
+            "tool_name": { "type": "string" },
+            "server": { "type": "string" },
+            "arguments_preview": { "type": "string" },
+            "error": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "description": "llm_trace: throttled streaming assistant excerpt (SSE)",
+          "properties": {
+            "text_tail": { "type": "string" },
+            "chars_total": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}

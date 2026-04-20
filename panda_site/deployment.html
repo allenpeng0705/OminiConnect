@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Deployment</h1>
+                    <p class="lead">Flexible deployment options for every environment</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Deployment Options -->
+    <section class="deployment-options py-12">
+        <div class="container">
+            <h2 class="mb-6">Deployment Models</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Standalone</h3>
+                            <p class="card-text">Single binary with YAML configuration, ideal for small teams and single-region deployments.</p>
+                            <div class="mermaid-diagram mt-4">
+                                <div class="mermaid">
+flowchart TD
+    Client["Client"]
+    Panda["Panda Gateway"]
+    ModelProvider["Model Provider"]
+    
+    Client -->|API Request| Panda
+    Panda -->|Process & Route| ModelProvider
+    ModelProvider -->|Response| Panda
+    Panda -->|Process & Return| Client
+    
+    classDef client fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef panda fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef provider fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    
+    class Client client
+    class Panda panda
+    class ModelProvider provider
+                                </div>
+                            </div>
+                            <h4 class="mt-4">When to use</h4>
+                            <ul class="list-unstyled">
+                                <li>• You want one service in front of your LLM upstream</li>
+                                <li>• TLS terminates at a cloud load balancer or on Panda</li>
+                                <li>• You don't need a large external route/plugin surface</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">With KONG</h3>
+                            <p class="card-text">Run behind KONG or other API gateways, keeping TLS and coarse routing at the edge.</p>
+                            <div class="mermaid-diagram mt-4">
+                                <div class="mermaid">
+flowchart TD
+    Client["Client"]
+    Kong["KONG"]
+    Panda["Panda Gateway"]
+    ModelProvider["Model Provider"]
+    
+    Client -->|API Request| Kong
+    Kong -->|AI Routes| Panda
+    Panda -->|Process & Route| ModelProvider
+    ModelProvider -->|Response| Panda
+    Panda -->|Process & Return| Kong
+    Kong -->|Return Response| Client
+    
+    classDef client fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef kong fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef panda fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef provider fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    
+    class Client client
+    class Kong kong
+    class Panda panda
+    class ModelProvider provider
+                                </div>
+                            </div>
+                            <h4 class="mt-4">When to use</h4>
+                            <ul class="list-unstyled">
+                                <li>• You already have KONG or another API gateway</li>
+                                <li>• You want to route only AI paths to Panda</li>
+                                <li>• You need advanced edge capabilities for non-AI traffic</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Kubernetes</h3>
+                            <p class="card-text">Stateless replicas with ConfigMap/Secret management for scalable production deployments.</p>
+                            <div class="mermaid-diagram mt-4">
+                                <div class="mermaid">
+flowchart TD
+    Client["Client"]
+    Ingress["Ingress Controller"]
+    Service["K8s Service"]
+    Deployment["Panda Deployment"]
+    ModelProvider["Model Provider"]
+    
+    Client -->|API Request| Ingress
+    Ingress -->|Route| Service
+    Service -->|Distribute| Deployment
+    Deployment -->|Process & Route| ModelProvider
+    ModelProvider -->|Response| Deployment
+    Deployment -->|Process & Return| Service
+    Service -->|Return| Ingress
+    Ingress -->|Return Response| Client
+    
+    classDef client fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
+    classDef ingress fill:#e0f7fa,stroke:#006064,stroke-width:2px
+    classDef service fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef deployment fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef provider fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    
+    class Client client
+    class Ingress ingress
+    class Service service
+    class Deployment deployment
+    class ModelProvider provider
+                                </div>
+                            </div>
+                            <h4 class="mt-4">When to use</h4>
+                            <ul class="list-unstyled">
+                                <li>• You have a Kubernetes cluster</li>
+                                <li>• You need horizontal scaling</li>
+                                <li>• You want automated rollouts and rollbacks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations -->
+    <section class="integrations py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Integrations</h2>
+            <p class="text-center mb-8">Panda integrates with various tools and services to enhance its capabilities.</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Redis</h3>
+                            <p class="card-text">Optional integration for shared TPM counters and semantic cache.</p>
+                            <h4 class="mt-4">Configuration</h4>
+                            <pre><code># In panda.yaml
+tpm:
+  redis_url: redis://127.0.0.1:6379
+
+semantic_cache:
+  enabled: true
+  backend: redis
+  redis_url: redis://127.0.0.1:6379</code></pre>
+                            <p class="mt-4">Environment variables:</p>
+                            <pre><code>export PANDA_REDIS_URL='redis://127.0.0.1:6379'
+export PANDA_SEMANTIC_CACHE_REDIS_URL='redis://127.0.0.1:6379'</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Prometheus</h3>
+                            <p class="card-text">Metrics endpoint for monitoring Panda's performance and usage.</p>
+                            <h4 class="mt-4">Configuration</h4>
+                            <p>Scrape the <code>/metrics</code> endpoint:</p>
+                            <pre><code># Prometheus config
+targets:
+  - http://panda:8080/metrics</code></pre>
+                            <p class="mt-4">Protected endpoints:</p>
+                            <pre><code>curl -H "x-panda-admin-secret: $PANDA_OPS_SECRET" http://panda:8080/metrics</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">OpenTelemetry (OTLP)</h3>
+                            <p class="card-text">Distributed tracing for end-to-end request visibility.</p>
+                            <h4 class="mt-4">Configuration</h4>
+                            <pre><code>export OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces
+export PANDA_OTEL_SERVICE_NAME=panda-gateway
+export PANDA_OTEL_TRACE_SAMPLING_RATIO=0.2</code></pre>
+                            <p class="mt-4">Supported backends:</p>
+                            <ul class="list-unstyled">
+                                <li>• Jaeger</li>
+                                <li>• Grafana Tempo</li>
+                                <li>• Cloud APM services</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kubernetes Deployment -->
+    <section class="kubernetes-deployment py-12">
+        <div class="container">
+            <h2 class="mb-6">Kubernetes Deployment</h2>
+            <p>Panda provides starter manifests for Kubernetes deployments:</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Manifests</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><code>k8s/configmap.yaml</code> - Configuration</li>
+                        <li class="mb-2"><code>k8s/deployment.yaml</code> - Deployment</li>
+                        <li class="mb-2"><code>k8s/service.yaml</code> - Service</li>
+                        <li class="mb-2"><code>k8s/pdb.yaml</code> - Pod Disruption Budget</li>
+                        <li class="mb-2"><code>k8s/hpa.yaml</code> - Horizontal Pod Autoscaler</li>
+                        <li class="mb-2"><code>k8s/secret.example.yaml</code> - Secret template</li>
+                    </ul>
+                    <h4 class="mt-4">Deployment Steps</h4>
+                    <pre><code># Set up configmap
+kubectl apply -f k8s/configmap.yaml
+
+# Set up secrets
+kubectl apply -f k8s/secret.example.yaml
+
+# Deploy
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/pdb.yaml
+kubectl apply -f k8s/hpa.yaml</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Configuration</h3>
+                    <p>Update the ConfigMap with your specific settings:</p>
+                    <pre><code># k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: panda-config
+data:
+  panda.yaml: |
+    listen: 0.0.0.0:8080
+    upstream: http://your-model-server:8000
+    identity:
+      require_jwt: false
+    tpm:
+      enforce_budget: true
+      budget_tokens_per_minute: 10000
+    semantic_cache:
+      enabled: true
+      backend: memory</code></pre>
+                    <h4 class="mt-4">Scaling</h4>
+                    <p>The Horizontal Pod Autoscaler can scale based on CPU utilization or custom metrics:</p>
+                    <pre><code># k8s/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: panda-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: panda
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Docker Deployment -->
+    <section class="docker-deployment py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Docker Deployment</h2>
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Building the Image</h3>
+                    <pre><code># Build the image
+docker build -t panda:latest .
+
+# Run the container
+docker run --rm -p 8080:8080 \
+  -v "$(pwd)/panda.yaml:/app/panda.yaml:ro" \
+  panda:latest /app/panda.yaml</code></pre>
+                    <h4 class="mt-4">Environment Variables</h4>
+                    <pre><code># Example with environment variables
+docker run --rm -p 8080:8080 \
+  -v "$(pwd)/panda.yaml:/app/panda.yaml:ro" \
+  -e PANDA_REDIS_URL=redis://redis:6379 \
+  -e OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4318/v1/traces \
+  panda:latest /app/panda.yaml</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Docker Compose</h3>
+                    <p>For a complete stack with Redis and monitoring:</p>
+                    <pre><code>version: '3.8'
+services:
+  panda:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./panda.yaml:/app/panda.yaml:ro
+    environment:
+      - PANDA_REDIS_URL=redis://redis:6379
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel:4318/v1/traces
+    depends_on:
+      - redis
+      - otel
+
+  redis:
+    image: redis:alpine
+
+  otel:
+    image: otel/opentelemetry-collector:latest
+    volumes:
+      - ./otel-config.yaml:/etc/otelcol/config.yaml
+    ports:
+      - "4318:4318"</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TLS Configuration -->
+    <section class="tls-configuration py-12">
+        <div class="container">
+            <h2 class="mb-6">TLS Configuration</h2>
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Option A: TLS at the Load Balancer</h3>
+                    <p>Terminate TLS on your cloud load balancer and let Panda listen on HTTP.</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Common on AWS, GCP, Azure</li>
+                        <li class="mb-2">• Simplifies Panda configuration</li>
+                        <li class="mb-2">• Load balancer handles certificate management</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Option B: TLS on Panda</h3>
+                    <p>Configure Panda to terminate TLS directly:</p>
+                    <pre><code># In panda.yaml
+tls:
+  cert_pem: /path/to/cert.pem
+  key_pem: /path/to/key.pem
+
+# Or in server block
+server:
+  address: 0.0.0.0
+  port: 443
+  tls:
+    cert_pem: /path/to/cert.pem
+    key_pem: /path/to/key.pem</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Best Practices -->
+    <section class="security-best-practices py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Security Best Practices</h2>
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Secrets Management</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Use environment variables for secrets</li>
+                                <li class="mb-2">• Never commit secrets to git</li>
+                                <li class="mb-2">• Use Kubernetes Secrets or a secret manager</li>
+                                <li class="mb-2">• Rotate secrets regularly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Access Control</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Protect ops endpoints with admin secrets</li>
+                                <li class="mb-2">• Enable JWT authentication for API access</li>
+                                <li class="mb-2">• Use trusted gateway headers when behind KONG</li>
+                                <li class="mb-2">• Restrict network access to Panda</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Runtime Security</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Run Panda as a non-root user</li>
+                                <li class="mb-2">• Set resource limits in containers</li>
+                                <li class="mb-2">• Enable Wasm sandboxing for plugins</li>
+                                <li class="mb-2">• Keep Panda and dependencies updated</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

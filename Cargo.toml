@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/panda-pdk",
+    "crates/panda-config",
+    "crates/panda-proxy",
+    "crates/panda-server",
+    "crates/panda-wasm",
+    "crates/wasm-plugin-sample",
+    "crates/panda-pdk/rust/pii_mini",
+    "crates/wasm-plugin-ssrf-guard",
+]
+# Standalone Wasm guests (same repo; built with --manifest-path). Not part of the default workspace graph.
+exclude = [
+    "community-plugins/slack-notifier-wasm",
+    "community-plugins/pii-masking-i18n",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Panda contributors"]
+license = "MIT OR Apache-2.0"

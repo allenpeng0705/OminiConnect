@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickStart - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">QuickStart Guide</h1>
+                    <p class="lead">Get up and running with Panda in minutes</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- QuickStart Steps -->
+    <section class="quickstart-section py-12">
+        <div class="container">
+            <div class="quickstart-steps">
+                <div class="quickstart-step">
+                    <h3>Prerequisites</h3>
+                    <p>Before you begin, make sure you have the following:</p>
+                    <ul class="list-unstyled">
+                        <li><strong>Rust toolchain</strong> (stable) or Docker</li>
+                        <li>A model server URL (e.g., Ollama on <code>http://127.0.0.1:11434</code> or a cloud provider's OpenAI-compatible base URL)</li>
+                    </ul>
+                </div>
+
+                <div class="quickstart-step">
+                    <h3>1. Clone the Repository</h3>
+                    <p>Start by cloning the Panda repository:</p>
+                    <pre><code>$ git clone https://github.com/allenpeng0705/panda.git
+$ cd panda</code></pre>
+                </div>
+
+                <div class="quickstart-step">
+                    <h3>2. Configure Panda</h3>
+                    <p>Copy the example configuration file and edit it to your needs:</p>
+                    <pre><code>$ cp panda.example.yaml panda.yaml</code></pre>
+                    <p>Edit <code>panda.yaml</code> to set your upstream provider:</p>
+                    <pre><code># Example: Local Ollama
+upstream: http://127.0.0.1:11434
+
+# Example: OpenAI
+# upstream: https://api.openai.com</code></pre>
+                    <p>The default listen address is <code>127.0.0.1:8080</code>.</p>
+                </div>
+
+                <div class="quickstart-step">
+                    <h3>3. Run Panda</h3>
+                    <p>Using Cargo (Rust):</p>
+                    <pre><code>$ cargo run -p panda-server -- panda.yaml</code></pre>
+                    <p>For more verbose logs:</p>
+                    <pre><code>$ RUST_LOG=info cargo run -p panda-server -- panda.yaml</code></pre>
+                    <p>Using Docker:</p>
+                    <pre><code>$ docker build -t panda:latest .
+$ docker run --rm -p 8080:8080 \
+  -v "$(pwd)/panda.yaml:/app/panda.yaml:ro" \
+  panda:latest /app/panda.yaml</code></pre>
+                </div>
+
+                <div class="quickstart-step">
+                    <h3>4. Verify the Installation</h3>
+                    <p>Check if Panda is running:</p>
+                    <pre><code>$ curl -s http://127.0.0.1:8080/health</code></pre>
+                    <p>Send a test chat request:</p>
+                    <pre><code>$ curl -s http://127.0.0.1:8080/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model": "gpt-4o-mini", "messages": [{"role": "user", "content": "hello from Panda"}]}'</code></pre>
+                    <p>Adjust the <code>model</code> parameter to match your upstream provider.</p>
+                </div>
+
+                <div class="quickstart-step">
+                    <h3>5. Enable the Developer Console (Optional)</h3>
+                    <p>For a live debug UI:</p>
+                    <pre><code>$ PANDA_DEV_CONSOLE_ENABLED=true cargo run -p panda-server -- panda.yaml</code></pre>
+                    <p>Open <a href="http://127.0.0.1:8080/console" target="_blank">http://127.0.0.1:8080/console</a> in your browser.</p>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h2>Agent Integration</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">OpenClaw Integration</h3>
+                                <p class="card-text">Integrate Panda with OpenClaw-class agents for enhanced performance, caching, and observability.</p>
+                                <h4>Key Benefits:</h4>
+                                <ul>
+                                    <li>Semantic caching for LLM responses</li>
+                                    <li>Tool caching for deterministic operations</li>
+                                    <li>Rate limiting and TPM control</li>
+                                    <li>Unified routing for local and cloud models</li>
+                                </ul>
+                                <h4>Configuration Steps:</h4>
+                                <pre><code># 1. Create panda.openclaw.yaml
+$ cp panda.example.yaml panda.openclaw.yaml
+
+# 2. Update with OpenClaw routes
+routes:
+  - path_prefix: /v1/chat
+    backend_base: "http://127.0.0.1:5023"
+    type: openai
+    semantic_cache: true
+  - path_prefix: /cloud
+    backend_base: "http://127.0.0.1:14005"
+    type: openai
+    semantic_cache: true
+  - path_prefix: /v1/embeddings
+    backend_base: "http://127.0.0.1:5066"
+    type: openai
+
+# 3. Start Panda
+$ cargo run --bin panda panda.openclaw.yaml
+
+# 4. Update OpenClaw config/llm.yml
+panda:
+  enabled: true
+  host: 127.0.0.1
+  port: 8081
+  paths:
+    main_llm: /v1/chat/completions
+    embedding: /v1/embeddings
+    cloud_llm: /cloud/v1/chat/completions</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">HomeClaw Integration</h3>
+                                <p class="card-text">Specific integration for HomeClaw agents with optimized routing and caching.</p>
+                                <h4>Configuration:</h4>
+                                <pre><code># Use the provided panda.homeclaw.yaml
+$ cargo run --bin panda panda.homeclaw.yaml
+
+# Update HomeClaw config/llm.yml
+panda:
+  enabled: true
+  host: 127.0.0.1
+  port: 8081
+  paths:
+    main_llm: /v1/chat/completions
+    embedding: /v1/embeddings
+    cloud_llm: /cloud/v1/chat/completions</code></pre>
+                                <h4>Testing:</h4>
+                                <pre><code># Test local model
+curl -X POST http://127.0.0.1:8081/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"test","messages":[{"role":"user","content":"hi"}]}'
+
+# Test cloud model
+curl -X POST http://127.0.0.1:8081/cloud/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"test","messages":[{"role":"user","content":"hi"}]}'
+
+# Test embeddings
+curl -X POST http://127.0.0.1:8081/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{"input":"test"}'</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h2>Next Steps</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">Deployment Options</h3>
+                                <p class="card-text">Explore different deployment models including Kubernetes, KONG integration, and more.</p>
+                                <a href="deployment.html" class="btn btn-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">Wasm Plugins</h3>
+                                <p class="card-text">Extend Panda's functionality with custom Wasm plugins written in Rust or Go.</p>
+                                <a href="extensibility.html" class="btn btn-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">MCP Integration</h3>
+                                <p class="card-text">Add tool capabilities to your AI agents with Model Context Protocol.</p>
+                                <a href="mcp.html" class="btn btn-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting Section -->
+    <section class="troubleshooting-section py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Troubleshooting</h2>
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Common Issues</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Connection Refused</strong>
+                            <p>Make sure your upstream server is running and accessible.</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Authentication Errors</strong>
+                            <p>Check your API keys and authentication configuration.</p>
+                        </li>
+                        <li class="mb-3">
+                            <strong>Model Not Found</strong>
+                            <p>Ensure the model name you're using exists in your upstream provider.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Useful Commands</h3>
+                    <pre><code># Check logs
+RUST_LOG=debug cargo run -p panda-server -- panda.yaml
+
+# Test with a different upstream
+PANDA_LISTEN_OVERRIDE=0.0.0.0:8080 cargo run -p panda-server -- panda.yaml
+
+# Enable OTLP tracing
+OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318/v1/traces cargo run -p panda-server -- panda.yaml</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

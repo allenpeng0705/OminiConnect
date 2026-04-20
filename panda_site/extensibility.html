@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extensibility - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Extensibility</h1>
+                    <p class="lead">Extend Panda with Wasm plugins</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Wasm Plugins Overview -->
+    <section class="wasm-plugins-overview py-12">
+        <div class="container">
+            <h2 class="mb-6">Wasm Plugin System</h2>
+            <p>Panda uses WebAssembly (Wasm) as its primary extension mechanism, allowing you to add custom policy hooks, transforms, and integrations without forking the core.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Benefits of Wasm Plugins</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>Sandboxed execution:</strong> Plugins run in an isolated environment with resource limits</li>
+                        <li class="mb-2">• <strong>Language flexibility:</strong> Write plugins in Rust, Go (via TinyGo), or any language that compiles to Wasm</li>
+                        <li class="mb-2">• <strong>Hot reload:</strong> Update plugins without restarting Panda</li>
+                        <li class="mb-2">• <strong>Performance:</strong> Near-native execution speed</li>
+                        <li class="mb-2">• <strong>Security:</strong> Strict access controls to host functions</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Plugin Lifecycle Hooks</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>panda_on_request:</strong> Process request headers</li>
+                        <li class="mb-2">• <strong>panda_on_request_body:</strong> Process request body</li>
+                        <li class="mb-2">• <strong>panda_on_response_chunk:</strong> Process response chunks</li>
+                    </ul>
+                    <p>Plugins can modify headers, replace request bodies, and enforce custom policies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creating Rust Plugins -->
+    <section class="creating-rust-plugins py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Creating Rust Plugins</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Setup</h3>
+                    <pre><code># Create a new Rust library project
+cargo new --lib my-panda-plugin
+cd my-panda-plugin
+
+# Edit Cargo.toml
+cat > Cargo.toml << 'EOF'
+[package]
+name = "my-panda-plugin"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+dependencies = {
+    "panda-pdk" = { path = "../crates/panda-pdk" }
+}
+EOF</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Plugin Implementation</h3>
+                    <pre><code>// src/lib.rs
+use panda_pdk::*;
+
+#[no_mangle]
+pub extern "C" fn panda_abi_version() -> i32 {
+    0 // Must match host ABI version
+}
+
+#[no_mangle]
+pub extern "C" fn panda_on_request() -> i32 {
+    // Example: Add a custom header
+    let name = "X-Custom-Header";
+    let value = "my-value";
+    panda_set_header(name.as_ptr(), name.len() as i32, value.as_ptr(), value.len() as i32);
+    0 // Allow the request
+}
+
+#[no_mangle]
+pub extern "C" fn panda_on_request_body(ptr: i32, len: i32) -> i32 {
+    // Example: Read and modify request body
+    let body = unsafe { std::slice::from_raw_parts(ptr as *const u8, len as usize) };
+    let body_str = std::str::from_utf8(body).unwrap_or("");
+    
+    // Modify body as needed
+    let modified_body = body_str.replace("secret", "[REDACTED]");
+    
+    // Set the modified body
+    panda_set_body(modified_body.as_ptr(), modified_body.len() as i32);
+    0 // Allow the request
+}
+</code></pre>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-12">
+                    <h3>Building the Plugin</h3>
+                    <pre><code># Build for Wasm target
+rustup target add wasm32-wasi
+cargo build --target wasm32-wasi --release
+
+# The plugin will be at:
+target/wasm32-wasi/release/my_panda_plugin.wasm</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creating Go Plugins -->
+    <section class="creating-go-plugins py-12">
+        <div class="container">
+            <h2 class="mb-6">Creating Go Plugins</h2>
+            <p>You can also write Panda plugins in Go using TinyGo, which compiles to WebAssembly.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Setup</h3>
+                    <pre><code># Install TinyGo
+# Follow instructions at https://tinygo.org/getting-started/
+
+# Create a new Go project
+mkdir my-go-plugin
+cd my-go-plugin
+go mod init my-go-plugin
+
+# Add panda-pdk
+go get github.com/allenpeng0705/panda/crates/panda-pdk/go/panda</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Plugin Implementation</h3>
+                    <pre><code>// main.go
+package main
+
+import (
+    "github.com/allenpeng0705/panda/crates/panda-pdk/go/panda"
+)
+
+//export panda_abi_version
+func panda_abi_version() int32 {
+    return 0 // Must match host ABI version
+}
+
+//export panda_on_request
+func panda_on_request() int32 {
+    // Example: Add a custom header
+    panda.SetHeader("X-Go-Plugin", "Hello from Go")
+    return 0 // Allow the request
+}
+
+//export panda_on_request_body
+func panda_on_request_body(ptr int32, len int32) int32 {
+    // Example: Read request body
+    body := panda.GetBody(ptr, len)
+    // Modify body as needed
+    modified := []byte("Modified by Go plugin")
+    panda.SetBody(modified)
+    return 0 // Allow the request
+}
+
+func main() {
+    // Required for TinyGo
+}
+</code></pre>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-12">
+                    <h3>Building the Plugin</h3>
+                    <pre><code># Build with TinyGo
+tinygo build -o my-go-plugin.wasm -target wasi main.go</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Configuring Plugins -->
+    <section class="configuring-plugins py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Configuring Plugins</h2>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Plugin Configuration in panda.yaml</h3>
+                    <pre><code>plugins:
+  # Path to directory containing Wasm plugins
+  directory: "./plugins"
+  # Execution timeout per plugin (milliseconds)
+  execution_timeout_ms: 100
+  # Maximum request body size for body hooks (bytes)
+  max_request_body_bytes: 1048576
+  # Enable hot reload of plugins
+  hot_reload: true
+  # Hot reload interval (milliseconds)
+  reload_interval_ms: 5000
+  # Fail closed if plugin execution fails
+  fail_closed: true
+  # Wasm instance pool size
+  instance_pool_size: 4</code></pre>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-6 mb-6">
+                    <h3>Plugin Return Codes</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Meaning</th>
+                                <th>Host Behavior</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0</td>
+                                <td>Allow</td>
+                                <td>Continue processing</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Reject (policy denied)</td>
+                                <td>Return 403 Forbidden</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Reject (malformed request)</td>
+                                <td>Return 400 Bad Request</td>
+                            </tr>
+                            <tr>
+                                <td>Other non-zero</td>
+                                <td>Plugin-specific error</td>
+                                <td>Return 502 Bad Gateway</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Host Imports</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>panda_set_header:</strong> Add or modify request headers</li>
+                        <li class="mb-2">• <strong>panda_set_body:</strong> Replace the request body</li>
+                    </ul>
+                    <p>These functions are available to plugins for modifying requests before they are sent to the upstream.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Plugin Examples -->
+    <section class="plugin-examples py-12">
+        <div class="container">
+            <h2 class="mb-6">Plugin Examples</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">SSRF Guard</h3>
+                            <p class="card-text">Protects against Server-Side Request Forgery attacks by validating URLs in requests.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/crates/wasm-plugin-ssrf-guard" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">PCI Guard</h3>
+                            <p class="card-text">Detects and redacts payment card information to ensure PCI compliance.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/examples/tinygo-plugin-pci-guard" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">PII Masking</h3>
+                            <p class="card-text">Detects and masks personally identifiable information in requests.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/community-plugins/pii-masking-i18n" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Slack Notifier</h3>
+                            <p class="card-text">Sends notifications to Slack when specific events occur.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/community-plugins/slack-notifier-wasm" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Sample Plugin</h3>
+                            <p class="card-text">A minimal example demonstrating the basic plugin structure.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/crates/wasm-plugin-sample" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">TinyGo Plugin</h3>
+                            <p class="card-text">An example of writing a plugin in Go using TinyGo.</p>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/examples/tinygo-plugin" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Practices -->
+    <section class="best-practices py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Plugin Development Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Security</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Validate all input from the request</li>
+                        <li class="mb-2">• Avoid memory leaks</li>
+                        <li class="mb-2">• Be mindful of resource usage</li>
+                        <li class="mb-2">• Don't perform blocking operations</li>
+                        <li class="mb-2">• Limit external dependencies</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Performance</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Keep plugin logic simple and fast</li>
+                        <li class="mb-2">• Avoid unnecessary allocations</li>
+                        <li class="mb-2">• Use efficient algorithms</li>
+                        <li class="mb-2">• Test with realistic payloads</li>
+                        <li class="mb-2">• Monitor execution time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

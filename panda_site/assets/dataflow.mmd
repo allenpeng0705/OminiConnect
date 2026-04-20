@@ -1,0 +1,37 @@
+sequenceDiagram
+  autonumber
+  participant U as Client / Agent SDK
+  participant K as Kong / Edge (optional)
+  participant P as Panda Gateway
+  participant R as Redis (optional)
+  participant M as MCP Tool Server(s) (optional)
+  participant L as Model Provider (OpenAI/Azure/DeepSeek/Qwen/MiniMax/Anthropic/Local)
+  participant O as Prometheus / OTLP / Ops endpoints
+
+  alt Standalone deployment
+    U->>P: OpenAI-style request (e.g. /v1/chat/completions)
+  else With Kong or existing edge
+    U->>K: Request to edge route
+    K->>P: Forward AI path + trusted identity headers
+  end
+
+  P->>P: Ingress auth/routing + policy checks (JWT/JWKS, safety, PII, Wasm)
+  P->>R: Read/update TPM and cache state (optional)
+  R-->>P: Budget/cache result
+
+  opt MCP tool orchestration needed
+    P->>L: Initial model call (tool planning)
+    L-->>P: Tool calls in response
+    P->>M: Execute approved tool(s)
+    M-->>P: Tool result payload(s)
+    P->>L: Follow-up model call with tool outputs
+  end
+
+  alt Enterprise failover enabled and hop fails (5xx/429/timeout)
+    P->>L: Retry next parity backend (ordered chain)
+  end
+
+  L-->>P: Final response (JSON or SSE stream)
+  P-->>U: OpenAI-shaped response (stream preserved when enabled)
+
+  P->>O: Emit metrics/logs/traces and status updates

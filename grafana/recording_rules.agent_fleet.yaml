@@ -1,0 +1,140 @@
+# Recording rules for Panda Unified Gateway (API + MCP + AI)
+# Load into Prometheus via your rules configuration.
+#
+# These rules reduce query complexity in Grafana dashboards and alerts.
+# Adjust thresholds and labels to match your deployment.
+
+groups:
+  - name: panda_unified_gateway_rates
+    interval: 30s
+    rules:
+      # TPM rejects by bucket class (anonymous, subject, tenant, subject_tenant)
+      - record: panda:tpm_rejects:rate5m
+        expr: sum by (bucket_class) (rate(panda_tpm_budget_rejected_total[5m]))
+        labels:
+          gateway: unified
+
+      # MCP tool rounds exceeded
+      - record: panda:mcp_rounds_exceeded:rate1h
+        expr: sum(increase(panda_mcp_agent_max_rounds_exceeded_total[1h]))
+        labels:
+          gateway: mcp
+
+      # MCP tool cache efficiency
+      - record: panda:mcp_tool_cache:hit_rate5m
+        expr: |
+          sum(rate(panda_mcp_tool_cache_hit_total[5m])) 
+          / 
+          (sum(rate(panda_mcp_tool_cache_hit_total[5m])) + sum(rate(panda_mcp_tool_cache_miss_total[5m])))
+        labels:
+          gateway: mcp
+
+      # AI semantic cache efficiency
+      - record: panda:semantic_cache:hit_rate5m
+        expr: |
+          sum(rate(panda_semantic_cache_hit_total[5m])) 
+          / 
+          (sum(rate(panda_semantic_cache_hit_total[5m])) + sum(rate(panda_semantic_cache_miss_total[5m])))
+        labels:
+          gateway: ai
+
+      # API Gateway request rates
+      - record: panda:api_gateway:ingress_rate5m
+        expr: sum by (path_prefix, method) (rate(panda_gateway_ingress_rps_total[5m]))
+        labels:
+          gateway: api
+
+      - record: panda:api_gateway:egress_rate5m
+        expr: sum by (host) (rate(panda_gateway_rps_allowed_total[5m]))
+        labels:
+          gateway: api
+
+      # API Gateway auth failures
+      - record: panda:api_gateway:auth_failures:rate5m
+        expr: sum by (endpoint) (rate(panda_ops_auth_denied_total[5m]))
+        labels:
+          gateway: api
+
+      # Model failover midstream retries (when enabled)
+      - record: panda:model_failover:midstream_retries:rate1h
+        expr: increase(panda_model_failover_midstream_retry_total[1h])
+        labels:
+          gateway: ai
+
+      # Ops endpoint auth telemetry
+      - record: panda:ops_auth:deny_ratio5m
+        expr: |
+          sum(rate(panda_ops_auth_denied_total[5m])) 
+          / 
+          (sum(rate(panda_ops_auth_allowed_total[5m])) + sum(rate(panda_ops_auth_denied_total[5m])))
+        labels:
+          gateway: unified
+
+  - name: panda_unified_gateway_alerts
+    interval: 60s
+    rules:
+      # Alert: High TPM rejection rate
+      - alert: PandaHighTPMRejectionRate
+        expr: panda:tpm_rejects:rate5m > 10
+        for: 5m
+        labels:
+          severity: warning
+          gateway: unified
+        annotations:
+          summary: "High TPM rejection rate for {{ $labels.bucket_class }}"
+          description: "TPM budget rejections are elevated. Check /tpm/status for budget details."
+
+      # Alert: MCP tool rounds cap exceeded frequently
+      - alert: PandaMCPRoundsCapExceeded
+        expr: panda:mcp_rounds_exceeded:rate1h > 5
+        for: 10m
+        labels:
+          severity: warning
+          gateway: mcp
+        annotations:
+          summary: "MCP tool rounds cap exceeded frequently"
+          description: "Agents are hitting the max_tool_rounds limit. Consider increasing the cap or investigating tool loops."
+
+      # Alert: Low tool cache hit rate
+      - alert: PandaLowToolCacheHitRate
+        expr: panda:mcp_tool_cache:hit_rate5m < 0.15
+        for: 15m
+        labels:
+          severity: info
+          gateway: mcp
+        annotations:
+          summary: "Low MCP tool cache hit rate"
+          description: "Tool cache hit rate is below 15%. Review tool cache allowlist and TTL settings."
+
+      # Alert: High API Gateway auth failures
+      - alert: PandaAPIGatewayHighAuthFailures
+        expr: panda:api_gateway:auth_failures:rate5m > 5
+        for: 5m
+        labels:
+          severity: warning
+          gateway: api
+        annotations:
+          summary: "High API Gateway authentication failures"
+          description: "Authentication failures are elevated. Check identity configuration and JWT/JWKS settings."
+
+      # Alert: High ops endpoint auth denial ratio
+      - alert: PandaHighOpsAuthDenialRatio
+        expr: panda:ops_auth:deny_ratio5m > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          gateway: unified
+        annotations:
+          summary: "High ops endpoint auth denial ratio"
+          description: "More than 10% of ops endpoint requests are being denied. Check admin secret configuration."
+
+      # Alert: Model failover midstream retries elevated
+      - alert: PandaModelFailoverMidstreamRetries
+        expr: panda:model_failover:midstream_retries:rate1h > 3
+        for: 15m
+        labels:
+          severity: warning
+          gateway: ai
+        annotations:
+          summary: "Model failover midstream retries elevated"
+          description: "Upstream models are failing mid-stream. Check model provider health and failover configuration."

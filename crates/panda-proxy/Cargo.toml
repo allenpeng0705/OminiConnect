@@ -1,0 +1,60 @@
+[package]
+name = "panda-proxy"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "HTTP proxy engine: listener, forwarding, future SSE and middleware"
+
+[features]
+default = []
+embedded-console-ui = ["dep:rust-embed"]
+control-plane-sql = ["dep:sqlx"]
+
+[dependencies]
+async-trait = "0.1"
+aho-corasick = "1"
+anyhow = "1"
+bytes = "1"
+base64 = "0.22"
+constant_time_eq = "0.4"
+futures-util = "0.3"
+hmac = "0.12"
+http-body-util = "0.1"
+http = "1"
+hyper = { version = "1", features = ["server", "client", "http1"] }
+hyper-rustls = { version = "0.27", default-features = false, features = ["http1", "webpki-roots", "tls12", "ring"] }
+hyper-util = { version = "0.1", features = ["tokio", "client", "client-legacy", "http1"] }
+jsonwebtoken = "9"
+panda-config = { path = "../panda-config" }
+panda-wasm = { path = "../panda-wasm" }
+regex = "1"
+webpki-roots = "1"
+rust-embed = { version = "8", optional = true }
+redis = { version = "0.27", features = ["tokio-comp", "connection-manager"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+rustls-pemfile = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+sqlx = { version = "0.8", optional = true, default-features = false, features = [
+    "runtime-tokio",
+    "macros",
+    "migrate",
+    "sqlite",
+    "postgres",
+    "tls-rustls",
+] }
+tiktoken-rs = "0.5"
+tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "process", "rt", "rt-multi-thread", "signal"] }
+tokio-stream = { version = "0.1", features = ["time"] }
+tokio-tungstenite = "0.24"
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring", "tls12"] }
+tracing = "0.1"
+urlencoding = "2"
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+rcgen = "0.13"
+tempfile = "3"
+wat = "1"

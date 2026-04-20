@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observability - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Observability</h1>
+                    <p class="lead">Monitor, trace, and log your AI traffic</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Observability Overview -->
+    <section class="observability-overview py-12">
+        <div class="container">
+            <h2 class="mb-6">Observability Features</h2>
+            <p>Panda provides comprehensive observability tools to help you monitor and debug your AI traffic.</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Metrics</h3>
+                            <p class="card-text">Prometheus-compatible metrics for monitoring Panda's performance and usage.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Request counts and latencies</li>
+                                <li class="mb-2">• Token usage (TPM)</li>
+                                <li class="mb-2">• Cache hit/miss rates</li>
+                                <li class="mb-2">• Plugin execution times</li>
+                                <li class="mb-2">• Error rates and types</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Tracing</h3>
+                            <p class="card-text">OpenTelemetry tracing for end-to-end request visibility.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Distributed tracing</li>
+                                <li class="mb-2">• Request lifecycle spans</li>
+                                <li class="mb-2">• Upstream request tracking</li>
+                                <li class="mb-2">• MCP tool execution tracing</li>
+                                <li class="mb-2">• Plugin execution tracing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Logging</h3>
+                            <p class="card-text">Structured JSON logging for detailed operational insights.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Request/response details</li>
+                                <li class="mb-2">• Error messages and stack traces</li>
+                                <li class="mb-2">• Plugin execution events</li>
+                                <li class="mb-2">• Token usage information</li>
+                                <li class="mb-2">• Configuration changes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics -->
+    <section class="metrics py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Metrics</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Metrics Endpoint</h3>
+                    <p>Panda exposes metrics in Prometheus text format at the <code>/metrics</code> endpoint.</p>
+                    <pre><code># Example: Accessing metrics
+curl http://localhost:8080/metrics
+
+# With authentication (if enabled)
+curl -H "x-panda-admin-secret: $PANDA_OPS_SECRET" http://localhost:8080/metrics</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Key Metrics</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <code>panda_http_requests_total</code> - Total HTTP requests</li>
+                        <li class="mb-2">• <code>panda_http_request_duration_seconds</code> - Request duration histogram</li>
+                        <li class="mb-2">• <code>panda_tpm_tokens_total</code> - Total tokens processed</li>
+                        <li class="mb-2">• <code>panda_semantic_cache_hits_total</code> - Cache hits</li>
+                        <li class="mb-2">• <code>panda_semantic_cache_misses_total</code> - Cache misses</li>
+                        <li class="mb-2">• <code>panda_plugin_execution_duration_seconds</code> - Plugin execution time</li>
+                        <li class="mb-2">• <code>panda_mcp_tool_calls_total</code> - MCP tool calls</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-12">
+                    <h3>Prometheus Configuration</h3>
+                    <pre><code># prometheus.yml
+scrape_configs:
+  - job_name: 'panda'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['panda:8080']
+    # If authentication is enabled
+    basic_auth:
+      username: ''
+      password: 'your-secret'
+    # Or custom headers
+    headers:
+      x-panda-admin-secret: 'your-secret'</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracing -->
+    <section class="tracing py-12">
+        <div class="container">
+            <h2 class="mb-6">Tracing</h2>
+            <p>Panda supports OpenTelemetry tracing for distributed request tracking.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Configuration</h3>
+                    <p>Set the following environment variables to enable tracing:</p>
+                    <pre><code>export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+export PANDA_OTEL_SERVICE_NAME=panda-gateway
+export PANDA_OTEL_TRACE_SAMPLING_RATIO=0.2</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Supported Backends</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Jaeger</li>
+                        <li class="mb-2">• Grafana Tempo</li>
+                        <li class="mb-2">• Zipkin</li>
+                        <li class="mb-2">• Cloud APM services (AWS X-Ray, Google Cloud Trace, etc.)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-12">
+                    <h3>Trace Example</h3>
+                    <p>A typical trace will include spans for:</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Request reception</li>
+                        <li class="mb-2">• Authentication and authorization</li>
+                        <li class="mb-2">• Plugin execution</li>
+                        <li class="mb-2">• Semantic cache lookup</li>
+                        <li class="mb-2">• Upstream request</li>
+                        <li class="mb-2">• MCP tool calls (if applicable)</li>
+                        <li class="mb-2">• Response preparation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logging -->
+    <section class="logging py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Logging</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Log Configuration</h3>
+                    <p>Set the log level using the <code>RUST_LOG</code> environment variable:</p>
+                    <pre><code># Basic logging
+RUST_LOG=info cargo run -p panda-server -- panda.yaml
+
+# Debug logging
+RUST_LOG=debug cargo run -p panda-server -- panda.yaml
+
+# Trace logging (very verbose)
+RUST_LOG=trace cargo run -p panda-server -- panda.yaml</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Log Format</h3>
+                    <p>Panda uses structured JSON logging by default:</p>
+                    <pre><code>{
+  "timestamp": "2023-10-01T12:00:00Z",
+  "level": "INFO",
+  "message": "Request completed",
+  "fields": {
+    "path": "/v1/chat/completions",
+    "method": "POST",
+    "status": 200,
+    "duration_ms": 1234,
+    "tokens": 456,
+    "model": "gpt-4o-mini",
+    "cache_hit": false
+  }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Console -->
+    <section class="developer-console py-12">
+        <div class="container">
+            <h2 class="mb-6">Developer Console</h2>
+            <p>The Developer Console provides a live debug UI for monitoring request flow and MCP activity.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Enabling the Console</h3>
+                    <pre><code># Enable the developer console
+PANDA_DEV_CONSOLE_ENABLED=true cargo run -p panda-server -- panda.yaml
+
+# Access the console at:
+# http://localhost:8080/console</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Console Features</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Real-time request monitoring</li>
+                        <li class="mb-2">• MCP tool activity visualization</li>
+                        <li class="mb-2">• Token usage tracking</li>
+                        <li class="mb-2">• Plugin execution details</li>
+                        <li class="mb-2">• Cache hit/miss information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Health Endpoints -->
+    <section class="health-endpoints py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Health Endpoints</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">/health</h3>
+                            <p class="card-text">Liveness probe - indicates if the process is running.</p>
+                            <pre><code>$ curl http://localhost:8080/health
+{"status": "ok"}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">/ready</h3>
+                            <p class="card-text">Readiness probe - indicates if Panda is ready to accept requests.</p>
+                            <pre><code>$ curl http://localhost:8080/ready
+{"status": "ready"}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">/tpm/status</h3>
+                            <p class="card-text">Token budget status and usage information.</p>
+                            <pre><code>$ curl http://localhost:8080/tpm/status
+{"budgets": {...}}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">/mcp/status</h3>
+                            <p class="card-text">MCP tool server status and activity.</p>
+                            <pre><code>$ curl http://localhost:8080/mcp/status
+{"servers": {...}}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">/metrics</h3>
+                            <p class="card-text">Prometheus metrics endpoint.</p>
+                            <pre><code>$ curl http://localhost:8080/metrics
+# HELP panda_http_requests_total Total HTTP requests
+# TYPE panda_http_requests_total counter
+panda_http_requests_total{method="POST",path="/v1/chat/completions"} 123</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Examples -->
+    <section class="integration-examples py-12">
+        <div class="container">
+            <h2 class="mb-6">Integration Examples</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Grafana Dashboard</h3>
+                    <p>Create a Grafana dashboard to visualize Panda metrics:</p>
+                    <pre><code># 1. Add Prometheus as a data source in Grafana
+
+# 2. Create a dashboard with panels for:
+- Request rate and latency
+- Token usage (TPM)
+- Cache hit/miss rate
+- Error rates
+- MCP tool calls</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Datadog Integration</h3>
+                    <p>Configure Datadog to collect Panda metrics:</p>
+                    <pre><code># datadog.yaml
+prometheus_check:
+  instances:
+    - prometheus_url: http://panda:8080/metrics
+      headers:
+        x-panda-admin-secret: your-secret
+      namespace: panda
+      metrics:
+        - panda_http_requests_total
+        - panda_tpm_tokens_total
+        - panda_semantic_cache_hits_total</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
