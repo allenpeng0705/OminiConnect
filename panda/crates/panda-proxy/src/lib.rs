@@ -5058,8 +5058,8 @@ fn extract_tool_names(raw: &[u8]) -> Vec<String> {
         .unwrap_or_default()
 }
 
-/// Construct an OpenAI-compatible response from a hybrid inference local LLM response.
-fn construct_hybrid_local_response(
+/// Construct an OpenAI-compatible response from a hybrid inference response.
+fn construct_hybrid_response(
     content: omni_hybrid_inference::ResponseContent,
     correlation_id: &str,
     config: &PandaConfig,
@@ -5110,9 +5110,33 @@ fn construct_hybrid_local_response(
             );
             Ok(out)
         }
-        omni_hybrid_inference::ResponseContent::Cloud(_) => Err(ProxyError::Upstream(
-            anyhow::anyhow!("cloud response in hybrid local path"),
-        )),
+        omni_hybrid_inference::ResponseContent::Cloud(cloud_response) => {
+            // Return the cloud response directly (already called by hybrid router)
+            let mut out = Response::builder()
+                .status(StatusCode::OK)
+                .header("content-type", "application/json; charset=utf-8")
+                .header("x-panda-hybrid-inference", "cloud")
+                .body(
+                    Full::new(bytes::Bytes::from(cloud_response.to_string()))
+                        .map_err(|never: std::convert::Infallible| match never {})
+                        .boxed_unsync(),
+                )
+                .map_err(|e| ProxyError::Upstream(anyhow::anyhow!("hybrid cloud response: {e}")))?;
+            // Add correlation ID header
+            let corr_name = http::header::HeaderName::from_bytes(
+                config.observability.correlation_header.as_bytes(),
+            )
+            .map_err(|_| {
+                ProxyError::Upstream(anyhow::anyhow!("correlation header name"))
+            })?;
+            out.headers_mut().insert(
+                corr_name,
+                http::header::HeaderValue::from_str(correlation_id).map_err(|_| {
+                    ProxyError::Upstream(anyhow::anyhow!("correlation id header value"))
+                })?,
+            );
+            Ok(out)
+        }
     }
 }
 
@@ -7584,20 +7608,13 @@ async fn forward_to_upstream(
 
                     match router.route(hybrid_ctx, messages).await {
                         Ok(response) => {
-                            match response.target {
-                                omni_hybrid_inference::RouteTarget::Local => {
-                                    // Return local response directly (bypass upstream and semantic routing)
-                                    return construct_hybrid_local_response(
-                                        response.content,
-                                        &ctx.correlation_id,
-                                        state.config.as_ref(),
-                                    );
-                                }
-                                omni_hybrid_inference::RouteTarget::Cloud(_) => {
-                                    // Log and continue with normal flow
-                                    tracing::debug!("hybrid inference routed to cloud");
-                                }
-                            }
+                            // Return hybrid response directly (bypasses Panda's upstream routing)
+                            // The hybrid router has already called local or cloud and we use that response
+                            return construct_hybrid_response(
+                                response.content,
+                                &ctx.correlation_id,
+                                state.config.as_ref(),
+                            );
                         }
                         Err(e) => {
                             tracing::warn!("hybrid inference routing failed: {e}");
