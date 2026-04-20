@@ -141,7 +141,7 @@ fn scenario_d_repo_root_panda_yaml_parses() {
     );
     assert_eq!(
         cfg.effective_backend_base("/v1/embeddings"),
-        "http://127.0.0.1:5023"
+        "http://127.0.0.1:5066"
     );
     let enabled_servers: Vec<_> = cfg
         .mcp
