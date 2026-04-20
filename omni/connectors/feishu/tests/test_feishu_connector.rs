@@ -1,6 +1,6 @@
 //! Unit tests for Feishu connector
 
-use omni_connector_feishu::{FeishuTool, tools::FeishuTool as ToolDef};
+use omni_connector_feishu::FeishuTool;
 
 #[test]
 fn test_feishu_tools_list() {

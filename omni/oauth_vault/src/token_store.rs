@@ -1,6 +1,6 @@
 //! Token storage trait and in-memory implementation.
 
-use crate::{OAuthError, OAuthToken};
+use crate::OAuthToken;
 use async_trait::async_trait;
 use std::sync::Arc;
 

@@ -13,7 +13,6 @@
 //! ```
 
 use std::sync::Arc;
-use std::collections::HashMap;
 
 pub mod platform;
 pub mod platforms;

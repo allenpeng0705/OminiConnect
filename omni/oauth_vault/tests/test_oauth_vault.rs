@@ -53,7 +53,7 @@ async fn test_token_expiry_check() {
     use omni_oauth_vault::OAuthVault;
 
     let store = Arc::new(TokenStore::in_memory());
-    let vault = OAuthVault::new(store);
+    let _vault = OAuthVault::new(store);
 
     let expired_token = OAuthToken {
         platform: "feishu".to_string(),
