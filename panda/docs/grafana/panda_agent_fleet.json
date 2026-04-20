@@ -1,0 +1,131 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [{ "expr": "sum(panda_mcp_agent_max_rounds_exceeded_total)", "legendFormat": "max_rounds", "refId": "A" }],
+      "title": "MCP max tool rounds exceeded (sum)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [{ "expr": "panda_mcp_agent_intent_tools_filtered_total", "legendFormat": "filtered", "refId": "A" }],
+      "title": "Intent tools filtered (counter)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "id": 3,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [{ "expr": "sum(panda_tpm_budget_rejected_total)", "legendFormat": "rejected", "refId": "A" }],
+      "title": "TPM budget rejected (sum)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "id": 4,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum by (server, tool) (rate(panda_mcp_tool_cache_hit_total[5m]))", "legendFormat": "hit {{server}}/{{tool}}", "refId": "A" },
+        { "expr": "sum by (server, tool) (rate(panda_mcp_tool_cache_miss_total[5m]))", "legendFormat": "miss {{server}}/{{tool}}", "refId": "B" }
+      ],
+      "title": "Tool-result cache hit/miss rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "id": 5,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum by (event, target) (rate(panda_semantic_routing_events_total[5m]))", "legendFormat": "{{event}} {{target}}", "refId": "A" }
+      ],
+      "title": "Semantic routing events",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "id": 6,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum(rate(panda_semantic_cache_hit_total[5m]))", "legendFormat": "hit", "refId": "A" },
+        { "expr": "sum(rate(panda_semantic_cache_miss_total[5m]))", "legendFormat": "miss", "refId": "B" },
+        { "expr": "sum(rate(panda_semantic_cache_store_total[5m]))", "legendFormat": "store", "refId": "C" }
+      ],
+      "title": "Semantic cache (rates)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "id": 7,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum by (bucket_class) (rate(panda_tpm_budget_rejected_total[5m]))", "legendFormat": "{{bucket_class}}", "refId": "A" }
+      ],
+      "title": "TPM budget rejected by bucket_class",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 20 },
+      "id": 8,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
+      "targets": [
+        { "expr": "sum by (server, tool) (rate(panda_mcp_tool_cache_store_total[5m]))", "legendFormat": "store {{server}}/{{tool}}", "refId": "A" },
+        { "expr": "sum by (server, tool, reason) (rate(panda_mcp_tool_cache_bypass_total[5m]))", "legendFormat": "bypass {{server}}/{{tool}} {{reason}}", "refId": "B" }
+      ],
+      "title": "Tool-result cache store & bypass (rates)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["panda", "agents", "mcp"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+        "hide": 0,
+        "label": "Datasource",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Panda agent fleet",
+  "uid": "panda-agent-fleet",
+  "version": 2,
+  "weekStart": ""
+}

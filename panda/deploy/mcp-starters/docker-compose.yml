@@ -1,0 +1,38 @@
+# One-click-ish MCP lab: Panda + PostgreSQL + npx MCP servers (stdio inside the Panda container).
+# Run from repo root:
+#   docker compose -f deploy/mcp-starters/docker-compose.yml up --build
+#
+# Required: OPENAI_API_KEY in .env (or environment). Optional: GITHUB_PERSONAL_ACCESS_TOKEN.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: panda
+      POSTGRES_PASSWORD: panda
+      POSTGRES_DB: panda
+    volumes:
+      - panda_mcp_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U panda -d panda"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  panda:
+    build:
+      context: ../..
+      dockerfile: deploy/mcp-starters/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_PERSONAL_ACCESS_TOKEN:-}
+    volumes:
+      - ./workspace:/workspace:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  panda_mcp_pg:

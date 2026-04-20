@@ -1,0 +1,31 @@
+# E2E smoke: ingress MCP on /mcp + egress http_tool -> mock_corp_api.py
+# Generate: sed -e "s/@MOCK_PORT@/18081/g" -e "s/@PANDA_PORT@/18080/g" panda.e2e.yaml.template > /tmp/panda.e2e.yaml
+
+listen: "127.0.0.1:@PANDA_PORT@"
+upstream: "http://127.0.0.1:1"
+
+api_gateway:
+  ingress:
+    enabled: true
+  egress:
+    enabled: true
+    timeout_ms: 5000
+    pool_idle_timeout_ms: 0
+    corporate:
+      default_base: "http://127.0.0.1:@MOCK_PORT@"
+    allowlist:
+      allow_hosts: ["127.0.0.1:@MOCK_PORT@"]
+      allow_path_prefixes: ["/allowed"]
+
+mcp:
+  enabled: true
+  advertise_tools: true
+  fail_open: true
+  tool_timeout_ms: 30000
+  servers:
+    - name: corpapi
+      enabled: true
+      http_tool:
+        path: /allowed/toolpath
+        method: GET
+        tool_name: fetch

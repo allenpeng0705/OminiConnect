@@ -1,0 +1,128 @@
+listen: 127.0.0.1:8080
+default_backend: "http://127.0.0.1:9999"
+
+routes:
+  - path_prefix: /v1/chat
+    backend_base: "http://127.0.0.1:9999"
+    type: openai
+    mcp_advertise_tools: true
+    rate_limit:
+      rps: 300
+    tpm_limit: 800000
+    semantic_cache: true
+
+  - path_prefix: /v1
+    backend_base: "http://127.0.0.1:9999"
+    type: openai
+    mcp_advertise_tools: false
+    rate_limit:
+      rps: 200
+
+  - path_prefix: /mcp
+    backend: mcp
+    backend_base: "http://127.0.0.1:5023"
+
+control_plane:
+  enabled: false
+  path_prefix: /ops/control
+  store:
+    kind: memory
+
+api_gateway:
+  ingress:
+    enabled: true
+    routes:
+      - path_prefix: /health
+        backend: ops
+      - path_prefix: /metrics
+        backend: ops
+        rate_limit:
+          rps: 10
+      - path_prefix: /v1
+        backend: ai
+        rate_limit:
+          rps: 50
+      - path_prefix: /mcp
+        backend: mcp
+        rate_limit:
+          rps: 50
+      - path_prefix: /test/deny
+        backend: deny
+  egress:
+    enabled: true
+    timeout_ms: 5000
+    pool_idle_timeout_ms: 0
+    corporate:
+      default_base: "http://127.0.0.1:18081"
+    allowlist:
+      allow_hosts: ["127.0.0.1:18081"]
+      allow_path_prefixes: ["/allowed", "/corp", "/api", "/v1"]
+
+mcp:
+  enabled: true
+  advertise_tools: false
+  fail_open: true
+  tool_timeout_ms: 30000
+  tool_cache:
+    enabled: true
+    backend: memory
+    default_ttl_seconds: 300
+    max_value_bytes: 65536
+    allow:
+      - server: corpapi
+        tool: fetch
+        ttl_seconds: 60
+      - server: corp
+        tool: from_a
+        ttl_seconds: 30
+  proof_of_intent_mode: "audit"
+  intent_tool_policies:
+    - intent: "data_read"
+      allowed_tools:
+        - "mcp_corpapi_fetch"
+        - "mcp_corp_from_a"
+        - "mcp_inventory_health"
+    - intent: "data_write"
+      allowed_tools:
+        - "mcp_corp_from_b"
+    - intent: "general"
+      allowed_tools:
+        - "mcp_edge_hi"
+  servers:
+    - name: corpapi
+      enabled: true
+      http_tool:
+        path: /allowed/toolpath
+        method: GET
+        tool_name: fetch
+    - name: corp
+      enabled: true
+      http_tools:
+        - path: /corp/service-a
+          method: GET
+          tool_name: from_a
+        - path: /corp/service-b
+          method: GET
+          tool_name: from_b
+    - name: inventory
+      enabled: true
+      http_tool:
+        path: /v1/status
+        method: GET
+        tool_name: health
+    - name: edge
+      enabled: true
+      http_tool:
+        path: /api/hi
+        method: GET
+        tool_name: hi
+
+observability:
+  prometheus:
+    enabled: true
+
+tpm:
+  enabled: false
+
+semantic_cache:
+  enabled: true

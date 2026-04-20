@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Architecture</h1>
+                    <p class="lead">A deep dive into Panda's design and components</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Architecture Overview -->
+    <section class="architecture-overview py-12">
+        <div class="container">
+            <h2 class="mb-6">Overall Architecture</h2>
+            <p>Panda is designed with a four-layer architecture that handles AI traffic efficiently and securely. Each layer has a specific responsibility, allowing for modularity and extensibility.</p>
+            
+            <div class="mb-8">
+                <div class="mermaid-diagram rounded-lg shadow-lg">
+                    <div class="mermaid">
+flowchart TD
+  C["Clients and Agent SDKs"]
+
+  subgraph EDGE["Ingress — Deployment Patterns"]
+    E1["Standalone: clients → Panda"]
+    E2["With KONG or edge: AI routes → Panda"]
+  end
+
+  C --> E1
+  C --> E2
+
+  E1 --> P
+  E2 --> P
+
+  subgraph PANDA["Panda Gateway"]
+    I["Ingress (Mouth)\nAccept connections, normalize protocols"]
+    S["Shield (Bamboo)\nSecurity, PII masking, Identity"]
+    X["Brain (Intelligence)\nIntent routing, semantic cache, MCP"]
+    A["Egress (Hands)\nAdapters, streaming, backends"]
+    I --> S --> X --> A
+  end
+
+  P["Panda HTTP Listener"] --> I
+
+  subgraph STATEFUL["State & Observability"]
+    R["Redis (optional)\nTPM, semantic cache"]
+    PM["Prometheus\nMetrics"]
+    OT["OpenTelemetry\nTraces"]
+    OPS["Ops HTTP\n/health, /ready, /mcp/status"]
+  end
+
+  X <--> R
+  P --> PM
+  P --> OT
+  P --> OPS
+
+  subgraph PROVIDERS["Model Providers"]
+    OAI["OpenAI / Azure OpenAI"]
+    DS["DeepSeek / Qwen / MiniMax"]
+    ANT["Anthropic"]
+    LOC["Local: Ollama / vLLM / TGI"]
+  end
+
+  A --> OAI
+  A --> DS
+  A --> ANT
+  A --> LOC
+
+  X --> TOOLS["MCP Tool Servers\nPostgres, Slack, RAG, custom"]
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-12 mb-6">Four-Layer Design</h3>
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">1. Ingress Layer ("The Mouth")</h4>
+                            <p class="card-text">Accepts high concurrency connections and normalizes inbound protocols into an internal Panda standard representation.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li><strong>Runtime:</strong> Async I/O with Tokio, HTTP with Hyper</li>
+                                <li><strong>Protocol Support:</strong> OpenAI-compatible REST (including streaming), gRPC, MCP-over-SSE</li>
+                                <li><strong>Responsibilities:</strong> Connection lifecycle, backpressure, timeouts, early request validation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">2. Shield Layer ("The Bamboo")</h4>
+                            <p class="card-text">Security and hygiene before expensive or risky downstream work.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li><strong>Prompt-injection firewall:</strong> Inspects inbound text for attempts to override system policy</li>
+                                <li><strong>PII masking:</strong> Detects and redacts sensitive information in near real time</li>
+                                <li><strong>Identity exchange:</strong> Validates enterprise OIDC/JWTs and maps identities to scopes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">3. Intelligence Layer ("The Brain")</h4>
+                            <p class="card-text">Intent, routing, reuse, and tool surfacing.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li><strong>Intent router:</strong> Classifies prompts and routes to the best-fit model</li>
+                                <li><strong>Semantic cache:</strong> Vector similarity over prompts to skip redundant LLM calls</li>
+                                <li><strong>MCP aggregator:</strong> Maintains connections to multiple MCP servers and exposes a unified tool surface</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">4. Egress Layer ("The Hands")</h4>
+                            <p class="card-text">Adapts the internal representation to each backend's reality.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li><strong>Universal adapters:</strong> Translate Panda's canonical request into vendor-specific formats</li>
+                                <li><strong>Stream emulator:</strong> Buffers and re-emits full responses as streams</li>
+                                <li><strong>Backend quotas:</strong> Enforces per-backend limits and transforms errors</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Flow -->
+    <section class="data-flow py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Data Flow</h2>
+            <div class="mb-8">
+                <div class="mermaid-diagram rounded-lg shadow-lg">
+                    <div class="mermaid">
+sequenceDiagram
+  autonumber
+  participant U as Client / Agent SDK
+  participant K as KONG / Edge (optional)
+  participant P as Panda Gateway
+  participant R as Redis (optional)
+  participant M as MCP Tool Server(s) (optional)
+  participant L as Model Provider (OpenAI/Azure/DeepSeek/Qwen/MiniMax/Anthropic/Local)
+  participant O as Prometheus / OTLP / Ops endpoints
+
+  alt Standalone deployment
+    U->>P: OpenAI-style request (e.g. /v1/chat/completions)
+  else With KONG or existing edge
+    U->>K: Request to edge route
+    K->>P: Forward AI path + trusted identity headers
+  end
+
+  P->>P: Ingress auth/routing + policy checks (JWT/JWKS, safety, PII, Wasm)
+  P->>R: Read/update TPM and cache state (optional)
+  R-->>P: Budget/cache result
+
+  opt MCP tool orchestration needed
+    P->>L: Initial model call (tool planning)
+    L-->>P: Tool calls in response
+    P->>M: Execute approved tool(s)
+    M-->>P: Tool result payload(s)
+    P->>L: Follow-up model call with tool outputs
+  end
+
+  alt Enterprise failover enabled and hop fails (5xx/429/timeout)
+    P->>L: Retry next parity backend (ordered chain)
+  end
+
+  L-->>P: Final response (JSON or SSE stream)
+  P-->>U: OpenAI-shaped response (stream preserved when enabled)
+
+  P->>O: Emit metrics/logs/traces and status updates
+                    </div>
+                </div>
+            </div>
+            <h3 class="mt-8 mb-4">Request Lifecycle</h3>
+            <ol class="list-unstyled">
+                <li class="mb-3"><strong>Ingress:</strong> Client sends an OpenAI-style request (e.g., /v1/chat/completions)</li>
+                <li class="mb-3"><strong>Authentication:</strong> JWT/JWKS validation and identity mapping</li>
+                <li class="mb-3"><strong>Policy Checks:</strong> Prompt safety, PII scrubbing, Wasm plugin execution</li>
+                <li class="mb-3"><strong>Budget Check:</strong> TPM validation and semantic cache lookup</li>
+                <li class="mb-3"><strong>Model Routing:</strong> Intent classification and backend selection</li>
+                <li class="mb-3"><strong>Tool Orchestration:</strong> MCP tool calls if needed</li>
+                <li class="mb-3"><strong>Upstream Request:</strong> Forward to model provider with appropriate adapter</li>
+                <li class="mb-3"><strong>Response Handling:</strong> Stream management and error transformation</li>
+                <li class="mb-3"><strong>Observability:</strong> Metrics, logs, and traces emission</li>
+                <li class="mb-3"><strong>Client Response:</strong> Return OpenAI-shaped response to client</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Rust Crates -->
+    <section class="rust-crates py-12">
+        <div class="container">
+            <h2 class="mb-6">Rust Crates Structure</h2>
+            <p>Panda is organized as a Cargo workspace with multiple crates, each with a specific responsibility:</p>
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">panda-config</h4>
+                            <p class="card-text">Types, validation, and YAML load for listener address, upstream base URL, and future routes/plugins—no socket I/O.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">panda-proxy</h4>
+                            <p class="card-text">Async HTTP server (Tokio + Hyper); streaming reverse proxy; KONG handshake; in-memory TPM hint.</p>
+                            <ul class="list-unstyled mt-2">
+                                <li>• api_gateway/ingress.rs - Ingress pipeline, route table</li>
+                                <li>• api_gateway/egress.rs - Egress client, pools, allowlist</li>
+                                <li>• inbound/mcp.rs - MCP runtime</li>
+                                <li>• inbound/mcp_stdio.rs - Stdio MCP client</li>
+                                <li>• inbound/mcp_http_tool.rs - HTTP tool client</li>
+                                <li>• inbound/mcp_http_remote.rs - Remote MCP client</li>
+                                <li>• inbound/mcp_http_ingress.rs - MCP HTTP ingress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">panda-server</h4>
+                            <p class="card-text">Thin binary crate; wires config path (CLI) → panda-config → panda-proxy::run.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h4 class="card-title">panda-wasm</h4>
+                            <p class="card-text">Wasmtime-based plugin host and guest ABI for extensibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Philosophy -->
+    <section class="design-philosophy py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Design Philosophy</h2>
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Key Principles</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Stateless Core:</strong> No local database required in the default data plane
+                        </li>
+                        <li class="mb-3">
+                            <strong>Stream-native:</strong> Built for the LLM "typewriter" effect (SSE and kin)
+                        </li>
+                        <li class="mb-3">
+                            <strong>Wasm extensibility:</strong> Plugin-first customization without Lua lock-in
+                        </li>
+                        <li class="mb-3">
+                            <strong>Intent-aware:</strong> Security and routing that reason about meaning, not only paths
+                        </li>
+                        <li class="mb-3">
+                            <strong>The layered play:</strong> Designed to sit behind or beside KONG-class gateways
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Strategic Differentiation</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Target</th>
+                                <th>Panda Emphasis</th>
+                                <th>Typical Gap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Simplicity</td>
+                                <td>Single binary, no mandatory control plane database</td>
+                                <td>Heavier dependency stacks or embedded script runtimes</td>
+                            </tr>
+                            <tr>
+                                <td>Cost control</td>
+                                <td>Token-based limits (TPM) + semantic cache</td>
+                                <td>Often RPS-oriented metering only</td>
+                            </tr>
+                            <tr>
+                                <td>Extensibility</td>
+                                <td>Rust + Wasm plugins (including Go support)</td>
+                                <td>Historic Lua-centric extension models</td>
+                            </tr>
+                            <tr>
+                                <td>Observability</td>
+                                <td>Intent- and tool-centric audit logs</td>
+                                <td>URL- and status-centric access logs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#e1f5fe',
+                primaryTextColor: '#01579b',
+                primaryBorderColor: '#0288d1',
+                lineColor: '#0288d1',
+                secondaryColor: '#f3e5f5',
+                tertiaryColor: '#fff',
+                background: '#ffffff',
+                mainBkg: '#ffffff',
+                clusterBkg: '#ffffff',
+                altSectionBkg: '#ffffff',
+                gridColor: '#e0e0e0'
+            }
+        });
+    </script>
+</body>
+</html>

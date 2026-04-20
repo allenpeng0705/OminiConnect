@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Security</h1>
+                    <p class="lead">Protect your AI systems with comprehensive security features</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Security Overview -->
+    <section class="security-overview py-12">
+        <div class="container">
+            <h2 class="mb-6">Security Features</h2>
+            <p>Panda provides a comprehensive set of security features to protect your AI systems and data.</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Authentication</h3>
+                            <p class="card-text">Secure authentication mechanisms to control access to your AI services.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• JWT/JWKS validation</li>
+                                <li class="mb-2">• Trusted gateway headers</li>
+                                <li class="mb-2">• API key support</li>
+                                <li class="mb-2">• Admin endpoint protection</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Authorization</h3>
+                            <p class="card-text">Fine-grained access control to ensure users and applications only access what they're allowed to.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• JWT scope validation</li>
+                                <li class="mb-2">• Per-route access control</li>
+                                <li class="mb-2">• Tool call authorization</li>
+                                <li class="mb-2">• Rate limiting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Data Protection</h3>
+                            <p class="card-text">Protect sensitive data in transit and at rest.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• TLS termination</li>
+                                <li class="mb-2">• PII detection and redaction</li>
+                                <li class="mb-2">• Encrypted configuration</li>
+                                <li class="mb-2">• Secure secret management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication -->
+    <section class="authentication py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Authentication</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>JWT Authentication</h3>
+                    <p>Configure JWT authentication in panda.yaml:</p>
+                    <pre><code>identity:
+  # Require JWT for all requests
+  require_jwt: true
+  # HS256 secret (from environment)
+  jwt_hs256_secret_env: "PANDA_JWT_SECRET"
+  # JWKS URL for RS256 tokens
+  jwt_jwks_url: "https://auth.example.com/.well-known/jwks.json"
+  # Expected audience
+  jwt_audience: "panda-api"
+  # Expected issuer
+  jwt_issuer: "https://auth.example.com"
+  # Claims mapping
+  jwt_claims:
+    subject: "sub"
+    scopes: "scp"
+    email: "email"</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Trusted Gateway</h3>
+                    <p>When running behind KONG or another API gateway:</p>
+                    <pre><code>trusted_gateway:
+  # Attestation header name
+  attestation_header: "x-panda-gateway-attestation"
+  # Identity header name
+  identity_header: "x-user-id"
+  # Scopes header name
+  scopes_header: "x-user-scopes"
+  # Secret for attestation (from environment)
+  secret_env: "PANDA_TRUSTED_GATEWAY_SECRET"
+
+# Environment variable
+export PANDA_TRUSTED_GATEWAY_SECRET="your-secret-key"</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authorization -->
+    <section class="authorization py-12">
+        <div class="container">
+            <h2 class="mb-6">Authorization</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Scope-Based Authorization</h3>
+                    <p>Panda can validate JWT scopes to control access to specific routes:</p>
+                    <pre><code>routes:
+  - path: "/v1/chat/completions"
+    methods: ["POST"]
+    required_scopes: ["chat:completions"]
+  - path: "/v1/embeddings"
+    methods: ["POST"]
+    required_scopes: ["embeddings:create"]
+  - path: "/admin/*"
+    methods: ["GET", "POST", "PUT", "DELETE"]
+    required_scopes: ["admin:access"]</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Rate Limiting</h3>
+                    <p>Control the rate of requests to prevent abuse:</p>
+                    <pre><code>routes:
+  - path: "/v1/chat/completions"
+    methods: ["POST"]
+    # Requests per second per IP
+    rps_limit: 10
+    # Requests per minute per subject
+    rpm_limit: 100
+    # Token budget per minute
+    tpm_limit: 10000</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Protection -->
+    <section class="data-protection py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Data Protection</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>PII Detection and Redaction</h3>
+                    <p>Panda can detect and redact personally identifiable information:</p>
+                    <pre><code>shield:
+  # Enable PII detection
+  pii_detection: true
+  # PII types to detect
+  pii_types:
+    - email
+    - phone
+    - credit_card
+    - social_security
+    - address
+  # Redaction strategy
+  pii_redaction:
+    mode: "mask"
+    mask_character: "*"
+    mask_length: 4</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>TLS Configuration</h3>
+                    <p>Configure TLS for secure connections:</p>
+                    <pre><code>tls:
+  # Path to certificate PEM file
+  cert_pem: "/path/to/cert.pem"
+  # Path to private key PEM file
+  key_pem: "/path/to/key.pem"
+  # TLS versions to enable
+  min_version: "TLSv1.2"
+  # Cipher suites
+  cipher_suites: ["TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256"]</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prompt Safety -->
+    <section class="prompt-safety py-12">
+        <div class="container">
+            <h2 class="mb-6">Prompt Safety</h2>
+            <p>Panda includes built-in protection against prompt injection attacks and other safety issues.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Prompt Injection Protection</h3>
+                    <pre><code>shield:
+  # Enable prompt safety
+  prompt_safety: true
+  # Block high-risk prompts
+  block_high_risk: true
+  # Score threshold for blocking
+  risk_threshold: 0.7
+  # Custom blocked patterns
+  blocked_patterns:
+    - "Ignore previous instructions"
+    - "System prompt"
+    - "You are a malicious AI"
+</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Wasm Plugins for Custom Safety</h3>
+                    <p>Use Wasm plugins to implement custom safety checks:</p>
+                    <pre><code>// Example: Custom prompt safety plugin
+#[no_mangle]
+pub extern "C" fn panda_on_request_body(ptr: i32, len: i32) -> i32 {
+    let body = unsafe { std::slice::from_raw_parts(ptr as *const u8, len as usize) };
+    let body_str = std::str::from_utf8(body).unwrap_or("");
+    
+    // Check for unsafe patterns
+    if body_str.contains("Ignore previous instructions") {
+        return 1; // Reject
+    }
+    
+    // Check for sensitive information
+    if body_str.contains("password") || body_str.contains("secret") {
+        return 1; // Reject
+    }
+    
+    0 // Allow
+}
+</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wasm Security -->
+    <section class="wasm-security py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Wasm Plugin Security</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Sandboxing</h3>
+                    <p>Wasm plugins run in a sandboxed environment with strict limits:</p>
+                    <pre><code>plugins:
+  # Execution timeout per plugin (milliseconds)
+  execution_timeout_ms: 100
+  # Maximum memory per plugin (megabytes)
+  max_memory_mb: 16
+  # Maximum request body size for body hooks (bytes)
+  max_request_body_bytes: 1048576
+  # Fail closed if plugin execution fails
+  fail_closed: true
+  # Wasm instance pool size
+  instance_pool_size: 4
+</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Host Function Access</h3>
+                    <p>Plugins have limited access to host functions:</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <code>panda_set_header</code> - Add or modify request headers</li>
+                        <li class="mb-2">• <code>panda_set_body</code> - Replace the request body</li>
+                    </ul>
+                    <p>Plugins cannot access the file system, network, or other system resources.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Best Practices -->
+    <section class="security-best-practices py-12">
+        <div class="container">
+            <h2 class="mb-6">Security Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Deployment Security</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Run Panda as a non-root user</li>
+                                <li class="mb-2">• Set resource limits in containers</li>
+                                <li class="mb-2">• Use a read-only filesystem where possible</li>
+                                <li class="mb-2">• Restrict network access with firewalls</li>
+                                <li class="mb-2">• Keep Panda and dependencies updated</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Configuration Security</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Use environment variables for secrets</li>
+                                <li class="mb-2">• Never commit secrets to git</li>
+                                <li class="mb-2">• Use Kubernetes Secrets or a secret manager</li>
+                                <li class="mb-2">• Rotate secrets regularly</li>
+                                <li class="mb-2">• Validate configuration before deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Operational Security</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Enable audit logging</li>
+                                <li class="mb-2">• Monitor for unusual activity</li>
+                                <li class="mb-2">• Set up alerts for security events</li>
+                                <li class="mb-2">• Perform regular security reviews</li>
+                                <li class="mb-2">• Test security controls regularly</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Threat Model -->
+    <section class="threat-model py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">Threat Model</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Potential Threats</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>Prompt injection:</strong> Malicious prompts that attempt to override system instructions</li>
+                        <li class="mb-2">• <strong>Data exfiltration:</strong> Attempts to extract sensitive information</li>
+                        <li class="mb-2">• <strong>Denial of service:</strong> Excessive requests to consume resources</li>
+                        <li class="mb-2">• <strong>Tool abuse:</strong> Unauthorized use of MCP tools</li>
+                        <li class="mb-2">• <strong>Authentication bypass:</strong> Attempts to access without valid credentials</li>
+                        <li class="mb-2">• <strong>Configuration vulnerabilities:</strong> Insecurely configured settings</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Mitigations</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>Prompt safety:</strong> Built-in protection against injection attacks</li>
+                        <li class="mb-2">• <strong>PII redaction:</strong> Automatic detection and redaction of sensitive data</li>
+                        <li class="mb-2">• <strong>Rate limiting:</strong> Control the rate of requests</li>
+                        <li class="mb-2">• <strong>Tool authorization:</strong> Validate tool calls against user intent</li>
+                        <li class="mb-2">• <strong>Strong authentication:</strong> JWT/JWKS and trusted gateway headers</li>
+                        <li class="mb-2">• <strong>Secure configuration:</strong> Best practices for secret management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

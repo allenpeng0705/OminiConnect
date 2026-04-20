@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP - Panda Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/panda-logo.svg" alt="Panda Logo" width="30" height="30" class="d-inline-block align-top me-2">
+                Panda Gateway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quickstart.html">QuickStart</a></li>
+                    <li class="nav-item"><a class="nav-link" href="architecture.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="deployment.html">Deployment</a></li>
+                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="extensibility.html">Extensibility</a></li>
+                    <li class="nav-item"><a class="nav-link" href="observability.html">Observability</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="mcp.html">MCP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="security.html">Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="roadmap.html">Roadmap</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/allenpeng0705/panda" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Model Context Protocol (MCP)</h1>
+                    <p class="lead">Tool orchestration for AI agents</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MCP Overview -->
+    <section class="mcp-overview py-12">
+        <div class="container">
+            <h2 class="mb-6">What is MCP?</h2>
+            <p>The Model Context Protocol (MCP) is Panda's mechanism for orchestrating tool calls between AI models and external services. It allows LLMs to use tools to perform actions, access data, and interact with external systems. MCP is integrated directly into the Panda gateway, providing a unified tool surface for AI agents.</p>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>Key Benefits</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• <strong>Unified tool surface:</strong> Expose multiple tools to LLMs through a single interface</li>
+                        <li class="mb-2">• <strong>Tool discovery:</strong> Automatic discovery and aggregation of tools from multiple servers</li>
+                        <li class="mb-2">• <strong>Tool call execution:</strong> Dispatch tool calls to the correct servers with timeout and payload bounds</li>
+                        <li class="mb-2">• <strong>OpenAI mapping:</strong> Automatically map MCP tools to OpenAI function calling format</li>
+                        <li class="mb-2">• <strong>Round limits:</strong> Enforce global and per-request round limits for tool use</li>
+                        <li class="mb-2">• <strong>Streaming support:</strong> Support for streaming tool responses</li>
+                        <li class="mb-2">• <strong>Security:</strong> Validate tool calls against user intent and permissions</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>How It Works</h3>
+                    <ol class="list-unstyled">
+                        <li class="mb-2">1. Client sends a request to Panda</li>
+                        <li class="mb-2">2. Panda aggregates tools from all configured MCP servers</li>
+                        <li class="mb-2">3. Panda forwards the request with available tools to the LLM</li>
+                        <li class="mb-2">4. LLM responds with tool calls</li>
+                        <li class="mb-2">5. Panda intercepts and executes the tool calls</li>
+                        <li class="mb-2">6. Panda sends the tool results back to the LLM</li>
+                        <li class="mb-2">7. LLM generates a final response based on the tool results</li>
+                        <li class="mb-2">8. Panda returns the response to the client</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP Architecture -->
+    <section class="mcp-architecture py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">MCP Architecture</h2>
+            
+            <div class="mb-8">
+                <div class="mermaid-diagram rounded-lg shadow-lg">
+                    <div class="mermaid">
+flowchart TD
+    C[Client] --> P[Panda Gateway]
+    P --> LLM[LLM Provider]
+    P --> M[MCP Runtime]
+    M --> TS1[Stdio MCP Server]
+    M --> TS2[HTTP Tool Server]
+    M --> TS3[Remote MCP Server]
+    
+    subgraph MCP[MCP Gateway]
+        M
+        TS1
+        TS2
+        TS3
+    end
+    
+    classDef default fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef highlight fill:#0288d1,stroke:#01579b,stroke-width:2px,color:white;
+    
+    class P,M highlight;
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">MCP Runtime</h3>
+                            <p class="card-text">The MCP runtime in Panda manages connections to tool servers and handles tool call orchestration.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Holds HashMap of Arc&lt;dyn McpClient&gt;</li>
+                                <li class="mb-2">• Implements list_all_tools and call_tool methods</li>
+                                <li class="mb-2">• Manages tool call timeouts and payload bounds</li>
+                                <li class="mb-2">• Enforces round limits for tool use</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">MCP Clients</h3>
+                            <p class="card-text">Different client implementations for various tool server types.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• <strong>StdioMcpClient:</strong> JSON-RPC over stdio</li>
+                                <li class="mb-2">• <strong>McpHttpRemoteClient:</strong> Remote MCP over HTTP</li>
+                                <li class="mb-2">• <strong>HttpToolClient:</strong> Declarative REST tools via egress</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">OpenAI Mapping</h3>
+                            <p class="card-text">Maps MCP tools to OpenAI function calling format.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Converts MCP tools to OpenAI tools[]</li>
+                                <li class="mb-2">• Uses mcp_{server}_{tool} naming convention</li>
+                                <li class="mb-2">• Handles function name sanitization</li>
+                                <li class="mb-2">• Supports structured tool results</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Configuring MCP -->
+    <section class="configuring-mcp py-12">
+        <div class="container">
+            <h2 class="mb-6">Configuring MCP</h2>
+            
+            <div class="row">
+                <div class="col-md-6 mb-6">
+                    <h3>MCP Configuration in panda.yaml</h3>
+                    <pre><code>mcp:
+  # Enable MCP
+  enabled: true
+  # Tool servers
+  servers:
+    - name: "stdio_server"
+      enabled: true
+      command: ["./path/to/server.py"]
+      args: ["--option", "value"]
+    - name: "http_tool_server"
+      enabled: true
+      http_tool:
+        egress_profile: internal_rest
+        base_path: /v1/api
+  # Advanced settings
+  fail_open: true
+  tool_timeout_ms: 30000
+  max_tool_payload_bytes: 1048576
+  max_tool_rounds: 10
+  advertise_tools: true
+  # Stream probe settings
+  stream_probe_bytes: 16384
+  probe_window_seconds: 60</code></pre>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Tool Execution Types</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Stdio MCP:</strong> Tool server communicates via standard input/output
+                            <pre><code># Example stdio tool server
+#!/usr/bin/env python3
+import json
+import sys
+
+while True:
+    # Read tool call from stdin
+    line = sys.stdin.readline()
+    if not line:
+        break
+    
+    # Parse tool call
+    tool_call = json.loads(line)
+    
+    # Process tool call
+    result = process_tool_call(tool_call)
+    
+    # Write result to stdout
+    print(json.dumps(result))
+    sys.stdout.flush()</code></pre>
+                        </li>
+                        <li class="mb-3">
+                            <strong>HTTP Tool (REST):</strong> Declarative REST tools via API gateway egress
+                        </li>
+                        <li class="mb-3">
+                            <strong>Remote MCP:</strong> Remote MCP server via HTTP JSON-RPC
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP Registry -->
+    <section class="mcp-registry py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">MCP Registry</h2>
+            <p class="text-center mb-8">Panda includes a registry of pre-built tool servers for common use cases.</p>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Postgres</h3>
+                            <p class="card-text">Execute SQL queries against a Postgres database.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Run SELECT queries</li>
+                                <li class="mb-2">• Execute stored procedures</li>
+                                <li class="mb-2">• Query database schema</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/panda-mcp-registry/postgres" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Slack/Discord</h3>
+                            <p class="card-text">Send messages to Slack or Discord channels.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Send text messages</li>
+                                <li class="mb-2">• Post rich content</li>
+                                <li class="mb-2">• Handle channel notifications</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/panda-mcp-registry/slack-discord" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Local RAG</h3>
+                            <p class="card-text">Retrieval-Augmented Generation with local documents.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Index local documents</li>
+                                <li class="mb-2">• Semantic search</li>
+                                <li class="mb-2">• Generate answers with context</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/panda-mcp-registry/local-rag-lite" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">GitHub Issues</h3>
+                            <p class="card-text">Manage GitHub issues and pull requests.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Create issues</li>
+                                <li class="mb-2">• List issues</li>
+                                <li class="mb-2">• Update issue status</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/panda-mcp-registry/github-issues" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Google Workspace</h3>
+                            <p class="card-text">Interact with Google Workspace services.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Read emails</li>
+                                <li class="mb-2">• Manage calendar events</li>
+                                <li class="mb-2">• Access Google Drive</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/panda-mcp-registry/google-workspace" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Custom Tools</h3>
+                            <p class="card-text">Create your own custom tool servers.</p>
+                            <ul class="list-unstyled mt-4">
+                                <li class="mb-2">• Write in any language</li>
+                                <li class="mb-2">• Follow stdio or SSE protocol</li>
+                                <li class="mb-2">• Integrate with any service</li>
+                            </ul>
+                            <a href="https://github.com/allenpeng0705/panda/tree/main/examples/mcp_stdio_minimal" class="btn btn-primary mt-4">View Example</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP in Action -->
+    <section class="mcp-in-action py-12">
+        <div class="container">
+            <h2 class="mb-6">MCP in Action</h2>
+            
+            <div class="row">
+                <div class="col-md-12 mb-6">
+                    <h3>Example: Using Postgres Tool</h3>
+                    <pre><code># 1. Configure Postgres tool server in panda.yaml
+mcp:
+  enabled: true
+  servers:
+    - name: "postgres"
+      type: "stdio"
+      command: ["./panda-mcp-registry/postgres/server.py"]
+      env:
+        - name: "DATABASE_URL"
+          value: "postgres://user:pass@localhost:5432/db"
+
+# 2. Client sends request with tool use
+def send_request():
+    response = openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant with access to a Postgres database. Use the postgres tool to query data."},
+            {"role": "user", "content": "How many users are in the database?"}
+        ],
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "postgres_query",
+                    "description": "Execute a SQL query against the database",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "SQL query to execute"
+                            }
+                        },
+                        "required": ["query"]
+                    }
+                }
+            }
+        ]
+    )
+    return response
+
+# 3. Panda intercepts tool call and executes it
+# 4. LLM receives tool result and generates response</code></pre>
+                </div>
+            </div>
+            
+            <div class="row mt-8">
+                <div class="col-md-6 mb-6">
+                    <h3>Tool Call Flow</h3>
+                    <ol class="list-unstyled">
+                        <li class="mb-2">1. LLM generates a tool call with function name and parameters</li>
+                        <li class="mb-2">2. Panda routes the tool call to the appropriate server</li>
+                        <li class="mb-2">3. Tool server executes the function and returns a result</li>
+                        <li class="mb-2">4. Panda sends the result back to the LLM</li>
+                        <li class="mb-2">5. LLM generates a final response based on the result</li>
+                    </ol>
+                </div>
+                <div class="col-md-6 mb-6">
+                    <h3>Security Considerations</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Validate tool calls against user intent</li>
+                        <li class="mb-2">• Set appropriate timeouts for tool execution</li>
+                        <li class="mb-2">• Limit tool server permissions</li>
+                        <li class="mb-2">• Monitor tool usage for异常 patterns</li>
+                        <li class="mb-2">• Use environment variables for secrets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP Best Practices -->
+    <section class="mcp-best-practices py-12 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-8">MCP Best Practices</h2>
+            
+            <div class="row">
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Tool Design</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Keep tool functions focused and specific</li>
+                                <li class="mb-2">• Provide clear descriptions for LLMs</li>
+                                <li class="mb-2">• Define well-structured parameters</li>
+                                <li class="mb-2">• Return structured, machine-readable results</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Performance</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Keep tool execution fast</li>
+                                <li class="mb-2">• Set appropriate timeouts</li>
+                                <li class="mb-2">• Use streaming for long-running tools</li>
+                                <li class="mb-2">• Cache frequently used results</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">Reliability</h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">• Handle errors gracefully</li>
+                                <li class="mb-2">• Implement retries for transient failures</li>
+                                <li class="mb-2">• Monitor tool server health</li>
+                                <li class="mb-2">• Provide clear error messages</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Panda Gateway</h4>
+                    <p>A high-performance, stateless, intent-aware gateway that combines MCP, API, and AI capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="quickstart.html" class="text-light">QuickStart</a></li>
+                        <li><a href="architecture.html" class="text-light">Architecture</a></li>
+                        <li><a href="deployment.html" class="text-light">Deployment</a></li>
+                        <li><a href="features.html" class="text-light">Features</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Resources</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="https://github.com/allenpeng0705/panda" class="text-light">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h4>Contact</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:shileipeng@gmail.com" class="text-light">shileipeng@gmail.com</a></li>
+                        <li><a href="mailto:shilei.peng@qq.com" class="text-light">shilei.peng@qq.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray mt-6 pt-6 text-center">
+                <p>&copy; 2026 Panda Gateway. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

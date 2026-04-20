@@ -1,0 +1,35 @@
+[package]
+name = "panda-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Panda gateway binary: wires config loader to proxy engine"
+
+[[bin]]
+name = "panda"
+path = "src/main.rs"
+
+[features]
+default = []
+mimalloc = ["dep:mimalloc"]
+grpc = ["dep:tonic", "dep:tonic-health"]
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive", "wrap_help"] }
+panda-config = { path = "../panda-config" }
+panda-proxy = { path = "../panda-proxy", features = ["embedded-console-ui", "control-plane-sql"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
+mimalloc = { version = "0.1", optional = true }
+tonic = { version = "0.12", optional = true }
+tonic-health = { version = "0.12", optional = true }
+opentelemetry = "0.31.0"
+opentelemetry_sdk = "0.31.0"
+opentelemetry-otlp = "0.31.1"
+tracing-opentelemetry = "0.32.1"
+
+[dev-dependencies]
+tempfile = "3"

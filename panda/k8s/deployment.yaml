@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: panda
+  labels:
+    app.kubernetes.io/name: panda
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: panda
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: panda
+    spec:
+      terminationGracePeriodSeconds: 45
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: panda
+          image: panda:0.1.0
+          imagePullPolicy: IfNotPresent
+          args: ["/etc/panda/panda.yaml"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: PANDA_SHUTDOWN_DRAIN_SECONDS
+              value: "30"
+            - name: PANDA_ADMIN_STATUS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: panda-secrets
+                  key: admin-status-secret
+                  optional: true
+            # Optional override for global TPM in multi-replica environments:
+            # - name: PANDA_REDIS_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: panda-secrets
+            #       key: redis-url
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          volumeMounts:
+            - name: panda-config
+              mountPath: /etc/panda
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: panda-config
+          configMap:
+            name: panda-config
+        - name: tmp
+          emptyDir: {}

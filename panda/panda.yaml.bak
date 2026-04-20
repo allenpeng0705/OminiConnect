@@ -1,0 +1,263 @@
+# -----------------------------------------------------------------------------# Base server settings# -----------------------------------------------------------------------------
+listen: 127.0.0.1:8080
+# Optional: override default tenant for routes and tools (empty = no default).
+# tenant_id: "default"
+# Optional: OpenAI-shaped /v1/* base URL when no per-route backend_base.
+default_backend: "http://127.0.0.1:9999"  # Non-existent backend to trigger failover
+# Optional: OpenAI-shaped /v1/* adapter type (openai or anthropic).
+# adapter: { provider: "openai" }
+
+# -----------------------------------------------------------------------------# Legacy routes (superseded by api_gateway.ingress.routes when enabled)# -----------------------------------------------------------------------------# Notes:#   - Paths match in order: longest prefix wins.#   - Uncomment and edit one or more routes to override default_backend per path.#   - See docs/panda_data_flow.md for full semantics (MCP advertise, TPM, etc.).
+routes:
+  # Example: override /v1/chat to a different backend with MCP tool injection and higher RPS.
+  - path_prefix: /v1/chat
+    backend_base: "http://127.0.0.1:9999"  # Non-existent backend
+    type: openai
+    mcp_advertise_tools: true
+    rate_limit:
+      rps: 300
+    tpm_limit: 800000
+    semantic_cache: true   # only valid when top-level `semantic_cache.enabled` is true (see commented block below)
+
+  # Other OpenAI-shaped /v1/* (models, images, …): inherit global MCP default; cap RPS for catch-all.
+  - path_prefix: /v1
+    backend_base: "http://127.0.0.1:9999"  # Non-existent backend
+    type: openai
+    mcp_advertise_tools: false
+    rate_limit:
+      rps: 200
+
+  # MCP route
+  - path_prefix: /mcp
+    backend: mcp
+    backend_base: "http://127.0.0.1:5023"
+
+# -----------------------------------------------------------------------------# Control plane (optional admin API — runs first in dispatch; see docs/panda_data_flow.md)# -----------------------------------------------------------------------------# HTTP surface (replace {path_prefix} with path_prefix below, default /ops/control):#   GET  {path_prefix}/v1/status#   GET  {path_prefix}/v1/api_gateway/ingress/routes#   POST {path_prefix}/v1/api_gateway/ingress/routes#   GET  {path_prefix}/v1/api_gateway/ingress/routes/export#   POST {path_prefix}/v1/api_gateway/ingress/routes/import?mode=merge|replace#   DELETE {path_prefix}/v1/api_gateway/ingress/routes?path_prefix=…&tenant_id=…#   POST/DELETE {path_prefix}/v1/api_keys — when auth.api_keys_redis_url_env is set# Auth: set observability.admin_secret_env (and/or control_plane.auth + Redis) before enabled: true in prod.# Store: memory = dev only; json_file / sqlite / postgres for durable dynamic routes (not for kind: memory: do not set reload_from_store_ms).# Postgres URLs: any wire-compatible server (RDS, Aurora, Azure Postgres, Cloud SQL) — use sslmode as your provider requires.control_plane:
+  enabled: false
+  path_prefix: /ops/control
+  # Poll backing store so replicas pick up another instance’s writes or GitOps edits to json_file.
+  # reload_from_store_ms: 10000
+  # Extra env vars whose values are accepted as admin auth (union with observability.admin_secret_env):
+  # additional_admin_secret_envs: [PANDA_CP_AUTOMATION_SECRET]
+  # Header for tenant-scoped dynamic ingress rows (must match ApiGatewayIngressRoute.tenant_id):
+  # tenant_resolution_header: X-Panda-Tenant
+  store:
+    kind: memory
+    # --- When enabled: true, pick one kind (comment out memory and uncomment one block) ---
+    # kind: json_file
+    # json_file: ./var/panda_dynamic_ingress.json
+    # json_file: /var/lib/panda/dynamic_ingress.json
+    # kind: sqlite
+    # database_url: sqlite://./panda_control.db
+  # --- Postgres store (recommended for HA control plane) ---
+  # kind: postgres
+  # database_url: "postgres://user:pass@localhost:5432/panda?sslmode=disable"
+  # Optional: pubsub for replica sync (omit for single-node or postgres-only deployments).
+  # redis_url_env: PANDA_REDIS_URL
+  # channel: panda:control_plane:ingress_reload
+
+api_gateway:
+  # --- Ingress (path → handler kind: ai / mcp / ops / deny / gone / not_found) ---
+  # When ingress.enabled is true, every request path must match a row (longest path_prefix wins).
+  # • ingress.routes OMITTED or []  → use built-in table (/health, /metrics, /v1→ai, /mcp→mcp, …).
+  # • ingress.routes NON-EMPTY      → replaces that table entirely; you must list every prefix you need
+  #   (e.g. /health → ops), or those paths return 404 from ingress.
+  #
+  # Example (commented — uncomment and merge with your needs if you customize ingress):
+  # ingress:
+  #   enabled: true
+  #   routes:
+  #     - path_prefix: /health
+  #       backend: ops
+  #     - path_prefix: /v1
+  #       backend: ai
+  #       # Optional: force a different HTTP base for this ingress row only (else top-level default_backend / routes[]).
+  #       # backend_base: "https://api.openai.com/v1"
+  #     - path_prefix: /mcp
+  #       backend: mcp
+  #     - path_prefix: /hooks/llm
+  #       backend: ai
+  #       methods: [POST]
+  #       rate_limit:
+  #         rps: 50
+  #     - path_prefix: /deprecated/surface
+  #       backend: gone
+  #   # Optional: Redis INCR for per-prefix RPS across replicas (see docs/deployment.md).
+  #   # rate_limit_redis:
+  #   #   url_env: "PANDA_REDIS_URL"
+  #   #   key_prefix: "panda:gw:ingress_rps"
+  ingress:
+    enabled: true
+    routes:
+      - path_prefix: /health
+        backend: ops
+      - path_prefix: /metrics
+        backend: ops
+        rate_limit:
+          rps: 10
+      - path_prefix: /v1
+        backend: ai
+        rate_limit:
+          rps: 50
+      - path_prefix: /mcp
+        backend: mcp
+        rate_limit:
+          rps: 50
+      - path_prefix: /test/deny
+        backend: deny
+  egress:
+    enabled: true
+    timeout_ms: 5000
+    pool_idle_timeout_ms: 0
+    corporate:
+      # Single base URL: all relative paths in http_tool(s) join to this host.
+      default_base: "http://127.0.0.1:18081"
+    allowlist:
+      allow_hosts: ["127.0.0.1:18081"]
+      # Every path prefix used by MCP REST tools must be allowed (longest-prefix match on requests).
+      allow_path_prefixes: ["/allowed", "/corp", "/api", "/v1"]
+
+mcp:
+  enabled: true
+  # Global default: false so non-/v1/chat paths (e.g. embeddings) do not get MCP tool injection.
+  # routes[].mcp_advertise_tools above enables injection for /v1/chat/* only.
+  advertise_tools: false
+  fail_open: true
+  tool_timeout_ms: 30000
+  # Optional: cache selected tool results (allowlist per server.tool — matches YAML tool_name, not ingress prefix).
+  tool_cache:
+    enabled: true
+    backend: memory
+    default_ttl_seconds: 300
+    max_value_bytes: 65536
+    allow:
+      - server: corpapi
+        tool: fetch
+        ttl_seconds: 60
+      - server: corp
+        tool: from_a
+        ttl_seconds: 30
+  # Intent-based tool policies (enforces which tools can be used based on user intent)
+  proof_of_intent_mode: "audit"  # options: "off", "audit", "enforce"
+  intent_tool_policies:
+    - intent: "data_read"
+      allowed_tools:
+        - "mcp_corpapi_fetch"
+        - "mcp_corp_from_a"
+        - "mcp_inventory_health"
+    - intent: "data_write"
+      allowed_tools:
+        - "mcp_corp_from_b"
+    - intent: "general"
+      allowed_tools:
+        - "mcp_edge_hi"
+  servers:
+    # Server A: single REST tool (same pattern as E2E template + tool-cache integration test).
+    - name: corpapi
+      enabled: true
+      http_tool:
+        path: /allowed/toolpath
+        method: GET
+        tool_name: fetch
+
+    # Server B: two tools on one logical MCP server (`http_tools` — mutually exclusive with `http_tool` on same server).
+    - name: corp
+      enabled: true
+      http_tools:
+        - path: /corp/service-a
+          method: GET
+          tool_name: from_a
+        - path: /corp/service-b
+          method: GET
+          tool_name: from_b
+
+    # Server C: another single-tool server (different paths / ownership in real deployments).
+    - name: inventory
+      enabled: true
+      http_tool:
+        path: /v1/status
+        method: GET
+        tool_name: health
+
+    # Server D: same mock host, different API surface (typical multi-team backends).
+    - name: edge
+      enabled: true
+      http_tool:
+        path: /api/hi
+        method: GET
+        tool_name: hi
+
+    # Optional: stdio MCP (uncomment if `python3` and crates/panda-proxy/tests/mcp_mock_stdio.py exist).
+    # Mutually exclusive per server: use `command` OR `http_tool` OR `http_tools` OR `remote_mcp_url`.
+    # - name: mock
+    #   enabled: true
+    #   command: "python3"
+    #   args: ["crates/panda-proxy/tests/mcp_mock_stdio.py"]
+
+    # Optional: remote MCP server over HTTP via egress (run a separate listener; see testing doc section 2.3).
+    # - name: remote1
+    #   enabled: true
+    #   remote_mcp_url: "http://127.0.0.1:18082/mcp"
+    # Add 127.0.0.1:18082 to allow_hosts and "/" to allow_path_prefixes when enabled.
+
+# -----------------------------------------------------------------------------# Observability# -----------------------------------------------------------------------------observability:
+  # Prometheus metrics on /metrics (when enabled: true).
+  prometheus:
+    enabled: true
+  # Optional: require this secret via header `x-panda-admin-secret` for /metrics, /tpm/status, /mcp/status, /ops/fleet/status.
+  # admin_secret_env: PANDA_ADMIN_STATUS_SECRET
+  # Optional: structured logging (default: false = line-based JSON).
+  # structured_logging: true
+  # Optional: OpenTelemetry HTTP exporter (traces only).
+  # opentelemetry:
+  #   endpoint: "http://localhost:4318/v1/traces"
+  #   service_name: "panda-gateway"
+  #   trace_sampling_ratio: 1.0
+
+# -----------------------------------------------------------------------------# AI governance: token per minute (TPM) limits and budget enforcement# -----------------------------------------------------------------------------tpm:
+  # enabled: false (default) → no TPM limits; all requests are allowed.
+  # enabled: true → enforce TPM limits per bucket (tenant / subject / global).
+  enabled: false
+  # Optional: Redis for TPM across replicas (omit for single-node).
+  # redis_url_env: PANDA_REDIS_URL
+  # Key prefix for TPM counters (defaults to "panda:tpm").
+  # key_prefix: "panda:tpm"
+  # Global budget across all buckets (optional, no default).
+  # global_budget_tokens_per_minute: 100000
+  # Per-bucket budgets (optional, no defaults).
+  # buckets:
+  #   - class: "tenant"
+  #     name: "default"
+  #     budget_tokens_per_minute: 10000
+  #   - class: "subject"
+  #     name: "user1"
+  #     budget_tokens_per_minute: 5000
+
+# -----------------------------------------------------------------------------# Anthropic adapter (requires type: anthropic in routes or default_backend override).# -----------------------------------------------------------------------------# anthropic:#   # Anthropic API key (required).#   api_key_env: ANTHROPIC_API_KEY
+
+# -----------------------------------------------------------------------------# Semantic cache (switchable backend).# -----------------------------------------------------------------------------semantic_cache:
+  enabled: true
+#   # backend: "memory" (default) or "redis" (Redis-compatible; Dragonfly supported)
+#   backend: "memory"
+#   # Optional when backend=redis; env PANDA_SEMANTIC_CACHE_REDIS_URL overrides.
+#   # redis_url: "redis://127.0.0.1:6379"
+#   similarity_threshold: 0.92
+#   max_entries: 10000
+#   ttl_seconds: 300
+#   # Agent / multi-tenant safe defaults: keep false (exact cache key only on memory backend).
+#   # Set true only if you explicitly want Jaccard "near-miss" hits (higher reuse, higher risk).
+#   similarity_fallback: false
+#   # Include TPM identity bucket in the cache key (recommended with untrusted tenants or agents).
+#   scope_keys_with_tpm_bucket: false
+#   # NOTE: breaking behavior: when `agent_sessions.enabled: true`, Panda now scopes semantic-cache
+#   # keys by TPM bucket automatically even if this flag is false.
+#   # Optional (memory backend only): after exact + Jaccard miss, call embeddings API and cosine-match stored vectors (uses similarity_threshold).
+#   # embedding_lookup_enabled: false
+#   # embedding_url: "https://api.openai.com/v1/embeddings"
+#   # embedding_model: "text-embedding-3-small"
+#   # embedding_api_key_env: "OPENAI_API_KEY"
+#   # embedding_timeout_ms: 15000
+#   # embedding_max_prompt_chars: 8192
+
+# -----------------------------------------------------------------------------# Universal adapter (OpenAI ingress -> backend protocol).# -----------------------------------------------------------------------------# adapter:#   provider: "openai"   # "openai" or "anthropic"
+#   anthropic_version: "2023-06-01"

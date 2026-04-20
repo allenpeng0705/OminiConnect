@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: panda-config
+  labels:
+    app.kubernetes.io/name: panda
+data:
+  panda.yaml: |
+    listen: "0.0.0.0:8080"
+    default_backend: "http://replace-me-upstream:11434"
+
+    api_gateway:
+      ingress:
+        enabled: true
+        routes:
+          - path_prefix: /v1
+            backend: ai
+            methods: [POST, GET]
+          - path_prefix: /mcp
+            backend: mcp
+            methods: [POST]
+          - path_prefix: /health
+            backend: ops
+            methods: [GET]
+          - path_prefix: /ready
+            backend: ops
+            methods: [GET]
+          - path_prefix: /metrics
+            backend: ops
+            methods: [GET]
+      egress:
+        enabled: true
+        corporate:
+          default_base: "http://internal-api:8080"
+        allowlist:
+          allow_hosts: ["internal-api:8080"]
+          allow_path_prefixes: ["/api"]
+
+    mcp:
+      enabled: true
+      advertise_tools: false
+      servers:
+        - name: corpapi
+          enabled: true
+          http_tool:
+            path: /api/data
+            method: GET
+            tool_name: fetch
+
+    observability:
+      correlation_header: "x-request-id"
+      admin_auth_header: "x-panda-admin-secret"
+      admin_secret_env: "PANDA_ADMIN_STATUS_SECRET"
+
+    tpm:
+      enforce_budget: false
+      budget_tokens_per_minute: 60000
+
+    plugins:
+      max_request_body_bytes: 262144
+      execution_timeout_ms: 25
+      fail_closed: false
+      hot_reload: false
+      reload_interval_ms: 2000
+      reload_debounce_ms: 500
+      max_reloads_per_minute: 30

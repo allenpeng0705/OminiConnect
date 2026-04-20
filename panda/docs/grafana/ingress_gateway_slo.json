@@ -1,0 +1,143 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(panda_gateway_rps_denied_total{layer=\"ingress\"}[5m]))",
+          "legendFormat": "429/s",
+          "refId": "A"
+        }
+      ],
+      "title": "Ingress RPS limiter — denied (429/s)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(panda_gateway_rps_allowed_total{layer=\"ingress\"}[5m]))",
+          "legendFormat": "allowed/s",
+          "refId": "A"
+        }
+      ],
+      "title": "Ingress RPS limiter — allowed (checks passed)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(panda_gateway_rps_denied_total{layer=\"legacy\"}[5m]))",
+          "legendFormat": "legacy 429/s",
+          "refId": "A"
+        }
+      ],
+      "title": "Legacy route RPS limiter — denied (429/s)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 4 },
+      "id": 4,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (layer) (rate(panda_gateway_rps_allowed_total[5m]))",
+          "legendFormat": "allowed {{layer}}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (layer) (rate(panda_gateway_rps_denied_total[5m]))",
+          "legendFormat": "denied {{layer}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Gateway RPS limiter — allowed vs denied by layer",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${datasource}" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 4 },
+      "id": 5,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "expr": "sum by (tenant_id, path_prefix, result) (rate(panda_gateway_ingress_rps_total[5m]))",
+          "legendFormat": "{{tenant_id}} {{path_prefix}} {{result}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Per ingress row — RPS outcomes (bounded labels)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["panda", "ingress", "slo"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+        "hide": 0,
+        "label": "Datasource",
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Panda ingress gateway SLO",
+  "uid": "panda-ingress-gateway-slo",
+  "version": 1,
+  "weekStart": ""
+}
