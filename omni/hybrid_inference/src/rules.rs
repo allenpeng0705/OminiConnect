@@ -113,11 +113,10 @@ impl RuleResult {
     }
 }
 
-/// Compiled regex pattern with metadata
+/// Compiled regex pattern
 #[derive(Debug, Clone)]
 struct CompiledPattern {
     pattern: Regex,
-    rule_name: String,
 }
 
 /// Rules engine for evaluating routing decisions
@@ -145,10 +144,7 @@ impl RulesEngine {
                 if let ConditionConfig::ContentMatches { pattern } = condition {
                     if let PatternConfig::Regex { pattern: p } = pattern {
                         if let Ok(re) = Regex::new(p) {
-                            self.compiled_patterns.push(CompiledPattern {
-                                pattern: re,
-                                rule_name: rule.name.clone(),
-                            });
+                            self.compiled_patterns.push(CompiledPattern { pattern: re });
                         }
                     }
                 }
@@ -263,18 +259,14 @@ impl RulesEngine {
                 values.iter().any(|kw| content.contains(kw))
             }
             PatternConfig::Regex { pattern: p } => {
-                // Check pre-compiled patterns first
-                for compiled in &self.compiled_patterns {
-                    if let Ok(matched) = glob_match(p, content) {
-                        if matched {
-                            return true;
-                        }
-                    }
+                // Use pre-compiled regex if available, else compile on the fly
+                if let Some(found) = self.compiled_patterns.iter().find(|cp| &cp.pattern.to_string() == p) {
+                    found.pattern.is_match(content)
+                } else {
+                    Regex::new(p)
+                        .map(|re| re.is_match(content))
+                        .unwrap_or(false)
                 }
-                // Fallback to regex
-                Regex::new(p)
-                    .map(|re| re.is_match(content))
-                    .unwrap_or(false)
             }
         }
     }

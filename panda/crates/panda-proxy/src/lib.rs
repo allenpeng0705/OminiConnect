@@ -5897,6 +5897,7 @@ pub(crate) async fn mcp_http_ingress_execute_tools_call(
         tool: tool_lbl.clone(),
         arguments: arguments.clone(),
         correlation_id: ctx.correlation_id.clone(),
+        original_name: Some(tool_name_openai.to_string()),
     };
     let call_args = call.arguments.clone();
 
@@ -8449,6 +8450,7 @@ async fn forward_to_upstream(
                             ) else {
                                 continue;
                             };
+                            let original_name = tc.function_name.clone();
                             if let Err(rule) = mcp::mcp_tool_allowed_by_route_rules(
                                 &state.config.mcp.tool_routes,
                                 &server,
@@ -8504,6 +8506,7 @@ async fn forward_to_upstream(
                                 tool,
                                 arguments: tc.function_arguments.clone(),
                                 correlation_id: ctx.correlation_id.clone(),
+                                original_name: Some(original_name),
                             };
                             let call_args = call.arguments.clone();
                             let policy_version = format!(

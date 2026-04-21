@@ -40,6 +40,9 @@ pub struct McpToolCallRequest {
     pub tool: String,
     pub arguments: serde_json::Value,
     pub correlation_id: String,
+    /// Original OpenAI-function-name tool name, e.g. "mcp_slack_chat".
+    /// Used by the maton_fallback fallback to detect mcp_{app}_{tool} pattern.
+    pub original_name: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -133,12 +136,18 @@ impl McpRuntime {
                     .as_ref()
                     .map(|p| p.trim().to_string())
                     .filter(|p| !p.is_empty());
+                let bearer_token = s
+                    .maton_api_key_env
+                    .as_deref()
+                    .filter(|n| !n.is_empty())
+                    .and_then(|n| std::env::var(n).ok());
                 Arc::new(McpHttpRemoteClient::new(
                     s.name.clone(),
                     url.to_string(),
                     Arc::clone(eg),
                     corr.clone(),
                     prof,
+                    bearer_token,
                 )?)
             } else if let Some(ref ht) = s.http_tool {
                 let Some(eg) = egress else {
@@ -211,7 +220,8 @@ impl McpRuntime {
         if client.is_none() {
             if let Some(ref fb_server) = self.maton_fallback_server {
                 if let Some(maton) = self.clients.get(fb_server) {
-                    if let Some((app, _tool)) = parse_mcp_app_tool(&req.server) {
+                    if let Some(ref orig) = req.original_name {
+                        if let Some((app, _tool)) = parse_mcp_app_tool(orig) {
                         let maton_args = serde_json::json!({
                             "app": app,
                             "method": "POST",
@@ -223,6 +233,7 @@ impl McpRuntime {
                             tool: "maton_gateway_call".to_string(),
                             arguments: maton_args,
                             correlation_id: req.correlation_id.clone(),
+                            original_name: None,
                         };
                         return tokio::time::timeout(
                             Duration::from_millis(self.tool_timeout_ms),
@@ -233,6 +244,7 @@ impl McpRuntime {
                             anyhow::anyhow!("{}: MCP fallback tool call timed out", MCP_TOOL_CALL_TIMEOUT_MARKER)
                         })?
                         .map_err(|e| anyhow::anyhow!("maton_fallback error: {e}"));
+                    }
                     }
                 }
             }
@@ -266,6 +278,7 @@ pub fn parse_openai_function_name(
     servers: &[McpServerConfig],
 ) -> Option<(String, String)> {
     let raw = function_name.strip_prefix("mcp_")?;
+    // First, try to match against registered servers.
     for s in servers.iter().filter(|s| s.enabled) {
         let sn = super::mcp_openai::sanitize_openai_function_name(&s.name);
         let p = format!("{sn}_");
@@ -275,6 +288,12 @@ pub fn parse_openai_function_name(
                 return Some((s.name.clone(), tool.to_string()));
             }
         }
+    }
+    // Fallback: treat any mcp_{app}_{tool} as (app, tool) even if app is not a registered server.
+    // This allows the maton_fallback routing in call_tool to handle unknown servers.
+    let parts: Vec<&str> = raw.splitn(2, '_').collect();
+    if parts.len() == 2 {
+        return Some((parts[0].to_string(), parts[1].to_string()));
     }
     None
 }
@@ -524,6 +543,7 @@ mcp:
                 tool: "t".into(),
                 arguments: big,
                 correlation_id: "c".into(),
+                original_name: None,
             })
             .await
             .unwrap_err();
@@ -711,6 +731,7 @@ mcp:
                 tool: "ping".into(),
                 arguments: serde_json::json!({}),
                 correlation_id: "c".into(),
+                original_name: None,
             })
             .await
             .expect("call");
@@ -772,6 +793,7 @@ for line in sys.stdin:
                 tool: "boom".into(),
                 arguments: serde_json::json!({}),
                 correlation_id: "c".into(),
+                original_name: None,
             })
             .await
             .unwrap_err();
@@ -856,6 +878,7 @@ mcp:
                 tool: "fetch".into(),
                 arguments: serde_json::json!({}),
                 correlation_id: "corr-1".into(),
+                original_name: None,
             })
             .await
             .expect("call");

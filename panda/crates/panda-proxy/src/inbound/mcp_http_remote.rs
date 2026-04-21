@@ -27,6 +27,8 @@ pub(crate) struct McpHttpRemoteClient {
     egress: Arc<EgressClient>,
     correlation_header: String,
     egress_profile: Option<String>,
+    /// Bearer token sent as `Authorization: Bearer <token>` on every request.
+    bearer_token: Option<String>,
     session: Mutex<Session>,
 }
 
@@ -37,6 +39,7 @@ impl McpHttpRemoteClient {
         egress: Arc<EgressClient>,
         correlation_header: String,
         egress_profile: Option<String>,
+        bearer_token: Option<String>,
     ) -> anyhow::Result<Self> {
         let ep = endpoint.trim();
         if ep.is_empty() {
@@ -51,6 +54,7 @@ impl McpHttpRemoteClient {
             egress,
             correlation_header,
             egress_profile,
+            bearer_token,
             session: Mutex::new(Session {
                 initialized: false,
                 next_id: 1,
@@ -92,6 +96,13 @@ impl McpHttpRemoteClient {
                     headers.insert(name, hv);
                 }
             }
+        }
+        if let Some(ref token) = self.bearer_token {
+            headers.insert(
+                header::AUTHORIZATION,
+                HeaderValue::from_str(&format!("Bearer {token}"))
+                    .unwrap_or_else(|_| HeaderValue::from_static("Bearer invalid")),
+            );
         }
         let res = self
             .egress
@@ -385,6 +396,7 @@ mcp:
             Arc::clone(&egress),
             "x-request-id".into(),
             None,
+            None,
         )
         .expect("new");
         let tools = client.list_tools().await.expect("list");
@@ -396,6 +408,7 @@ mcp:
                 tool: "alpha".into(),
                 arguments: json!({}),
                 correlation_id: "c1".into(),
+                original_name: None,
             })
             .await
             .expect("call");

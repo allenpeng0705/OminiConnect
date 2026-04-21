@@ -694,6 +694,199 @@ mcp:
     panda_task.await.ok();
 }
 
+/// Mock server that handles both a primary remote server and a maton fallback server.
+async fn mock_mcp_with_maton_fallback(listener: tokio::net::TcpListener) {
+    loop {
+        let mut sock = match listener.accept().await {
+            Ok((s, _)) => s,
+            Err(_) => continue,
+        };
+        let mut buf = vec![0u8; 64 * 1024];
+        let n = match sock.read(&mut buf).await {
+            Ok(n) if n > 0 => n,
+            _ => continue,
+        };
+        let req_str = std::str::from_utf8(&buf[..n]).expect("utf8");
+        let Some(body_start) = req_str.find("\r\n\r\n") else { continue };
+        let body = req_str[body_start + 4..].trim();
+        let Ok(v) = serde_json::from_str::<Value>(body) else { continue };
+        let method = v.get("method").and_then(|m| m.as_str()).unwrap_or("");
+        let params = v.get("params");
+        let mid = v.get("id").and_then(|x| x.as_u64().or_else(|| x.as_str().and_then(|s| s.parse().ok()))).unwrap_or(0);
+
+        let (status, resp_body): (&str, String) = match method {
+            "initialize" => {
+                let name = params.and_then(|p| p.get("clientInfo"))
+                    .and_then(|ci| ci.get("name"))
+                    .and_then(|n| n.as_str())
+                    .unwrap_or("mock");
+                ("HTTP/1.1 200 OK", format!(r#"{{"jsonrpc":"2.0","id":{mid},"result":{{"protocolVersion":"2024-11-05","capabilities":{{}},"serverInfo":{{"name":"{name}"}}}}}}"#))
+            }
+            "notifications/initialized" => ("HTTP/1.1 200 OK", String::new()),
+            "tools/call" => {
+                let tool_name = params.and_then(|p| p.get("name")).and_then(|n| n.as_str()).unwrap_or("");
+                if tool_name == "alpha" {
+                    ("HTTP/1.1 200 OK", format!(r#"{{"jsonrpc":"2.0","id":{mid},"result":{{"content":[{{"type":"text","text":"primary_ok"}}],"isError":false}}}}"#))
+                } else if tool_name == "maton_gateway_call" {
+                    let app = params.and_then(|p| p.get("arguments"))
+                        .and_then(|a| a.get("app"))
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("");
+                    if app == "slack" {
+                        ("HTTP/1.1 200 OK", format!(r#"{{"jsonrpc":"2.0","id":{mid},"result":{{"content":[{{"type":"text","text":"fallback_ok app=slack"}}],"isError":false}}}}"#))
+                    } else {
+                        ("HTTP/1.1 200 OK", format!(r#"{{"jsonrpc":"2.0","id":{mid},"result":{{"content":[{{"type":"text","text":"fallback_ok app={app}"}}],"isError":false}}}}"#))
+                    }
+                } else {
+                    ("HTTP/1.1 200 OK", format!(r#"{{"jsonrpc":"2.0","id":{mid},"result":{{"content":[{{"type":"text","text":"ok {tool_name}"}}],"isError":false}}}}"#))
+                }
+            }
+            _ => ("HTTP/1.1 400 Bad Request", "{}".to_string()),
+        };
+        let cl = resp_body.len();
+        let resp = if cl == 0 {
+            format!("{status}\r\nConnection: close\r\nContent-Length: 0\r\n\r\n")
+        } else {
+            format!("{status}\r\nConnection: close\r\nContent-Type: application/json\r\nContent-Length: {cl}\r\n\r\n{resp_body}")
+        };
+        let _ = sock.write_all(resp.as_bytes()).await;
+    }
+}
+
+/// Ingress MCP `tools/call` for **unknown server** → `maton_fallback` routes to `maton_gateway_call`.
+#[tokio::test]
+async fn workflow_mcp_maton_fallback_routes_unknown_server() {
+    // The mock MCP server port must be accessible
+    let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind");
+    let port = listener.local_addr().unwrap().port();
+    tokio::spawn(async move {
+        // The mock runs forever, accepting connections sequentially
+        mock_mcp_with_maton_fallback(listener).await;
+    });
+
+    let yaml = format!(r#"listen: '127.0.0.1:0'
+default_backend: 'http://127.0.0.1:1'
+api_gateway:
+  ingress:
+    enabled: true
+  egress:
+    enabled: true
+    timeout_ms: 5000
+    pool_idle_timeout_ms: 0
+    corporate:
+      default_base: 'http://127.0.0.1:{port}'
+    allowlist:
+      allow_hosts: ['127.0.0.1:{port}']
+      allow_path_prefixes: ['/']
+mcp:
+  enabled: true
+  advertise_tools: true
+  servers:
+    - name: remote1
+      enabled: true
+      remote_mcp_url: 'http://127.0.0.1:{port}/mcp'
+    - name: maton
+      enabled: true
+      remote_mcp_url: 'http://127.0.0.1:{port}/mcp'
+      maton_fallback: true
+"#);
+    let cfg = Arc::new(PandaConfig::from_yaml_str(&yaml).expect("yaml"));
+    let egress = EgressClient::connect(&cfg.api_gateway.egress)
+        .await
+        .expect("egress")
+        .expect("some");
+    let ingress = crate::api_gateway::ingress::IngressRouter::try_new(&cfg.api_gateway.ingress)
+        .expect("ingress");
+    let mut state = test_proxy_state(Arc::clone(&cfg)).await;
+    state.ingress_router = Some(ingress);
+    state.egress = Some(egress);
+    state.mcp = Some(
+        mcp::McpRuntime::connect(cfg.as_ref(), state.egress.as_ref())
+            .await
+            .unwrap()
+            .expect("mcp"),
+    );
+    let state = Arc::new(state);
+
+    let listener_panda = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let addr_panda = listener_panda.local_addr().unwrap();
+    let st = Arc::clone(&state);
+    let server = tokio::spawn(async move {
+        for _ in 0..3 {
+            let (stream, _) = listener_panda.accept().await.unwrap();
+            let io = TokioIo::new(stream);
+            let st2 = Arc::clone(&st);
+            let svc = service_fn(move |req| {
+                let s = Arc::clone(&st2);
+                crate::dispatch(req, s)
+            });
+            let _ = http1::Builder::new()
+                .serve_connection(io, svc)
+                .with_upgrades()
+                .await;
+        }
+    });
+
+    // Step 1: Initialize session with the remote1 server
+    let body_init = mcp_init_body();
+    let req_init = format!(
+        "POST /mcp HTTP/1.1\r\nHost: z\r\nAccept: {}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+        mcp_streamable_accept_value(),
+        body_init.len(),
+        body_init
+    );
+    let mut c0 = TcpStream::connect(addr_panda).await.unwrap();
+    c0.write_all(req_init.as_bytes()).await.unwrap();
+    let mut buf0 = vec![];
+    c0.read_to_end(&mut buf0).await.unwrap();
+    let s0 = String::from_utf8_lossy(&buf0);
+    assert!(s0.contains("200 OK"), "{s0}");
+    let sid = parse_mcp_session_id_from_raw_http(&s0).expect("session id");
+
+    // Step 2: Call a tool on the primary server — should succeed normally
+    let body_primary = r#"{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"mcp_remote1_alpha","arguments":{}}}"#;
+    let req_primary = format!(
+        "POST /mcp HTTP/1.1\r\nHost: z\r\nAccept: {}\r\nMcp-Session-Id: {}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+        mcp_streamable_accept_value(),
+        sid,
+        body_primary.len(),
+        body_primary
+    );
+    let mut c1 = TcpStream::connect(addr_panda).await.unwrap();
+    c1.write_all(req_primary.as_bytes()).await.unwrap();
+    let mut b1 = vec![];
+    c1.read_to_end(&mut b1).await.unwrap();
+    let s1 = String::from_utf8_lossy(&b1);
+    assert!(s1.contains("200 OK"), "{s1}");
+    assert!(s1.contains("primary_ok"), "expected primary tool result: {s1}");
+
+    // Step 3: Call an UNKNOWN server — should fall back to maton_gateway_call
+    let body_fallback = r#"{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"mcp_slack_chat","arguments":{"channel":"C0123","text":"hello"}}}"#;
+    let req_fallback = format!(
+        "POST /mcp HTTP/1.1\r\nHost: z\r\nAccept: {}\r\nMcp-Session-Id: {}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+        mcp_streamable_accept_value(),
+        sid,
+        body_fallback.len(),
+        body_fallback
+    );
+    let mut c2 = TcpStream::connect(addr_panda).await.unwrap();
+    c2.write_all(req_fallback.as_bytes()).await.unwrap();
+    let mut b2 = vec![];
+    c2.read_to_end(&mut b2).await.unwrap();
+    let s2 = String::from_utf8_lossy(&b2);
+    assert!(s2.contains("200 OK"), "expected 200 for fallback: {s2}");
+    assert!(
+        s2.contains("fallback_ok"),
+        "expected maton_gateway_call fallback result: {s2}"
+    );
+    assert!(
+        s2.contains("app=slack"),
+        "expected app=slack in fallback result: {s2}"
+    );
+
+    server.await.unwrap();
+}
+
 #[test]
 fn workflow_http_tool_requires_egress_enabled() {
     let yaml = r#"listen: '127.0.0.1:0'

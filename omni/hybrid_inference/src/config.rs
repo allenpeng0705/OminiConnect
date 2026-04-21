@@ -1,7 +1,6 @@
 //! Configuration types for hybrid inference
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// Hybrid inference configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]

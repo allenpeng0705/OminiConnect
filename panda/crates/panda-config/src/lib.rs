@@ -876,6 +876,10 @@ pub struct McpServerConfig {
     /// `maton_gateway_call` tool as a fallback (requires this server to expose that tool).
     #[serde(default)]
     pub maton_fallback: bool,
+    /// Env var name holding the API key for the remote MCP server.
+    /// The resolved value is sent as `Authorization: Bearer <key>` on every request.
+    #[serde(default)]
+    pub maton_api_key_env: Option<String>,
 }
 
 /// Single tool backed by one HTTP call through the API gateway egress client (`api_gateway.egress`).

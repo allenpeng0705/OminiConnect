@@ -64,12 +64,12 @@ api_gateway:
     corporate:
       default_base: "http://127.0.0.1:18081"
     allowlist:
-      allow_hosts: ["127.0.0.1:18081", "127.0.0.1:5023", "127.0.0.1:5066", "127.0.0.1:14005"]
+      allow_hosts: ["127.0.0.1:18081", "127.0.0.1:5023", "127.0.0.1:5066", "127.0.0.1:14005", "127.0.0.1:8093"]
       allow_path_prefixes: ["/allowed", "/corp", "/api", "/v1"]
 
 mcp:
   enabled: true
-  advertise_tools: false
+  advertise_tools: true
   fail_open: true
   tool_timeout_ms: 30000
   tool_cache:
@@ -144,6 +144,12 @@ mcp:
         - path: /ready
           method: GET
           tool_name: ready
+
+    - name: maton
+      enabled: true
+      remote_mcp_url: "http://127.0.0.1:8093/mcp"
+      maton_fallback: true
+      maton_api_key_env: "MATON_API_KEY"
 
 observability:
   prometheus:

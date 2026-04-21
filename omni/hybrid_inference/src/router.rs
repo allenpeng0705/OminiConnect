@@ -1,8 +1,8 @@
 //! Hybrid inference router
 
-use crate::config::{CloudFallbackConfig, HybridConfig, TargetConfig};
+use crate::config::{HybridConfig, TargetConfig};
 use crate::local_llm::{ChatMessage, LocalLlmClient, LocalLlmError};
-use crate::rules::{RequestContext, RoutingDecision, RulesEngine, RuleResult};
+use crate::rules::{RequestContext, RoutingDecision, RulesEngine};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
