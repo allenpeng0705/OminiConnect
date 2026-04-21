@@ -12,6 +12,7 @@
 //! └─────────────────┘      └──────────────────┘      └─────────────────┘
 //! ```
 
+use std::collections::HashMap;
 use std::sync::Arc;
 
 pub mod platform;
@@ -61,21 +62,26 @@ pub struct TokenRefreshResult {
 /// Token vault manages OAuth2 tokens for all platforms
 pub struct OAuthVault {
     store: Arc<TokenStore>,
-    // Using concrete platform type for now to avoid dyn async trait issues
-    platform_handler: Option<Arc<dyn OAuth2Platform + Send + Sync>>,
+    platforms: HashMap<String, Arc<dyn OAuth2Platform + Send + Sync>>,
 }
 
 impl OAuthVault {
     pub fn new(store: Arc<TokenStore>) -> Self {
         Self {
             store,
-            platform_handler: None,
+            platforms: HashMap::new(),
         }
     }
 
-    /// Register a platform handler
+    /// Create with an in-memory store and no platform registered.
+    pub fn new_in_memory() -> Self {
+        Self::new(Arc::new(TokenStore::in_memory()))
+    }
+
+    /// Register a platform handler.
     pub fn register_platform<P: OAuth2Platform + Send + Sync + 'static>(&mut self, platform: P) {
-        self.platform_handler = Some(Arc::new(platform));
+        let name = platform.name().to_string();
+        self.platforms.insert(name, Arc::new(platform));
     }
 
     /// Get a valid token, refreshing if necessary
@@ -113,8 +119,8 @@ impl OAuthVault {
 
     /// Refresh an expired token
     async fn refresh_token(&self, platform: &str, token: &OAuthToken) -> Result<Option<TokenRefreshResult>, OAuthError> {
-        let platform_handler = self.platform_handler.as_ref()
-            .ok_or_else(|| OAuthError::InvalidConfig(format!("No platform handler registered")))?;
+        let platform_handler = self.platforms.get(platform)
+            .ok_or_else(|| OAuthError::InvalidConfig(format!("No platform handler registered for {}", platform)))?;
 
         let refresh_token = token.refresh_token.as_ref()
             .ok_or_else(|| OAuthError::TokenExpired(format!("No refresh token for {}", platform)))?;
