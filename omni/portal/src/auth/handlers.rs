@@ -5,7 +5,7 @@ use std::sync::Arc;
 use axum::{
     extract::State,
     response::{IntoResponse, Redirect, Response},
-    Form,
+    Json,
 };
 use http::{header, StatusCode};
 use uuid::Uuid;
@@ -19,7 +19,7 @@ use crate::auth::models::{
 /// POST /auth/login
 pub async fn login(
     State(state): State<Arc<AppState>>,
-    Form(req): Form<LoginRequest>,
+    Json(req): Json<LoginRequest>,
 ) -> Response {
     let users = state.users.read().await;
     let user = match users.get(&req.username) {
@@ -89,7 +89,7 @@ pub async fn logout(
 pub async fn generate_api_key(
     State(state): State<Arc<AppState>>,
     headers: http::HeaderMap,
-    Form(req): Form<GenerateApiKeyRequest>,
+    Json(req): Json<GenerateApiKeyRequest>,
 ) -> impl IntoResponse {
     let username = match try_auth(&state, &headers).await {
         Some(auth) => auth.username,
