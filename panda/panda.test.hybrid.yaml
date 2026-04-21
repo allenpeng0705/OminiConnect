@@ -2,6 +2,21 @@
 listen: 127.0.0.1:8089
 default_backend: "http://127.0.0.1:5023"
 
+api_gateway:
+  ingress:
+    enabled: true
+  egress:
+    enabled: true
+    allowlist:
+      allow_hosts: ["*"]
+
+# MCP servers
+mcp:
+  enabled: true
+  servers:
+    - name: maton
+      remote_mcp_url: "http://127.0.0.1:8093/mcp"
+
 # Enable hybrid inference
 hybrid_inference:
   enabled: true
