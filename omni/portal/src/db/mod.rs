@@ -1,7 +1,8 @@
-//! Database persistence layer using sqlx (SQLite + Postgres).
+//! Database persistence layer using sqlx (SQLite + MySQL + PostgreSQL).
 //!
 //! Configure via `DATABASE_URL` env var:
 //! - `sqlite:portal.db` (default if not set)
+//! - `mysql://user:pass@localhost/omni_portal` (also works for MariaDB)
 //! - `postgres://user:pass@localhost/omni_portal`
 
 use sqlx::any::Any;
@@ -15,7 +16,7 @@ pub async fn create_pool() -> anyhow::Result<sqlx::AnyPool> {
     let url = std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:portal.db".to_string());
     tracing::info!("Connecting to database: {}", url);
 
-    // Install the any driver with support for sqlite and postgres
+    // Install the any driver with support for sqlite, postgres, and mysql (MariaDB compatible)
     sqlx::any::install_default_drivers();
 
     let pool = PoolOptions::<Any>::new()
