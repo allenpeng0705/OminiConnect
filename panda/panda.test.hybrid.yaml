@@ -22,7 +22,10 @@ hybrid_inference:
     - name: sensitive_data
       priority: 1
       conditions:
-        - type: content_contains_pii
+        - type: content_matches
+          pattern:
+            type: keywords
+            values: ["工资", "薪酬", "银行", "身份证"]
       action: route_to_local
     - name: catch_all
       priority: 0

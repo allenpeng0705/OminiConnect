@@ -7601,6 +7601,26 @@ async fn forward_to_upstream(
                 let messages = extract_openai_chat_messages(&next_bytes);
                 let model = extract_openai_chat_model(&next_bytes);
                 if !messages.is_empty() {
+                    // Detect PII types for hybrid inference routing
+                    // Use x-panda-pii-redacted header as proxy for "some PII detected"
+                    let pii_types_detected: std::collections::HashSet<omni_hybrid_inference::PiiType> =
+                        if parts.headers.contains_key("x-panda-pii-redacted")
+                            || parts.headers.contains_key("x-panda-pii-shadow-detected")
+                        {
+                            let mut types = std::collections::HashSet::new();
+                            types.insert(omni_hybrid_inference::PiiType::Email); // Marker type
+                            types
+                        } else {
+                            std::collections::HashSet::new()
+                        };
+
+                    // Read Wasm sensitivity score from header if set by plugin
+                    let wasm_sensitivity_score: Option<u8> = parts
+                        .headers
+                        .get("x-panda-sensitivity-score")
+                        .and_then(|v| v.to_str().ok())
+                        .and_then(|s| s.parse::<u8>().ok());
+
                     // Build request context for hybrid inference
                     let hybrid_ctx = omni_hybrid_inference::RequestContext {
                         content: semantic_routing::extract_openai_chat_text_for_routing(
@@ -7611,8 +7631,8 @@ async fn forward_to_upstream(
                         tenant_id: ctx.tenant.clone(),
                         user_id: ctx.subject.clone(),
                         user_groups: Vec::new(),
-                        wasm_sensitivity_score: None,
-                        pii_types: std::collections::HashSet::new(),
+                        wasm_sensitivity_score,
+                        pii_types: pii_types_detected,
                         keyword_categories: std::collections::HashSet::new(),
                     };
 
