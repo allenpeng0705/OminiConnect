@@ -119,6 +119,7 @@ impl Router {
         &self,
         ctx: RequestContext,
         messages: Vec<ChatMessage>,
+        model: Option<String>,
     ) -> Result<RouterResponse, RouterError> {
         // Evaluate rules
         let result = self.rules_engine.evaluate(&ctx);
@@ -126,21 +127,21 @@ impl Router {
         // Decide where to route
         match result.action {
             RoutingDecision::RouteToLocal => {
-                self.route_to_local(messages).await
+                self.route_to_local(messages, model).await
             }
             RoutingDecision::RouteToTarget(target) => {
-                self.route_to_cloud(target, messages).await
+                self.route_to_cloud(target, messages, model).await
             }
             RoutingDecision::RouteToCloud => {
                 // Use default target from config
                 let target_name = self.config.cloud_fallback.target.clone();
-                self.route_to_cloud(&target_name, messages).await
+                self.route_to_cloud(&target_name, messages, model).await
             }
             RoutingDecision::AskWasmPolicy => {
                 // Wasm policy should have set headers - re-evaluate with higher threshold
                 let mut ctx = ctx;
                 ctx.wasm_sensitivity_score = Some(100); // Force local
-                self.route_to_local(messages).await
+                self.route_to_local(messages, model).await
             }
         }
     }
@@ -149,6 +150,7 @@ impl Router {
     async fn route_to_local(
         &self,
         messages: Vec<ChatMessage>,
+        model: Option<String>,
     ) -> Result<RouterResponse, RouterError> {
         let local_llm = self.local_llm.read().await;
 
@@ -158,7 +160,7 @@ impl Router {
                 if !client.is_available().await {
                     // Fallback to cloud if local not available
                     if self.config.cloud_fallback.enabled {
-                        return self.route_to_cloud_fallback(messages).await;
+                        return self.route_to_cloud_fallback(messages, model).await;
                     }
                     return Err(RouterError::LocalLlm(LocalLlmError::NotAvailable(
                         "Local LLM not available".to_string(),
@@ -187,7 +189,7 @@ impl Router {
             None => {
                 // No local LLM configured - fallback to cloud
                 if self.config.cloud_fallback.enabled {
-                    self.route_to_cloud_fallback(messages).await
+                    self.route_to_cloud_fallback(messages, model).await
                 } else {
                     Err(RouterError::Config("Local LLM disabled and no cloud fallback".to_string()))
                 }
@@ -200,6 +202,7 @@ impl Router {
         &self,
         target_name: &str,
         messages: Vec<ChatMessage>,
+        model: Option<String>,
     ) -> Result<RouterResponse, RouterError> {
         // Find target config
         let target = self
@@ -210,9 +213,12 @@ impl Router {
         // Get or create client for this target
         let client = self.get_cloud_client(&target).await?;
 
+        // Use provided model or a sensible default
+        let model_name = model.clone().unwrap_or_else(|| "auto".to_string());
+
         // Build request
         let request_body = serde_json::json!({
-            "model": "unknown", // Will be forwarded by cloud
+            "model": model_name,
             "messages": messages,
         });
 
@@ -226,7 +232,7 @@ impl Router {
         if !response.status().is_success() {
             // Try fallback if not already a fallback
             if self.config.cloud_fallback.enabled && target.name != self.config.cloud_fallback.target {
-                return self.route_to_cloud_fallback(messages).await;
+                return self.route_to_cloud_fallback(messages, model).await;
             }
             return Err(RouterError::Request(response.error_for_status().unwrap_err()));
         }
@@ -252,6 +258,7 @@ impl Router {
     async fn route_to_cloud_fallback(
         &self,
         messages: Vec<ChatMessage>,
+        model: Option<String>,
     ) -> Result<RouterResponse, RouterError> {
         let fallback_target_name = &self.config.cloud_fallback.target;
 
@@ -264,9 +271,12 @@ impl Router {
         // Get or create client for this target
         let client = self.get_cloud_client(&target).await?;
 
+        // Use provided model or a sensible default
+        let model_name = model.unwrap_or_else(|| "auto".to_string());
+
         // Build request
         let request_body = serde_json::json!({
-            "model": "unknown",
+            "model": model_name,
             "messages": messages,
         });
 

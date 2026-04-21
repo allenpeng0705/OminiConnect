@@ -5038,6 +5038,14 @@ fn extract_openai_chat_messages(raw: &[u8]) -> Vec<omni_hybrid_inference::ChatMe
         .collect()
 }
 
+/// Extract model from OpenAI chat completions request body for hybrid inference routing.
+fn extract_openai_chat_model(raw: &[u8]) -> Option<String> {
+    let Ok(v) = serde_json::from_slice::<serde_json::Value>(raw) else {
+        return None;
+    };
+    v.get("model")?.as_str().map(String::from)
+}
+
 /// Extract tool names from OpenAI chat completions request body for hybrid inference routing.
 fn extract_tool_names(raw: &[u8]) -> Vec<String> {
     let Ok(v) = serde_json::from_slice::<serde_json::Value>(raw) else {
@@ -7589,8 +7597,9 @@ async fn forward_to_upstream(
         // Hybrid inference routing (before semantic routing - decides Local vs Cloud)
         if let Some(ref router) = state.hybrid_router {
             if !is_openai_chat_streaming_request(&next_bytes) {
-                // Extract messages from request body
+                // Extract messages and model from request body
                 let messages = extract_openai_chat_messages(&next_bytes);
+                let model = extract_openai_chat_model(&next_bytes);
                 if !messages.is_empty() {
                     // Build request context for hybrid inference
                     let hybrid_ctx = omni_hybrid_inference::RequestContext {
@@ -7607,7 +7616,7 @@ async fn forward_to_upstream(
                         keyword_categories: std::collections::HashSet::new(),
                     };
 
-                    match router.route(hybrid_ctx, messages).await {
+                    match router.route(hybrid_ctx, messages, model).await {
                         Ok(response) => {
                             // Return hybrid response directly (bypasses Panda's upstream routing)
                             // The hybrid router has already called local or cloud and we use that response
