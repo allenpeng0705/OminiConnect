@@ -36,8 +36,7 @@ async fn extract_session(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
             if k == "session" { Some(v) } else { None }
         })?;
 
-    let sessions = state.sessions.read().await;
-    let session = sessions.get(session_id)?;
+    let session = state.sessions.get(session_id).await.ok().flatten()?;
 
     if session.expires_at < chrono::Utc::now() {
         return None;
@@ -53,8 +52,10 @@ async fn extract_api_key(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
     let auth_header = headers.get(http::header::AUTHORIZATION)?.to_str().ok()?;
     let raw_key = auth_header.strip_prefix("Bearer ")?;
 
-    let api_keys = state.api_keys.read().await;
-    for (_stored_key, ak) in api_keys.iter() {
+    // Look up API key by iterating and checking bcrypt hash (same as original in-memory design)
+    let api_keys = state.api_keys.list_all().await.ok()?;
+
+    for ak in api_keys {
         if bcrypt::verify(raw_key, &ak.key_hash).ok() == Some(true) {
             return Some(AuthUser {
                 username: ak.username.clone(),

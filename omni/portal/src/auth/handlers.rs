@@ -13,7 +13,7 @@ use uuid::Uuid;
 use crate::app::AppState;
 use crate::auth::middleware::try_auth;
 use crate::auth::models::{
-    ApiKeyResponse, GenerateApiKeyRequest, LoginRequest,
+    ApiKey, ApiKeyResponse, GenerateApiKeyRequest, LoginRequest,
 };
 
 /// POST /auth/login
@@ -21,11 +21,14 @@ pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(req): Json<LoginRequest>,
 ) -> Response {
-    let users = state.users.read().await;
-    let user = match users.get(&req.username) {
-        Some(u) => u,
-        None => {
+    let user = match state.users.get(&req.username).await {
+        Ok(Some(u)) => u,
+        Ok(None) => {
             return (StatusCode::UNAUTHORIZED, "Invalid username or password").into_response();
+        }
+        Err(e) => {
+            tracing::error!("DB error looking up user: {}", e);
+            return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
 
@@ -35,7 +38,6 @@ pub async fn login(
             return (StatusCode::UNAUTHORIZED, "Invalid username or password").into_response();
         }
     }
-    drop(users);
 
     let session_id = Uuid::new_v4().to_string();
     let session = crate::auth::models::Session {
@@ -45,7 +47,10 @@ pub async fn login(
         expires_at: chrono::Utc::now() + chrono::Duration::hours(24),
     };
 
-    state.sessions.write().await.insert(session_id.clone(), session);
+    if let Err(e) = state.sessions.insert(&session).await {
+        tracing::error!("DB error inserting session: {}", e);
+        return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
+    }
 
     let mut resp = Redirect::to("/").into_response();
     let cookie = format!(
@@ -77,9 +82,11 @@ pub async fn logout(
         });
 
     if let Some(sid) = session_id {
-        if let Some(username) = state.sessions.read().await.get(sid).map(|s| s.username.clone()) {
-            state.sessions.write().await.remove(sid);
-            tracing::info!("User {} logged out", username);
+        if let Ok(Some(session)) = state.sessions.get(sid).await {
+            let username = session.username.clone();
+            if state.sessions.delete(sid).await.is_ok() {
+                tracing::info!("User {} logged out", username);
+            }
         }
     }
     Redirect::to("/auth/login").into_response()
@@ -101,22 +108,27 @@ pub async fn generate_api_key(
     let raw_key = format!("{}:{}", username, Uuid::new_v4());
     let hash = bcrypt::hash(&raw_key, bcrypt::DEFAULT_COST).unwrap_or_default();
 
-    let api_key = ApiKeyResponse {
-        key: raw_key.clone(),
-        label: req.label,
+    let api_key = ApiKey {
+        key_hash: hash,
+        username: username.clone(),
+        label: req.label.clone(),
         created_at: chrono::Utc::now(),
     };
 
-    state.api_keys.write().await.insert(raw_key.clone(), crate::auth::models::ApiKey {
-        key_hash: hash,
-        username: username.clone(),
-        label: api_key.label.clone(),
-        created_at: api_key.created_at,
-    });
+    if let Err(e) = state.api_keys.insert(&api_key).await {
+        tracing::error!("DB error inserting API key: {}", e);
+        return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
+    }
 
     tracing::info!("API key generated for user {}", username);
 
-    (StatusCode::CREATED, axum::Json(api_key)).into_response()
+    let resp = ApiKeyResponse {
+        key: raw_key,
+        label: req.label,
+        created_at: api_key.created_at,
+    };
+
+    (StatusCode::CREATED, axum::Json(resp)).into_response()
 }
 
 /// GET /auth/me — returns current user info

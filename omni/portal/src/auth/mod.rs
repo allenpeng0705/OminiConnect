@@ -10,10 +10,14 @@ use axum::{Router, routing::get, routing::post};
 
 use crate::app::AppState;
 
-const SPA_HTML: &str = std::include_str!("../../frontend/dist/index.html");
-
-async fn serve_spa() -> axum::response::Html<&'static str> {
-    axum::response::Html(SPA_HTML)
+async fn serve_spa() -> axum::response::Html<String> {
+    match tokio::fs::read_to_string("omni/portal/frontend/dist/index.html").await {
+        Ok(html) => axum::response::Html(html),
+        Err(e) => {
+            tracing::error!("Failed to read SPA HTML: {}", e);
+            axum::response::Html("<html><body><h1>Server error</h1></body></html>".to_string())
+        }
+    }
 }
 
 pub fn router() -> Router<Arc<AppState>> {

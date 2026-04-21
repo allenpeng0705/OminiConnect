@@ -12,6 +12,7 @@ use uuid::Uuid;
 use omni_oauth_vault::platform::{OAuth2Platform, PlatformConfig};
 
 use crate::app::AppState;
+use crate::auth::models::Session;
 use crate::oauth::models::OAuthCallbackQuery;
 
 /// Supported platforms.
@@ -32,13 +33,14 @@ pub async fn oauth_init(
         return (StatusCode::NOT_FOUND, format!("Unknown platform: {platform}")).into_response();
     }
 
-    let config = {
-        let connectors = state.connectors.read().await;
-        match connectors.get(&platform) {
-            Some(c) => c.clone(),
-            None => {
-                return (StatusCode::BAD_REQUEST, "Connector not configured yet").into_response();
-            }
+    let config = match state.connectors.get(&platform).await {
+        Ok(Some(c)) => c,
+        Ok(None) => {
+            return (StatusCode::BAD_REQUEST, "Connector not configured yet").into_response();
+        }
+        Err(e) => {
+            tracing::error!("DB error: {}", e);
+            return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
 
@@ -48,7 +50,7 @@ pub async fn oauth_init(
         name: platform.clone(),
         client_id: config.client_id.clone(),
         client_secret: config.client_secret.clone(),
-        auth_url: String::new(), // not needed for URL generation
+        auth_url: String::new(),
         token_url: String::new(),
         revoke_url: None,
         redirect_uri: redirect_uri.clone(),
@@ -65,16 +67,16 @@ pub async fn oauth_init(
     let state_param = Uuid::new_v4().to_string();
     let auth_url = handler.get_auth_url(&state_param);
 
-    // Store state for CSRF validation (in-memory for now)
-    state.sessions.write().await.insert(
-        format!("oauth_state:{}", state_param),
-        crate::auth::models::Session {
-            session_id: state_param.clone(),
-            username: platform.clone(),
-            created_at: chrono::Utc::now(),
-            expires_at: chrono::Utc::now() + chrono::Duration::minutes(10),
-        },
-    );
+    // Store state for CSRF validation
+    let oauth_session = Session {
+        session_id: format!("oauth_state:{}", state_param),
+        username: platform.clone(),
+        created_at: chrono::Utc::now(),
+        expires_at: chrono::Utc::now() + chrono::Duration::minutes(10),
+    };
+    if let Err(e) = state.sessions.insert(&oauth_session).await {
+        tracing::error!("Failed to store OAuth state: {}", e);
+    }
 
     tracing::info!("Initiating OAuth for {} -> redirect to {}", platform, auth_url);
     Redirect::to(&auth_url).into_response()
@@ -100,13 +102,14 @@ pub async fn oauth_callback(
 
     let redirect_uri = format!("{}/oauth/{}/callback", portal_base_url(), platform);
 
-    let config = {
-        let connectors = state.connectors.read().await;
-        match connectors.get(&platform) {
-            Some(c) => c.clone(),
-            None => {
-                return (StatusCode::BAD_REQUEST, "Connector not configured").into_response();
-            }
+    let config = match state.connectors.get(&platform).await {
+        Ok(Some(c)) => c,
+        Ok(None) => {
+            return (StatusCode::BAD_REQUEST, "Connector not configured").into_response();
+        }
+        Err(e) => {
+            tracing::error!("DB error: {}", e);
+            return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
 

@@ -13,9 +13,11 @@ interface ConnectorInfo {
 }
 
 const PLATFORMS = [
-  { id: 'feishu', name: 'Feishu / Lark', color: '#00A1E0' },
-  { id: 'dingtalk', name: 'DingTalk', color: '#1677FF' },
-  { id: 'wechatwork', name: 'WeChat Work', color: '#07C160' },
+  { id: 'feishu', name: 'Feishu / Lark', color: '#00A1E0', type: 'oauth2' },
+  { id: 'dingtalk', name: 'DingTalk', color: '#1677FF', type: 'oauth2' },
+  { id: 'wechatwork', name: 'WeChat Work', color: '#07C160', type: 'oauth2' },
+  { id: 'maton', name: 'Maton.ai', color: '#6366F1', type: 'api_key' },
+  { id: 'qqmail', name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 ];
 
 export default function Dashboard() {
@@ -63,6 +65,11 @@ export default function Dashboard() {
   }
 
   async function handleConnect(platform: string) {
+    const p = PLATFORMS.find(p => p.id === platform);
+    if (p?.type === 'api_key') {
+      // API key platforms go directly to config
+      return;
+    }
     window.location.href = `/auth/${platform}`;
   }
 
@@ -87,7 +94,7 @@ export default function Dashboard() {
             <p style={{ color: '#666' }}>Loading...</p>
           ) : connectors.length === 0 ? (
             <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', textAlign: 'center', color: '#666' }}>
-              No connectors configured yet. Add one below.
+              No connectors configured yet. Connect one below.
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
@@ -109,13 +116,17 @@ export default function Dashboard() {
                       </span>
                     </div>
                     <div style={{ fontSize: '0.8125rem', color: '#666', marginBottom: '1rem' }}>
-                      Client ID: <code style={{ background: '#f5f5f5', padding: '0.125rem 0.25rem', borderRadius: '2px' }}>{c.client_id || '—'}</code>
+                      {platform?.type === 'api_key' ? (
+                        <span>API Key: <code style={{ background: '#f5f5f5', padding: '0.125rem 0.25rem', borderRadius: '2px' }}>{c.client_id ? '••••••••' : '—'}</code></span>
+                      ) : (
+                        <span>Client ID: <code style={{ background: '#f5f5f5', padding: '0.125rem 0.25rem', borderRadius: '2px' }}>{c.client_id || '—'}</code></span>
+                      )}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <Link to={`/connectors/${c.platform}`} style={{ padding: '0.375rem 0.75rem', background: '#1976d2', color: 'white', borderRadius: '4px', textDecoration: 'none', fontSize: '0.8125rem' }}>
                         Configure
                       </Link>
-                      {c.configured && !c.connected && (
+                      {platform?.type === 'oauth2' && c.configured && !c.connected && (
                         <button onClick={() => handleConnect(c.platform)} style={{ padding: '0.375rem 0.75rem', background: '#dcfce7', color: '#166534', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8125rem' }}>
                           Connect OAuth
                         </button>
@@ -130,13 +141,13 @@ export default function Dashboard() {
 
         {/* Available Platforms */}
         <section>
-          <h2 style={{ fontSize: '1.125rem', color: '#333', marginBottom: '1rem' }}>Add Service</h2>
+          <h2 style={{ fontSize: '1.125rem', color: '#333', marginBottom: '1rem' }}>Connect Service</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem' }}>
             {PLATFORMS.filter(p => !configuredPlatforms.has(p.id)).map(p => (
               <div key={p.id} style={{ background: 'white', borderRadius: '8px', padding: '1rem', boxShadow: '0 1px 4px rgba(0,0,0,0.08)', borderLeft: `4px solid ${p.color}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: '0.9375rem', color: '#333' }}>{p.name}</span>
                 <Link to={`/connectors/${p.id}`} style={{ padding: '0.25rem 0.625rem', background: '#f5f5f5', color: '#333', border: '1px solid #ccc', borderRadius: '4px', textDecoration: 'none', fontSize: '0.8125rem' }}>
-                  Add
+                  Connect
                 </Link>
               </div>
             ))}

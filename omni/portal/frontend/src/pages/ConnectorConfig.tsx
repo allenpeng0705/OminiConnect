@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getConnectors, upsertConnector, deleteConnector, getConnectorStatus, testConnector } from '../api/client';
 
-const PLATFORMS: Record<string, { name: string; color: string; scopes_default: string }> = {
-  feishu: { name: 'Feishu / Lark', color: '#00A1E0', scopes_default: 'contact:user.base:readonly' },
-  dingtalk: { name: 'DingTalk', color: '#1677FF', scopes_default: '' },
-  wechatwork: { name: 'WeChat Work', color: '#07C160', scopes_default: '' },
+const PLATFORMS: Record<string, { name: string; color: string; type: 'oauth2' | 'api_key'; scopes_default?: string }> = {
+  feishu: { name: 'Feishu / Lark', color: '#00A1E0', type: 'oauth2', scopes_default: 'contact:user.base:readonly' },
+  dingtalk: { name: 'DingTalk', color: '#1677FF', type: 'oauth2' },
+  wechatwork: { name: 'WeChat Work', color: '#07C160', type: 'oauth2' },
+  maton: { name: 'Maton.ai', color: '#6366F1', type: 'api_key' },
+  qqmail: { name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 };
 
 export default function ConnectorConfig() {
@@ -23,10 +25,14 @@ export default function ConnectorConfig() {
   const [connected, setConnected] = useState(false);
 
   const info = platform ? PLATFORMS[platform] : null;
+  const isOAuth2 = info?.type === 'oauth2';
+  const isQQMail = platform === 'qqmail';
 
   useEffect(() => {
     if (!platform) return;
-    setRedirectUri(`${window.location.origin}/oauth/${platform}/callback`);
+    if (isOAuth2) {
+      setRedirectUri(`${window.location.origin}/oauth/${platform}/callback`);
+    }
     loadExisting();
     loadStatus();
   }, [platform]);
@@ -37,11 +43,11 @@ export default function ConnectorConfig() {
       const existing = list.find(c => c.platform === platform);
       if (existing) {
         setClientId(existing.client_id);
-        setClientSecret(existing.client_secret);
+        setClientSecret(existing.client_secret || '');
         setScopes(existing.scopes?.join(' ') || '');
         setEnabled(existing.enabled);
-      } else if (platform && PLATFORMS[platform]) {
-        setScopes(PLATFORMS[platform].scopes_default);
+      } else if (platform && PLATFORMS[platform]?.scopes_default) {
+        setScopes(PLATFORMS[platform].scopes_default!);
       }
     } catch {}
   }
@@ -65,7 +71,7 @@ export default function ConnectorConfig() {
         client_id: clientId,
         client_secret: clientSecret,
         redirect_uri: redirectUri,
-        scopes: scopes.split(' ').filter(Boolean),
+        scopes: isOAuth2 ? scopes.split(' ').filter(Boolean) : [],
         enabled,
       });
       await loadStatus();
@@ -115,29 +121,56 @@ export default function ConnectorConfig() {
 
       <main style={{ padding: '2rem', maxWidth: '600px' }}>
         <form onSubmit={handleSave} style={{ background: 'white', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
-          <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', color: '#333' }}>OAuth Configuration</h2>
+          <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', color: '#333' }}>
+            {isOAuth2 ? 'OAuth Configuration' : isQQMail ? 'Corp ID / Secret' : 'API Key Configuration'}
+          </h2>
           {error && <div style={{ color: '#d32f2f', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client ID</label>
-            <input type="text" value={clientId} onChange={e => setClientId(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
-          </div>
+          {isOAuth2 ? (
+            <>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client ID</label>
+                <input type="text" value={clientId} onChange={e => setClientId(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+              </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client Secret</label>
-            <input type="password" value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
-          </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client Secret</label>
+                <input type="password" value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+              </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Redirect URI</label>
-            <input type="text" value={redirectUri} onChange={e => setRedirectUri(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box', fontFamily: 'monospace', fontSize: '0.8125rem' }} />
-            <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Register this URI in the {info.name} developer console.</p>
-          </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Redirect URI</label>
+                <input type="text" value={redirectUri} onChange={e => setRedirectUri(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box', fontFamily: 'monospace', fontSize: '0.8125rem' }} />
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Register this URI in the {info.name} developer console.</p>
+              </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Scopes (space-separated)</label>
-            <input type="text" value={scopes} onChange={e => setScopes(e.target.value)} placeholder="contact:user.base:readonly" style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
-          </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Scopes (space-separated)</label>
+                <input type="text" value={scopes} onChange={e => setScopes(e.target.value)} placeholder="contact:user.base:readonly" style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+              </div>
+            </>
+          ) : isQQMail ? (
+            <>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Corp ID</label>
+                <input type="text" value={clientId} onChange={e => setClientId(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Corp Secret</label>
+                <input type="password" value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Found in QQ Enterprise Mail management console → Application → Secret.</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>API Key</label>
+                <input type="password" value={clientId} onChange={e => setClientId(e.target.value)} required placeholder="sk-..." style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box', fontFamily: 'monospace' }} />
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Get your API key from the Maton.ai dashboard.</p>
+              </div>
+            </>
+          )}
 
           <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <input type="checkbox" id="enabled" checked={enabled} onChange={e => setEnabled(e.target.checked)} />

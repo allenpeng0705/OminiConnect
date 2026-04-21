@@ -21,10 +21,16 @@ use crate::app::AppState;
 
 const PORT: u16 = 8090;
 
-const SPA_HTML: &str = std::include_str!("../frontend/dist/index.html");
+const SPA_HTML_PATH: &str = "omni/portal/frontend/dist/index.html";
 
-async fn serve_spa() -> axum::response::Html<&'static str> {
-    axum::response::Html(SPA_HTML)
+async fn serve_spa() -> axum::response::Html<String> {
+    match tokio::fs::read_to_string(SPA_HTML_PATH).await {
+        Ok(html) => axum::response::Html(html),
+        Err(e) => {
+            tracing::error!("Failed to read SPA HTML: {}", e);
+            axum::response::Html("<html><body><h1>Server error</h1></body></html>".to_string())
+        }
+    }
 }
 
 #[tokio::main]
@@ -36,10 +42,14 @@ async fn main() -> anyhow::Result<()> {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let app_state = Arc::new(AppState::new());
+    // Create DB pool and run migrations
+    let pool = db::create_pool().await?;
+    db::run_migrations(&pool).await?;
+
+    let app_state = Arc::new(AppState::new(pool).await);
 
     // Seed default admin user
-    db::seed_admin_user(&app_state).await;
+    db::seed_admin_user(app_state.users.as_ref()).await;
 
     let app = Router::new()
         .route("/", get(|| async { axum::response::Redirect::to("/auth/login") }))
