@@ -84,6 +84,9 @@ pub struct McpRuntime {
     tool_timeout_ms: u64,
     max_tool_payload_bytes: usize,
     clients: HashMap<String, Arc<dyn McpClient + Send + Sync>>,
+    /// Server name to use as fallback when an unknown MCP server is called
+    /// and `maton_fallback: true` is set on that server.
+    maton_fallback_server: Option<String>,
 }
 
 impl McpRuntime {
@@ -160,11 +163,18 @@ impl McpRuntime {
         if clients.is_empty() {
             anyhow::bail!("mcp.enabled with no enabled servers");
         }
+        let maton_fallback_server = config
+            .mcp
+            .servers
+            .iter()
+            .find(|s| s.maton_fallback && s.enabled && clients.contains_key(&s.name))
+            .map(|s| s.name.clone());
         Ok(Some(Arc::new(Self {
             fail_open: config.mcp.fail_open,
             tool_timeout_ms: config.mcp.tool_timeout_ms,
             max_tool_payload_bytes: config.mcp.max_tool_payload_bytes,
             clients,
+            maton_fallback_server,
         })))
     }
 
@@ -195,16 +205,59 @@ impl McpRuntime {
         if payload.len() > self.max_tool_payload_bytes {
             anyhow::bail!("tool arguments exceed mcp.max_tool_payload_bytes");
         }
-        let client = self
-            .clients
-            .get(&req.server)
-            .ok_or_else(|| anyhow::anyhow!("unknown MCP server {:?}", req.server))?;
+        let client = self.clients.get(&req.server);
+
+        // Fallback: if server not found and maton_fallback is configured, route to maton_gateway_call.
+        if client.is_none() {
+            if let Some(ref fb_server) = self.maton_fallback_server {
+                if let Some(maton) = self.clients.get(fb_server) {
+                    if let Some((app, _tool)) = parse_mcp_app_tool(&req.server) {
+                        let maton_args = serde_json::json!({
+                            "app": app,
+                            "method": "POST",
+                            "path": format!("/{}/{}", app, req.tool.replace('_', "-")),
+                            "body": req.arguments
+                        });
+                        let fb_req = McpToolCallRequest {
+                            server: fb_server.clone(),
+                            tool: "maton_gateway_call".to_string(),
+                            arguments: maton_args,
+                            correlation_id: req.correlation_id.clone(),
+                        };
+                        return tokio::time::timeout(
+                            Duration::from_millis(self.tool_timeout_ms),
+                            maton.call_tool(fb_req),
+                        )
+                        .await
+                        .map_err(|_| {
+                            anyhow::anyhow!("{}: MCP fallback tool call timed out", MCP_TOOL_CALL_TIMEOUT_MARKER)
+                        })?
+                        .map_err(|e| anyhow::anyhow!("maton_fallback error: {e}"));
+                    }
+                }
+            }
+            // No fallback matched — return the original error
+            anyhow::bail!("unknown MCP server {:?}", req.server);
+        }
+
         tokio::time::timeout(
             Duration::from_millis(self.tool_timeout_ms),
-            client.call_tool(req),
+            client.unwrap().call_tool(req),
         )
         .await
         .map_err(|_| anyhow::anyhow!("{}: MCP tool call timed out", MCP_TOOL_CALL_TIMEOUT_MARKER))?
+    }
+}
+
+/// Parse `mcp_{app}_{tool}` convention, returning (app, tool).
+/// E.g. "mcp_slack_chat_postMessage" → Some(("slack", "chat_postMessage")).
+fn parse_mcp_app_tool(server: &str) -> Option<(String, String)> {
+    let raw = server.strip_prefix("mcp_")?;
+    let parts: Vec<&str> = raw.splitn(2, '_').collect();
+    if parts.len() == 2 {
+        Some((parts[0].to_string(), parts[1].to_string()))
+    } else {
+        None
     }
 }
 

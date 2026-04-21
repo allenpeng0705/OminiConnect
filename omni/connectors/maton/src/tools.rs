@@ -55,7 +55,7 @@ pub fn maton_create_connection_tool() -> MatonTool {
 pub fn maton_gateway_call_tool() -> MatonTool {
     MatonTool {
         name: "maton_gateway_call".to_string(),
-        description: "Make a direct API call to a connected service through Maton.ai gateway. Use maton_list_connections first to see available services.".to_string(),
+        description: "Make a direct API call to any connected service through Maton.ai gateway. First call maton_list_connections to see which services (Slack, Gmail, LinkedIn, HubSpot, etc.) are connected. Then use this tool with the app name, HTTP method, and the service's native API path. Examples: app='slack', method='POST', path='/api/chat.postMessage', body={'channel': 'C0123', 'text': 'Hello!'}; app='google-mail', method='GET', path='/gmail/v1/users/me/messages?maxResults=10'; app='hubspot', method='POST', path='/crm/v3/objects/contacts', body={'properties': {'email': 'test@example.com'}}".to_string(),
         input_schema: serde_json::json!({
             "type": "object",
             "properties": {

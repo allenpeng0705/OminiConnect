@@ -872,6 +872,10 @@ pub struct McpServerConfig {
     /// Optional [`ApiGatewayEgressProfile::name`] for headers on `remote_mcp_url` requests.
     #[serde(default)]
     pub remote_mcp_egress_profile: Option<String>,
+    /// When true and a `tools/call` arrives for an unknown MCP server, route to this server's
+    /// `maton_gateway_call` tool as a fallback (requires this server to expose that tool).
+    #[serde(default)]
+    pub maton_fallback: bool,
 }
 
 /// Single tool backed by one HTTP call through the API gateway egress client (`api_gateway.egress`).
