@@ -67,7 +67,9 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
             subject TEXT NOT NULL,
             access_token TEXT NOT NULL,
             refresh_token TEXT,
-            expires_at TEXT,
+            token_type TEXT NOT NULL DEFAULT 'Bearer',
+            expires_at TEXT NOT NULL,
+            scopes TEXT NOT NULL DEFAULT '',
             created_at TEXT NOT NULL,
             PRIMARY KEY (platform, subject)
         )"#,

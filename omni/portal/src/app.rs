@@ -23,12 +23,17 @@ impl AppState {
         let api_key_repo = SqlxApiKeyRepo::new(pool.clone());
         let connector_repo = SqlxConnectorRepo::new(pool.clone());
 
+        // Create SQLx-backed token store for OAuth token persistence
+        let token_store_backend = Arc::new(omni_oauth_vault::SqlxTokenStoreBackend::new(pool.clone()));
+        let token_store = Arc::new(omni_oauth_vault::TokenStore::new(token_store_backend));
+        let oauth_vault = Arc::new(omni_oauth_vault::OAuthVault::new(token_store));
+
         Self {
             users: Arc::new(user_repo),
             sessions: Arc::new(session_repo),
             api_keys: Arc::new(api_key_repo),
             connectors: Arc::new(connector_repo),
-            oauth_vault: Arc::new(omni_oauth_vault::OAuthVault::new_in_memory()),
+            oauth_vault,
         }
     }
 }

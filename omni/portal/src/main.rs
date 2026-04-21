@@ -33,6 +33,67 @@ async fn serve_spa() -> axum::response::Html<String> {
     }
 }
 
+/// Register platform handlers with OAuthVault based on configured connectors.
+async fn register_platforms(state: &Arc<AppState>) {
+    let connectors = match state.connectors.list().await {
+        Ok(c) => c,
+        Err(e) => {
+            tracing::warn!("Could not load connectors for platform registration: {}", e);
+            return;
+        }
+    };
+
+    for config in connectors.iter().filter(|c| c.enabled) {
+        let platform_config = omni_oauth_vault::PlatformConfig {
+            name: config.platform.clone(),
+            client_id: config.client_id.clone(),
+            client_secret: config.client_secret.clone(),
+            auth_url: String::new(),
+            token_url: String::new(),
+            revoke_url: None,
+            redirect_uri: config.redirect_uri.clone(),
+            scopes: config.scopes.clone(),
+        };
+
+        use omni_oauth_vault::OAuth2Platform;
+
+        let handler: Box<dyn OAuth2Platform + Send + Sync> = match config.platform.as_str() {
+            "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
+            "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
+            "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+            _ => continue,
+        };
+
+        state.oauth_vault.register_platform(handler).await;
+        tracing::info!("Registered platform handler: {}", config.platform);
+    }
+}
+
+/// Background task that periodically checks and refreshes tokens.
+async fn token_refresh_loop(vault: Arc<omni_oauth_vault::OAuthVault>) {
+    let check_interval = std::time::Duration::from_secs(300); // 5 minutes
+
+    loop {
+        tokio::time::sleep(check_interval).await;
+
+        tracing::debug!("Checking tokens for refresh...");
+
+        for platform in ["feishu", "dingtalk", "wechatwork"] {
+            match vault.get_token(platform, "user").await {
+                Ok(_) => {
+                    tracing::debug!("Token OK for {}", platform);
+                }
+                Err(omni_oauth_vault::OAuthError::TokenNotFound(_)) => {
+                    // No token stored for this platform yet
+                }
+                Err(e) => {
+                    tracing::warn!("Token check failed for {}: {}", platform, e);
+                }
+            }
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::registry()
@@ -50,6 +111,15 @@ async fn main() -> anyhow::Result<()> {
 
     // Seed default admin user
     db::seed_admin_user(app_state.users.as_ref()).await;
+
+    // Register platform handlers
+    register_platforms(&app_state).await;
+
+    // Spawn background token refresh task
+    let vault_for_refresh = Arc::clone(&app_state.oauth_vault);
+    tokio::spawn(async move {
+        token_refresh_loop(vault_for_refresh).await;
+    });
 
     let app = Router::new()
         .route("/", get(|| async { axum::response::Redirect::to("/auth/login") }))

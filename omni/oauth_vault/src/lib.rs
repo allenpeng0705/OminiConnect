@@ -14,6 +14,7 @@
 
 use std::collections::HashMap;
 use std::sync::Arc;
+use tokio::sync::RwLock;
 
 pub mod platform;
 pub mod platforms;
@@ -24,6 +25,7 @@ pub use platform::PlatformConfig;
 pub use token_store::TokenStore;
 pub use token_store::TokenStoreBackend;
 pub use token_store::InMemoryTokenStore;
+pub use token_store::SqlxTokenStoreBackend;
 pub use crate::platform::OAuth2Platform as OAuth2PlatformTrait;
 
 /// OAuth2 token with metadata
@@ -62,14 +64,14 @@ pub struct TokenRefreshResult {
 /// Token vault manages OAuth2 tokens for all platforms
 pub struct OAuthVault {
     store: Arc<TokenStore>,
-    platforms: HashMap<String, Arc<dyn OAuth2Platform + Send + Sync>>,
+    platforms: Arc<RwLock<HashMap<String, Arc<dyn OAuth2Platform + Send + Sync>>>>,
 }
 
 impl OAuthVault {
     pub fn new(store: Arc<TokenStore>) -> Self {
         Self {
             store,
-            platforms: HashMap::new(),
+            platforms: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -78,10 +80,11 @@ impl OAuthVault {
         Self::new(Arc::new(TokenStore::in_memory()))
     }
 
-    /// Register a platform handler.
-    pub fn register_platform<P: OAuth2Platform + Send + Sync + 'static>(&mut self, platform: P) {
+    /// Register a platform handler (async to allow Arc<Self> usage).
+    pub async fn register_platform(&self, platform: Box<dyn OAuth2Platform + Send + Sync>) {
         let name = platform.name().to_string();
-        self.platforms.insert(name, Arc::new(platform));
+        let mut platforms = self.platforms.write().await;
+        platforms.insert(name, platform.into());
     }
 
     /// Get a valid token, refreshing if necessary
@@ -119,7 +122,8 @@ impl OAuthVault {
 
     /// Refresh an expired token
     async fn refresh_token(&self, platform: &str, token: &OAuthToken) -> Result<Option<TokenRefreshResult>, OAuthError> {
-        let platform_handler = self.platforms.get(platform)
+        let platforms = self.platforms.read().await;
+        let platform_handler = platforms.get(platform)
             .ok_or_else(|| OAuthError::InvalidConfig(format!("No platform handler registered for {}", platform)))?;
 
         let refresh_token = token.refresh_token.as_ref()
