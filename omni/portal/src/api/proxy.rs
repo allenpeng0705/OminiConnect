@@ -78,7 +78,7 @@ pub async fn forward(
 
     // 4. Forward to native API
     let client = match reqwest::Client::builder()
-        .timeout(Duration::from_secs(30))
+        .timeout(Duration::from_secs(60)) // Longer timeout for uploads
         .build()
     {
         Ok(c) => c,
@@ -92,18 +92,30 @@ pub async fn forward(
     // Inject Authorization header with the access token
     req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
 
-    // Forward Content-Type if present
-    if let Some(ct) = headers.get("content-type") {
-        if let Ok(ct_str) = ct.to_str() {
-            req_builder = req_builder.header("Content-Type", ct_str);
+    // Forward relevant headers
+    let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
+    let is_multipart = content_type.map(|ct| ct.starts_with("multipart/")).unwrap_or(false);
+
+    // For LinkedIn, add version header if present in query params
+    if platform == "linkedin" {
+        if let Some(version) = headers.get("x-linkedin-version").and_then(|v| v.to_str().ok()) {
+            req_builder = req_builder.header("LinkedIn-Version", version);
         }
     }
 
-    // Add body if present, otherwise send empty body with Content-Length: 0
+    // Forward Content-Type if present
+    if let Some(ct) = content_type {
+        req_builder = req_builder.header("Content-Type", ct);
+    }
+
+    // Add body - binary data for multipart, regular body otherwise
     if !body.is_empty() {
         req_builder = req_builder.body(body);
-    } else {
-        req_builder = req_builder.header("Content-Length", "0");
+    } else if !is_multipart {
+        // Don't send Content-Length: 0 for GET/DELETE, only for POST/PUT with no body
+        if method.as_str() == "POST" || method.as_str() == "PUT" {
+            req_builder = req_builder.header("Content-Length", "0");
+        }
     }
 
     // 5. Send request and forward response
