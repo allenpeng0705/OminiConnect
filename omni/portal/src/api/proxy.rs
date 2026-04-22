@@ -22,6 +22,7 @@ pub async fn forward(
     method: axum::http::Method,
     body: Bytes,
 ) -> axum::response::Response<Body> {
+    tracing::info!("PROXY CALLED: platform={}, path={}, method={}", platform, native_path, method);
     // 1. Auth: require Bearer token (OmniConnect API key)
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
@@ -47,8 +48,11 @@ pub async fn forward(
     }
 
     if !valid_key {
+        tracing::warn!("PROXY: Invalid API key");
         return proxy_error_response(StatusCode::UNAUTHORIZED, "invalid API key");
     }
+
+    tracing::info!("PROXY: API key validated, getting token for {}", platform);
 
     // 2. Get access token for platform
     let access_token = if platform == "maton" || platform == "qqmail" {
@@ -75,6 +79,7 @@ pub async fn forward(
 
     // 3. Build upstream URL
     let upstream_url = format!("{}/{}", get_platform_base_url(&platform), native_path);
+    tracing::debug!("Proxy request: platform={}, upstream_url={}", platform, upstream_url);
 
     // 4. Forward to native API
     let client = match reqwest::Client::builder()
@@ -111,15 +116,13 @@ pub async fn forward(
     // Add body - binary data for multipart, regular body otherwise
     if !body.is_empty() {
         req_builder = req_builder.body(body);
-    } else if !is_multipart {
-        // Don't send Content-Length: 0 for GET/DELETE, only for POST/PUT with no body
-        if method.as_str() == "POST" || method.as_str() == "PUT" {
-            req_builder = req_builder.header("Content-Length", "0");
-        }
     }
 
     // 5. Send request and forward response
-    match req_builder.send().await {
+    tracing::info!("Sending request to upstream_url={}", upstream_url);
+    let resp = req_builder.send().await;
+    tracing::info!("Got response: {:?}", resp);
+    match resp {
         Ok(resp) => {
             let status = resp.status();
             let body = resp.bytes().await.unwrap_or_default();
