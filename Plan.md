@@ -1,25 +1,43 @@
-# Project Roadmap: OmniConnect
+# OmniConnect Roadmap
 
-## Phase 1: Foundation (Weeks 1-4)
-- [ ] **Core Gateway Architecture:** Implement the basic Rust-based proxy layer.
-- [ ] **Auth Engine:** Build the centralized OAuth2 handler for Feishu (Lark).
-- [ ] **MCP Integration:** Setup the base MCP server structure to register tools.
-- [ ] **Basic Security:** Implement API key management for agent access.
+## ✅ Completed
 
-## Phase 2: Tool Expansion (Weeks 5-8)
-- [ ] **Enterprise Connectors:**
-    - [ ] Feishu (Bitable, Calendar, Messaging)
-    - [ ] DingTalk (Workflow, Messaging)
-    - [ ] WeChat Work (Customer Management)
-- [ ] **Schema Registry:** A discovery service for LLMs to understand available tool capabilities.
-- [ ] **Documentation:** Generate OpenAPI/MCP specs automatically.
+### Phase 1: Foundation
+- [x] **Core Gateway Architecture**: Axum-based proxy server
+- [x] **Auth Engine**: OAuth2 handler for Feishu, DingTalk, WeChat Work, LinkedIn, Facebook
+- [x] **API Key Management**: Web UI to create, list, delete API keys
+- [x] **Portal UI**: Dashboard, connector config, API key management pages
 
-## Phase 3: Advanced Features & Compliance (Weeks 9-12)
-- [ ] **Data Localization:** Ensure all token/log storage complies with PIPL regulations.
-- [ ] **Content Moderation:** Integrated filtering for upstream/downstream AI content.
-- [ ] **Hybrid Inference:** Integration with local LLM providers for sensitive tasks.
+### Phase 2: Proxy & Token Management
+- [x] **Token Persistence**: SQLite/MySQL/PostgreSQL storage via sqlx
+- [x] **Auto Token Refresh**: Background task refreshes tokens before expiry
+- [x] **Maton-style Proxy**: `/api/proxy/{platform}/{path}` passthrough endpoint
+- [x] **OAuth Token Injection**: Proxy automatically injects stored tokens
 
-## Phase 4: Scaling & Ecosystem (Ongoing)
-- [ ] **Developer SDK:** Simplify connecting new agents to OmniConnect.
-- [ ] **Skill Marketplace:** Allow community-contributed MCP servers.
-- [ ] **Monitoring:** Real-time observability dashboard for API usage and costs.
+## 📋 In Progress
+
+- [ ] **LinkedIn Image Upload**: Multi-step asset upload flow
+- [ ] **MCP Connectors**: Full MCP server implementations for each platform
+- [ ] **Schema Registry**: Discovery service for LLM tool understanding
+
+## 📋 TODO
+
+### Phase 2 (Continued)
+- [ ] **Facebook Posting**: Test and document posting API
+- [ ] **Feishu Fix**: Custom App support (Enterprise Internal Apps don't support user OAuth)
+
+### Phase 3: Advanced Features
+- [ ] **Content Moderation**: Integrated filtering for upstream/downstream AI content
+- [ ] **PII Filtering**: Data localization compliance
+- [ ] **Hybrid Inference**: Integration with local LLM providers
+
+### Phase 4: Ecosystem
+- [ ] **Developer SDK**: Simplify connecting new agents to OmniConnect
+- [ ] **Monitoring Dashboard**: Real-time observability for API usage and costs
+- [ ] **Skill Marketplace**: Community-contributed MCP servers
+
+## Known Issues
+
+- **Feishu Enterprise Internal Apps**: User OAuth endpoints return 404 - use Custom App type instead
+- **LinkedIn Geographic Restriction**: API calls may fail based on server IP location
+- **Image Upload**: Requires `w_asset_upload` scope and multi-step binary upload flow

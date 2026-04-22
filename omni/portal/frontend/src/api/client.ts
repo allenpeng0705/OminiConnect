@@ -15,7 +15,8 @@ interface ConnectorStatus {
 interface ConnectorConfig {
   platform: string;
   client_id: string;
-  client_secret: string;
+  client_secret?: string;
+  has_client_secret?: boolean;
   redirect_uri: string;
   scopes: string[];
   enabled: boolean;

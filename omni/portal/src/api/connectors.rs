@@ -28,6 +28,7 @@ pub async fn list(State(state): State<Arc<AppState>>) -> impl IntoResponse {
                     serde_json::json!({
                         "platform": c.platform,
                         "client_id": c.client_id,
+                        "has_client_secret": !c.client_secret.is_empty(),
                         "redirect_uri": c.redirect_uri,
                         "scopes": c.scopes,
                         "enabled": c.enabled,
@@ -44,8 +45,15 @@ pub async fn list(State(state): State<Arc<AppState>>) -> impl IntoResponse {
 /// POST /api/connectors
 pub async fn upsert(
     State(state): State<Arc<AppState>>,
-    Json(payload): Json<ConnectorConfig>,
+    Json(mut payload): Json<ConnectorConfig>,
 ) -> impl IntoResponse {
+    // Preserve existing client_secret if not provided (empty string means unchanged)
+    if payload.client_secret.is_empty() {
+        if let Ok(Some(existing)) = state.connectors.get(&payload.platform).await {
+            payload.client_secret = existing.client_secret;
+        }
+    }
+
     if let Err(e) = state.connectors.upsert(&payload).await {
         tracing::error!("DB error upserting connector: {}", e);
         return (StatusCode::INTERNAL_SERVER_ERROR, Json(serde_json::json!({ "error": "db error" }))).into_response();

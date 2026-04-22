@@ -25,6 +25,8 @@ export default function ConnectorConfig() {
   const [testResult, setTestResult] = useState<{ status: string; message: string } | null>(null);
   const [error, setError] = useState('');
   const [connected, setConnected] = useState(false);
+  const [showClientSecret, setShowClientSecret] = useState(false);
+  const [showClientId, setShowClientId] = useState(false);
 
   const info = platform ? PLATFORMS[platform] : null;
   const isOAuth2 = info?.type === 'oauth2';
@@ -45,7 +47,9 @@ export default function ConnectorConfig() {
       const existing = list.find(c => c.platform === platform);
       if (existing) {
         setClientId(existing.client_id);
-        setClientSecret(existing.client_secret || '');
+        // If has_client_secret is true, show masked value; otherwise show empty
+        // User must re-enter secret only if they want to change it
+        setClientSecret(existing.has_client_secret ? '••••••••' : '');
         setScopes(existing.scopes?.join(' ') || '');
         setEnabled(existing.enabled);
       } else if (platform && PLATFORMS[platform]?.scopes_default) {
@@ -68,10 +72,12 @@ export default function ConnectorConfig() {
     setSaving(true);
     setError('');
     try {
+      // If clientSecret is masked (••••••••), treat as empty (preserve existing on backend)
+      const secretToSave = clientSecret === '••••••••' ? '' : clientSecret;
       await upsertConnector({
         platform,
         client_id: clientId,
-        client_secret: clientSecret,
+        client_secret: secretToSave,
         redirect_uri: redirectUri,
         scopes: isOAuth2 ? scopes.split(' ').filter(Boolean) : [],
         enabled,
@@ -132,12 +138,22 @@ export default function ConnectorConfig() {
             <>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client ID</label>
-                <input type="text" value={clientId} onChange={e => setClientId(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  <input type={showClientId ? 'text' : 'password'} value={clientId} onChange={e => setClientId(e.target.value)} required style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                  <button type="button" onClick={() => setShowClientId(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
+                    {showClientId ? '👁' : '👁‍🗨'}
+                  </button>
+                </div>
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client Secret</label>
-                <input type="password" value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  <input type={showClientSecret ? 'text' : 'password'} value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                  <button type="button" onClick={() => setShowClientSecret(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
+                    {showClientSecret ? '👁' : '👁‍🗨'}
+                  </button>
+                </div>
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
@@ -155,12 +171,22 @@ export default function ConnectorConfig() {
             <>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Corp ID</label>
-                <input type="text" value={clientId} onChange={e => setClientId(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  <input type={showClientId ? 'text' : 'password'} value={clientId} onChange={e => setClientId(e.target.value)} required style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                  <button type="button" onClick={() => setShowClientId(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
+                    {showClientId ? '👁' : '👁‍🗨'}
+                  </button>
+                </div>
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Corp Secret</label>
-                <input type="password" value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  <input type={showClientSecret ? 'text' : 'password'} value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
+                  <button type="button" onClick={() => setShowClientSecret(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
+                    {showClientSecret ? '👁' : '👁‍🗨'}
+                  </button>
+                </div>
                 <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Found in QQ Enterprise Mail management console → Application → Secret.</p>
               </div>
             </>
@@ -168,7 +194,12 @@ export default function ConnectorConfig() {
             <>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>API Key</label>
-                <input type="password" value={clientId} onChange={e => setClientId(e.target.value)} required placeholder="sk-..." style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box', fontFamily: 'monospace' }} />
+                <div style={{ position: 'relative', display: 'flex' }}>
+                  <input type={showClientId ? 'text' : 'password'} value={clientId} onChange={e => setClientId(e.target.value)} required placeholder="sk-..." style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box', fontFamily: 'monospace' }} />
+                  <button type="button" onClick={() => setShowClientId(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
+                    {showClientId ? '👁' : '👁‍🗨'}
+                  </button>
+                </div>
                 <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Get your API key from the Maton.ai dashboard.</p>
               </div>
             </>
@@ -186,6 +217,11 @@ export default function ConnectorConfig() {
             <button type="button" onClick={handleTest} disabled={testing || !clientId} style={{ padding: '0.5rem 1.25rem', background: '#f5f5f5', color: '#333', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' }}>
               {testing ? 'Testing...' : 'Test Connection'}
             </button>
+            {isOAuth2 && connected && (
+              <button type="button" onClick={() => window.location.href = `/oauth/${platform}`} style={{ padding: '0.5rem 1.25rem', background: '#dcfce7', color: '#166534', border: '1px solid #86efac', borderRadius: '4px', cursor: 'pointer' }}>
+                Reconnect OAuth
+              </button>
+            )}
             <button type="button" onClick={handleDelete} style={{ padding: '0.5rem 1.25rem', background: 'white', color: '#d32f2f', border: '1px solid #d32f2f', borderRadius: '4px', cursor: 'pointer', marginLeft: 'auto' }}>
               Remove
             </button>
