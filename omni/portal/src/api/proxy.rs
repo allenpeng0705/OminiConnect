@@ -149,6 +149,7 @@ fn get_platform_base_url(platform: &str) -> &'static str {
         "wechatwork" => "https://qyapi.weixin.qq.com",
         "linkedin" => "https://api.linkedin.com",
         "facebook" => "https://graph.facebook.com/v21.0",
+        "x" => "https://api.x.com/2",
         "maton" => "https://api.maton.ai",
         "qqmail" => "https://api.exmail.qq.com",
         _ => "",

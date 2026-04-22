@@ -8,6 +8,7 @@ const PLATFORMS: Record<string, { name: string; color: string; type: 'oauth2' | 
   wechatwork: { name: 'WeChat Work', color: '#07C160', type: 'oauth2' },
   linkedin: { name: 'LinkedIn', color: '#0A66C2', type: 'oauth2', scopes_default: 'openid profile email' },
   facebook: { name: 'Facebook', color: '#1877F2', type: 'oauth2', scopes_default: 'email public_profile' },
+  x: { name: 'X (Twitter)', color: '#111111', type: 'oauth2', scopes_default: 'tweet.read users.read tweet.write offline.access' },
   maton: { name: 'Maton.ai', color: '#6366F1', type: 'api_key' },
   qqmail: { name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 };
@@ -27,6 +28,7 @@ export default function ConnectorConfig() {
   const [connected, setConnected] = useState(false);
   const [showClientSecret, setShowClientSecret] = useState(false);
   const [showClientId, setShowClientId] = useState(false);
+  const [hasExistingSecret, setHasExistingSecret] = useState(false);
 
   const info = platform ? PLATFORMS[platform] : null;
   const isOAuth2 = info?.type === 'oauth2';
@@ -47,9 +49,10 @@ export default function ConnectorConfig() {
       const existing = list.find(c => c.platform === platform);
       if (existing) {
         setClientId(existing.client_id);
-        // If has_client_secret is true, show masked value; otherwise show empty
+        // Track whether secret exists, but show empty in the field
         // User must re-enter secret only if they want to change it
-        setClientSecret(existing.has_client_secret ? '••••••••' : '');
+        setHasExistingSecret(!!existing.has_client_secret);
+        setClientSecret('');
         setScopes(existing.scopes?.join(' ') || '');
         setEnabled(existing.enabled);
       } else if (platform && PLATFORMS[platform]?.scopes_default) {
@@ -72,17 +75,20 @@ export default function ConnectorConfig() {
     setSaving(true);
     setError('');
     try {
-      // If clientSecret is masked (••••••••), treat as empty (preserve existing on backend)
-      const secretToSave = clientSecret === '••••••••' ? '' : clientSecret;
+      // Only send client_secret if user actually entered a new value
+      // If field is empty and hasExistingSecret is true, backend preserves the existing one
       await upsertConnector({
         platform,
         client_id: clientId,
-        client_secret: secretToSave,
+        client_secret: clientSecret,
         redirect_uri: redirectUri,
         scopes: isOAuth2 ? scopes.split(' ').filter(Boolean) : [],
         enabled,
       });
       await loadStatus();
+      // Refresh to show empty field again after save
+      setHasExistingSecret(true);
+      setClientSecret('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -149,11 +155,20 @@ export default function ConnectorConfig() {
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.375rem', fontSize: '0.875rem', color: '#666' }}>Client Secret</label>
                 <div style={{ position: 'relative', display: 'flex' }}>
-                  <input type={showClientSecret ? 'text' : 'password'} value={clientSecret} onChange={e => setClientSecret(e.target.value)} required style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }} />
-                  <button type="button" onClick={() => setShowClientSecret(v => !v)} style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', padding: '0.25rem' }}>
-                    {showClientSecret ? '👁' : '👁‍🗨'}
-                  </button>
+                  <input
+                    type="password"
+                    value={clientSecret}
+                    onChange={e => setClientSecret(e.target.value)}
+                    placeholder={hasExistingSecret ? '••••••••' : ''}
+                    style={{ flex: 1, padding: '0.5rem', paddingRight: '2.5rem', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
+                  />
+                  <span style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1rem', padding: '0.25rem', color: '#999' }}>
+                    {hasExistingSecret ? '🔒' : ''}
+                  </span>
                 </div>
+                {hasExistingSecret && (
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>Leave empty to keep existing secret, or enter new value to change.</p>
+                )}
               </div>
 
               <div style={{ marginBottom: '1rem' }}>

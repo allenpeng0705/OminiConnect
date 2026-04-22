@@ -63,6 +63,7 @@ async fn register_platforms(state: &Arc<AppState>) {
             "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
             "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
             "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+            "x" => Box::new(omni_oauth_vault::platforms::XPlatform::new(platform_config)),
             _ => continue,
         };
 
@@ -80,7 +81,7 @@ async fn token_refresh_loop(vault: Arc<omni_oauth_vault::OAuthVault>) {
 
         tracing::debug!("Checking tokens for refresh...");
 
-        for platform in ["feishu", "dingtalk", "wechatwork", "linkedin", "facebook"] {
+        for platform in ["feishu", "dingtalk", "wechatwork", "linkedin", "facebook", "x"] {
             match vault.get_token(platform, "user").await {
                 Ok(_) => {
                     tracing::debug!("Token OK for {}", platform);

@@ -18,6 +18,7 @@ const PLATFORMS = [
   { id: 'wechatwork', name: 'WeChat Work', color: '#07C160', type: 'oauth2' },
   { id: 'linkedin', name: 'LinkedIn', color: '#0A66C2', type: 'oauth2' },
   { id: 'facebook', name: 'Facebook', color: '#1877F2', type: 'oauth2' },
+  { id: 'x', name: 'X (Twitter)', color: '#111111', type: 'oauth2' },
   { id: 'maton', name: 'Maton.ai', color: '#6366F1', type: 'api_key' },
   { id: 'qqmail', name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 ];

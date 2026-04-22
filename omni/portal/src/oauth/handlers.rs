@@ -16,7 +16,7 @@ use crate::auth::models::Session;
 use crate::oauth::models::OAuthCallbackQuery;
 
 /// Supported platforms.
-const SUPPORTED_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork", "linkedin", "facebook"];
+const SUPPORTED_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork", "linkedin", "facebook", "x"];
 
 /// Base URL for the portal's OAuth callback.
 fn portal_base_url() -> String {
@@ -63,6 +63,7 @@ pub async fn oauth_init(
         "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
         "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
         "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+        "x" => Box::new(omni_oauth_vault::platforms::XPlatform::new(platform_config)),
         _ => unreachable!(),
     };
 
@@ -132,6 +133,7 @@ pub async fn oauth_callback(
         "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
         "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
         "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+        "x" => Box::new(omni_oauth_vault::platforms::XPlatform::new(platform_config)),
         _ => return (StatusCode::NOT_FOUND, "Unknown platform").into_response(),
     };
 
