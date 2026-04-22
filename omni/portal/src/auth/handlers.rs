@@ -54,7 +54,7 @@ pub async fn login(
 
     let mut resp = Redirect::to("/").into_response();
     let cookie = format!(
-        "session={}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax",
+        "session={}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax; Secure",
         session_id
     );
     if let Ok(h) = http::HeaderValue::from_str(&cookie) {
@@ -129,6 +129,73 @@ pub async fn generate_api_key(
     };
 
     (StatusCode::CREATED, axum::Json(resp)).into_response()
+}
+
+/// GET /auth/apikey — list all API keys for current user
+pub async fn list_api_keys(
+    State(state): State<Arc<AppState>>,
+    headers: http::HeaderMap,
+) -> Response {
+    let username = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return (StatusCode::UNAUTHORIZED, "Not authenticated").into_response();
+        }
+    };
+
+    match state.api_keys.list_by_username(&username).await {
+        Ok(keys) => {
+            let resp: Vec<_> = keys.into_iter().map(|k| {
+                serde_json::json!({
+                    "key_hash": k.key_hash,
+                    "username": k.username,
+                    "label": k.label,
+                    "created_at": k.created_at,
+                })
+            }).collect();
+            axum::Json(resp).into_response()
+        }
+        Err(e) => {
+            tracing::error!("DB error listing API keys: {}", e);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response()
+        }
+    }
+}
+
+/// DELETE /auth/apikey/:key_hash — delete an API key
+pub async fn delete_api_key(
+    State(state): State<Arc<AppState>>,
+    headers: http::HeaderMap,
+    axum::extract::Path(key_hash): axum::extract::Path<String>,
+) -> Response {
+    let username = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return (StatusCode::UNAUTHORIZED, "Not authenticated").into_response();
+        }
+    };
+
+    // Verify the key belongs to this user
+    match state.api_keys.get_by_hash(&key_hash).await {
+        Ok(Some(key)) if key.username == username => {
+            if let Err(e) = state.api_keys.delete(&key_hash).await {
+                tracing::error!("DB error deleting API key: {}", e);
+                return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
+            }
+            tracing::info!("API key deleted for user {}", username);
+            (StatusCode::NO_CONTENT).into_response()
+        }
+        Ok(Some(_)) => {
+            (StatusCode::FORBIDDEN, "Cannot delete another user's key").into_response()
+        }
+        Ok(None) => {
+            (StatusCode::NOT_FOUND, "API key not found").into_response()
+        }
+        Err(e) => {
+            tracing::error!("DB error looking up API key: {}", e);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response()
+        }
+    }
 }
 
 /// GET /auth/me — returns current user info

@@ -16,7 +16,7 @@ use crate::auth::models::Session;
 use crate::oauth::models::OAuthCallbackQuery;
 
 /// Supported platforms.
-const SUPPORTED_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork"];
+const SUPPORTED_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork", "linkedin", "facebook"];
 
 /// Base URL for the portal's OAuth callback.
 fn portal_base_url() -> String {
@@ -61,6 +61,8 @@ pub async fn oauth_init(
         "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
         "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
         "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+        "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
+        "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
         _ => unreachable!(),
     };
 
@@ -128,6 +130,8 @@ pub async fn oauth_callback(
         "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
         "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
         "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+        "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
+        "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
         _ => return (StatusCode::NOT_FOUND, "Unknown platform").into_response(),
     };
 

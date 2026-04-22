@@ -194,6 +194,8 @@ pub trait ApiKeyRepository: Send + Sync {
     async fn get_by_hash(&self, key_hash: &str) -> anyhow::Result<Option<ApiKey>>;
     async fn insert(&self, api_key: &ApiKey) -> anyhow::Result<()>;
     async fn list_all(&self) -> anyhow::Result<Vec<ApiKey>>;
+    async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>>;
+    async fn delete(&self, key_hash: &str) -> anyhow::Result<()>;
 }
 
 pub struct SqlxApiKeyRepo {
@@ -239,6 +241,24 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
         .fetch_all(&self.pool)
         .await?;
         Ok(rows.into_iter().map(|r| r.into()).collect())
+    }
+
+    async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>> {
+        let rows: Vec<models::ApiKeyRow> = sqlx::query_as(
+            "SELECT key_hash, username, label, created_at FROM api_keys WHERE username = $1",
+        )
+        .bind(username)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows.into_iter().map(|r| r.into()).collect())
+    }
+
+    async fn delete(&self, key_hash: &str) -> anyhow::Result<()> {
+        sqlx::query("DELETE FROM api_keys WHERE key_hash = $1")
+            .bind(key_hash)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
     }
 }
 

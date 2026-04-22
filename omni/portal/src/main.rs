@@ -19,9 +19,9 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::app::AppState;
 
-const PORT: u16 = 8090;
+const PORT: u16 = 9000;
 
-const SPA_HTML_PATH: &str = "omni/portal/frontend/dist/index.html";
+const SPA_HTML_PATH: &str = "/Users/shileipeng/Documents/mygithub/OminiConnect/omni/portal/frontend/dist/index.html";
 
 async fn serve_spa() -> axum::response::Html<String> {
     match tokio::fs::read_to_string(SPA_HTML_PATH).await {
@@ -61,6 +61,8 @@ async fn register_platforms(state: &Arc<AppState>) {
             "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
             "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
             "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+            "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
+            "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
             _ => continue,
         };
 
@@ -78,7 +80,7 @@ async fn token_refresh_loop(vault: Arc<omni_oauth_vault::OAuthVault>) {
 
         tracing::debug!("Checking tokens for refresh...");
 
-        for platform in ["feishu", "dingtalk", "wechatwork"] {
+        for platform in ["feishu", "dingtalk", "wechatwork", "linkedin", "facebook"] {
             match vault.get_token(platform, "user").await {
                 Ok(_) => {
                     tracing::debug!("Token OK for {}", platform);
@@ -126,7 +128,7 @@ async fn main() -> anyhow::Result<()> {
         .nest("/auth", auth::router())
         .nest("/oauth", oauth::router())
         .nest("/api", api::router())
-        .route_service("/*path", ServeDir::new("omni/portal/frontend/dist"))
+        .route_service("/assets/*path", ServeDir::new("/Users/shileipeng/Documents/mygithub/OminiConnect/omni/portal/frontend/dist"))
         .fallback(serve_spa)
         .with_state(app_state);
 

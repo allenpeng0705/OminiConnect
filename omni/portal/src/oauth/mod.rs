@@ -5,12 +5,12 @@ pub mod models;
 
 use std::sync::Arc;
 
-use axum::Router;
+use axum::{routing::get, Router};
 
 use crate::app::AppState;
 
 pub fn router() -> Router<Arc<AppState>> {
     Router::new()
-        .route("/{platform}", axum::routing::get(handlers::oauth_init))
-        .route("/{platform}/callback", axum::routing::get(handlers::oauth_callback))
+        .route("/:platform", get(handlers::oauth_init))
+        .route("/:platform/callback", get(handlers::oauth_callback))
 }

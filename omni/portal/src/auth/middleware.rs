@@ -36,9 +36,20 @@ async fn extract_session(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
             if k == "session" { Some(v) } else { None }
         })?;
 
-    let session = state.sessions.get(session_id).await.ok().flatten()?;
+    let session = match state.sessions.get(session_id).await {
+        Ok(Some(s)) => s,
+        Ok(None) => {
+            tracing::debug!("Session not found: {}", session_id);
+            return None;
+        }
+        Err(e) => {
+            tracing::error!("DB error looking up session: {}", e);
+            return None;
+        }
+    };
 
     if session.expires_at < chrono::Utc::now() {
+        tracing::debug!("Session expired: {} (expires_at={})", session_id, session.expires_at);
         return None;
     }
 

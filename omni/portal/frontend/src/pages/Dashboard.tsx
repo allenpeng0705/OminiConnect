@@ -16,6 +16,8 @@ const PLATFORMS = [
   { id: 'feishu', name: 'Feishu / Lark', color: '#00A1E0', type: 'oauth2' },
   { id: 'dingtalk', name: 'DingTalk', color: '#1677FF', type: 'oauth2' },
   { id: 'wechatwork', name: 'WeChat Work', color: '#07C160', type: 'oauth2' },
+  { id: 'linkedin', name: 'LinkedIn', color: '#0A66C2', type: 'oauth2' },
+  { id: 'facebook', name: 'Facebook', color: '#1877F2', type: 'oauth2' },
   { id: 'maton', name: 'Maton.ai', color: '#6366F1', type: 'api_key' },
   { id: 'qqmail', name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 ];
@@ -70,7 +72,7 @@ export default function Dashboard() {
       // API key platforms go directly to config
       return;
     }
-    window.location.href = `/auth/${platform}`;
+    window.location.href = `/oauth/${platform}`;
   }
 
   const configuredPlatforms = new Set(connectors.map(c => c.platform));
@@ -82,6 +84,7 @@ export default function Dashboard() {
         <h1 style={{ margin: 0, fontSize: '1.25rem', color: '#333' }}>OmniConnect Portal</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span style={{ color: '#666', fontSize: '0.875rem' }}>{username}</span>
+          <Link to="/api-keys" style={{ padding: '0.375rem 0.75rem', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem', textDecoration: 'none', color: '#333' }}>API Keys</Link>
           <button onClick={handleLogout} style={{ padding: '0.375rem 0.75rem', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem' }}>Logout</button>
         </div>
       </header>

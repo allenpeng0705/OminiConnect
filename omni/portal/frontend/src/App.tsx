@@ -4,6 +4,7 @@ import { getMe } from './api/client';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import ConnectorConfig from './pages/ConnectorConfig';
+import ApiKeys from './pages/ApiKeys';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [checking, setChecking] = useState(true);
@@ -36,6 +37,11 @@ export default function App() {
         <Route path="/connectors/:platform" element={
           <ProtectedRoute>
             <ConnectorConfig />
+          </ProtectedRoute>
+        } />
+        <Route path="/api-keys" element={
+          <ProtectedRoute>
+            <ApiKeys />
           </ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/" replace />} />

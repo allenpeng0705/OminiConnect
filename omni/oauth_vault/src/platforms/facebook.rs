@@ -1,4 +1,4 @@
-//! Feishu (Lark) OAuth2 platform implementation.
+//! Facebook OAuth2 platform implementation.
 
 use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
@@ -6,29 +6,28 @@ use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
 
-/// Feishu OAuth2 platform handler
-pub struct FeishuPlatform {
+pub struct FacebookPlatform {
     config: PlatformConfig,
     client: Client,
 }
 
 #[derive(Debug, Deserialize)]
-struct FeishuTokenResponse {
-    code: i64,
-    msg: String,
+struct FacebookTokenResponse {
     #[serde(rename = "access_token")]
     access_token: Option<String>,
-    #[serde(rename = "refresh_token")]
-    refresh_token: Option<String>,
     #[serde(rename = "token_type")]
     token_type: Option<String>,
     #[serde(rename = "expires_in")]
     expires_in: Option<i64>,
-    #[serde(rename = "scope")]
-    _scope: Option<String>,
+    #[serde(rename = "refresh_token")]
+    refresh_token: Option<String>,
+    #[serde(rename = "error")]
+    error: Option<String>,
+    #[serde(rename = "error_message")]
+    error_message: Option<String>,
 }
 
-impl FeishuPlatform {
+impl FacebookPlatform {
     pub fn new(config: PlatformConfig) -> Self {
         Self {
             config,
@@ -38,25 +37,25 @@ impl FeishuPlatform {
 }
 
 #[async_trait]
-impl OAuth2Platform for FeishuPlatform {
+impl OAuth2Platform for FacebookPlatform {
     fn name(&self) -> &str {
-        "feishu"
+        "facebook"
     }
 
-    /// Exchange authorization code for user access token
     async fn exchange_code(&self, code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/connect/token";
+        let url = "https://graph.facebook.com/v21.0/oauth/access_token";
 
         let resp = self
             .client
             .post(url)
-            .header("Content-Type", "application/json; charset=utf-8")
-            .json(&serde_json::json!({
-                "grant_type": "authorization_code",
-                "code": code,
-                "app_id": self.config.client_id,
-                "app_secret": self.config.client_secret,
-            }))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(format!(
+                "grant_type=authorization_code&code={}&redirect_uri={}&client_id={}&client_secret={}",
+                urlencoding::encode(code),
+                urlencoding::encode(&self.config.redirect_uri),
+                urlencoding::encode(&self.config.client_id),
+                urlencoding::encode(&self.config.client_secret),
+            ))
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
@@ -66,14 +65,11 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
+        let body: FacebookTokenResponse = serde_json::from_str(&body_text)
             .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
 
-        if body.code != 0 {
-            return Err(OAuthError::ExchangeFailed(format!(
-                "Feishu auth error: {} - {}",
-                body.code, body.msg
-            )));
+        if let Some(err) = body.error {
+            return Err(OAuthError::ExchangeFailed(format!("Facebook auth error: {} - {}", err, body.error_message.unwrap_or_default())));
         }
 
         let access_token = body.access_token
@@ -83,7 +79,7 @@ impl OAuth2Platform for FeishuPlatform {
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs() as i64;
-        let expires_at = now + body.expires_in.unwrap_or(7200);
+        let expires_at = now + body.expires_in.unwrap_or(3600);
 
         Ok(OAuthToken {
             platform: self.name().to_string(),
@@ -96,20 +92,19 @@ impl OAuth2Platform for FeishuPlatform {
         })
     }
 
-    /// Refresh user access token using refresh token
     async fn refresh_token(&self, refresh_token: &str) -> Result<OAuthToken, OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/connect/token";
+        let url = "https://graph.facebook.com/v21.0/oauth/access_token";
 
         let resp = self
             .client
             .post(url)
-            .header("Content-Type", "application/json")
-            .json(&serde_json::json!({
-                "grant_type": "refresh_token",
-                "refresh_token": refresh_token,
-                "app_id": self.config.client_id,
-                "app_secret": self.config.client_secret,
-            }))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(format!(
+                "grant_type=fb_exchange_token&fb_exchange_token={}&client_id={}&client_secret={}",
+                urlencoding::encode(refresh_token),
+                urlencoding::encode(&self.config.client_id),
+                urlencoding::encode(&self.config.client_secret),
+            ))
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
@@ -119,42 +114,38 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
+        let body: FacebookTokenResponse = serde_json::from_str(&body_text)
             .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
 
-        if body.code != 0 {
-            return Err(OAuthError::ExchangeFailed(format!(
-                "Feishu refresh error: {} - {}",
-                body.code, body.msg
-            )));
+        if let Some(err) = body.error {
+            return Err(OAuthError::ExchangeFailed(format!("Facebook refresh error: {} - {}", err, body.error_message.unwrap_or_default())));
         }
 
         let access_token = body.access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+        let expires_at = now + body.expires_in.unwrap_or(3600);
+
         Ok(OAuthToken {
             platform: self.name().to_string(),
             subject: "user".to_string(),
             access_token,
-            refresh_token: body.refresh_token,
+            refresh_token: body.refresh_token.or_else(|| Some(refresh_token.to_string())),
             token_type: body.token_type.unwrap_or_else(|| "Bearer".to_string()),
-            expires_at: {
-                let now = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs() as i64;
-                now + body.expires_in.unwrap_or(7200)
-            },
+            expires_at,
             scopes: self.config.scopes.clone(),
         })
     }
 
-    /// Get Feishu OAuth authorization URL for user consent
     fn get_auth_url(&self, state: &str) -> String {
-        let scopes = self.config.scopes.join(" ");
-        let auth_base = "https://open.feishu.cn/open-apis/authen/v1/authorize";
+        let scopes = self.config.scopes.join(",");
+        let auth_base = "https://www.facebook.com/v21.0/dialog/oauth";
         format!(
-            "{}?app_id={}&redirect_uri={}&scope={}&state={}",
+            "{}?client_id={}&redirect_uri={}&scope={}&state={}",
             auth_base,
             self.config.client_id,
             urlencoding::encode(&self.config.redirect_uri),
@@ -164,11 +155,13 @@ impl OAuth2Platform for FeishuPlatform {
     }
 
     async fn revoke_token(&self, token: &str) -> Result<(), OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/revoke";
+        let url = format!(
+            "https://graph.facebook.com/v21.0/me/permissions?access_token={}",
+            urlencoding::encode(token)
+        );
 
         self.client
-            .post(url)
-            .header("Authorization", format!("Bearer {}", token))
+            .delete(&url)
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;

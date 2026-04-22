@@ -74,7 +74,7 @@ pub async fn forward(
     };
 
     // 3. Build upstream URL
-    let upstream_url = format!("{}{}", get_platform_base_url(&platform), native_path);
+    let upstream_url = format!("{}/{}", get_platform_base_url(&platform), native_path);
 
     // 4. Forward to native API
     let client = match reqwest::Client::builder()
@@ -99,9 +99,11 @@ pub async fn forward(
         }
     }
 
-    // Add body if present
+    // Add body if present, otherwise send empty body with Content-Length: 0
     if !body.is_empty() {
         req_builder = req_builder.body(body);
+    } else {
+        req_builder = req_builder.header("Content-Length", "0");
     }
 
     // 5. Send request and forward response
@@ -133,6 +135,8 @@ fn get_platform_base_url(platform: &str) -> &'static str {
         "feishu" => "https://open.feishu.cn/open-apis",
         "dingtalk" => "https://api.dingtalk.com",
         "wechatwork" => "https://qyapi.weixin.qq.com",
+        "linkedin" => "https://api.linkedin.com",
+        "facebook" => "https://graph.facebook.com/v21.0",
         "maton" => "https://api.maton.ai",
         "qqmail" => "https://api.exmail.qq.com",
         _ => "",

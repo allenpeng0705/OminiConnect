@@ -18,5 +18,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/connectors/:platform", axum::routing::delete(connectors::delete))
         .route("/connectors/:platform/status", axum::routing::get(connectors::status))
         .route("/connectors/:platform/test", axum::routing::post(connectors::test))
-        .route("/proxy/:platform/*path", axum::routing::post(proxy::forward))
+        .route("/proxy/:platform/*path", axum::routing::get(proxy::forward).post(proxy::forward))
 }

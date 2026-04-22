@@ -1,4 +1,4 @@
-//! Feishu (Lark) OAuth2 platform implementation.
+//! LinkedIn OAuth2 platform implementation.
 
 use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
@@ -6,16 +6,13 @@ use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
 
-/// Feishu OAuth2 platform handler
-pub struct FeishuPlatform {
+pub struct LinkedInPlatform {
     config: PlatformConfig,
     client: Client,
 }
 
 #[derive(Debug, Deserialize)]
-struct FeishuTokenResponse {
-    code: i64,
-    msg: String,
+struct LinkedInTokenResponse {
     #[serde(rename = "access_token")]
     access_token: Option<String>,
     #[serde(rename = "refresh_token")]
@@ -25,10 +22,13 @@ struct FeishuTokenResponse {
     #[serde(rename = "expires_in")]
     expires_in: Option<i64>,
     #[serde(rename = "scope")]
-    _scope: Option<String>,
+    scope: Option<String>,
+    #[serde(rename = "id_token")]
+    id_token: Option<String>,
+    pub sub: Option<String>,
 }
 
-impl FeishuPlatform {
+impl LinkedInPlatform {
     pub fn new(config: PlatformConfig) -> Self {
         Self {
             config,
@@ -38,25 +38,26 @@ impl FeishuPlatform {
 }
 
 #[async_trait]
-impl OAuth2Platform for FeishuPlatform {
+impl OAuth2Platform for LinkedInPlatform {
     fn name(&self) -> &str {
-        "feishu"
+        "linkedin"
     }
 
     /// Exchange authorization code for user access token
     async fn exchange_code(&self, code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/connect/token";
+        let url = "https://www.linkedin.com/oauth/v2/accessToken";
 
         let resp = self
             .client
             .post(url)
-            .header("Content-Type", "application/json; charset=utf-8")
-            .json(&serde_json::json!({
-                "grant_type": "authorization_code",
-                "code": code,
-                "app_id": self.config.client_id,
-                "app_secret": self.config.client_secret,
-            }))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(format!(
+                "grant_type=authorization_code&code={}&redirect_uri={}&client_id={}&client_secret={}",
+                urlencoding::encode(code),
+                urlencoding::encode(&self.config.redirect_uri),
+                urlencoding::encode(&self.config.client_id),
+                urlencoding::encode(&self.config.client_secret),
+            ))
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
@@ -66,15 +67,8 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
+        let body: LinkedInTokenResponse = serde_json::from_str(&body_text)
             .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
-
-        if body.code != 0 {
-            return Err(OAuthError::ExchangeFailed(format!(
-                "Feishu auth error: {} - {}",
-                body.code, body.msg
-            )));
-        }
 
         let access_token = body.access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
@@ -83,11 +77,11 @@ impl OAuth2Platform for FeishuPlatform {
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs() as i64;
-        let expires_at = now + body.expires_in.unwrap_or(7200);
+        let expires_at = now + body.expires_in.unwrap_or(5184000);
 
         Ok(OAuthToken {
             platform: self.name().to_string(),
-            subject: "user".to_string(),
+            subject: body.sub.clone().unwrap_or_else(|| "user".to_string()),
             access_token,
             refresh_token: body.refresh_token,
             token_type: body.token_type.unwrap_or_else(|| "Bearer".to_string()),
@@ -96,20 +90,20 @@ impl OAuth2Platform for FeishuPlatform {
         })
     }
 
-    /// Refresh user access token using refresh token
+    /// Refresh access token (LinkedIn refresh tokens are long-lived, but may expire)
     async fn refresh_token(&self, refresh_token: &str) -> Result<OAuthToken, OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/connect/token";
+        let url = "https://www.linkedin.com/oauth/v2/accessToken";
 
         let resp = self
             .client
             .post(url)
-            .header("Content-Type", "application/json")
-            .json(&serde_json::json!({
-                "grant_type": "refresh_token",
-                "refresh_token": refresh_token,
-                "app_id": self.config.client_id,
-                "app_secret": self.config.client_secret,
-            }))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(format!(
+                "grant_type=refresh_token&refresh_token={}&client_id={}&client_secret={}",
+                urlencoding::encode(refresh_token),
+                urlencoding::encode(&self.config.client_id),
+                urlencoding::encode(&self.config.client_secret),
+            ))
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
@@ -119,42 +113,35 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
+        let body: LinkedInTokenResponse = serde_json::from_str(&body_text)
             .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
-
-        if body.code != 0 {
-            return Err(OAuthError::ExchangeFailed(format!(
-                "Feishu refresh error: {} - {}",
-                body.code, body.msg
-            )));
-        }
 
         let access_token = body.access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as i64;
+        let expires_at = now + body.expires_in.unwrap_or(5184000);
+
         Ok(OAuthToken {
             platform: self.name().to_string(),
-            subject: "user".to_string(),
+            subject: body.sub.unwrap_or_else(|| "user".to_string()),
             access_token,
-            refresh_token: body.refresh_token,
+            refresh_token: body.refresh_token.or_else(|| Some(refresh_token.to_string())),
             token_type: body.token_type.unwrap_or_else(|| "Bearer".to_string()),
-            expires_at: {
-                let now = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs() as i64;
-                now + body.expires_in.unwrap_or(7200)
-            },
+            expires_at,
             scopes: self.config.scopes.clone(),
         })
     }
 
-    /// Get Feishu OAuth authorization URL for user consent
+    /// Get LinkedIn OAuth authorization URL
     fn get_auth_url(&self, state: &str) -> String {
         let scopes = self.config.scopes.join(" ");
-        let auth_base = "https://open.feishu.cn/open-apis/authen/v1/authorize";
+        let auth_base = "https://www.linkedin.com/oauth/v2/authorization";
         format!(
-            "{}?app_id={}&redirect_uri={}&scope={}&state={}",
+            "{}?response_type=code&client_id={}&redirect_uri={}&scope={}&state={}",
             auth_base,
             self.config.client_id,
             urlencoding::encode(&self.config.redirect_uri),
@@ -164,14 +151,25 @@ impl OAuth2Platform for FeishuPlatform {
     }
 
     async fn revoke_token(&self, token: &str) -> Result<(), OAuthError> {
-        let url = "https://open.feishu.cn/open-apis/authen/v1/oid/revoke";
+        let url = "https://www.linkedin.com/oauth/v2/revocateToken";
 
-        self.client
+        let resp = self
+            .client
             .post(url)
-            .header("Authorization", format!("Bearer {}", token))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(format!(
+                "token={}&client_id={}&client_secret={}",
+                urlencoding::encode(token),
+                urlencoding::encode(&self.config.client_id),
+                urlencoding::encode(&self.config.client_secret),
+            ))
             .send()
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
+
+        if !resp.status().is_success() {
+            return Err(OAuthError::ExchangeFailed(format!("Revoke failed: {}", resp.status())));
+        }
 
         Ok(())
     }
