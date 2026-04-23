@@ -57,18 +57,35 @@ pub async fn oauth_init(
         scopes: config.scopes.clone(),
     };
 
-    let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
-        "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
-        "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
-        "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
-        "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
-        "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
-        "x" => Box::new(omni_oauth_vault::platforms::XPlatform::new(platform_config)),
-        _ => unreachable!(),
-    };
-
     let state_param = Uuid::new_v4().to_string();
-    let auth_url = handler.get_auth_url(&state_param);
+
+    // X requires PKCE (RFC 7636): store verifier keyed by OAuth `state`, send challenge on authorize.
+    let auth_url = if platform == "x" {
+        let verifier = omni_oauth_vault::random_code_verifier();
+        let challenge = omni_oauth_vault::code_challenge_s256(&verifier);
+        let x = omni_oauth_vault::platforms::XPlatform::new(platform_config.clone());
+        let pkce_session = Session {
+            session_id: format!("oauth_pkce:{}", state_param),
+            username: verifier,
+            created_at: chrono::Utc::now(),
+            expires_at: chrono::Utc::now() + chrono::Duration::minutes(10),
+        };
+        if let Err(e) = state.sessions.insert(&pkce_session).await {
+            tracing::error!("Failed to store OAuth PKCE verifier: {}", e);
+            return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to prepare OAuth session").into_response();
+        }
+        x.authorize_url(&state_param, &challenge)
+    } else {
+        let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
+            "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
+            "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
+            "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+            "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
+            "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+            _ => unreachable!(),
+        };
+        handler.get_auth_url(&state_param)
+    };
 
     // Store state for CSRF validation
     let oauth_session = Session {
@@ -127,18 +144,51 @@ pub async fn oauth_callback(
         scopes: config.scopes.clone(),
     };
 
-    let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
-        "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
-        "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
-        "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
-        "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
-        "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
-        "x" => Box::new(omni_oauth_vault::platforms::XPlatform::new(platform_config)),
-        _ => return (StatusCode::NOT_FOUND, "Unknown platform").into_response(),
+    let token_result = if platform == "x" {
+        let state_val = match &query.state {
+            Some(s) if !s.is_empty() => s.as_str(),
+            _ => {
+                return (StatusCode::BAD_REQUEST, "Missing OAuth state (required for X)").into_response();
+            }
+        };
+
+        let pkce_sid = format!("oauth_pkce:{state_val}");
+        let verifier = match state.sessions.get(&pkce_sid).await {
+            Ok(Some(s)) => s.username,
+            _ => {
+                return (
+                    StatusCode::BAD_REQUEST,
+                    "Missing or expired PKCE session — go back and start Connect OAuth again",
+                )
+                    .into_response();
+            }
+        };
+
+        let x = omni_oauth_vault::platforms::XPlatform::new(platform_config);
+        x.exchange_authorization_code(code, &redirect_uri, &verifier).await
+    } else {
+        let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
+            "feishu" => Box::new(omni_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
+            "dingtalk" => Box::new(omni_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
+            "wechatwork" => Box::new(omni_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
+            "linkedin" => Box::new(omni_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
+            "facebook" => Box::new(omni_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+            _ => return (StatusCode::NOT_FOUND, "Unknown platform").into_response(),
+        };
+
+        handler.exchange_code(code, &redirect_uri).await
     };
 
-    match handler.exchange_code(code, &redirect_uri).await {
+    match token_result {
         Ok(token) => {
+            if platform == "x" {
+                if let Some(st) = query.state.as_ref().filter(|s| !s.is_empty()) {
+                    let pkce_sid = format!("oauth_pkce:{st}");
+                    let _ = state.sessions.delete(&pkce_sid).await;
+                    let _ = state.sessions.delete(&format!("oauth_state:{st}")).await;
+                }
+            }
+
             if let Err(e) = state.oauth_vault.store_token(token).await {
                 tracing::error!("Failed to store token for {}: {}", platform, e);
                 return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to store token").into_response();

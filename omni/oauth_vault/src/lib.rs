@@ -18,6 +18,7 @@ use tokio::sync::RwLock;
 
 pub mod platform;
 pub mod platforms;
+pub mod pkce;
 pub mod token_store;
 
 pub use platform::OAuth2Platform;
@@ -27,6 +28,7 @@ pub use token_store::TokenStoreBackend;
 pub use token_store::InMemoryTokenStore;
 pub use token_store::SqlxTokenStoreBackend;
 pub use crate::platform::OAuth2Platform as OAuth2PlatformTrait;
+pub use pkce::{code_challenge_s256, random_code_verifier};
 
 /// OAuth2 token with metadata
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]

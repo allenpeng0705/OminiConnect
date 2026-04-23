@@ -201,5 +201,6 @@ curl -X POST https://your-domain.com/api/proxy/facebook/me/photos \
 
 ### Notes
 
-- X OAuth settings and app permissions are strict. Ensure callback URI and scopes match exactly.
-- If X app policy requires additional OAuth hardening (for example PKCE-only constraints), add that in the OAuth flow handler as a follow-up hardening step.
+- X OAuth 2.0 **requires PKCE** (RFC 7636). OmniConnect generates `code_challenge` / `code_verifier` automatically when you use **Connect OAuth** from the portal; you do not configure PKCE manually.
+- Callback URI and scopes must match your X app settings exactly.
+- Set `PORTAL_BASE_URL` to the same origin users use in the browser (for example `http://localhost:9000` if the portal listens on port 9000), otherwise the redirect URI sent to X will not match what you registered.

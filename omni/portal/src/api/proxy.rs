@@ -22,7 +22,6 @@ pub async fn forward(
     method: axum::http::Method,
     body: Bytes,
 ) -> axum::response::Response<Body> {
-    tracing::info!("PROXY CALLED: platform={}, path={}, method={}", platform, native_path, method);
     // 1. Auth: require Bearer token (OmniConnect API key)
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
@@ -48,11 +47,8 @@ pub async fn forward(
     }
 
     if !valid_key {
-        tracing::warn!("PROXY: Invalid API key");
         return proxy_error_response(StatusCode::UNAUTHORIZED, "invalid API key");
     }
-
-    tracing::info!("PROXY: API key validated, getting token for {}", platform);
 
     // 2. Get access token for platform
     let access_token = if platform == "maton" || platform == "qqmail" {
@@ -79,7 +75,6 @@ pub async fn forward(
 
     // 3. Build upstream URL
     let upstream_url = format!("{}/{}", get_platform_base_url(&platform), native_path);
-    tracing::debug!("Proxy request: platform={}, upstream_url={}", platform, upstream_url);
 
     // 4. Forward to native API
     let client = match reqwest::Client::builder()
@@ -99,7 +94,6 @@ pub async fn forward(
 
     // Forward relevant headers
     let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
-    let is_multipart = content_type.map(|ct| ct.starts_with("multipart/")).unwrap_or(false);
 
     // For LinkedIn, add version header if present in query params
     if platform == "linkedin" {
@@ -119,10 +113,7 @@ pub async fn forward(
     }
 
     // 5. Send request and forward response
-    tracing::info!("Sending request to upstream_url={}", upstream_url);
-    let resp = req_builder.send().await;
-    tracing::info!("Got response: {:?}", resp);
-    match resp {
+    match req_builder.send().await {
         Ok(resp) => {
             let status = resp.status();
             let body = resp.bytes().await.unwrap_or_default();
@@ -133,7 +124,14 @@ pub async fn forward(
         }
         Err(e) => {
             tracing::error!("Proxy request failed for {}: {}", platform, e);
-            proxy_error_response(StatusCode::BAD_GATEWAY, "upstream request failed")
+            let err_msg = if e.is_timeout() {
+                "upstream request timed out"
+            } else if e.is_connect() {
+                "upstream connection failed"
+            } else {
+                "upstream request failed"
+            };
+            proxy_error_response(StatusCode::BAD_GATEWAY, err_msg)
         }
     }
 }
