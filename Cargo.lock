@@ -1969,7 +1969,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-audit_logger"
+name = "omini-connect-audit-logger"
 version = "0.1.0"
 dependencies = [
  "chrono",
@@ -1983,61 +1983,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-connector-dingtalk"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tower 0.4.13",
-]
-
-[[package]]
-name = "omni-connector-feishu"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tower 0.4.13",
-]
-
-[[package]]
-name = "omni-connector-maton"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "reqwest",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
- "tokio-test",
- "tower-http 0.5.2",
-]
-
-[[package]]
-name = "omni-connector-wechatwork"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
- "tower 0.4.13",
-]
-
-[[package]]
-name = "omni-dashboard"
+name = "omini-connect-dashboard"
 version = "0.1.0"
 dependencies = [
  "axum",
@@ -2050,7 +1996,33 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-hybrid_inference"
+name = "omini-connect-dingtalk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower 0.4.13",
+]
+
+[[package]]
+name = "omini-connect-feishu"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower 0.4.13",
+]
+
+[[package]]
+name = "omini-connect-hybrid-inference"
 version = "0.1.0"
 dependencies = [
  "glob",
@@ -2065,13 +2037,31 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-oauth_vault"
+name = "omini-connect-maton"
 version = "0.1.0"
 dependencies = [
- "async-trait",
+ "anyhow",
+ "axum",
  "reqwest",
  "serde",
  "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-test",
+ "tower-http 0.5.2",
+]
+
+[[package]]
+name = "omini-connect-oauth-vault"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "base64 0.22.1",
+ "rand 0.8.6",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2",
  "sqlx",
  "thiserror 1.0.69",
  "tokio",
@@ -2079,18 +2069,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-portal"
+name = "omini-connect-portal"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "async-trait",
  "axum",
  "bcrypt",
+ "bytes",
  "chrono",
  "http",
  "http-body-util",
  "hyper",
- "omni-oauth_vault",
+ "omini-connect-oauth-vault",
  "reqwest",
  "serde",
  "serde_json",
@@ -2100,23 +2091,24 @@ dependencies = [
  "tower-http 0.6.8",
  "tracing",
  "tracing-subscriber",
+ "urlencoding",
  "uuid",
 ]
 
 [[package]]
-name = "omni-schema-registry"
+name = "omini-connect-schema-registry"
 version = "0.1.0"
 dependencies = [
- "omni-connector-dingtalk",
- "omni-connector-feishu",
- "omni-connector-wechatwork",
+ "omini-connect-dingtalk",
+ "omini-connect-feishu",
+ "omini-connect-wechatwork",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
 ]
 
 [[package]]
-name = "omni-sdk"
+name = "omini-connect-sdk"
 version = "0.1.0"
 dependencies = [
  "reqwest",
@@ -2129,7 +2121,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-skills"
+name = "omini-connect-skills"
 version = "0.1.0"
 dependencies = [
  "serde",
@@ -2141,10 +2133,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "omni-wasm_policies"
+name = "omini-connect-wasm-policies"
 version = "0.1.0"
 dependencies = [
  "panda-pdk",
+]
+
+[[package]]
+name = "omini-connect-wechatwork"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower 0.4.13",
 ]
 
 [[package]]
@@ -2313,7 +2318,7 @@ dependencies = [
  "hyper-rustls",
  "hyper-util",
  "jsonwebtoken",
- "omni-hybrid_inference",
+ "omini-connect-hybrid-inference",
  "panda-config",
  "panda-wasm",
  "rcgen",

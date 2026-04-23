@@ -1,4 +1,4 @@
-# OmniConnect Design Document
+# OminiConnect Design Document
 
 **Date:** 2026-04-20
 **Status:** Draft
@@ -8,13 +8,13 @@
 
 ## 1. Executive Summary
 
-**OmniConnect** is a next-generation AI Gateway and Tool Orchestrator that bridges LLMs with the Chinese enterprise software ecosystem (Feishu, DingTalk, WeChat Work). It is built on top of Panda's proven Rust-based gateway architecture.
+**OminiConnect** is a next-generation AI Gateway and Tool Orchestrator that bridges LLMs with the Chinese enterprise software ecosystem (Feishu, DingTalk, WeChat Work). It is built on top of Panda's proven Rust-based gateway architecture.
 
 **Core Value Proposition:** Secure, authenticated, standardized "hands" for AI agents to manipulate Chinese SaaS platforms via MCP (Model Context Protocol) — without the complexity of manual OAuth management.
 
 ---
 
-## 2. Background: Why OmniConnect?
+## 2. Background: Why OminiConnect?
 
 ### 2.1 The Problem
 
@@ -38,7 +38,7 @@ The "Last Mile" of Enterprise AI Integration — connecting AI agents to existin
 
 ```
 ┌─────────┐     ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   LLM   │────▶│  OmniConnect    │────▶│  OmniConnect    │────▶│  Feishu/DingTalk│
+│   LLM   │────▶│  OminiConnect    │────▶│  OminiConnect    │────▶│  Feishu/DingTalk│
 │         │◀────│  (Panda Core)   │◀────│  Connectors      │◀────│  /WeChat APIs   │
 └─────────┘     └─────────────────┘     └──────────────────┘     └─────────────────┘
                       ▲                        ▲
@@ -47,10 +47,10 @@ The "Last Mile" of Enterprise AI Integration — connecting AI agents to existin
                (tools/list)             Vault
 ```
 
-### 3.2 OmniConnect Components
+### 3.2 OminiConnect Components
 
 ```
-OmniConnect/
+OminiConnect/
 ├── panda/              (Forked: Panda gateway core)
 │   ├── crates/
 │   │   ├── panda-proxy/   # MCP runtime, AI gateway, Wasm engine
@@ -58,7 +58,7 @@ OmniConnect/
 │   │   ├── panda-config/ # Configuration types
 │   │   └── panda-pdk/    # Wasm policy SDK
 │   └── panda.example.yaml
-├── omni/               (OmniConnect value layer)
+├── omini_connect/               (OminiConnect value layer)
 │   ├── oauth_vault/    # Token storage + refresh
 │   ├── connectors/     # Platform-specific connectors
 │   │   ├── feishu/     # Feishu (Lark) API connector
@@ -73,11 +73,11 @@ OmniConnect/
 
 ---
 
-## 4. OmniConnect vs Panda: What We Use
+## 4. OminiConnect vs Panda: What We Use
 
 ### 4.1 Components We Use from Panda
 
-| Panda Component | Purpose in OmniConnect |
+| Panda Component | Purpose in OminiConnect |
 |----------------|------------------------|
 | `panda-proxy` (MCP runtime) | Tool discovery and execution |
 | `panda-proxy` (Wasm engine) | Compliance policy sandbox |
@@ -113,7 +113,7 @@ OmniConnect/
 
 ```
 1. LLM sends: POST /v1/chat/completions (with tools wanted)
-2. Panda MCP runtime: returns OmniConnect tools in OpenAI format
+2. Panda MCP runtime: returns OminiConnect tools in OpenAI format
 3. Tools appear to LLM as standard function definitions
 ```
 
@@ -121,7 +121,7 @@ OmniConnect/
 
 ```
 1. LLM calls tool (e.g., feishu_calendar_list)
-2. Panda routes to OmniConnect connector
+2. Panda routes to OminiConnect connector
 3. Connector fetches OAuth2 token from vault
 4. Connector transforms args + calls Feishu API
 5. Result returned through Panda to LLM
@@ -138,7 +138,7 @@ OmniConnect/
 
 ### 5.4 Connector Integration with Panda
 
-OmniConnect connectors run as standalone MCP HTTP servers. Panda connects to them via `remote_mcp_url`:
+OminiConnect connectors run as standalone MCP HTTP servers. Panda connects to them via `remote_mcp_url`:
 
 ```
 ┌─────────┐     ┌─────────────────┐     ┌──────────────────┐
@@ -155,7 +155,7 @@ OmniConnect connectors run as standalone MCP HTTP servers. Panda connects to the
               (allowlist config)          (per-connector)
 ```
 
-**Configuration (`omni_connect.yaml`):**
+**Configuration (`omini_connect.yaml`):**
 ```yaml
 api_gateway:
   egress:
@@ -177,18 +177,18 @@ mcp:
 **Running the System:**
 1. Start each connector server:
    ```bash
-   cargo run -p omni-connector-feishu --bin feishu_server --port=8090
-   cargo run -p omni-connector-dingtalk --bin dingtalk_server --port=8091
-   cargo run -p omni-connector-wechatwork --bin wechatwork_server --port=8092
+   cargo run -p omini-connect-feishu --bin feishu_server --port=8090
+   cargo run -p omini-connect-dingtalk --bin dingtalk_server --port=8091
+   cargo run -p omini-connect-wechatwork --bin wechatwork_server --port=8092
    ```
-2. Start Panda with the OmniConnect configuration:
+2. Start Panda with the OminiConnect configuration:
    ```bash
-   cargo run -p panda-server -- --config omni_connect.yaml
+   cargo run -p panda-server -- --config omini_connect.yaml
    ```
 
 ### 5.5 Hybrid Inference Configuration
 
-OmniConnect supports hybrid inference routing to route sensitive requests to local LLM (Ollama/vLLM) while forwarding general requests to cloud providers. This is configured via the `hybrid_inference` section in Panda's configuration.
+OminiConnect supports hybrid inference routing to route sensitive requests to local LLM (Ollama/vLLM) while forwarding general requests to cloud providers. This is configured via the `hybrid_inference` section in Panda's configuration.
 
 **Request Flow:**
 ```
@@ -287,7 +287,7 @@ hybrid_inference:
 ## 6. Priority Roadmap
 
 ### Phase 1: Foundation (Weeks 1-4)
-- [x] Fork Panda into OmniConnect structure
+- [x] Fork Panda into OminiConnect structure
 - [x] Build OAuth2 vault (token storage + refresh)
 - [x] Implement Feishu connector (Bitable, Calendar, Messaging)
 - [x] Basic compliance Wasm (PII scrub, keyword filter)
@@ -339,7 +339,7 @@ Compliance requirements in China change rapidly. Wasm modules provide hot-reload
 
 ### 7.4 Local-First Edge (Future Differentiation)
 
-Allow enterprises to host OmniConnect on-premise. OAuth tokens never leave the internal network. The "agent" might be a cloud model, but it communicates with a local instance that sanitizes data before going to the cloud.
+Allow enterprises to host OminiConnect on-premise. OAuth tokens never leave the internal network. The "agent" might be a cloud model, but it communicates with a local instance that sanitizes data before going to the cloud.
 
 **Status:** Deferred — sales differentiator for later
 
@@ -347,13 +347,13 @@ Allow enterprises to host OmniConnect on-premise. OAuth tokens never leave the i
 
 ## 8. The "Skill" as an Asset
 
-Beyond providing "Feishu API access," OmniConnect should package **Skills** — pre-defined sets of MCP tools, system prompts, and Wasm policies.
+Beyond providing "Feishu API access," OminiConnect should package **Skills** — pre-defined sets of MCP tools, system prompts, and Wasm policies.
 
 **Example:**
 - "Feishu Project Manager Skill" = Feishu connector + calendar tool + approval workflow + compliance policies
 - "WeChat Customer Service Skill" = WeChat Work connector + message templates + PII scrubber
 
-This transforms OmniConnect from a utility (low margin) to an enterprise solution (high margin).
+This transforms OminiConnect from a utility (low margin) to an enterprise solution (high margin).
 
 ---
 
@@ -361,7 +361,7 @@ This transforms OmniConnect from a utility (low margin) to an enterprise solutio
 
 ### 9.1 Why Fork Panda?
 
-- Full control over branding (OmniConnect vs Panda)
+- Full control over branding (OminiConnect vs Panda)
 - Can strip unnecessary Panda features (TPM, semantic cache, AI gateway)
 - Clear sync path for upstream Panda updates
 - Independent release versioning
@@ -370,7 +370,7 @@ This transforms OmniConnect from a utility (low margin) to an enterprise solutio
 
 When Panda updates:
 ```bash
-cd omni-connect
+cd OminiConnect
 git remote add panda <panda-repo>
 git fetch panda
 git merge panda/main
@@ -417,7 +417,7 @@ https://github.com/allenpeng0705/panda
 ### 11.1 Project Layout
 
 ```
-OmniConnect/
+OminiConnect/
 ├── panda/                    # Forked from Panda (subtree)
 │   ├── crates/
 │   │   ├── panda-proxy/      # MCP runtime, AI gateway, Wasm engine
@@ -427,7 +427,7 @@ OmniConnect/
 │   │   └── panda-wasm/      # Wasm runtime
 │   ├── docs/                # Panda documentation (read-only reference)
 │   └── panda.example.yaml   # Example configuration
-├── omni/                     # OmniConnect value layer
+├── omini_connect/                     # OminiConnect value layer
 │   ├── oauth_vault/         # OAuth2 token storage + refresh
 │   ├── schema_registry/     # Tool schema registry
 │   ├── connectors/
@@ -453,20 +453,18 @@ OmniConnect/
 | `panda-server` | Forked | Binary entry point |
 | `panda-config` | Forked | YAML configuration parsing |
 | `panda-pdk` | Forked | Wasm plugin SDK |
-| `omni-oauth_vault` | New | OAuth2 token storage and auto-refresh |
-| `omni-connector-feishu` | New | Feishu API connector |
-| `omni-connector-dingtalk` | New | DingTalk API connector |
-| `omni-connector-wechatwork` | New | WeChat Work API connector |
-| `omni-wasm_policies` | New | Compliance Wasm policies |
-| `omni-schema_registry` | New | Tool schema registry |
-| `omni-audit_logger` | New | Audit logging for PIPL compliance |
-| `omni-sdk` | New | Developer SDK |
-| `omni-skills` | New | Skill marketplace |
-| `omni-dashboard` | New | Monitoring dashboard |
-| `omni-audit_logger` | New | Audit logging for PIPL compliance |
-| `omni-sdk` | New | Developer SDK |
-| `omni-skills` | New | Skill marketplace |
-| `omni-dashboard` | New | Monitoring dashboard |
+| `omini-connect-oauth-vault` | New | OAuth2 token storage and auto-refresh |
+| `omini-connect-feishu` | New | Feishu API connector |
+| `omini-connect-dingtalk` | New | DingTalk API connector |
+| `omini-connect-wechatwork` | New | WeChat Work API connector |
+| `omini-connect-wasm-policies` | New | Compliance Wasm policies |
+| `omini-connect-schema-registry` | New | Tool schema registry |
+| `omini-connect-portal` | New | Operator portal (OAuth + connectors) |
+| `omini-connect-hybrid-inference` | New | Hybrid inference routing |
+| `omini-connect-audit-logger` | New | Audit logging for PIPL compliance |
+| `omini-connect-sdk` | New | Developer SDK |
+| `omini-connect-skills` | New | Skill marketplace |
+| `omini-connect-dashboard` | New | Monitoring dashboard |
 
 ### 11.3 Update Strategy
 
@@ -476,7 +474,7 @@ When Panda releases updates, sync using git subtree:
 # Fetch latest Panda
 git fetch panda main
 
-# Merge updates into OmniConnect
+# Merge updates into OminiConnect
 git subtree pull --prefix=panda panda main --squash
 
 # After resolving conflicts, commit

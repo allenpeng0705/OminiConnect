@@ -170,7 +170,7 @@ pub struct ProxyState {
     /// Embedding-based semantic upstream selection (optional).
     semantic_routing: Option<Arc<semantic_routing::SemanticRoutingRuntime>>,
     /// Hybrid inference router for sensitive request routing to local LLM (optional).
-    hybrid_router: Option<Arc<omni_hybrid_inference::Router>>,
+    hybrid_router: Option<Arc<omini_connect_hybrid_inference::Router>>,
     /// Built-in API gateway flags (`api_gateway` YAML); ingress/egress wired when enabled in config.
     pub api_gateway: api_gateway::ApiGatewayState,
     /// Corporate HTTP egress when `api_gateway.egress.enabled`.
@@ -1912,11 +1912,11 @@ pub async fn run(config: Arc<PandaConfig>) -> anyhow::Result<()> {
         };
 
     let hybrid_router = if config.hybrid_inference.enabled {
-        match omni_hybrid_inference::Router::new(
-            omni_hybrid_inference::HybridConfig::from_json(
+        match omini_connect_hybrid_inference::Router::new(
+            omini_connect_hybrid_inference::HybridConfig::from_json(
                 &serde_json::to_string(&config.hybrid_inference).unwrap_or_default(),
             )
-            .unwrap_or_else(|_| omni_hybrid_inference::HybridConfig::default()),
+            .unwrap_or_else(|_| omini_connect_hybrid_inference::HybridConfig::default()),
         )
         .await
         {
@@ -5019,7 +5019,7 @@ fn is_openai_chat_streaming_request(raw: &[u8]) -> bool {
 }
 
 /// Extract chat messages from OpenAI chat completions request body for hybrid inference.
-fn extract_openai_chat_messages(raw: &[u8]) -> Vec<omni_hybrid_inference::ChatMessage> {
+fn extract_openai_chat_messages(raw: &[u8]) -> Vec<omini_connect_hybrid_inference::ChatMessage> {
     let Ok(v) = serde_json::from_slice::<serde_json::Value>(raw) else {
         return Vec::new();
     };
@@ -5030,7 +5030,7 @@ fn extract_openai_chat_messages(raw: &[u8]) -> Vec<omni_hybrid_inference::ChatMe
     messages
         .iter()
         .filter_map(|msg| {
-            Some(omni_hybrid_inference::ChatMessage {
+            Some(omini_connect_hybrid_inference::ChatMessage {
                 role: msg.get("role")?.as_str()?.to_string(),
                 content: msg.get("content")?.as_str().unwrap_or("").to_string(),
             })
@@ -5068,12 +5068,12 @@ fn extract_tool_names(raw: &[u8]) -> Vec<String> {
 
 /// Construct an OpenAI-compatible response from a hybrid inference response.
 fn construct_hybrid_response(
-    content: omni_hybrid_inference::ResponseContent,
+    content: omini_connect_hybrid_inference::ResponseContent,
     correlation_id: &str,
     config: &PandaConfig,
 ) -> Result<Response<BoxBody>, ProxyError> {
     match content {
-        omni_hybrid_inference::ResponseContent::Local(local) => {
+        omini_connect_hybrid_inference::ResponseContent::Local(local) => {
             let openai_response = serde_json::json!({
                 "id": local.id,
                 "object": "chat.completion",
@@ -5118,7 +5118,7 @@ fn construct_hybrid_response(
             );
             Ok(out)
         }
-        omni_hybrid_inference::ResponseContent::Cloud(cloud_response) => {
+        omini_connect_hybrid_inference::ResponseContent::Cloud(cloud_response) => {
             // Return the cloud response directly (already called by hybrid router)
             let mut out = Response::builder()
                 .status(StatusCode::OK)
@@ -7604,12 +7604,12 @@ async fn forward_to_upstream(
                 if !messages.is_empty() {
                     // Detect PII types for hybrid inference routing
                     // Use x-panda-pii-redacted header as proxy for "some PII detected"
-                    let pii_types_detected: std::collections::HashSet<omni_hybrid_inference::PiiType> =
+                    let pii_types_detected: std::collections::HashSet<omini_connect_hybrid_inference::PiiType> =
                         if parts.headers.contains_key("x-panda-pii-redacted")
                             || parts.headers.contains_key("x-panda-pii-shadow-detected")
                         {
                             let mut types = std::collections::HashSet::new();
-                            types.insert(omni_hybrid_inference::PiiType::Email); // Marker type
+                            types.insert(omini_connect_hybrid_inference::PiiType::Email); // Marker type
                             types
                         } else {
                             std::collections::HashSet::new()
@@ -7623,7 +7623,7 @@ async fn forward_to_upstream(
                         .and_then(|s| s.parse::<u8>().ok());
 
                     // Build request context for hybrid inference
-                    let hybrid_ctx = omni_hybrid_inference::RequestContext {
+                    let hybrid_ctx = omini_connect_hybrid_inference::RequestContext {
                         content: semantic_routing::extract_openai_chat_text_for_routing(
                             &next_bytes,
                             4096,

@@ -1,8 +1,8 @@
-# OmniConnect
+# OminiConnect
 
 **A self-hosted API gateway that lets AI agents use connected services via OAuth.**
 
-OmniConnect acts as a unified proxy between AI agents and external APIs. Instead of managing OAuth flows directly, AI agents use OmniConnect API keys to call the proxy, which automatically injects stored OAuth tokens and forwards requests to the native APIs.
+OminiConnect acts as a unified proxy between AI agents and external APIs. Instead of managing OAuth flows directly, AI agents use OminiConnect API keys to call the proxy, which automatically injects stored OAuth tokens and forwards requests to the native APIs.
 
 ## How It Works
 
@@ -11,7 +11,7 @@ AI Agent / Client
      │
      │ Bearer $OMNICONNECT_API_KEY
      ▼
-OmniConnect Portal
+OminiConnect Portal
      │
      ├─ User authenticates via OAuth (e.g., LinkedIn, Facebook)
      ├─ Tokens stored securely in database (persisted)
@@ -37,8 +37,8 @@ LinkedIn API (with stored OAuth token injected automatically)
 ### 1. Start the Portal
 
 ```bash
-cd omni/portal
-PORTAL_BASE_URL=https://your-domain.com cargo run -p omni-portal
+cd omini_connect/portal
+PORTAL_BASE_URL=https://your-domain.com cargo run -p omini-connect-portal
 ```
 
 ### 2. Access the Web UI
@@ -76,7 +76,7 @@ curl -X POST https://your-domain.com/api/proxy/linkedin/v2/ugcPosts \
     "lifecycleState": "PUBLISHED",
     "specificContent": {
       "com.linkedin.ugc.ShareContent": {
-        "shareCommentary": {"text": "Hello from OmniConnect!"},
+        "shareCommentary": {"text": "Hello from OminiConnect!"},
         "shareMediaCategory": "NONE"
       }
     },
@@ -88,15 +88,22 @@ curl -X POST https://your-domain.com/api/proxy/linkedin/v2/ugcPosts \
 
 ## Supported Platforms
 
-| Platform | Status | Notes |
-|----------|--------|-------|
-| LinkedIn | ✅ | Posting, user info |
-| Facebook | ✅ | Basic API access |
-| Feishu | ✅ | Enterprise internal apps not supported |
-| DingTalk | ✅ | OAuth2 supported |
-| WeChat Work | ✅ | OAuth2 supported |
-| Maton.ai | ✅ | API key based |
-| QQ Mail | ✅ | API key based |
+| Platform | Type | Status | Notes |
+|----------|------|--------|-------|
+| LinkedIn | OAuth2 | ✅ | Posting, user info |
+| Facebook | OAuth2 | ✅ | Page access tokens (App Review required for Page posting) |
+| X / Twitter | OAuth2 | ✅ | Requires PKCE, credit-based API access |
+| Feishu / Lark | OAuth2 | ✅ | Custom Apps only (Enterprise Internal Apps not supported) |
+| DingTalk | OAuth2 | ✅ | OAuth2 supported |
+| WeChat Work | OAuth2 | ✅ | OAuth2 supported |
+| Maton.ai | API Key | ✅ | Agent connector |
+| QQ Enterprise Mail | API Key | ✅ | Email API |
+
+### Platform-Specific Notes
+
+- **Facebook**: `pages_manage_posts` and `pages_read_engagement` require [App Review](https://developers.facebook.com/docs/app-review) before use in production. Development mode works with app roles.
+- **X**: Uses PKCE (RFC 7636) for OAuth2 - no client secret needed in callback. X has credit-based API access with monthly limits.
+- **Feishu**: Enterprise Internal Apps do not support user OAuth - use Custom App type.
 
 ## Environment Variables
 
@@ -112,10 +119,10 @@ curl -X POST https://your-domain.com/api/proxy/linkedin/v2/ugcPosts \
 DATABASE_URL=sqlite:portal.db
 
 # MySQL
-DATABASE_URL=mysql://user:pass@localhost/omni_portal
+DATABASE_URL=mysql://user:pass@localhost/omini_connect_portal
 
 # PostgreSQL
-DATABASE_URL=postgres://user:pass@localhost/omni_portal
+DATABASE_URL=postgres://user:pass@localhost/omini_connect_portal
 
 # Absolute path for SQLite
 DATABASE_URL=sqlite:///absolute/path/to/portal.db
@@ -124,7 +131,10 @@ DATABASE_URL=sqlite:///absolute/path/to/portal.db
 ## Project Structure
 
 ```
-omni/
+third_party/
+└── nango/              # Optional vendored upstream (if used)
+
+omini_connect/
 ├── portal/              # Web UI and API server (Rust/Axum)
 │   ├── frontend/       # React frontend
 │   └── src/
@@ -132,9 +142,22 @@ omni/
 │       ├── auth/       # Authentication (login, API keys, sessions)
 │       └── oauth/      # OAuth handlers
 ├── oauth_vault/        # OAuth2 token storage and refresh
-│   └── src/platforms/  # Platform-specific OAuth implementations
+│   └── src/
+│       ├── platforms/  # Platform-specific OAuth implementations
+│       └── pkce.rs     # PKCE helpers for X OAuth2
 └── connectors/         # MCP connector implementations (optional)
 ```
+
+See `docs/omini_connect_nango_option_b.md` and `docs/nango_upstream_strategy.md` for the Option B architecture and upstream sync strategy.
+
+To vendor Nango locally as a submodule:
+
+```bash
+chmod +x scripts/bootstrap_nango_submodule.sh
+./scripts/bootstrap_nango_submodule.sh
+```
+
+Copy `.env.example` to `.env` and fill in secrets for local development.
 
 ## API Reference
 
@@ -148,7 +171,7 @@ GET  /api/proxy/{platform}/{path}
 Authentication: `Authorization: Bearer YOUR_API_KEY`
 
 The proxy automatically:
-1. Validates your OmniConnect API key
+1. Validates your OminiConnect API key
 2. Retrieves the stored OAuth token for the platform
 3. Injects the token into the request
 4. Forwards to the native platform API

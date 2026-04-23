@@ -1,4 +1,4 @@
-# OmniConnect Roadmap
+# OminiConnect Roadmap
 
 ## ✅ Completed
 
@@ -32,7 +32,7 @@
 - [ ] **Hybrid Inference**: Integration with local LLM providers
 
 ### Phase 4: Ecosystem
-- [ ] **Developer SDK**: Simplify connecting new agents to OmniConnect
+- [ ] **Developer SDK**: Simplify connecting new agents to OminiConnect
 - [ ] **Monitoring Dashboard**: Real-time observability for API usage and costs
 - [ ] **Skill Marketplace**: Community-contributed MCP servers
 

@@ -1,0 +1,18 @@
+[package]
+name = "omini-connect-wasm-policies"
+version = "0.1.0"
+edition = "2021"
+description = "Compliance Wasm policies for OminiConnect"
+
+[dependencies]
+panda-pdk = { path = "../../panda/crates/panda-pdk" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+
+[profile.dev]
+opt-level = 0

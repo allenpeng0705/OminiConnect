@@ -226,7 +226,7 @@ static DASHBOARD_HTML: &str = r#"<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniConnect Dashboard</title>
+    <title>OminiConnect Dashboard</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; }
@@ -256,7 +256,7 @@ static DASHBOARD_HTML: &str = r#"<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h1>OmniConnect Compliance Dashboard</h1>
+        <h1>OminiConnect Compliance Dashboard</h1>
     </div>
     <div class="container">
         <div class="stats-grid">

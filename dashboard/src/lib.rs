@@ -1,11 +1,11 @@
-//! # OmniConnect Monitoring Dashboard
+//! # OminiConnect Monitoring Dashboard
 //!
-//! Web-based dashboard for monitoring OmniConnect compliance and audit logs.
+//! Web-based dashboard for monitoring OminiConnect compliance and audit logs.
 //!
 //! ## Running
 //!
 //! ```bash
-//! cargo run -p omni-dashboard
+//! cargo run -p omini-connect-dashboard
 //! ```
 //!
 //! Then open http://localhost:8081 in your browser.

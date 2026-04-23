@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-20
 **Status:** Design Draft
-**Parent Project:** OmniConnect
+**Parent Project:** OminiConnect
 
 ---
 
@@ -173,15 +173,15 @@ Current Wasm policies already scan content:
 
 | Policy | Checks | Sets Header |
 |--------|--------|-------------|
-| `pii_scrubber` | Phone, ID, email | `x-omni-pii-detected` |
-| `keyword_filter` | Restricted keywords | `x-omni-keyword-blocked` |
-| `content_moderation` | Adult/hate/violence | `x-omni-policy` |
-| `data_residency` | Chinese PII | `x-omni-blocked` |
+| `pii_scrubber` | Phone, ID, email | `x-omini-connect-pii-detected` |
+| `keyword_filter` | Restricted keywords | `x-omini-connect-keyword-blocked` |
+| `content_moderation` | Adult/hate/violence | `x-omini-connect-policy` |
+| `data_residency` | Chinese PII | `x-omini-connect-blocked` |
 
 ### 3.2 New Wasm Policy: Sensitivity Scorer
 
 ```rust
-// New: omni/hybrid_inference/src/wasm_sensitivity.rs
+// New: omini_connect/hybrid_inference/src/wasm_sensitivity.rs
 
 #[no_mangle]
 pub extern "C" fn panda_on_request_body(ptr: i32, len: i32) -> i32 {
@@ -191,11 +191,11 @@ pub extern "C" fn panda_on_request_body(ptr: i32, len: i32) -> i32 {
     let score = calculate_sensitivity_score(input);
 
     // Set sensitivity header
-    set_header(b"x-omni-sensitivity-score", score.to_string().as_bytes());
+    set_header(b"x-omini-connect-sensitivity-score", score.to_string().as_bytes());
 
     // If score >= threshold, set high sensitivity marker
     if score >= 70 {
-        set_header(b"x-omni-high-sensitivity", b"true");
+        set_header(b"x-omini-connect-high-sensitivity", b"true");
     }
 
     RC_ALLOW  // Don't block, just score
@@ -235,9 +235,9 @@ static SENSITIVE_KEYWORDS: &[&str] = &[
 ```
 Request → Wasm Policy (scans + scores)
         → Sets headers:
-          - x-omni-sensitivity-score: 0-100
-          - x-omni-pii-types: phone,id,email
-          - x-omni-keyword-categories: financial,medical
+          - x-omini-connect-sensitivity-score: 0-100
+          - x-omini-connect-pii-types: phone,id,email
+          - x-omini-connect-keyword-categories: financial,medical
         → Hybrid Inference Gateway reads headers
         → Applies routing rules
 ```
@@ -258,7 +258,7 @@ Request → Wasm Policy (scans + scores)
 ### 4.2 Local LLM Module
 
 ```rust
-// omni/hybrid_inference/src/local_llm.rs
+// omini_connect/hybrid_inference/src/local_llm.rs
 
 pub struct LocalLlmClient {
     endpoint: String,
@@ -319,9 +319,9 @@ Recommended models for Chinese enterprise compliance:
 │  │  - Scan for PII, keywords                              │  │
 │  │  - Calculate sensitivity_score (0-100)                 │  │
 │  │  - Set headers:                                        │  │
-│  │    x-omni-sensitivity-score                           │  │
-│  │    x-omni-pii-types                                   │  │
-│  │    x-omni-keyword-categories                          │  │
+│  │    x-omini-connect-sensitivity-score                           │  │
+│  │    x-omini-connect-pii-types                                   │  │
+│  │    x-omini-connect-keyword-categories                          │  │
 │  └────────────────────────────────────────────────────────┘  │
 └─────────────────────────┬────────────────────────────────────┘
                           │
@@ -360,7 +360,7 @@ Recommended models for Chinese enterprise compliance:
 ### 6.1 Full Configuration Example
 
 ```yaml
-# omni_connect.yaml
+# omini_connect.yaml
 
 hybrid_inference:
   enabled: true
@@ -507,7 +507,7 @@ hybrid_inference:
   observability:
     log_routing_decisions: true
     metrics_enabled: true
-    audit_log_path: "/var/log/omni/hybrid_audit.log"
+    audit_log_path: "/var/log/omini_connect/hybrid_audit.log"
 ```
 
 ### 6.2 Target Configuration
@@ -562,7 +562,7 @@ tenants:
 ## 7. Implementation Plan
 
 ### Phase 1: Core Engine (MVP)
-1. Create `omni/hybrid_inference` crate
+1. Create `omini_connect/hybrid_inference` crate
 2. Implement sensitivity rules engine
 3. Add local LLM client (Ollama)
 4. Basic routing decision
@@ -587,16 +587,16 @@ tenants:
 ## 8. Files to Create/Modify
 
 ### Create:
-- `omni/hybrid_inference/Cargo.toml`
-- `omni/hybrid_inference/src/lib.rs`
-- `omni/hybrid_inference/src/rules.rs`
-- `omni/hybrid_inference/src/router.rs`
-- `omni/hybrid_inference/src/local_llm.rs`
-- `omni/hybrid_inference/src/config.rs`
-- `omni/hybrid_inference/src/wasm_sensitivity.rs` (Wasm module)
+- `omini_connect/hybrid_inference/Cargo.toml`
+- `omini_connect/hybrid_inference/src/lib.rs`
+- `omini_connect/hybrid_inference/src/rules.rs`
+- `omini_connect/hybrid_inference/src/router.rs`
+- `omini_connect/hybrid_inference/src/local_llm.rs`
+- `omini_connect/hybrid_inference/src/config.rs`
+- `omini_connect/hybrid_inference/src/wasm_sensitivity.rs` (Wasm module)
 
 ### Modify:
-- `omni/connectors/*/tools.rs` - Add `sensitive: bool` flag to tools
+- `omini_connect/connectors/*/tools.rs` - Add `sensitive: bool` flag to tools
 - `panda/crates/panda-proxy` - Add hybrid inference middleware
 - `docs/design.md` - Update with hybrid inference section
 
