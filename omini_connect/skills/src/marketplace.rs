@@ -1,17 +1,7 @@
 //! Skill marketplace for discovering and managing skills
 
-use crate::registry::SkillRegistry;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-
-/// Marketplace error types
-#[derive(Debug, thiserror::Error)]
-pub enum MarketplaceError {
-    #[error("Skill not found: {0}")]
-    NotFound(String),
-    #[error("Skill error: {0}")]
-    Skill(String),
-}
 
 /// Marketplace category
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

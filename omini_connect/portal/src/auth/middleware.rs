@@ -10,7 +10,6 @@ use crate::app::AppState;
 #[derive(Debug, Clone)]
 pub struct AuthUser {
     pub username: String,
-    pub session_id: Option<String>,
 }
 
 /// Try to extract auth from request. Returns Some(AuthUser) if valid.
@@ -55,7 +54,6 @@ async fn extract_session(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
 
     Some(AuthUser {
         username: session.username.clone(),
-        session_id: Some(session.session_id.clone()),
     })
 }
 
@@ -70,7 +68,6 @@ async fn extract_api_key(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
         if bcrypt::verify(raw_key, &ak.key_hash).ok() == Some(true) {
             return Some(AuthUser {
                 username: ak.username.clone(),
-                session_id: None,
             });
         }
     }

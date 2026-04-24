@@ -17,7 +17,7 @@
 #   # Put NANGO_SECRET_KEY in .env after you create an API key in the Nango UI (first successful start).
 #   ./scripts/dev_omini_connect_nango_native.sh
 #
-# First run runs `npm ci` and `npm run ts-build` under third_party/nango (several minutes).
+# Nango checkout, patches, and first-time npm/ts-build are handled by ./scripts/ensure_nango.sh (several minutes on first run).
 
 set -euo pipefail
 
@@ -34,12 +34,6 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-if [[ ! -d "${NANGO_DIR}/packages/server" ]]; then
-  echo "Missing Nango sources at ${NANGO_DIR}. Init submodule:"
-  echo "  git submodule update --init --recursive"
-  exit 1
-fi
-
 if ! command -v node >/dev/null 2>&1; then
   echo "Node.js is required (see third_party/nango/.nvmrc; use nvm/fnm if needed)."
   exit 1
@@ -52,6 +46,13 @@ fi
 
 if ! command -v cargo >/dev/null 2>&1; then
   echo "Rust (cargo) is required for omini-connect-portal."
+  exit 1
+fi
+
+"${ROOT}/scripts/ensure_nango.sh"
+
+if [[ ! -d "${NANGO_DIR}/packages/server" ]]; then
+  echo "Nango sources incomplete at ${NANGO_DIR}. Run: ./scripts/ensure_nango.sh"
   exit 1
 fi
 
@@ -78,6 +79,10 @@ ensure_nango_env() {
   local env_file="${NANGO_DIR}/.env"
   if [[ -f "${env_file}" ]]; then
     echo "Using existing ${env_file}"
+    if ! grep -q '^NANGO_DEV_SKIP_EMAIL_VERIFICATION=' "${env_file}" 2>/dev/null; then
+      echo "Appending NANGO_DEV_SKIP_EMAIL_VERIFICATION=true (dashboard signin without SMTP)"
+      printf '\n# Local dev: skip email verification for dashboard signup/signin without SMTP\nNANGO_DEV_SKIP_EMAIL_VERIFICATION=true\n' >>"${env_file}"
+    fi
     return
   fi
   echo "Creating ${env_file} for native Postgres..."
@@ -107,6 +112,9 @@ CONNECT_UI_PORT=3009
 FLAG_SERVE_CONNECT_UI=true
 
 LOG_LEVEL=info
+
+# Local dev: skip email verification for dashboard signup/signin without SMTP
+NANGO_DEV_SKIP_EMAIL_VERIFICATION=true
 EOF
   echo "Wrote ${env_file}. Database URL: ${DB_URL}"
 }
@@ -114,16 +122,6 @@ EOF
 ensure_nango_env
 
 cd "${NANGO_DIR}"
-
-if [[ ! -d node_modules ]]; then
-  echo "Running npm ci in Nango (first time can take several minutes)..."
-  npm ci
-else
-  echo "Using existing third_party/nango/node_modules"
-fi
-
-echo "Running npm run ts-build in Nango (one-time compile; can take a few minutes)..."
-npm run ts-build
 
 echo "Starting Nango dev processes (server + dashboard + Connect UI) in background..."
 npm run dev:watch:web &
@@ -146,15 +144,27 @@ if ! curl -sf "http://localhost:3003/health" >/dev/null 2>&1; then
   exit 1
 fi
 
+# If OminiConnect .env has no NANGO_SECRET_KEY yet, pull the default dev secret from Nango's DB (same encryption key + Postgres as Nango).
+if [[ -f "${ROOT}/.env" ]]; then
+  _nsk="$(grep -E '^[[:space:]]*NANGO_SECRET_KEY[[:space:]]*=' "${ROOT}/.env" 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '\r' | tr -d '[:space:]')"
+  if [[ -z "${_nsk}" ]] && [[ -f "${ROOT}/scripts/sync_nango_secret_to_omini_env.sh" ]]; then
+    echo "NANGO_SECRET_KEY is empty; syncing from local Nango database into ${ROOT}/.env ..."
+    "${ROOT}/scripts/sync_nango_secret_to_omini_env.sh" || {
+      echo "Could not auto-sync NANGO_SECRET_KEY. Set it manually (Nango UI → Environment → API keys) or run:"
+      echo "  ./scripts/sync_nango_secret_to_omini_env.sh"
+    }
+  fi
+fi
+
 cat <<EOF
 
 ----------------------------------------------------------------
 Nango (from source): API http://localhost:3003  |  Connect UI http://localhost:3009
 Dashboard (Vite):  http://localhost:3000  (if the webapp dev server binds there — check terminal output)
 
-Add to your OminiConnect repo root .env (create from .env.example):
+OminiConnect repo root .env (create from .env.example if needed):
   NANGO_BASE_URL=http://localhost:3003
-  NANGO_SECRET_KEY=<create in Nango UI → Environment → API keys>
+  NANGO_SECRET_KEY=  (auto-filled from Nango DB when empty; or Nango UI → Environment → API keys; ./scripts/sync_nango_secret_to_omini_env.sh)
 
 OminiConnect on Postgres (same host as Nango): use a **separate** database, e.g.
   DATABASE_URL=postgres://nango:nango@127.0.0.1:5432/omini_connect_portal

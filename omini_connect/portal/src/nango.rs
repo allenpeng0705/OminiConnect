@@ -235,30 +235,93 @@ pub async fn list_integrations_catalog(base_url: &str, secret: &str) -> anyhow::
     Ok(parsed.data)
 }
 
+fn providers_catalog_from_data_root(root: serde_json::Value) -> Vec<serde_json::Value> {
+    root.get("data")
+        .and_then(|d| d.as_array())
+        .cloned()
+        .unwrap_or_default()
+}
+
+/// `GET /providers.json` — unauthenticated provider template map (same YAML as `/providers` body).
+/// Used when `GET /providers` rejects the secret so the integration library still loads for browsing.
+async fn list_providers_catalog_from_public_json(
+    client: &reqwest::Client,
+    base_trim: &str,
+    search: Option<&str>,
+) -> anyhow::Result<Vec<serde_json::Value>> {
+    let url = format!("{base_trim}/providers.json");
+    let resp = client.get(url).send().await?;
+    if !resp.status().is_success() {
+        let status = resp.status();
+        let text = resp.text().await.unwrap_or_default();
+        anyhow::bail!("Nango GET /providers.json failed {status}: {text}");
+    }
+    let root: serde_json::Value = resp.json().await.context("parse providers.json")?;
+    let Some(obj) = root.as_object() else {
+        anyhow::bail!("providers.json: expected a JSON object keyed by provider id");
+    };
+    let needle = search.map(str::trim).filter(|s| !s.is_empty()).map(|s| s.to_lowercase());
+    let mut rows: Vec<serde_json::Value> = Vec::new();
+    for (name, v) in obj {
+        if let Some(n) = needle.as_ref() {
+            if !name.to_lowercase().contains(n.as_str()) {
+                continue;
+            }
+        }
+        let Some(p) = v.as_object() else {
+            continue;
+        };
+        let display_name = p
+            .get("display_name")
+            .and_then(|x| x.as_str())
+            .unwrap_or(name.as_str());
+        let logo_url = format!("{base_trim}/images/template-logos/{name}.svg");
+        rows.push(json!({
+            "name": name,
+            "display_name": display_name,
+            "logo_url": logo_url,
+            "auth_mode": p.get("auth_mode"),
+            "categories": p.get("categories"),
+            "docs": p.get("docs"),
+        }));
+    }
+    rows.sort_by(|a, b| {
+        let an = a.get("name").and_then(|x| x.as_str()).unwrap_or("");
+        let bn = b.get("name").and_then(|x| x.as_str()).unwrap_or("");
+        an.cmp(bn)
+    });
+    Ok(rows)
+}
+
 /// `GET /providers` — full Nango provider catalog (`search` filters by provider id regex on Nango side).
+/// Falls back to `GET /providers.json` when Nango returns 401/403 (e.g. wrong `NANGO_SECRET_KEY`) so the UI
+/// can still show the static template list; OAuth flows still need a valid secret.
 pub async fn list_providers_catalog(
     base_url: &str,
     secret: &str,
     search: Option<&str>,
 ) -> anyhow::Result<Vec<serde_json::Value>> {
     let client = nango_client()?;
-    let mut url = format!("{}/providers", base_url.trim_end_matches('/'));
+    let base_trim = base_url.trim_end_matches('/');
+    let mut url = format!("{base_trim}/providers");
     if let Some(s) = search.map(str::trim).filter(|s| !s.is_empty()) {
         url.push_str("?search=");
         url.push_str(&urlencoding::encode(s));
     }
     let headers = auth_headers(secret)?;
-    let resp = client.get(&url).headers(headers).send().await?;
-    if !resp.status().is_success() {
-        let status = resp.status();
-        let text = resp.text().await.unwrap_or_default();
-        anyhow::bail!("Nango GET /providers failed {status}: {text}");
+    let resp = client.get(url).headers(headers).send().await?;
+    if resp.status().is_success() {
+        let root: serde_json::Value = resp.json().await.context("parse providers JSON")?;
+        return Ok(providers_catalog_from_data_root(root));
     }
-    let root: serde_json::Value = resp.json().await.context("parse providers JSON")?;
-    let arr = root
-        .get("data")
-        .and_then(|d| d.as_array())
-        .cloned()
-        .unwrap_or_default();
-    Ok(arr)
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    if status == reqwest::StatusCode::UNAUTHORIZED || status == reqwest::StatusCode::FORBIDDEN {
+        tracing::warn!(
+            %status,
+            "Nango GET /providers rejected credentials; using unauthenticated /providers.json for catalog only"
+        );
+        return list_providers_catalog_from_public_json(&client, base_trim, search).await;
+    }
+    anyhow::bail!("Nango GET /providers failed {status}: {text}");
 }

@@ -31,3 +31,8 @@ version = "0.1.0"
 edition = "2021"
 authors = ["OminiConnect contributors"]
 license = "MIT OR Apache-2.0"
+
+# Per-crate release settings must live at workspace root (not in member Cargo.toml).
+# (`lto` is not allowed here; use `RUSTFLAGS='-C lto=fat'` when building the wasm crate if needed.)
+[profile.release.package.omini-connect-wasm-policies]
+opt-level = "s"

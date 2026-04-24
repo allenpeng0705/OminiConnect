@@ -38,13 +38,6 @@ pub struct LoginRequest {
     pub password: String,
 }
 
-/// Login response (session ID set as cookie).
-#[derive(Debug, Serialize)]
-pub struct LoginResponse {
-    pub username: String,
-    pub message: String,
-}
-
 /// Generate API key request.
 #[derive(Debug, Deserialize)]
 pub struct GenerateApiKeyRequest {

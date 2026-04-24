@@ -6,7 +6,7 @@ The OminiConnect Portal uses [sqlx](https://github.com/org-rs/sqlx) for database
 
 | Database | Connection URL | Notes |
 |----------|---------------|-------|
-| SQLite | `sqlite:portal.db` | Default, file-based, no setup |
+| SQLite | *(unset `DATABASE_URL`)* | Default file `omini_connect/portal/portal.db` |
 | MySQL | `mysql://user:pass@localhost/omini_connect_portal` | Requires MySQL 5.7+ |
 | MariaDB | `mysql://user:pass@localhost/omini_connect_portal` | MariaDB uses MySQL protocol (10.2+) |
 | PostgreSQL | `postgres://user:pass@localhost/omini_connect_portal` | Requires PostgreSQL 12+ |

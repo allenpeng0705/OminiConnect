@@ -1,0 +1,148 @@
+diff --git a/packages/server/lib/controllers/v1/account/signup.ts b/packages/server/lib/controllers/v1/account/signup.ts
+index 67e62a592..4705d3ada 100644
+--- a/packages/server/lib/controllers/v1/account/signup.ts
++++ b/packages/server/lib/controllers/v1/account/signup.ts
+@@ -105,13 +105,15 @@ export const signup = asyncWrapper<PostSignup>(async (req, res) => {
+     // Create user
+     const salt = crypto.randomBytes(16).toString('base64');
+     const hashedPassword = (await pbkdf2(password, salt, 310000, 32, 'sha256')).toString('base64');
++    const devSkipEnv = process.env['NANGO_DEV_SKIP_EMAIL_VERIFICATION']?.trim().toLowerCase();
++    const devSkipEmailVerification = !token && (devSkipEnv === 'true' || devSkipEnv === '1' || devSkipEnv === 'yes');
+     const user = await userService.createUser({
+         email,
+         name,
+         hashed_password: hashedPassword,
+         salt,
+         account_id: account.id,
+-        email_verified: token ? true : false,
++        email_verified: Boolean(token) || devSkipEmailVerification,
+         role: token ? invitationRole : envs.DEFAULT_USER_ROLE
+     });
+     if (!user) {
+@@ -133,6 +135,18 @@ export const signup = asyncWrapper<PostSignup>(async (req, res) => {
+ 
+     // Ask for email validation if not coming from an invitation
+     if (!token) {
++        if (user.email_verified) {
++            req.login(user, function (err) {
++                if (err) {
++                    res.status(500).send({ error: { code: 'server_error', message: 'There was a problem logging in the user. Please reach out to support.' } });
++                    return;
++                }
++
++                res.status(200).send({ data: { uuid: user.uuid, verified: true } });
++            });
++            return;
++        }
++
+         if (!user.email_verification_token) {
+             res.status(400).send({ error: { code: 'email_already_verified', message: 'Email address was already verified, please login.' } });
+             return;
+diff --git a/packages/server/lib/routes.private.ts b/packages/server/lib/routes.private.ts
+index 57cc6aed5..7ea4a3541 100644
+--- a/packages/server/lib/routes.private.ts
++++ b/packages/server/lib/routes.private.ts
+@@ -4,7 +4,18 @@ import express from 'express';
+ import passport from 'passport';
+ 
+ import { permissions as p } from '@nangohq/authz';
+-import { basePublicUrl, baseUrl, flagHasAuth, flagHasManagedAuth, flagHasUsage, isBasicAuthEnabled, isCloud, isEnterprise, isTest } from '@nangohq/utils';
++import {
++    basePublicUrl,
++    baseUrl,
++    flagHasAuth,
++    flagHasManagedAuth,
++    flagHasUsage,
++    isBasicAuthEnabled,
++    isCloud,
++    isEnterprise,
++    isLocal,
++    isTest
++} from '@nangohq/utils';
+ 
+ import { can, envScope } from './authz/middleware.js';
+ import { setupAuth } from './clients/auth.client.js';
+@@ -119,12 +130,37 @@ if (isTest) {
+ const web = express.Router();
+ setupAuth(web);
+ 
++function apiBaseIsLoopback(): boolean {
++    try {
++        const host = new URL(baseUrl).hostname.toLowerCase();
++        return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
++    } catch {
++        return false;
++    }
++}
++
++/** Vite dashboard uses --port 3000; API is usually SERVER_PORT (e.g. 3003). Needs CORS+credentials. */
++function webDashboardCorsExtras(): string[] {
++    const fromEnv =
++        process.env['NANGO_WEBAPP_CORS_ORIGINS']
++            ?.split(',')
++            .map((s) => s.trim())
++            .filter((s) => s.length > 0) ?? [];
++
++    // isLocal is false when NODE_ENV=production even for localhost URLs — still allow the split-origin dashboard.
++    const loopbackDashboard = ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://[::1]:3000'];
++    const includeLoopbackDashboard = isLocal || apiBaseIsLoopback();
++
++    return [...new Set([...(includeLoopbackDashboard ? loopbackDashboard : []), ...fromEnv])];
++}
++
+ // --- Security
++const webCorsOrigins = [basePublicUrl, baseUrl, ...webDashboardCorsExtras()];
+ const webCorsHandler = cors({
+     maxAge: 600,
+     allowedHeaders: 'Origin, Content-Type, sentry-trace, baggage',
+     exposedHeaders: 'Authorization, Etag, Content-Type, Content-Length, Set-Cookie',
+-    origin: [basePublicUrl, baseUrl],
++    origin: webCorsOrigins,
+     credentials: true
+ });
+ web.use(webCorsHandler);
+diff --git a/packages/webapp/src/hooks/useAuth.tsx b/packages/webapp/src/hooks/useAuth.tsx
+index b7b94dd38..bcc1cc095 100644
+--- a/packages/webapp/src/hooks/useAuth.tsx
++++ b/packages/webapp/src/hooks/useAuth.tsx
+@@ -179,6 +179,10 @@ export function useSignupAPI() {
+         | {
+               status: 400;
+               json: PostSignup['Errors'];
++          }
++        | {
++              status: 403;
++              json: { error: { code?: string; message?: string } };
+           },
+         APIError,
+         { name: string; email: string; password: string; token?: string }
+@@ -203,6 +207,13 @@ export function useSignupAPI() {
+                 };
+             }
+ 
++            if (res.status === 403) {
++                return {
++                    status: res.status,
++                    json: (await res.json()) as { error: { code?: string; message?: string } }
++                };
++            }
++
+             const json = (await res.json()) as Record<string, unknown>;
+             throw new APIError({ res, json });
+         }
+diff --git a/packages/webapp/src/pages/Account/components/SignupForm.tsx b/packages/webapp/src/pages/Account/components/SignupForm.tsx
+index 028009c97..df91726db 100644
+--- a/packages/webapp/src/pages/Account/components/SignupForm.tsx
++++ b/packages/webapp/src/pages/Account/components/SignupForm.tsx
+@@ -64,6 +64,11 @@ export const SignupForm: React.FC<{ invitation?: ApiInvitation; token?: string }
+                 return;
+             }
+ 
++            if (res.status === 403) {
++                setServerErrorMessage(res.json.error?.message || 'Signup is disabled.');
++                return;
++            }
++
+             setServerErrorMessage(res.json.error.message || 'Issue signing up. Please try again.');
+             if (res.json.error.code === 'email_not_verified') {
+                 setShowResendEmail(true);

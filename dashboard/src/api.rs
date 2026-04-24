@@ -3,8 +3,7 @@
 use crate::model::*;
 use axum::{
     extract::{Query, State},
-    http::StatusCode,
-    response::{Html, IntoResponse, Response},
+    response::Html,
     routing::{get, post},
     Json, Router,
 };
@@ -13,7 +12,6 @@ use std::collections::VecDeque;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use chrono::Utc;
 
 /// Application state
 #[derive(Debug, Clone)]
@@ -102,14 +100,6 @@ impl<T> ApiResponse<T> {
             success: true,
             data: Some(data),
             error: None,
-        }
-    }
-
-    fn error(msg: &str) -> Self {
-        Self {
-            success: false,
-            data: None,
-            error: Some(msg.to_string()),
         }
     }
 }

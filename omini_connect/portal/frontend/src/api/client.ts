@@ -139,6 +139,20 @@ export interface IntegrationCatalogRow {
 export async function getIntegrationCatalog(search?: string): Promise<IntegrationCatalogRow[]> {
   const q = search?.trim() ? `?search=${encodeURIComponent(search.trim())}` : '';
   const res = await apiFetch(`/api/nango/providers${q}`);
-  if (!res.ok) throw new Error('Failed to load integration catalog');
+  if (!res.ok) {
+    if (res.status === 401) {
+      throw new Error('Sign in to the portal again — your session expired.');
+    }
+    let detail = res.statusText || 'Failed to load integration catalog';
+    try {
+      const j = (await res.json()) as { error?: unknown };
+      if (typeof j?.error === 'string' && j.error.trim()) {
+        detail = j.error.trim();
+      }
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
   return res.json();
 }

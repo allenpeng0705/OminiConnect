@@ -12,6 +12,7 @@ pub struct FacebookPlatform {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Fields mirror Facebook token JSON; only some are read.
 struct FacebookTokenResponse {
     #[serde(rename = "access_token")]
     access_token: Option<String>,
@@ -28,6 +29,7 @@ struct FacebookTokenResponse {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct FacebookPage {
     #[serde(rename = "access_token")]
     access_token: Option<String>,

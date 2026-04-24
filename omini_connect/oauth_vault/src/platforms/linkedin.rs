@@ -12,6 +12,7 @@ pub struct LinkedInPlatform {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)] // Fields mirror LinkedIn token JSON; only some are read.
 struct LinkedInTokenResponse {
     #[serde(rename = "access_token")]
     access_token: Option<String>,

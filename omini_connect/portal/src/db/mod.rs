@@ -1,7 +1,7 @@
 //! Database persistence layer using sqlx (SQLite + MySQL + PostgreSQL).
 //!
 //! Configure via `DATABASE_URL` env var:
-//! - `sqlite:portal.db` (default if not set)
+//! - If unset: SQLite at `omini_connect/portal/portal.db` (next to this crate’s `Cargo.toml`)
 //! - `mysql://user:pass@localhost/omini_connect_portal` (also works for MariaDB)
 //! - `postgres://user:pass@localhost/omini_connect_portal`
 
@@ -11,9 +11,17 @@ use sqlx::pool::PoolOptions;
 use crate::auth::models::{ApiKey, Session, User};
 use crate::oauth::models::ConnectorConfig;
 
-/// Create a DB pool. Reads `DATABASE_URL` env var, defaults to `sqlite:portal.db`.
+fn default_sqlite_url() -> String {
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("portal.db");
+    format!("sqlite://{}", path.display())
+}
+
+/// Create a DB pool. Reads `DATABASE_URL` env var, or defaults to SQLite `portal.db` beside this crate.
 pub async fn create_pool() -> anyhow::Result<sqlx::AnyPool> {
-    let url = std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:portal.db".to_string());
+    let url = std::env::var("DATABASE_URL")
+        .ok()
+        .filter(|s| !s.trim().is_empty())
+        .unwrap_or_else(|| default_sqlite_url());
     tracing::info!("Connecting to database: {}", url);
 
     // Install the any driver with support for sqlite, postgres, and mysql (MariaDB compatible)

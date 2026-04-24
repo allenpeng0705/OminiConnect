@@ -106,8 +106,18 @@ async fn token_refresh_loop(vault: Arc<omini_connect_oauth_vault::OAuthVault>) {
     }
 }
 
+fn load_dotenv() {
+    let repo_root_env = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.env");
+    if repo_root_env.is_file() {
+        let _ = dotenvy::from_path(&repo_root_env);
+    }
+    let _ = dotenvy::dotenv();
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    load_dotenv();
+
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new(
             std::env::var("RUST_LOG").unwrap_or_else(|_| "info".to_string()),

@@ -16,6 +16,7 @@ struct JsonRpcRequest {
 
 /// MCP JSON-RPC response
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 struct JsonRpcResponse {
     jsonrpc: String,
     result: Option<Value>,
@@ -25,6 +26,7 @@ struct JsonRpcResponse {
 
 /// JSON-RPC error
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 struct JsonRpcError {
     code: i32,
     message: String,

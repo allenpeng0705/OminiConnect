@@ -29,15 +29,6 @@ fn default_provider_key() -> String {
     String::new()
 }
 
-/// Connection status for a connector.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ConnectionStatus {
-    pub platform: String,
-    pub connected: bool,
-    pub configured: bool,
-    pub expires_at: Option<String>,
-}
-
 /// OAuth callback query params (common pattern).
 #[derive(Debug, Deserialize)]
 pub struct OAuthCallbackQuery {
