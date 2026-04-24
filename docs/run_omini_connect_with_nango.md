@@ -162,7 +162,7 @@ This runs **`scripts/dev_omini_connect_nango_native.sh`**, which roughly:
 
 **Ports:** keep **9000**, **3003**, **3000**, **3009** free or adjust configs.
 
-**Stop:** **Ctrl+C** in that terminal; the script stops background Nango processes.
+**Stop:** **Ctrl+C** in that terminal once; the script stops the portal and tears down the Nango dev process tree (not only the top-level `npm` PID).
 
 ---
 
@@ -187,7 +187,7 @@ This runs **`scripts/dev_omini_connect_nango_native.sh`**, which roughly:
 
 ### Integration library (“Open library”)
 
-The UI loads **`GET /api/nango/providers`**, which calls Nango’s **`GET /providers`** with your **`NANGO_SECRET_KEY`**. If that returns **401** (wrong or stale secret), the portal falls back to Nango’s public **`GET /providers.json`** so you can still browse templates. Fix **`NANGO_SECRET_KEY`** (e.g. `./scripts/sync_nango_secret_to_omini_env.sh`) for full API behavior. If you see **401** on the API itself, sign in to the portal again (session cookie).
+The UI loads **`GET /api/nango/providers`**, which calls Nango’s **`GET /providers`** with your **`NANGO_SECRET_KEY`**. If that returns **401** / **403** (wrong or stale secret) or **5xx** (Nango `/providers` broken while static files still work), the portal falls back to Nango’s **`GET /providers.json`** so you can still browse templates. Fix **`NANGO_SECRET_KEY`** and Nango server health for full **`/providers`** behavior. If you see **401** on the portal route itself, sign in to the portal again (session cookie).
 
 ---
 

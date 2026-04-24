@@ -25,14 +25,56 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NANGO_DIR="${ROOT}/third_party/nango"
 
 NANGO_APPS_PID=""
+PORTAL_PID=""
+
+# Best-effort recursive SIGTERM then SIGKILL (npm/concurrently leaves many children).
+kill_tree() {
+  local root="${1:?}"
+  [[ "${root}" =~ ^[0-9]+$ ]] || return 0
+  kill -0 "${root}" 2>/dev/null || return 0
+  local children c
+  children=$(pgrep -P "${root}" 2>/dev/null || true)
+  for c in ${children}; do
+    kill_tree "${c}"
+  done
+  kill -TERM "${root}" 2>/dev/null || true
+}
+
+kill_tree_force() {
+  local root="${1:?}"
+  [[ "${root}" =~ ^[0-9]+$ ]] || return 0
+  kill -0 "${root}" 2>/dev/null || return 0
+  local children c
+  children=$(pgrep -P "${root}" 2>/dev/null || true)
+  for c in ${children}; do
+    kill_tree_force "${c}"
+  done
+  kill -KILL "${root}" 2>/dev/null || true
+}
+
 cleanup() {
+  if [[ -n "${PORTAL_PID}" ]] && kill -0 "${PORTAL_PID}" 2>/dev/null; then
+    kill_tree "${PORTAL_PID}"
+  fi
   if [[ -n "${NANGO_APPS_PID}" ]] && kill -0 "${NANGO_APPS_PID}" 2>/dev/null; then
-    kill "${NANGO_APPS_PID}" 2>/dev/null || true
-    # concurrently spawns children — tear down process group if we created one
-    pkill -P "${NANGO_APPS_PID}" 2>/dev/null || true
+    kill_tree "${NANGO_APPS_PID}"
+  fi
+  sleep 1
+  if [[ -n "${PORTAL_PID}" ]] && kill -0 "${PORTAL_PID}" 2>/dev/null; then
+    kill_tree_force "${PORTAL_PID}"
+  fi
+  if [[ -n "${NANGO_APPS_PID}" ]] && kill -0 "${NANGO_APPS_PID}" 2>/dev/null; then
+    kill_tree_force "${NANGO_APPS_PID}"
   fi
 }
-trap cleanup EXIT INT TERM
+
+on_signal() {
+  cleanup
+  exit 130
+}
+
+trap cleanup EXIT
+trap on_signal INT TERM
 
 if ! command -v node >/dev/null 2>&1; then
   echo "Node.js is required (see third_party/nango/.nvmrc; use nvm/fnm if needed)."
@@ -170,7 +212,7 @@ OminiConnect on Postgres (same host as Nango): use a **separate** database, e.g.
   DATABASE_URL=postgres://nango:nango@127.0.0.1:5432/omini_connect_portal
   (create with: createdb -h 127.0.0.1 -U nango omini_connect_portal)
 
-Stopping Nango: Ctrl+C stops the portal; this script then stops the Nango dev processes.
+Stopping: press **Ctrl+C** once — the script stops the portal and tears down the Nango dev tree (npm / concurrently / node).
 ----------------------------------------------------------------
 
 EOF
@@ -182,4 +224,8 @@ if [[ -f "${ROOT}/.env" ]]; then
   set +a
 fi
 
-cargo run -p omini-connect-portal
+# Run the portal in the background so this shell stays in the foreground process group and
+# receives Ctrl+C; then we stop both cargo and the Nango dev processes reliably.
+cargo run -p omini-connect-portal &
+PORTAL_PID=$!
+wait "${PORTAL_PID}"

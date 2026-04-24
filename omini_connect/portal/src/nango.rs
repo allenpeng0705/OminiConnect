@@ -293,9 +293,18 @@ async fn list_providers_catalog_from_public_json(
     Ok(rows)
 }
 
+/// Same as [`list_providers_catalog_from_public_json`] but exposed for callers that have no API secret yet
+/// (browse-only library in the portal).
+pub async fn list_providers_catalog_public_only(base_url: &str, search: Option<&str>) -> anyhow::Result<Vec<serde_json::Value>> {
+    let client = nango_client()?;
+    let base_trim = base_url.trim_end_matches('/');
+    list_providers_catalog_from_public_json(&client, base_trim, search).await
+}
+
 /// `GET /providers` — full Nango provider catalog (`search` filters by provider id regex on Nango side).
-/// Falls back to `GET /providers.json` when Nango returns 401/403 (e.g. wrong `NANGO_SECRET_KEY`) so the UI
-/// can still show the static template list; OAuth flows still need a valid secret.
+/// Falls back to `GET /providers.json` when Nango returns 401/403 (e.g. wrong `NANGO_SECRET_KEY`) or **5xx**
+/// (broken `/providers` while static templates still serve) so the integration library can load; OAuth and
+/// connect-session still need a healthy Nango API and valid secret.
 pub async fn list_providers_catalog(
     base_url: &str,
     secret: &str,
@@ -320,6 +329,13 @@ pub async fn list_providers_catalog(
         tracing::warn!(
             %status,
             "Nango GET /providers rejected credentials; using unauthenticated /providers.json for catalog only"
+        );
+        return list_providers_catalog_from_public_json(&client, base_trim, search).await;
+    }
+    if status.is_server_error() {
+        tracing::warn!(
+            %status,
+            "Nango GET /providers failed; using unauthenticated /providers.json for catalog browse (repair Nango for authenticated /providers)"
         );
         return list_providers_catalog_from_public_json(&client, base_trim, search).await;
     }

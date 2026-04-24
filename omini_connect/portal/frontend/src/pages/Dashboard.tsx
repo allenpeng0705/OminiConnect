@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getConnectors, getConnectorStatus, logout } from '../api/client';
 
 interface ConnectorInfo {
@@ -7,6 +7,7 @@ interface ConnectorInfo {
   client_id: string;
   redirect_uri: string;
   scopes: string[];
+  /** `nango` = managed hub (Nango Connect under the hood). */
   engine?: string;
   enabled: boolean;
   connected?: boolean;
@@ -25,6 +26,7 @@ const PLATFORMS = [
 ];
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [connectors, setConnectors] = useState<ConnectorInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
@@ -68,10 +70,13 @@ export default function Dashboard() {
     window.location.href = '/auth/login';
   }
 
-  async function handleConnect(platform: string) {
-    const p = PLATFORMS.find(p => p.id === platform);
+  function handleConnect(platform: string, engine?: string) {
+    const p = PLATFORMS.find((x) => x.id === platform);
     if (p?.type === 'api_key') {
-      // API key platforms go directly to config
+      return;
+    }
+    if (engine === 'nango') {
+      navigate(`/connectors/${encodeURIComponent(platform)}/connect`);
       return;
     }
     window.location.href = `/oauth/${platform}`;
@@ -165,7 +170,7 @@ export default function Dashboard() {
                         Configure
                       </Link>
                       {(c.engine === 'nango' || platform?.type === 'oauth2') && c.configured && !c.connected && (
-                        <button onClick={() => handleConnect(c.platform)} style={{ padding: '0.375rem 0.75rem', background: '#dcfce7', color: '#166534', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8125rem' }}>
+                        <button onClick={() => handleConnect(c.platform, c.engine)} style={{ padding: '0.375rem 0.75rem', background: '#dcfce7', color: '#166534', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8125rem' }}>
                           {c.engine === 'nango' ? 'Connect (managed)' : 'Connect OAuth'}
                         </button>
                       )}

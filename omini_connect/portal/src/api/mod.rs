@@ -22,5 +22,6 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/connectors/:platform/test", axum::routing::post(connectors::test))
         .route("/nango/integrations", axum::routing::get(nango_catalog::list_integrations))
         .route("/nango/providers", axum::routing::get(nango_catalog::list_providers))
+        .route("/nango/connect-session", axum::routing::post(nango_catalog::post_connect_session))
         .route("/proxy/:platform/*path", axum::routing::get(proxy::forward).post(proxy::forward))
 }

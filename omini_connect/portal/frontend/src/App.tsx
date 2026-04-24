@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import ConnectorConfig from './pages/ConnectorConfig';
 import AddNangoConnector from './pages/AddNangoConnector';
 import IntegrationCatalog from './pages/IntegrationCatalog';
+import ConnectManagedHub from './pages/ConnectManagedHub';
 import ApiKeys from './pages/ApiKeys';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,13 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  if (checking) return null;
+  if (checking) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '0.95rem' }}>
+        Checking session…
+      </div>
+    );
+  }
   return authenticated ? <>{children}</> : <Navigate to="/auth/login" replace />;
 }
 
@@ -54,6 +61,11 @@ export default function App() {
         <Route path="/connectors/add-nango" element={
           <ProtectedRoute>
             <AddNangoConnector />
+          </ProtectedRoute>
+        } />
+        <Route path="/connectors/:platform/connect" element={
+          <ProtectedRoute>
+            <ConnectManagedHub />
           </ProtectedRoute>
         } />
         <Route path="/connectors/:platform" element={

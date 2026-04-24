@@ -195,6 +195,7 @@ Or: **`./scripts/snapshot_nango_patch.sh`** (use **`--reset`** so the submodule 
 
 ### Further reading
 
+- `docs/try_managed_nango_flow.md` — **hands-on**: popup Nango Connect from OminiConnect, then finalize
 - `docs/omini_connect_nango_option_b.md` — Option B architecture
 - `docs/nango_upstream_strategy.md` — upstream / submodule strategy
 

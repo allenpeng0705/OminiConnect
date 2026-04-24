@@ -4,6 +4,35 @@ import { getIntegrationCatalog, type IntegrationCatalogRow } from '../api/client
 
 const PAGE = 72;
 
+/** Nango may send `categories` as string[], a single string, or other shapes — normalize so we never crash on `.join` / React keys. */
+function normalizeCategories(raw: unknown): string[] {
+  if (raw == null) return [];
+  if (Array.isArray(raw)) {
+    return raw.map((c) => (typeof c === 'string' ? c : String(c))).filter(Boolean);
+  }
+  if (typeof raw === 'string') return raw.trim() ? [raw.trim()] : [];
+  return [];
+}
+
+function normalizeCatalogRow(r: unknown): IntegrationCatalogRow | null {
+  if (!r || typeof r !== 'object') return null;
+  const o = r as Record<string, unknown>;
+  const name = typeof o.name === 'string' ? o.name.trim() : '';
+  if (!name) return null;
+  const display_name = typeof o.display_name === 'string' && o.display_name.trim() ? o.display_name.trim() : name;
+  const logo_url = typeof o.logo_url === 'string' ? o.logo_url : '';
+  const auth_mode = typeof o.auth_mode === 'string' ? o.auth_mode : undefined;
+  const docs = typeof o.docs === 'string' ? o.docs : undefined;
+  return {
+    name,
+    display_name,
+    logo_url,
+    auth_mode,
+    categories: normalizeCategories(o.categories),
+    docs,
+  };
+}
+
 function providerSearchBlob(p: IntegrationCatalogRow): string {
   const cats = (p.categories || []).join(' ');
   return `${p.name} ${p.display_name} ${cats} ${p.auth_mode || ''}`.toLowerCase();
@@ -22,7 +51,9 @@ export default function IntegrationCatalog() {
     setError('');
     try {
       const data = await getIntegrationCatalog();
-      const cleaned = (Array.isArray(data) ? data : []).filter((r): r is IntegrationCatalogRow => typeof r?.name === 'string' && r.name.length > 0);
+      const cleaned = (Array.isArray(data) ? data : [])
+        .map((r) => normalizeCatalogRow(r))
+        .filter((r): r is IntegrationCatalogRow => r != null);
       setRows(cleaned);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load catalog');
@@ -137,6 +168,21 @@ export default function IntegrationCatalog() {
 
         {loading ? (
           <p style={{ color: '#64748b' }}>Loading integration library…</p>
+        ) : !error && rows.length === 0 ? (
+          <div
+            style={{
+              padding: '1.25rem',
+              borderRadius: '10px',
+              background: '#fffbeb',
+              border: '1px solid #fcd34d',
+              color: '#92400e',
+              fontSize: '0.9rem',
+            }}
+          >
+            <strong>No providers loaded.</strong> Set <code style={{ background: '#fef3c7', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>NANGO_BASE_URL</code> in the
+            repo-root <code style={{ background: '#fef3c7', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>.env</code> (e.g. <code style={{ background: '#fef3c7', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>http://localhost:3003</code>) and restart the portal. For full Nango API features, add{' '}
+            <code style={{ background: '#fef3c7', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>NANGO_SECRET_KEY</code> or run <code style={{ background: '#fef3c7', padding: '0.1rem 0.35rem', borderRadius: '4px' }}>./scripts/sync_nango_secret_to_omini_env.sh</code>. Signing into the <strong>Nango</strong> dashboard is separate from signing into this <strong>OminiConnect</strong> portal.
+          </div>
         ) : (
           <>
             <div
@@ -185,9 +231,9 @@ export default function IntegrationCatalog() {
                         {p.auth_mode}
                       </span>
                     )}
-                    {(p.categories || []).slice(0, 3).map((c) => (
+                    {(p.categories || []).slice(0, 3).map((c, i) => (
                       <span
-                        key={c}
+                        key={`${p.name}-cat-${i}-${c}`}
                         style={{
                           fontSize: '0.68rem',
                           padding: '0.2rem 0.45rem',

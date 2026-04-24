@@ -126,6 +126,25 @@ export async function getNangoIntegrations(): Promise<NangoIntegrationRow[]> {
   return res.json();
 }
 
+/** Start Nango Connect for a managed (`engine=nango`) connector — returns URL to open in a popup or new tab. */
+export async function createNangoConnectSession(platform: string): Promise<{ connect_url: string }> {
+  const res = await apiFetch('/api/nango/connect-session', {
+    method: 'POST',
+    body: JSON.stringify({ platform }),
+  });
+  if (!res.ok) {
+    let detail = res.statusText || 'Failed to start Nango Connect';
+    try {
+      const j = (await res.json()) as { error?: unknown };
+      if (typeof j?.error === 'string' && j.error.trim()) detail = j.error.trim();
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+  return res.json() as Promise<{ connect_url: string }>;
+}
+
 /** One row in the OminiConnect integration library (server-backed catalog). */
 export interface IntegrationCatalogRow {
   name: string;

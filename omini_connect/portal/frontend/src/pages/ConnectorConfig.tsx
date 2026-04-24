@@ -294,12 +294,16 @@ export default function ConnectorConfig() {
             </button>
             {isOAuth2 && engine === 'nango' && (
               <>
-                <button type="button" onClick={() => window.location.href = `/oauth/${platform}`} style={{ padding: '0.5rem 1.25rem', background: '#e0e7ff', color: '#3730a3', border: '1px solid #a5b4fc', borderRadius: '4px', cursor: 'pointer' }}>
-                  Connect (managed)
+                <button
+                  type="button"
+                  onClick={() => platform && navigate(`/connectors/${encodeURIComponent(platform)}/connect`)}
+                  style={{ padding: '0.5rem 1.25rem', background: '#e0e7ff', color: '#3730a3', border: '1px solid #a5b4fc', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  Connect in OminiConnect
                 </button>
                 {!connected && (
-                  <button type="button" onClick={() => window.location.href = `/oauth/${platform}/nango-finalize`} style={{ padding: '0.5rem 1.25rem', background: '#fef3c7', color: '#92400e', border: '1px solid #fcd34d', borderRadius: '4px', cursor: 'pointer' }}>
-                    Import existing connection
+                  <button type="button" onClick={() => platform && (window.location.href = `/oauth/${encodeURIComponent(platform)}/nango-finalize`)} style={{ padding: '0.5rem 1.25rem', background: '#fef3c7', color: '#92400e', border: '1px solid #fcd34d', borderRadius: '4px', cursor: 'pointer' }}>
+                    Save connection (after sign-in)
                   </button>
                 )}
               </>
