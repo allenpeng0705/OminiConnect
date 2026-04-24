@@ -1,0 +1,111 @@
+{
+    "name": "nango",
+    "version": "0.70.1",
+    "description": "Nango's CLI tool.",
+    "type": "module",
+    "bin": {
+        "nango": "./dist/index.js"
+    },
+    "main": "./dist/sdkScripts.js",
+    "types": "./dist/sdkScripts.d.ts",
+    "typings": "./dist/sdkScripts.d.ts",
+    "exports": {
+        ".": {
+            "require": "./dist/sdkScripts.js",
+            "types": "./dist/sdkScripts.d.ts",
+            "default": "./dist/sdkScripts.js"
+        },
+        "./test": {
+            "require": "./dist/testMocks/utils.js",
+            "types": "./dist/testMocks/utils.d.ts",
+            "default": "./dist/testMocks/utils.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "keywords": [],
+    "author": "bastien@nango.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/NangoHQ/nango.git",
+        "directory": "packages/cli"
+    },
+    "license": "SEE LICENSE IN LICENSE FILE IN GIT REPOSITORY",
+    "scripts": {
+        "copy:files": "copyfiles -u 1 lib/templates/* dist",
+        "prepublishOnly": "npm run copy:files"
+    },
+    "dependencies": {
+        "@babel/core": "7.28.0",
+        "@babel/parser": "7.28.0",
+        "@babel/preset-typescript": "7.27.1",
+        "@babel/traverse": "7.28.0",
+        "@babel/types": "7.28.2",
+        "@nangohq/nango-yaml": "0.70.1",
+        "@nangohq/node": "0.70.1",
+        "@nangohq/providers": "0.70.1",
+        "@nangohq/runner-sdk": "0.70.1",
+        "@swc/core": "1.13.2",
+        "@types/unzipper": "0.10.11",
+        "ajv": "8.18.0",
+        "ajv-errors": "3.0.0",
+        "axios": "1.15.0",
+        "chalk": "5.4.1",
+        "chokidar": "3.5.3",
+        "columnify": "1.6.0",
+        "commander": "10.0.1",
+        "conf": "12.0.0",
+        "copyfiles": "2.4.1",
+        "dotenv": "16.5.0",
+        "ejs": "3.1.10",
+        "esbuild": "0.25.5",
+        "figlet": "1.8.2",
+        "glob": "13.0.5",
+        "import-meta-resolve": "4.1.0",
+        "inquirer": "13.1.0",
+        "js-yaml": "4.1.1",
+        "jscodeshift": "17.3.0",
+        "npm-package-arg": "10.1.0",
+        "ora": "9.2.0",
+        "parse-link-header": "2.0.0",
+        "promptly": "3.2.0",
+        "semver": "7.5.4",
+        "serialize-error": "11.0.3",
+        "ts-node": "10.9.2",
+        "tsup": "8.5.1",
+        "typescript": "5.8.3",
+        "unzipper": "0.12.3",
+        "zod": "4.3.6"
+    },
+    "devDependencies": {
+        "@nangohq/types": "0.70.1",
+        "@types/babel__core": "7.20.5",
+        "@types/babel__traverse": "7.20.7",
+        "@types/columnify": "1.5.4",
+        "@types/commander": "2.12.5",
+        "@types/ejs": "3.1.5",
+        "@types/figlet": "1.5.6",
+        "@types/inquirer": "9.0.7",
+        "@types/jscodeshift": "17.3.0",
+        "@types/json-schema": "7.0.15",
+        "@types/node": "22.15.29",
+        "@types/npm-package-arg": "6.1.4",
+        "@types/promptly": "3.0.5",
+        "babel-loader": "9.1.2",
+        "json-schema": "0.4.0",
+        "strip-ansi": "7.1.0",
+        "type-fest": "4.41.0",
+        "vitest": "3.2.4"
+    },
+    "engines": {
+        "node": ">=20.0"
+    },
+    "files": [
+        "dist/**/*",
+        "example/**/*",
+        "lib/nango.yaml.schema.v1.json",
+        "lib/nango.yaml.schema.v2.json",
+        "scripts/v1-v2.js",
+        "tsconfig.dev.json",
+        "README.md"
+    ]
+}

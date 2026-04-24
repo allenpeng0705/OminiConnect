@@ -1,42 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import CatalogProviderCard from '../components/CatalogProviderCard';
 import { getIntegrationCatalog, type IntegrationCatalogRow } from '../api/client';
+import { normalizeCatalogResponse, providerSearchBlob } from '../lib/integrationCatalogNormalize';
 
 const PAGE = 72;
-
-/** Nango may send `categories` as string[], a single string, or other shapes — normalize so we never crash on `.join` / React keys. */
-function normalizeCategories(raw: unknown): string[] {
-  if (raw == null) return [];
-  if (Array.isArray(raw)) {
-    return raw.map((c) => (typeof c === 'string' ? c : String(c))).filter(Boolean);
-  }
-  if (typeof raw === 'string') return raw.trim() ? [raw.trim()] : [];
-  return [];
-}
-
-function normalizeCatalogRow(r: unknown): IntegrationCatalogRow | null {
-  if (!r || typeof r !== 'object') return null;
-  const o = r as Record<string, unknown>;
-  const name = typeof o.name === 'string' ? o.name.trim() : '';
-  if (!name) return null;
-  const display_name = typeof o.display_name === 'string' && o.display_name.trim() ? o.display_name.trim() : name;
-  const logo_url = typeof o.logo_url === 'string' ? o.logo_url : '';
-  const auth_mode = typeof o.auth_mode === 'string' ? o.auth_mode : undefined;
-  const docs = typeof o.docs === 'string' ? o.docs : undefined;
-  return {
-    name,
-    display_name,
-    logo_url,
-    auth_mode,
-    categories: normalizeCategories(o.categories),
-    docs,
-  };
-}
-
-function providerSearchBlob(p: IntegrationCatalogRow): string {
-  const cats = (p.categories || []).join(' ');
-  return `${p.name} ${p.display_name} ${cats} ${p.auth_mode || ''}`.toLowerCase();
-}
 
 export default function IntegrationCatalog() {
   const navigate = useNavigate();
@@ -51,10 +19,7 @@ export default function IntegrationCatalog() {
     setError('');
     try {
       const data = await getIntegrationCatalog();
-      const cleaned = (Array.isArray(data) ? data : [])
-        .map((r) => normalizeCatalogRow(r))
-        .filter((r): r is IntegrationCatalogRow => r != null);
-      setRows(cleaned);
+      setRows(normalizeCatalogResponse(data));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load catalog');
       setRows([]);
@@ -193,83 +158,13 @@ export default function IntegrationCatalog() {
               }}
             >
               {slice.map((p) => (
-                <article
+                <CatalogProviderCard
                   key={p.name}
-                  style={{
-                    background: 'white',
-                    borderRadius: '12px',
-                    padding: '1rem',
-                    border: '1px solid #e2e8f0',
-                    boxShadow: '0 1px 3px rgba(15,23,42,0.06)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.65rem',
-                    transition: 'border-color 0.15s, box-shadow 0.15s',
-                  }}
-                >
-                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                    <Logo url={p.logo_url} label={p.display_name || p.name} />
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.95rem', lineHeight: 1.3 }}>{p.display_name || p.name}</div>
-                      <code style={{ fontSize: '0.75rem', color: '#64748b', wordBreak: 'break-all' }}>{p.name}</code>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                    {p.auth_mode && (
-                      <span
-                        style={{
-                          fontSize: '0.68rem',
-                          fontWeight: 600,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.04em',
-                          padding: '0.2rem 0.45rem',
-                          borderRadius: '6px',
-                          background: '#eef2ff',
-                          color: '#4338ca',
-                        }}
-                      >
-                        {p.auth_mode}
-                      </span>
-                    )}
-                    {(p.categories || []).slice(0, 3).map((c, i) => (
-                      <span
-                        key={`${p.name}-cat-${i}-${c}`}
-                        style={{
-                          fontSize: '0.68rem',
-                          padding: '0.2rem 0.45rem',
-                          borderRadius: '6px',
-                          background: '#f1f5f9',
-                          color: '#475569',
-                        }}
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-                  <div style={{ marginTop: 'auto', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-                    <button
-                      type="button"
-                      onClick={() => navigate(`/connectors/add-managed?provider_key=${encodeURIComponent(p.name)}`)}
-                      style={{
-                        padding: '0.4rem 0.75rem',
-                        borderRadius: '8px',
-                        border: 'none',
-                        background: '#4f46e5',
-                        color: 'white',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Add connector
-                    </button>
-                    {p.docs && /^https?:\/\//i.test(p.docs) && (
-                      <a href={p.docs} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: '#2563eb' }}>
-                        Docs ↗
-                      </a>
-                    )}
-                  </div>
-                </article>
+                  row={p}
+                  onAddConnector={(providerKey) =>
+                    navigate(`/connectors/add-managed?provider_key=${encodeURIComponent(providerKey)}`)
+                  }
+                />
               ))}
             </div>
             {visible < filtered.length && (
@@ -295,41 +190,5 @@ export default function IntegrationCatalog() {
         )}
       </div>
     </div>
-  );
-}
-
-function Logo({ url, label }: { url?: string; label: string }) {
-  const [ok, setOk] = useState(true);
-  const initial = (label || '?').trim().charAt(0).toUpperCase();
-  if (!url || !ok) {
-    return (
-      <div
-        style={{
-          width: 44,
-          height: 44,
-          borderRadius: '10px',
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-          color: 'white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: 700,
-          fontSize: '1.1rem',
-          flexShrink: 0,
-        }}
-      >
-        {initial}
-      </div>
-    );
-  }
-  return (
-    <img
-      src={url}
-      alt=""
-      width={44}
-      height={44}
-      style={{ borderRadius: '10px', objectFit: 'contain', background: '#f8fafc', flexShrink: 0 }}
-      onError={() => setOk(false)}
-    />
   );
 }

@@ -1,0 +1,228 @@
+import type {
+    GetEmailByExpiredToken,
+    GetEmailByUuid,
+    GetManagedCallback,
+    GetManagedEmailVerification,
+    PostForgotPassword,
+    PostLogout,
+    PostManagedEmailVerification,
+    PostManagedSignup,
+    PostSignin,
+    PostSignup,
+    PutResetPassword
+} from './account/api.js';
+import type { GetAsyncActionResult, GetPublicV1, PostInternalTriggerFunction, PostPublicTriggerAction } from './action/api.js';
+import type { PostImpersonate } from './admin/http.api.js';
+import type { EndpointMethod } from './api.js';
+import type {
+    PostPublicApiKeyAuthorization,
+    PostPublicAppStoreAuthorization,
+    PostPublicBasicAuthorization,
+    PostPublicBillAuthorization,
+    PostPublicJwtAuthorization,
+    PostPublicOauthOutboundAuthorization,
+    PostPublicSignatureAuthorization,
+    PostPublicTbaAuthorization,
+    PostPublicTwoStepAuthorization,
+    PostPublicUnauthenticatedAuthorization
+} from './auth/http.api.js';
+import type {
+    DeleteConnectSession,
+    GetConnectSession,
+    PostConnectSessions,
+    PostInternalConnectSessions,
+    PostPublicConnectSessionsReconnect,
+    PostPublicConnectTelemetry
+} from './connect/api.js';
+import type { GetConnectUISettings, PutConnectUISettings } from './connectUISettings/api.js';
+import type {
+    DeletePublicConnection,
+    GetConnection,
+    GetConnections,
+    GetConnectionsCount,
+    GetPublicConnection,
+    GetPublicConnections,
+    PatchPublicConnection,
+    PostConnectionRefresh,
+    PostPublicConnection
+} from './connection/api/get.js';
+import type { SetMetadata, UpdateMetadata } from './connection/api/metadata.js';
+import type { PostDeploy, PostDeployConfirmation, PostDeployInternal } from './deploy/api.js';
+import type {
+    CreateApiKey,
+    DeleteApiKey,
+    DeleteEnvironment,
+    GetEnvironment,
+    GetEnvironments,
+    ListApiKeys,
+    PatchApiKey,
+    PatchEnvironment,
+    PostEnvironment
+} from './environment/api/index.js';
+import type { PatchWebhook } from './environment/api/webhook.js';
+import type { PostEnvironmentVariables } from './environment/variable/api.js';
+import type { PatchFlowDisable, PatchFlowEnable, PatchFlowFrequency, PostPreBuiltDeploy, PutUpgradePreBuiltFlow } from './flow/http.api.js';
+import type { PostRemoteFunctionCompile, PostRemoteFunctionDeploy, PostRemoteFunctionDryrun } from './functions/api.js';
+import type { GetGettingStarted, PatchGettingStarted } from './gettingStarted/api.js';
+import type {
+    DeleteIntegration,
+    DeletePublicIntegration,
+    GetIntegration,
+    GetIntegrationFlows,
+    GetPublicIntegration,
+    GetPublicListIntegrations,
+    PatchIntegration,
+    PatchPublicIntegration,
+    PostIntegration,
+    PostPublicIntegration
+} from './integration/api.js';
+import type { DeleteInvite, GetInvite, PostInvite } from './invitations/api.js';
+import type { GetOperation, PostInsights, SearchFilters, SearchMessages, SearchOperations } from './logs/api.js';
+import type { GetMeta } from './meta/api.js';
+import type { PostPlanChange, PostPlanExtendTrial, PutBillingInvoicingDetails } from './plans/http.api.js';
+import type { GetProvider, GetProviders, GetPublicProvider, GetPublicProviders } from './providers/api.js';
+import type { AllPublicProxy } from './proxy/http.api.js';
+import type { GetPublicRecords, PatchPublicPruneRecords } from './record/api.js';
+import type { GetPublicScriptsConfig } from './scripts/http.api.js';
+import type {
+    GetSharedCredentialsProvider,
+    GetSharedCredentialsProviders,
+    PatchSharedCredentialsProvider,
+    PostSharedCredentialsProvider
+} from './sharedCredentials/api.js';
+import type { GetPublicSyncStatus, PostPublicSyncPause, PostPublicSyncStart, PostPublicTrigger, PutPublicSyncConnectionFrequency } from './sync/api.js';
+import type { DeleteTeamUser, GetTeam, PatchTeamUser, PutTeam } from './team/api.js';
+import type { GetUser, PatchUser } from './user/api.js';
+import type { PostPublicWebhook } from './webhooks/http.api.js';
+
+export type PublicApiEndpoints =
+    | SetMetadata
+    | UpdateMetadata
+    | PostDeploy
+    | PostDeployConfirmation
+    | PostPublicTrigger
+    | PostPublicTbaAuthorization
+    | PostPublicJwtAuthorization
+    | PostPublicUnauthenticatedAuthorization
+    | PostPublicApiKeyAuthorization
+    | PostPublicBasicAuthorization
+    | PostPublicAppStoreAuthorization
+    | GetPublicProviders
+    | GetPublicProvider
+    | GetPublicListIntegrations
+    | GetPublicIntegration
+    | DeletePublicIntegration
+    | PostConnectSessions
+    | PostPublicConnectSessionsReconnect
+    | GetPublicConnections
+    | GetPublicConnection
+    | GetConnectSession
+    | DeleteConnectSession
+    | PostDeployInternal
+    | PostPublicBillAuthorization
+    | DeletePublicConnection
+    | PostPublicSignatureAuthorization
+    | PostPublicTwoStepAuthorization
+    | PostPublicWebhook
+    | GetPublicRecords
+    | PatchPublicPruneRecords
+    | GetPublicScriptsConfig
+    | PostPublicConnectTelemetry
+    | PutPublicSyncConnectionFrequency
+    | PostPublicIntegration
+    | PatchPublicIntegration
+    | GetAsyncActionResult
+    | PostPublicOauthOutboundAuthorization
+    | PostPublicConnection
+    | PatchPublicConnection
+    | PostPublicSyncStart
+    | PostPublicSyncPause
+    | GetPublicSyncStatus
+    | GetPublicV1
+    | PostPublicTriggerAction
+    | PostRemoteFunctionCompile
+    | PostRemoteFunctionDryrun
+    | PostRemoteFunctionDeploy
+    | AllPublicProxy;
+
+export type PrivateApiEndpoints =
+    | PostSignup
+    | PostSignin
+    | PostLogout
+    | GetTeam
+    | PutTeam
+    | PostPlanExtendTrial
+    | PostPlanChange
+    | PutBillingInvoicingDetails
+    | GetUser
+    | PatchUser
+    | PostInvite
+    | DeleteInvite
+    | DeleteTeamUser
+    | PatchTeamUser
+    | PostInsights
+    | PostForgotPassword
+    | PutResetPassword
+    | SearchOperations
+    | GetOperation
+    | SearchMessages
+    | SearchFilters
+    | PostInternalConnectSessions
+    | GetIntegrationFlows
+    | DeleteIntegration
+    | PatchIntegration
+    | GetIntegration
+    | PostIntegration
+    | GetConnections
+    | GetConnectionsCount
+    | GetConnection
+    | GetInvite
+    | GetMeta
+    | GetEmailByExpiredToken
+    | GetEmailByUuid
+    | GetManagedCallback
+    | GetManagedEmailVerification
+    | PatchFlowDisable
+    | PatchFlowEnable
+    | PatchFlowFrequency
+    | PutUpgradePreBuiltFlow
+    | PostConnectionRefresh
+    | PostManagedEmailVerification
+    | PostManagedSignup
+    | PostPreBuiltDeploy
+    | PostEnvironment
+    | PatchEnvironment
+    | DeleteEnvironment
+    | GetEnvironments
+    | GetEnvironment
+    | ListApiKeys
+    | CreateApiKey
+    | DeleteApiKey
+    | PatchApiKey
+    | PatchWebhook
+    | PostEnvironmentVariables
+    | PostImpersonate
+    | GetSharedCredentialsProviders
+    | GetSharedCredentialsProvider
+    | PostSharedCredentialsProvider
+    | PatchSharedCredentialsProvider
+    | GetGettingStarted
+    | PatchGettingStarted
+    | GetConnectUISettings
+    | PutConnectUISettings
+    | GetProviders
+    | GetProvider
+    | PostInternalTriggerFunction;
+
+export type APIEndpoints = PrivateApiEndpoints | PublicApiEndpoints;
+
+/**
+ * Automatically narrow endpoints type with Method + Path
+ */
+export type APIEndpointsPicker<TMethod extends EndpointMethod, TPath extends APIEndpoints['Path']> = Extract<APIEndpoints, { Method: TMethod; Path: TPath }>;
+
+/**
+ * Automatically narrow endpoints type with Path
+ * Useful to get allowed methods
+ */
+export type APIEndpointsPickerWithPath<TPath extends APIEndpoints['Path']> = Extract<APIEndpoints, { Path: TPath }>;

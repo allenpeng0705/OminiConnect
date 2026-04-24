@@ -1,0 +1,207 @@
+import type { Timestamps } from '../db.js';
+
+type FunctionRuntime = 'runner' | 'lambda';
+
+export interface DBPlan extends Timestamps {
+    id: number;
+    account_id: number;
+    name: 'free' | 'starter-v2' | 'growth-v2' | 'enterprise' | 'starter' | 'growth' | 'starter-legacy' | 'scale-legacy' | 'growth-legacy';
+
+    // Stripe
+    stripe_customer_id: string | null;
+    stripe_payment_id: string | null;
+
+    // Orb
+    orb_customer_id: string | null;
+    orb_subscription_id: string | null;
+    orb_future_plan: string | null;
+    orb_future_plan_at: Date | null;
+    orb_subscribed_at: Date | null;
+
+    // Trial
+    // Remove all values when you upgrade a customer
+    trial_start_at: Date | null;
+    trial_end_at: Date | null;
+    trial_extension_count: number;
+    trial_end_notified_at: Date | null;
+    trial_expired: boolean | null;
+
+    /**
+     * Limit the number of total non-deleted connections
+     * Set to null to remove limit
+     * @default null
+     */
+    connections_max: number | null;
+
+    /**
+     * Limit the number of total non-deleted records
+     * Set to null to remove limit
+     * @default null
+     */
+    records_max: number | null;
+
+    /**
+     * Limit the number of total proxy requests that can be made in a month
+     * Set to null to remove limit
+     * @default null
+     */
+    proxy_max: number | null;
+
+    /** Limit the number of function executions that can be triggered in a month
+     * Set to null to remove limit
+     * @default null
+     */
+    function_executions_max: number | null;
+
+    /** Limit the amount of compute time (in gb/ms) that can be used by functions in a month
+     * Set to null to remove limit
+     * @default null
+     */
+    function_compute_gbms_max: number | null;
+
+    /** Limit the number of webhook forwards that can happen in a month
+     * Set to null to remove limit
+     * @default null
+     */
+    webhook_forwards_max: number | null;
+
+    /** Limit the number of log entries in functions that can be created in a month
+     * Set to null to remove limit
+     * @default null
+     */
+    function_logs_max: number | null;
+
+    /**
+     * Limit the number of environments that can be created
+     * @default 2
+     */
+    environments_max: number;
+
+    /**
+     * Limit the number of actions that can be triggered in a month
+     * @default 1000
+     */
+    monthly_actions_max: number | null;
+
+    /**
+     * Limit the amount of monthly active records (Records created or updated in a month)
+     * @default 5000
+     */
+    monthly_active_records_max: number | null;
+
+    /**
+     * Limit the minimum frequency of a sync
+     * Not used yet
+     * @default 86400
+     */
+    sync_frequency_secs_min: number;
+
+    /**
+     * Enable or disabled open telemetry export
+     * @default false
+     */
+    has_otel: boolean;
+
+    /**
+     * Change the applied rate limit for the public API
+     * @default "m"
+     */
+    api_rate_limit_size: 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl';
+
+    /**
+     * Enable or disable machine auto idling
+     * @default true
+     */
+    auto_idle: boolean;
+
+    /**
+     * Enable or disable webhooks script
+     * @default false
+     */
+    has_webhooks_script: boolean;
+
+    /**
+     * Enable or disable webhooks forward
+     * @default false
+     */
+    has_webhooks_forward: boolean;
+
+    /**
+     * Enable role-based access control (non-administrator roles)
+     * When false, all users/invites must be 'administrator'
+     * @default false
+     */
+    has_rbac: boolean;
+
+    /**
+     * Enable or disable the ability to override the docs connect url from the connect session
+     * @default false
+     */
+    can_override_docs_connect_url: boolean;
+
+    /**
+     * Enable or disable the ability to customize the connect UI theme
+     * @default false
+     */
+    can_customize_connect_ui_theme: boolean;
+
+    /**
+     * Enable or disable the ability to disable the connect UI watermark
+     * @default false
+     */
+    can_disable_connect_ui_watermark: boolean;
+
+    /**
+     * Enable or disable remote function compile, dry-run, and deploy endpoints
+     * @default false
+     */
+    remote_functions: boolean;
+
+    /**
+     * Sync Function Runtime
+     * @default "runner"
+     */
+    sync_function_runtime: FunctionRuntime;
+
+    /**
+     * When true, syncs routed to the Lambda fleet require the checkpoints feature or they run on the runner fleet.
+     * @default true
+     */
+    sync_lambda_checkpoint_required: boolean;
+
+    /**
+     * Action Function Runtime
+     * @default "runner"
+     */
+    action_function_runtime: FunctionRuntime;
+
+    /**
+     * Webhook Function Runtime
+     * @default "runner"
+     */
+    webhook_function_runtime: FunctionRuntime;
+
+    /**
+     * On Event Function Runtime
+     * @default "runner"
+     */
+    on_event_function_runtime: FunctionRuntime;
+
+    /**
+     * Enable or disable records autopruning
+     * @default true
+     */
+    has_records_autopruning: boolean;
+
+    /**
+     * Limit the number of variants per sync
+     * @default 100
+     */
+    variants_per_sync_max: number;
+
+    /**
+     * Override the prefix for the function routing
+     * @default null
+     */
+    fleet_node_routing_override: string | null;
+}

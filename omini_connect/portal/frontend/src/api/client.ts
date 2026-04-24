@@ -6,6 +6,12 @@ interface ApiKeyResponse {
   created_at: string;
 }
 
+interface AuthConfig {
+  mode: string;
+  oidc_ready: boolean;
+  login_path: string;
+}
+
 interface ConnectorStatus {
   platform: string;
   configured: boolean;
@@ -47,6 +53,14 @@ export async function login(username: string, password: string): Promise<void> {
     const text = await res.text();
     throw new Error(text || 'Login failed');
   }
+}
+
+export async function getAuthConfig(): Promise<AuthConfig> {
+  const res = await apiFetch('/auth/config');
+  if (!res.ok) {
+    throw new Error('Failed to load auth config');
+  }
+  return res.json();
 }
 
 export async function logout(): Promise<void> {

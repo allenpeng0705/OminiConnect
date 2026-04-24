@@ -24,6 +24,9 @@ async fn serve_spa() -> axum::response::Html<String> {
 pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/login", post(handlers::login).get(serve_spa))
+        .route("/config", get(handlers::config))
+        .route("/oidc/login", get(handlers::oidc_login))
+        .route("/oidc/callback", get(handlers::oidc_callback))
         .route("/logout", post(handlers::logout))
         .route("/apikey", get(handlers::list_api_keys).post(handlers::generate_api_key))
         .route("/apikey/:key_hash", delete(handlers::delete_api_key))

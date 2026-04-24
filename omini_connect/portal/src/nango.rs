@@ -36,6 +36,24 @@ fn auth_headers(secret: &str) -> anyhow::Result<HeaderMap> {
         AUTHORIZATION,
         HeaderValue::from_str(&bearer).map_err(|e| anyhow::anyhow!("invalid NANGO_SECRET_KEY for header: {e}"))?,
     );
+    if let Ok(key) = std::env::var("NANGO_OMINICONNECT_INTERNAL_KEY") {
+        let k = key.trim();
+        if !k.is_empty() {
+            h.insert(
+                HeaderName::from_static("x-omini-internal-key"),
+                HeaderValue::from_str(k).map_err(|e| anyhow::anyhow!("invalid NANGO_OMINICONNECT_INTERNAL_KEY header: {e}"))?,
+            );
+        }
+    }
+    if let Ok(env_id) = std::env::var("NANGO_ENVIRONMENT_ID") {
+        let v = env_id.trim();
+        if !v.is_empty() {
+            h.insert(
+                HeaderName::from_static("x-nango-environment-id"),
+                HeaderValue::from_str(v).map_err(|e| anyhow::anyhow!("invalid NANGO_ENVIRONMENT_ID header: {e}"))?,
+            );
+        }
+    }
     Ok(h)
 }
 

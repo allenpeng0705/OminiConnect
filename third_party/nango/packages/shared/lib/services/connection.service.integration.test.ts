@@ -1,0 +1,375 @@
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import db, { multipleMigrations } from '@nangohq/database';
+
+import connectionService from './connection.service.js';
+import { createConfigSeed, createConfigSeeds } from '../seeders/config.seeder.js';
+import { createConnectionSeed, createConnectionSeeds, getTestConnection } from '../seeders/connection.seeder.js';
+import { createEnvironmentSeed } from '../seeders/environment.seeder.js';
+import { errorNotificationService } from './notification/error.service.js';
+import { createSyncSeeds } from '../seeders/sync.seeder.js';
+
+import type { Metadata } from '@nangohq/types';
+
+describe('Connection service integration tests', () => {
+    beforeAll(async () => {
+        await multipleMigrations();
+    });
+
+    describe('Metadata simple operations', () => {
+        it('Should replace existing metadata, overwriting anything existing', async () => {
+            const env = await createEnvironmentSeed();
+            await createConfigSeeds(env);
+
+            const connections = await createConnectionSeeds(env);
+
+            const initialMetadata = {
+                name: 'test',
+                host: 'test'
+            };
+
+            const newMetadata = {
+                additionalName: 'test23'
+            };
+
+            const [connectionId] = connections;
+            const connection = getTestConnection({ id: connectionId! });
+            await db.knex.transaction(async (trx) => {
+                await connectionService.replaceMetadata([connection.id], initialMetadata, trx);
+                await connectionService.replaceMetadata([connection.id], newMetadata, trx);
+            });
+
+            const dbConnection = await connectionService.getConnectionById(connectionId as number);
+            const updatedMetadata = dbConnection?.metadata as Metadata;
+            expect(updatedMetadata).toEqual(newMetadata);
+        });
+
+        it('Should update metadata and not overwrite', async () => {
+            const env = await createEnvironmentSeed();
+            await createConfigSeeds(env);
+
+            const connections = await createConnectionSeeds(env);
+
+            const initialMetadata = {
+                name: 'test',
+                host: 'test'
+            };
+
+            const newMetadata = {
+                additionalName: 'test23'
+            };
+
+            const connectionId = connections[1];
+            const dbConnection = (await connectionService.getConnectionById(connectionId as number))!;
+            await db.knex.transaction(async (trx) => {
+                await connectionService.replaceMetadata([dbConnection.id], initialMetadata, trx);
+            });
+
+            const updatedMetadataConnection = (await connectionService.getConnectionById(connectionId as number))!;
+            await connectionService.updateMetadata([updatedMetadataConnection], newMetadata);
+
+            const updatedDbConnection = await connectionService.getConnectionById(connectionId as number);
+            const updatedMetadata = updatedDbConnection?.metadata as Metadata;
+            expect(updatedMetadata).toEqual({ ...initialMetadata, ...newMetadata });
+        });
+    });
+
+    describe('findConnectionsByMetadataValue', () => {
+        it('should match scalar values and set-like values (arrays)', async () => {
+            const env = await createEnvironmentSeed();
+
+            const integrationA = await createConfigSeed(env, 'google-calendar-a', 'google-calendar');
+            const integrationB = await createConfigSeed(env, 'google-calendar-b', 'google-calendar');
+
+            const scalar = await createConnectionSeed({ env, provider: integrationA.unique_key, metadata: { email: 'user@example.com' } });
+            const array = await createConnectionSeed({
+                env,
+                provider: integrationA.unique_key,
+                metadata: { email: ['user@example.com', 'other@example.com'] }
+            });
+            const otherIntegration = await createConnectionSeed({ env, provider: integrationB.unique_key, metadata: { email: 'user@example.com' } });
+
+            const matches = await connectionService.findConnectionsByMetadataValue({
+                metadataProperty: 'email',
+                payloadIdentifier: 'user@example.com',
+                configId: integrationA.id,
+                environmentId: env.id
+            });
+
+            const matchedConnectionIds = (matches || []).map((c) => c.connection_id);
+            expect(matchedConnectionIds).toEqual(expect.arrayContaining([scalar.connection_id, array.connection_id]));
+            expect(matchedConnectionIds).not.toContain(otherIntegration.connection_id);
+        });
+    });
+
+    describe('listConnections', () => {
+        it('should return all connections', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'google', 'google');
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const google = await createConnectionSeed({ env, provider: 'google' });
+            const notion = await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notion.connection_id, google.connection_id]);
+        });
+
+        it('should paginate', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'google', 'google');
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const google = await createConnectionSeed({ env, provider: 'google' });
+            const notion = await createConnectionSeed({ env, provider: 'notion' });
+            await createConnectionSeed({ env, provider: 'notion' });
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                limit: 2,
+                page: 1
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notion.connection_id, google.connection_id]);
+        });
+
+        it('should filter connections by integration id', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'google', 'google');
+            await createConfigSeed(env, 'notion', 'notion');
+            const google = await createConnectionSeed({ env, provider: 'google' });
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                integrationIds: ['google']
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([google.connection_id]);
+        });
+
+        it('should filter connections by connection id', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const notion = await createConnectionSeed({ env, provider: 'notion' });
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                connectionId: notion.connection_id
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notion.connection_id]);
+        });
+
+        it('should filter connections by search', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const notion = await createConnectionSeed({ env, provider: 'notion' });
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                search: notion.connection_id
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notion.connection_id]);
+        });
+
+        it('should return connections with errors', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const notionError = await createConnectionSeed({ env, provider: 'notion' });
+            await errorNotificationService.auth.create({
+                type: 'auth',
+                action: 'connection_test',
+                connection_id: notionError.id,
+                log_id: Math.random().toString(36).substring(7),
+                active: true
+            });
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                withError: true
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notionError.connection_id]);
+        });
+
+        it('should filter connections by tags', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const tagged = await createConnectionSeed({ env, provider: 'notion', tags: { team: 'backend', region: 'us' } });
+            await createConnectionSeed({ env, provider: 'notion', tags: { team: 'frontend', region: 'eu' } });
+            await createConnectionSeed({ env, provider: 'notion', tags: {} });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                tags: { team: 'backend' }
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([tagged.connection_id]);
+        });
+
+        it('should return connections without errors', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const notionError = await createConnectionSeed({ env, provider: 'notion' });
+            await errorNotificationService.auth.create({
+                type: 'auth',
+                action: 'connection_test',
+                connection_id: notionError.id,
+                log_id: Math.random().toString(36).substring(7),
+                active: true
+            });
+            const notionOK = await createConnectionSeed({ env, provider: 'notion' });
+
+            const dbConnections = await connectionService.listConnections({
+                environmentId: env.id,
+                withError: false
+            });
+
+            const connectionIds = dbConnections.map((c) => c.connection.connection_id);
+            expect(connectionIds).toEqual([notionOK.connection_id]);
+        });
+
+        it('should filter errored connections before pagination', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            // Create 10 connections, every other one with errors (5 with errors, 5 without)
+            const erroredConnections = [];
+            for (let i = 0; i < 10; i++) {
+                const conn = await createConnectionSeed({ env, provider: 'notion' });
+
+                if (i % 2 === 0) {
+                    await errorNotificationService.auth.create({
+                        type: 'auth',
+                        action: 'connection_test',
+                        connection_id: conn.id,
+                        log_id: Math.random().toString(36).substring(7),
+                        active: true
+                    });
+                    erroredConnections.push(conn);
+                }
+            }
+
+            // Get a single page with limit 5 and withError=true
+            // This should return all 5 errored connections, not just the first 5 connections
+            const page = await connectionService.listConnections({
+                environmentId: env.id,
+                withError: true,
+                limit: 5,
+                page: 0
+            });
+
+            // Verify we got all 5 errored connections on the first page
+            expect(page.length).toBe(5);
+
+            const returnedConnectionIds = page.map((c) => c.connection.connection_id).sort();
+            const expectedErroredConnectionIds = erroredConnections.map((c) => c.connection_id).sort();
+            expect(returnedConnectionIds).toEqual(expectedErroredConnectionIds);
+
+            // Verify all returned connections have errors
+            for (const conn of page) {
+                expect(conn.active_logs).toBeDefined();
+                expect(Array.isArray(conn.active_logs)).toBe(true);
+                expect(conn.active_logs.length).toBeGreaterThan(0);
+            }
+        });
+    });
+
+    describe('count', () => {
+        it('return total and error counts', async () => {
+            const env = await createEnvironmentSeed();
+
+            const config = await createConfigSeed(env, 'notion', 'notion');
+
+            await createConnectionSeed({ env, provider: 'notion' });
+
+            const notionAuthError = await createConnectionSeed({ env, provider: 'notion' });
+            await errorNotificationService.auth.create({
+                type: 'auth',
+                action: 'connection_test',
+                connection_id: notionAuthError.id,
+                log_id: Math.random().toString(36).substring(7),
+                active: true
+            });
+
+            const notionSyncError = await createConnectionSeed({ env, provider: 'notion' });
+            const sync = await createSyncSeeds({
+                connectionId: notionSyncError.id,
+                environment_id: env.id,
+                nango_config_id: config.id!,
+                sync_name: 'test'
+            });
+            await errorNotificationService.sync.create({
+                type: 'sync',
+                action: 'sync_test',
+                connection_id: notionSyncError.id,
+                log_id: Math.random().toString(36).substring(7),
+                active: true,
+                sync_id: sync.sync.id
+            });
+
+            const countResult = await connectionService.count({ environmentId: env.id });
+            const count = countResult.unwrap();
+
+            expect(count.total).toBe(3);
+            expect(count.withAuthError).toBe(1);
+            expect(count.withSyncError).toBe(1);
+            expect(count.withError).toBe(2);
+        });
+    });
+
+    describe('paginate', () => {
+        it('should paginate through connections', async () => {
+            const env = await createEnvironmentSeed();
+
+            await createConfigSeed(env, 'notion', 'notion');
+
+            const connection1 = await createConnectionSeed({ env, provider: 'notion' });
+            const connection2 = await createConnectionSeed({ env, provider: 'notion' });
+            const connection3 = await createConnectionSeed({ env, provider: 'notion' });
+            const connectionIds = [connection1.id, connection2.id, connection3.id];
+
+            const paginatedConnections: number[] = [];
+            for await (const res of connectionService.paginateConnections({ connectionIds, batchSize: 2 })) {
+                if (res.isErr()) {
+                    throw res.error;
+                }
+                for (const c of res.value) {
+                    paginatedConnections.push(c.connection.id);
+                }
+            }
+
+            expect(paginatedConnections).toEqual(connectionIds);
+        });
+    });
+});

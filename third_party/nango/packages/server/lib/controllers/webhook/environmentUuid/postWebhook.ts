@@ -1,0 +1,121 @@
+import tracer from 'dd-trace';
+import * as z from 'zod';
+
+import db from '@nangohq/database';
+import { logContextGetter } from '@nangohq/logs';
+import { accountService, configService, getPlan, getProvider } from '@nangohq/shared';
+import { flagHasPlan, metrics, zodErrorToHTTP } from '@nangohq/utils';
+
+import { providerConfigKeySchema } from '../../../helpers/validation.js';
+import { asyncWrapper } from '../../../utils/asyncWrapper.js';
+import { featureFlags } from '../../../utils/utils.js';
+import { routeWebhook } from '../../../webhook/webhook.manager.js';
+
+import type { DBPlan, PostPublicWebhook } from '@nangohq/types';
+
+const paramValidation = z
+    .object({
+        environmentUuid: z.string().uuid(),
+        providerConfigKey: providerConfigKeySchema
+    })
+    .strict();
+
+export const postWebhook = asyncWrapper<PostPublicWebhook>(async (req, res) => {
+    const paramValue = paramValidation.safeParse(req.params);
+    if (!paramValue.success) {
+        res.status(400).send({ error: { code: 'invalid_uri_params', errors: zodErrorToHTTP(paramValue.error) } });
+        return;
+    }
+
+    await tracer.trace('server.sync.receiveWebhook', async (span) => {
+        const { environmentUuid, providerConfigKey }: PostPublicWebhook['Params'] = req.params;
+        const headers = req.headers;
+
+        try {
+            const isGloballyDisabled = await featureFlags.isSet('disable-external-webhooks');
+            if (isGloballyDisabled) {
+                res.status(404).send({ error: { code: 'feature_disabled', message: 'Feature globally disabled' } });
+                return;
+            }
+
+            const resEnv = await accountService.getAccountContext({ environmentUuid });
+            if (!resEnv) {
+                res.status(404).send({ error: { code: 'unknown_environment' } });
+                return;
+            }
+
+            const { environment, account } = resEnv;
+            span.setTag('nango.accountUUID', account.uuid);
+            span.setTag('nango.environmentUUID', environmentUuid);
+            span.setTag('nango.providerConfigKey', providerConfigKey);
+
+            metrics.increment(metrics.Types.WEBHOOK_INCOMING_PAYLOAD_SIZE_BYTES, req.rawBody ? Buffer.byteLength(req.rawBody) : 0, { accountId: account.id });
+
+            const isDisabledForThisAccount = await featureFlags.isSet('disable-external-webhooks', { distinctId: account.uuid });
+            if (isDisabledForThisAccount) {
+                res.status(404).send({ error: { code: 'feature_disabled', message: 'Feature disabled for this account' } });
+                return;
+            }
+
+            let plan: DBPlan | undefined;
+            if (flagHasPlan) {
+                const resPlan = await getPlan(db.knex, { accountId: account.id });
+                if (resPlan.isErr()) {
+                    res.status(404).send({ error: { code: 'unknown_plan' } });
+                    return;
+                }
+
+                plan = resPlan.value;
+                if (!plan.has_webhooks_forward && !plan.has_webhooks_script) {
+                    res.status(404).send({ error: { code: 'feature_disabled', message: 'Feature disabled for this account' } });
+                    return;
+                }
+            }
+
+            const integration = await configService.getProviderConfig(providerConfigKey, environment.id);
+            if (!integration) {
+                res.status(404).send({ error: { code: 'unknown_provider_config' } });
+                return;
+            }
+
+            metrics.increment(metrics.Types.WEBHOOK_INCOMING_RECEIVED);
+
+            const provider = getProvider(integration.provider);
+
+            // Query params are blocked by default — providers may include unverifiable params
+            // that can't be covered by webhook signatures. Only params explicitly listed in
+            // `webhook_allowed_query_params` (provider config) are forwarded.
+            const allowedQueryParams = provider?.webhook_allowed_query_params ?? [];
+            const queryFiltered = allowedQueryParams.reduce<Record<string, string>>((acc, name) => {
+                const v = req.query[name];
+                if (v) acc[name] = typeof v === 'string' ? v : String(v);
+                return acc;
+            }, {});
+
+            const query = Object.keys(queryFiltered).length > 0 ? queryFiltered : undefined;
+
+            const response = await routeWebhook({
+                environment,
+                account,
+                plan,
+                integration,
+                headers,
+                body: req.body,
+                rawBody: req.rawBody!,
+                ...(query !== undefined ? { query } : {}),
+                logContextGetter
+            });
+
+            if (!response) {
+                res.status(200).send();
+                return;
+            }
+
+            res.status(response.statusCode).send(response.content);
+        } catch (err) {
+            span.setTag('nango.error', err);
+
+            res.status(500).send({ error: { code: 'server_error', message: 'An unexpected error occurred' } });
+        }
+    });
+});

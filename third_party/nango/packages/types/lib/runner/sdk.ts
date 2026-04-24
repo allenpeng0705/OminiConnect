@@ -1,0 +1,74 @@
+import type { RunnerFlags } from './index.js';
+import type { LogLevel } from '../logs/messages.js';
+import type { IntegrationConfigForProxy } from '../proxy/api.js';
+import type { DBSyncConfig } from '../syncConfigs/db.js';
+import type { DBTeam } from '../team/db.js';
+import type { AxiosError, AxiosInterceptorManager, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+export interface SdkLogger {
+    level: LogLevel | 'off';
+}
+
+export type ConflictResolutionMode = 'IN_MEMORY' | 'REDIS';
+
+export type ScriptType = 'sync' | 'action' | 'webhook' | 'on-event';
+
+export interface NangoProps {
+    scriptType: ScriptType;
+    host?: string;
+    secretKey: string;
+    team: Pick<DBTeam, 'id' | 'name'>;
+    connectionId: string;
+    environmentId: number;
+    environmentName: string;
+    activityLogId: string;
+    providerConfigKey: string;
+    provider: string;
+    lastSyncDate?: Date;
+    syncId?: string | undefined;
+    syncVariant?: string | undefined;
+    nangoConnectionId: number;
+    syncJobId?: number | undefined;
+    track_deletes?: boolean;
+    attributes?: object | undefined;
+    abortSignal?: AbortSignal;
+    syncConfig: DBSyncConfig;
+    runnerFlags: RunnerFlags;
+    logger: SdkLogger;
+    /**
+     * @deprecated not used
+     */
+    debug: boolean;
+    startedAt: Date;
+    endUser: { id: number; endUserId: string | null; orgId: string | null } | null;
+    heartbeatTimeoutSecs?: number | undefined;
+    lifecycle?:
+        | {
+              interruptAfterMs: number;
+              killAfterMs: number;
+          }
+        | undefined;
+    isCLI?: boolean | undefined;
+    integrationConfig?: IntegrationConfigForProxy;
+
+    axios?: {
+        request?: AxiosInterceptorManager<AxiosRequestConfig>;
+        response?: {
+            onFulfilled: (value: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>;
+            onRejected: (value: unknown) => AxiosError | Promise<AxiosError>;
+        };
+    };
+}
+
+export interface UserLogParameters {
+    level?: 'info' | 'debug' | 'error' | 'warn' | 'http' | 'verbose' | 'silly';
+}
+
+export interface TelemetryBag extends Record<string, number> {
+    customLogs: number;
+    proxyCalls: number;
+    durationMs: number;
+    memoryGb: number;
+}
+
+export type FunctionRuntime = 'runner' | 'lambda';

@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getConnectors, getConnectorStatus, logout } from '../api/client';
+import CatalogProviderCard from '../components/CatalogProviderCard';
+import { getConnectors, getConnectorStatus, getIntegrationCatalog, getNangoStatus, logout, type IntegrationCatalogRow } from '../api/client';
+import { normalizeCatalogResponse, providerSearchBlob } from '../lib/integrationCatalogNormalize';
 
 interface ConnectorInfo {
   platform: string;
@@ -25,16 +27,56 @@ const PLATFORMS = [
   { id: 'qqmail', name: 'QQ Enterprise Mail', color: '#12B7F5', type: 'api_key' },
 ];
 
+const CATALOG_HOME_PREVIEW = 36;
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [connectors, setConnectors] = useState<ConnectorInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
+  const [catalogRows, setCatalogRows] = useState<IntegrationCatalogRow[]>([]);
+  const [catalogLoading, setCatalogLoading] = useState(true);
+  const [catalogError, setCatalogError] = useState('');
+  const [catalogFilter, setCatalogFilter] = useState('');
+  const [nangoBaseUrl, setNangoBaseUrl] = useState('');
 
   useEffect(() => {
     loadData();
     loadMe();
+    void getNangoStatus()
+      .then((s) => setNangoBaseUrl((s.base_url || '').trim().replace(/\/+$/, '')))
+      .catch(() => setNangoBaseUrl(''));
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      setCatalogLoading(true);
+      setCatalogError('');
+      try {
+        const data = await getIntegrationCatalog();
+        if (!cancelled) setCatalogRows(normalizeCatalogResponse(data));
+      } catch (e) {
+        if (!cancelled) {
+          setCatalogError(e instanceof Error ? e.message : 'Failed to load catalog');
+          setCatalogRows([]);
+        }
+      } finally {
+        if (!cancelled) setCatalogLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const catalogFiltered = useMemo(() => {
+    const q = catalogFilter.trim().toLowerCase();
+    if (!q) return catalogRows;
+    return catalogRows.filter((p) => providerSearchBlob(p).includes(q));
+  }, [catalogRows, catalogFilter]);
+
+  const catalogPreview = catalogFiltered.slice(0, CATALOG_HOME_PREVIEW);
 
   async function loadMe() {
     try {
@@ -97,25 +139,130 @@ export default function Dashboard() {
       </header>
 
       <main style={{ padding: '2rem' }}>
-        <section style={{ marginBottom: '1.5rem' }}>
-          <Link
-            to="/connectors/catalog"
+        <section style={{ marginBottom: '1.75rem' }}>
+          <div
             style={{
-              display: 'block',
-              textDecoration: 'none',
-              borderRadius: '12px',
-              padding: '1.25rem 1.5rem',
-              background: 'linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #6366f1 100%)',
-              color: 'white',
-              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.35)',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: '0.75rem',
+              marginBottom: '0.75rem',
             }}
           >
-            <div style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.35rem' }}>OminiConnect integration library</div>
-            <div style={{ fontSize: '0.875rem', opacity: 0.92, lineHeight: 1.45 }}>
-              Browse the full set of APIs and SaaS products OminiConnect can connect to. Search the library, then add a connector with a few clicks.
+            <h2 style={{ fontSize: '1.125rem', color: '#333', margin: 0 }}>Integration library</h2>
+            <Link to="/connectors/catalog" style={{ fontSize: '0.875rem', color: '#4f46e5', fontWeight: 500 }}>
+              Full library & search →
+            </Link>
+          </div>
+          {nangoBaseUrl && (
+            <div style={{ marginBottom: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <a
+                href={`${nangoBaseUrl}/integrations`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-block',
+                  padding: '0.35rem 0.7rem',
+                  borderRadius: '6px',
+                  border: '1px solid #cbd5e1',
+                  background: '#fff',
+                  color: '#334155',
+                  fontSize: '0.8rem',
+                  textDecoration: 'none',
+                }}
+              >
+                Manage in Nango portal
+              </a>
             </div>
-            <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', fontWeight: 600 }}>Open library →</div>
-          </Link>
+          )}
+          <p style={{ margin: '0 0 1rem', fontSize: '0.875rem', color: '#666', lineHeight: 1.45 }}>
+            Loaded automatically from your managed hub. Filter here or open the full page for paging and refresh.
+          </p>
+          <div style={{ marginBottom: '1rem', maxWidth: '420px' }}>
+            <input
+              type="search"
+              placeholder="Filter by name, category, auth…"
+              value={catalogFilter}
+              onChange={(e) => setCatalogFilter(e.target.value)}
+              disabled={catalogLoading || !!catalogError || catalogRows.length === 0}
+              style={{
+                width: '100%',
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                border: '1px solid #ccc',
+                fontSize: '0.875rem',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+          {catalogLoading && <p style={{ color: '#666', fontSize: '0.875rem' }}>Loading integration catalog…</p>}
+          {catalogError && (
+            <div
+              style={{
+                padding: '0.85rem 1rem',
+                borderRadius: '8px',
+                background: '#fef2f2',
+                color: '#b91c1c',
+                fontSize: '0.875rem',
+                marginBottom: '0.75rem',
+              }}
+            >
+              {catalogError}
+              <div style={{ marginTop: '0.5rem', color: '#64748b', fontSize: '0.8rem' }}>
+                Fix <code style={{ background: '#fee2e2', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>NANGO_BASE_URL</code> in repo-root{' '}
+                <code style={{ background: '#fee2e2', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>.env</code> and ensure Nango is running, then refresh this page.
+              </div>
+            </div>
+          )}
+          {!catalogLoading && !catalogError && catalogRows.length === 0 && (
+            <p style={{ color: '#666', fontSize: '0.875rem' }}>No providers returned. Check hub configuration or open the full library to retry.</p>
+          )}
+          {!catalogLoading && !catalogError && catalogPreview.length > 0 && (
+            <>
+              <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.65rem' }}>
+                Preview: {catalogPreview.length} of {catalogFiltered.length}
+                {catalogFilter.trim() ? ' (filtered)' : ''}.
+                {catalogRows.length > CATALOG_HOME_PREVIEW ? (
+                  <>
+                    {' '}
+                    <Link to="/connectors/catalog">Full library</Link> pages through all {catalogRows.length}.
+                  </>
+                ) : null}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.75rem' }}>
+                {catalogPreview.map((p) => (
+                  <CatalogProviderCard
+                    key={p.name}
+                    row={p}
+                    onAddConnector={(providerKey) =>
+                      navigate(`/connectors/add-managed?provider_key=${encodeURIComponent(providerKey)}`)
+                    }
+                  />
+                ))}
+              </div>
+              {catalogFiltered.length > CATALOG_HOME_PREVIEW && (
+                <div style={{ marginTop: '1rem' }}>
+                  <Link
+                    to="/connectors/catalog"
+                    style={{
+                      display: 'inline-block',
+                      padding: '0.45rem 0.9rem',
+                      borderRadius: '8px',
+                      border: '1px solid #c7d2fe',
+                      background: '#eef2ff',
+                      color: '#3730a3',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Open full library ({catalogFiltered.length - CATALOG_HOME_PREVIEW} more here)
+                  </Link>
+                </div>
+              )}
+            </>
+          )}
         </section>
 
         {/* Configured Connectors */}

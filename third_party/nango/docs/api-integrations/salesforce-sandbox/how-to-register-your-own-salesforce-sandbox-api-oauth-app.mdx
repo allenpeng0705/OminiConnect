@@ -1,0 +1,104 @@
+---
+title: 'How to register your own Salesforce Sandbox OAuth app'
+sidebarTitle: 'Salesforce Sandbox Setup'
+description: 'Register an OAuth app with Salesforce Sandbox and connect it to Nango'
+---
+
+This guide shows you how to register your own app with Salesforce Sandbox to obtain your OAuth credentials (client ID and secret). These are required so your users can grant your app access to their Salesforce Sandbox account.
+
+## Understanding Salesforce Sandbox
+
+Salesforce Sandbox is a separate environment from Salesforce production. If you or your end-users are authorizing a Salesforce sandbox account, you must use the **`salesforce-sandbox`** integration in Nango (not `salesforce`).
+
+<Note>Your Salesforce Developer Edition account is **not** a Salesforce sandbox. Use it with the regular `salesforce` integration.</Note>
+
+## Why External Client Apps only
+
+This guide uses **External Client Apps (ECA)** only. Salesforce is [phasing out Connected Apps](https://help.salesforce.com/s/articleView?id=005228017&type=1): in Winter '26, creating connected apps in the UI was turned off by default on new orgs; starting in Spring '26, that option can no longer be turned on unless Salesforce Support approves it. For Sandbox, create an **External Client App** in your Sandbox the same way as in production.
+
+In Sandbox, use **Local** distribution only (for use inside your Sandbox org). Packaged distribution is not supported in Sandbox.
+
+### Prerequisites for External Client Apps
+
+- Your user must have the **Create, Edit, and Delete External Client Apps** permission.
+- A Sandbox environment.
+
+## Creating an External Client App in Sandbox (Local distribution)
+
+Use this option if your app will only be used within your own Salesforce Sandbox organization.
+
+<Steps>
+  <Step title="Create an External Client App">
+    1. Log in to your Salesforce account.
+    2. Click on the **Setup** menu, in the **Quick Find** box, enter **App Manager**, and then select **App Manager**.
+    3. Click **New External Client App**.
+  </Step>
+  <Step title="Configure External Client App settings">
+  1. Fill in the required **Basic information**:
+   - **External Client App Name**: The display name of your app as it will appear in Salesforce.
+   - **API Name**: Auto-filled based on the app name; used internally by Salesforce.
+   - **Contact Email**: The email address Salesforce can use to contact the app owner.
+   - **Distribution State**: Select **Local** for internal use within your Salesforce organization.
+   - **Contact Phone (Optional)**: A phone number for reaching the app's designated point of contact.
+   - **Info URL (Optional)**: A link to your app's website or documentation.
+   - **Logo Image URL (Optional)**: A direct URL to an image that will be used as the app's logo.
+   - **Icon URL (Optional)**: A direct URL to a smaller icon representing the app.
+   - **Description (Optional)**: A short summary describing what the app does.
+  2. Check the **API (Enable Oauth Settings)** checkbox.
+  3. For **Callback URL**, enter: `https://api.nango.dev/oauth/callback`.
+  4. Under **Selected OAuth Scopes**, add the permissions your app needs. At minimum, add:
+    - "Access and manage your data (api)"
+    - "Perform requests on your behalf at any time (refresh_token, offline_access)"
+  5. Under **Flow Enablement**, check **Enable Authorization Code and Credentials Flow**.
+  6. Under **Security**, leave the default options selected:
+      - ✅ Require secret for Web Server Flow
+      - ✅ Require secret for Refresh Token Flow
+      - ✅ Require Proof Key for Code Exchange (PKCE) extension for Supported Authorization Flows
+  7. Click **Create**.
+  </Step>
+  <Step title="Obtain API credentials">
+    1. After saving, navigate to your app **Settings** tab.
+    2. Scroll down to **Oauth Settings** section.
+    3. Click **Consumer Key and Secret** to view your credentials. You may be required to verify your identity.
+    4. Copy the **Consumer Key** (this is your Client ID) and **Consumer Secret** (this is your Client Secret).
+    5. You will need these credentials when configuring your integration in Nango.
+  </Step>
+  <Step title="Configure token settings (recommended)">
+   1. Click your app's **Policies** tab, then click the **Edit** button. Scroll down to **OAuth Policies**, and under **App Authorization**, set the **Refresh Token Policy** to "Refresh token is valid until revoked" for long-lived access.
+   2. Click **Save**.
+  </Step>
+</Steps>
+
+## Already using a Connected App in Sandbox? Migrate to External Client App
+
+If you previously created a **Connected App** in your Sandbox, you can migrate it to an **External Client App**.
+
+1. Log in at **https://test.salesforce.com**, go to **Setup** → **App Manager**, and open the connected app.
+2. If eligible, click the **Migrate to External Client App** button.
+3. Confirm that the app is local and doesn't use the username-password flow.
+4. Click **Migrate**.
+5. A new External Client App will be created; the old Connected App will remain in read-only mode.
+
+<Note>All changes must be made in the new External Client App. Deleting the External Client App reactivates the original Connected App with its previous settings intact.</Note>
+
+## Connection configuration in Nango
+
+Salesforce uses a different API base URL, the `instance_url`, for each customer. Nango automatically retrieves the `instance_url` from Salesforce and stores it in the connection config. If you use the Nango Proxy, it uses the correct API base URL automatically. You can also retrieve the `instance_url` via the [backend SDK](/reference/sdks/node#get-a-connection-with-credentials) or [Connections API](/reference/api/connection/get).
+
+## Important considerations
+
+### Troubleshooting invalid Client ID errors
+
+If you see `invalid_client_id`, [ensure your (developer) user password does not contain special characters](https://developer.salesforce.com/forums/?id=906F00000009ABLIA2).
+
+## Next steps
+
+After completing the steps above, follow the [_Quickstart_](/getting-started/quickstart) and use the **salesforce-sandbox** integration when connecting.
+
+## Additional resources
+
+- [Salesforce OAuth documentation](https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authorization_code_credentials_flow.htm&type=5)
+- [Create an External Client App (Local)](https://help.salesforce.com/s/articleView?id=xcloud.create_a_local_external_client_app.htm&type=5)
+- [External Client Apps vs. Connected Apps](https://help.salesforce.com/s/articleView?id=xcloud.external_client_apps_overview.htm&type=5)
+- [Migrate Connected App to External Client App](https://help.salesforce.com/s/articleView?id=xcloud.migrate_connected_app_to_external_client_app.htm&type=5)
+- [REST API documentation](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm)

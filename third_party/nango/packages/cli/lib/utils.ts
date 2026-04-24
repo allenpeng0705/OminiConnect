@@ -1,0 +1,401 @@
+import { spawn } from 'child_process';
+import fs from 'fs';
+import https from 'node:https';
+import Module from 'node:module';
+import os from 'os';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import axios from 'axios';
+import chalk from 'chalk';
+import * as dotenv from 'dotenv';
+import npa from 'npm-package-arg';
+import promptly from 'promptly';
+import semver from 'semver';
+import { serializeError } from 'serialize-error';
+
+import { cloudHost, localhostUrl } from './constants.js';
+import { state } from './state.js';
+import { NANGO_VERSION } from './version.js';
+
+import type { GetEnvironments, GetPublicConnection, GetPublicIntegration } from '@nangohq/types';
+import type { PackageJson } from 'type-fest';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const require = Module.createRequire(import.meta.url);
+
+dotenv.config();
+
+export const NANGO_INTEGRATIONS_LOCATION = process.env['NANGO_INTEGRATIONS_LOCATION'] || './';
+export const isCI = process.env['CI'];
+const IGNORE_UPGRADE_FOR = 86400 * 1000;
+
+const PROVIDER_ERROR_MESSAGE_FIELDS = ['message', 'error', 'error_description', 'error_message', 'detail', 'details', 'reason', 'description'];
+
+function stringifyError(err: unknown): string {
+    const serialized = serializeError(err);
+    const enriched: Record<string, unknown> = { ...(serialized && typeof serialized === 'object' ? serialized : {}) };
+
+    if (typeof err === 'object' && err != null) {
+        const anyErr = err as any;
+        if (anyErr.response?.data?.error && typeof anyErr.response.data.error === 'object') {
+            const filteredError: Record<string, unknown> = {};
+            for (const field of PROVIDER_ERROR_MESSAGE_FIELDS) {
+                if (field in anyErr.response.data.error) {
+                    filteredError[field] = anyErr.response.data.error[field];
+                }
+            }
+            if (Object.keys(filteredError).length > 0) {
+                enriched['provider_error_payload'] = filteredError;
+            }
+        }
+    }
+
+    const allowed = new Set(['name', 'message', 'provider_error_payload']);
+    return JSON.stringify(Object.fromEntries(Object.entries(enriched).filter(([k]) => allowed.has(k))));
+}
+
+const rawHostport = process.env['NANGO_HOSTPORT'] || cloudHost;
+const resolvedHostport = rawHostport.endsWith('/') ? rawHostport.slice(0, -1) : rawHostport;
+const isHostportFromEnv = Boolean(process.env['NANGO_HOSTPORT']);
+
+export function resolveHostport(env?: string): string {
+    if (!isHostportFromEnv && env === 'local') {
+        return localhostUrl;
+    }
+    return resolvedHostport;
+}
+
+export function printDebug(message: string, debug?: boolean) {
+    if (debug === true || debug === undefined) {
+        console.log(chalk.gray(message));
+    }
+}
+
+export function isLocallyInstalled(packageName: string, debug = false) {
+    try {
+        let dir = __dirname;
+        const npxCacheDir = path.join(os.homedir(), '.npm/_npx');
+
+        while (dir !== path.resolve(dir, '..')) {
+            const packageJsonPath = path.resolve(dir, 'package.json');
+
+            if (dir.startsWith(npxCacheDir)) {
+                if (debug) {
+                    printDebug(`Ignoring npx cache directory: ${dir} while trying to find if nango is locally installed.`);
+                }
+            } else if (fs.existsSync(packageJsonPath)) {
+                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as PackageJson;
+
+                const dependencies = packageJson.dependencies || {};
+                const devDependencies = packageJson.devDependencies || {};
+
+                if (packageName in dependencies || packageName in devDependencies) {
+                    return true;
+                }
+            }
+
+            dir = path.resolve(dir, '..');
+        }
+
+        return false;
+    } catch (err) {
+        console.error(`Error checking if package is installed`, err);
+        return false;
+    }
+}
+
+export async function upgradeAction(debug = false) {
+    const isRunViaNpx = process.argv.some((arg) => arg.includes('npx'));
+    const locallyInstalled = isLocallyInstalled('nango', debug);
+
+    if (debug) {
+        printDebug(`Is run via npx: ${isRunViaNpx}. Is locally installed: ${locallyInstalled}`);
+    }
+
+    if (!locallyInstalled && isRunViaNpx) {
+        console.log(
+            chalk.red(`It appears you are running nango via npx. We recommend installing nango globally ("npm install nango -g") and running it directly.`)
+        );
+        process.exit(1);
+    }
+
+    if (process.env['NANGO_CLI_UPGRADE_MODE'] === 'ignore') {
+        return;
+    }
+
+    const ignoreState = state.get('lastIgnoreUpgrade');
+    if (typeof ignoreState === 'number' && ignoreState > Date.now() - IGNORE_UPGRADE_FOR) {
+        if (debug) {
+            printDebug(`Upgrade action skipped.`);
+        }
+        return;
+    }
+
+    try {
+        const resolved = npa('nango');
+        const version = NANGO_VERSION;
+        if (debug) {
+            printDebug(`Version ${version} of nango is installed.`);
+        }
+        const response = await http.get(`https://registry.npmjs.org/${resolved.name}`);
+        const latestVersion = response.data['dist-tags'].latest;
+
+        if (debug) {
+            printDebug(`Latest version of ${resolved.name} is ${latestVersion}.`);
+        }
+
+        if (!semver.gt(latestVersion, version)) {
+            return;
+        }
+
+        console.log(chalk.red(`A new version of ${resolved.name} is available: ${latestVersion}`));
+        const cwd = process.cwd();
+
+        const upgrade = process.env['NANGO_CLI_UPGRADE_MODE'] === 'auto' || (await promptly.confirm('Would you like to upgrade? (yes/no)'));
+
+        if (!upgrade) {
+            state.set('lastIgnoreUpgrade', Date.now());
+            return;
+        }
+
+        console.log(chalk.yellow(`Upgrading ${resolved.name} to version ${latestVersion}...`));
+
+        const packagePath = getPackagePath();
+        const usePnpm = path.resolve(packagePath, '..').includes('.pnpm');
+
+        let args: string[] = [];
+
+        if (usePnpm) {
+            if (locallyInstalled) {
+                args = ['add', `nango@${latestVersion}`];
+            } else {
+                args = ['add', '-g', `nango@${latestVersion}`];
+            }
+        } else {
+            if (locallyInstalled) {
+                args = ['install', '--no-audit', '--save', `nango@${latestVersion}`];
+            } else {
+                args = ['install', '-g', '--no-audit', `nango@${latestVersion}`];
+            }
+        }
+
+        if (debug) {
+            printDebug(`Running npm ${args.join(' ')}`);
+        }
+
+        const child = spawn('npm', args, {
+            cwd,
+            detached: false,
+            stdio: 'inherit'
+        });
+        await new Promise((resolve, reject) => {
+            child.on('exit', (code) => {
+                if (code !== 0) {
+                    reject(new Error(`Upgrade process exited with code ${code}`));
+                    return;
+                }
+                resolve(true);
+                console.log(chalk.green(`Successfully upgraded ${resolved.name} to version ${latestVersion}`));
+            });
+
+            child.on('error', reject);
+        });
+    } catch (err: any) {
+        console.error(`An error occurred: ${err.message}`);
+    }
+}
+
+export async function getConnection(
+    providerConfigKey: string,
+    connectionId: string,
+    setHeaders?: Record<string, string | boolean>,
+    debug = false
+): Promise<GetPublicConnection['Success'] | undefined> {
+    const url = resolveHostport() + `/connection/${connectionId}`;
+    const headers = enrichHeaders(setHeaders);
+    if (debug) {
+        printDebug(`getConnection endpoint to the URL: ${url} with headers: ${JSON.stringify(headers, null, 2)}`);
+    }
+
+    try {
+        const res = await http.get(url, { params: { provider_config_key: providerConfigKey }, headers });
+        return res.data as GetPublicConnection['Success'];
+    } catch (err) {
+        console.log(`❌ ${stringifyError(err)}`);
+        return;
+    }
+}
+
+export async function getConfig(providerConfigKey: string, debug = false): Promise<GetPublicIntegration['Success'] | undefined> {
+    const url = resolveHostport() + `/integrations/${providerConfigKey}`;
+    const headers = enrichHeaders();
+    if (debug) {
+        printDebug(`getConfig endpoint to the URL: ${url} with headers: ${JSON.stringify(headers, null, 2)}`);
+    }
+
+    try {
+        const res = await http.get(url, { headers });
+        return res.data as GetPublicIntegration['Success'];
+    } catch (err) {
+        console.log(`❌ ${stringifyError(err)}`);
+        return;
+    }
+}
+
+export async function getEnvironments(debug = false): Promise<GetEnvironments['Success'] | undefined> {
+    if (!process.env['NANGO_SECRET_KEY']) {
+        console.warn(chalk.yellow('Warning: NANGO_SECRET_KEY is not set, skipping environment fetch.'));
+        return;
+    }
+
+    const url = resolveHostport() + `/api/v1/environments`;
+    const headers = enrichHeaders();
+    if (debug) {
+        printDebug(`getEnvironments endpoint to the URL: ${url} with headers: ${JSON.stringify(headers, null, 2)}`);
+    }
+
+    try {
+        const res = await http.get(url, { headers });
+        return res.data as GetEnvironments['Success'];
+    } catch (err) {
+        console.log(`❌ ${stringifyError(err)}`);
+        return;
+    }
+}
+
+export function enrichHeaders(headers: Record<string, string | number | boolean> = {}) {
+    headers['Authorization'] = 'Bearer ' + process.env['NANGO_SECRET_KEY'];
+
+    headers['Accept-Encoding'] = 'application/json';
+
+    return headers;
+}
+
+const defaultHttpsAgent = new https.Agent({ keepAlive: true, rejectUnauthorized: false });
+export const http = axios.create({
+    httpsAgent: defaultHttpsAgent,
+    headers: { 'User-Agent': getUserAgent() }
+});
+
+export function getUserAgent(): string {
+    const clientVersion = NANGO_VERSION;
+    const nodeVersion = process.versions.node;
+
+    const osName = os.platform().replace(' ', '_');
+    const osVersion = os.release().replace(' ', '_');
+    return `nango-cli/${clientVersion} (${osName}/${osVersion}; node.js/${nodeVersion})`;
+}
+
+export function getNangoRootPath(debug = false): string {
+    const packagePath = getPackagePath(debug);
+    const rootPath = path.resolve(packagePath, '..');
+
+    if (debug) {
+        printDebug(`Found the nango cli root path at ${rootPath}`);
+    }
+
+    return rootPath;
+}
+
+function getPackagePath(debug = false): string {
+    if (isCI || process.env['VITEST']) {
+        return path.join(__dirname);
+    }
+
+    try {
+        if (isLocallyInstalled('nango', debug)) {
+            if (debug) {
+                printDebug('Found locally installed nango');
+            }
+            return path.resolve(__dirname, '../package.json');
+        }
+        const packageMainPath = require.resolve('nango');
+        const packagePath = path.dirname(packageMainPath);
+
+        if (debug) {
+            printDebug(`Found nango at ${packagePath}`);
+        }
+
+        return packagePath;
+    } catch {
+        throw new Error(
+            'Could not find nango package. Please make sure it is installed in your project or installed globally. Reach out to us in the Slack community if you continue to have issues!'
+        );
+    }
+}
+
+export async function parseSecretKey(environment: string, debug = false): Promise<void> {
+    if (process.env[`NANGO_SECRET_KEY_${environment.toUpperCase()}`]) {
+        if (debug) {
+            printDebug(`Environment is set to ${environment}, setting NANGO_SECRET_KEY to NANGO_SECRET_KEY_${environment.toUpperCase()}.`);
+        }
+        process.env['NANGO_SECRET_KEY'] = process.env[`NANGO_SECRET_KEY_${environment.toUpperCase()}`];
+    }
+
+    if (!process.env['NANGO_SECRET_KEY']) {
+        console.log(chalk.red(`NANGO_SECRET_KEY_${environment.toUpperCase()} environment variable is not set. Please set it now`));
+        try {
+            const secretKey = await promptly.prompt('Secret Key: ');
+            if (secretKey) {
+                process.env['NANGO_SECRET_KEY'] = secretKey;
+            } else {
+                return;
+            }
+        } catch (err) {
+            console.log('Error occurred while trying to prompt for secret key:', err);
+            process.exit(1);
+        }
+    }
+}
+
+/**
+ * Convert Windows backslash paths to slash paths.
+ * From https://github.com/sindresorhus/slash/blob/main/index.js
+ */
+export function slash(path: string) {
+    const isExtendedLengthPath = path.startsWith('\\\\?\\');
+    if (isExtendedLengthPath) {
+        return path;
+    }
+    return path.replace(/\\/g, '/');
+}
+
+export function detectPackageManager({ fullPath }: { fullPath: string }): 'pnpm' | 'yarn' | 'bun' | 'npm' {
+    let dir = fullPath;
+
+    while (true) {
+        const entries = fs.readdirSync(dir);
+
+        // Check package.json#packageManager field first (corepack standard)
+        if (entries.includes('package.json')) {
+            try {
+                const pkg = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf-8')) as { packageManager?: string };
+                if (pkg.packageManager) {
+                    if (pkg.packageManager.startsWith('pnpm')) return 'pnpm';
+                    if (pkg.packageManager.startsWith('yarn')) return 'yarn';
+                    if (pkg.packageManager.startsWith('bun')) return 'bun';
+                    if (pkg.packageManager.startsWith('npm')) return 'npm';
+                }
+            } catch {
+                // ignore malformed package.json, keep walking up
+            }
+        }
+
+        if (entries.includes('pnpm-lock.yaml')) return 'pnpm';
+        if (entries.includes('yarn.lock')) return 'yarn';
+        if (entries.includes('bun.lockb') || entries.includes('bun.lock')) return 'bun';
+
+        // Walk up to parent directory
+        const parent = path.dirname(dir);
+        if (parent === dir) {
+            // Reached filesystem root
+            break;
+        }
+        dir = parent;
+    }
+
+    return 'npm';
+}

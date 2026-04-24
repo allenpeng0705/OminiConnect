@@ -1,0 +1,98 @@
+import {
+    promptForConnection,
+    promptForEnvironment,
+    promptForFunctionName,
+    promptForFunctionToRun,
+    promptForFunctionType,
+    promptForIntegration,
+    promptForIntegrationName,
+    promptForProjectPath
+} from './interactive.service.js';
+import { MissingArgumentError } from '../utils/errors.js';
+
+import type { FunctionType } from '../types.js';
+
+export class Ensure {
+    constructor(private readonly interactive: boolean) {}
+
+    private async ensure<T>(currentValue: T | undefined, promptFn: () => Promise<T>, errorMessage: string): Promise<T> {
+        if (currentValue) {
+            return currentValue;
+        }
+        if (!this.interactive) {
+            throw new MissingArgumentError(errorMessage);
+        }
+        try {
+            return await promptFn();
+        } catch (err: any) {
+            if (err.isTtyError) {
+                throw new Error(
+                    "Prompt couldn't be rendered in the current environment. Please use the --no-interactive flag and pass all required arguments."
+                );
+            }
+            if (err.name === 'ExitPromptError') {
+                console.log('Interactive prompt cancelled.');
+                process.exit(0);
+            }
+            throw err;
+        }
+    }
+
+    public async functionType(sync: boolean, action: boolean, onEvent: boolean): Promise<FunctionType> {
+        if (sync) return 'sync';
+        if (action) return 'action';
+        if (onEvent) return 'on-event';
+
+        if (!this.interactive) {
+            throw new MissingArgumentError('Must specify --sync, --action, or --on-event');
+        }
+
+        return await this.ensure(undefined, promptForFunctionType, 'Function type is required');
+    }
+
+    public async integration(current: string | undefined, context: { integrations: string[] }): Promise<string> {
+        return this.ensure(current, () => promptForIntegrationName(context), 'Integration name is required');
+    }
+
+    public async functionName(current: string | undefined, functionType: FunctionType): Promise<string> {
+        return this.ensure(current, () => promptForFunctionName(functionType), 'Function name is required');
+    }
+
+    public async environment(current: string | undefined, debug = false): Promise<string> {
+        return this.ensure(current, () => promptForEnvironment(debug), 'Environment is required');
+    }
+
+    public async functionWithIntegration(
+        availableFunctions: { name: string; type: string; integration: string }[]
+    ): Promise<{ name: string; integration: string }> {
+        if (!this.interactive) {
+            throw new MissingArgumentError('Function name is required');
+        }
+        try {
+            return await promptForFunctionToRun(availableFunctions);
+        } catch (err: any) {
+            if (err.isTtyError) {
+                throw new Error(
+                    "Prompt couldn't be rendered in the current environment. Please use the --no-interactive flag and pass all required arguments."
+                );
+            }
+            if (err.name === 'ExitPromptError') {
+                console.log('Interactive prompt cancelled.');
+                process.exit(0);
+            }
+            throw err;
+        }
+    }
+
+    public async connection(current: string | undefined, environment: string, integrationId?: string): Promise<string> {
+        return this.ensure(current, () => promptForConnection(environment, integrationId), 'Connection ID is required');
+    }
+
+    public async integrationForScript(scriptName: string, integrations: string[]): Promise<string> {
+        return this.ensure(undefined, () => promptForIntegration(integrations), `Multiple integrations have "${scriptName}". Please use --integration-id`);
+    }
+
+    public async projectPath(current: string | undefined): Promise<string> {
+        return this.ensure(current, () => promptForProjectPath(), 'Project path is required');
+    }
+}

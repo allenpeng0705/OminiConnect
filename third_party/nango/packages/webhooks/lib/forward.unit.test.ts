@@ -1,0 +1,193 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { logContextGetter } from '@nangohq/logs';
+import { axiosInstance } from '@nangohq/utils';
+
+import { forwardWebhook } from './forward.js';
+import { TestWebhookServer } from './helpers/test.js';
+
+import type { DBAPISecret, DBEnvironment, DBExternalWebhook, DBTeam, IntegrationConfig } from '@nangohq/types';
+
+const spy = vi.spyOn(axiosInstance, 'post');
+
+const testServer = new TestWebhookServer(4102);
+
+const account: DBTeam = {
+    id: 1,
+    name: 'test',
+    uuid: 'whatever',
+    found_us: '',
+    created_at: new Date(),
+    updated_at: new Date()
+};
+
+const webhookSettings: DBExternalWebhook = {
+    id: 1,
+    environment_id: 1,
+    primary_url: testServer.primaryUrl,
+    secondary_url: testServer.secondaryUrl,
+    on_sync_completion_always: true,
+    on_auth_creation: true,
+    on_auth_refresh_error: true,
+    on_sync_error: true,
+    on_async_action_completion: true,
+    created_at: new Date(),
+    updated_at: new Date()
+};
+
+const integration = {
+    id: 1,
+    provider: 'hubspot',
+    unique_key: 'hubspot',
+    forward_webhooks: true
+} as IntegrationConfig;
+
+const secret = 'secret' as DBAPISecret['secret'];
+
+describe('Webhooks: forward notification tests', () => {
+    beforeAll(async () => {
+        await testServer.start();
+    });
+
+    afterAll(async () => {
+        await testServer.stop();
+    });
+
+    beforeEach(() => {
+        vi.resetAllMocks();
+    });
+
+    it('Should not send a forward webhook if the webhook url is not present', async () => {
+        await forwardWebhook({
+            connectionIds: [],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1
+            } as DBEnvironment,
+            secret,
+            webhookSettings: {
+                ...webhookSettings,
+                primary_url: '',
+                secondary_url: ''
+            },
+            logContextGetter,
+            integration,
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Should not send a forward webhook if forward_webhooks is false', async () => {
+        await forwardWebhook({
+            connectionIds: [],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1
+            } as DBEnvironment,
+            secret,
+            webhookSettings,
+            logContextGetter,
+            integration: {
+                ...integration,
+                forward_webhooks: false
+            },
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Should send a forward webhook if the webhook url is not present but the secondary is', async () => {
+        await forwardWebhook({
+            connectionIds: [],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1
+            } as DBEnvironment,
+            secret,
+            webhookSettings: {
+                ...webhookSettings,
+                primary_url: ''
+            },
+            logContextGetter,
+            integration,
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should send a forwarded webhook if the webhook url is present', async () => {
+        await forwardWebhook({
+            connectionIds: [],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1,
+                always_send_webhook: true
+            } as DBEnvironment,
+            secret,
+            webhookSettings: {
+                ...webhookSettings,
+                primary_url: ''
+            },
+            logContextGetter,
+            integration,
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should send a forwarded webhook twice if the webhook url and secondary are present', async () => {
+        await forwardWebhook({
+            connectionIds: [],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1
+            } as DBEnvironment,
+            secret,
+            webhookSettings: webhookSettings,
+            logContextGetter,
+            integration,
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should send a forwarded webhook to each webhook and for each connection if the webhook url and secondary are present', async () => {
+        await forwardWebhook({
+            connectionIds: ['1', '2'],
+            account,
+            environment: {
+                name: 'dev',
+                id: 1
+            } as DBEnvironment,
+            secret,
+            webhookSettings: webhookSettings,
+            logContextGetter,
+            integration,
+            payload: { some: 'data' },
+            webhookOriginalHeaders: {
+                'content-type': 'application/json'
+            }
+        });
+        expect(spy).toHaveBeenCalledTimes(4);
+    });
+});

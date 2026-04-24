@@ -1,0 +1,79 @@
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { seeders } from '@nangohq/shared';
+
+import { isError, runServer } from './utils/tests.js';
+
+let api: Awaited<ReturnType<typeof runServer>>;
+describe('route', () => {
+    beforeAll(async () => {
+        api = await runServer();
+    });
+    afterAll(() => {
+        api.server.close();
+    });
+
+    describe('Content-type', () => {
+        it.each(['GET', 'POST'] as const)('should enforce content-type %s', async (val) => {
+            const res = await api.fetch(`/connect/sessions`, {
+                method: val as any,
+                body: '' as any,
+                headers: { 'content-type': 'application/octet-stream' }
+            });
+
+            isError(res.json);
+            expect(res.json).toStrictEqual({
+                error: { code: 'invalid_content_type', message: 'Content-Type header must be application/json' }
+            });
+        });
+
+        it('should allow empty content-type', async () => {
+            const res = await api.fetch(`/connect/sessions`, {
+                method: 'POST',
+                body: '' as any,
+                headers: { 'content-type': '' }
+            });
+
+            isError(res.json);
+            expect(res.json).toMatchObject({
+                error: { code: 'missing_auth_header' }
+            });
+        });
+    });
+
+    describe('GET /api/v1/environment/callback', () => {
+        it('should handle invalid json', async () => {
+            const { secret } = await seeders.seedAccountEnvAndUser();
+            const res = await fetch(`${api.url}/api/v1/environment/callback`, {
+                method: 'POST',
+                body: 'undefined',
+                headers: { Authorization: `Bearer ${secret.secret}`, 'content-type': 'application/json' }
+            });
+
+            expect(await res.json()).toStrictEqual({
+                error: {
+                    code: 'invalid_json',
+                    message: expect.any(String) // unfortunately the message is different depending on the platform
+                }
+            });
+        });
+    });
+
+    describe('Authenticated endpoints', () => {
+        it('should return 401 if unknown bearer token', async () => {
+            const res = await fetch(`${api.url}/providers`, {
+                method: 'GET',
+                headers: { Authorization: `Bearer 00000000-0000-4000-8000-000000000000` }
+            });
+
+            expect(res.status).toBe(401);
+            expect(await res.json()).toStrictEqual({
+                error: {
+                    message: expect.any(String),
+                    code: 'unknown_account',
+                    payload: {}
+                }
+            });
+        });
+    });
+});

@@ -1,0 +1,54 @@
+name: '[Release] NPM publish'
+run-name: '[Release] NPM publish ${{ inputs.version }}'
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                type: string
+                description: 'Version to publish'
+                required: true
+                default: '0.0.0'
+
+permissions:
+    contents: write
+    id-token: write
+
+jobs:
+    npm-publish:
+        if: github.ref == 'refs/heads/master'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/create-github-app-token@v2
+              id: create_github_app_token
+              with:
+                  app-id: ${{ secrets.GH_APP_PUSHER_ID }}
+                  private-key: ${{ secrets.GH_APP_PUSHER_PRIVATE_KEY }}
+
+            - uses: actions/checkout@v4
+              with:
+                  token: ${{ steps.create_github_app_token.outputs.token }}
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
+              with:
+                  cache: 'npm'
+                  node-version-file: '.nvmrc'
+                  registry-url: 'https://registry.npmjs.org'
+
+            - name: Update npm to latest
+              run: npm install -g npm@11.5.1
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Publish npm packages
+              shell: bash
+              run: |
+                  npx zx ./scripts/publish.mjs --version="${{ inputs.version }}"
+
+            - name: Publish release
+              env:
+                  GITHUB_TOKEN: ${{ steps.create_github_app_token.outputs.token }}
+              run: |
+                  npx zx ./scripts/gitrelease.mjs "${{ inputs.version }}" "${{ github.head_ref || github.ref_name }}"

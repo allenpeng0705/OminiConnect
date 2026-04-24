@@ -1,0 +1,23 @@
+export interface Deployment {
+    readonly id: number;
+    readonly image: string;
+    readonly createdAt: Date;
+    readonly supersededAt: Date | null;
+}
+
+export type RoutingId = string;
+
+export type ImageType = 'docker' | 'ecr';
+
+export interface NodeConfig {
+    readonly image: string;
+    readonly cpuMilli: number;
+    readonly memoryMb: number;
+    readonly storageMb: number;
+    readonly isTracingEnabled: boolean;
+    readonly isProfilingEnabled: boolean;
+    readonly idleMaxDurationMs: number;
+    readonly executionTimeoutSecs: number;
+    readonly provisionedConcurrency: number;
+    readonly replicas: number;
+}

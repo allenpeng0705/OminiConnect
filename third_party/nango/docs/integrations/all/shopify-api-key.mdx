@@ -1,0 +1,87 @@
+---
+title: 'Shopify (API Key)'
+sidebarTitle: 'Shopify (API Key)'
+description: 'Access the Shopify API in 2 minutes 💨'
+---
+
+<Tabs>
+  <Tab title="🚀 Quickstart">
+   <Warning>
+      Starting January 1, 2026, you can no longer create legacy custom apps. We recommend using [Shopify (OAuth)](/api-integrations/shopify) instead. This won't impact any existing apps.
+    </Warning>
+    <Steps>
+      <Step title="Create an integration">
+        In Nango ([free signup](https://app.nango.dev)), go to [Integrations](https://app.nango.dev/dev/integrations) -> _Configure New Integration_ -> _Shopify API Key_.
+      </Step>
+      <Step title="Authorize Shopify (API Key)">
+        Go to [Connections](https://app.nango.dev/dev/connections) -> _Add Test Connection_ -> _Authorize_, then enter your Shopify (API Key) credentials. Later, you'll let your users do the same directly from your app.
+      </Step>
+      <Step title="Call the Shopify API">
+        Let's make your first request to the Shopify API (fetch a list of customers). Replace the placeholders below with your [secret key](https://app.nango.dev/dev/environment-settings), [integration ID](https://app.nango.dev/dev/integrations), and [connection ID](https://app.nango.dev/dev/connections):
+        <Tabs>
+            <Tab title="cURL">
+
+                ```bash
+                curl "https://api.nango.dev/proxy/admin/api/2025-01/customers.json?limit=10" \
+                  -H "Authorization: Bearer <NANGO-SECRET-KEY>" \
+                  -H "Provider-Config-Key: <INTEGRATION-ID>" \
+                  -H "Connection-Id: <CONNECTION-ID>"
+                ```
+
+            </Tab>
+
+            <Tab title="Node">
+
+            Install Nango's backend SDK with `npm i @nangohq/node`. Then run:
+
+            ```typescript
+            import { Nango } from '@nangohq/node';
+
+            const nango = new Nango({ secretKey: '<NANGO-SECRET-KEY>' });
+
+            const res = await nango.get({
+                endpoint: '/admin/api/2025-01/customers.json',
+                params: {
+                  limit: 10
+                },
+                providerConfigKey: '<INTEGRATION-ID>',
+                connectionId: '<CONNECTION-ID>'
+            });
+
+            console.log(JSON.stringify(res.data, null, 2));
+            ```
+            </Tab>
+
+        </Tabs>
+
+        Or fetch credentials dynamically via the [Node SDK](/reference/sdks/node#get-a-connection-with-credentials) or [API](/reference/api/connection/get).
+
+      </Step>
+    </Steps>
+
+    ✅ You're connected! Check the [Logs](https://app.nango.dev/dev/logs) tab in Nango to inspect requests.
+
+    <Tip>
+    Next step: [Embed the auth flow](/implementation-guides/platform/auth/implement-api-auth) in your app to let your users connect their Shopify stores.
+    </Tip>
+  </Tab>
+  <Tab title="🔗 Useful links">
+    | Topic | Links |
+    | - | - |
+    | Authorization | [Guide to connect to Shopify (API Key) using Connect UI](/integrations/all/shopify-api-key/connect) |
+    | General | [Website](https://www.shopify.com/) |
+    | Developer | [Generate access tokens for custom apps in the Shopify admin](https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/generate-app-access-tokens-admin) |
+    | | [Custom apps](https://help.shopify.com/en/manual/apps/app-types/custom-apps) |
+  
+    <Note>Contribute useful links by [editing this page](https://github.com/nangohq/nango/tree/master/docs/integrations/all/shopify-api-key.mdx)</Note>
+  </Tab>
+  <Tab title="🚨 API gotchas">
+    - Starting January 1, 2026, you can no longer create legacy custom apps. We recommend using [Shopify (OAuth)](/api-integrations/shopify) instead.  This won't impact any existing apps.
+
+    <Note>Contribute API gotchas by [editing this page](https://github.com/nangohq/nango/tree/master/docs/integrations/all/shopify-api-key.mdx)</Note>
+  </Tab>
+</Tabs>
+
+<Info>
+    Questions? Join us in the [Slack community](https://nango.dev/slack).
+</Info>

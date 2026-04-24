@@ -1,0 +1,36 @@
+---
+title: 'How to register your own Slack OAuth app'
+sidebarTitle: 'Slack Setup'
+description: 'Register an OAuth app with Slack and connect it to Nango'
+---
+
+This guide shows you how to register your own app with Slack to obtain your OAuth credentials (client id & secret). These are required to let your users grant your app access to their Slack workspace.
+
+<Steps>
+  <Step title="Create a developer account">
+    Go to [Slack Developer Program signup page](https://api.slack.com/developer-program) and click Join the Program.
+  </Step>
+  <Step title="Create & configure a Slack app">
+    1. Click on the **Your Apps** button then **Create New App**.
+    2. Choose how you'd like to configure your app's scopes and settings. You can use a manifest file or start from scratch; for a simpler flow, select **From scratch**.
+    3. Add your **App name** and select a workspace to develop your app in, then click **Create App**.
+    4. In the **Basic Information** tab, copy your app's `Client ID` and `Client Secret`, as you'll need them when configuring your integration in Nango.
+    </Step>
+    <Step title="Set up the OAuth scopes">
+    1. In the left sidebar, select the **OAuth & Permissions** tab and configure the following Redirect URL: `https://api.nango.dev/oauth/callback`.
+    2. Still in the **OAuth & Permissions** tab, under **Scopes**, add the scopes that are relevant to how you want to consume Slack's API.
+    There are 2 types of scopes, [Bot Token Scopes](https://docs.slack.dev/reference/scopes/?token_types=Bot) and [User Token Scopes](https://docs.slack.dev/reference/scopes/?token_types=User).
+    - Bot tokens represent a bot associated with an app installed in a workspace. They govern what your app can access. They will be added to Nango when creating a Slack integration.
+    - User token Scopes access user data and act on behalf of users that authorize them. They will be [added](/reference/api/connect/sessions/create#body-integrations-config-defaults-key-user_scopes) to Nango when creating a Slack connection.
+  </Step>
+  <Step title="Create a Slack Developer Sandbox (Optional)">
+    If you don't have a Slack Developer Sandbox already, head over to Slack's [Developer Program dashboard](https://api.slack.com/developer-program/dashboard) and provision one to test your integration.
+  </Step>
+  <Step title="Next">
+    Follow the [_Quickstart_](/getting-started/quickstart).
+  </Step>
+</Steps>
+
+For more details on Slack's OAuth implementation, see [Slack's OAuth documentation](https://api.slack.com/authentication/oauth-v2).
+
+---

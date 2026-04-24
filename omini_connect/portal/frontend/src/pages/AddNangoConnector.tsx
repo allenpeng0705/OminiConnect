@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { getNangoIntegrations, upsertConnector } from '../api/client';
+import { getNangoIntegrations, getNangoStatus, upsertConnector } from '../api/client';
 
 export default function AddNangoConnector() {
   const navigate = useNavigate();
@@ -12,11 +12,26 @@ export default function AddNangoConnector() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [nangoBaseUrl, setNangoBaseUrl] = useState('');
+  const [nangoReady, setNangoReady] = useState(false);
 
   useEffect(() => {
     const pk = params.get('provider_key') || params.get('prefill');
     if (pk) setProviderKey(pk);
   }, [params]);
+
+  useEffect(() => {
+    getNangoStatus()
+      .then((s) => {
+        const base = (s.base_url || '').trim().replace(/\/+$/, '');
+        setNangoBaseUrl(base);
+        setNangoReady(Boolean(base));
+      })
+      .catch(() => {
+        setNangoBaseUrl('');
+        setNangoReady(false);
+      });
+  }, []);
 
   useEffect(() => {
     getNangoIntegrations()
@@ -27,6 +42,12 @@ export default function AddNangoConnector() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  function openNangoPortal(path = '') {
+    if (!nangoBaseUrl) return;
+    const normalizedPath = path.startsWith('/') || path === '' ? path : `/${path}`;
+    window.open(`${nangoBaseUrl}${normalizedPath}`, '_blank', 'noopener,noreferrer');
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -76,6 +97,24 @@ export default function AddNangoConnector() {
             Registers a connector in OminiConnect that uses the managed integration hub for OAuth and API access. Pick a unique connector id (slug) per connection. Open the{' '}
             <Link to="/connectors/catalog" style={{ color: '#4f46e5' }}>integration library</Link> to choose a provider; the <strong>integration unique key</strong> below must match an integration already enabled in your environment (often the same as the provider id in the library).
           </p>
+          {nangoReady && (
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+              <button
+                type="button"
+                onClick={() => openNangoPortal()}
+                style={{ padding: '0.4rem 0.75rem', border: '1px solid #cbd5e1', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.8rem' }}
+              >
+                Open Nango portal
+              </button>
+              <button
+                type="button"
+                onClick={() => openNangoPortal('/integrations')}
+                style={{ padding: '0.4rem 0.75rem', border: '1px solid #cbd5e1', borderRadius: '6px', background: '#fff', cursor: 'pointer', fontSize: '0.8rem' }}
+              >
+                Open Nango integrations
+              </button>
+            </div>
+          )}
           {error && <div style={{ color: '#d32f2f', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
 
           <div style={{ marginBottom: '1rem' }}>

@@ -1,0 +1,114 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { logContextGetter } from '@nangohq/logs';
+import { axiosInstance, stringifyStable } from '@nangohq/utils';
+
+import { sendAsyncActionWebhook } from './asyncAction.js';
+import { TestWebhookServer } from './helpers/test.js';
+
+import type { DBAPISecret, DBEnvironment, DBExternalWebhook } from '@nangohq/types';
+
+const spy = vi.spyOn(axiosInstance, 'post');
+
+const testServer = new TestWebhookServer(4100);
+
+const webhookSettings: DBExternalWebhook = {
+    id: 1,
+    environment_id: 1,
+    primary_url: testServer.primaryUrl,
+    secondary_url: testServer.secondaryUrl,
+    on_sync_completion_always: true,
+    on_auth_creation: true,
+    on_auth_refresh_error: true,
+    on_sync_error: true,
+    on_async_action_completion: true,
+    created_at: new Date(),
+    updated_at: new Date()
+};
+const environment = {
+    name: 'dev',
+    id: 1
+} as DBEnvironment;
+
+const secret = 'secret' as DBAPISecret['secret'];
+
+describe('AsyncAction webhookds', () => {
+    beforeAll(async () => {
+        await testServer.start();
+    });
+
+    afterAll(async () => {
+        await testServer.stop();
+    });
+
+    beforeEach(() => {
+        vi.resetAllMocks();
+    });
+
+    it('should not be sent if on_async_action_completion is false', async () => {
+        const logCtx = await logContextGetter.create(
+            { operation: { type: 'sync', action: 'run' } },
+            { account: { id: environment.account_id, name: '' }, environment: { id: environment.id, name: environment.name } }
+        );
+        await sendAsyncActionWebhook({
+            connectionId: '123',
+            secret,
+            providerConfigKey: 'some-provider',
+            webhookSettings: {
+                ...webhookSettings,
+                on_async_action_completion: false
+            },
+            payload: { id: '00000000-0000-0000-0000-000000000000', statusUrl: '/action/00000000-0000-0000-0000-000000000000' },
+            logCtx
+        });
+        expect(spy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should be sent if on_async_action_completion is true', async () => {
+        const logCtx = await logContextGetter.create(
+            { operation: { type: 'sync', action: 'run' } },
+            { account: { id: environment.account_id, name: '' }, environment: { id: environment.id, name: environment.name } }
+        );
+        const props = {
+            connectionId: '123',
+            secret,
+            providerConfigKey: 'some-provider',
+            webhookSettings: {
+                ...webhookSettings,
+                on_async_action_completion: true
+            },
+            payload: { id: '00000000-0000-0000-0000-000000000000', statusUrl: '/action/00000000-0000-0000-0000-000000000000' },
+            logCtx
+        };
+
+        await sendAsyncActionWebhook(props);
+
+        expect(spy).toHaveBeenCalledTimes(2);
+        const body = {
+            type: 'async_action',
+            from: 'nango',
+            connectionId: props.connectionId,
+            payload: props.payload,
+            providerConfigKey: props.providerConfigKey
+        };
+        const bodyString = stringifyStable(body).unwrap();
+        expect(spy).toHaveBeenNthCalledWith(1, webhookSettings.primary_url, bodyString, {
+            headers: {
+                'X-Nango-Signature': expect.toBeSha256(),
+                'X-Nango-Hmac-Sha256': expect.toBeSha256(),
+                'content-type': 'application/json',
+                'user-agent': expect.stringContaining('nango/')
+            },
+            timeout: expect.any(Number)
+        });
+        expect(spy).toHaveBeenNthCalledWith(2, webhookSettings.secondary_url, bodyString, {
+            headers: {
+                'X-Nango-Signature': expect.toBeSha256(),
+                'X-Nango-Hmac-Sha256': expect.toBeSha256(),
+                'content-type': 'application/json',
+                'user-agent': expect.stringContaining('nango/')
+            },
+            timeout: expect.any(Number)
+        });
+    });
+});

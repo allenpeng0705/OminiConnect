@@ -1,0 +1,12 @@
+import type { Node } from '../types.js';
+import type { NodeConfig } from '@nangohq/types';
+import type { Result } from '@nangohq/utils';
+
+export interface NodeProvider {
+    defaultNodeConfig: Omit<NodeConfig, 'image'>;
+    start(node: Node): Promise<Result<void>>;
+    terminate(node: Node): Promise<Result<void>>;
+    verifyUrl(url: string): Promise<Result<void>>;
+    finish(node: Node): Promise<Result<void>>;
+    waitUntilHealthy(options: { nodeId: number; url: string; timeoutMs: number }): Promise<Result<void>>;
+}

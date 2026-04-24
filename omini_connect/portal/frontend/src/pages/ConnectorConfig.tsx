@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getConnectors, upsertConnector, deleteConnector, getConnectorStatus, testConnector } from '../api/client';
+import { getConnectors, upsertConnector, deleteConnector, getConnectorStatus, testConnector, getNangoStatus } from '../api/client';
 
 const PLATFORMS: Record<string, { name: string; color: string; type: 'oauth2' | 'api_key'; scopes_default?: string }> = {
   feishu: { name: 'Feishu / Lark', color: '#00A1E0', type: 'oauth2', scopes_default: 'contact:user.base:readonly' },
@@ -33,6 +33,7 @@ export default function ConnectorConfig() {
   const [showClientSecret, setShowClientSecret] = useState(false);
   const [showClientId, setShowClientId] = useState(false);
   const [hasExistingSecret, setHasExistingSecret] = useState(false);
+  const [nangoBaseUrl, setNangoBaseUrl] = useState('');
 
   const info = platform
     ? (PLATFORMS[platform] ?? {
@@ -54,6 +55,12 @@ export default function ConnectorConfig() {
     loadExisting();
     loadStatus();
   }, [platform]);
+
+  useEffect(() => {
+    getNangoStatus()
+      .then((s) => setNangoBaseUrl((s.base_url || '').trim().replace(/\/+$/, '')))
+      .catch(() => setNangoBaseUrl(''));
+  }, []);
 
   async function loadExisting() {
     try {
@@ -140,6 +147,12 @@ export default function ConnectorConfig() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed');
     }
+  }
+
+  function openNango(path = '') {
+    if (!nangoBaseUrl) return;
+    const normalizedPath = path.startsWith('/') || path === '' ? path : `/${path}`;
+    window.open(`${nangoBaseUrl}${normalizedPath}`, '_blank', 'noopener,noreferrer');
   }
 
   if (!platform) {
@@ -231,6 +244,16 @@ export default function ConnectorConfig() {
                   <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#999' }}>
                     Optional for now. Leave blank before first OAuth connect; testing will require this value.
                   </p>
+                  {nangoBaseUrl && (
+                    <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button type="button" onClick={() => openNango('/integrations')} style={{ padding: '0.35rem 0.7rem', background: 'white', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>
+                        Open Nango integrations
+                      </button>
+                      <button type="button" onClick={() => openNango()} style={{ padding: '0.35rem 0.7rem', background: 'white', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}>
+                        Open Nango portal
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
