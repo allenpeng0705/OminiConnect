@@ -313,6 +313,11 @@ pub struct ExecuteToolRequest {
     pub tool_slug: String,
     pub platform: String,
     pub arguments: serde_json::Value,
+    /// Optional callback URL for async result delivery.
+    /// When provided, the call returns 202 Accepted with a call_id immediately,
+    /// and the result is POSTed to the callback URL once ready.
+    #[serde(default)]
+    pub callback_url: Option<String>,
 }
 
 /// Execute a tool.
@@ -348,7 +353,110 @@ pub async fn execute(
     // Build query string from arguments
     let (query_string, body_json) = build_params(&tool.method, &body.arguments, &tool.endpoint);
 
-    // Time the execution for audit
+    // If callback_url is provided, return 202 immediately and fire-and-forget
+    if let Some(callback_url) = &body.callback_url {
+        let call_id = uuid::Uuid::new_v4().to_string();
+        let owner_clone = owner.clone();
+        let agent_id_str = agent_id.clone();
+        let agent_id_for_record = agent_id_str.clone().unwrap_or_else(|| "".to_string());
+        let exec_record_for_callback = crate::db::ToolExecution {
+            id: call_id.clone(),
+            agent_id: agent_id_for_record.clone(),
+            owner_username: owner_clone.clone(),
+            tool_slug: body.tool_slug.clone(),
+            platform: body.platform.clone(),
+            arguments: body.arguments.clone(),
+            result: "".to_string(),
+            status: "pending".to_string(),
+            duration_ms: 0,
+            created_at: chrono::Utc::now(),
+        };
+        // Record as pending
+        if let Err(e) = state.tool_executions.insert(&exec_record_for_callback).await {
+            tracing::warn!("Failed to record pending tool execution: {}", e);
+        }
+
+        // Spawn async task to execute and post to callback
+        let state_clone = Arc::clone(&state);
+        let tool_clone = tool.clone();
+        let connector_clone = connector.clone();
+        let native_path_clone = native_path.clone();
+        let query_string_clone = query_string.clone();
+        let body_json_clone = body_json.clone();
+        let callback_url_clone = callback_url.clone();
+        let call_id_clone = call_id.clone();
+        let agent_id_for_async = agent_id_str.clone().unwrap_or_else(|| "".to_string());
+
+        tokio::spawn(async move {
+            let start = std::time::Instant::now();
+            let exec_result = if connector_clone.engine == "nango" {
+                execute_nango(&state_clone, &connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
+            } else if connector_clone.platform == "maton" || connector_clone.platform == "qqmail" || connector_clone.platform == "github" {
+                execute_api_key(&connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
+            } else {
+                execute_oauth_vault(&state_clone, &owner_clone, &connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
+            };
+
+            let duration_ms = start.elapsed().as_millis() as i64;
+            let status_code = exec_result.status();
+            let status = if status_code.is_success() { "success" } else { "error" };
+
+            // Extract body
+            let body_bytes = {
+                use axum::body::HttpBody;
+                let mut body = exec_result.into_body();
+                let mut bytes = bytes::BytesMut::new();
+                while let Some(item) = body.frame().await {
+                    if let Ok(frame) = item {
+                        if let Some(data) = frame.data_ref() {
+                            bytes.extend_from_slice(data);
+                        }
+                    }
+                }
+                bytes.freeze()
+            };
+            let result_text = String::from_utf8_lossy(&body_bytes).to_string();
+
+            // Update audit record with result
+            // We update by inserting a new record with same id (upsert behavior is ok for this simple case)
+            let updated_record = crate::db::ToolExecution {
+                id: call_id_clone.clone(),
+                agent_id: agent_id_for_async.clone(),
+                owner_username: owner_clone,
+                tool_slug: tool_clone.slug.clone(),
+                platform: tool_clone.provider.clone(),
+                arguments: serde_json::Value::Object(Default::default()),
+                result: result_text.clone(),
+                status: status.to_string(),
+                duration_ms,
+                created_at: chrono::Utc::now(),
+            };
+            let _ = state_clone.tool_executions.insert(&updated_record).await;
+
+            // POST result to callback_url
+            let client = reqwest::Client::new();
+            let payload = serde_json::json!({
+                "call_id": call_id_clone,
+                "tool_slug": tool_clone.slug,
+                "platform": tool_clone.provider,
+                "status": status,
+                "result": result_text,
+                "duration_ms": duration_ms,
+            });
+            match client.post(&callback_url_clone).json(&payload).send().await {
+                Ok(resp) => tracing::info!("Callback posted to {}: {}", callback_url_clone, resp.status()),
+                Err(e) => tracing::warn!("Callback to {} failed: {}", callback_url_clone, e),
+            }
+        });
+
+        // Return 202 Accepted immediately
+        let body = serde_json::json!({ "call_id": call_id, "status": "pending" }).to_string();
+        let mut resp = axum::response::Response::new(body.into());
+        *resp.status_mut() = StatusCode::ACCEPTED;
+        return resp;
+    }
+
+    // Inline execution (no callback)
     let start = std::time::Instant::now();
     let exec_result: Response;
 

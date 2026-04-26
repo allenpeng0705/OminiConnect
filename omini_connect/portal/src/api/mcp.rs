@@ -277,6 +277,7 @@ async fn handle_tools_call(
         tool_slug: tool_name.to_string(),
         platform: tool.provider.clone(),
         arguments,
+        callback_url: None,
     };
 
     // Use tools execute handler
