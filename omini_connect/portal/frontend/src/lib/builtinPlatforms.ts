@@ -41,7 +41,7 @@ const ALL: BuiltinPlatform[] = [
     name: 'DingTalk',
     color: '#1677FF',
     type: 'oauth2',
-    logo_url: '/images/template-logos/dingtalk.svg',
+    logo_url: '/images/template-logos/dingtalk.png',
     showOnDashboard: true,
   },
   {
@@ -50,7 +50,7 @@ const ALL: BuiltinPlatform[] = [
     color: '#00A1E0',
     type: 'oauth2',
     scopes_default: 'contact:user.base:readonly',
-    logo_url: '/images/template-logos/feishu.svg',
+    logo_url: '/images/template-logos/feishu.png',
     showOnDashboard: true,
   },
   {
@@ -58,7 +58,7 @@ const ALL: BuiltinPlatform[] = [
     name: 'QQ Enterprise Mail',
     color: '#12B7F5',
     type: 'api_key',
-    logo_url: '/images/template-logos/tencent-qq.svg',
+    logo_url: '/images/template-logos/tencent-qq.png',
     showOnDashboard: true,
   },
   {
@@ -66,7 +66,7 @@ const ALL: BuiltinPlatform[] = [
     name: 'Maton.ai',
     color: '#6366F1',
     type: 'api_key',
-    logo_url: '/images/template-logos/maton.svg',
+    logo_url: '/images/template-logos/maton.png',
     showOnDashboard: true,
   },
 ];

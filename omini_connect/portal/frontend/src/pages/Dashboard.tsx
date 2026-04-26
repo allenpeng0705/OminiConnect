@@ -708,6 +708,7 @@ export default function Dashboard() {
                         url={resolveBuiltinCatalogLogo(p.id, catalogLogoByProvider, p.logo_url || '')}
                         label={p.name}
                         size={52}
+                        brandColor={p.color}
                       />
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div

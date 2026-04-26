@@ -4,9 +4,11 @@ interface Props {
   url?: string;
   label: string;
   size?: number;
+  /** Optional brand color to use as background for the logo container */
+  brandColor?: string;
 }
 
-export default function IntegrationProviderLogo({ url, label, size = 48 }: Props) {
+export default function IntegrationProviderLogo({ url, label, size = 48, brandColor }: Props) {
   const [imgFailed, setImgFailed] = useState(false);
 
   const initial = (label || '?').trim().charAt(0).toUpperCase();
@@ -38,7 +40,7 @@ export default function IntegrationProviderLogo({ url, label, size = 48 }: Props
           width: size,
           height: size,
           borderRadius: '12px',
-          background: getGradient(label),
+          background: brandColor || getGradient(label),
           color: 'white',
           display: 'flex',
           alignItems: 'center',
@@ -60,7 +62,7 @@ export default function IntegrationProviderLogo({ url, label, size = 48 }: Props
         width: size,
         height: size,
         borderRadius: '12px',
-        background: '#f8fafc',
+        background: brandColor || '#f8fafc',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -68,14 +70,18 @@ export default function IntegrationProviderLogo({ url, label, size = 48 }: Props
         boxShadow: '0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5)',
         border: '1px solid #e2e8f0',
         overflow: 'hidden',
+        padding: '4px',
+        boxSizing: 'border-box',
       }}
     >
       <img
         src={url}
         alt=""
-        width={size - 4}
-        height={size - 4}
-        style={{ objectFit: 'contain' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+        }}
         onError={() => setImgFailed(true)}
       />
     </div>
