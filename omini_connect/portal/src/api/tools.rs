@@ -5,7 +5,6 @@ use std::{collections::HashSet, sync::Arc, time::Duration};
 use axum::{
     extract::{Query, State},
     http::{HeaderMap, StatusCode},
-    response::IntoResponse,
     response::Response,
     routing::{get, post},
     Json, Router,
@@ -403,7 +402,6 @@ pub async fn execute(
 
             // Extract body
             let body_bytes = {
-                use axum::body::HttpBody;
                 let mut body = exec_result.into_body();
                 let mut bytes = bytes::BytesMut::new();
                 while let Some(item) = body.frame().await {
@@ -475,7 +473,6 @@ pub async fn execute(
 
     // Extract body bytes for audit log (body is consumed from Response)
     let body_bytes = {
-        use axum::body::HttpBody;
         let mut body = exec_result.into_body();
         let mut bytes = bytes::BytesMut::new();
         while let Some(item) = body.frame().await {

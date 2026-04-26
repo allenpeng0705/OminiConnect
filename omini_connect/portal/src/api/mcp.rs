@@ -14,7 +14,7 @@ use std::{sync::Arc, collections::HashMap};
 use axum::{
     extract::State,
     http::{HeaderMap, StatusCode},
-    response::Response,
+    response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
 };
@@ -295,15 +295,43 @@ fn headers_from_owner(_owner: &str) -> HeaderMap {
     HeaderMap::new()
 }
 
-/// MCP SSE stream endpoint for tools/listen (optional long-polling).
+/// MCP SSE stream endpoint for tools/listen.
+/// Clients connect via EventSource to receive async tool results and notifications.
+/// The client sends JSON-RPC requests via POST /mcp, and results are streamed back via SSE.
 pub async fn handle_mcp_sse(
-    State(_state): State<Arc<AppState>>,
-    _headers: HeaderMap,
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
 ) -> Response {
-    // For now, return a simple message that MCP is available
-    let body = "MCP endpoint available. Use POST with JSON-RPC.";
-    let mut resp = Response::new(body.into());
-    *resp.status_mut() = StatusCode::OK;
+    // Authenticate first
+    let owner = match auth_user(&state, &headers).await {
+        Ok(u) => u,
+        Err(e) => return e,
+    };
+
+    use axum::response::sse::{Event, KeepAlive, Sse};
+    use tokio::sync::broadcast;
+    use tokio_stream::StreamExt;
+
+    // Create a broadcast channel for this SSE connection
+    let (tx, rx) = broadcast::channel::<String>(100);
+
+    // Send initial connection event
+    let _ = tx.send(serde_json::json!({ "type": "connected", "owner": owner }).to_string());
+
+    // Build SSE stream from broadcast receiver
+    let stream = tokio_stream::wrappers::BroadcastStream::new(rx)
+        .map(|msg| {
+            let data = msg.unwrap_or_default();
+            Ok::<_, std::convert::Infallible>(Event::default().data(data))
+        });
+
+    let sse = Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(30)));
+
+    let mut resp = sse.into_response();
+    resp.headers_mut().insert(
+        axum::http::header::CACHE_CONTROL,
+        axum::http::HeaderValue::from_static("no-cache"),
+    );
     resp
 }
 
