@@ -18,7 +18,7 @@
 - slug: google_meet_list_spaces
   name: List Spaces
   description: |
-    List meeting spaces in Google Meet.
+    List all meeting spaces in Google Meet. Returns space IDs, meeting titles, created timestamps, and participant counts for each space.
   provider: google-meet
   endpoint: /v2/spaces
   method: GET
@@ -36,7 +36,7 @@
 - slug: google_meet_create_space
   name: Create Space
   description: |
-    Create a new meeting space.
+    Create a new meeting space in Google Meet with a specified title. Returns the space ID and meeting join information.
   provider: google-meet
   endpoint: /v2/spaces
   method: POST
@@ -59,7 +59,7 @@
 - slug: google_meet_get_space
   name: Get Space
   description: |
-    Get details about a meeting space.
+    Get detailed information about a specific meeting space including its title, created time, and current participant list.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}
   method: GET
@@ -82,7 +82,7 @@
 - slug: google_meet_list_recordings
   name: List Recordings
   description: |
-    List recordings from Meet.
+    List all recordings from Google Meet sessions. Returns recording IDs, space names, recording dates, durations, and file sizes for each recording.
   provider: google-meet
   endpoint: /v2/recordings
   method: GET
@@ -100,7 +100,7 @@
 - slug: google_meet_list_participants
   name: List Participants
   description: |
-    List participants in a space.
+    List all participants in a specific Google Meet space. Returns participant IDs, names, email addresses, and join/leave times for each participant.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}/participants
   method: GET
@@ -123,7 +123,7 @@
 - slug: google_meet_create_access_rule
   name: Create Access Rule
   description: |
-    Create an access rule for a space.
+    Create a new access rule for a Google Meet space to control who can join. Returns the created rule ID and assigned role.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}/accessRules
   method: POST
@@ -154,7 +154,7 @@
 - slug: google_meet_list_access_rules
   name: List Access Rules
   description: |
-    List access rules for a space.
+    List all access rules for a Google Meet space. Returns rule IDs, principal emails, roles (creator, moderator, attendee), and rule types for each rule.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}/accessRules
   method: GET
@@ -177,7 +177,7 @@
 - slug: google_meet_get_participant
   name: Get Participant
   description: |
-    Get details about a participant.
+    Get detailed information about a specific meeting participant including their name, email, join time, and role in the meeting.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}/participants/{participant_id}
   method: GET
@@ -204,7 +204,7 @@
 - slug: google_meet_list_codecs
   name: List Codecs
   description: |
-    List available codecs for Meet.
+    List all available video codecs for Google Meet including supported audio codecs and their configuration options.
   provider: google-meet
   endpoint: /v2/codecs
   method: GET
@@ -222,7 +222,7 @@
 - slug: google_meet_update_space
   name: Update Space
   description: |
-    Update a meeting space.
+    Update a Google Meet space with a new title. Returns the updated space with the modified title.
   provider: google-meet
   endpoint: /v2/spaces/{space_id}
   method: PATCH

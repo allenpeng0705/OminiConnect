@@ -2,6 +2,8 @@
   name: List Customers
   description: |
     Retrieve a list of all customers in the Oracle ERP system.
+    Returns customer names, IDs, contact information, and account status for each customer.
+    Use this to discover customers and manage customer relationships.
   provider: oracle
   endpoint: /crm/v4/customers
   method: GET
@@ -27,7 +29,9 @@
 - slug: oracle_get_customer
   name: Get Customer
   description: |
-    Retrieve detailed information for a specific customer by ID.
+    Retrieve detailed information for a specific customer by ID including contact details and account history.
+    Returns the complete customer data with all associated information.
+    This provides full customer data for relationship management and support.
   provider: oracle
   endpoint: /crm/v4/customers/{customer_id}
   method: GET
@@ -48,7 +52,9 @@
 - slug: oracle_list_orders
   name: List Orders
   description: |
-    Retrieve a list of all orders in the Oracle ERP system.
+    Retrieve a list of all orders in the Oracle ERP system with filtering by status and customer.
+    Returns order IDs, dates, statuses, and total amounts for each order.
+    Use this to discover orders and track fulfillment progress.
   provider: oracle
   endpoint: /om/v4/orders
   method: GET
@@ -77,7 +83,9 @@
 - slug: oracle_get_order
   name: Get Order
   description: |
-    Retrieve detailed information for a specific order by ID.
+    Retrieve detailed information for a specific order by ID including line items and shipping details.
+    Returns the complete order data with all associated information.
+    This provides full order data for fulfillment and customer service.
   provider: oracle
   endpoint: /om/v4/orders/{order_id}
   method: GET
@@ -98,7 +106,9 @@
 - slug: oracle_create_order
   name: Create Order
   description: |
-    Create a new order in the Oracle ERP system.
+    Create a new order in the Oracle ERP system with customer and line item information.
+    Returns the created order with its unique ID and confirmation.
+    This provisions a new order for fulfillment processing.
   provider: oracle
   endpoint: /om/v4/orders
   method: POST
@@ -135,7 +145,9 @@
 - slug: oracle_list_products
   name: List Products
   description: |
-    Retrieve a list of all products in the Oracle ERP catalog.
+    Retrieve a list of all products in the Oracle ERP catalog with category filtering.
+    Returns product names, IDs, pricing, and availability for each product.
+    Use this to discover products and manage inventory.
   provider: oracle
   endpoint: /pim/v4/products
   method: GET
@@ -161,7 +173,9 @@
 - slug: oracle_get_product
   name: Get Product
   description: |
-    Retrieve detailed information for a specific product by ID.
+    Retrieve detailed information for a specific product by ID including pricing and inventory levels.
+    Returns the complete product data with all associated details.
+    This provides full product data for catalog management and sales.
   provider: oracle
   endpoint: /pim/v4/products/{product_id}
   method: GET
@@ -182,7 +196,9 @@
 - slug: oracle_list_invoices
   name: List Invoices
   description: |
-    Retrieve a list of all invoices in the Oracle ERP system.
+    Retrieve a list of all invoices in the Oracle ERP system with status and customer filtering.
+    Returns invoice IDs, amounts, status, and dates for each invoice.
+    Use this to discover invoices and track payments.
   provider: oracle
   endpoint: /ar/v4/invoices
   method: GET
@@ -211,7 +227,9 @@
 - slug: oracle_get_invoice
   name: Get Invoice
   description: |
-    Retrieve detailed information for a specific invoice by ID.
+    Retrieve detailed information for a specific invoice by ID including line items and payment status.
+    Returns the complete invoice data with all financial details.
+    This provides full invoice data for billing and accounting.
   provider: oracle
   endpoint: /ar/v4/invoices/{invoice_id}
   method: GET
@@ -232,7 +250,9 @@
 - slug: oracle_list_shipments
   name: List Shipments
   description: |
-    Retrieve a list of all shipments in the Oracle ERP system.
+    Retrieve a list of all shipments in the Oracle ERP system with status and order filtering.
+    Returns shipment IDs, tracking numbers, status, and delivery dates for each shipment.
+    Use this to discover shipments and track delivery progress.
   provider: oracle
   endpoint: /wms/v4/shipments
   method: GET

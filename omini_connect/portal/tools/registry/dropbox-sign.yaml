@@ -18,7 +18,7 @@
 - slug: dropbox_sign_list_signature_requests
   name: List Signature Requests
   description: |
-    List all signature requests in Dropbox Sign.
+    List all signature requests in Dropbox Sign. Returns request details including status, signers, and document information.
   provider: dropbox-sign
   endpoint: /signature_requests
   method: GET
@@ -43,7 +43,7 @@
 - slug: dropbox_sign_get_signature_request
   name: Get Signature Request
   description: |
-    Get details of a specific signature request.
+    Retrieve detailed information about a specific signature request including signer status, document, and audit trail.
   provider: dropbox-sign
   endpoint: /signature_requests/{signature_request_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: dropbox_sign_create_signature_request
   name: Create Signature Request
   description: |
-    Create and send a new signature request.
+    Create and send a new signature request to one or more signers. Returns the created request with its ID and signing URL.
   provider: dropbox-sign
   endpoint: /signature_requests/send
   method: POST
@@ -102,7 +102,7 @@
 - slug: dropbox_sign_list_templates
   name: List Templates
   description: |
-    List all templates in Dropbox Sign.
+    List all signature templates in Dropbox Sign. Returns template names, descriptions, and field information.
   provider: dropbox-sign
   endpoint: /templates
   method: GET
@@ -124,7 +124,7 @@
 - slug: dropbox_sign_get_template
   name: Get Template
   description: |
-    Get details of a specific template.
+    Retrieve detailed information about a specific signature template including fields, signers, and document.
   provider: dropbox-sign
   endpoint: /templates/{template_id}
   method: GET
@@ -146,7 +146,7 @@
 - slug: dropbox_sign_list_users
   name: List Users
   description: |
-    List all users on the team.
+    List all users on the Dropbox Sign team. Returns user names, emails, and permission levels.
   provider: dropbox-sign
   endpoint: /teams
   method: GET
@@ -168,7 +168,7 @@
 - slug: dropbox_sign_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve detailed information about a specific Dropbox Sign team member including account status and permissions.
   provider: dropbox-sign
   endpoint: /teams/{user_id}
   method: GET
@@ -190,7 +190,7 @@
 - slug: dropbox_sign_list_bulk_send_jobs
   name: List Bulk Send Jobs
   description: |
-    List all bulk send jobs.
+    List all bulk send jobs in Dropbox Sign. Returns job status, recipient counts, and completion progress.
   provider: dropbox-sign
   endpoint: /bulk_send_jobs
   method: GET
@@ -212,7 +212,7 @@
 - slug: dropbox_sign_get_bulk_send_job
   name: Get Bulk Send Job
   description: |
-    Get details of a specific bulk send job.
+    Retrieve detailed status and results of a specific bulk send job including individual recipient statuses.
   provider: dropbox-sign
   endpoint: /bulk_send_jobs/{job_id}
   method: GET
@@ -234,7 +234,7 @@
 - slug: dropbox_sign_list_documents
   name: List Documents
   description: |
-    List all documents (completed signatures).
+    List all completed signature documents in Dropbox Sign. Returns document details including signers and timestamps.
   provider: dropbox-sign
   endpoint: /documents
   method: GET

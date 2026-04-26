@@ -17,8 +17,7 @@
 - slug: pagerduty_list_incidents
   name: List Incidents
   description: |
-    List incidents in your PagerDuty account. Incidents are alerts or events
-    that trigger notifications to users. Filter by status, service, or date range.
+    List incidents in your PagerDuty account with optional filtering by status, service, or date range. Returns incident IDs, titles, statuses, and priority levels.
   provider: pagerduty
   endpoint: /incidents
   method: GET
@@ -59,8 +58,7 @@
 - slug: pagerduty_get_incident
   name: Get Incident
   description: |
-    Get details of a specific incident by ID. Returns title, description,
-    status, service, assigned users, and timeline of events.
+    Get details of a specific incident by ID including title, description, status, assigned service, users, and timeline of events and actions.
   provider: pagerduty
   endpoint: /incidents/{id}
   method: GET
@@ -82,8 +80,7 @@
 - slug: pagerduty_create_incident
   name: Create Incident
   description: |
-    Create a new incident in PagerDuty. Incidents trigger alerts
-    to on-call responders based on escalation policies.
+    Create a new incident that triggers notifications to on-call responders based on escalation policies. Returns the created incident with its unique identifier and service assignment.
   provider: pagerduty
   endpoint: /incidents
   method: POST
@@ -120,8 +117,7 @@
 - slug: pagerduty_manage_incident
   name: Manage Incident
   description: |
-    Update an existing incident: acknowledge, resolve, or reassign.
-    Use this to change the status or update details of an active incident.
+    Manage an existing incident by updating its status to acknowledged or resolved, changing urgency, or reassigning to different users. Returns the updated incident with modified fields.
   provider: pagerduty
   endpoint: /incidents/{id}
   method: PUT
@@ -156,8 +152,7 @@
 - slug: pagerduty_list_users
   name: List Users
   description: |
-    List all users in your PagerDuty account. Users are people who can
-    be assigned to incidents and are part of escalation policies.
+    List all users in your PagerDuty account who can be assigned to incidents and are part of escalation policies. Returns user names, emails, and roles.
   provider: pagerduty
   endpoint: /users
   method: GET
@@ -186,8 +181,7 @@
 - slug: pagerduty_get_user
   name: Get User
   description: |
-    Get details of a specific user including their contact methods,
-    time zone, and current on-call status.
+    Get details of a specific user including their contact methods, time zone, and current on-call status.
   provider: pagerduty
   endpoint: /users/{id}
   method: GET
@@ -209,8 +203,7 @@
 - slug: pagerduty_list_services
   name: List Services
   description: |
-    List all services in your PagerDuty account. Services are applications
-    or components that can create incidents and have escalation policies.
+    List all services in your PagerDuty account that can create incidents and have escalation policies. Returns service names, statuses, and integration settings.
   provider: pagerduty
   endpoint: /services
   method: GET
@@ -236,8 +229,7 @@
 - slug: pagerduty_get_service
   name: Get Service
   description: |
-    Get details of a specific service including its integration keys,
-    escalation policy, and incident creation settings.
+    Get details of a specific service including its integration keys, escalation policy, and incident creation settings.
   provider: pagerduty
   endpoint: /services/{id}
   method: GET
@@ -259,8 +251,7 @@
 - slug: pagerduty_list_schedules
   name: List Schedules
   description: |
-    List all on-call schedules in PagerDuty. Schedules define who is on-call
-    and when they receive incident notifications.
+    List all on-call schedules including their names, time zones, and user assignments. Returns schedule identifiers for determining who handles incidents at any given time.
   provider: pagerduty
   endpoint: /schedules
   method: GET
@@ -289,8 +280,7 @@
 - slug: pagerduty_get_schedule
   name: Get Schedule
   description: |
-    Get details of a specific schedule including the escalation policy
-    and upcoming on-call shifts. Useful for finding who is on-call.
+    Get detailed information for a specific schedule including its escalation policy, user rotations, and upcoming on-call shifts. Returns timeline data for identifying current and future responders.
   provider: pagerduty
   endpoint: /schedules/{id}
   method: GET

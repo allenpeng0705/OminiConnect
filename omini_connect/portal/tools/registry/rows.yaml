@@ -1,7 +1,9 @@
 - slug: rows_list_spreadsheets
   name: List Spreadsheets
   description: |
-    Retrieve a list of all accessible spreadsheets.
+    Retrieve a list of all accessible spreadsheets in Rows.
+    Returns spreadsheet names, IDs, and last modified dates for each spreadsheet.
+    Use this to discover available data files and track recent changes.
   provider: rows
   endpoint: /spreadsheets
   method: GET
@@ -26,6 +28,8 @@
   name: Get Spreadsheet
   description: |
     Get details and metadata for a specific spreadsheet by ID.
+    Returns the complete spreadsheet metadata including tables and column structure.
+    This provides full spreadsheet data for understanding organization.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}
   method: GET
@@ -47,7 +51,9 @@
 - slug: rows_create_spreadsheet
   name: Create Spreadsheet
   description: |
-    Create a new spreadsheet with specified name.
+    Create a new spreadsheet with specified name and optional folder location.
+    Returns the created spreadsheet with its unique ID and initial configuration.
+    This provisions a new spreadsheet document in Rows.
   provider: rows
   endpoint: /spreadsheets
   method: POST
@@ -73,6 +79,8 @@
   name: List Tables
   description: |
     List all tables within a specific spreadsheet.
+    Returns table names, IDs, and record counts for each table.
+    Use this to discover available data structures in a spreadsheet.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables
   method: GET
@@ -95,6 +103,8 @@
   name: Get Table
   description: |
     Get details, schema, and structure of a specific table.
+    Returns the complete table definition including column types and field configurations.
+    This provides table metadata for understanding data organization.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}
   method: GET
@@ -121,6 +131,8 @@
   name: List Rows
   description: |
     Retrieve all rows from a specific table with optional filtering and pagination.
+    Returns row data with all column values for each matching entry.
+    Use this to query table data for analysis and reporting.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows
   method: GET
@@ -155,7 +167,9 @@
 - slug: rows_get_row
   name: Get Row
   description: |
-    Get a single row by its unique identifier.
+    Get a single row by its unique identifier from a table.
+    Returns the complete row data with all column values.
+    This provides detailed row information for specific data lookup.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows/{rowId}
   method: GET
@@ -185,7 +199,9 @@
 - slug: rows_insert_row
   name: Insert Row
   description: |
-    Insert a new row into a specified table.
+    Insert a new row into a specified table with provided data.
+    Returns the created row with its assigned position.
+    This adds new data rows to a Rows table.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows
   method: POST
@@ -219,6 +235,8 @@
   name: Update Row
   description: |
     Update an existing row with new data in a specified table.
+    Returns the updated row with modified values.
+    This modifies existing data in a Rows table.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows/{rowId}
   method: PUT
@@ -252,7 +270,9 @@
 - slug: rows_list_collaborators
   name: List Collaborators
   description: |
-    List all collaborators on a specific spreadsheet.
+    List all collaborators on a specific spreadsheet with their access levels.
+    Returns collaborator names, emails, and permission roles.
+    Use this to discover who has access to a spreadsheet.
   provider: rows
   endpoint: /spreadsheets/{spreadsheetId}/collaborators
   method: GET

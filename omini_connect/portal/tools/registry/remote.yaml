@@ -17,8 +17,7 @@
 - slug: remote_list_contractors
   name: List Contractors
   description: |
-    List all contractors in the Remote platform. Returns contractor profiles, contract terms, payment rates, and status.
-    Use this to manage the contractor workforce and track independent relationships.
+    List all contractors in the Remote platform with optional filtering by status or country. Returns contractor profiles, contract terms, payment rates, and statuses for workforce management.
   provider: remote
   endpoint: /v1/contractors
   method: GET
@@ -52,7 +51,7 @@
 - slug: remote_get_contractor
   name: Get Contractor
   description: |
-    Get details of a specific contractor by ID. Returns full contractor profile, contract terms, payment details, and status.
+    Retrieve details for a specific contractor by their unique identifier. Returns the full contractor profile, contract terms, payment details, and current status.
   provider: remote
   endpoint: /v1/contractors/{contractor_id}
   method: GET
@@ -74,7 +73,7 @@
 - slug: remote_create_contractor
   name: Create Contractor
   description: |
-    Create a new contractor record in Remote. Include personal details, contract terms, hourly/fixed rates, and payment preferences.
+    Create a new contractor record in Remote with personal details, contract terms, hourly or fixed rates, and payment preferences. Returns the created contractor with their unique identifier.
   provider: remote
   endpoint: /v1/contractors
   method: POST
@@ -122,8 +121,7 @@
 - slug: remote_list_employees
   name: List Employees
   description: |
-    List all employees in the Remote platform. Returns employee profiles, employment status, location, and benefits info.
-    Use this to manage the full-time workforce across global operations.
+    List all employees in the Remote platform with optional filtering by status, country, or department. Returns employee profiles, employment status, location, and benefits information for global workforce management.
   provider: remote
   endpoint: /v1/employees
   method: GET
@@ -160,7 +158,7 @@
 - slug: remote_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee by ID. Returns full employee profile, employment terms, payroll setup, and benefits enrollment.
+    Retrieve details for a specific employee by their unique identifier. Returns the full employee profile, employment terms, payroll setup, and benefits enrollment.
   provider: remote
   endpoint: /v1/employees/{employee_id}
   method: GET
@@ -183,8 +181,7 @@
 - slug: remote_create_employee
   name: Create Employee
   description: |
-    Create a new employee record in Remote. Include personal details, employment terms, location, and payroll configuration.
-    Supports onboarding for full-time employees globally.
+    Create a new employee record in Remote with personal details, employment terms, location, and payroll configuration. Supports global onboarding for full-time employees and returns the created employee with their unique identifier.
   provider: remote
   endpoint: /v1/employees
   method: POST
@@ -232,8 +229,7 @@
 - slug: remote_list_payrolls
   name: List Payrolls
   description: |
-    List all payroll runs in the Remote platform. Returns payroll periods, status, totals, and worker counts.
-    Use this to track payroll cycles, monitor payments, and manage global payroll operations.
+    List all payroll runs in the Remote platform with optional filtering by status or period. Returns payroll periods, statuses, totals, and worker counts for payroll cycle tracking.
   provider: remote
   endpoint: /v1/payrolls
   method: GET
@@ -270,7 +266,7 @@
 - slug: remote_get_payroll
   name: Get Payroll
   description: |
-    Get details of a specific payroll run by ID. Returns payroll period details, total amounts, worker breakdown, and processing status.
+    Retrieve details for a specific payroll run by its unique identifier. Returns the payroll period details, total amounts, worker breakdown, and current processing status.
   provider: remote
   endpoint: /v1/payrolls/{payroll_id}
   method: GET
@@ -293,8 +289,7 @@
 - slug: remote_list_time_off
   name: List Time Off
   description: |
-    List all time off requests in the Remote platform. Returns request details, leave types, status, and employee info.
-    Use this to track leave, manage approvals, and monitor time off balances.
+    List all time off requests in the Remote platform with optional filtering by status, employee, leave type, or date range. Returns request details, leave types, statuses, and employee information.
   provider: remote
   endpoint: /v1/time_off
   method: GET
@@ -338,7 +333,7 @@
 - slug: remote_get_time_off_request
   name: Get Time Off Request
   description: |
-    Get details of a specific time off request by ID. Returns employee, dates, leave type, status, balance impact, and approver info.
+    Retrieve details for a specific time off request by its unique identifier. Returns the employee, dates, leave type, status, balance impact, and approver information.
   provider: remote
   endpoint: /v1/time_off/{request_id}
   method: GET

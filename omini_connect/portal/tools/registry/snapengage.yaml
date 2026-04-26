@@ -17,8 +17,9 @@
 - slug: snapengage_list_conversations
   name: List Conversations
   description: |
-    List all conversations across all channels in Snapengage.
-    Snapengage unifies chats from multiple sources.
+    List all conversations across all channels in Snapengage with pagination.
+    Returns conversation IDs, statuses, and latest messages for each conversation.
+    Use this to discover customer chats and manage support workflows.
   provider: snapengage
   endpoint: /conversations
   method: GET
@@ -48,8 +49,9 @@
 - slug: snapengage_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a specific conversation.
-    Includes all messages and conversation metadata.
+    Get detailed information about a specific conversation including all messages.
+    Returns the complete conversation data with all associated information.
+    This provides full conversation data for customer support management.
   provider: snapengage
   endpoint: /conversations/{conversation_id}
   method: GET
@@ -71,8 +73,9 @@
 - slug: snapengage_send_message
   name: Send Message
   description: |
-    Send a message in an active conversation.
-    Used to respond to customers across all channels.
+    Send a message in an active conversation to respond to customers.
+    Returns the sent message confirmation with delivery status.
+    This sends a reply across all unified chat channels.
   provider: snapengage
   endpoint: /conversations/{conversation_id}/messages
   method: POST
@@ -101,8 +104,9 @@
 - slug: snapengage_list_operators
   name: List Operators
   description: |
-    List all operators in your Snapengage account.
-    Shows operator status, role, and availability.
+    List all operators in your Snapengage account with pagination.
+    Returns operator names, IDs, status, and roles for each operator.
+    Use this to discover team members and manage support availability.
   provider: snapengage
   endpoint: /operators
   method: GET
@@ -127,8 +131,9 @@
 - slug: snapengage_get_operator
   name: Get Operator
   description: |
-    Get detailed information about a specific operator.
-    Includes role, status, and performance data.
+    Get detailed information about a specific operator including performance data.
+    Returns the complete operator data with all associated information.
+    This provides full operator data for team management and analytics.
   provider: snapengage
   endpoint: /operators/{operator_id}
   method: GET
@@ -150,8 +155,9 @@
 - slug: snapengage_list_engagements
   name: List Engagements
   description: |
-    List all engagements in Snapengage.
-    Engagements track proactive chat invitations and automated messages.
+    List all engagements in Snapengage with pagination and status filtering.
+    Returns engagement names, IDs, and types for each engagement.
+    Use this to discover proactive chat invitations and automated messages.
   provider: snapengage
   endpoint: /engagements
   method: GET
@@ -177,8 +183,9 @@
 - slug: snapengage_get_engagement
   name: Get Engagement
   description: |
-    Get detailed information about a specific engagement.
-    Shows engagement rules, triggers, and performance metrics.
+    Get detailed information about a specific engagement including rules and triggers.
+    Returns the complete engagement data with all associated information.
+    This provides full engagement data for campaign management.
   provider: snapengage
   endpoint: /engagements/{engagement_id}
   method: GET
@@ -200,8 +207,9 @@
 - slug: snapengage_send_proactive
   name: Send Proactive
   description: |
-    Send a proactive chat invitation to a visitor.
-    Used to start conversations based on engagement rules.
+    Send a proactive chat invitation to a visitor to start conversations.
+    Returns the sent invitation confirmation with delivery status.
+    This initiates engagement based on automated rules and triggers.
   provider: snapengage
   endpoint: /proactive
   method: POST
@@ -230,8 +238,9 @@
 - slug: snapengage_list_chats
   name: List Chats
   description: |
-    List all chats in your Snapengage account.
-    Filter by status, operator, or time period.
+    List all chats in your Snapengage account with pagination and filtering.
+    Returns chat IDs, statuses, and timestamps for each chat.
+    Use this to discover chat history and track conversation metrics.
   provider: snapengage
   endpoint: /chats
   method: GET
@@ -260,8 +269,9 @@
 - slug: snapengage_get_chat
   name: Get Chat
   description: |
-    Get detailed information about a specific chat.
-    Includes transcript, participants, and metadata.
+    Get detailed information about a specific chat including transcript and participants.
+    Returns the complete chat data with all associated information.
+    This provides full chat data for conversation analysis and quality assurance.
   provider: snapengage
   endpoint: /chats/{chat_id}
   method: GET

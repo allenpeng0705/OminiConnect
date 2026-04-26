@@ -18,7 +18,8 @@
 - slug: lemlist_get_team
   name: Get Team Info
   description: |
-    Get the current team information.
+    Get your Lemlist team information including team name, owner details, and subscription plan.
+    Returns the authenticated team's account details and current subscription status.
   provider: lemlist
   endpoint: /api/team
   method: GET
@@ -36,7 +37,7 @@
 - slug: lemlist_list_campaigns
   name: List Campaigns
   description: |
-    List all campaigns.
+    List all email campaigns in your Lemlist account. Returns campaign names, IDs, statuses, target audience sizes, and scheduled dates for each campaign.
   provider: lemlist
   endpoint: /api/campaigns
   method: GET
@@ -54,7 +55,7 @@
 - slug: lemlist_get_campaign
   name: Get Campaign
   description: |
-    Get details for a specific campaign.
+    Get detailed information for a specific Lemlist campaign by its ID. Returns campaign name, status, settings, configured steps, and performance statistics.
   provider: lemlist
   endpoint: /api/campaigns/{campaign_id}
   method: GET
@@ -75,7 +76,7 @@
 - slug: lemlist_list_leads
   name: List Leads
   description: |
-    List all leads in a campaign.
+    List all leads enrolled in a specific Lemlist campaign. Returns lead names, email addresses, activation status, and last activity timestamps for each lead.
   provider: lemlist
   endpoint: /api/campaigns/{campaign_id}/leads
   method: GET
@@ -97,7 +98,7 @@
 - slug: lemlist_add_lead
   name: Add Lead
   description: |
-    Add a lead to a campaign.
+    Add a new lead to a Lemlist campaign with first name, last name, and email address. Creates the lead and returns the created lead record with its unique ID.
   provider: lemlist
   endpoint: /api/campaigns/{campaign_id}/leads
   method: POST
@@ -129,7 +130,7 @@
 - slug: lemlist_update_lead
   name: Update Lead
   description: |
-    Update an existing lead.
+    Update an existing lead in a Lemlist campaign. Modify the lead's first name, last name, or other properties. Returns the updated lead record confirming all changes.
   provider: lemlist
   endpoint: /api/campaigns/{campaign_id}/leads/{lead_id}
   method: PUT
@@ -161,7 +162,7 @@
 - slug: lemlist_list_unsubscribed
   name: List Unsubscribed Leads
   description: |
-    List all unsubscribed leads.
+    List all leads who have unsubscribed from your Lemlist campaigns. Returns lead names, email addresses, and unsubscription timestamps for each unsubscribed lead.
   provider: lemlist
   endpoint: /api/unsubscribed
   method: GET
@@ -180,7 +181,7 @@
 - slug: lemlist_list_blacklisted
   name: List Blacklisted Leads
   description: |
-    List all blacklisted leads.
+    List all leads that have been blacklisted in your Lemlist account. Returns lead names, email addresses, and reasons for blacklisting for each blocked lead.
   provider: lemlist
   endpoint: /api/blacklisted
   method: GET
@@ -199,7 +200,7 @@
 - slug: lemlist_list_stats
   name: Get Stats
   description: |
-    Get overall statistics.
+    Get overall email marketing statistics for your Lemlist account. Returns total lead counts, emails sent, open rates, click rates, and unsubscription counts for your campaigns.
   provider: lemlist
   endpoint: /api/stats
   method: GET
@@ -216,7 +217,7 @@
 - slug: lemlist_get_campaign_stats
   name: Get Campaign Stats
   description: |
-    Get statistics for a specific campaign.
+    Get detailed email marketing statistics for a specific Lemlist campaign. Returns emails sent, open counts, click counts, reply rates, and bounce counts for the campaign.
   provider: lemlist
   endpoint: /api/campaigns/{campaign_id}/stats
   method: GET

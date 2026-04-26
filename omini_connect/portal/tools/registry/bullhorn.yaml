@@ -17,8 +17,8 @@
 - slug: bullhorn_list_candidates
   name: List Candidates
   description: |
-    Returns a paginated list of candidates in the Bullhorn recruiting CRM.
-    Filter by status, skills, or date added.
+    List candidates in the Bullhorn recruiting CRM and return candidate IDs, names, emails, and status.
+    Filter by status, skills, or date added to find specific talent for recruitment.
   provider: bullhorn
   endpoint: /candidate
   method: GET
@@ -52,6 +52,7 @@
   name: Get Candidate
   description: |
     Get full details of a specific candidate including contact info, work history, and skills.
+    Returns the complete candidate profile for recruitment and placement decisions.
   provider: bullhorn
   endpoint: /candidate/{id}
   method: GET
@@ -76,7 +77,8 @@
 - slug: bullhorn_create_candidate
   name: Create Candidate
   description: |
-    Create a new candidate record in Bullhorn CRM with contact info and initial details.
+    Create a new candidate record in Bullhorn CRM with first name, last name, email, and phone.
+    Returns the created candidate ID for further recruitment management.
   provider: bullhorn
   endpoint: /candidate
   method: POST
@@ -115,7 +117,8 @@
 - slug: bullhorn_list_jobs
   name: List Jobs
   description: |
-    Returns a paginated list of job orders (open positions). Filter by status, title, or client.
+    List job orders in Bullhorn and return job IDs, titles, client names, and status.
+    Filter by status, title, or client to find open positions for candidate matching.
   provider: bullhorn
   endpoint: /jobOrder
   method: GET
@@ -148,7 +151,8 @@
 - slug: bullhorn_get_job
   name: Get Job
   description: |
-    Get full details of a specific job order including description, requirements, and client info.
+    Get full details of a specific job order including description, requirements, and client information.
+    Returns the complete job data for candidate matching and recruitment planning.
   provider: bullhorn
   endpoint: /jobOrder/{id}
   method: GET
@@ -173,7 +177,8 @@
 - slug: bullhorn_create_job
   name: Create Job
   description: |
-    Create a new job order (open position) in Bullhorn for a client.
+    Create a new job order in Bullhorn with title, client corporation, description, and location.
+    Returns the created job ID for candidate sourcing and placement.
   provider: bullhorn
   endpoint: /jobOrder
   method: POST
@@ -216,7 +221,8 @@
 - slug: bullhorn_list_placements
   name: List Placements
   description: |
-    Returns a paginated list of placements (hired candidates). Filter by job, candidate, or date.
+    List placements in Bullhorn and return placement IDs, candidate names, job titles, and status.
+    Filter by job, candidate, or date to track successful hires and onboarding.
   provider: bullhorn
   endpoint: /placement
   method: GET
@@ -250,6 +256,7 @@
   name: Get Placement
   description: |
     Get full details of a specific placement including candidate, job, start date, and status.
+    Returns the complete placement data for hiring tracking and commission management.
   provider: bullhorn
   endpoint: /placement/{id}
   method: GET
@@ -274,7 +281,8 @@
 - slug: bullhorn_list_opportunities
   name: List Opportunities
   description: |
-    Returns a paginated list of sales opportunities (pipeline deals). Filter by status, owner, or value.
+    List sales opportunities in Bullhorn and return opportunity IDs, names, companies, values, and stages.
+    Filter by status, owner, or value to track pipeline and forecast revenue.
   provider: bullhorn
   endpoint: /opportunity
   method: GET
@@ -308,6 +316,7 @@
   name: Get Opportunity
   description: |
     Get full details of a specific sales opportunity including company, value, stage, and notes.
+    Returns the complete opportunity data for sales pipeline management and forecasting.
   provider: bullhorn
   endpoint: /opportunity/{id}
   method: GET

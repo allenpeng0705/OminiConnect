@@ -18,7 +18,7 @@
 - slug: minimax_list_chats
   name: List Chats
   description: |
-    List all conversations in MiniMax.
+    List all chat conversations in MiniMax. Returns conversation IDs, titles, and last message timestamps.
   provider: minimax
   endpoint: /v1/chat/conversations
   method: GET
@@ -44,7 +44,7 @@
 - slug: minimax_get_chat
   name: Get Chat
   description: |
-    Get details of a specific chat conversation.
+    Get details about a specific chat conversation, including title and message history.
   provider: minimax
   endpoint: /v1/chat/conversations/{conversationId}
   method: GET
@@ -65,7 +65,7 @@
 - slug: minimax_create_chat
   name: Create Chat
   description: |
-    Create a new chat conversation.
+    Create a new chat conversation in MiniMax with a specified title.
   provider: minimax
   endpoint: /v1/chat/conversations
   method: POST
@@ -86,7 +86,7 @@
 - slug: minimax_send_message
   name: Send Message
   description: |
-    Send a message in a chat conversation.
+    Send a message in a specific MiniMax chat conversation.
   provider: minimax
   endpoint: /v1/chat/conversations/{conversationId}/messages
   method: POST
@@ -115,7 +115,7 @@
 - slug: minimax_list_models
   name: List Models
   description: |
-    List all available AI models in MiniMax.
+    List all available AI language models in MiniMax. Returns model IDs and capability descriptions.
   provider: minimax
   endpoint: /v1/models
   method: GET
@@ -133,7 +133,7 @@
 - slug: minimax_get_model
   name: Get Model
   description: |
-    Get details of a specific AI model.
+    Get details about a specific AI model in MiniMax, including context length and capabilities.
   provider: minimax
   endpoint: /v1/models/{modelId}
   method: GET
@@ -154,7 +154,7 @@
 - slug: minimax_list_roles
   name: List Roles
   description: |
-    List all roles in the organization.
+    List all roles defined in the MiniMax organization. Returns role names and permission descriptions.
   provider: minimax
   endpoint: /v1/roles
   method: GET
@@ -172,7 +172,7 @@
 - slug: minimax_create_role
   name: Create Role
   description: |
-    Create a new role in the organization.
+    Create a new role in the MiniMax organization with specified name and permissions.
   provider: minimax
   endpoint: /v1/roles
   method: POST
@@ -196,7 +196,7 @@
 - slug: minimax_list_permissions
   name: List Permissions
   description: |
-    List all available permissions.
+    List all available permissions in MiniMax. Returns permission IDs and descriptions.
   provider: minimax
   endpoint: /v1/permissions
   method: GET
@@ -214,7 +214,7 @@
 - slug: minimax_assign_permission
   name: Assign Permission
   description: |
-    Assign a permission to a role.
+    Assign a specific permission to a role in the MiniMax organization.
   provider: minimax
   endpoint: /v1/roles/{roleId}/permissions
   method: POST

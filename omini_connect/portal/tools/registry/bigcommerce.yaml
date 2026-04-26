@@ -16,7 +16,8 @@
 - slug: bigcommerce_list_orders
   name: List Orders
   description: |
-    List all orders in the BigCommerce store. Filter by status, payment method, and date range.
+    List all orders in the BigCommerce store and return order IDs, statuses, and totals.
+    Filter by status, payment method, and date range to find specific orders.
   provider: bigcommerce
   endpoint: /api/storefront/orders
   method: GET
@@ -48,7 +49,8 @@
 - slug: bigcommerce_get_order
   name: Get Order
   description: |
-    Get detailed information about a specific order including products, shipping, and payment details.
+    Get detailed information about a specific order including products, shipping address, and payment details.
+    Returns the complete order data for fulfillment processing.
   provider: bigcommerce
   endpoint: /api/storefront/orders/{order_id}
   method: GET
@@ -70,7 +72,8 @@
 - slug: bigcommerce_list_products
   name: List Products
   description: |
-    List all products in the BigCommerce store. Filter by category, brand, and availability.
+    List all products in the BigCommerce store and return product names, prices, and inventory levels.
+    Filter by category, brand, and availability for catalog management.
   provider: bigcommerce
   endpoint: /api/storefront/products
   method: GET
@@ -103,6 +106,7 @@
   name: Get Product
   description: |
     Get detailed information about a specific product including variants, images, and custom fields.
+    Returns the complete product data for catalog management.
   provider: bigcommerce
   endpoint: /api/storefront/products/{product_id}
   method: GET
@@ -124,7 +128,8 @@
 - slug: bigcommerce_create_product
   name: Create Product
   description: |
-    Create a new product in BigCommerce. Include name, description, price, and inventory settings.
+    Create a new product in BigCommerce with name, description, price, and inventory settings.
+    The product will be available in your store catalog for sales.
   provider: bigcommerce
   endpoint: /api/v3/catalog/products
   method: POST
@@ -162,7 +167,8 @@
 - slug: bigcommerce_list_customers
   name: List Customers
   description: |
-    List all customers in BigCommerce. Filter by email, company, and date created.
+    List all customers in BigCommerce and return customer names, emails, and order history.
+    Filter by email, company, and registration date for customer management.
   provider: bigcommerce
   endpoint: /api/storefront/customers
   method: GET
@@ -194,7 +200,8 @@
 - slug: bigcommerce_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer including addresses and attributes.
+    Get detailed information about a specific customer including addresses and attribute data.
+    Returns the complete customer profile for relationship management.
   provider: bigcommerce
   endpoint: /api/storefront/customers/{customer_id}
   method: GET
@@ -216,7 +223,8 @@
 - slug: bigcommerce_list_categories
   name: List Categories
   description: |
-    List all product categories in BigCommerce. Filter by parent category and availability.
+    List all product categories in BigCommerce and return category names, IDs, and parent relationships.
+    Filter by parent category and availability for catalog organization.
   provider: bigcommerce
   endpoint: /api/storefront/categories
   method: GET
@@ -242,7 +250,8 @@
 - slug: bigcommerce_get_category
   name: Get Category
   description: |
-    Get detailed information about a specific category including parent and subcategories.
+    Get detailed information about a specific category including parent and subcategory relationships.
+    Returns the complete category hierarchy for catalog management.
   provider: bigcommerce
   endpoint: /api/storefront/categories/{category_id}
   method: GET
@@ -264,7 +273,8 @@
 - slug: bigcommerce_list_coupons
   name: List Coupons
   description: |
-    List all coupons in the BigCommerce store. Filter by type and expiration.
+    List all coupons in the BigCommerce store and return coupon codes, discount types, and expiration dates.
+    Filter by type and expiration status for promotional management.
   provider: bigcommerce
   endpoint: /api/v3/marketing/coupons
   method: GET

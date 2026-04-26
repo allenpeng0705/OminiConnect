@@ -19,7 +19,8 @@
 - slug: bill_sandbox_list_vendors
   name: List Vendors
   description: |
-    List all vendors in the Bill sandbox account.
+    List all vendors in the Bill sandbox account and return vendor names, IDs, and payment terms.
+    Use this to discover vendors for testing accounts payable workflows.
   provider: bill-sandbox
   endpoint: /v3/vendors
   method: GET
@@ -44,7 +45,8 @@
 - slug: bill_sandbox_get_vendor
   name: Get Vendor
   description: |
-    Get details for a specific vendor.
+    Get details for a specific vendor including address, contact information, and payment terms.
+    Returns the complete vendor profile for sandbox testing.
   provider: bill-sandbox
   endpoint: /v3/vendors/{vendorId}
   method: GET
@@ -65,7 +67,8 @@
 - slug: bill_sandbox_list_invoices
   name: List Invoices
   description: |
-    List all invoices (bills to pay or received).
+    List all invoices in the Bill sandbox and return invoice IDs, amounts, and status.
+    Filter by status and vendor to test payable workflows.
   provider: bill-sandbox
   endpoint: /v3/invoices
   method: GET
@@ -96,7 +99,8 @@
 - slug: bill_sandbox_get_invoice
   name: Get Invoice
   description: |
-    Get details for a specific invoice.
+    Get details for a specific invoice including line items, amounts, and payment status.
+    Returns the complete invoice data for sandbox testing.
   provider: bill-sandbox
   endpoint: /v3/invoices/{invoiceId}
   method: GET
@@ -117,7 +121,8 @@
 - slug: bill_sandbox_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice (vendor bill) in sandbox.
+    Create a new invoice (vendor bill) in the sandbox environment with vendor, amount, dates, and description.
+    Use this to test invoice creation workflows without affecting production data.
   provider: bill-sandbox
   endpoint: /v3/invoices
   method: POST
@@ -153,7 +158,8 @@
 - slug: bill_sandbox_list_payments
   name: List Payments
   description: |
-    List all payments made.
+    List all payments made in the sandbox and return payment IDs, amounts, and dates.
+    Use this to test payment tracking without real financial impact.
   provider: bill-sandbox
   endpoint: /v3/payments
   method: GET
@@ -181,7 +187,8 @@
 - slug: bill_sandbox_get_payment
   name: Get Payment
   description: |
-    Get details for a specific payment.
+    Get details for a specific payment including amount, date, and vendor reference.
+    Returns the complete payment record for sandbox reconciliation testing.
   provider: bill-sandbox
   endpoint: /v3/payments/{paymentId}
   method: GET
@@ -202,7 +209,8 @@
 - slug: bill_sandbox_list_accounts
   name: List Accounts
   description: |
-    List all chart of accounts.
+    List all chart of accounts in the sandbox and return account names, types, and balances.
+    Use this to discover accounts for testing general ledger workflows.
   provider: bill-sandbox
   endpoint: /v3/accounts
   method: GET
@@ -226,7 +234,8 @@
 - slug: bill_sandbox_get_account
   name: Get Account
   description: |
-    Get details for a specific account.
+    Get details for a specific account including type, balance, and transaction history.
+    Returns the complete account data for sandbox accounting testing.
   provider: bill-sandbox
   endpoint: /v3/accounts/{accountId}
   method: GET
@@ -247,7 +256,8 @@
 - slug: bill_sandbox_list_organizations
   name: List Organizations
   description: |
-    List all organizations in the account.
+    List all organizations in the Bill sandbox account and return organization names and IDs.
+    Use this to discover available organizations for multi-entity sandbox testing.
   provider: bill-sandbox
   endpoint: /v3/organizations
   method: GET

@@ -1,7 +1,7 @@
 - slug: smartsheet_list_sheets
   name: List Sheets
   description: |
-    Retrieve a list of all sheets accessible to the user.
+    List all sheets accessible to the user with pagination. Returns sheet names, owners, modification dates, and workspace locations for spreadsheet organization.
   provider: smartsheet
   endpoint: /sheets
   method: GET
@@ -28,7 +28,7 @@
 - slug: smartsheet_get_sheet
   name: Get Sheet
   description: |
-    Retrieve details of a specific sheet including columns and rows.
+    Get details of a specific Smartsheet including column definitions, row count, and cell data. Returns sheet structure for data analysis and collaboration setup.
   provider: smartsheet
   endpoint: /sheets/{sheetId}
   method: GET
@@ -59,7 +59,7 @@
 - slug: smartsheet_create_sheet
   name: Create Sheet
   description: |
-    Create a new sheet in the specified workspace or folder.
+    Create a new sheet in Smartsheet with defined column structure and name. Returns the created sheet with its ID for data entry and collaboration.
   provider: smartsheet
   endpoint: /sheets
   method: POST
@@ -103,7 +103,7 @@
 - slug: smartsheet_list_rows
   name: List Rows
   description: |
-    Retrieve all rows from a specific sheet.
+    List all rows from a specific Smartsheet including cell values, row IDs, and position information. Returns row data for export and analysis.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/rows
   method: GET
@@ -137,7 +137,7 @@
 - slug: smartsheet_get_row
   name: Get Row
   description: |
-    Retrieve details of a specific row including cell values.
+    Get details of a specific Smartsheet row including cell values, hierarchy level, and parent relationships. Returns row data for inspection and updates.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/rows/{rowId}
   method: GET
@@ -166,7 +166,7 @@
 - slug: smartsheet_add_row
   name: Add Row
   description: |
-    Add one or more rows to a sheet.
+    Create one or more rows in a Smartsheet with specified cell values and position placement. Returns confirmation with row IDs for further manipulation and data entry.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/rows
   method: POST
@@ -204,7 +204,7 @@
 - slug: smartsheet_update_row
   name: Update Row
   description: |
-    Update an existing row in a sheet.
+    Update an existing row in a Smartsheet with new cell values, lock status, or expansion state. Returns the updated row for confirmation.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/rows/{rowId}
   method: PUT
@@ -240,7 +240,7 @@
 - slug: smartsheet_list_columns
   name: List Columns
   description: |
-    Retrieve all columns from a specific sheet.
+    List all columns from a Smartsheet including column names, types, and option values. Returns column metadata for schema inspection and data modeling.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/columns
   method: GET
@@ -268,7 +268,7 @@
 - slug: smartsheet_get_column
   name: Get Column
   description: |
-    Retrieve details of a specific column including type and options.
+    Get details of a specific Smartsheet column including type, options, and validation rules. Returns column data for form building and validation setup.
   provider: smartsheet
   endpoint: /sheets/{sheetId}/columns/{columnId}
   method: GET
@@ -294,7 +294,7 @@
 - slug: smartsheet_list_users
   name: List Users
   description: |
-    Retrieve a list of all users in the organization.
+    List all users in the Smartsheet organization with pagination. Returns names, email addresses, and permission levels for access management.
   provider: smartsheet
   endpoint: /users
   method: GET

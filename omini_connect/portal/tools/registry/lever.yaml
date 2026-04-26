@@ -17,8 +17,7 @@
 - slug: lever_list_opportunities
   name: List Opportunities
   description: |
-    List all candidate opportunities with optional filters for stage, status, or tags.
-    Returns candidate info, current stage, owner, and timeline.
+    List all candidate opportunities in your Lever account. Returns opportunity IDs, candidate names, stages, statuses, and owners for each candidate opportunity.
   provider: lever
   endpoint: /opportunities
   method: GET
@@ -56,8 +55,7 @@
 - slug: lever_get_opportunity
   name: Get Opportunity
   description: |
-    Get detailed information about a specific opportunity including candidate profile,
-    interview history, stage progression, offers, and all associated notes.
+    Get detailed information about a specific Lever opportunity by its ID. Returns the candidate profile, stage, interview history, offers, and all associated notes.
   provider: lever
   endpoint: /opportunities/{opportunity_id}
   method: GET
@@ -80,8 +78,7 @@
 - slug: lever_create_opportunity
   name: Create Opportunity
   description: |
-    Create a new opportunity for a candidate including name, email, stage, and owner.
-    This is the first step in tracking a candidate through the hiring process.
+    Create a new candidate opportunity in Lever. Specify the candidate name, email, phone, and initial stage. Creates the opportunity and returns it with its unique ID.
   provider: lever
   endpoint: /opportunities
   method: POST
@@ -124,8 +121,7 @@
 - slug: lever_update_opportunity
   name: Update Opportunity
   description: |
-    Update opportunity fields including stage, status, owner, or add notes and tags.
-    Use this to move candidates through hiring stages or archive rejected candidates.
+    Update an existing Lever opportunity to move it to a different stage, change its status, reassign the owner, or add notes. Returns the updated opportunity confirming all changes were applied.
   provider: lever
   endpoint: /opportunities/{opportunity_id}
   method: PUT
@@ -165,8 +161,7 @@
 - slug: lever_list_offers
   name: List Offers
   description: |
-    List all offers with optional filters for status, candidate, or date range.
-    Returns offer amounts, statuses, conditions, and associated opportunities.
+    List all offers in your Lever account. Returns offer IDs, amounts, statuses, conditions, and associated opportunities for each offer.
   provider: lever
   endpoint: /offers
   method: GET
@@ -199,8 +194,7 @@
 - slug: lever_get_offer
   name: Get Offer
   description: |
-    Get detailed information about a specific offer including compensation details,
-    start date, approval chain, and status history.
+    Get detailed information about a specific Lever offer by its ID. Returns the offer compensation details, start date, approval chain, and status history.
   provider: lever
   endpoint: /offers/{offer_id}
   method: GET
@@ -223,8 +217,7 @@
 - slug: lever_create_offer
   name: Create Offer
   description: |
-    Create an offer for an opportunity including salary, equity, start date, and details.
-    Offers go through an approval workflow before being sent to candidates.
+    Create a new offer in Lever for a specific opportunity. Specify compensation details including salary, equity, and start date. Creates the offer and returns it with its unique ID and approval status.
   provider: lever
   endpoint: /offers
   method: POST
@@ -252,8 +245,7 @@
 - slug: lever_list_users
   name: List Users
   description: |
-    List all team members including recruiters, hiring managers, and interviewers.
-    Returns names, email addresses, titles, and team assignments.
+    List all team members in your Lever account. Returns user names, IDs, email addresses, titles, and team assignments for each team member.
   provider: lever
   endpoint: /users
   method: GET
@@ -286,8 +278,7 @@
 - slug: lever_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user including profile, role,
-    teams they belong to, and their scheduling visibility.
+    Get detailed information about a specific Lever user by their ID. Returns the user's name, email, role, teams, and scheduling visibility settings.
   provider: lever
   endpoint: /users/{user_id}
   method: GET
@@ -310,8 +301,7 @@
 - slug: lever_list_feedback
   name: List Feedback
   description: |
-    List interview feedback for an opportunity including scores, comments, and interviewer info.
-    Use this to review how candidates performed in their interviews.
+    List all interview feedback for a specific Lever opportunity. Returns feedback IDs, scores, comments, and interviewer information for each feedback entry.
   provider: lever
   endpoint: /feedback
   method: GET

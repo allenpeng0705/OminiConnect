@@ -17,8 +17,7 @@
 - slug: freshbooks_list_clients
   name: List Clients
   description: |
-    List all clients in the FreshBooks account.
-    Returns client details including name, email, phone, and billing information.
+    List all clients in the FreshBooks account with optional pagination and search. Returns client names, IDs, email addresses, phone numbers, and billing information.
   provider: freshbooks
   endpoint: /users/business/{business_id}/clients
   method: GET
@@ -52,8 +51,7 @@
 - slug: freshbooks_get_client
   name: Get Client
   description: |
-    Get details of a specific client by their ID.
-    Returns full client information including contact details and metadata.
+    Retrieve detailed information about a specific FreshBooks client including name, email, phone, address, and billing metadata.
   provider: freshbooks
   endpoint: /users/business/{business_id}/clients/{client_id}
   method: GET
@@ -80,8 +78,7 @@
 - slug: freshbooks_create_client
   name: Create Client
   description: |
-    Create a new client in FreshBooks.
-    Include name and optional email, phone, and billing address.
+    Create a new client in FreshBooks with contact information. Returns the created client with their unique ID and account details.
   provider: freshbooks
   endpoint: /users/business/{business_id}/clients
   method: POST
@@ -122,8 +119,7 @@
 - slug: freshbooks_list_invoices
   name: List Invoices
   description: |
-    List all invoices in the FreshBooks account.
-    Returns invoice details including invoice number, client, date, and total.
+    List all invoices in the FreshBooks account with optional pagination and status filtering. Returns invoice IDs, numbers, client names, dates, and totals.
   provider: freshbooks
   endpoint: /users/business/{business_id}/invoices
   method: GET
@@ -157,8 +153,7 @@
 - slug: freshbooks_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice by its ID.
-    Returns full invoice information including line items, totals, and status.
+    Retrieve detailed information about a specific FreshBooks invoice including invoice number, line items, totals, taxes, client information, and payment status.
   provider: freshbooks
   endpoint: /users/business/{business_id}/invoices/{invoice_id}
   method: GET
@@ -185,8 +180,7 @@
 - slug: freshbooks_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice in FreshBooks.
-    Include client, line items, and optional due date and invoice number.
+    Create a new invoice in FreshBooks with client and line items. Returns the created invoice with its unique ID and invoice number.
   provider: freshbooks
   endpoint: /users/business/{business_id}/invoices
   method: POST
@@ -229,8 +223,7 @@
 - slug: freshbooks_list_expenses
   name: List Expenses
   description: |
-    List all expenses in the FreshBooks account.
-    Returns expense details including vendor, amount, date, and category.
+    List all expenses in the FreshBooks account with optional pagination and status filtering. Returns expense IDs, vendors, amounts, dates, and categories.
   provider: freshbooks
   endpoint: /users/business/{business_id}/expenses
   method: GET
@@ -264,8 +257,7 @@
 - slug: freshbooks_get_expense
   name: Get Expense
   description: |
-    Get details of a specific expense by its ID.
-    Returns full expense information including vendor, amount, and category.
+    Retrieve detailed information about a specific FreshBooks expense including vendor, amount, date, category, tax information, and attachments.
   provider: freshbooks
   endpoint: /users/business/{business_id}/expenses/{expense_id}
   method: GET
@@ -292,8 +284,7 @@
 - slug: freshbooks_list_time_entries
   name: List Time Entries
   description: |
-    List all time entries in the FreshBooks account.
-    Returns time entry details including user, project, duration, and date.
+    List all time entries in the FreshBooks account with optional pagination and project/user filtering. Returns time entry IDs, user names, project names, durations, and dates.
   provider: freshbooks
   endpoint: /users/business/{business_id}/time_entries
   method: GET
@@ -330,8 +321,7 @@
 - slug: freshbooks_get_time_entry
   name: Get Time Entry
   description: |
-    Get details of a specific time entry by its ID.
-    Returns full time entry information including duration, notes, and project.
+    Retrieve detailed information about a specific FreshBooks time entry including duration, notes, project, user, task information, and billing status.
   provider: freshbooks
   endpoint: /users/business/{business_id}/time_entries/{time_entry_id}
   method: GET

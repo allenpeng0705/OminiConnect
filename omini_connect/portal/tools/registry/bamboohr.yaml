@@ -17,8 +17,7 @@
 - slug: bamboohr_list_employees
   name: List Employees
   description: |
-    List all employees with optional filters for status, department, or location.
-    Returns employee names, titles, departments, and contact information.
+    List all employees in BambooHR with optional filtering by status, department, or location. Returns employee names, IDs, titles, departments, and contact information for each employee.
   provider: bamboohr
   endpoint: /employees
   method: GET
@@ -51,8 +50,7 @@
 - slug: bamboohr_get_employee
   name: Get Employee
   description: |
-    Get detailed employee information including personal info, job details,
-    compensation, manager, and employment history.
+    Get detailed employee information from BambooHR by their ID. Returns the employee's personal info, job details, compensation, manager, and employment history.
   provider: bamboohr
   endpoint: /employees/{employee_id}
   method: GET
@@ -78,8 +76,7 @@
 - slug: bamboohr_create_employee
   name: Create Employee
   description: |
-    Create a new employee record with name, job info, start date, and personal details.
-    New employees are added to the directory and can be assigned to departments.
+    Create a new employee record in BambooHR with name, job info, start date, and personal details. Returns the created employee with their ID.
   provider: bamboohr
   endpoint: /employees
   method: POST
@@ -119,8 +116,7 @@
 - slug: bamboohr_list_jobs
   name: List Jobs
   description: |
-    List all job openings with optional filters for status or department.
-    Returns job titles, descriptions, locations, and employment status.
+    List all job openings in BambooHR with optional filtering by status or department. Returns job titles, IDs, locations, employment types, and status for each job.
   provider: bamboohr
   endpoint: /jobs
   method: GET
@@ -145,8 +141,7 @@
 - slug: bamboohr_get_job
   name: Get Job
   description: |
-    Get detailed information about a specific job posting including full description,
-    requirements, location, department, and salary range if available.
+    Get detailed information about a specific BambooHR job posting by its ID. Returns the job title, full description, requirements, location, department, and salary range if available.
   provider: bamboohr
   endpoint: /jobs/{job_id}
   method: GET
@@ -169,8 +164,7 @@
 - slug: bamboohr_list_time_off
   name: List Time Off
   description: |
-    List time off requests with optional filters for employee, status, or date range.
-    Returns request details, approval status, and time-off balances.
+    List all time off requests in BambooHR with optional filtering by employee, status, or date range. Returns request details, approval status, and time-off balances for each request.
   provider: bamboohr
   endpoint: /time_off/requests
   method: GET
@@ -204,8 +198,7 @@
 - slug: bamboohr_get_time_off_request
   name: Get Time Off Request
   description: |
-    Get detailed information about a specific time off request including
-    dates, type, notes, approval history, and current status.
+    Get detailed information about a specific BambooHR time off request by its ID. Returns the request dates, type, notes, approval history, and current status.
   provider: bamboohr
   endpoint: /time_off/requests/{request_id}
   method: GET
@@ -228,8 +221,7 @@
 - slug: bamboohr_create_time_off_request
   name: Create Time Off Request
   description: |
-    Submit a new time off request for an employee with start date, end date, and type.
-    Request will be sent for approval to the employee's manager.
+    Submit a new time off request in BambooHR for an employee with start date, end date, and type. Returns the request with its ID and pending approval status.
   provider: bamboohr
   endpoint: /time_off/requests
   method: POST
@@ -268,8 +260,7 @@
 - slug: bamboohr_list_benefits
   name: List Benefits
   description: |
-    List benefit enrollments for an employee or all employees with optional filters.
-    Returns benefit plans, coverage levels, and enrollment status.
+    List all benefit enrollments in BambooHR with optional filtering by employee or benefit type. Returns benefit plans, coverage levels, and enrollment status for each benefit.
   provider: bamboohr
   endpoint: /benefits
   method: GET
@@ -294,8 +285,7 @@
 - slug: bamboohr_get_benefit
   name: Get Benefit
   description: |
-    Get detailed information about a specific benefit enrollment including
-    coverage details, costs, provider information, and enrollment dates.
+    Get detailed information about a specific BambooHR benefit enrollment by its ID. Returns the coverage details, costs, provider information, and enrollment dates.
   provider: bamboohr
   endpoint: /benefits/{benefit_id}
   method: GET

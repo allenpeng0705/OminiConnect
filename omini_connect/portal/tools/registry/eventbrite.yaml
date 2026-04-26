@@ -1,7 +1,7 @@
 - slug: eventbrite_list_events
   name: List Events
   description: |
-    Retrieve a list of all events for the authenticated organization.
+    List all events for the Eventbrite organization with optional status filtering. Returns event names, IDs, dates, venues, and ticket availability for each event.
   provider: eventbrite
   endpoint: /v3/organizations/{organization_id}/events/
   method: GET
@@ -28,7 +28,7 @@
 - slug: eventbrite_get_event
   name: Get Event
   description: |
-    Retrieve detailed information about a specific event by ID.
+    Retrieve detailed information about a specific Eventbrite event including description, pricing, venue details, ticket sales status, and organizer information.
   provider: eventbrite
   endpoint: /v3/events/{event_id}/
   method: GET
@@ -52,7 +52,7 @@
 - slug: eventbrite_create_event
   name: Create Event
   description: |
-    Create a new event under the specified organization with timing and venue details.
+    Create a new event under the Eventbrite organization with timing, venue, and ticketing configuration. Returns the created event with its unique identifier.
   provider: eventbrite
   endpoint: /v3/organizations/{organization_id}/events/
   method: POST
@@ -98,7 +98,7 @@
 - slug: eventbrite_list_orders
   name: List Orders
   description: |
-    Retrieve all orders for a specific event including purchaser and payment details.
+    List all orders for a specific Eventbrite event with optional status filtering. Returns order IDs, purchaser names, ticket quantities, and payment status.
   provider: eventbrite
   endpoint: /v3/events/{event_id}/orders/
   method: GET
@@ -122,7 +122,7 @@
 - slug: eventbrite_get_order
   name: Get Order
   description: |
-    Retrieve detailed information about a specific order including attendee list.
+    Retrieve detailed information about a specific Eventbrite order including purchaser details, ticket quantities, payment information, and associated attendees.
   provider: eventbrite
   endpoint: /v3/orders/{order_id}/
   method: GET
@@ -143,7 +143,7 @@
 - slug: eventbrite_list_attendees
   name: List Attendees
   description: |
-    Retrieve all attendees for a specific event with their ticket and status information.
+    List all attendees for a specific Eventbrite event with optional status filtering. Returns attendee names, email addresses, ticket types, and check-in status.
   provider: eventbrite
   endpoint: /v3/events/{event_id}/attendees/
   method: GET
@@ -167,7 +167,7 @@
 - slug: eventbrite_get_attendee
   name: Get Attendee
   description: |
-    Retrieve detailed information about a specific attendee including their ticket type.
+    Retrieve detailed information about a specific Eventbrite attendee including contact details, ticket type, order reference, and check-in status.
   provider: eventbrite
   endpoint: /v3/attendees/{attendee_id}/
   method: GET
@@ -188,7 +188,7 @@
 - slug: eventbrite_list_categories
   name: List Categories
   description: |
-    Retrieve all event categories available in Eventbrite for classification.
+    List all event categories available in Eventbrite for classifying events. Returns category names, IDs, and parent category relationships.
   provider: eventbrite
   endpoint: /v3/categories/
   method: GET
@@ -205,7 +205,7 @@
 - slug: eventbrite_get_category
   name: Get Category
   description: |
-    Retrieve information about a specific event category by ID.
+    Retrieve information about a specific Eventbrite event category including name, subcategories, and related event counts.
   provider: eventbrite
   endpoint: /v3/categories/{category_id}/
   method: GET
@@ -226,7 +226,7 @@
 - slug: eventbrite_list_venues
   name: List Venues
   description: |
-    Retrieve all venues associated with the authenticated organization.
+    List all venues associated with the Eventbrite organization with addresses and contact information for each location.
   provider: eventbrite
   endpoint: /v3/organizations/{organization_id}/venues/
   method: GET

@@ -17,8 +17,8 @@
 - slug: botpress_list_bots
   name: List Bots
   description: |
-    Retrieve all bots in your Botpress workspace.
-    Bots are conversational AI applications.
+    List all bots in your Botpress workspace and return bot names, IDs, status, and category information.
+    Filter by status (active, archived) to find bots in specific states for management.
   provider: botpress
   endpoint: /bots
   method: GET
@@ -44,8 +44,8 @@
 - slug: botpress_get_bot
   name: Get Bot
   description: |
-    Get details of a specific bot.
-    Returns configuration, status, and metadata.
+    Get details of a specific bot including configuration, status, category, and language settings.
+    Returns the complete bot metadata for configuration review and updates.
   provider: botpress
   endpoint: /bots/{id}
   method: GET
@@ -66,8 +66,8 @@
 - slug: botpress_create_bot
   name: Create Bot
   description: |
-    Create a new bot in your Botpress workspace.
-    Bots are conversational AI applications that can be configured with flows, intents, and entities.
+    Create a new bot in your Botpress workspace with name, description, category, and language settings.
+    Returns the created bot ID for flow and intent configuration.
   provider: botpress
   endpoint: /bots
   method: POST
@@ -97,8 +97,8 @@
 - slug: botpress_list_flows
   name: List Flows
   description: |
-    Retrieve all flows in a Botpress bot.
-    Flows define the conversation paths and logic.
+    List all flows in a Botpress bot and return flow names, IDs, and status information.
+    Flows define conversation paths and logic for automated interactions.
   provider: botpress
   endpoint: /bots/{bot_id}/flows
   method: GET
@@ -122,8 +122,8 @@
 - slug: botpress_get_flow
   name: Get Flow
   description: |
-    Get details of a specific flow including nodes and transitions.
-    Use this to understand the conversation logic.
+    Get details of a specific flow including nodes, transitions, and conversation logic configuration.
+    Returns the complete flow data for understanding and modifying chatbot behavior.
   provider: botpress
   endpoint: /bots/{bot_id}/flows/{flow_id}
   method: GET
@@ -148,8 +148,8 @@
 - slug: botpress_create_flow
   name: Create Flow
   description: |
-    Create a new flow in a Botpress bot.
-    Flows automate conversations based on user inputs and logic.
+    Create a new flow in a Botpress bot with specified name, nodes, and transition logic.
+    Returns the created flow ID for building automated conversation paths.
   provider: botpress
   endpoint: /bots/{bot_id}/flows
   method: POST
@@ -180,8 +180,8 @@
 - slug: botpress_list_intents
   name: List Intents
   description: |
-    Retrieve all intents in a Botpress bot.
-    Intents represent user intentions or goals.
+    List all intents in a Botpress bot and return intent names, IDs, and training examples.
+    Intents represent user intentions or goals for conversational AI.
   provider: botpress
   endpoint: /bots/{bot_id}/intents
   method: GET
@@ -205,8 +205,8 @@
 - slug: botpress_get_intent
   name: Get Intent
   description: |
-    Get details of a specific intent including utterances and slots.
-    Intents are trained with example phrases to recognize user goals.
+    Get details of a specific intent including utterances, slots, and training phrases.
+    Returns the complete intent configuration for NLU training and optimization.
   provider: botpress
   endpoint: /bots/{bot_id}/intents/{intent_id}
   method: GET
@@ -231,8 +231,8 @@
 - slug: botpress_list_entities
   name: List Entities
   description: |
-    Retrieve all entities in a Botpress bot.
-    Entities extract specific data types from user input.
+    List all entities in a Botpress bot and return entity names, types, and extraction patterns.
+    Entities extract specific data types like dates, names, or locations from user input.
   provider: botpress
   endpoint: /bots/{bot_id}/entities
   method: GET
@@ -256,8 +256,8 @@
 - slug: botpress_get_entity
   name: Get Entity
   description: |
-    Get details of a specific entity including synonyms and patterns.
-    Entities extract structured information like dates, names, or locations.
+    Get details of a specific entity including synonyms, patterns, and extraction configurations.
+    Returns the complete entity data for natural language understanding and data extraction.
   provider: botpress
   endpoint: /bots/{bot_id}/entities/{entity_id}
   method: GET

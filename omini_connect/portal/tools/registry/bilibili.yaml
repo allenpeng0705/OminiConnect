@@ -17,8 +17,8 @@
 - slug: bilibili_list_videos
   name: List Videos
   description: |
-    List videos for the authenticated user.
-    Returns user's uploaded videos with title, description, and view count.
+    List videos for the authenticated user and return titles, descriptions, view counts, and publish dates.
+    Use this to discover your uploaded content for management.
   provider: bilibili
   endpoint: /video/get_my_videos
   method: GET
@@ -45,8 +45,8 @@
 - slug: bilibili_get_video
   name: Get Video
   description: |
-    Get detailed information about a specific video.
-    Returns title, description, duration, view count, and metadata.
+    Get detailed information about a specific video including title, description, duration, and view statistics.
+    Returns the complete video metadata for content management.
   provider: bilibili
   endpoint: /video/{avid}
   method: GET
@@ -68,8 +68,8 @@
 - slug: bilibili_search_videos
   name: Search Videos
   description: |
-    Search for videos by keyword query.
-    Returns matching videos with title, author, and stats.
+    Search for videos by keyword and return matching results with titles, authors, and view counts.
+    Use this to discover content on Bilibili for research or analytics.
   provider: bilibili
   endpoint: /video/search
   method: GET
@@ -100,8 +100,8 @@
 - slug: bilibili_list_users
   name: List Users
   description: |
-    List users by keyword search or browse.
-    Returns user profiles with follower counts.
+    List users by keyword search and return user profiles with follower counts and bio information.
+    Use this to discover creators and influencers on Bilibili.
   provider: bilibili
   endpoint: /user/search
   method: GET
@@ -132,8 +132,8 @@
 - slug: bilibili_get_user
   name: Get User
   description: |
-    Get detailed user profile information.
-    Returns nickname, avatar, follower count, and bio.
+    Get detailed user profile information including nickname, avatar URL, follower count, and bio.
+    Returns the complete user profile for creator analysis.
   provider: bilibili
   endpoint: /user/{mid}
   method: GET
@@ -155,8 +155,8 @@
 - slug: bilibili_list_subtitles
   name: List Subtitles
   description: |
-    List subtitles for a video.
-    Returns subtitle tracks with language and timing info.
+    List subtitles for a video and return subtitle tracks with language codes and timing information.
+    Returns available subtitle options for video accessibility.
   provider: bilibili
   endpoint: /video/{avid}/subtitles
   method: GET
@@ -179,8 +179,8 @@
 - slug: bilibili_update_subtitle
   name: Update Subtitle
   description: |
-    Update subtitle status or settings for a video.
-    Modifies subtitle visibility or default track.
+    Update subtitle status or settings for a video including visibility and default track selection.
+    Modifies subtitle configuration for video accessibility.
   provider: bilibili
   endpoint: /video/{avid}/subtitles/{subtitle_id}
   method: PUT
@@ -213,8 +213,8 @@
 - slug: bilibili_list_favorites
   name: List Favorites
   description: |
-    List videos in user's favorite folder.
-    Returns favorite videos with collection info.
+    List videos in the user's favorite folder and return video titles, thumbnails, and add timestamps.
+    Use this to discover saved content for viewing or analysis.
   provider: bilibili
   endpoint: /favorite/get
   method: GET
@@ -241,8 +241,8 @@
 - slug: bilibili_get_favorite_folder
   name: Get Favorite Folder
   description: |
-    Get detailed information about a favorite folder.
-    Returns folder name, description, and video count.
+    Get detailed information about a favorite folder including name, description, and video count.
+    Returns the complete folder metadata for collection management.
   provider: bilibili
   endpoint: /favorite/{folder_id}
   method: GET
@@ -264,8 +264,8 @@
 - slug: bilibili_get_video_stats
   name: Get Video Stats
   description: |
-    Get detailed statistics for a video.
-    Returns view count, likes, coins, favorites, and shares.
+    Get detailed statistics for a video including view count, likes, coins, favorites, and shares.
+    Returns the complete engagement metrics for performance analysis.
   provider: bilibili
   endpoint: /video/{avid}/stats
   method: GET

@@ -1,7 +1,7 @@
 - slug: basecamp_list_projects
   name: List Projects
   description: |
-    Retrieve a list of all projects accessible to the authenticated user.
+    List all projects in your Basecamp account. Returns project names, IDs, status, and participant information for each project.
   provider: basecamp
   endpoint: /projects.json
   method: GET
@@ -25,7 +25,7 @@
 - slug: basecamp_get_project
   name: Get Project
   description: |
-    Retrieve details of a specific project including its structure and participants.
+    Get detailed information about a specific Basecamp project by its ID. Returns the project name, description, participants, and structure.
   provider: basecamp
   endpoint: /projects/{projectId}.json
   method: GET
@@ -47,7 +47,7 @@
 - slug: basecamp_create_project
   name: Create Project
   description: |
-    Create a new project in Basecamp.
+    Create a new project in Basecamp with the specified name and description. Returns the created project with its unique ID.
   provider: basecamp
   endpoint: /projects.json
   method: POST
@@ -82,7 +82,7 @@
 - slug: basecamp_list_todos
   name: List Todos
   description: |
-    Retrieve all todo items from a project, organized by todo sets.
+    List all todo items from a Basecamp project. Returns todo titles, IDs, status, assignees, and due dates for each todo.
   provider: basecamp
   endpoint: /projects/{projectId}/todos.json
   method: GET
@@ -110,7 +110,7 @@
 - slug: basecamp_get_todo
   name: Get Todo
   description: |
-    Retrieve details of a specific todo item including comments and assignments.
+    Get detailed information about a specific Basecamp todo by its ID. Returns the todo content, status, assignees, due date, and comments.
   provider: basecamp
   endpoint: /projects/{projectId}/todos/{todoId}.json
   method: GET
@@ -136,7 +136,7 @@
 - slug: basecamp_create_todo
   name: Create Todo
   description: |
-    Create a new todo item in a project's todo set.
+    Create a new todo item in a Basecamp project. Returns the created todo with its unique ID and content.
   provider: basecamp
   endpoint: /projects/{projectId}/todos.json
   method: POST
@@ -173,7 +173,7 @@
 - slug: basecamp_list_documents
   name: List Documents
   description: |
-    Retrieve all documents from a project's documents vault.
+    List all documents in a Basecamp project's vault. Returns document titles, IDs, and created timestamps for each document.
   provider: basecamp
   endpoint: /projects/{projectId}/documents.json
   method: GET
@@ -198,7 +198,7 @@
 - slug: basecamp_get_document
   name: Get Document
   description: |
-    Retrieve details and content of a specific document.
+    Get detailed information about a specific Basecamp document by its ID. Returns the document title, content, and metadata.
   provider: basecamp
   endpoint: /projects/{projectId}/documents/{documentId}.json
   method: GET
@@ -224,7 +224,7 @@
 - slug: basecamp_list_events
   name: List Events
   description: |
-    Retrieve recent activity events from a project.
+    List all recent activity events from a Basecamp project. Returns event IDs, types, timestamps, and subject for each event.
   provider: basecamp
   endpoint: /projects/{projectId}/events.json
   method: GET
@@ -252,7 +252,7 @@
 - slug: basecamp_get_person
   name: Get Person
   description: |
-    Retrieve profile information for a specific user.
+    Get detailed information about a specific Basecamp user by their ID. Returns the user's name, email, avatar, and profile information.
   provider: basecamp
   endpoint: /people/{userId}.json
   method: GET

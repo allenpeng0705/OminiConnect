@@ -18,7 +18,7 @@
 - slug: google_list_emails
   name: List Emails
   description: |
-    List emails in the user's Gmail mailbox.
+    List all emails in the user's Gmail mailbox with optional search filtering. Returns email IDs, subjects, sender addresses, and timestamps for each email.
   provider: google
   endpoint: /gmail/v1/users/me/messages
   method: GET
@@ -45,7 +45,7 @@
 - slug: google_get_email
   name: Get Email
   description: |
-    Get detailed information about a specific email.
+    Get detailed information about a specific Gmail email by its ID. Returns the email subject, body content, sender, recipients, and headers.
   provider: google
   endpoint: /gmail/v1/users/me/messages/{id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: google_send_email
   name: Send Email
   description: |
-    Send an email from the user's Gmail account.
+    Send an email from the user's Gmail account with specified recipient, subject, and body content. Returns the sent message ID and thread information.
   provider: google
   endpoint: /gmail/v1/users/me/messages/send
   method: POST
@@ -101,7 +101,7 @@
 - slug: google_list_calendars
   name: List Calendars
   description: |
-    List all calendars in the user's Google Calendar.
+    List all calendars in the user's Google Calendar account. Returns calendar IDs, names, descriptions, and time zone settings for each calendar.
   provider: google
   endpoint: /calendar/v3/users/me/calendarList
   method: GET
@@ -118,7 +118,7 @@
 - slug: google_list_events
   name: List Events
   description: |
-    List events from Google Calendar.
+    List all events from a Google Calendar with optional time range filtering. Returns event IDs, titles, start/end times, locations, and attendee information for each event.
   provider: google
   endpoint: /calendar/v3/calendars/{calendarId}/events
   method: GET
@@ -151,7 +151,7 @@
 - slug: google_create_event
   name: Create Event
   description: |
-    Create a new event in Google Calendar.
+    Create a new event in Google Calendar with specified title, start time, and end time. Returns the created event with its unique ID and calendar link.
   provider: google
   endpoint: /calendar/v3/calendars/{calendarId}/events
   method: POST
@@ -186,7 +186,7 @@
 - slug: google_list_contacts
   name: List Contacts
   description: |
-    List contacts from Google Contacts.
+    List all contacts from Google Contacts for the authenticated user. Returns contact names, email addresses, phone numbers, and profile photos for each contact.
   provider: google
   endpoint: /v1/people/me/connections
   method: GET
@@ -208,7 +208,7 @@
 - slug: google_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a contact.
+    Get detailed information about a specific Google Contact by their resource name. Returns the contact name, email addresses, phone numbers, address, and organization information.
   provider: google
   endpoint: /v1/people/{resourceName}
   method: GET
@@ -230,7 +230,7 @@
 - slug: google_list_files
   name: List Files
   description: |
-    List files in Google Drive.
+    List all files in Google Drive for the authenticated user with optional search filtering. Returns file names, IDs, MIME types, and last modified dates for each file.
   provider: google
   endpoint: /drive/v3/files
   method: GET
@@ -256,7 +256,7 @@
 - slug: google_get_file
   name: Get File
   description: |
-    Get detailed information about a Drive file.
+    Get detailed information about a specific Google Drive file by its ID. Returns the file name, description, MIME type, size, created/modified dates, and sharing permissions.
   provider: google
   endpoint: /drive/v3/files/{fileId}
   method: GET

@@ -19,7 +19,8 @@
 - slug: avalara_sandbox_ping
   name: Ping
   description: |
-    Verify API connectivity and authentication.
+    Verify API connectivity and authentication status with Avalara sandbox.
+    Returns a confirmation if credentials are valid and the service is reachable.
   provider: avalara-sandbox
   endpoint: /utilities/subscriptions
   method: GET
@@ -36,7 +37,8 @@
 - slug: avalara_sandbox_list_subscriptions
   name: List Subscriptions
   description: |
-    List all subscriptions available for the account.
+    List all available subscriptions for the Avalara sandbox account. Returns subscription types, status, and service endpoints for each subscription.
+    Use this to discover available tax and compliance services in the sandbox environment.
   provider: avalara-sandbox
   endpoint: /utilities/subscriptions
   method: GET
@@ -53,7 +55,8 @@
 - slug: avalara_sandbox_get_tax_rate
   name: Get Tax Rate
   description: |
-    Get the tax rate for a specific address. Returns jurisdiction and rate info.
+    Get the tax rate for a specific address including jurisdiction hierarchy and applicable tax types. Returns the combined tax rate and breakdown by jurisdiction level.
+    This enables address validation and tax rate lookups for pricing calculations.
   provider: avalara-sandbox
   endpoint: /taxes/get
   method: GET
@@ -91,7 +94,8 @@
 - slug: avalara_sandbox_calculate_tax
   name: Calculate Tax
   description: |
-    Calculate tax for a transaction without creating it. Use for estimates.
+    Calculate tax for a transaction without creating a permanent record. Use this for tax estimates and pricing calculations before finalizing a sale.
+    This returns detailed tax breakdown by jurisdiction for accurate pricing.
   provider: avalara-sandbox
   endpoint: /taxes/calculate
   method: POST
@@ -120,7 +124,8 @@
 - slug: avalara_sandbox_create_transaction
   name: Create Transaction
   description: |
-    Create or void a transaction (order, invoice) in Avalara.
+    Create a sales transaction (order, invoice, or quote) in Avalara sandbox. Records the transaction for tax reporting and compliance purposes.
+    This creates a permanent tax record for tracking and reporting.
   provider: avalara-sandbox
   endpoint: /transactions/create
   method: POST
@@ -160,7 +165,8 @@
 - slug: avalara_sandbox_void_transaction
   name: Void Transaction
   description: |
-    Void an existing transaction by its code.
+    Void an existing transaction by its code, removing it from tax calculations. Voids are permanent and cannot be reversed.
+    This cancels a transaction and prevents it from affecting tax liability.
   provider: avalara-sandbox
   endpoint: /transactions/{transactionCode}/void
   method: POST
@@ -185,7 +191,8 @@
 - slug: avalara_sandbox_refund_transaction
   name: Refund Transaction
   description: |
-    Refund a previously posted transaction.
+    Refund a previously posted transaction, creating a credit memo for the customer. Adjusts tax liability and updates reporting records.
+    This handles customer refunds while maintaining accurate tax compliance.
   provider: avalara-sandbox
   endpoint: /transactions/refund
   method: POST
@@ -212,7 +219,8 @@
 - slug: avalara_sandbox_list_companies
   name: List Companies
   description: |
-    List all companies in the account.
+    List all companies configured in the Avalara sandbox account. Returns company names, IDs, and tax configuration settings.
+    Use this to discover available companies for transaction creation.
   provider: avalara-sandbox
   endpoint: /companies
   method: GET
@@ -237,7 +245,8 @@
 - slug: avalara_sandbox_get_company
   name: Get Company
   description: |
-    Get details of a specific company.
+    Get details for a specific company including tax settings, addresses, and exemption certificates.
+    This provides comprehensive company data for tax configuration and compliance.
   provider: avalara-sandbox
   endpoint: /companies/{companyId}
   method: GET
@@ -258,7 +267,8 @@
 - slug: avalara_sandbox_list_items
   name: List Items
   description: |
-    List all items (products/services) in a company.
+    List all items (products and services) configured in a company. Returns item codes, descriptions, tax classifications, and unit prices.
+    Use this to find products for transaction line items.
   provider: avalara-sandbox
   endpoint: /items
   method: GET

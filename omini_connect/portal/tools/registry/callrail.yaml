@@ -18,7 +18,7 @@
 - slug: callrail_list_accounts
   name: List Accounts
   description: |
-    List all accounts associated with the API key.
+    Retrieve all accounts associated with the API key. Returns account names, IDs, and configuration settings.
   provider: callrail
   endpoint: /v3/accounts
   method: GET
@@ -35,7 +35,7 @@
 - slug: callrail_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Retrieve detailed information about a specific account by its unique ID. Returns the account name, timezone, and call tracking settings.
   provider: callrail
   endpoint: /v3/accounts/{accountId}
   method: GET
@@ -56,7 +56,7 @@
 - slug: callrail_list_companies
   name: List Companies
   description: |
-    List all companies in an account.
+    Retrieve all companies in an account with pagination support. Returns company names, IDs, and tracking phone numbers.
   provider: callrail
   endpoint: /v3/accounts/{accountId}/companies
   method: GET
@@ -81,7 +81,7 @@
 - slug: callrail_get_company
   name: Get Company
   description: |
-    Get details of a specific company.
+    Retrieve detailed information about a specific company by its unique ID. Returns the company name, tracking numbers, and call settings.
   provider: callrail
   endpoint: /v3/companies/{companyId}
   method: GET
@@ -102,7 +102,7 @@
 - slug: callrail_list_calls
   name: List Calls
   description: |
-    List all calls for a company.
+    Retrieve all calls for a company with optional filtering by date range. Returns call records with duration, disposition, and caller information.
   provider: callrail
   endpoint: /v3/companies/{companyId}/calls
   method: GET
@@ -133,7 +133,7 @@
 - slug: callrail_get_call
   name: Get Call
   description: |
-    Get details of a specific call.
+    Retrieve detailed information about a specific call by its unique ID. Returns the recording URL, duration, caller information, and disposition notes.
   provider: callrail
   endpoint: /v3/calls/{callId}
   method: GET
@@ -154,7 +154,7 @@
 - slug: callrail_list_call_tags
   name: List Call Tags
   description: |
-    List all tags for calls in a company.
+    Retrieve all tags used to categorize calls in a company. Returns tag names, colors, and call counts associated with each tag.
   provider: callrail
   endpoint: /v3/companies/{companyId}/tags
   method: GET
@@ -175,7 +175,7 @@
 - slug: callrail_create_call_tag
   name: Create Call Tag
   description: |
-    Create a new tag for calls.
+    Create a new tag for categorizing calls with a custom name and color. Returns the created tag with its unique ID.
   provider: callrail
   endpoint: /v3/companies/{companyId}/tags
   method: POST
@@ -203,7 +203,7 @@
 - slug: callrail_list_agents
   name: List Agents
   description: |
-    List all agents in a company.
+    Retrieve all agents in a company who handle incoming calls. Returns agent names, IDs, and availability status.
   provider: callrail
   endpoint: /v3/companies/{companyId}/agents
   method: GET
@@ -224,7 +224,7 @@
 - slug: callrail_get_call_score
   name: Get Call Score
   description: |
-    Get the conversation analysis score for a call.
+    Retrieve the conversation analysis score and transcript for a specific call. Returns sentiment analysis, keyword detection, and overall score.
   provider: callrail
   endpoint: /v3/calls/{callId}/score
   method: GET

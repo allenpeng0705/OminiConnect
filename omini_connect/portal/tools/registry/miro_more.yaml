@@ -16,8 +16,7 @@
 - slug: miro_more_list_teams
   name: List Teams
   description: |
-    List all teams in the organization that the authenticated user belongs to.
-    Teams are used to organize members and manage access to boards and projects.
+    List all teams in the Miro organization. Returns team names, descriptions, and member counts.
   provider: miro_more
   endpoint: /v2/teams
   method: GET
@@ -42,8 +41,7 @@
 - slug: miro_more_get_team
   name: Get Team
   description: |
-    Get details of a specific team including name, description, and member count.
-    Use this to retrieve team information before listing members or managing access.
+    Retrieve details about a specific Miro team including its name, description, and member count. Returns the complete team object with configuration and member information.
   provider: miro_more
   endpoint: /v2/teams/{teamId}
   method: GET
@@ -65,8 +63,7 @@
 - slug: miro_more_list_members
   name: List Team Members
   description: |
-    List all members of a specific team. Returns user information including name, email, and role.
-    Use this to see who belongs to a team or find specific users.
+    List all members of a specific Miro team. Returns user names, email addresses, and their roles for each member of the team.
   provider: miro_more
   endpoint: /v2/teams/{teamId}/members
   method: GET
@@ -96,8 +93,7 @@
 - slug: miro_more_get_member
   name: Get Team Member
   description: |
-    Get details of a specific member in a team including their role and permissions.
-    Use this to check a user's role or verify their access level.
+    Retrieve details about a specific member of a Miro team including their role and permissions. Returns the member's user profile and access rights within the team.
   provider: miro_more
   endpoint: /v2/teams/{teamId}/members/{userId}
   method: GET
@@ -124,8 +120,7 @@
 - slug: miro_more_list_boards
   name: List Boards
   description: |
-    List all boards accessible to the authenticated user.
-    Boards are the main workspace in Miro where teams collaborate using frames, widgets, and mind maps.
+    List all Miro boards accessible to the authenticated user. Returns board names, descriptions, and owner information for each board.
   provider: miro_more
   endpoint: /v2/boards
   method: GET
@@ -153,8 +148,7 @@
 - slug: miro_more_get_board
   name: Get Board
   description: |
-    Get details of a specific board including name, description, owner, and sharing settings.
-    Use this to retrieve board metadata before accessing its contents.
+    Retrieve details about a specific Miro board including its name, description, owner, and sharing settings. Returns the complete board configuration and metadata.
   provider: miro_more
   endpoint: /v2/boards/{boardId}
   method: GET
@@ -176,8 +170,7 @@
 - slug: miro_more_create_board
   name: Create Board
   description: |
-    Create a new board in a specified team. The board starts empty and can be populated with frames and widgets.
-    Specify a name and optional description to help team members understand its purpose.
+    Create a new Miro board in a specified team with a name and optional description. Returns the created board with its unique ID.
   provider: miro_more
   endpoint: /v2/boards
   method: POST
@@ -209,8 +202,7 @@
 - slug: miro_more_list_projects
   name: List Projects
   description: |
-    List all projects in a team. Projects are top-level containers that group related boards together.
-    Use projects to organize boards by initiative, quarter, or team.
+    List all projects in a Miro team. Projects are containers that group related boards together. Returns project names, IDs, and board counts for each project.
   provider: miro_more
   endpoint: /v2/projects
   method: GET
@@ -238,8 +230,7 @@
 - slug: miro_more_get_project
   name: Get Project
   description: |
-    Get details of a specific project including its name, description, and associated boards.
-    Use this to understand the scope of a project before accessing its boards.
+    Retrieve details about a specific Miro project including its name, description, and associated boards. Returns the complete project object with board listings and settings.
   provider: miro_more
   endpoint: /v2/projects/{projectId}
   method: GET
@@ -261,8 +252,7 @@
 - slug: miro_more_list_frames
   name: List Frames
   description: |
-    List all frames on a specific board. Frames are containers that organize content on a board.
-    They can hold widgets, text, images, and other elements.
+    List all frames on a specific Miro board. Frames are containers that organize content on a board. Returns frame IDs, titles, and positions for each frame on the board.
   provider: miro_more
   endpoint: /v2/boards/{boardId}/frames
   method: GET

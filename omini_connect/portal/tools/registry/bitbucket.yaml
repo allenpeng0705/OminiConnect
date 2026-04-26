@@ -17,7 +17,8 @@
 - slug: bitbucket_list_repositories
   name: List Repositories
   description: |
-    List repositories in a workspace. Returns a list of public and private repositories.
+    List repositories in a Bitbucket workspace and return repository names, descriptions, and visibility settings.
+    Filter by role (owner, collaborator, member) to find relevant repositories.
   provider: bitbucket
   endpoint: /repositories/{workspace}
   method: GET
@@ -51,7 +52,8 @@
 - slug: bitbucket_get_repository
   name: Get Repository
   description: |
-    Get details of a specific repository including description, visibility, and main branch.
+    Get details of a specific repository including description, visibility, main branch, and clone URLs.
+    Returns the complete repository configuration for code management.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}
   method: GET
@@ -77,7 +79,8 @@
 - slug: bitbucket_create_repository
   name: Create Repository
   description: |
-    Create a new repository in a workspace.
+    Create a new repository in a Bitbucket workspace with name, description, and privacy settings.
+    The repository will be available for code hosting and collaboration.
   provider: bitbucket
   endpoint: /repositories/{workspace}
   method: POST
@@ -115,7 +118,8 @@
 - slug: bitbucket_list_branches
   name: List Branches
   description: |
-    List all branches in a repository including protected branch info.
+    List all branches in a repository and return branch names, last commit, and protection status.
+    Use this to discover available branches for development workflows.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/refs/branches
   method: GET
@@ -153,7 +157,8 @@
 - slug: bitbucket_get_branch
   name: Get Branch
   description: |
-    Get details of a specific branch including the target commit and branch metadata.
+    Get details of a specific branch including the target commit hash, author, and branch metadata.
+    Returns the complete branch information for code review.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/refs/branches/{branch}
   method: GET
@@ -183,8 +188,8 @@
 - slug: bitbucket_list_commits
   name: List Commits
   description: |
-    List commits in a repository. Filter by branch, author, or date range.
-    Useful for viewing change history and authorship.
+    List commits in a repository and return commit hashes, messages, authors, and timestamps.
+    Filter by branch, author, or date range to find specific changes.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/commits
   method: GET
@@ -221,7 +226,8 @@
 - slug: bitbucket_get_commit
   name: Get Commit
   description: |
-    Get details of a specific commit including message, author, date, and changed files.
+    Get details of a specific commit including message, author, date, and list of changed files.
+    Returns the complete commit data for code analysis.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/commit/{revision}
   method: GET
@@ -251,8 +257,8 @@
 - slug: bitbucket_list_pullrequests
   name: List Pull Requests
   description: |
-    List pull requests in a repository. Filter by state (open/closed/merged), author, or destination.
-    Use for code review and merge tracking.
+    List pull requests in a repository and return PR IDs, titles, states, and participant information.
+    Filter by state (open, closed, merged) for code review tracking.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/pullrequests
   method: GET
@@ -291,7 +297,8 @@
 - slug: bitbucket_get_pullrequest
   name: Get Pull Request
   description: |
-    Get details of a specific pull request: title, description, state, participants, and merge status.
+    Get details of a specific pull request including title, description, state, and participant list.
+    Returns the complete PR data for code review and merging.
   provider: bitbucket
   endpoint: /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}
   method: GET
@@ -321,7 +328,8 @@
 - slug: bitbucket_list_snippets
   name: List Snippets
   description: |
-    List snippets in a workspace. Snippets are a way to share code fragments and scripts.
+    List snippets in a Bitbucket workspace and return snippet IDs, titles, and creation dates.
+    Snippets are shareable code fragments for quick collaboration.
   provider: bitbucket
   endpoint: /snippets/{workspace}
   method: GET

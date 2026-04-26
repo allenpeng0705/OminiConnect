@@ -1,7 +1,9 @@
 - slug: yandex_list_disk_files
   name: List Disk Files
   description: |
-    List all files and folders in Yandex Disk storage.
+    List all files and folders in Yandex Disk storage with metadata.
+    Returns file names, sizes, types, and modification dates for each item.
+    Use this to browse cloud storage and discover available files.
   provider: yandex
   endpoint: /v1/disk/resources
   method: GET
@@ -29,6 +31,8 @@
   name: Get Disk File
   description: |
     Get metadata and download URL for a specific file on Yandex Disk.
+    Returns the complete file data with size, path, and access information.
+    This provides file details for download and management.
   provider: yandex
   endpoint: /v1/disk/resources
   method: GET
@@ -50,7 +54,9 @@
 - slug: yandex_upload_disk_file
   name: Upload Disk File
   description: |
-    Upload a file to Yandex Disk storage.
+    Upload a file to Yandex Disk storage with specified path and content.
+    Returns the uploaded file metadata confirming successful storage.
+    This adds new files to your Yandex Disk cloud storage.
   provider: yandex
   endpoint: /v1/disk/resources
   method: PUT
@@ -79,7 +85,9 @@
 - slug: yandex_translate_text
   name: Translate Text
   description: |
-    Translate text between languages using Yandex Translate.
+    Translate text between languages using Yandex Translate with automatic detection.
+    Returns the translated text with detected source language when auto-detection is used.
+    Use this for multilingual content translation and localization.
   provider: yandex
   endpoint: /api/v1.5/tr.json/translate
   method: GET
@@ -111,7 +119,9 @@
 - slug: yandex_detect_language
   name: Detect Language
   description: |
-    Detect the language of the given text using Yandex Translate.
+    Detect the language of the given text using Yandex Translate with confidence score.
+    Returns the detected language code and confidence level for the text.
+    Use this to identify language before translation or for content classification.
   provider: yandex
   endpoint: /api/v1.5/tr.json/detect
   method: GET
@@ -136,7 +146,9 @@
 - slug: yandex_list_mail_messages
   name: List Mail Messages
   description: |
-    List email messages from Yandex Mail inbox.
+    List email messages from Yandex Mail inbox with filtering options.
+    Returns message IDs, subjects, senders, and dates for each email.
+    Use this to browse inbox and discover email correspondence.
   provider: yandex
   endpoint: /v2/messages
   method: GET
@@ -163,7 +175,9 @@
 - slug: yandex_get_mail_message
   name: Get Mail Message
   description: |
-    Get a specific email message by ID from Yandex Mail.
+    Get a specific email message by ID from Yandex Mail with full content.
+    Returns the complete email data including body, headers, and attachments.
+    This provides full email details for reading and analysis.
   provider: yandex
   endpoint: /v2/messages/{message_id}
   method: GET
@@ -185,7 +199,9 @@
 - slug: yandex_send_mail_message
   name: Send Mail Message
   description: |
-    Send an email message via Yandex Mail.
+    Send an email message via Yandex Mail to specified recipients.
+    Returns the sent message confirmation with unique ID.
+    This composes and delivers emails through your Yandex Mail account.
   provider: yandex
   endpoint: /v2/messages/send
   method: POST
@@ -221,7 +237,9 @@
 - slug: yandex_list_calendar_events
   name: List Calendar Events
   description: |
-    List events from Yandex Calendar.
+    List events from Yandex Calendar within a specified time range.
+    Returns event titles, start times, locations, and attendees for each event.
+    Use this to discover scheduled events and plan meetings.
   provider: yandex
   endpoint: /calendar/v1/calendars/{calendar_id}/events
   method: GET
@@ -251,7 +269,9 @@
 - slug: yandex_get_calendar_event
   name: Get Calendar Event
   description: |
-    Get a specific calendar event by ID from Yandex Calendar.
+    Get a specific calendar event by ID from Yandex Calendar with full details.
+    Returns the complete event data including description, attendees, and reminders.
+    This provides event details for scheduling and coordination.
   provider: yandex
   endpoint: /calendar/v1/calendars/{calendar_id}/events/{event_id}
   method: GET

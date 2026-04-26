@@ -18,8 +18,7 @@
 - slug: facebook_list_pages
   name: List Pages
   description: |
-    List all Facebook pages managed by the authenticated user.
-    Returns page IDs, names, and access status.
+    List all Facebook pages managed by the authenticated user with page IDs, names, categories, and access token status for each page.
   provider: facebook
   endpoint: /me/accounts
   method: GET
@@ -42,7 +41,7 @@
 - slug: facebook_get_page
   name: Get Page
   description: |
-    Get Facebook page information including name, description, follower count, and cover photo.
+    Retrieve detailed Facebook page information including name, description, follower count, cover photo, category, and engagement metrics.
   provider: facebook
   endpoint: /{page-id}
   method: GET
@@ -68,7 +67,7 @@
 - slug: facebook_list_posts
   name: List Posts
   description: |
-    List posts from a Facebook page. Returns post content, metrics, and timestamps.
+    List posts from a Facebook page with content, metrics (likes, shares, comments), creation timestamps, and scheduled status for each post.
   provider: facebook
   endpoint: /{page-id}/posts
   method: GET
@@ -98,7 +97,7 @@
 - slug: facebook_get_post
   name: Get Post
   description: |
-    Get a specific Facebook post by ID with full details including message, metrics, and media.
+    Retrieve detailed information about a specific Facebook post including message content, media attachments, metrics, and engagement statistics.
   provider: facebook
   endpoint: /{post-id}
   method: GET
@@ -123,7 +122,7 @@
 - slug: facebook_create_post
   name: Create Post
   description: |
-    Create a post on a Facebook page. Supports text, links, and media.
+    Create a post on a Facebook page with text content and optional link attachment. Returns the post ID and creation timestamp.
   provider: facebook
   endpoint: /{page-id}/feed
   method: POST
@@ -152,7 +151,7 @@
 - slug: facebook_list_comments
   name: List Comments
   description: |
-    List comments on a Facebook post. Returns comment text, author, and timestamp.
+    List comments on a Facebook post with comment text, author names, timestamps, and like counts for each comment.
   provider: facebook
   endpoint: /{post-id}/comments
   method: GET
@@ -182,7 +181,7 @@
 - slug: facebook_get_comment
   name: Get Comment
   description: |
-    Get a specific Facebook comment by ID including text, author, and likes.
+    Retrieve detailed information about a specific Facebook comment including text content, author profile, timestamp, and like count.
   provider: facebook
   endpoint: /{comment-id}
   method: GET
@@ -207,7 +206,7 @@
 - slug: facebook_get_page_insights
   name: Get Page Insights
   description: |
-    Get insights and metrics for a Facebook page including page views, reach, and engagement.
+    Retrieve insights and metrics for a Facebook page including page views, reach, engagement rate, follower demographics, and content performance.
   provider: facebook
   endpoint: /{page-id}/insights
   method: GET
@@ -237,7 +236,7 @@
 - slug: facebook_send_message
   name: Send Message
   description: |
-    Send a direct message to a user via the Facebook page messaging.
+    Send a direct message to a user via Facebook page messaging and return delivery status confirmation.
   provider: facebook
   endpoint: /{page-id}/messages
   method: POST
@@ -268,7 +267,7 @@
 - slug: facebook_list_page_events
   name: List Page Events
   description: |
-    List events associated with a Facebook page including event name, date, and attendance.
+    List events associated with a Facebook page including event names, dates, locations, descriptions, and RSVP counts for each event.
   provider: facebook
   endpoint: /{page-id}/events
   method: GET

@@ -17,7 +17,7 @@
 - slug: slite_list_notes
   name: List Notes
   description: |
-    List all notes in Slite. Filter by channel, status, or keyword.
+    List all notes in Slite. Returns note titles, content previews, author names, and channel assignments. Filter by channel, status, or keyword.
   provider: slite
   endpoint: /api/v1/notes
   method: GET
@@ -71,7 +71,7 @@
 - slug: slite_create_note
   name: Create Note
   description: |
-    Create a new note in Slite. Set title, content, and channel.
+    Create a new note in Slite. Sets the note title, markdown content, and assigns it to a channel.
   provider: slite
   endpoint: /api/v1/notes
   method: POST
@@ -99,7 +99,7 @@
 - slug: slite_list_channels
   name: List Channels
   description: |
-    List all channels in Slite. Filter by name or type.
+    List all channels in Slite. Returns channel names, descriptions, member counts, and channel types.
   provider: slite
   endpoint: /api/v1/channels
   method: GET
@@ -150,7 +150,7 @@
 - slug: slite_list_members
   name: List Members
   description: |
-    List all members in Slite. Filter by role or status.
+    List all members in Slite. Returns member names, email addresses, roles, and last active dates.
   provider: slite
   endpoint: /api/v1/members
   method: GET
@@ -233,7 +233,7 @@
 - slug: slite_share_note
   name: Share Note
   description: |
-    Share a note with specific members or make it publicly accessible.
+    Share a note with specific Slite members or make it publicly accessible. Sets member permissions or public access.
   provider: slite
   endpoint: /api/v1/notes/{id}/share
   method: POST
@@ -263,7 +263,7 @@
 - slug: slite_update_permissions
   name: Update Permissions
   description: |
-    Update permissions for a note. Change access level for specific members.
+    Update permissions for a note in Slite. Changes the access level for specific members including view, edit, or admin permissions.
   provider: slite
   endpoint: /api/v1/notes/{id}/permissions
   method: PUT

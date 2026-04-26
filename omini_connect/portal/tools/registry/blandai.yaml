@@ -18,7 +18,8 @@
 - slug: blandai_list_calls
   name: List Calls
   description: |
-    List all calls made through Bland AI.
+    List all calls made through Bland AI and return call IDs, status, duration, and participant information.
+    Use this to track outbound call campaigns and call history.
   provider: blandai
   endpoint: /v1/calls
   method: GET
@@ -43,7 +44,8 @@
 - slug: blandai_get_call
   name: Get Call
   description: |
-    Get details for a specific call.
+    Get details for a specific call including duration, status, transcript, and outcome.
+    Returns the complete call data for analytics and quality assurance.
   provider: blandai
   endpoint: /v1/calls/{callId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: blandai_create_call
   name: Create Call
   description: |
-    Create an outbound call with AI voice.
+    Create an outbound call with AI voice to a specified phone number using a task description and voice ID.
+    Returns call ID and initial status for tracking the conversation.
   provider: blandai
   endpoint: /v1/calls
   method: POST
@@ -98,7 +101,8 @@
 - slug: blandai_list_campaigns
   name: List Campaigns
   description: |
-    List all call campaigns.
+    List all call campaigns in Bland AI and return campaign names, status, and participant counts.
+    Use this to track bulk calling operations and campaign performance.
   provider: blandai
   endpoint: /v1/campaigns
   method: GET
@@ -123,7 +127,8 @@
 - slug: blandai_get_campaign
   name: Get Campaign
   description: |
-    Get details for a specific campaign.
+    Get details for a specific campaign including status, participant list, and completion statistics.
+    Returns campaign performance data for call campaign analysis.
   provider: blandai
   endpoint: /v1/campaigns/{campaignId}
   method: GET
@@ -144,7 +149,8 @@
 - slug: blandai_list_recordings
   name: List Recordings
   description: |
-    List all call recordings.
+    List all call recordings in Bland AI and return recording IDs, call references, and duration timestamps.
+    Filter by call ID to find recordings for specific conversations.
   provider: blandai
   endpoint: /v1/recordings
   method: GET
@@ -172,7 +178,8 @@
 - slug: blandai_get_recording
   name: Get Recording
   description: |
-    Get details for a specific recording.
+    Get details for a specific recording including duration, transcript, and audio download URL.
+    Returns the complete recording data for call review and analysis.
   provider: blandai
   endpoint: /v1/recordings/{recordingId}
   method: GET
@@ -193,7 +200,8 @@
 - slug: blandai_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Bland AI.
+    List all contacts in Bland AI and return contact names, phone numbers, and tags.
+    Use this to discover contacts for outbound calling campaigns.
   provider: blandai
   endpoint: /v1/contacts
   method: GET
@@ -218,7 +226,8 @@
 - slug: blandai_get_contact
   name: Get Contact
   description: |
-    Get details for a specific contact.
+    Get details for a specific contact including name, phone number, and metadata.
+    Returns the complete contact profile for campaign targeting.
   provider: blandai
   endpoint: /v1/contacts/{contactId}
   method: GET
@@ -239,7 +248,8 @@
 - slug: blandai_get_stats
   name: Get Stats
   description: |
-    Get call statistics and analytics.
+    Get call statistics and analytics including total calls, duration, success rate, and cost metrics.
+    Returns aggregated data for call campaign performance analysis.
   provider: blandai
   endpoint: /v1/stats
   method: GET

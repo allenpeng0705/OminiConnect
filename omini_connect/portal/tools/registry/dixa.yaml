@@ -1,7 +1,7 @@
 - slug: dixa_list_conversations
   name: List Conversations
   description: |
-    Retrieve all conversations with optional status and date filters.
+    List all customer conversations in Dixa with optional filtering by status or date range. Returns conversation IDs, participant names, message counts, and timestamps.
   provider: dixa
   endpoint: /v1/conversations
   method: GET
@@ -33,7 +33,7 @@
 - slug: dixa_get_conversation
   name: Get Conversation
   description: |
-    Get details of a specific conversation including messages.
+    Retrieve detailed information about a specific Dixa conversation including all messages, participant details, and conversation status.
   provider: dixa
   endpoint: /v1/conversations/{id}
   method: GET
@@ -54,7 +54,7 @@
 - slug: dixa_create_conversation
   name: Create Conversation
   description: |
-    Create a new conversation with an initial message.
+    Create a new customer conversation in Dixa with specified channel, contact, and initial message content. Returns the created conversation with its unique identifier.
   provider: dixa
   endpoint: /v1/conversations
   method: POST
@@ -85,7 +85,7 @@
 - slug: dixa_list_contacts
   name: List Contacts
   description: |
-    Retrieve all contacts with optional search filters.
+    List all customer contacts in Dixa with optional search filtering. Returns contact names, email addresses, phone numbers, and last interaction timestamps.
   provider: dixa
   endpoint: /v1/contacts
   method: GET
@@ -111,7 +111,7 @@
 - slug: dixa_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a specific contact.
+    Retrieve detailed information about a specific Dixa contact including their profile data, conversation history, and custom attributes.
   provider: dixa
   endpoint: /v1/contacts/{id}
   method: GET
@@ -132,7 +132,7 @@
 - slug: dixa_list_agents
   name: List Agents
   description: |
-    Retrieve all agents in the organization.
+    List all support agents in the Dixa organization with optional team filtering. Returns agent names, email addresses, online status, and team assignments.
   provider: dixa
   endpoint: /v1/agents
   method: GET
@@ -154,7 +154,7 @@
 - slug: dixa_get_agent
   name: Get Agent
   description: |
-    Get detailed information about a specific agent.
+    Retrieve detailed information about a specific Dixa agent including their profile, current status, assigned conversations, and performance metrics.
   provider: dixa
   endpoint: /v1/agents/{id}
   method: GET
@@ -175,7 +175,7 @@
 - slug: dixa_list_teams
   name: List Teams
   description: |
-    Retrieve all teams in the organization.
+    List all teams in the Dixa organization with optional pagination. Returns team names, IDs, member counts, and queue configurations.
   provider: dixa
   endpoint: /v1/teams
   method: GET
@@ -195,7 +195,7 @@
 - slug: dixa_get_team
   name: Get Team
   description: |
-    Get detailed information about a specific team.
+    Retrieve detailed information about a specific Dixa team including member list, settings, operating hours, and queue configuration.
   provider: dixa
   endpoint: /v1/teams/{id}
   method: GET
@@ -216,7 +216,7 @@
 - slug: dixa_list_routing_rules
   name: List Routing Rules
   description: |
-    Retrieve all routing rules that determine conversation distribution.
+    List all conversation routing rules in Dixa that determine how customer inquiries are distributed to agents. Returns rule names, conditions, and target assignments.
   provider: dixa
   endpoint: /v1/routing-rules
   method: GET

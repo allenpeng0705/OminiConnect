@@ -18,7 +18,7 @@
 - slug: docusign_sandbox_list_envelopes
   name: List Envelopes
   description: |
-    List all envelopes (sent documents) in DocuSign sandbox.
+    List all DocuSign sandbox envelopes with optional filtering by status or date range. Returns envelope IDs, subject lines, statuses, and recipient information.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes
   method: GET
@@ -43,7 +43,7 @@
 - slug: docusign_sandbox_get_envelope
   name: Get Envelope
   description: |
-    Get details of a specific envelope.
+    Retrieve detailed information about a specific DocuSign sandbox envelope including status, document list, and real-time signing progress.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes/{envelope_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: docusign_sandbox_create_envelope
   name: Create Envelope
   description: |
-    Create and send a new envelope.
+    Create a new DocuSign sandbox envelope for testing electronic signatures with documents and recipients. Returns the created envelope with its unique identifier.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes
   method: POST
@@ -97,7 +97,7 @@
 - slug: docusign_sandbox_list_documents
   name: List Documents
   description: |
-    List all documents in an envelope.
+    List all documents in a specific DocuSign sandbox envelope with document IDs, names, and page counts for each attachment.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes/{envelope_id}/documents
   method: GET
@@ -119,7 +119,7 @@
 - slug: docusign_sandbox_get_document
   name: Get Document
   description: |
-    Get details of a specific document.
+    Retrieve detailed information about a specific document in a DocuSign sandbox envelope including content metadata and page count.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes/{envelope_id}/documents/{document_id}
   method: GET
@@ -145,7 +145,7 @@
 - slug: docusign_sandbox_list_recipients
   name: List Recipients
   description: |
-    List all recipients of an envelope.
+    List all recipients for a specific DocuSign sandbox envelope with their names, email addresses, and current signing status.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes/{envelope_id}/recipients
   method: GET
@@ -167,7 +167,7 @@
 - slug: docusign_sandbox_get_recipient
   name: Get Recipient
   description: |
-    Get details of a specific recipient.
+    Retrieve detailed information about a specific DocuSign sandbox envelope recipient including their signature status and delivery information.
   provider: docusign-sandbox
   endpoint: /v2.1/envelopes/{envelope_id}/recipients/{recipient_id}
   method: GET
@@ -193,7 +193,7 @@
 - slug: docusign_sandbox_list_templates
   name: List Templates
   description: |
-    List all templates in the account.
+    List all available templates in the DocuSign sandbox account with template IDs, names, and descriptions for reusable envelope configurations.
   provider: docusign-sandbox
   endpoint: /v2.1/templates
   method: GET
@@ -215,7 +215,7 @@
 - slug: docusign_sandbox_get_template
   name: Get Template
   description: |
-    Get details of a specific template.
+    Retrieve detailed information about a specific DocuSign sandbox template including document structure and predefined recipient roles.
   provider: docusign-sandbox
   endpoint: /v2.1/templates/{template_id}
   method: GET
@@ -237,7 +237,7 @@
 - slug: docusign_sandbox_list_users
   name: List Users
   description: |
-    List all users in the account.
+    List all user accounts in the DocuSign sandbox environment with names, email addresses, and permission levels for each user.
   provider: docusign-sandbox
   endpoint: /v2.1/users
   method: GET

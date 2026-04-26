@@ -18,7 +18,7 @@
 - slug: schwab_list_accounts
   name: List Accounts
   description: |
-    Retrieve a list of all brokerage accounts.
+    List all brokerage accounts associated with the user. Returns account identifiers, types, and ownership details for each account in the portfolio.
   provider: schwab
   endpoint: /v1/accounts
   method: GET
@@ -41,7 +41,7 @@
 - slug: schwab_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Retrieve detailed information for a specific brokerage account. Returns account balances, holdings, and key account attributes including margin balances and cash positions.
   provider: schwab
   endpoint: /v1/accounts/{accountId}
   method: GET
@@ -64,7 +64,7 @@
 - slug: schwab_list_positions
   name: List Positions
   description: |
-    Retrieve a list of all positions.
+    List all positions held in a specific brokerage account. Returns symbol, quantity, market value, cost basis, and unrealized gain/loss for each holding.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/positions
   method: GET
@@ -91,7 +91,7 @@
 - slug: schwab_get_portfolio
   name: Get Portfolio
   description: |
-    Get portfolio details and allocations.
+    Retrieve portfolio details and asset allocation breakdown for an account. Returns total value, cash balances, and percentage distribution across asset classes.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/portfolio
   method: GET
@@ -114,7 +114,7 @@
 - slug: schwab_list_transactions
   name: List Transactions
   description: |
-    Retrieve a list of all transactions.
+    List all transactions for a specific brokerage account within a date range. Returns transaction type, date, amount, and security details for each activity.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/transactions
   method: GET
@@ -147,7 +147,7 @@
 - slug: schwab_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction.
+    Retrieve detailed information for a specific transaction. Returns the full transaction record including security details, amounts, fees, and settlement information.
   provider: schwab
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -170,7 +170,7 @@
 - slug: schwab_get_quotes
   name: Get Quotes
   description: |
-    Get stock quotes for symbols.
+    Retrieve real-time or delayed stock quotes for specified symbols. Returns bid, ask, last price, volume, and daily price change for each security.
   provider: schwab
   endpoint: /v1/marketdata/quotes
   method: GET
@@ -196,7 +196,7 @@
 - slug: schwab_list_orders
   name: List Orders
   description: |
-    Retrieve a list of all orders.
+    List all orders for a specific brokerage account, optionally filtered by status. Returns order details including symbol, quantity, order type, side, and current status.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/orders
   method: GET
@@ -223,7 +223,7 @@
 - slug: schwab_place_order
   name: Place Order
   description: |
-    Place a new trade order.
+    Submit a new trade order for execution. Creates a buy or sell order with specified quantity and order type for the given symbol in the account.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/orders
   method: POST
@@ -263,7 +263,7 @@
 - slug: schwab_get_balances
   name: Get Balances
   description: |
-    Get account balances.
+    Retrieve account balance information including cash available for trading, buying power, and total account value with breakdowns by currency.
   provider: schwab
   endpoint: /v1/accounts/{accountId}/balances
   method: GET

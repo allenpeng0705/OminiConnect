@@ -18,7 +18,7 @@
 - slug: sap-fieldglass_list_engagements
   name: List Engagements
   description: |
-    Retrieve a list of all engagements in SAP Fieldglass.
+    List all workforce engagements in SAP Fieldglass with optional status filtering. Returns engagement IDs, titles, worker types, start and end dates, and approval status.
   provider: sap-fieldglass
   endpoint: /v1/engagements
   method: GET
@@ -44,7 +44,7 @@
 - slug: sap-fieldglass_get_engagement
   name: Get Engagement
   description: |
-    Get details of a specific engagement.
+    Retrieve detailed information for a specific engagement including worker assignment, compensation terms, statement of work, and compliance documentation.
   provider: sap-fieldglass
   endpoint: /v1/engagements/{engagementId}
   method: GET
@@ -67,7 +67,7 @@
 - slug: sap-fieldglass_create_engagement
   name: Create Engagement
   description: |
-    Create a new engagement in SAP Fieldglass.
+    Create a new workforce engagement in SAP Fieldglass. Initializes an engagement with title, dates, and worker type for contractor or temp worker assignment.
   provider: sap-fieldglass
   endpoint: /v1/engagements
   method: POST
@@ -100,7 +100,7 @@
 - slug: sap-fieldglass_list_workers
   name: List Workers
   description: |
-    Retrieve a list of all workers.
+    List all contingent workers managed through SAP Fieldglass with optional type filtering. Returns worker IDs, names, assignments, and compliance status for each worker.
   provider: sap-fieldglass
   endpoint: /v1/workers
   method: GET
@@ -126,7 +126,7 @@
 - slug: sap-fieldglass_get_worker
   name: Get Worker
   description: |
-    Get details of a specific worker.
+    Retrieve detailed information for a specific worker including contact details, qualifications, current assignments, and compliance documentation status.
   provider: sap-fieldglass
   endpoint: /v1/workers/{workerId}
   method: GET
@@ -149,7 +149,7 @@
 - slug: sap-fieldglass_list_invoices
   name: List Invoices
   description: |
-    Retrieve a list of all invoices.
+    List all invoices from SAP Fieldglass with optional status filtering. Returns invoice numbers, engagement references, amounts, dates, and payment status for each invoice.
   provider: sap-fieldglass
   endpoint: /v1/invoices
   method: GET
@@ -175,7 +175,7 @@
 - slug: sap-fieldglass_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice.
+    Retrieve detailed information for a specific invoice including line item breakdown, timesheet references, expense charges, and payment terms.
   provider: sap-fieldglass
   endpoint: /v1/invoices/{invoiceId}
   method: GET
@@ -198,7 +198,7 @@
 - slug: sap-fieldglass_approve_invoice
   name: Approve Invoice
   description: |
-    Approve an invoice for payment.
+    Approve a pending invoice for payment processing. Updates the invoice status to approved and triggers the payment workflow in the system.
   provider: sap-fieldglass
   endpoint: /v1/invoices/{invoiceId}/approve
   method: POST
@@ -222,7 +222,7 @@
 - slug: sap-fieldglass_list_rate_cards
   name: List Rate Cards
   description: |
-    Retrieve a list of all rate cards.
+    List all rate cards defining worker compensation rates and pricing. Returns rate card identifiers, descriptions, effective dates, and rate structures for different worker types.
   provider: sap-fieldglass
   endpoint: /v1/rateCards
   method: GET
@@ -245,7 +245,7 @@
 - slug: sap-fieldglass_get_rate_card
   name: Get Rate Card
   description: |
-    Get details of a specific rate card.
+    Retrieve complete details for a specific rate card including all rate lines, skill-based pricing, and effective date ranges for each rate structure.
   provider: sap-fieldglass
   endpoint: /v1/rateCards/{rateCardId}
   method: GET

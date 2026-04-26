@@ -18,7 +18,7 @@
 - slug: docuware_list_cabinets
   name: List Cabinets
   description: |
-    List all DocuWare cabinets (document repositories).
+    List all DocuWare cabinets (document repositories) in your organization. Returns cabinet names, IDs, and descriptions for each repository.
   provider: docuware
   endpoint: /Cabinets
   method: GET
@@ -40,7 +40,7 @@
 - slug: docuware_get_cabinet
   name: Get Cabinet
   description: |
-    Get details of a specific cabinet.
+    Get detailed information about a specific DocuWare cabinet including its structure, index fields, and document count.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}
   method: GET
@@ -62,7 +62,7 @@
 - slug: docuware_list_documents
   name: List Documents
   description: |
-    List all documents in a cabinet.
+    List all documents stored in a specific DocuWare cabinet. Returns document IDs, names, timestamps, and index values for each document.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Documents
   method: GET
@@ -88,7 +88,7 @@
 - slug: docuware_get_document
   name: Get Document
   description: |
-    Get details of a specific document.
+    Get detailed information about a specific document in DocuWare including its metadata, index values, and file properties.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Documents/{document_id}
   method: GET
@@ -114,7 +114,7 @@
 - slug: docuware_search_documents
   name: Search Documents
   description: |
-    Search documents using query expressions.
+    Search for documents in a DocuWare cabinet using query expressions. Returns matching documents with their index field values.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Documents/Search
   method: POST
@@ -144,7 +144,7 @@
 - slug: docuware_list_folders
   name: List Folders
   description: |
-    List all folders in a cabinet.
+    List all folders within a DocuWare cabinet. Returns folder names, IDs, and subfolder counts for each folder.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Folders
   method: GET
@@ -166,7 +166,7 @@
 - slug: docuware_get_folder
   name: Get Folder
   description: |
-    Get details of a specific folder.
+    Get detailed information about a specific folder in DocuWare including its path, contents count, and access permissions.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Folders/{folder_id}
   method: GET
@@ -192,7 +192,7 @@
 - slug: docuware_list_indexes
   name: List Indexes
   description: |
-    List all index fields for a cabinet.
+    List all index field definitions for a DocuWare cabinet. Returns field names, data types, and validation rules for each index.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Indexes
   method: GET
@@ -214,7 +214,7 @@
 - slug: docuware_create_document
   name: Create Document
   description: |
-    Upload a new document to a cabinet.
+    Upload a new document to a DocuWare cabinet with optional index values. Returns the created document ID and storage location.
   provider: docuware
   endpoint: /Cabinets/{cabinet_id}/Documents
   method: POST
@@ -243,7 +243,7 @@
 - slug: docuware_get_user
   name: Get User
   description: |
-    Get details of the current user.
+    Get information about the currently authenticated DocuWare user including their name, roles, and cabinet access permissions.
   provider: docuware
   endpoint: /UserInfo
   method: GET

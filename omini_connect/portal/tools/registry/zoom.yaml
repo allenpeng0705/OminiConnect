@@ -17,7 +17,7 @@
 - slug: zoom_list_meetings
   name: List Meetings
   description: |
-    List meetings for a user. Shows upcoming and past meetings.
+    Retrieve all meetings in the Zoom account with pagination support. Returns meeting IDs, topics, start times, durations, and statuses for each meeting.
   provider: zoom
   endpoint: /users/{user_id}/meetings
   method: GET
@@ -47,8 +47,7 @@
 - slug: zoom_get_meeting
   name: Get Meeting
   description: |
-    Get detailed information about a specific meeting.
-    Includes join URL, password, settings, and recurrence.
+    Retrieve detailed information about a specific Zoom meeting by its unique ID. Returns the meeting topic, join URL, password, settings, and recurrence schedule.
   provider: zoom
   endpoint: /meetings/{meeting_id}
   method: GET
@@ -70,8 +69,7 @@
 - slug: zoom_create_meeting
   name: Create Meeting
   description: |
-    Create a new meeting for a user.
-    Set topic, start time, duration, timezone, and settings.
+    Schedule a new meeting in Zoom with topic, start time, duration, and timezone settings. Returns the created meeting with its unique ID and join URL.
   provider: zoom
   endpoint: /users/{user_id}/meetings
   method: POST
@@ -116,7 +114,7 @@
 - slug: zoom_update_meeting
   name: Update Meeting
   description: |
-    Update an existing meeting. Can change topic, time, duration, settings.
+    Modify an existing Zoom meeting by updating its topic, time, duration, or settings. Returns the updated meeting confirming the changes made.
   provider: zoom
   endpoint: /meetings/{meeting_id}
   method: PUT
@@ -153,7 +151,7 @@
 - slug: zoom_delete_meeting
   name: Delete Meeting
   description: |
-    Delete a meeting. This removes it from the calendar and invalidates the join link.
+    Permanently remove a specific Zoom meeting by its unique ID. Returns confirmation of successful deletion.
   provider: zoom
   endpoint: /meetings/{meeting_id}
   method: DELETE
@@ -175,8 +173,7 @@
 - slug: zoom_list_participants
   name: List Participants
   description: |
-    List all participants who have joined a specific meeting.
-    Returns join/leave times, duration, and participant details.
+    Retrieve all participants who have joined a specific Zoom meeting. Returns participant names, IDs, email addresses, join times, and session durations.
   provider: zoom
   endpoint: /meetings/{meeting_id}/participants
   method: GET
@@ -199,8 +196,7 @@
 - slug: zoom_get_participant
   name: Get Participant
   description: |
-    Get details about a specific participant in a meeting.
-    Includes their connection quality, device info, and participation duration.
+    Retrieve detailed information about a specific meeting participant by their ID. Returns the participant name, device info, connection quality, and session duration.
   provider: zoom
   endpoint: /meetings/{meeting_id}/participants/{participant_id}
   method: GET
@@ -227,8 +223,7 @@
 - slug: zoom_list_recordings
   name: List Recordings
   description: |
-    List all cloud recordings for a user.
-    Includes meeting recordings with download/view links.
+    Retrieve all cloud recordings in the Zoom account with pagination support. Returns recording IDs, meeting topics, durations, file sizes, and download URLs.
   provider: zoom
   endpoint: /users/{user_id}/recordings
   method: GET
@@ -255,8 +250,7 @@
 - slug: zoom_get_recording
   name: Get Recording
   description: |
-    Get details about a specific cloud recording.
-    Includes download URLs, file sizes, and recording date/time.
+    Retrieve detailed information about a specific cloud recording by meeting ID. Returns the recording files, durations, sharing URLs, and deletion settings.
   provider: zoom
   endpoint: /meetings/{meeting_id}/recordings
   method: GET
@@ -278,8 +272,7 @@
 - slug: zoom_list_users
   name: List Users
   description: |
-    List all users in a Zoom account.
-    Returns user details including email, name, status, type.
+    Retrieve all users in the Zoom account with pagination support. Returns user names, IDs, email addresses, and status for each user.
   provider: zoom
   endpoint: /users
   method: GET

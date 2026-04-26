@@ -18,7 +18,9 @@
 - slug: fullenrich_get_account
   name: Get Account
   description: |
-    Get FullEnrich account information.
+    Get FullEnrich account information including plan details and usage statistics.
+    Returns the complete account data with all associated information.
+    This provides full account data for billing and usage monitoring.
   provider: fullenrich
   endpoint: /v2/account
   method: GET
@@ -35,7 +37,9 @@
 - slug: fullenrich_get_credits
   name: Get Credits
   description: |
-    Get account credit balance and usage.
+    Get account credit balance and usage statistics with remaining credits.
+    Returns the complete credit data with all associated information.
+    This provides full credit data for usage monitoring and planning.
   provider: fullenrich
   endpoint: /v2/account/credits
   method: GET
@@ -53,7 +57,9 @@
 - slug: fullenrich_enrich_person
   name: Enrich Person
   description: |
-    Enrich person data with email or name/company.
+    Enrich person data with email or name and company information.
+    Returns the enriched person data with all associated information.
+    This provides comprehensive person data for lead enrichment and prospecting.
   provider: fullenrich
   endpoint: /v2/person/enrich
   method: POST
@@ -84,7 +90,9 @@
 - slug: fullenrich_enrich_company
   name: Enrich Company
   description: |
-    Enrich company data with domain or company name.
+    Enrich company data with domain or company name to get firmographics.
+    Returns the enriched company data with all associated information.
+    This provides comprehensive company data for B2B intelligence and prospecting.
   provider: fullenrich
   endpoint: /v2/company/enrich
   method: POST
@@ -109,7 +117,9 @@
 - slug: fullenrich_lookup_domain
   name: Lookup Domain
   description: |
-    Look up company information by domain.
+    Look up company information by domain including name, industry, and size.
+    Returns the complete company data with all associated information.
+    This provides full company data for lead identification and enrichment.
   provider: fullenrich
   endpoint: /v2/company/lookup
   method: GET
@@ -132,7 +142,9 @@
 - slug: fullenrich_list_enrichments
   name: List Enrichments
   description: |
-    List recent enrichment requests and results.
+    List recent enrichment requests and results with pagination.
+    Returns enrichment IDs, types, and timestamps for each request.
+    Use this to discover enrichment history and track data quality.
   provider: fullenrich
   endpoint: /v2/enrichments
   method: GET
@@ -159,7 +171,9 @@
 - slug: fullenrich_get_enrichment
   name: Get Enrichment
   description: |
-    Get a specific enrichment result by ID.
+    Get a specific enrichment result by ID including all enriched data.
+    Returns the complete enrichment data with all associated information.
+    This provides full enrichment data for lead scoring and analysis.
   provider: fullenrich
   endpoint: /v2/enrichments/{id}
   method: GET
@@ -181,7 +195,9 @@
 - slug: fullenrich_list_webhooks
   name: List Webhooks
   description: |
-    List all configured webhooks.
+    List all configured webhooks with pagination.
+    Returns webhook IDs, URLs, and event types for each webhook.
+    Use this to discover webhook integrations and manage event notifications.
   provider: fullenrich
   endpoint: /v2/webhooks
   method: GET
@@ -199,7 +215,9 @@
 - slug: fullenrich_create_webhook
   name: Create Webhook
   description: |
-    Create a new webhook for enrichment events.
+    Create a new webhook for enrichment events at a specified URL.
+    Returns the created webhook with its unique ID and confirmation.
+    This enables real-time integration with your applications for enrichment data.
   provider: fullenrich
   endpoint: /v2/webhooks
   method: POST
@@ -225,7 +243,9 @@
 - slug: fullenrich_delete_webhook
   name: Delete Webhook
   description: |
-    Delete a webhook by ID.
+    Delete a webhook by ID to remove event subscriptions.
+    Returns the deletion confirmation for the removed webhook.
+    This removes unwanted webhook integrations from your account.
   provider: fullenrich
   endpoint: /v2/webhooks/{id}
   method: DELETE

@@ -17,8 +17,7 @@
 - slug: salesforce_list_accounts
   name: List Accounts
   description: |
-    List Salesforce accounts (companies/organizations).
-    Filter by industry, type, or location.
+    List all Salesforce CRM accounts (companies and organizations) with optional filtering by industry, type, or location. Returns account names, IDs, industries, and revenue information for pipeline management.
   provider: salesforce
   endpoint: /services/data/v59.0/query
   method: GET
@@ -47,7 +46,7 @@
 - slug: salesforce_get_account
   name: Get Account
   description: |
-    Get detailed information about a Salesforce account including name, industry, revenue, and contacts.
+    Get detailed information about a specific Salesforce account by ID. Returns account name, industry, annual revenue, number of employees, and associated contacts for relationship management.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Account/{accountId}
   method: GET
@@ -70,7 +69,7 @@
 - slug: salesforce_create_account
   name: Create Account
   description: |
-    Create a new account in Salesforce. Set company name, industry, type, and contact information.
+    Create a new account in Salesforce CRM with company name, industry, type, and contact information. Returns the created account with its unique ID for pipeline management.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Account
   method: POST
@@ -120,7 +119,7 @@
 - slug: salesforce_list_contacts
   name: List Contacts
   description: |
-    List Salesforce contacts. Filter by account, title, department, or state.
+    List all Salesforce CRM contacts with optional filtering by account, title, department, or location. Returns contact names, email addresses, phone numbers, and account associations for outreach management.
   provider: salesforce
   endpoint: /services/data/v59.0/query
   method: GET
@@ -152,7 +151,7 @@
 - slug: salesforce_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a Salesforce contact including name, email, phone, and account.
+    Get detailed information about a specific Salesforce contact by ID. Returns contact name, email, phone, title, department, and associated account details for relationship management.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Contact/{contactId}
   method: GET
@@ -175,7 +174,7 @@
 - slug: salesforce_create_contact
   name: Create Contact
   description: |
-    Create a new contact in Salesforce. Set name, email, phone, and account association.
+    Create a new contact in Salesforce CRM with name, email, phone, and account association. Returns the created contact with its unique ID for relationship management.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Contact
   method: POST
@@ -219,8 +218,7 @@
 - slug: salesforce_list_leads
   name: List Leads
   description: |
-    List Salesforce leads with optional filters.
-    Filter by status, source, industry, rating, or created date.
+    List all Salesforce CRM leads with optional filtering by status, source, industry, rating, or creation date. Returns lead names, companies, contact information, and qualification status for pipeline management.
   provider: salesforce
   endpoint: /services/data/v59.0/query
   method: GET
@@ -255,7 +253,7 @@
 - slug: salesforce_get_lead
   name: Get Lead
   description: |
-    Get detailed information about a Salesforce lead including name, company, status, and source.
+    Get detailed information about a specific Salesforce lead by ID. Returns lead name, company, email, phone, status, source, rating, and conversion readiness for qualification tracking.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Lead/{leadId}
   method: GET
@@ -278,7 +276,7 @@
 - slug: salesforce_list_opportunities
   name: List Opportunities
   description: |
-    List Salesforce opportunities. Filter by stage, type, close date, or account.
+    List all Salesforce CRM opportunities with optional filtering by stage, type, close date, or account. Returns opportunity names, amounts, stages, close dates, and account associations for pipeline management.
   provider: salesforce
   endpoint: /services/data/v59.0/query
   method: GET
@@ -313,7 +311,7 @@
 - slug: salesforce_get_opportunity
   name: Get Opportunity
   description: |
-    Get detailed information about an opportunity including name, amount, stage, close date, and account.
+    Get detailed information about a specific Salesforce opportunity by ID. Returns opportunity name, amount, probability, stage, expected close date, and associated account details for pipeline management.
   provider: salesforce
   endpoint: /services/data/v59.0/sobjects/Opportunity/{opportunityId}
   method: GET

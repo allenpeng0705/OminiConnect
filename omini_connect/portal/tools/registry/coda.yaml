@@ -17,7 +17,7 @@
 - slug: coda_list_docs
   name: List Docs
   description: |
-    List all accessible Coda documents. Returns doc metadata including title, owner, and workspace.
+    List all accessible Coda documents with pagination support, returning document IDs, titles, owner information, and workspace associations.
   provider: coda
   endpoint: /docs
   method: GET
@@ -42,7 +42,7 @@
 - slug: coda_get_doc
   name: Get Doc
   description: |
-    Get details and metadata for a specific document by ID including name, workspace, and settings.
+    Retrieve details and metadata for a specific Coda document, including its name, workspace, settings, permissions, and structural elements.
   provider: coda
   endpoint: /docs/{docId}
   method: GET
@@ -64,7 +64,7 @@
 - slug: coda_create_doc
   name: Create Doc
   description: |
-    Create a new Coda document with specified title in a workspace or folder.
+    Create a new Coda document with a specified title in a workspace or folder, returning the created document ID and initial metadata.
   provider: coda
   endpoint: /docs
   method: POST
@@ -89,7 +89,7 @@
 - slug: coda_list_tables
   name: List Tables
   description: |
-    List all tables within a specific document. Returns table metadata and column schemas.
+    List all tables within a specific Coda document, returning table IDs, names, column schemas, and row counts for each table.
   provider: coda
   endpoint: /docs/{docId}/tables
   method: GET
@@ -112,7 +112,7 @@
 - slug: coda_get_table
   name: Get Table
   description: |
-    Get details, schema, and structure of a specific table including column definitions.
+    Retrieve details, schema, and structure of a specific Coda table including column definitions, data types, and formatting options.
   provider: coda
   endpoint: /docs/{docId}/tables/{tableId}
   method: GET
@@ -138,7 +138,7 @@
 - slug: coda_list_rows
   name: List Rows
   description: |
-    Retrieve all rows from a specific table with optional filtering, sorting, and pagination.
+    List all rows from a specific Coda table with pagination and filtering support, returning row IDs, cell values, and pagination information.
   provider: coda
   endpoint: /docs/{docId}/tables/{tableId}/rows
   method: GET
@@ -174,7 +174,7 @@
 - slug: coda_get_row
   name: Get Row
   description: |
-    Get a single row by its unique identifier including all cell values.
+    Retrieve a single row from a Coda table by its unique identifier, including all cell values, column data, and row metadata.
   provider: coda
   endpoint: /docs/{docId}/tables/{tableId}/rows/{rowId}
   method: GET
@@ -204,7 +204,7 @@
 - slug: coda_create_row
   name: Create Row
   description: |
-    Insert a new row into a specified table with cell values for each column.
+    Insert a new row into a specified Coda table with cell values for each column, returning the created row ID and timestamp.
   provider: coda
   endpoint: /docs/{docId}/tables/{tableId}/rows
   method: POST
@@ -234,7 +234,7 @@
 - slug: coda_update_row
   name: Update Row
   description: |
-    Update an existing row with new cell values in a specified table.
+    Update an existing row in a Coda table with new cell values, modifying the specified columns and returning the updated row data.
   provider: coda
   endpoint: /docs/{docId}/tables/{tableId}/rows/{rowId}
   method: PUT
@@ -268,7 +268,7 @@
 - slug: coda_list_collaborators
   name: List Collaborators
   description: |
-    List all collaborators on a specific document including their email and permission level.
+    List all collaborators on a specific Coda document, returning their names, email addresses, and permission levels for access.
   provider: coda
   endpoint: /docs/{docId}/collaborators
   method: GET

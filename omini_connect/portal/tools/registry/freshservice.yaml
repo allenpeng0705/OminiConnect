@@ -1,7 +1,9 @@
 - slug: freshservice_list_tickets
   name: List Tickets
   description: |
-    Retrieve a list of all tickets in the Freshservice system.
+    Retrieve a list of all tickets in the Freshservice system with pagination and filtering.
+    Returns ticket IDs, subjects, statuses, and timestamps for each ticket.
+    Use this to discover support issues and track ticket resolution progress.
   provider: freshservice
   endpoint: /tickets
   method: GET
@@ -27,7 +29,9 @@
 - slug: freshservice_get_ticket
   name: Get Ticket
   description: |
-    Retrieve details of a specific ticket by ID.
+    Retrieve details of a specific ticket by ID including conversation history.
+    Returns the complete ticket data with all associated information.
+    This provides full ticket data for customer support management.
   provider: freshservice
   endpoint: /tickets/{id}
   method: GET
@@ -48,7 +52,9 @@
 - slug: freshservice_create_ticket
   name: Create Ticket
   description: |
-    Create a new ticket in the Freshservice system.
+    Create a new ticket in the Freshservice system with subject, description, and requester.
+    Returns the created ticket with its unique ID and confirmation.
+    This opens a new customer support issue for resolution.
   provider: freshservice
   endpoint: /tickets
   method: POST
@@ -84,7 +90,9 @@
 - slug: freshservice_list_agents
   name: List Agents
   description: |
-    Retrieve a list of all agents in the Freshservice system.
+    Retrieve a list of all agents in the Freshservice system with pagination and filtering.
+    Returns agent IDs, names, emails, and availability status for each agent.
+    Use this to discover support team members and manage agent assignments.
   provider: freshservice
   endpoint: /agents
   method: GET
@@ -110,7 +118,9 @@
 - slug: freshservice_get_agent
   name: Get Agent
   description: |
-    Retrieve details of a specific agent by ID.
+    Retrieve details of a specific agent by ID including permissions and groups.
+    Returns the complete agent data with all associated information.
+    This provides full agent data for team management and support operations.
   provider: freshservice
   endpoint: /agents/{id}
   method: GET
@@ -131,7 +141,9 @@
 - slug: freshservice_list_assets
   name: List Assets
   description: |
-    Retrieve a list of all assets in the Freshservice system.
+    Retrieve a list of all assets in the Freshservice system with pagination.
+    Returns asset IDs, names, types, and status for each asset.
+    Use this to discover IT assets and manage inventory tracking.
   provider: freshservice
   endpoint: /assets
   method: GET
@@ -154,7 +166,9 @@
 - slug: freshservice_get_asset
   name: Get Asset
   description: |
-    Retrieve details of a specific asset by ID.
+    Retrieve details of a specific asset by ID including configuration and relationships.
+    Returns the complete asset data with all associated information.
+    This provides full asset data for IT inventory and asset management.
   provider: freshservice
   endpoint: /assets/{id}
   method: GET
@@ -175,7 +189,9 @@
 - slug: freshservice_list_problems
   name: List Problems
   description: |
-    Retrieve a list of all problems in the Freshservice system.
+    Retrieve a list of all problems in the Freshservice system with pagination.
+    Returns problem IDs, titles, statuses, and priority levels for each problem.
+    Use this to discover known issues and manage problem tracking.
   provider: freshservice
   endpoint: /problems
   method: GET
@@ -198,7 +214,9 @@
 - slug: freshservice_get_problem
   name: Get Problem
   description: |
-    Retrieve details of a specific problem by ID.
+    Retrieve details of a specific problem by ID including related tickets and analysis.
+    Returns the complete problem data with all associated information.
+    This provides full problem data for issue resolution and tracking.
   provider: freshservice
   endpoint: /problems/{id}
   method: GET
@@ -219,7 +237,9 @@
 - slug: freshservice_list_changes
   name: List Changes
   description: |
-    Retrieve a list of all changes in the Freshservice system.
+    Retrieve a list of all changes in the Freshservice system with pagination.
+    Returns change IDs, titles, statuses, and implementation plans for each change.
+    Use this to discover change requests and manage IT change management.
   provider: freshservice
   endpoint: /changes
   method: GET
@@ -242,7 +262,9 @@
 - slug: freshservice_get_change
   name: Get Change
   description: |
-    Retrieve details of a specific change by ID.
+    Retrieve details of a specific change by ID including approvals and implementation timeline.
+    Returns the complete change data with all associated information.
+    This provides full change data for change management and authorization.
   provider: freshservice
   endpoint: /changes/{id}
   method: GET

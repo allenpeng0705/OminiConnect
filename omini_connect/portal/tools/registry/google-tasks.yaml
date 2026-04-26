@@ -18,7 +18,7 @@
 - slug: google_tasks_list_tasklists
   name: List Task Lists
   description: |
-    List all task lists.
+    List all task lists in Google Tasks including names, IDs, and task counts. Returns task list metadata for organizing and managing todo items.
   provider: google-tasks
   endpoint: /tasks/v1/users/@me/lists
   method: GET
@@ -36,7 +36,7 @@
 - slug: google_tasks_get_tasklist
   name: Get Task List
   description: |
-    Get task list details.
+    Retrieve detailed information about a specific task list including all tasks and due dates. Returns task list configuration and completion statistics.
   provider: google-tasks
   endpoint: /tasks/v1/users/@me/lists/{tasklist}
   method: GET
@@ -59,7 +59,7 @@
 - slug: google_tasks_create_tasklist
   name: Create Task List
   description: |
-    Create a new task list.
+    Create a new task list in Google Tasks with a specified title. Returns the created task list with its unique identifier.
   provider: google-tasks
   endpoint: /tasks/v1/users/@me/lists
   method: POST
@@ -82,7 +82,7 @@
 - slug: google_tasks_update_tasklist
   name: Update Task List
   description: |
-    Update a task list.
+    Update a task list's title or other properties in Google Tasks. Modifies the task list and returns the updated configuration.
   provider: google-tasks
   endpoint: /tasks/v1/users/@me/lists/{tasklist}
   method: PUT
@@ -108,7 +108,7 @@
 - slug: google_tasks_delete_tasklist
   name: Delete Task List
   description: |
-    Delete a task list.
+    Delete a task list and all its tasks permanently from Google Tasks. Returns confirmation of deletion with the task list identifier.
   provider: google-tasks
   endpoint: /tasks/v1/users/@me/lists/{tasklist}
   method: DELETE
@@ -131,7 +131,7 @@
 - slug: google_tasks_list_tasks
   name: List Tasks
   description: |
-    List tasks in a task list.
+    List all tasks in a specific task list including titles, due dates, and completion status. Returns task metadata for productivity management.
   provider: google-tasks
   endpoint: /tasks/v1/lists/{tasklist}/tasks
   method: GET
@@ -157,7 +157,7 @@
 - slug: google_tasks_get_task
   name: Get Task
   description: |
-    Get task details.
+    Retrieve detailed information about a specific task including notes, due date, and subtasks. Returns the complete task data with status information.
   provider: google-tasks
   endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
   method: GET
@@ -183,7 +183,7 @@
 - slug: google_tasks_create_task
   name: Create Task
   description: |
-    Create a new task.
+    Create a new task in a task list with title, notes, and due date. Returns the created task with its unique identifier for tracking.
   provider: google-tasks
   endpoint: /tasks/v1/lists/{tasklist}/tasks
   method: POST
@@ -215,7 +215,7 @@
 - slug: google_tasks_update_task
   name: Update Task
   description: |
-    Update a task.
+    Update an existing task's title, notes, due date, or completion status. Modifies the task and returns the updated task data.
   provider: google-tasks
   endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
   method: PUT
@@ -247,7 +247,7 @@
 - slug: google_tasks_delete_task
   name: Delete Task
   description: |
-    Delete a task.
+    Delete a task from a task list permanently removing it from the todo list. Returns confirmation of deletion with the task identifier.
   provider: google-tasks
   endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
   method: DELETE

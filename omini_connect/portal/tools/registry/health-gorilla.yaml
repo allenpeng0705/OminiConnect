@@ -1,7 +1,8 @@
 - slug: health_gorilla_list_patients
   name: List Patients
   description: |
-    Retrieve a list of all patients in the healthcare system.
+    Retrieve all patients in the Health Gorilla system with pagination and search.
+    Returns patient records with demographics and identifiers.
   provider: health-gorilla
   endpoint: /patients
   method: GET
@@ -27,7 +28,8 @@
 - slug: health_gorilla_get_patient
   name: Get Patient
   description: |
-    Retrieve details of a specific patient by ID.
+    Retrieve a specific patient by their unique identifier.
+    Returns full patient demographics and medical identifiers.
   provider: health-gorilla
   endpoint: /patients/{id}
   method: GET
@@ -48,7 +50,8 @@
 - slug: health_gorilla_create_patient
   name: Create Patient
   description: |
-    Create a new patient record in the healthcare system.
+    Register a new patient in the Health Gorilla system with demographics.
+    Returns the created patient record with assigned ID.
   provider: health-gorilla
   endpoint: /patients
   method: POST
@@ -90,7 +93,8 @@
 - slug: health_gorilla_list_appointments
   name: List Appointments
   description: |
-    Retrieve a list of all appointments in the healthcare system.
+    Retrieve all appointments with optional patient, practitioner, or status filtering.
+    Returns appointment details including scheduled times and types.
   provider: health-gorilla
   endpoint: /appointments
   method: GET
@@ -122,7 +126,8 @@
 - slug: health_gorilla_get_appointment
   name: Get Appointment
   description: |
-    Retrieve details of a specific appointment by ID.
+    Retrieve a specific appointment by its unique identifier.
+    Returns full appointment details including participants and location.
   provider: health-gorilla
   endpoint: /appointments/{id}
   method: GET
@@ -143,7 +148,8 @@
 - slug: health_gorilla_create_appointment
   name: Create Appointment
   description: |
-    Create a new appointment in the healthcare system.
+    Schedule a new appointment with patient, practitioner, and time details.
+    Returns the created appointment with confirmation details.
   provider: health-gorilla
   endpoint: /appointments
   method: POST
@@ -182,7 +188,8 @@
 - slug: health_gorilla_list_practitioners
   name: List Practitioners
   description: |
-    Retrieve a list of all healthcare practitioners.
+    Retrieve all healthcare practitioners with optional specialty filtering.
+    Returns practitioner names, credentials, and specialties.
   provider: health-gorilla
   endpoint: /practitioners
   method: GET
@@ -208,7 +215,8 @@
 - slug: health_gorilla_get_practitioner
   name: Get Practitioner
   description: |
-    Retrieve details of a specific practitioner by ID.
+    Retrieve a specific practitioner by their unique identifier.
+    Returns full practitioner profile including credentials and specialties.
   provider: health-gorilla
   endpoint: /practitioners/{id}
   method: GET
@@ -229,7 +237,8 @@
 - slug: health_gorilla_list_labs
   name: List Labs
   description: |
-    Retrieve a list of all lab results in the healthcare system.
+    Retrieve lab results with optional patient filtering.
+    Returns lab result records with test names and values.
   provider: health-gorilla
   endpoint: /labs
   method: GET
@@ -255,7 +264,8 @@
 - slug: health_gorilla_get_lab_result
   name: Get Lab Result
   description: |
-    Retrieve details of a specific lab result by ID.
+    Retrieve a specific lab result by its unique identifier.
+    Returns full lab result details including test values and reference ranges.
   provider: health-gorilla
   endpoint: /labs/{id}
   method: GET

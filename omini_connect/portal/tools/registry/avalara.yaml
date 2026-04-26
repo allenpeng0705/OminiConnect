@@ -17,7 +17,7 @@
 - slug: avalara_list_transactions
   name: List Transactions
   description: |
-    List all transactions (invoices, refunds, etc.) in the Avalara account. Returns a paginated list with transaction details.
+    List transactions (invoices, refunds) in the Avalara account with optional company, date, and status filters.
   provider: avalara
   endpoint: /transactions
   method: GET
@@ -77,7 +77,7 @@
 - slug: avalara_create_transaction
   name: Create Transaction
   description: |
-    Create a new transaction (invoice, order, refund) for tax calculation. Returns calculated tax amounts.
+    Create a new transaction (invoice, order, refund) for tax calculation with type, company, date, and line items.
   provider: avalara
   endpoint: /transactions/create
   method: POST
@@ -120,7 +120,7 @@
 - slug: avalara_list_customers
   name: List Customers
   description: |
-    List all customers in the Avalara account. Returns customer details including code, name, and exemption status.
+    List customers in the Avalara account with pagination.
   provider: avalara
   endpoint: /customers
   method: GET
@@ -176,7 +176,7 @@
 - slug: avalara_list_items
   name: List Items
   description: |
-    List all items in the item catalog. Returns item details including SKU, description, and tax code.
+    List items in the item catalog with pagination.
   provider: avalara
   endpoint: /items
   method: GET
@@ -232,7 +232,7 @@
 - slug: avalara_validate_address
   name: Validate Address
   description: |
-    Validate and normalize an address. Returns validated address with geocoding coordinates and resolution status.
+    Validate and normalize an address with geocoding coordinates and resolution status.
   provider: avalara
   endpoint: /addresses/resolve
   method: POST
@@ -273,7 +273,7 @@
 - slug: avalara_get_tax_rates
   name: Get Tax Rates
   description: |
-    Get tax rates for a specific address or postal code. Returns combined tax rate and breakdown by jurisdiction.
+    Get tax rates for a specific address or postal code with breakdown by jurisdiction.
   provider: avalara
   endpoint: /taxrates/byaddress
   method: GET
@@ -311,7 +311,7 @@
 - slug: avalara_list_exemptions
   name: List Exemptions
   description: |
-    List all tax exemptions in the account. Returns exemption details including customer, reason, and validity dates.
+    List tax exemptions in the account with optional customer filter.
   provider: avalara
   endpoint: /exemptions
   method: GET

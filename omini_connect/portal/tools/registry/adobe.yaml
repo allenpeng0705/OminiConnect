@@ -17,8 +17,7 @@
 - slug: adobe_list_assets
   name: List Assets
   description: |
-    List assets in Adobe Creative Cloud storage.
-    Filter by folder, type, and tags.
+    List all assets in your Adobe Creative Cloud storage. Returns asset names, IDs, types, and metadata for each asset.
   provider: adobe
   endpoint: /api/assets
   method: GET
@@ -47,7 +46,7 @@
 - slug: adobe_get_asset
   name: Get Asset
   description: |
-    Get detailed information about a specific Creative Cloud asset including metadata and renditions.
+    Get detailed information about a specific Adobe Creative Cloud asset by its ID. Returns the asset name, type, metadata, and renditions.
   provider: adobe
   endpoint: /api/assets/{assetId}
   method: GET
@@ -69,8 +68,7 @@
 - slug: adobe_upload_asset
   name: Upload Asset
   description: |
-    Upload a new asset to Adobe Creative Cloud storage.
-    Set metadata and destination folder.
+    Upload a new asset to Adobe Creative Cloud storage with the specified name and destination folder. Returns the uploaded asset with its unique ID.
   provider: adobe
   endpoint: /api/assets
   method: POST
@@ -98,7 +96,7 @@
 - slug: adobe_create_asset_folder
   name: Create Asset Folder
   description: |
-    Create a new folder in Adobe Creative Cloud storage for organizing assets.
+    Create a new folder in Adobe Creative Cloud storage for organizing assets. Returns the created folder with its unique ID.
   provider: adobe
   endpoint: /api/assets/folders
   method: POST
@@ -124,8 +122,7 @@
 - slug: adobe_list_libraries
   name: List Libraries
   description: |
-    List all Creative Cloud libraries.
-    Libraries contain design elements like colors, fonts, and assets.
+    List all Creative Cloud libraries in your Adobe account. Returns library names, IDs, and element counts for each library.
   provider: adobe
   endpoint: /api/libraries
   method: GET
@@ -147,7 +144,7 @@
 - slug: adobe_get_library
   name: Get Library
   description: |
-    Get details about a specific Creative Cloud library including its elements.
+    Get detailed information about a specific Creative Cloud library by its ID. Returns the library name, elements, and available design assets.
   provider: adobe
   endpoint: /api/libraries/{libraryId}
   method: GET
@@ -169,8 +166,7 @@
 - slug: adobe_list_fonts
   name: List Fonts
   description: |
-    List Adobe Fonts available in the account.
-    Shows font families and styles.
+    List all Adobe Fonts available in your account. Returns font names, families, styles, and usage rights for each font.
   provider: adobe
   endpoint: /api/fonts
   method: GET
@@ -195,7 +191,7 @@
 - slug: adobe_get_font
   name: Get Font
   description: |
-    Get detailed information about a specific Adobe Font including variants and usage rights.
+    Get detailed information about a specific Adobe Font by its ID. Returns the font name, family, variants, and usage rights.
   provider: adobe
   endpoint: /api/fonts/{fontId}
   method: GET
@@ -217,7 +213,7 @@
 - slug: adobe_search_assets
   name: Search Assets
   description: |
-    Search assets in Adobe Creative Cloud by keyword, type, or tag.
+    Search for assets in Adobe Creative Cloud by keyword. Returns asset names, IDs, types, and metadata for each matching asset.
   provider: adobe
   endpoint: /api/assets/search
   method: GET
@@ -246,7 +242,7 @@
 - slug: adobe_download_asset
   name: Download Asset
   description: |
-    Download an asset from Adobe Creative Cloud to local storage.
+    Download a specific asset from Adobe Creative Cloud to local storage. Returns the asset download URL and metadata.
   provider: adobe
   endpoint: /api/assets/{assetId}/download
   method: GET

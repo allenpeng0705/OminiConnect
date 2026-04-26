@@ -18,7 +18,7 @@
 - slug: juniper_mist_get_self
   name: Get Current User
   description: |
-    Get the current authenticated user.
+    Get the profile of the currently authenticated Juniper Mist user. Returns account details and organization information.
   provider: juniper-mist
   endpoint: /api/v1/self
   method: GET
@@ -36,7 +36,7 @@
 - slug: juniper_mist_list_sites
   name: List Sites
   description: |
-    List all sites in the organization.
+    List all sites (locations) in the Juniper Mist organization. Returns site names, addresses, and device counts.
   provider: juniper-mist
   endpoint: /api/v1/sites
   method: GET
@@ -54,7 +54,7 @@
 - slug: juniper_mist_get_site
   name: Get Site
   description: |
-    Get details for a specific site.
+    Retrieve details about a specific Juniper Mist site by its ID. Includes site configuration, device inventory, and network settings.
   provider: juniper-mist
   endpoint: /api/v1/sites/{site_id}
   method: GET
@@ -75,7 +75,7 @@
 - slug: juniper_mist_list_devices
   name: List Devices
   description: |
-    List all devices in a site or organization.
+    List all network devices (access points, switches, routers) in a Juniper Mist site or organization. Returns device status and model information.
   provider: juniper-mist
   endpoint: /api/v1/devices
   method: GET
@@ -96,7 +96,7 @@
 - slug: juniper_mist_get_device
   name: Get Device
   description: |
-    Get details for a specific device.
+    Retrieve details about a specific network device by its ID. Includes device status, configuration, and connected clients.
   provider: juniper-mist
   endpoint: /api/v1/devices/{device_id}
   method: GET
@@ -117,7 +117,7 @@
 - slug: juniper_mist_list_networks
   name: List Networks
   description: |
-    List all networks in a site.
+    List all wireless networks (SSIDs) in a Juniper Mist site. Returns network names, security settings, and status.
   provider: juniper-mist
   endpoint: /api/v1/networks
   method: GET
@@ -138,7 +138,7 @@
 - slug: juniper_mist_get_network
   name: Get Network
   description: |
-    Get details for a specific network.
+    Retrieve details about a specific wireless network by its ID. Includes SSID, security type, VLAN configuration, and usage statistics.
   provider: juniper-mist
   endpoint: /api/v1/networks/{network_id}
   method: GET
@@ -159,7 +159,7 @@
 - slug: juniper_mist_list_alerts
   name: List Alerts
   description: |
-    List all alerts in a site or organization.
+    List all alerts and events in a Juniper Mist site or organization. Filter by severity and time range.
   provider: juniper-mist
   endpoint: /api/v1/alerts
   method: GET
@@ -180,7 +180,7 @@
 - slug: juniper_mist_list_clients
   name: List Clients
   description: |
-    List all clients connected to the network.
+    List all client devices connected to Juniper Mist networks. Returns client MAC addresses, device types, and connection status.
   provider: juniper-mist
   endpoint: /api/v1/clients
   method: GET
@@ -204,7 +204,7 @@
 - slug: juniper_mist_get_client
   name: Get Client
   description: |
-    Get details for a specific client.
+    Retrieve details about a specific client device by its MAC address. Includes connection history, signal strength, and associated network.
   provider: juniper-mist
   endpoint: /api/v1/clients/{client_id}
   method: GET

@@ -17,8 +17,7 @@
 - slug: envoy_list_visitors
   name: List Visitors
   description: |
-    List all visitors in the workplace system.
-    Returns visitor records including name, email, host, and check-in status.
+    List all visitors in the Envoy workplace system with optional filtering by date range or status. Returns visitor names, emails, host names, and check-in status.
   provider: envoy
   endpoint: /visitors
   method: GET
@@ -53,7 +52,7 @@
 - slug: envoy_get_visitor
   name: Get Visitor
   description: |
-    Get details of a specific visitor including contact info, host, and visit history.
+    Retrieve detailed information about a specific visitor including contact information, host employee, scheduled arrival time, and complete visit history.
   provider: envoy
   endpoint: /visitors/{id}
   method: GET
@@ -75,7 +74,7 @@
 - slug: envoy_create_visitor
   name: Create Visitor
   description: |
-    Create a new visitor record and optionally send an invitation email.
+    Create a new visitor record in Envoy with visitor details and scheduled arrival time, with option to automatically send an invitation email.
   provider: envoy
   endpoint: /visitors
   method: POST
@@ -116,8 +115,7 @@
 - slug: envoy_list_employees
   name: List Employees
   description: |
-    List all employees in the workplace directory.
-    Returns employee records including name, email, department, and role.
+    List all employees in the Envoy workplace directory with optional filtering by department or role. Returns employee names, emails, departments, and titles.
   provider: envoy
   endpoint: /employees
   method: GET
@@ -149,7 +147,7 @@
 - slug: envoy_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee including contact info, department, and role.
+    Retrieve detailed information about a specific employee including contact details, department assignment, role, and desk or office location.
   provider: envoy
   endpoint: /employees/{id}
   method: GET
@@ -171,7 +169,7 @@
 - slug: envoy_list_devices
   name: List Devices
   description: |
-    List all devices in the workplace including badges, tablets, and kiosks.
+    List all devices in the Envoy workplace system with optional filtering by type or online status. Returns device names, types, statuses, and locations.
   provider: envoy
   endpoint: /devices
   method: GET
@@ -203,7 +201,7 @@
 - slug: envoy_get_device
   name: Get Device
   description: |
-    Get details of a specific device including type, status, location, and configuration.
+    Retrieve detailed information about a specific device including device type, connection status, physical location, and configuration settings.
   provider: envoy
   endpoint: /devices/{id}
   method: GET
@@ -225,7 +223,7 @@
 - slug: envoy_list_places
   name: List Places
   description: |
-    List all places in the workplace such as offices, floors, desks, and rooms.
+    List all places in the Envoy workplace system with optional filtering by type or building. Returns place names, types, capacities, and amenity information.
   provider: envoy
   endpoint: /places
   method: GET
@@ -257,7 +255,7 @@
 - slug: envoy_get_place
   name: Get Place
   description: |
-    Get details of a specific place including address, capacity, amenities, and availability.
+    Retrieve detailed information about a specific place including address, seating capacity, available amenities, and current availability status.
   provider: envoy
   endpoint: /places/{id}
   method: GET
@@ -279,8 +277,7 @@
 - slug: envoy_list_events
   name: List Events
   description: |
-    List all events in the workplace calendar.
-    Returns event details including title, time, location, and attendee count.
+    List all events in the Envoy workplace calendar with optional filtering by date range or place. Returns event titles, times, locations, and confirmed attendee counts.
   provider: envoy
   endpoint: /events
   method: GET

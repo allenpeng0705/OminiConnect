@@ -17,8 +17,7 @@
 - slug: cloudflare_list_zones
   name: List Zones
   description: |
-    List all zones (domains) in your Cloudflare account.
-    Returns zone names, status, and configuration.
+    List all zones (domains) in your Cloudflare account, returning zone IDs, names, status, and DNS configuration.
   provider: cloudflare
   endpoint: /zones
   method: GET
@@ -52,8 +51,7 @@
 - slug: cloudflare_get_zone
   name: Get Zone
   description: |
-    Get detailed information about a specific zone including DNS settings,
-    security configuration, and traffic statistics.
+    Get detailed information about a specific Cloudflare zone including DNS settings, security configuration, and traffic statistics.
   provider: cloudflare
   endpoint: /zones/{zone_id}
   method: GET
@@ -76,8 +74,7 @@
 - slug: cloudflare_list_dns_records
   name: List DNS Records
   description: |
-    List all DNS records for a zone. Returns record type, name, content, and TTL.
-    Supports filtering by record type.
+    List all DNS records for a Cloudflare zone, returning record IDs, types, names, content, and TTL values.
   provider: cloudflare
   endpoint: /zones/{zone_id}/dns_records
   method: GET
@@ -115,8 +112,7 @@
 - slug: cloudflare_get_dns_record
   name: Get DNS Record
   description: |
-    Get detailed information about a specific DNS record including
-    proxied status, TTL, and creation/modification dates.
+    Get detailed information about a specific DNS record including proxied status, TTL, and creation/modification dates.
   provider: cloudflare
   endpoint: /zones/{zone_id}/dns_records/{dns_record_id}
   method: GET
@@ -144,8 +140,7 @@
 - slug: cloudflare_create_dns_record
   name: Create DNS Record
   description: |
-    Create a new DNS record for a zone. Supports all record types including
-    A, AAAA, CNAME, MX, TXT, and others.
+    Create a new DNS record for a Cloudflare zone, supporting all record types including A, AAAA, CNAME, MX, and TXT.
   provider: cloudflare
   endpoint: /zones/{zone_id}/dns_records
   method: POST
@@ -192,8 +187,7 @@
 - slug: cloudflare_list_pages_projects
   name: List Pages Projects
   description: |
-    List all Cloudflare Pages projects in your account.
-    Returns project names, subdomains, and deployment status.
+    List all Cloudflare Pages projects in your account, returning project names, subdomains, and deployment status.
   provider: cloudflare
   endpoint: /accounts/{account_id}/pages/projects
   method: GET
@@ -224,8 +218,7 @@
 - slug: cloudflare_get_pages_project
   name: Get Pages Project
   description: |
-    Get detailed information about a Cloudflare Pages project including
-    build configuration, deployments, and custom domains.
+    Get detailed information about a Cloudflare Pages project including build configuration, deployments, and custom domains.
   provider: cloudflare
   endpoint: /accounts/{account_id}/pages/projects/{project_name}
   method: GET
@@ -252,8 +245,7 @@
 - slug: cloudflare_list_workers
   name: List Workers
   description: |
-    List all Workers scripts in your account.
-    Returns script names, etags, and deployment dates.
+    List all Cloudflare Workers scripts in your account, returning script names, etags, and deployment dates.
   provider: cloudflare
   endpoint: /accounts/{account_id}/workers/scripts
   method: GET
@@ -284,8 +276,7 @@
 - slug: cloudflare_get_worker
   name: Get Worker
   description: |
-    Get details about a specific Workers script including the code,
-    deployment metadata, and usage statistics.
+    Get details about a specific Cloudflare Workers script including deployment metadata and usage statistics.
   provider: cloudflare
   endpoint: /accounts/{account_id}/workers/scripts/{script_name}
   method: GET
@@ -312,8 +303,7 @@
 - slug: cloudflare_list_ssl_certificates
   name: List SSL Certificates
   description: |
-    List all SSL certificates in your account including universal,
-    dedicated, and custom certificates.
+    List all SSL certificates in your Cloudflare account including universal, dedicated, and custom certificates.
   provider: cloudflare
   endpoint: /zones/{zone_id}/sslCertificates
   method: GET

@@ -18,8 +18,7 @@
 - slug: miro_scim_list_users
   name: List Users (SCIM)
   description: |
-    List all user accounts in Miro via SCIM API.
-    Supports filtering and pagination.
+    List all user accounts in Miro via SCIM API. Returns user names, emails, and active status for each user.
   provider: miro-scim
   endpoint: /v1/scim/Users
   method: GET
@@ -48,7 +47,7 @@
 - slug: miro_scim_get_user
   name: Get User (SCIM)
   description: |
-    Get detailed information about a specific user via SCIM API.
+    Retrieve detailed information about a specific Miro user via SCIM API including profile and group memberships.
   provider: miro-scim
   endpoint: /v1/scim/Users/{id}
   method: GET
@@ -70,7 +69,7 @@
 - slug: miro_scim_create_user
   name: Create User (SCIM)
   description: |
-    Create a new user account in Miro via SCIM API.
+    Create a new user account in Miro via SCIM API with specified name and email. Returns the created user with their SCIM ID.
   provider: miro-scim
   endpoint: /v1/scim/Users
   method: POST
@@ -107,7 +106,7 @@
 - slug: miro_scim_update_user
   name: Update User (SCIM)
   description: |
-    Update an existing user account via SCIM API.
+    Update an existing Miro user account via SCIM API including name, email, or active status. Returns the updated user.
   provider: miro-scim
   endpoint: /v1/scim/Users/{id}
   method: PUT
@@ -143,7 +142,7 @@
 - slug: miro_scim_delete_user
   name: Delete User (SCIM)
   description: |
-    Delete a user account via SCIM API.
+    Permanently delete a user account from Miro via SCIM API. Returns confirmation of the successful deletion of the user account.
   provider: miro-scim
   endpoint: /v1/scim/Users/{id}
   method: DELETE
@@ -165,7 +164,7 @@
 - slug: miro_scim_list_teams
   name: List Teams (SCIM)
   description: |
-    List all teams in Miro via SCIM API.
+    List all teams in Miro via SCIM API. Returns team names, descriptions, and member counts.
   provider: miro-scim
   endpoint: /v1/scim/Teams
   method: GET
@@ -194,7 +193,7 @@
 - slug: miro_scim_get_team
   name: Get Team (SCIM)
   description: |
-    Get detailed information about a specific team via SCIM API.
+    Retrieve detailed information about a specific Miro team via SCIM API including members and settings.
   provider: miro-scim
   endpoint: /v1/scim/Teams/{id}
   method: GET
@@ -216,7 +215,7 @@
 - slug: miro_scim_create_team
   name: Create Team (SCIM)
   description: |
-    Create a new team in Miro via SCIM API.
+    Create a new team in Miro via SCIM API with a specified display name. Returns the created team with its SCIM ID.
   provider: miro-scim
   endpoint: /v1/scim/Teams
   method: POST
@@ -241,7 +240,7 @@
 - slug: miro_scim_update_team
   name: Update Team (SCIM)
   description: |
-    Update an existing team via SCIM API.
+    Update an existing Miro team via SCIM API including name and member list. Returns the updated team.
   provider: miro-scim
   endpoint: /v1/scim/Teams/{id}
   method: PUT
@@ -269,7 +268,7 @@
 - slug: miro_scim_delete_team
   name: Delete Team (SCIM)
   description: |
-    Delete a team via SCIM API.
+    Permanently delete a team from Miro via SCIM API. Returns confirmation of the successful deletion of the team and its membership.
   provider: miro-scim
   endpoint: /v1/scim/Teams/{id}
   method: DELETE

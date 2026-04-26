@@ -1,7 +1,7 @@
 - slug: shortcut_list_stories
   name: List Stories
   description: |
-    Retrieve a list of stories, optionally filtered by project or epic.
+    List all stories in Shortcut project management with optional filtering by project, epic, and workflow state. Returns story IDs, names, descriptions, story types, and workflow states for sprint planning and backlog management.
   provider: shortcut
   endpoint: /stories
   method: GET
@@ -33,7 +33,7 @@
 - slug: shortcut_get_story
   name: Get Story
   description: |
-    Retrieve details of a specific story by ID.
+    Get detailed information about a specific Shortcut story by ID including description, workflow state, linked epics, task checklist, and comments. Returns data for sprint planning and progress tracking.
   provider: shortcut
   endpoint: /stories/{storyId}
   method: GET
@@ -54,7 +54,7 @@
 - slug: shortcut_create_story
   name: Create Story
   description: |
-    Create a new story in a project.
+    Create a new story in Shortcut with name, description, project, story type, and initial workflow state. Returns the created story with its unique ID for sprint planning and backlog management.
   provider: shortcut
   endpoint: /stories
   method: POST
@@ -91,7 +91,7 @@
 - slug: shortcut_update_story
   name: Update Story
   description: |
-    Update an existing story with new values.
+    Update an existing Shortcut story with new name, description, workflow state, or linked epic. Returns the updated story for confirmation and sprint progress tracking.
   provider: shortcut
   endpoint: /stories/{storyId}
   method: PUT
@@ -124,7 +124,7 @@
 - slug: shortcut_list_epics
   name: List Epics
   description: |
-    Retrieve a list of all epics.
+    List all epics in Shortcut with optional project filtering. Returns epic IDs, names, descriptions, start and due dates, workflow states, and associated story counts for roadmap planning.
   provider: shortcut
   endpoint: /epics
   method: GET
@@ -150,7 +150,7 @@
 - slug: shortcut_get_epic
   name: Get Epic
   description: |
-    Retrieve details of a specific epic by ID.
+    Get detailed information about a specific Shortcut epic by ID including description, start and due dates, workflow state, and associated story list. Returns data for roadmap planning and progress monitoring.
   provider: shortcut
   endpoint: /epics/{epicId}
   method: GET
@@ -171,7 +171,7 @@
 - slug: shortcut_list_members
   name: List Members
   description: |
-    Retrieve a list of all members in the workspace.
+    List all members in the Shortcut workspace with optional project filtering. Returns member names, email addresses, gravatar URLs, and assigned story counts for team management.
   provider: shortcut
   endpoint: /members
   method: GET
@@ -194,7 +194,7 @@
 - slug: shortcut_get_member
   name: Get Member
   description: |
-    Retrieve details of a specific member by ID.
+    Get detailed information about a specific Shortcut member by ID including profile, assigned stories, group memberships, and activity status. Returns data for team management and workload tracking.
   provider: shortcut
   endpoint: /members/{memberId}
   method: GET
@@ -215,7 +215,7 @@
 - slug: shortcut_list_groups
   name: List Groups
   description: |
-    Retrieve a list of all groups in the workspace.
+    List all groups in the Shortcut workspace for team organization. Returns group names, descriptions, and member counts for access control and project assignment configuration.
   provider: shortcut
   endpoint: /groups
   method: GET
@@ -238,7 +238,7 @@
 - slug: shortcut_get_group
   name: Get Group
   description: |
-    Retrieve details of a specific group by ID.
+    Get detailed information about a specific Shortcut group by ID including description, member list, and assigned permissions. Returns data for team organization and access control management.
   provider: shortcut
   endpoint: /groups/{groupId}
   method: GET

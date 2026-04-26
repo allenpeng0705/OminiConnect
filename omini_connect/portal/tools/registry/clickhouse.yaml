@@ -1,7 +1,7 @@
 - slug: clickhouse_list_databases
   name: List Databases
   description: |
-    Retrieve a list of all databases in the ClickHouse server.
+    List all databases on the ClickHouse server, returning database names, engines, and table counts for each database.
   provider: clickhouse
   endpoint: /
   method: GET
@@ -17,7 +17,7 @@
 - slug: clickhouse_get_database
   name: Get Database
   description: |
-    Retrieve details of a specific database.
+    Retrieve details of a specific ClickHouse database including its engine type, table count, and storage settings.
   provider: clickhouse
   endpoint: /database/{database}
   method: GET
@@ -37,7 +37,7 @@
 - slug: clickhouse_list_tables
   name: List Tables
   description: |
-    Retrieve a list of all tables in a specific database.
+    List all tables in a specified ClickHouse database, returning table names, engines, column counts, and row counts.
   provider: clickhouse
   endpoint: /database/{database}/tables
   method: GET
@@ -57,7 +57,7 @@
 - slug: clickhouse_get_table
   name: Get Table
   description: |
-    Retrieve details of a specific table including schema.
+    Retrieve details of a ClickHouse table including its full column schema, engine type, indexes, and partition key information.
   provider: clickhouse
   endpoint: /database/{database}/tables/{table}
   method: GET
@@ -81,7 +81,7 @@
 - slug: clickhouse_list_users
   name: List Users
   description: |
-    Retrieve a list of all users in the ClickHouse server.
+    List all users on the ClickHouse server, returning usernames, privilege levels, and assigned quota configurations.
   provider: clickhouse
   endpoint: /users
   method: GET
@@ -97,7 +97,7 @@
 - slug: clickhouse_get_user
   name: Get User
   description: |
-    Retrieve details of a specific user.
+    Retrieve details of a ClickHouse user including their access privileges, quota assignments, and server permissions.
   provider: clickhouse
   endpoint: /users/{user}
   method: GET
@@ -117,7 +117,7 @@
 - slug: clickhouse_create_user
   name: Create User
   description: |
-    Create a new user in the ClickHouse server.
+    Create a new user on the ClickHouse server with a specified password and optional quota assignments, returning the created username.
   provider: clickhouse
   endpoint: /users
   method: POST
@@ -146,7 +146,7 @@
 - slug: clickhouse_execute_query
   name: Execute Query
   description: |
-    Execute a SQL query on the ClickHouse server.
+    Execute a SQL query on the ClickHouse server and return results in the specified format such as JSON, CSV, or TabSeparated.
   provider: clickhouse
   endpoint: /query
   method: POST
@@ -172,7 +172,7 @@
 - slug: clickhouse_get_query_result
   name: Get Query Result
   description: |
-    Retrieve the results of a previously executed query.
+    Retrieve the results of a previously executed ClickHouse query using its unique query ID, returning the computed data.
   provider: clickhouse
   endpoint: /query/{query_id}
   method: GET
@@ -192,7 +192,7 @@
 - slug: clickhouse_list_dictionaries
   name: List Dictionaries
   description: |
-    Retrieve a list of all dictionaries in the ClickHouse server.
+    List all external dictionaries configured in ClickHouse, returning dictionary names, data sources, and structure definitions.
   provider: clickhouse
   endpoint: /dictionaries
   method: GET

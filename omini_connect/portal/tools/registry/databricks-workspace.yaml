@@ -18,7 +18,7 @@
 - slug: databricks_workspace_list_notebooks
   name: List Notebooks
   description: |
-    List all notebooks in the Databricks workspace.
+    List all notebooks in the Databricks workspace, returning notebook paths, names, and languages.
   provider: databricks-workspace
   endpoint: /2.0/workspace/list
   method: GET
@@ -44,7 +44,7 @@
 - slug: databricks_workspace_get_notebook
   name: Get Notebook
   description: |
-    Get details and content of a specific notebook.
+    Get detailed information and content for a specific Databricks notebook including its code cells and metadata.
   provider: databricks-workspace
   endpoint: /2.0/workspace/get
   method: GET
@@ -66,7 +66,7 @@
 - slug: databricks_workspace_create_notebook
   name: Create Notebook
   description: |
-    Create a new notebook in the workspace.
+    Create a new notebook in the Databricks workspace at the specified path with a designated programming language.
   provider: databricks-workspace
   endpoint: /2.0/workspace/mkdirs
   method: POST
@@ -92,7 +92,7 @@
 - slug: databricks_workspace_run_notebook
   name: Run Notebook
   description: |
-    Execute a notebook on a cluster.
+    Execute a Databricks notebook on a specified cluster, initiating a new notebook job run.
   provider: databricks-workspace
   endpoint: /2.0/jobs/run-now
   method: POST
@@ -121,7 +121,7 @@
 - slug: databricks_workspace_list_clusters
   name: List Clusters
   description: |
-    List all clusters available in the workspace.
+    List all clusters available in the Databricks workspace, returning cluster IDs, names, states, and configurations.
   provider: databricks-workspace
   endpoint: /2.0/clusters/list
   method: GET
@@ -143,7 +143,7 @@
 - slug: databricks_workspace_get_cluster
   name: Get Cluster
   description: |
-    Get details of a specific cluster.
+    Get detailed information for a specific Databricks cluster including its state, size, and configuration.
   provider: databricks-workspace
   endpoint: /2.0/clusters/get
   method: GET
@@ -165,7 +165,7 @@
 - slug: databricks_workspace_list_jobs
   name: List Jobs
   description: |
-    List all jobs in the workspace.
+    List all jobs in the Databricks workspace, returning job IDs, names, schedules, and last run status.
   provider: databricks-workspace
   endpoint: /2.0/jobs/list
   method: GET
@@ -187,7 +187,7 @@
 - slug: databricks_workspace_get_job
   name: Get Job
   description: |
-    Get details of a specific job.
+    Get detailed information for a specific Databricks job including its settings, schedule, and task configuration.
   provider: databricks-workspace
   endpoint: /2.0/jobs/get
   method: GET
@@ -209,7 +209,7 @@
 - slug: databricks_workspace_list_models
   name: List Models
   description: |
-    List all MLflow models registered in the workspace.
+    List all MLflow models registered in the Databricks workspace, returning model names, versions, and creation dates.
   provider: databricks-workspace
   endpoint: /2.0/mlflow/databricks/registered-models/list
   method: GET
@@ -231,7 +231,7 @@
 - slug: databricks_workspace_get_model
   name: Get Model
   description: |
-    Get details of a specific MLflow model including versions.
+    Get detailed information for a specific MLflow model in Databricks including its versions, stages, and artifact location.
   provider: databricks-workspace
   endpoint: /2.0/mlflow/databricks/registered-models/get
   method: GET

@@ -17,7 +17,9 @@
 - slug: functionize_list_tests
   name: List Tests
   description: |
-    List all tests in the account.
+    List all tests in the Functionize account with filtering options.
+    Returns test names, IDs, status, and target URLs for each test.
+    Use this to discover automated tests and track testing coverage.
   provider: functionize
   endpoint: /api/v1/tests
   method: GET
@@ -44,7 +46,9 @@
 - slug: functionize_get_test
   name: Get Test
   description: |
-    Get detailed information about a test.
+    Get detailed information about a test including steps and configuration.
+    Returns the complete test data with all associated settings.
+    This provides full test data for test management.
   provider: functionize
   endpoint: /api/v1/tests/{testId}
   method: GET
@@ -66,7 +70,9 @@
 - slug: functionize_create_test
   name: Create Test
   description: |
-    Create a new test.
+    Create a new test with name, URL, and steps for automated execution.
+    Returns the created test with its unique ID and configuration.
+    This provisions a new automated test in Functionize.
   provider: functionize
   endpoint: /api/v1/tests
   method: POST
@@ -102,7 +108,9 @@
 - slug: functionize_run_test
   name: Run Test
   description: |
-    Trigger a test run.
+    Trigger a test run on a specified environment for automated execution.
+    Returns the initiated run with its unique ID and initial status.
+    This starts the test immediately on the target environment.
   provider: functionize
   endpoint: /api/v1/tests/{testId}/run
   method: POST
@@ -127,7 +135,9 @@
 - slug: functionize_list_test_runs
   name: List Test Runs
   description: |
-    List test run executions.
+    List test run executions with filtering by test, status, and date range.
+    Returns run IDs, status, start times, and results for each execution.
+    Use this to track test execution history and identify failures.
   provider: functionize
   endpoint: /api/v1/runs
   method: GET
@@ -157,7 +167,9 @@
 - slug: functionize_get_test_run
   name: Get Test Run
   description: |
-    Get detailed information about a test run.
+    Get detailed information about a test run including steps and results.
+    Returns the complete run data with all execution details.
+    This provides full run data for debugging and analysis.
   provider: functionize
   endpoint: /api/v1/runs/{runId}
   method: GET
@@ -179,7 +191,9 @@
 - slug: functionize_list_results
   name: List Results
   description: |
-    List test results from test runs.
+    List test results from test runs with filtering by test and status.
+    Returns result IDs, pass/fail status, and timestamps for each result.
+    Use this to track test outcomes and quality metrics.
   provider: functionize
   endpoint: /api/v1/results
   method: GET
@@ -206,7 +220,9 @@
 - slug: functionize_get_result
   name: Get Result
   description: |
-    Get detailed information about a test result.
+    Get detailed information about a test result including screenshots and logs.
+    Returns the complete result data with all failure details.
+    This provides full result data for debugging test failures.
   provider: functionize
   endpoint: /api/v1/results/{resultId}
   method: GET
@@ -228,7 +244,9 @@
 - slug: functionize_list_suites
   name: List Suites
   description: |
-    List test suites in the project.
+    List test suites in the Functionize project for test organization.
+    Returns suite names, IDs, and test counts for each suite.
+    Use this to discover test suites and organize test execution.
   provider: functionize
   endpoint: /api/v1/suites
   method: GET
@@ -249,7 +267,9 @@
 - slug: functionize_list_environments
   name: List Environments
   description: |
-    List test environments configured in Functionize.
+    List test environments configured in Functionize for test execution.
+    Returns environment names, IDs, and URLs for each environment.
+    Use this to discover available environments for test runs.
   provider: functionize
   endpoint: /api/v1/environments
   method: GET

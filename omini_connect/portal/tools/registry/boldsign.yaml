@@ -18,7 +18,8 @@
 - slug: boldsign_list_documents
   name: List Documents
   description: |
-    List all documents in BoldSign.
+    List all documents in BoldSign and return document IDs, titles, statuses, and signer information.
+    Filter by status to find documents in specific states like draft, sent, or signed.
   provider: boldsign
   endpoint: /v1/documents
   method: GET
@@ -46,7 +47,8 @@
 - slug: boldsign_get_document
   name: Get Document
   description: |
-    Get details for a specific document.
+    Get details for a specific document including title, status, signers, and audit trail.
+    Returns the complete document data for signature tracking and compliance.
   provider: boldsign
   endpoint: /v1/documents/{documentId}
   method: GET
@@ -67,7 +69,8 @@
 - slug: boldsign_create_document
   name: Create Document
   description: |
-    Create a new document for signing.
+    Create a new document for signing with title, subject, signers, and file attachments.
+    Returns the created document ID for further sending or tracking.
   provider: boldsign
   endpoint: /v1/documents
   method: POST
@@ -99,7 +102,8 @@
 - slug: boldsign_send_document
   name: Send Document
   description: |
-    Send an existing document for signature.
+    Send an existing document for signature to specified signers via email.
+    Returns confirmation of the sent document for tracking signature requests.
   provider: boldsign
   endpoint: /v1/documents/{documentId}/send
   method: POST
@@ -124,7 +128,8 @@
 - slug: boldsign_list_templates
   name: List Templates
   description: |
-    List all templates in BoldSign.
+    List all templates in BoldSign and return template names, IDs, and field configurations.
+    Use this to discover reusable document templates for consistent signature workflows.
   provider: boldsign
   endpoint: /v1/templates
   method: GET
@@ -149,7 +154,8 @@
 - slug: boldsign_get_template
   name: Get Template
   description: |
-    Get details for a specific template.
+    Get details for a specific template including field layout, signer requirements, and document structure.
+    Returns the complete template configuration for document creation and automation.
   provider: boldsign
   endpoint: /v1/templates/{templateId}
   method: GET
@@ -170,7 +176,8 @@
 - slug: boldsign_list_signers
   name: List Signers
   description: |
-    List all signers in BoldSign.
+    List all signers in BoldSign and return signer names, email addresses, and signature status.
+    Use this to manage contact information for document signature workflows.
   provider: boldsign
   endpoint: /v1/signers
   method: GET
@@ -195,7 +202,8 @@
 - slug: boldsign_get_signer
   name: Get Signer
   description: |
-    Get details for a specific signer.
+    Get details for a specific signer including contact information and signature history.
+    Returns the complete signer profile for relationship management and compliance tracking.
   provider: boldsign
   endpoint: /v1/signers/{signerId}
   method: GET
@@ -216,7 +224,8 @@
 - slug: boldsign_list_teams
   name: List Teams
   description: |
-    List all teams in BoldSign.
+    List all teams in BoldSign and return team names, member counts, and permission levels.
+    Use this to discover organizational units for team-based document management.
   provider: boldsign
   endpoint: /v1/teams
   method: GET
@@ -233,7 +242,8 @@
 - slug: boldsign_get_settings
   name: Get Settings
   description: |
-    Get team settings for BoldSign.
+    Get team settings for BoldSign including branding, notification preferences, and security configurations.
+    Returns the complete settings data for account customization and compliance.
   provider: boldsign
   endpoint: /v1/settings
   method: GET

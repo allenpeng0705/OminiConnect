@@ -18,7 +18,7 @@
 - slug: chattermill_list_projects
   name: List Projects
   description: |
-    List all projects in the account.
+    Retrieve all projects in the Chattermill account with pagination support. Returns project names, IDs, and review counts.
   provider: chattermill
   endpoint: /v1/projects
   method: GET
@@ -39,7 +39,7 @@
 - slug: chattermill_get_project
   name: Get Project
   description: |
-    Get details of a specific project.
+    Retrieve detailed information about a specific project by its unique ID. Returns the project name, description, and review count.
   provider: chattermill
   endpoint: /v1/projects/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: chattermill_list_reviews
   name: List Reviews
   description: |
-    List all reviews in a project.
+    Retrieve all reviews in a specific project with optional filtering by date or rating. Returns review IDs, texts, ratings, and sentiment scores.
   provider: chattermill
   endpoint: /v1/reviews
   method: GET
@@ -85,7 +85,7 @@
 - slug: chattermill_get_review
   name: Get Review
   description: |
-    Get details of a specific review.
+    Retrieve detailed information about a specific review by its unique ID. Returns the review text, rating, and sentiment score.
   provider: chattermill
   endpoint: /v1/reviews/{id}
   method: GET
@@ -106,7 +106,7 @@
 - slug: chattermill_list_themes
   name: List Themes
   description: |
-    List all themes in a project.
+    Retrieve all themes extracted from reviews in a specific project. Returns theme names, IDs, and associated sentiment scores.
   provider: chattermill
   endpoint: /v1/projects/{projectId}/themes
   method: GET
@@ -127,7 +127,7 @@
 - slug: chattermill_get_theme
   name: Get Theme
   description: |
-    Get details of a specific theme.
+    Retrieve detailed information about a specific theme by its unique ID. Returns the theme name, associated reviews, and sentiment breakdown.
   provider: chattermill
   endpoint: /v1/themes/{id}
   method: GET
@@ -148,7 +148,7 @@
 - slug: chattermill_list_reports
   name: List Reports
   description: |
-    List all reports in a project.
+    Retrieve all reports generated for a specific project. Returns report IDs, types, statuses, and generation dates.
   provider: chattermill
   endpoint: /v1/projects/{projectId}/reports
   method: GET
@@ -169,7 +169,7 @@
 - slug: chattermill_get_report
   name: Get Report
   description: |
-    Get details of a specific report.
+    Retrieve detailed information about a specific report by its unique ID. Returns the summary statistics, sentiment analysis, and key insights.
   provider: chattermill
   endpoint: /v1/reports/{id}
   method: GET
@@ -190,7 +190,7 @@
 - slug: chattermill_list_comments
   name: List Comments
   description: |
-    List all comments in a review.
+    Retrieve all comments on a specific review with pagination support. Returns comment texts, author names, and timestamps.
   provider: chattermill
   endpoint: /v1/reviews/{reviewId}/comments
   method: GET
@@ -211,7 +211,7 @@
 - slug: chattermill_create_comment
   name: Create Comment
   description: |
-    Create a new comment on a review.
+    Add a new comment to a specific review with text content. Returns the created comment with its unique ID.
   provider: chattermill
   endpoint: /v1/reviews/{reviewId}/comments
   method: POST

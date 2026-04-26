@@ -18,7 +18,7 @@
 - slug: google_chat_list_spaces
   name: List Spaces
   description: |
-    List spaces in Google Chat.
+    List all Google Chat spaces accessible to the bot including room names and membership counts. Returns space metadata for channel discovery and management.
   provider: google-chat
   endpoint: /chat/v1/spaces
   method: GET
@@ -35,7 +35,7 @@
 - slug: google_chat_get_space
   name: Get Space
   description: |
-    Get detailed information about a space.
+    Retrieve detailed information about a specific Google Chat space including members, settings, and message history. Returns space configuration and recent activity summary.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}
   method: GET
@@ -57,7 +57,7 @@
 - slug: google_chat_list_messages
   name: List Messages
   description: |
-    List messages in a space.
+    List messages in a specific Google Chat space with support for chronological filtering. Returns message content, sender information, and attachment metadata.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/messages
   method: GET
@@ -79,7 +79,7 @@
 - slug: google_chat_get_message
   name: Get Message
   description: |
-    Get detailed information about a message.
+    Retrieve detailed information about a specific message including content, reactions, and threading context. Returns the complete message data with sender details.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}
   method: GET
@@ -105,7 +105,7 @@
 - slug: google_chat_create_message
   name: Create Message
   description: |
-    Create a message in a space.
+    Create and send a new message in a Google Chat space with text content and optional formatting. Posts the message to the specified space and returns message metadata.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/messages
   method: POST
@@ -131,7 +131,7 @@
 - slug: google_chat_list_members
   name: List Members
   description: |
-    List members in a space.
+    List all members in a specific Google Chat space including names, email addresses, and membership status. Returns membership roster for permission management.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/members
   method: GET
@@ -153,7 +153,7 @@
 - slug: google_chat_get_member
   name: Get Member
   description: |
-    Get details about a member in a space.
+    Retrieve detailed information about a specific member in a Google Chat space including role and join date. Returns member profile and permission level.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/members/{member_id}
   method: GET
@@ -179,7 +179,7 @@
 - slug: google_chat_list_reactions
   name: List Reactions
   description: |
-    List reactions to a message.
+    List all emoji reactions on a specific message including user accounts and emoji types. Returns reaction summary and aggregated vote counts.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}/reactions
   method: GET
@@ -205,7 +205,7 @@
 - slug: google_chat_create_reaction
   name: Create Reaction
   description: |
-    Add a reaction to a message.
+    Add an emoji reaction to a specific message in Google Chat to express user sentiment. Creates a reaction and returns the updated reaction count.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}/reactions
   method: POST
@@ -235,7 +235,7 @@
 - slug: google_chat_get_space_event
   name: Get Space Event
   description: |
-    Get a specific event in a space.
+    Retrieve detailed information about a specific event in a Google Chat space including event type and timestamp. Returns event data and associated metadata.
   provider: google-chat
   endpoint: /chat/v1/spaces/{space_id}/events/{event_id}
   method: GET

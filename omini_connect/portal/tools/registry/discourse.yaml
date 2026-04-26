@@ -1,7 +1,7 @@
 - slug: discourse_list_categories
   name: List Categories
   description: |
-    Retrieve all categories in the forum with their descriptions and settings.
+    List all forum categories in the Discourse community with optional filtering. Returns category names, descriptions, color codes, and topic counts for organizing discussions.
   provider: discourse
   endpoint: /categories.json
   method: GET
@@ -17,7 +17,7 @@
 - slug: discourse_get_category
   name: Get Category
   description: |
-    Get details of a specific category by its ID.
+    Retrieve detailed information about a specific Discourse category including its description, color scheme, permissions settings, and recent topic activity.
   provider: discourse
   endpoint: /c/{id}/show.json
   method: GET
@@ -38,7 +38,7 @@
 - slug: discourse_list_posts
   name: List Posts
   description: |
-    Retrieve a list of posts, optionally filtered by topic or category.
+    List recent posts across the Discourse forum with optional filtering by category or topic. Returns post content previews, author information, and timestamps for engagement tracking.
   provider: discourse
   endpoint: /posts.json
   method: GET
@@ -63,7 +63,7 @@
 - slug: discourse_get_post
   name: Get Post
   description: |
-    Get details of a specific post by its ID.
+    Retrieve detailed information about a specific Discourse post including its full content, author profile, creation timestamp, and any embedded media or links.
   provider: discourse
   endpoint: /posts/{id}.json
   method: GET
@@ -84,7 +84,7 @@
 - slug: discourse_create_post
   name: Create Post
   description: |
-    Create a new post in a topic or as a new topic.
+    Create a new discussion post in a Discourse topic or start a new topic thread. Returns the created post with its unique identifier and creation timestamp.
   provider: discourse
   endpoint: /posts.json
   method: POST
@@ -114,7 +114,7 @@
 - slug: discourse_list_users
   name: List Users
   description: |
-    Retrieve a list of users in the forum with optional search filter.
+    List all registered users in the Discourse community with optional filtering by status. Returns usernames, email addresses, join dates, and trust levels for each user account.
   provider: discourse
   endpoint: /admin/users/list/{flag}.json
   method: GET
@@ -140,7 +140,7 @@
 - slug: discourse_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Retrieve detailed information about a specific Discourse user including their profile bio, statistics, badge count, and recent activity summary.
   provider: discourse
   endpoint: /u/{username}.json
   method: GET
@@ -161,7 +161,7 @@
 - slug: discourse_list_groups
   name: List Groups
   description: |
-    Retrieve all groups in the forum.
+    List all user groups in the Discourse community with optional filtering by type. Returns group names, member counts, and visibility settings for organizing users.
   provider: discourse
   endpoint: /groups.json
   method: GET
@@ -180,7 +180,7 @@
 - slug: discourse_get_group
   name: Get Group
   description: |
-    Get details of a specific group including members.
+    Retrieve detailed information about a specific Discourse group including member list, permission settings, and group description or bio.
   provider: discourse
   endpoint: /groups/{id}.json
   method: GET
@@ -201,7 +201,7 @@
 - slug: discourse_list_notifications
   name: List Notifications
   description: |
-    Retrieve notifications for the authenticated user.
+    List all notifications for the authenticated Discourse user with optional pagination. Returns notification types, related post information, and read status for each alert.
   provider: discourse
   endpoint: /notifications.json
   method: GET

@@ -16,8 +16,7 @@
 - slug: figma_more_list_files
   name: List Files
   description: |
-    List all files in a specific project. Files contain designs, prototypes, and specifications.
-    Use this to browse projects and find design files.
+    List all files in a Figma project with pagination and cursor-based navigation. Returns file names, thumbnail previews, and last modified dates for each file.
   provider: figma_more
   endpoint: /v1/projects/{projectId}/files
   method: GET
@@ -46,8 +45,7 @@
 - slug: figma_more_get_file
   name: Get File
   description: |
-    Get a specific Figma file including its document structure, canvas, and metadata.
-    Returns the full file content including all pages and their elements.
+    Retrieve a specific Figma file by its key including document structure, all pages, and canvas elements. Returns the complete file configuration with optional version control.
   provider: figma_more
   endpoint: /v1/files/{fileKey}
   method: GET
@@ -78,8 +76,7 @@
 - slug: figma_more_get_file_nodes
   name: Get File Nodes
   description: |
-    Get specific nodes from a Figma file by their IDs. Returns the node data for each specified ID.
-    Use this to retrieve specific components, frames, or elements without loading the entire file.
+    Retrieve specific nodes from a Figma file by their IDs with optional version control. Returns the node hierarchy and properties without loading the entire file structure.
   provider: figma_more
   endpoint: /v1/files/{fileKey}/nodes
   method: GET
@@ -108,8 +105,7 @@
 - slug: figma_more_list_comments
   name: List Comments
   description: |
-    List all comments on a specific Figma file. Comments include the author, message, and position.
-    Use this to review feedback and discussion on a design.
+    List all comments on a specific Figma file with optional filtering. Returns author names, message content, timestamps, and position coordinates for each comment.
   provider: figma_more
   endpoint: /v1/files/{fileKey}/comments
   method: GET
@@ -131,8 +127,7 @@
 - slug: figma_more_get_comment
   name: Get Comment
   description: |
-    Get details of a specific comment including the message, author, timestamp, and position.
-    Use this to retrieve full comment details for review.
+    Retrieve detailed information about a specific Figma comment including message content, author profile, and timestamp. Returns position coordinates and engagement metadata for the comment.
   provider: figma_more
   endpoint: /v1/files/{fileKey}/comments/{commentId}
   method: GET
@@ -158,8 +153,7 @@
 - slug: figma_more_post_comment
   name: Post Comment
   description: |
-    Post a new comment on a Figma file. Comments can include text and optional position coordinates.
-    Use this to leave feedback, ask questions, or start discussions on designs.
+    Post a new comment on a Figma file with optional position coordinates. Returns the created comment with its unique identifier and timestamp confirmation.
   provider: figma_more
   endpoint: /v1/files/{fileKey}/comments
   method: POST
@@ -188,8 +182,7 @@
 - slug: figma_more_list_components
   name: List Components
   description: |
-    List all components in a team library. Components are reusable design elements like buttons, cards, and icons.
-    Use this to explore available components for consistency in designs.
+    List all components in a Figma team library with pagination and cursor navigation. Returns component names, descriptions, and thumbnail previews with component set associations.
   provider: figma_more
   endpoint: /v1/components/{teamId}
   method: GET
@@ -218,8 +211,7 @@
 - slug: figma_more_get_component
   name: Get Component
   description: |
-    Get details of a specific component including its name, description, and the containing component set.
-    Use this to understand a component's structure and how to use it.
+    Retrieve detailed information about a specific Figma component including name, description, and containing component set. Returns property definitions and variant information for the component.
   provider: figma_more
   endpoint: /v1/components/{key}
   method: GET
@@ -244,8 +236,7 @@
 - slug: figma_more_list_styles
   name: List Styles
   description: |
-    List all styles in a team library. Styles include colors, typography, effects, and grids.
-    Use this to explore available styles for maintaining design consistency.
+    List all styles in a Figma team library with pagination and cursor navigation. Returns style names, types (color, typography, effects), and thumbnail previews with full configurations.
   provider: figma_more
   endpoint: /v1/styles/{teamId}
   method: GET
@@ -274,8 +265,7 @@
 - slug: figma_more_get_style
   name: Get Style
   description: |
-    Get details of a specific style including its name, description, and style properties.
-    Use this to understand a style's values and how to apply it.
+    Retrieve detailed information about a specific Figma style including name, description, and type. Returns all style property values for the selected style configuration.
   provider: figma_more
   endpoint: /v1/styles/{key}
   method: GET

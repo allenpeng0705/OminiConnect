@@ -1,7 +1,7 @@
 - slug: upsun_list_projects
   name: List Projects
   description: |
-    List all projects in your Upsun account.
+    List all projects in the Upsun account. Returns project names, IDs, regions, and subscription plans.
   provider: upsun
   endpoint: /projects
   method: GET
@@ -24,7 +24,7 @@
 - slug: upsun_get_project
   name: Get Project
   description: |
-    Get details for a specific project by ID.
+    Retrieve detailed information for a specific project including environments, subscription details, and repository configuration.
   provider: upsun
   endpoint: /projects/{projectId}
   method: GET
@@ -45,7 +45,7 @@
 - slug: upsun_create_project
   name: Create Project
   description: |
-    Create a new project on Upsun.
+    Create a new project on Upsun with the specified region, title, and repository configuration.
   provider: upsun
   endpoint: /projects
   method: POST
@@ -76,7 +76,7 @@
 - slug: upsun_list_apps
   name: List Apps
   description: |
-    List all applications in a project.
+    List all applications in an Upsun project. Returns application names, URLs, build statuses, and environment configurations.
   provider: upsun
   endpoint: /projects/{projectId}/apps
   method: GET
@@ -97,7 +97,7 @@
 - slug: upsun_get_app
   name: Get App
   description: |
-    Get details for a specific application.
+    Retrieve detailed information for a specific application including routes, environment variables, and deployment configuration.
   provider: upsun
   endpoint: /projects/{projectId}/apps/{appId}
   method: GET
@@ -122,7 +122,7 @@
 - slug: upsun_list_services
   name: List Services
   description: |
-    List all services (databases, caches, search) in a project.
+    List all managed services such as databases, caches, and search in an Upsun project. Returns service names, types, and connection details.
   provider: upsun
   endpoint: /projects/{projectId}/services
   method: GET
@@ -143,7 +143,7 @@
 - slug: upsun_get_service
   name: Get Service
   description: |
-    Get details for a specific service.
+    Retrieve detailed information for a specific managed service including type, version, and connection credentials.
   provider: upsun
   endpoint: /projects/{projectId}/services/{serviceId}
   method: GET
@@ -168,7 +168,7 @@
 - slug: upsun_list_deployments
   name: List Deployments
   description: |
-    List all deployments for an environment.
+    List all deployments for an Upsun environment. Returns deployment IDs, statuses, commit information, and deployment times.
   provider: upsun
   endpoint: /projects/{projectId}/environments/{environmentId}/deployments
   method: GET
@@ -196,7 +196,7 @@
 - slug: upsun_get_deployment
   name: Get Deployment
   description: |
-    Get details for a specific deployment.
+    Retrieve detailed information for a specific deployment including build logs, environment changes, and deployment status.
   provider: upsun
   endpoint: /deployments/{deploymentId}
   method: GET
@@ -217,7 +217,7 @@
 - slug: upsun_list_domains
   name: List Domains
   description: |
-    List all domains for a project.
+    List all domains configured for an Upsun project. Returns domain names, SSL status, and routing configuration.
   provider: upsun
   endpoint: /projects/{projectId}/domains
   method: GET

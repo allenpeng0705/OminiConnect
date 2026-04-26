@@ -18,7 +18,7 @@
 - slug: list_documents
   name: List Documents
   description: |
-    List all documents
+    List all documents in SignNow. Returns document IDs, names, created dates, statuses, and owner information.
   provider: signnow
   endpoint: /documents
   method: GET
@@ -35,7 +35,7 @@
 - slug: get_document
   name: Get Document
   description: |
-    Get document details
+    Get detailed information about a specific document including its status, signer information, and field data.
   provider: signnow
   endpoint: /documents/{id}
   method: GET
@@ -52,7 +52,7 @@
 - slug: upload_document
   name: Upload Document
   description: |
-    Upload a document
+    Upload a document to SignNow for electronic signatures. The document is stored and prepared for signature requests.
   provider: signnow
   endpoint: /documents
   method: POST
@@ -69,7 +69,7 @@
 - slug: download_document
   name: Download Document
   description: |
-    Download document PDF
+    Download a signed document PDF from SignNow. Returns the PDF binary content for local storage or viewing.
   provider: signnow
   endpoint: /documents/{id}/download
   method: GET
@@ -86,7 +86,7 @@
 - slug: create_signature_request
   name: Create Signature Request
   description: |
-    Create signature request
+    Create a signature request in SignNow. Sends the document to specified signers for electronic signature.
   provider: signnow
   endpoint: /signature_requests
   method: POST
@@ -103,7 +103,7 @@
 - slug: list_signature_requests
   name: List Signature Requests
   description: |
-    List signature requests
+    List all signature requests in SignNow. Returns request IDs, document names, statuses, and signer information.
   provider: signnow
   endpoint: /signature_requests
   method: GET
@@ -120,7 +120,7 @@
 - slug: get_signature_request
   name: Get Signature Request
   description: |
-    Get signature request status
+    Get detailed information about a signature request including its status, signer progress, and completion details.
   provider: signnow
   endpoint: /signature_requests/{id}
   method: GET
@@ -137,7 +137,7 @@
 - slug: cancel_signature_request
   name: Cancel Signature Request
   description: |
-    Cancel a signature request
+    Cancel a pending signature request in SignNow. The request is voided and signers can no longer sign the document.
   provider: signnow
   endpoint: /signature_requests/{id}/cancel
   method: POST
@@ -154,7 +154,7 @@
 - slug: create_folder
   name: Create Folder
   description: |
-    Create a folder
+    Create a new folder in SignNow for organizing documents. Sets the folder name and parent folder if needed.
   provider: signnow
   endpoint: /folders
   method: POST
@@ -171,7 +171,7 @@
 - slug: list_folders
   name: List Folders
   description: |
-    List all folders
+    List all folders in SignNow. Returns folder names, IDs, document counts, and parent folder information.
   provider: signnow
   endpoint: /folders
   method: GET

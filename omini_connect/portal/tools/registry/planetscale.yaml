@@ -17,8 +17,7 @@
 - slug: planetscale_list_databases
   name: List Databases
   description: |
-    List all PlanetScale databases in the organization.
-    Databases are MySQL-compatible schemas managed by PlanetScale.
+    List all PlanetScale databases in the organization. Returns database names, regions, creation dates, and connection details.
   provider: planetscale
   endpoint: /v1/databases
   method: GET
@@ -40,7 +39,7 @@
 - slug: planetscale_get_database
   name: Get Database
   description: |
-    Get details about a specific PlanetScale database including region, schema, and branch info.
+    Retrieve detailed information for a specific PlanetScale database including region, schema details, branch structure, and connection credentials.
   provider: planetscale
   endpoint: /v1/databases/{database}
   method: GET
@@ -62,8 +61,7 @@
 - slug: planetscale_create_database
   name: Create Database
   description: |
-    Create a new PlanetScale database with an initial main branch.
-    Specify the region for optimal latency.
+    Create a new PlanetScale database with an initial main branch in the specified region. Returns the database configuration and connection details.
   provider: planetscale
   endpoint: /v1/databases
   method: POST
@@ -92,8 +90,7 @@
 - slug: planetscale_list_branches
   name: List Branches
   description: |
-    List all branches for a PlanetScale database.
-    Branches are isolated copies of the database schema for development and testing.
+    List all branches for a PlanetScale database. Returns branch names, parent branches, creation dates, and schema status.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches
   method: GET
@@ -115,7 +112,7 @@
 - slug: planetscale_get_branch
   name: Get Branch
   description: |
-    Get details about a specific database branch including schema, row count, and status.
+    Retrieve detailed information for a specific PlanetScale database branch including schema, row count, parent branch, and migration status.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches/{branch}
   method: GET
@@ -141,8 +138,7 @@
 - slug: planetscale_create_branch
   name: Create Branch
   description: |
-    Create a new branch from the main database or an existing branch.
-    Branches can be used for development, testing, or creating schema changes.
+    Create a new branch from an existing PlanetScale database branch. Returns the new branch configuration and connection details.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches
   method: POST
@@ -172,8 +168,7 @@
 - slug: planetscale_list_tables
   name: List Tables
   description: |
-    List all tables in a specific branch's schema.
-    Returns table names, row counts, and column information.
+    List all tables in a PlanetScale database branch schema. Returns table names, row counts, and column count totals.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches/{branch}/tables
   method: GET
@@ -199,7 +194,7 @@
 - slug: planetscale_get_table
   name: Get Table
   description: |
-    Get the schema and column definitions of a specific table in a branch.
+    Retrieve the schema and column definitions for a specific table in a PlanetScale database branch including column names, types, and constraints.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches/{branch}/tables/{table}
   method: GET
@@ -229,8 +224,7 @@
 - slug: planetscale_execute_query
   name: Execute Query
   description: |
-    Execute a SQL query against a database branch using the query API.
-    Supports SELECT, INSERT, UPDATE, and DELETE statements.
+    Execute a SQL query against a PlanetScale database branch. Returns a query ID for retrieving results later.
   provider: planetscale
   endpoint: /v1/databases/{database}/branches/{branch}/queries
   method: POST
@@ -267,8 +261,7 @@
 - slug: planetscale_get_query_result
   name: Get Query Result
   description: |
-    Retrieve the results of a previously executed query by its ID.
-    Use after Execute Query to get the actual data returned.
+    Retrieve the results of a previously executed PlanetScale query by its ID. Returns the rows returned and any error information.
   provider: planetscale
   endpoint: /v1/databases/{database}/queries/{queryId}
   method: GET

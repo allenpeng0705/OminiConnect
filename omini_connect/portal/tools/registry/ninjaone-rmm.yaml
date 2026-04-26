@@ -18,7 +18,7 @@
 - slug: ninjaone_list_devices
   name: List Devices
   description: |
-    List all devices monitored by NinjaOne RMM.
+    List all devices monitored by NinjaOne RMM. Returns device names, IDs, status, and system information for each device in the monitoring dashboard.
   provider: ninjaone-rmm
   endpoint: /v1/devices
   method: GET
@@ -48,7 +48,7 @@
 - slug: ninjaone_get_device
   name: Get Device
   description: |
-    Get detailed information for a specific device.
+    Get detailed information for a specific device including its status, configuration, and monitoring settings. Returns the complete device object with all properties.
   provider: ninjaone-rmm
   endpoint: /v1/devices/{id}
   method: GET
@@ -71,7 +71,7 @@
 - slug: ninjaone_list_alerts
   name: List Alerts
   description: |
-    List all alerts in NinjaOne RMM.
+    List all alerts in NinjaOne RMM. Returns alert IDs, types, severities, and timestamps for each alert on the monitored devices.
   provider: ninjaone-rmm
   endpoint: /v1/alerts
   method: GET
@@ -96,7 +96,7 @@
 - slug: ninjaone_list_policies
   name: List Policies
   description: |
-    List all management policies.
+    List all management policies in NinjaOne RMM. Returns policy names, IDs, and configuration settings for each policy configured in the system.
   provider: ninjaone-rmm
   endpoint: /v1/policies
   method: GET
@@ -115,7 +115,7 @@
 - slug: ninjaone_list_schedules
   name: List Schedules
   description: |
-    List all scheduled tasks.
+    List all scheduled tasks in NinjaOne RMM. Returns schedule names, IDs, run times, and task types for each scheduled automation.
   provider: ninjaone-rmm
   endpoint: /v1/schedules
   method: GET
@@ -134,7 +134,7 @@
 - slug: ninjaone_list_scripts
   name: List Scripts
   description: |
-    List all automation scripts.
+    List all automation scripts available in NinjaOne RMM. Returns script names, IDs, and descriptions for each automation script in the library.
   provider: ninjaone-rmm
   endpoint: /v1/scripts
   method: GET
@@ -153,7 +153,7 @@
 - slug: ninjaone_run_script
   name: Run Script
   description: |
-    Run an automation script on a device.
+    Run an automation script on a device. Returns the execution ID, status, and any output or errors from the script execution on the target device.
   provider: ninjaone-rmm
   endpoint: /v1/devices/{deviceId}/scripts/{scriptId}/run
   method: POST
@@ -183,7 +183,7 @@
 - slug: ninjaone_list_users
   name: List Users
   description: |
-    List all users in NinjaOne.
+    List all users in NinjaOne RMM. Returns user names, emails, roles, and permission levels for each user in the system.
   provider: ninjaone-rmm
   endpoint: /v1/users
   method: GET
@@ -202,7 +202,7 @@
 - slug: ninjaone_get_dashboard
   name: Get Dashboard
   description: |
-    Get dashboard summary and overview.
+    Get dashboard summary and overview from NinjaOne RMM. Returns key metrics, device status summaries, and alert counts for the monitoring dashboard.
   provider: ninjaone-rmm
   endpoint: /v1/dashboard
   method: GET
@@ -221,7 +221,7 @@
 - slug: ninjaone_list_locations
   name: List Locations
   description: |
-    List all locations in NinjaOne.
+    List all locations in NinjaOne RMM. Returns location names, IDs, addresses, and device counts for each location configured.
   provider: ninjaone-rmm
   endpoint: /v1/locations
   method: GET

@@ -17,7 +17,7 @@
 - slug: zapier_list_integrations
   name: List Integrations
   description: |
-    List all Zapier integrations or Zaps in the connected account.
+    List all Zapier integrations (Zaps) in the connected account. Returns Zap names, statuses, and configuration details.
   provider: zapier
   endpoint: /zaps
   method: GET
@@ -43,7 +43,7 @@
 - slug: zapier_get_integration
   name: Get Integration
   description: |
-    Get detailed information about a specific integration or Zap.
+    Retrieve detailed information for a specific Zap including trigger, action configurations, and field mappings.
   provider: zapier
   endpoint: /zaps/{zap_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: zapier_create_integration
   name: Create Integration
   description: |
-    Create a new integration or Zap. Configure trigger, action, and mapping.
+    Create a new Zapier integration with the specified trigger app, action app, and field mappings between them.
   provider: zapier
   endpoint: /zaps
   method: POST
@@ -104,7 +104,7 @@
 - slug: zapier_list_actions
   name: List Actions
   description: |
-    List available Zapier actions across all supported apps.
+    List available Zapier actions across all supported applications. Returns action names, descriptions, and required input fields.
   provider: zapier
   endpoint: /actions
   method: GET
@@ -133,7 +133,7 @@
 - slug: zapier_get_action
   name: Get Action
   description: |
-    Get detailed information about a specific action including input fields.
+    Retrieve detailed information for a specific action including all input fields and their configurations.
   provider: zapier
   endpoint: /actions/{action_id}
   method: GET
@@ -155,7 +155,7 @@
 - slug: zapier_trigger_action
   name: Trigger Action
   description: |
-    Trigger a specific action directly. Provide app, action, and input data.
+    Trigger a specific Zapier action directly with the specified app, action name, and input data.
   provider: zapier
   endpoint: /actions/trigger
   method: POST
@@ -187,7 +187,7 @@
 - slug: zapier_list_searches
   name: List Searches
   description: |
-    List available Zapier searches across all supported apps.
+    List available Zapier searches across all supported applications. Returns search names, descriptions, and required input fields.
   provider: zapier
   endpoint: /searches
   method: GET
@@ -216,7 +216,7 @@
 - slug: zapier_get_search
   name: Get Search
   description: |
-    Get detailed information about a specific search including input fields.
+    Retrieve detailed information for a specific search including all input fields and their configurations.
   provider: zapier
   endpoint: /searches/{search_id}
   method: GET
@@ -238,7 +238,7 @@
 - slug: zapier_create_zap
   name: Create Zap
   description: |
-    Create a new Zap with trigger and action configuration.
+    Create a new Zap with the specified trigger and action configurations. Sets up the automation workflow in Zapier.
   provider: zapier
   endpoint: /zaps
   method: POST
@@ -270,7 +270,7 @@
 - slug: zapier_get_zap_status
   name: Get Zap Status
   description: |
-    Get the current status of a Zap including last run details and history.
+    Retrieve the current status of a Zap including last run timestamp, execution history, and any errors encountered.
   provider: zapier
   endpoint: /zaps/{zap_id}/status
   method: GET

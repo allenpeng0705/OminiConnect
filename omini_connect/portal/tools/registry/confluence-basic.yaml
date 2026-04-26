@@ -18,7 +18,7 @@
 - slug: confluence_list_spaces
   name: List Spaces
   description: |
-    List all spaces in Confluence.
+    List all spaces in Confluence with pagination support, returning space keys, names, descriptions, and member counts for each space.
   provider: confluence-basic
   endpoint: /wiki/api/v2/spaces
   method: GET
@@ -42,7 +42,7 @@
 - slug: confluence_get_space
   name: Get Space
   description: |
-    Get details of a specific space.
+    Retrieve details of a specific Confluence space including its name, key, description, homepage, and permissions settings.
   provider: confluence-basic
   endpoint: /wiki/api/v2/spaces/{spaceKey}
   method: GET
@@ -63,7 +63,7 @@
 - slug: confluence_list_pages
   name: List Pages
   description: |
-    List all pages in a space.
+    List all pages in a Confluence space with pagination, returning page IDs, titles, versions, status, and author information for each page.
   provider: confluence-basic
   endpoint: /wiki/api/v2/spaces/{spaceKey}/pages
   method: GET
@@ -88,7 +88,7 @@
 - slug: confluence_get_page
   name: Get Page
   description: |
-    Get details of a specific page.
+    Retrieve details of a specific Confluence page including its title, body content, version number, author, and creation date.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages/{pageId}
   method: GET
@@ -109,7 +109,7 @@
 - slug: confluence_create_page
   name: Create Page
   description: |
-    Create a new page in a space.
+    Create a new page in a Confluence space with a specified title, body content, and optional parent page, returning the created page ID.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages
   method: POST
@@ -141,7 +141,7 @@
 - slug: confluence_update_page
   name: Update Page
   description: |
-    Update an existing page.
+    Update an existing Confluence page with new title, body content, or version information for optimistic locking, returning the updated page.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages/{pageId}
   method: PUT
@@ -171,7 +171,8 @@
 - slug: confluence_delete_page
   name: Delete Page
   description: |
-    Delete a page.
+    Delete a page from Confluence, removing the page and all its child pages from the space permanently.
+    Returns confirmation of deletion for space management and content cleanup.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages/{pageId}
   method: DELETE
@@ -192,7 +193,7 @@
 - slug: confluence_list_comments
   name: List Comments
   description: |
-    List all comments on a page.
+    List all comments on a Confluence page, returning comment IDs, content, authors, creation dates, and parent comment relationships.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages/{pageId}/comments
   method: GET
@@ -213,7 +214,7 @@
 - slug: confluence_create_comment
   name: Create Comment
   description: |
-    Create a new comment on a page.
+    Create a new comment on a Confluence page with HTML content, returning the created comment ID and timestamp.
   provider: confluence-basic
   endpoint: /wiki/api/v2/pages/{pageId}/comments
   method: POST
@@ -238,7 +239,7 @@
 - slug: confluence_search_content
   name: Search Content
   description: |
-    Search for content in Confluence.
+    Search for content in Confluence using CQL (Confluence Query Language), returning matching pages, comments, and attachments with their metadata.
   provider: confluence-basic
   endpoint: /wiki/api/v2/search
   method: GET

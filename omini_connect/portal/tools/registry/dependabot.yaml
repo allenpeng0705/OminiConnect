@@ -17,7 +17,7 @@
 - slug: dependabot_list_repositories
   name: List Repositories
   description: |
-    Retrieve all repositories enabled for Dependabot in the organization.
+    List all repositories in your GitHub organization that have Dependabot enabled. Returns repository names, IDs, and Dependabot configuration status for each repo.
   provider: dependabot
   endpoint: /repositories
   method: GET
@@ -44,7 +44,7 @@
 - slug: dependabot_get_repository
   name: Get Repository
   description: |
-    Retrieve Dependabot configuration and status for a specific repository.
+    Get the Dependabot configuration and security alert status for a specific GitHub repository. Returns update schedule, target ecosystems, and vulnerability settings.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}
   method: GET
@@ -69,7 +69,7 @@
 - slug: dependabot_list_dependencies
   name: List Dependencies
   description: |
-    Retrieve all dependencies tracked by Dependabot for a repository.
+    List all dependencies tracked by Dependabot for a GitHub repository. Returns package names, versions, vulnerability status, and manifest file locations.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/dependencies
   method: GET
@@ -97,7 +97,7 @@
 - slug: dependabot_get_dependency
   name: Get Dependency
   description: |
-    Retrieve details about a specific dependency tracked by Dependabot.
+    Get detailed information about a specific dependency tracked by Dependabot including version history, vulnerability alerts, and update availability.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/dependencies/{dependency_id}
   method: GET
@@ -126,7 +126,7 @@
 - slug: dependabot_list_pull_requests
   name: List Pull Requests
   description: |
-    Retrieve all Dependabot pull requests for repositories in the organization.
+    List all Dependabot pull requests in your GitHub organization. Returns PR numbers, titles, dependency updates, states, and created dates.
   provider: dependabot
   endpoint: /pulls
   method: GET
@@ -156,7 +156,7 @@
 - slug: dependabot_get_pull_request
   name: Get Pull Request
   description: |
-    Retrieve details about a specific Dependabot pull request.
+    Get detailed information about a specific Dependabot pull request including the dependency changes, version updates, and CI status.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/pulls/{pull_number}
   method: GET
@@ -185,7 +185,7 @@
 - slug: dependabot_create_pull_request
   name: Create Pull Request
   description: |
-    Create a Dependabot pull request to update a dependency.
+    Create a new Dependabot pull request to update a specific dependency to a target version. Returns the created PR number and URL.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/pulls
   method: POST
@@ -232,7 +232,7 @@
 - slug: dependabot_update_dependency
   name: Update Dependency
   description: |
-    Trigger an immediate update for a specific dependency via Dependabot.
+    Trigger an immediate Dependabot update scan for a specific dependency and optionally update it to a target version. Returns the update job status and results.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/dependabot/updates/{update_id}
   method: PATCH
@@ -264,7 +264,7 @@
 - slug: dependabot_list_security_updates
   name: List Security Updates
   description: |
-    Retrieve all security updates configured for repositories.
+    List all Dependabot security updates configured in your GitHub organization. Returns security update IDs, targeted repositories, and vulnerability severity levels.
   provider: dependabot
   endpoint: /security-updates
   method: GET
@@ -288,7 +288,7 @@
 - slug: dependabot_get_security_update
   name: Get Security Update
   description: |
-    Retrieve details about a specific security update.
+    Get detailed information about a specific Dependabot security update including the vulnerability CVE, affected ranges, and fix status.
   provider: dependabot
   endpoint: /repositories/{owner}/{repo}/security-updates/{update_id}
   method: GET

@@ -18,7 +18,7 @@
 - slug: lokalise_list_projects
   name: List Projects
   description: |
-    List all projects.
+    List all translation projects in your Lokalise account with pagination. Returns project names, IDs, languages, and team member counts.
   provider: lokalise
   endpoint: /api2/projects
   method: GET
@@ -40,7 +40,7 @@
 - slug: lokalise_get_project
   name: Get Project
   description: |
-    Get details for a specific project.
+    Retrieve details about a specific Lokalise project by its ID. Returns the project name, description, source language, target languages, and team access.
   provider: lokalise
   endpoint: /api2/projects/{project_id}
   method: GET
@@ -61,7 +61,7 @@
 - slug: lokalise_list_keys
   name: List Keys
   description: |
-    List all keys in a project.
+    List all translation keys in a specified Lokalise project. Returns key names, descriptions, platform locations, and translation status for each key.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/keys
   method: GET
@@ -87,7 +87,7 @@
 - slug: lokalise_get_key
   name: Get Key
   description: |
-    Get details for a specific key.
+    Retrieve details about a specific translation key in Lokalise by its ID. Returns the key name, description, screenshots, and translations across all languages.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/keys/{key_id}
   method: GET
@@ -112,7 +112,7 @@
 - slug: lokalise_create_key
   name: Create Key
   description: |
-    Create a new key.
+    Create a new translation key in a Lokalise project with specified name and description. Returns the created key with its unique ID.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/keys
   method: POST
@@ -141,7 +141,7 @@
 - slug: lokalise_list_translations
   name: List Translations
   description: |
-    List all translations for a key.
+    List all translations for a specific key in a Lokalise project. Returns translation values, language codes, reviewer status, and modification timestamps.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/keys/{key_id}/translations
   method: GET
@@ -167,7 +167,7 @@
 - slug: lokalise_list_languages
   name: List Languages
   description: |
-    List all project languages.
+    List all languages configured in a Lokalise project. Returns language codes, names, plural forms, and translation progress percentages.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/languages
   method: GET
@@ -189,7 +189,7 @@
 - slug: lokalise_get_language
   name: Get Language
   description: |
-    Get details for a specific language.
+    Retrieve details about a specific language in a Lokalise project. Returns the language name, code, plural rules, and translation completion status.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/languages/{language_id}
   method: GET
@@ -214,7 +214,7 @@
 - slug: lokalise_list_tasks
   name: List Tasks
   description: |
-    List all tasks in a project.
+    List all translation tasks in a Lokalise project with status filtering. Returns task names, IDs, assignees, due dates, and completion status.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/tasks
   method: GET
@@ -236,7 +236,7 @@
 - slug: lokalise_get_task
   name: Get Task
   description: |
-    Get details for a specific task.
+    Retrieve details about a specific Lokalise task by its ID. Returns the task title, description, assignees, language pair, and progress statistics.
   provider: lokalise
   endpoint: /api2/projects/{project_id}/tasks/{task_id}
   method: GET

@@ -18,8 +18,7 @@
 - slug: mimecast_list_audit_logs
   name: List Audit Logs
   description: |
-    List audit logs from Mimecast.
-    Filter by date, user, or event type.
+    List audit log events from Mimecast. Returns information about admin actions, sign-ins, and policy changes.
   provider: mimecast
   endpoint: /api/audit/get-audit-events
   method: POST
@@ -49,7 +48,7 @@
 - slug: mimecast_list_managed_urls
   name: List Managed URLs
   description: |
-    List all managed URLs in Mimecast.
+    List all managed URLs in Mimecast. Returns URLs with their assigned policies (permit, block, warn).
   provider: mimecast
   endpoint: /api/managed-headers/get-managed-urls
   method: POST
@@ -71,7 +70,7 @@
 - slug: mimecast_create_managed_url
   name: Create Managed URL
   description: |
-    Create a new managed URL entry.
+    Create a new managed URL entry in Mimecast with a specified policy action.
   provider: mimecast
   endpoint: /api/managed-headers/create-managed-url
   method: POST
@@ -96,7 +95,7 @@
 - slug: mimecast_list_templates
   name: List Templates
   description: |
-    List all email templates in Mimecast.
+    List all email templates in Mimecast. Returns template names, subjects, and content previews.
   provider: mimecast
   endpoint: /api/templates/get-templates
   method: POST
@@ -118,7 +117,7 @@
 - slug: mimecast_get_template
   name: Get Template
   description: |
-    Get details of a specific template.
+    Get details about a specific email template in Mimecast, including subject line and HTML content.
   provider: mimecast
   endpoint: /api/templates/get-template
   method: POST
@@ -139,7 +138,7 @@
 - slug: mimecast_list_groups
   name: List Groups
   description: |
-    List all distribution groups in Mimecast.
+    List all distribution groups in Mimecast. Returns group names, member counts, and delivery settings.
   provider: mimecast
   endpoint: /api/directory/list-groups
   method: POST
@@ -161,7 +160,7 @@
 - slug: mimecast_get_group
   name: Get Group
   description: |
-    Get details of a specific group.
+    Get details about a specific distribution group in Mimecast, including member list and settings.
   provider: mimecast
   endpoint: /api/directory/get-group
   method: POST
@@ -182,7 +181,7 @@
 - slug: mimecast_list_domains
   name: List Domains
   description: |
-    List all configured domains in Mimecast.
+    List all configured email domains in Mimecast. Returns domain names and verification status.
   provider: mimecast
   endpoint: /api/domain/get-domains
   method: POST
@@ -200,7 +199,7 @@
 - slug: mimecast_list_accounts
   name: List Accounts
   description: |
-    List all accounts in Mimecast.
+    List all accounts in Mimecast. Returns account names, regions, and subscription statuses.
   provider: mimecast
   endpoint: /api/account/get-accounts
   method: POST
@@ -218,7 +217,7 @@
 - slug: mimecast_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Get details about a specific Mimecast account, including subscription tier and regional settings.
   provider: mimecast
   endpoint: /api/account/get-account
   method: POST

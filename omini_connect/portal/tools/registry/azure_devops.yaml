@@ -17,7 +17,7 @@
 - slug: azure_devops_list_projects
   name: List Projects
   description: |
-    List all projects in an Azure DevOps organization. Returns project details including name, description, visibility, and state.
+    List all projects in an Azure DevOps organization, returning project names, descriptions, visibility, and state.
   provider: azure_devops
   endpoint: /api/v4/projects
   method: GET
@@ -77,8 +77,7 @@
 - slug: azure_devops_list_work_items
   name: List Work Items
   description: |
-    List work items in a project. Filter by type, state, assigned to, or area path.
-    Use WIQL (Work Item Query Language) for complex queries.
+    List work items in a project with optional filters for type, state, assignee, or area path.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/workitems
   method: GET
@@ -154,7 +153,7 @@
 - slug: azure_devops_create_work_item
   name: Create Work Item
   description: |
-    Create a new work item in a project. Include title, work item type, and optional description, assignees, and tags.
+    Create a new work item in a project with title, type, description, assignees, and tags.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/workitems
   method: POST
@@ -197,8 +196,7 @@
 - slug: azure_devops_list_repos
   name: List Repositories
   description: |
-    List all repositories in a project including Git and TFVC repositories.
-    Returns repository name, URL, default branch, and size.
+    List all repositories in a project including Git and TFVC repositories, returning names, URLs, and default branches.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/repos
   method: GET
@@ -232,7 +230,7 @@
 - slug: azure_devops_get_repo
   name: Get Repository
   description: |
-    Get details of a specific repository including name, URL, default branch, isDisabled, and remote URL.
+    Get details of a specific repository including name, URL, default branch, and remote URL.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/repos/{repo_id}
   method: GET
@@ -262,8 +260,7 @@
 - slug: azure_devops_list_builds
   name: List Builds
   description: |
-    List build definitions or recent build runs in a project.
-    Filter by branch, status, result, or definition.
+    List build definitions or recent build runs in a project with optional filters for branch, status, or result.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/builds
   method: GET
@@ -341,8 +338,7 @@
 - slug: azure_devops_list_releases
   name: List Releases
   description: |
-    List release definitions or recent release deployments in a project.
-    Filter by release environment, status, or result.
+    List release definitions or recent release deployments in a project with optional filters for environment, status, or result.
   provider: azure_devops
   endpoint: /api/v4/projects/{project_id}/releases
   method: GET

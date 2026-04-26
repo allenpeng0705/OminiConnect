@@ -18,7 +18,8 @@
 - slug: box_list_files
   name: List Files
   description: |
-    List files and folders in a Box folder.
+    List files and folders in a Box folder and return item names, IDs, types, and modification dates.
+    Use folder_id "0" for root directory to navigate the entire file hierarchy.
   provider: box
   endpoint: /2.0/folders/{folder_id}/items
   method: GET
@@ -49,7 +50,8 @@
 - slug: box_get_file
   name: Get File
   description: |
-    Get metadata for a Box file.
+    Get metadata for a Box file including name, size, created date, and uploader information.
+    Returns file metadata for content management and access tracking.
   provider: box
   endpoint: /2.0/files/{file_id}
   method: GET
@@ -72,7 +74,8 @@
 - slug: box_upload_file
   name: Upload File
   description: |
-    Upload a file to a Box folder.
+    Upload a file to a Box folder with specified name and base64-encoded content.
+    Returns the uploaded file ID and metadata for confirmation.
   provider: box
   endpoint: /2.0/files/content
   method: POST
@@ -103,7 +106,8 @@
 - slug: box_create_folder
   name: Create Folder
   description: |
-    Create a new folder in Box.
+    Create a new folder in Box with a specified name and parent folder location.
+    Returns the created folder ID for file organization and management.
   provider: box
   endpoint: /2.0/folders
   method: POST
@@ -130,7 +134,8 @@
 - slug: box_delete_file
   name: Delete File
   description: |
-    Permanently delete a Box file (moves to trash).
+    Permanently delete a Box file by moving it to trash (can be recovered within retention period).
+    Returns confirmation of deletion for file management workflows.
   provider: box
   endpoint: /2.0/files/{file_id}
   method: DELETE
@@ -152,7 +157,8 @@
 - slug: box_list_users
   name: List Users
   description: |
-    List users in the enterprise.
+    List users in the enterprise and return user names, emails, IDs, and status information.
+    Use this to discover and manage enterprise Box users for collaboration.
   provider: box
   endpoint: /2.0/users
   method: GET
@@ -179,7 +185,8 @@
 - slug: box_get_user
   name: Get User
   description: |
-    Get information about a Box user by ID or email.
+    Get information about a Box user by ID (use "me" for current authenticated user) or email.
+    Returns complete user profile including name, email, and role for access management.
   provider: box
   endpoint: /2.0/users/{user_id}
   method: GET
@@ -201,7 +208,8 @@
 - slug: box_list_groups
   name: List Groups
   description: |
-    List groups in the enterprise.
+    List groups in the enterprise and return group names, IDs, and member counts.
+    Use this to discover available groups for file access and collaboration settings.
   provider: box
   endpoint: /2.0/groups
   method: GET
@@ -227,7 +235,8 @@
 - slug: box_get_group
   name: Get Group
   description: |
-    Get information about a group.
+    Get information about a group including group name, description, and member list.
+    Returns the complete group configuration for collaboration management.
   provider: box
   endpoint: /2.0/groups/{group_id}
   method: GET
@@ -249,7 +258,8 @@
 - slug: box_list_tasks
   name: List Tasks
   description: |
-    List tasks on a file.
+    List tasks on a file and return task IDs, assignees, due dates, and completion status.
+    Use this to track pending review items and assignment progress on documents.
   provider: box
   endpoint: /2.0/files/{file_id}/tasks
   method: GET

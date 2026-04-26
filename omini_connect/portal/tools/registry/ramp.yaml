@@ -18,7 +18,7 @@
 - slug: ramp_list_transactions
   name: List Transactions
   description: |
-    Retrieve a list of all transactions in your Ramp account.
+    List all transactions in your Ramp account including amounts, dates, merchants, and status values. Returns transaction records for expense tracking and financial reconciliation.
   provider: ramp
   endpoint: /v1/transactions
   method: GET
@@ -48,7 +48,7 @@
 - slug: ramp_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction by ID.
+    Get details of a specific Ramp transaction by ID including amount, date, merchant, category, and receipt information. Returns transaction data for expense reporting and audit preparation.
   provider: ramp
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -71,7 +71,7 @@
 - slug: ramp_list_cards
   name: List Cards
   description: |
-    Retrieve a list of all company cards.
+    List all company cards in your Ramp account including card numbers (masked), holders, spending limits, and activation statuses. Returns card listings for corporate spend management and policy enforcement.
   provider: ramp
   endpoint: /v1/cards
   method: GET
@@ -97,7 +97,7 @@
 - slug: ramp_get_card
   name: Get Card
   description: |
-    Get details of a specific card by ID.
+    Get details of a specific Ramp card by ID including spending limit, holder information, and recent transaction summaries. Returns card data for usage monitoring and limit adjustment.
   provider: ramp
   endpoint: /v1/cards/{cardId}
   method: GET
@@ -120,7 +120,7 @@
 - slug: ramp_list_employees
   name: List Employees
   description: |
-    Retrieve a list of all employees in your Ramp account.
+    List all employees in your Ramp account including names, email addresses, and department assignments. Returns employee records for spend policy assignment and card management.
   provider: ramp
   endpoint: /v1/employees
   method: GET
@@ -143,7 +143,7 @@
 - slug: ramp_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee by ID.
+    Get details of a specific Ramp employee by ID including name, department, spending limit, and assigned cards. Returns employee data for expense management and policy configuration.
   provider: ramp
   endpoint: /v1/employees/{employeeId}
   method: GET
@@ -166,7 +166,7 @@
 - slug: ramp_list_departments
   name: List Departments
   description: |
-    Retrieve a list of all departments.
+    List all departments in your Ramp account including names, budgets, and manager information. Returns department data for organizational structure and budget allocation.
   provider: ramp
   endpoint: /v1/departments
   method: GET
@@ -185,7 +185,7 @@
 - slug: ramp_create_expense
   name: Create Expense
   description: |
-    Create a new expense record.
+    Create a new expense record in Ramp with amount, merchant name, date, and optional description and employee assignment. Returns the created expense with ID for tracking and reimbursement processing.
   provider: ramp
   endpoint: /v1/expenses
   method: POST
@@ -225,7 +225,7 @@
 - slug: ramp_list_limits
   name: List Limits
   description: |
-    Retrieve spending limits for cards and employees.
+    List spending limits for Ramp cards and employees including daily, monthly, and category-specific restrictions. Returns limit data for policy enforcement and budget monitoring.
   provider: ramp
   endpoint: /v1/limits
   method: GET
@@ -247,7 +247,7 @@
 - slug: ramp_get_balance
   name: Get Balance
   description: |
-    Get your Ramp account balance.
+    Get your Ramp account balance including available credit, pending transactions, and recent cash flow summary. Returns balance data for budget planning and cash management.
   provider: ramp
   endpoint: /v1/balance
   method: GET

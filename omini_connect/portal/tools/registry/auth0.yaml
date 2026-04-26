@@ -1,7 +1,8 @@
 - slug: auth0_list_users
   name: List Users
   description: |
-    Retrieve a list of all users in your Auth0 tenant.
+    List users in your Auth0 tenant with search query and pagination. Returns user IDs, emails, names, and metadata for each user.
+    Use this to discover and manage user accounts in your authentication system.
   provider: auth0
   endpoint: /users
   method: GET
@@ -27,7 +28,8 @@
 - slug: auth0_get_user
   name: Get User
   description: |
-    Get details of a specific user by ID.
+    Get details of a specific user by ID. Returns the user's email, name, picture, metadata, and last login information.
+    This provides complete user profile data for account management and support.
   provider: auth0
   endpoint: /users/{id}
   method: GET
@@ -48,7 +50,8 @@
 - slug: auth0_create_user
   name: Create User
   description: |
-    Create a new user in your Auth0 tenant.
+    Create a new user in your Auth0 tenant with email, password, and connection. Returns the created user with their unique ID.
+    This provisions new user accounts for your application.
   provider: auth0
   endpoint: /users
   method: POST
@@ -80,7 +83,8 @@
 - slug: auth0_update_user
   name: Update User
   description: |
-    Update an existing user's information.
+    Update an existing user's information in Auth0 including email, name, or metadata. Returns the updated user profile.
+    This modifies user account data to keep profiles current.
   provider: auth0
   endpoint: /users/{id}
   method: PATCH
@@ -107,7 +111,8 @@
 - slug: auth0_list_clients
   name: List Clients
   description: |
-    Retrieve a list of all clients (applications) in your Auth0 tenant.
+    List clients (applications) in your Auth0 tenant with pagination. Returns client IDs, names, types, and callback URLs.
+    Use this to discover registered applications using your Auth0 domain.
   provider: auth0
   endpoint: /clients
   method: GET
@@ -130,7 +135,8 @@
 - slug: auth0_get_client
   name: Get Client
   description: |
-    Get details of a specific client by ID.
+    Get details of a specific client by ID. Returns the client's name, type, settings, and OAuth configuration.
+    This provides complete client application data for configuration management.
   provider: auth0
   endpoint: /clients/{id}
   method: GET
@@ -151,7 +157,8 @@
 - slug: auth0_list_connections
   name: List Connections
   description: |
-    Retrieve a list of all database and social connections in your Auth0 tenant.
+    List database and social connections in your Auth0 tenant with pagination. Returns connection names, types, and status.
+    This discovers available identity providers for authentication.
   provider: auth0
   endpoint: /connections
   method: GET
@@ -174,7 +181,8 @@
 - slug: auth0_get_connection
   name: Get Connection
   description: |
-    Get details of a specific connection by ID.
+    Get details of a specific connection by ID. Returns the connection configuration, enabled providers, and options.
+    This provides detailed connection settings for troubleshooting and configuration.
   provider: auth0
   endpoint: /connections/{id}
   method: GET
@@ -195,7 +203,8 @@
 - slug: auth0_get_logs
   name: Get Logs
   description: |
-    Retrieve log entries for your Auth0 tenant.
+    List log entries for your Auth0 tenant with pagination and type filter. Returns timestamps, event types, and user details.
+    This provides security auditing and troubleshooting for authentication events.
   provider: auth0
   endpoint: /logs
   method: GET
@@ -221,7 +230,8 @@
 - slug: auth0_get_rules
   name: Get Rules
   description: |
-    Retrieve all rules configured in your Auth0 tenant.
+    List rules configured in your Auth0 tenant with optional stage filter. Returns rule names, order, enabled status, and script content.
+    Use this to discover custom authentication logic and extensions.
   provider: auth0
   endpoint: /rules
   method: GET

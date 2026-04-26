@@ -18,7 +18,8 @@
 - slug: crisp_plugin_list_conversations
   name: List Conversations
   description: |
-    List all conversations in Crisp. Filter by status, assignee, or date.
+    List all conversations in the Crisp workspace, returning conversation IDs, status, assignees, and timestamps.
+    Supports filtering by status (open, closed, pending) with pagination.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/conversations
   method: GET
@@ -44,7 +45,7 @@
 - slug: crisp_plugin_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information for a specific conversation including participants and metadata.
+    Get detailed information for a specific Crisp conversation including participants, metadata, and full conversation history.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/conversations/{conversation_id}
   method: GET
@@ -66,7 +67,7 @@
 - slug: crisp_plugin_list_messages
   name: List Messages
   description: |
-    List all messages in a specific conversation.
+    List all messages in a specific Crisp conversation, returning message IDs, content, sender, and timestamps.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/conversations/{conversation_id}/messages
   method: GET
@@ -92,7 +93,7 @@
 - slug: crisp_plugin_send_message
   name: Send Message
   description: |
-    Send a message in a conversation. Use for proactive outreach or bot responses.
+    Send a message in a Crisp conversation, either for proactive outreach or automated bot responses.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/conversations/{conversation_id}/messages
   method: POST
@@ -122,7 +123,7 @@
 - slug: crisp_plugin_list_operators
   name: List Operators
   description: |
-    List all operators (agents) in the Crisp workspace.
+    List all operators (agents) in the Crisp workspace, returning operator IDs, names, roles, and availability status.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/operators
   method: GET
@@ -144,7 +145,7 @@
 - slug: crisp_plugin_get_operator
   name: Get Operator
   description: |
-    Get details of a specific operator including role and availability status.
+    Get detailed information for a specific Crisp operator including their role, availability status, and profile details.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/operators/{operator_id}
   method: GET
@@ -166,7 +167,7 @@
 - slug: crisp_plugin_list_websites
   name: List Websites
   description: |
-    List all websites connected to the Crisp workspace.
+    List all websites connected to the Crisp workspace, returning website IDs, domains, and integration status.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/websites
   method: GET
@@ -188,7 +189,7 @@
 - slug: crisp_plugin_get_website
   name: Get Website
   description: |
-    Get details of a specific website including settings and integration status.
+    Get detailed information for a specific Crisp website including its settings and integration configuration.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/websites/{website_id}
   method: GET
@@ -210,7 +211,7 @@
 - slug: crisp_plugin_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Crisp. Filter by segments or date added.
+    List all contacts in Crisp, returning contact IDs, names, email addresses, and segment memberships.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/contacts
   method: GET
@@ -235,7 +236,7 @@
 - slug: crisp_plugin_get_contact
   name: Get Contact
   description: |
-    Get detailed contact information including profile data, segments, and activity.
+    Get detailed information for a specific Crisp contact including their profile data, segments, and activity history.
   provider: crisp-plugin-install
   endpoint: /v1/plugin/connect/account/contacts/{contact_id}
   method: GET

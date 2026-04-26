@@ -17,7 +17,7 @@
 - slug: clockify_list_time_entries
   name: List Time Entries
   description: |
-    List time entries with optional filtering by user, project, or date range.
+    List time entries within a workspace, returning entry IDs, associated projects, user information, and duration details.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/time-entries
   method: GET
@@ -51,7 +51,7 @@
 - slug: clockify_get_time_entry
   name: Get Time Entry
   description: |
-    Get detailed information about a specific time entry.
+    Get detailed information about a specific time entry, including project association, duration, and description.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/time-entries/{id}
   method: GET
@@ -77,7 +77,7 @@
 - slug: clockify_create_time_entry
   name: Create Time Entry
   description: |
-    Create a new time entry.
+    Create a new time entry in a workspace, specifying the project, start and end times, and description.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/time-entries
   method: POST
@@ -111,7 +111,7 @@
 - slug: clockify_update_time_entry
   name: Update Time Entry
   description: |
-    Update an existing time entry.
+    Update an existing time entry, modifying its project, time range, or description.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/time-entries/{id}
   method: PUT
@@ -149,7 +149,7 @@
 - slug: clockify_list_workspaces
   name: List Workspaces
   description: |
-    List all workspaces for the authenticated user.
+    List all workspaces accessible to the authenticated user, returning workspace IDs and names.
   provider: clockify
   endpoint: /v1/workspaces
   method: GET
@@ -167,7 +167,7 @@
 - slug: clockify_get_workspace
   name: Get Workspace
   description: |
-    Get detailed information about a specific workspace.
+    Get detailed information about a specific workspace, including its name, settings, and associated projects.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}
   method: GET
@@ -189,7 +189,7 @@
 - slug: clockify_list_projects
   name: List Projects
   description: |
-    List all projects in a workspace.
+    List all projects in a workspace, returning project IDs, names, client associations, and current status.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/projects
   method: GET
@@ -214,7 +214,7 @@
 - slug: clockify_get_project
   name: Get Project
   description: |
-    Get detailed information about a specific project.
+    Get detailed information about a specific project, including its name, description, client, and billing settings.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/projects/{id}
   method: GET
@@ -240,7 +240,7 @@
 - slug: clockify_list_users
   name: List Users
   description: |
-    List all users in a workspace.
+    List all users in a workspace, returning user IDs, names, email addresses, and status.
   provider: clockify
   endpoint: /v1/workspaces/{workspaceId}/users
   method: GET
@@ -262,7 +262,7 @@
 - slug: clockify_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Get detailed information about a specific user, including their name, email address, and assigned roles.
   provider: clockify
   endpoint: /v1/users/{id}
   method: GET

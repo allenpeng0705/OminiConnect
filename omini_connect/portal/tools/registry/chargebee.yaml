@@ -17,7 +17,7 @@
 - slug: chargebee_list_subscriptions
   name: List Subscriptions
   description: |
-    List all subscriptions in Chargebee. Filter by status, customer, or plan.
+    Retrieve all subscriptions with optional filtering by status, customer, or plan. Returns subscription IDs, statuses, plan names, and billing cycle information.
   provider: chargebee
   endpoint: /subscriptions
   method: GET
@@ -53,7 +53,7 @@
 - slug: chargebee_get_subscription
   name: Get Subscription
   description: |
-    Get detailed information about a specific Chargebee subscription.
+    Retrieve detailed information about a specific subscription by its unique ID. Returns the plan name, billing cycle, status, and customer information.
   provider: chargebee
   endpoint: /subscriptions/{id}
   method: GET
@@ -75,7 +75,7 @@
 - slug: chargebee_create_subscription
   name: Create Subscription
   description: |
-    Create a new subscription in Chargebee with customer and plan details.
+    Create a new subscription for a specific customer with a specified plan and billing settings. Returns the created subscription with its unique ID.
   provider: chargebee
   endpoint: /subscriptions
   method: POST
@@ -114,7 +114,7 @@
 - slug: chargebee_cancel_subscription
   name: Cancel Subscription
   description: |
-    Cancel an existing Chargebee subscription with optional end date.
+    Cancel an existing subscription with optional cancellation at the end of the billing period. Returns confirmation of the cancellation.
   provider: chargebee
   endpoint: /subscriptions/{id}/cancel
   method: POST
@@ -147,7 +147,7 @@
 - slug: chargebee_list_customers
   name: List Customers
   description: |
-    List all customers in Chargebee. Filter by email, company, or status.
+    Retrieve all customers with optional filtering by email, company, or status. Returns customer names, IDs, email addresses, and company information.
   provider: chargebee
   endpoint: /customers
   method: GET
@@ -180,7 +180,7 @@
 - slug: chargebee_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific Chargebee customer.
+    Retrieve detailed information about a specific customer by their unique ID. Returns the billing address, subscription history, and payment information.
   provider: chargebee
   endpoint: /customers/{id}
   method: GET
@@ -202,7 +202,7 @@
 - slug: chargebee_list_invoices
   name: List Invoices
   description: |
-    List all invoices in Chargebee. Filter by customer, status, or date range.
+    Retrieve all invoices with optional filtering by customer, status, or date range. Returns invoice IDs, amounts, statuses, and customer information.
   provider: chargebee
   endpoint: /invoices
   method: GET
@@ -241,7 +241,7 @@
 - slug: chargebee_get_invoice
   name: Get Invoice
   description: |
-    Get detailed information about a specific Chargebee invoice.
+    Retrieve detailed information about a specific invoice by its unique ID. Returns line items, total amount, due date, and payment status.
   provider: chargebee
   endpoint: /invoices/{id}
   method: GET
@@ -263,7 +263,7 @@
 - slug: chargebee_list_plans
   name: List Plans
   description: |
-    List all plans in Chargebee. Filter by status or recurring addons.
+    Retrieve all subscription plans with optional filtering by status. Returns plan names, IDs, pricing, billing intervals, and feature information.
   provider: chargebee
   endpoint: /plans
   method: GET
@@ -293,7 +293,7 @@
 - slug: chargebee_get_plan
   name: Get Plan
   description: |
-    Get detailed information about a specific Chargebee plan.
+    Retrieve detailed information about a specific plan by its unique ID. Returns the pricing, billing interval, and feature list.
   provider: chargebee
   endpoint: /plans/{id}
   method: GET

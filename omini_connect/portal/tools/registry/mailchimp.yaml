@@ -16,8 +16,7 @@
 - slug: mailchimp_list_lists
   name: List Audiences
   description: |
-    Get all audiences (formerly lists) in your Mailchimp account.
-    Audiences contain your subscribers and are used for sending campaigns.
+    List all audiences in your Mailchimp account with optional filtering by creation date. Returns audience names, IDs, member counts, and campaign defaults for each audience.
   provider: mailchimp
   endpoint: /3.0/lists
   method: GET
@@ -49,8 +48,7 @@
 - slug: mailchimp_get_list
   name: Get Audience
   description: |
-    Get details about a specific audience including stats and settings.
-    Returns member count, unsubscribe rate, and campaign activity.
+    Retrieve detailed information about a specific Mailchimp audience by its ID. Returns the audience name, member count, stats, and campaign settings.
   provider: mailchimp
   endpoint: /3.0/lists/{list_id}
   method: GET
@@ -73,8 +71,7 @@
 - slug: mailchimp_create_list
   name: Create Audience
   description: |
-    Create a new audience in your Mailchimp account.
-    Configure contact details, campaign defaults, and permissions.
+    Create a new audience in Mailchimp with the specified name and contact information. Returns the created audience with its unique ID.
   provider: mailchimp
   endpoint: /3.0/lists
   method: POST
@@ -106,8 +103,7 @@
 - slug: mailchimp_list_members
   name: List Members
   description: |
-    Get all members of a specific audience.
-    Includes subscriber status, engagement metrics, and tags.
+    List all members in a specific Mailchimp audience with optional filtering by status. Returns member email addresses, statuses, engagement metrics, and tags for each member.
   provider: mailchimp
   endpoint: /3.0/lists/{list_id}/members
   method: GET
@@ -141,8 +137,7 @@
 - slug: mailchimp_get_member
   name: Get Member
   description: |
-    Get details about a specific audience member.
-    Returns contact info, status, tags, and activity history.
+    Retrieve detailed information about a specific Mailchimp audience member by their email hash. Returns the member email, status, tags, and activity history.
   provider: mailchimp
   endpoint: /3.0/lists/{list_id}/members/{subscriber_hash}
   method: GET
@@ -168,8 +163,7 @@
 - slug: mailchimp_add_member
   name: Add Member
   description: |
-    Add a new member to an audience.
-    Can optionally send a confirmation email for double opt-in.
+    Add a new member to a Mailchimp audience with their email address and optional tags. Returns the created member with their subscription status.
   provider: mailchimp
   endpoint: /3.0/lists/{list_id}/members
   method: POST
@@ -208,8 +202,7 @@
 - slug: mailchimp_list_campaigns
   name: List Campaigns
   description: |
-    Get all campaigns in your Mailchimp account.
-    Includes sent, scheduled, and draft campaigns.
+    List all campaigns in your Mailchimp account with optional filtering by status. Returns campaign names, IDs, subjects, statuses, and send dates for each campaign.
   provider: mailchimp
   endpoint: /3.0/campaigns
   method: GET
@@ -239,8 +232,7 @@
 - slug: mailchimp_get_campaign
   name: Get Campaign
   description: |
-    Get details about a specific campaign including content and settings.
-    Returns recipients, send time, and tracking metrics.
+    Retrieve detailed information about a specific Mailchimp campaign by its ID. Returns the campaign recipients, subject, content, and tracking metrics.
   provider: mailchimp
   endpoint: /3.0/campaigns/{campaign_id}
   method: GET
@@ -262,8 +254,7 @@
 - slug: mailchimp_create_campaign
   name: Create Campaign
   description: |
-    Create a new campaign in Mailchimp.
-    Set recipients, subject, from info, and content.
+    Create a new campaign in Mailchimp with the specified type, recipients, and content settings. Returns the created campaign with its unique ID.
   provider: mailchimp
   endpoint: /3.0/campaigns
   method: POST
@@ -293,8 +284,7 @@
 - slug: mailchimp_list_automations
   name: List Automations
   description: |
-    Get all automations in your Mailchimp account.
-    Automations are triggered email sequences like welcome series.
+    List all automations in your Mailchimp account with optional filtering by status. Returns automation names, IDs, statuses, and subscriber counts for each automation.
   provider: mailchimp
   endpoint: /3.0/automations
   method: GET

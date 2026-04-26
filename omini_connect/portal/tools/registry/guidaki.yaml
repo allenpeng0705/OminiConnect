@@ -17,7 +17,8 @@
 - slug: guidaki_list_tours
   name: List Tours
   description: |
-    List all onboarding tours in your Guidaki account.
+    Retrieve all onboarding tours in your Guidaki account, filterable by status.
+    Returns tour summaries with names and publishing state.
   provider: guidaki
   endpoint: /api/v1/tours
   method: GET
@@ -42,7 +43,8 @@
 - slug: guidaki_get_tour
   name: Get Tour
   description: |
-    Get detailed information about a specific tour.
+    Retrieve a specific Guidaki tour with its steps and configuration.
+    Returns full tour details including all step definitions and settings.
   provider: guidaki
   endpoint: /api/v1/tours/{tourId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: guidaki_create_tour
   name: Create Tour
   description: |
-    Create a new onboarding tour in Guidaki.
+    Create a new onboarding tour in Guidaki with specified steps and configuration.
+    Returns the created tour with its assigned ID.
   provider: guidaki
   endpoint: /api/v1/tours
   method: POST
@@ -97,7 +100,8 @@
 - slug: guidaki_list_checklists
   name: List Checklists
   description: |
-    List all checklists in your Guidaki account.
+    Retrieve all checklists in your Guidaki account.
+    Returns checklist templates with their item counts and settings.
   provider: guidaki
   endpoint: /api/v1/checklists
   method: GET
@@ -119,7 +123,8 @@
 - slug: guidaki_get_checklist
   name: Get Checklist
   description: |
-    Get detailed information about a specific checklist.
+    Retrieve a specific Guidaki checklist with its items and configuration.
+    Returns full checklist details including all checklist items.
   provider: guidaki
   endpoint: /api/v1/checklists/{checklistId}
   method: GET
@@ -141,7 +146,8 @@
 - slug: guidaki_list_users
   name: List Users
   description: |
-    List all users in your Guidaki account.
+    Retrieve all users in your Guidaki account.
+    Returns user profiles with names and roles.
   provider: guidaki
   endpoint: /api/v1/users
   method: GET
@@ -163,7 +169,8 @@
 - slug: guidaki_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Retrieve a specific Guidaki user profile with their permissions and activity.
+    Returns user details including role and assigned tours.
   provider: guidaki
   endpoint: /api/v1/users/{userId}
   method: GET
@@ -185,7 +192,8 @@
 - slug: guidaki_get_analytics
   name: Get Analytics
   description: |
-    Get analytics data for tours and user onboarding progress.
+    Retrieve onboarding analytics showing tour completion rates and user progress.
+    Returns metrics filtered by date range and specific tours.
   provider: guidaki
   endpoint: /api/v1/analytics
   method: GET
@@ -212,7 +220,8 @@
 - slug: guidaki_list_flows
   name: List Flows
   description: |
-    List all flows in your Guidaki account.
+    Retrieve all flows in your Guidaki account.
+    Returns flow templates with their step configurations.
   provider: guidaki
   endpoint: /api/v1/flows
   method: GET
@@ -234,7 +243,8 @@
 - slug: guidaki_get_flow
   name: Get Flow
   description: |
-    Get detailed information about a specific flow.
+    Retrieve a specific Guidaki flow with its step definitions and settings.
+    Returns full flow configuration including all steps.
   provider: guidaki
   endpoint: /api/v1/flows/{flowId}
   method: GET

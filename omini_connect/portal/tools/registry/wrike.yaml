@@ -1,7 +1,7 @@
 - slug: wrike_list_tasks
   name: List Tasks
   description: |
-    Retrieve a list of tasks, optionally filtered by project or folder.
+    List all tasks in your Wrike account with optional filtering by project, folder, or status. Returns task IDs, titles, assignees, due dates, and completion status for each task.
   provider: wrike
   endpoint: /tasks
   method: GET
@@ -33,7 +33,7 @@
 - slug: wrike_get_task
   name: Get Task
   description: |
-    Retrieve details of a specific task by ID.
+    Retrieve details for a specific task by its unique ID. Returns the task title, description, status, assignees, due date, and all associated metadata.
   provider: wrike
   endpoint: /tasks/{taskId}
   method: GET
@@ -54,7 +54,7 @@
 - slug: wrike_create_task
   name: Create Task
   description: |
-    Create a new task in a project or folder.
+    Create a new task in a Wrike project or folder with the specified title, description, and assignees. Returns the created task with its unique ID confirming successful creation.
   provider: wrike
   endpoint: /tasks
   method: POST
@@ -89,7 +89,7 @@
 - slug: wrike_update_task
   name: Update Task
   description: |
-    Update an existing task with new values.
+    Update an existing task in Wrike with new values for title, description, status, or due date. Returns the updated task confirming the changes were applied successfully.
   provider: wrike
   endpoint: /tasks/{taskId}
   method: PUT
@@ -122,7 +122,7 @@
 - slug: wrike_list_projects
   name: List Projects
   description: |
-    Retrieve a list of all projects.
+    List all projects in your Wrike account with optional filtering by space. Returns project IDs, titles, statuses, and creation dates for each project.
   provider: wrike
   endpoint: /projects
   method: GET
@@ -148,7 +148,7 @@
 - slug: wrike_get_project
   name: Get Project
   description: |
-    Retrieve details of a specific project by ID.
+    Retrieve details for a specific project by its unique ID. Returns the project title, description, status, team members, task counts, and all associated settings.
   provider: wrike
   endpoint: /projects/{projectId}
   method: GET
@@ -169,7 +169,7 @@
 - slug: wrike_list_folders
   name: List Folders
   description: |
-    Retrieve a list of folders, optionally within a workspace.
+    List all folders in your Wrike account with optional filtering by workspace or parent folder. Returns folder IDs, titles, and metadata for each folder.
   provider: wrike
   endpoint: /folders
   method: GET
@@ -195,7 +195,7 @@
 - slug: wrike_get_folder
   name: Get Folder
   description: |
-    Retrieve details of a specific folder by ID.
+    Retrieve details for a specific folder by its unique ID. Returns the folder title, description, task counts, subfolders, and all associated metadata.
   provider: wrike
   endpoint: /folders/{folderId}
   method: GET
@@ -216,7 +216,7 @@
 - slug: wrike_list_workspaces
   name: List Workspaces
   description: |
-    Retrieve a list of all workspaces.
+    List all workspaces in your Wrike account with pagination support. Returns workspace IDs, titles, and member counts for each workspace.
   provider: wrike
   endpoint: /workspaces
   method: GET
@@ -239,7 +239,7 @@
 - slug: wrike_get_workspace
   name: Get Workspace
   description: |
-    Retrieve details of a specific workspace by ID.
+    Retrieve details for a specific workspace by its unique ID. Returns the workspace title, description, member list, project counts, and all associated settings.
   provider: wrike
   endpoint: /workspaces/{workspaceId}
   method: GET

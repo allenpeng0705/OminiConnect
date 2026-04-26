@@ -18,7 +18,7 @@
 - slug: pivotaltracker_list_projects
   name: List Projects
   description: |
-    List all projects.
+    List all projects including their names, statuses, point scales, and member counts. Returns project listings for agile project management and team coordination.
   provider: pivotaltracker
   endpoint: /projects
   method: GET
@@ -36,7 +36,7 @@
 - slug: pivotaltracker_get_project
   name: Get Project
   description: |
-    Get detailed information about a specific project.
+    Get detailed information for a specific project including its name, description, iteration length, and velocity settings. Returns project configuration for agile planning and team management.
   provider: pivotaltracker
   endpoint: /projects/{projectId}
   method: GET
@@ -58,7 +58,7 @@
 - slug: pivotaltracker_list_stories
   name: List Stories
   description: |
-    List all stories in a project.
+    List all stories in a project including their titles, types, states, estimates, and current owners. Returns story listings for sprint planning and backlog management.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/stories
   method: GET
@@ -86,7 +86,7 @@
 - slug: pivotaltracker_get_story
   name: Get Story
   description: |
-    Get detailed information about a specific story.
+    Get detailed information for a specific story including its title, description, type, state, estimate, and task breakdown. Returns story details for detailed planning and estimation.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/stories/{storyId}
   method: GET
@@ -112,7 +112,7 @@
 - slug: pivotaltracker_list_tasks
   name: List Tasks
   description: |
-    List all tasks in a story.
+    List all tasks within a specific story including their descriptions, statuses, and assignee information. Returns task listings for work breakdown and progress tracking.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/stories/{storyId}/tasks
   method: GET
@@ -138,7 +138,7 @@
 - slug: pivotaltracker_get_task
   name: Get Task
   description: |
-    Get detailed information about a specific task.
+    Get detailed information for a specific task including its description, status, and assigned team member. Returns task details for work assignment and completion tracking.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/stories/{storyId}/tasks/{taskId}
   method: GET
@@ -168,7 +168,7 @@
 - slug: pivotaltracker_list_members
   name: List Members
   description: |
-    List all members in a project.
+    List all members in a project including their names, email addresses, and project roles. Returns member listings for team coordination and permission management.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/memberships
   method: GET
@@ -190,7 +190,7 @@
 - slug: pivotaltracker_get_iteration
   name: Get Iteration
   description: |
-    Get detailed information about a specific iteration.
+    Get detailed information for a specific iteration including its start and end dates, story list, and team capacity. Returns iteration details for sprint planning and progress monitoring.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/iterations/{iterationId}
   method: GET
@@ -216,7 +216,7 @@
 - slug: pivotaltracker_list_iterations
   name: List Iterations
   description: |
-    List all iterations in a project.
+    List all iterations in a project including their numbers, dates, story counts, and point totals. Returns iteration listings for release planning and velocity tracking.
   provider: pivotaltracker
   endpoint: /projects/{projectId}/iterations
   method: GET
@@ -242,7 +242,7 @@
 - slug: pivotaltracker_get_account
   name: Get Account
   description: |
-    Get account information.
+    Get account information including account name, subscription plan, and project limits. Returns account details for usage monitoring and billing management.
   provider: pivotaltracker
   endpoint: /accounts
   method: GET

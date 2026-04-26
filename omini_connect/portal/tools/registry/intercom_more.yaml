@@ -17,8 +17,7 @@
 - slug: intercom_list_conversations
   name: List Conversations
   description: |
-    List conversations from your Intercom workspace.
-    Returns a paginated list of conversations with their status, participants, and latest message.
+    List conversations from your Intercom workspace with pagination. Returns conversation status, participants, and the most recent message.
   provider: intercom_more
   endpoint: /conversations
   method: GET
@@ -72,8 +71,7 @@
 - slug: intercom_reply_to_conversation
   name: Reply to Conversation
   description: |
-    Reply to a conversation. Use this to send a message to a contact or team member in an existing conversation.
-    Supports text and emoji responses.
+    Send a reply to an existing conversation with text or emoji responses. Returns the created message confirming delivery.
   provider: intercom_more
   endpoint: /conversations/{id}/reply
   method: POST
@@ -105,7 +103,7 @@
 - slug: intercom_list_messages
   name: List Messages
   description: |
-    List all messages in a conversation. Returns the message thread with timestamps and sender information.
+    List all messages in a conversation. Returns the message thread with timestamps, sender information, and message content.
   provider: intercom_more
   endpoint: /conversations/{id}/messages
   method: GET
@@ -251,7 +249,7 @@
 - slug: intercom_create_article
   name: Create Article
   description: |
-    Create a new article in your Intercom help center. Include title and body content with optional state.
+    Create a new article in your Intercom help center with title and body content. Returns the created article with its ID.
   provider: intercom_more
   endpoint: /articles
   method: POST

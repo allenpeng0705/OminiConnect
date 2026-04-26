@@ -18,7 +18,7 @@
 - slug: google_docs_list_documents
   name: List Documents
   description: |
-    List documents in Google Docs.
+    List all Google Docs documents accessible to the user including titles and last modified dates. Returns document metadata for discovery and access management.
   provider: google-docs
   endpoint: /documents
   method: GET
@@ -35,7 +35,7 @@
 - slug: google_docs_get_document
   name: Get Document
   description: |
-    Get detailed information about a document.
+    Retrieve detailed information about a Google Docs document including title, owner, and modification history. Returns document metadata and sharing settings.
   provider: google-docs
   endpoint: /documents/{documentId}
   method: GET
@@ -57,7 +57,7 @@
 - slug: google_docs_create_document
   name: Create Document
   description: |
-    Create a new Google Doc.
+    Create a new blank Google Doc with a specified title in the user's Drive. Returns the created document with its unique identifier and URL.
   provider: google-docs
   endpoint: /documents
   method: POST
@@ -79,7 +79,7 @@
 - slug: google_docs_batch_update
   name: Batch Update
   description: |
-    Apply batch updates to a document.
+    Apply multiple updates to a Google Docs document including text insertions, deletions, and formatting changes. Executes all requests in a single atomic operation.
   provider: google-docs
   endpoint: /documents/{documentId}:batchUpdate
   method: POST
@@ -105,7 +105,7 @@
 - slug: google_docs_get_content
   name: Get Content
   description: |
-    Get full content of a document.
+    Retrieve the full textual content of a Google Docs document including all paragraphs and structural elements. Returns document text with formatting metadata.
   provider: google-docs
   endpoint: /documents/{documentId}
   method: GET
@@ -128,7 +128,7 @@
 - slug: google_docs_create_comment
   name: Create Comment
   description: |
-    Create a comment on a document.
+    Create a new comment on a specific Google Docs document at a specified text location. Adds the comment and returns the comment thread identifier.
   provider: google-docs
   endpoint: /documents/{documentId}/comments
   method: POST
@@ -157,7 +157,7 @@
 - slug: google_docs_list_comments
   name: List Comments
   description: |
-    List comments on a document.
+    List all comments on a Google Docs document including author, content, and resolved status. Returns comment threads for collaborative document review.
   provider: google-docs
   endpoint: /documents/{documentId}/comments
   method: GET
@@ -179,7 +179,7 @@
 - slug: google_docs_list_revisions
   name: List Revisions
   description: |
-    List revision history of a document.
+    List all revision history for a Google Docs document including modification timestamps and author information. Returns revision IDs and change summaries.
   provider: google-docs
   endpoint: /documents/{documentId}/revisions
   method: GET
@@ -201,7 +201,7 @@
 - slug: google_docs_get_revision
   name: Get Revision
   description: |
-    Get a specific revision of a document.
+    Retrieve detailed information about a specific revision of a Google Docs document including the content at that point in time. Returns revision content and modification details.
   provider: google-docs
   endpoint: /documents/{documentId}/revisions/{revisionId}
   method: GET
@@ -227,7 +227,7 @@
 - slug: google_docs_list_styles
   name: List Styles
   description: |
-    List defined styles in a document.
+    List all defined styles in a Google Docs document including heading levels, body text, and custom styles. Returns style definitions for document formatting analysis.
   provider: google-docs
   endpoint: /documents/{documentId}/styles
   method: GET

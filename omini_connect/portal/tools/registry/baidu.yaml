@@ -1,7 +1,8 @@
 - slug: baidu_translate_text
   name: Translate Text
   description: |
-    Translate text between languages using Baidu Translate API.
+    Translate text between languages using Baidu's neural machine translation engine.
+    Returns the translated text with detected source language when auto-detection is used.
   provider: baidu
   endpoint: /api/trans/v2/lingo
   method: GET
@@ -30,7 +31,8 @@
 - slug: baidu_detect_language
   name: Detect Language
   description: |
-    Detect the language of the given text using Baidu Translate.
+    Detect the language of the given text and return the language code with confidence score.
+    Supports automatic detection for multilingual content.
   provider: baidu
   endpoint: /api/trans/v2/lingo
   method: GET
@@ -52,7 +54,8 @@
 - slug: baidu_get_map_place
   name: Get Map Place
   description: |
-    Get detailed information about a specific place using Baidu Maps.
+    Get detailed information about a specific place from Baidu Maps including address, phone number, and business hours.
+    Returns location coordinates and formatted address for navigation and discovery.
   provider: baidu
   endpoint: /place/v2/detail
   method: GET
@@ -77,7 +80,8 @@
 - slug: baidu_search_places
   name: Search Places
   description: |
-    Search for places, businesses, or landmarks using Baidu Maps.
+    Search for places, businesses, or landmarks using Baidu Maps and return matching results with addresses and distances.
+    Filter results by region and search radius for localized discovery.
   provider: baidu
   endpoint: /place/v2/search
   method: GET
@@ -116,7 +120,8 @@
 - slug: baidu_list_pan_files
   name: List Pan Files
   description: |
-    List files in Baidu Pan (Net Disk) storage.
+    List files in a Baidu Pan (Net Disk) directory and return file names, sizes, and timestamps.
+    Supports pagination and sorting for navigating cloud storage.
   provider: baidu
   endpoint: /api/v1/pan_api/file/list
   method: GET
@@ -150,6 +155,7 @@
   name: Get Pan File
   description: |
     Get metadata and download link for a specific file in Baidu Pan.
+    Returns file size, creation time, and a temporary download URL.
   provider: baidu
   endpoint: /api/v1/pan_api/file/info
   method: GET
@@ -171,7 +177,8 @@
 - slug: baidu_upload_pan_file
   name: Upload Pan File
   description: |
-    Upload a file to Baidu Pan storage.
+    Upload a file to Baidu Pan storage with the specified path and content.
+    Creates a new file or overwrites an existing one in the cloud storage.
   provider: baidu
   endpoint: /api/v1/pan_api/file/upload
   method: POST
@@ -200,7 +207,8 @@
 - slug: baidu_detect_face
   name: Detect Face
   description: |
-    Detect faces in an image and return attributes using Baidu Face API.
+    Detect faces in an image and return face locations, attributes, and age estimation.
+    Returns face rectangles and optional attributes like gender, glasses, and expression.
   provider: baidu
   endpoint: /api/v1/face/v3/detect
   method: POST
@@ -229,7 +237,8 @@
 - slug: baidu_compare_faces
   name: Compare Faces
   description: |
-    Compare two faces and return similarity score using Baidu Face API.
+    Compare two faces and return a similarity score indicating how closely they match.
+    Returns a confidence score between 0 and 100 for face verification.
   provider: baidu
   endpoint: /api/v1/face/v3/match
   method: POST
@@ -259,7 +268,8 @@
 - slug: baidu_search_web
   name: Search Web
   description: |
-    Search the web using Baidu Search engine.
+    Search the web using Baidu's search engine and return matching web pages with titles and snippets.
+    Returns search results with URLs and brief descriptions.
   provider: baidu
   endpoint: /api/search/v1/compound
   method: GET

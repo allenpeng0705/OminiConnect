@@ -18,7 +18,7 @@
 - slug: list_projects
   name: List Projects
   description: |
-    List all Sentry projects
+    List all projects in the Sentry organization for error tracking configuration. Returns project names, slugs, platforms, and team assignments for monitoring setup.
   provider: sentry-oauth
   endpoint: /projects
   method: GET
@@ -35,7 +35,7 @@
 - slug: list_issues
   name: List Issues
   description: |
-    List issues across projects
+    List all issues across Sentry projects with optional status filtering. Returns issue titles, IDs, error types, assignee information, and occurrence counts for bug triage.
   provider: sentry-oauth
   endpoint: /issues
   method: GET
@@ -52,7 +52,7 @@
 - slug: get_issue
   name: Get Issue
   description: |
-    Get details for a specific issue
+    Get detailed information about a specific Sentry issue by ID including stack traces, user reports, tags, and occurrence timestamps. Returns data for error debugging and investigation.
   provider: sentry-oauth
   endpoint: /issues/{id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: list_events
   name: List Events
   description: |
-    List events for an issue
+    List all events (error occurrences) for a Sentry issue with pagination. Returns event IDs, timestamps, device info, and operating system details for error monitoring.
   provider: sentry-oauth
   endpoint: /events
   method: GET
@@ -86,7 +86,7 @@
 - slug: list_teams
   name: List Teams
   description: |
-    List teams in organization
+    List all teams in the Sentry organization for access control and project assignment. Returns team names, slugs, and member counts for organizational management.
   provider: sentry-oauth
   endpoint: /teams
   method: GET
@@ -103,7 +103,7 @@
 - slug: list_members
   name: List Members
   description: |
-    List organization members
+    List all members in the Sentry organization with their roles and access levels. Returns member names, emails, and pending invitations for user management.
   provider: sentry-oauth
   endpoint: /members
   method: GET
@@ -120,7 +120,7 @@
 - slug: list_releases
   name: List Releases
   description: |
-    List releases
+    List all releases in the Sentry organization for deployment tracking. Returns version numbers, commit SHAs, deployment dates, and associated projects for release management.
   provider: sentry-oauth
   endpoint: /releases
   method: GET
@@ -137,7 +137,7 @@
 - slug: get_org_stats
   name: Get Org Stats
   description: |
-    Get organization statistics
+    Get organization statistics from Sentry including event counts by time period, error frequencies, and performance metrics. Returns data for overall health monitoring and reporting.
   provider: sentry-oauth
   endpoint: /stats
   method: GET
@@ -154,7 +154,7 @@
 - slug: list_projects_by_team
   name: List Projects By Team
   description: |
-    List projects for a team
+    List all projects associated with a specific Sentry team by team ID. Returns project names, slugs, and error counts for team project management.
   provider: sentry-oauth
   endpoint: /teams/{team_id}/projects
   method: GET
@@ -171,7 +171,7 @@
 - slug: get_event_counts
   name: Get Event Counts
   description: |
-    Get event count statistics
+    Get event count statistics for Sentry projects including resolved vs unresolved ratios and trend data over time. Returns data for error tracking performance monitoring.
   provider: sentry-oauth
   endpoint: /event-counts
   method: GET

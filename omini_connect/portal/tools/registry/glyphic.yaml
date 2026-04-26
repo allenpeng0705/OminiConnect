@@ -18,7 +18,7 @@
 - slug: glyphic_list_conversations
   name: List Conversations
   description: |
-    List all conversations in Glyphic.
+    List all conversations in Glyphic with optional status filtering. Returns conversation IDs, participant counts, last message timestamps, and statuses.
   provider: glyphic
   endpoint: /v1/conversations
   method: GET
@@ -39,7 +39,7 @@
 - slug: glyphic_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a conversation.
+    Get detailed information about a specific conversation including participants, message count, created date, and last activity timestamp.
   provider: glyphic
   endpoint: /v1/conversations/{id}
   method: GET
@@ -61,7 +61,7 @@
 - slug: glyphic_send_message
   name: Send Message
   description: |
-    Send a message in a conversation.
+    Send a message in a specific Glyphic conversation with the message content. Returns the sent message with its unique ID and timestamp.
   provider: glyphic
   endpoint: /v1/conversations/{id}/messages
   method: POST
@@ -87,7 +87,7 @@
 - slug: glyphic_list_messages
   name: List Messages
   description: |
-    List messages in a conversation.
+    List all messages in a specific Glyphic conversation with chronological ordering. Returns message IDs, sender information, content, and timestamps.
   provider: glyphic
   endpoint: /v1/conversations/{id}/messages
   method: GET
@@ -109,7 +109,7 @@
 - slug: glyphic_create_thread
   name: Create Thread
   description: |
-    Create a new thread in Glyphic.
+    Create a new thread in Glyphic with a title and participant list. Returns the created thread with its unique ID for ongoing conversations.
   provider: glyphic
   endpoint: /v1/threads
   method: POST
@@ -134,7 +134,7 @@
 - slug: glyphic_list_threads
   name: List Threads
   description: |
-    List all threads in Glyphic.
+    List all threads in Glyphic for organizing conversations. Returns thread IDs, titles, participant counts, and last activity dates for each thread.
   provider: glyphic
   endpoint: /v1/threads
   method: GET
@@ -151,7 +151,7 @@
 - slug: glyphic_get_thread
   name: Get Thread
   description: |
-    Get detailed information about a thread.
+    Get detailed information about a specific thread including its title, participants, message count, and creation date.
   provider: glyphic
   endpoint: /v1/threads/{id}
   method: GET
@@ -173,7 +173,7 @@
 - slug: glyphic_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Glyphic.
+    List all contacts in Glyphic for messaging and collaboration. Returns contact IDs, names, email addresses, and online status for each contact.
   provider: glyphic
   endpoint: /v1/contacts
   method: GET
@@ -190,7 +190,7 @@
 - slug: glyphic_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a contact.
+    Get detailed information about a specific contact including their name, email address, role, and recent activity in Glyphic.
   provider: glyphic
   endpoint: /v1/contacts/{id}
   method: GET
@@ -212,7 +212,7 @@
 - slug: glyphic_list_webhooks
   name: List Webhooks
   description: |
-    List all configured webhooks.
+    List all configured webhooks in Glyphic for event notifications. Returns webhook IDs, endpoint URLs, event types, and activation status for each webhook.
   provider: glyphic
   endpoint: /v1/webhooks
   method: GET

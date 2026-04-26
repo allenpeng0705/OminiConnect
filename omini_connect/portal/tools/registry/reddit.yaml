@@ -17,8 +17,7 @@
 - slug: reddit_list_subreddits
   name: List Subreddits
   description: |
-    List popular subreddits. Returns a list of trending communities on Reddit.
-    Use this to discover new communities or browse by interest.
+    List all subreddits in your Reddit account. Returns subreddit names, IDs, descriptions, and subscriber counts for each subreddit.
   provider: reddit
   endpoint: /subreddits.json
   method: GET
@@ -42,8 +41,7 @@
 - slug: reddit_get_subreddit
   name: Get Subreddit
   description: |
-    Get details about a specific subreddit including name, description, subscriber count, and rules.
-    Use this to learn about a community before participating.
+    Get detailed information about a specific Reddit subreddit by its name. Returns the subreddit name, description, subscriber count, and rules.
   provider: reddit
   endpoint: /r/{subreddit}/about.json
   method: GET
@@ -64,8 +62,7 @@
 - slug: reddit_list_posts
   name: List Posts
   description: |
-    List posts in a subreddit. Returns the most recent or popular posts depending on the sort parameter.
-    Use this to browse content in a community.
+    List all posts in a specific Reddit subreddit. Returns post titles, IDs, authors, scores, and timestamps for each post.
   provider: reddit
   endpoint: /r/{subreddit}/{sort}.json
   method: GET
@@ -98,8 +95,7 @@
 - slug: reddit_get_post
   name: Get Post
   description: |
-    Get details of a specific post including title, body, author, score, and metadata.
-    Use this to read the full content before commenting or analyzing.
+    Get detailed information about a specific Reddit post by its ID. Returns the post title, body, author, score, and metadata.
   provider: reddit
   endpoint: /r/{subreddit}/comments/{post_id}.json
   method: GET
@@ -124,8 +120,7 @@
 - slug: reddit_create_post
   name: Create Post
   description: |
-    Create a new post in a subreddit. Choose between a link post or a text post with a title.
-    Use this to share content, ask questions, or start discussions.
+    Create a new post in a Reddit subreddit with the specified title and content. Returns the created post with its unique ID.
   provider: reddit
   endpoint: /api/submit.json
   method: POST
@@ -166,8 +161,7 @@
 - slug: reddit_list_comments
   name: List Comments
   description: |
-    List comments on a post. Returns the comment tree with nested replies.
-    Use this to read discussions and community feedback.
+    List all comments on a specific Reddit post. Returns comment IDs, bodies, authors, scores, and parent information for each comment.
   provider: reddit
   endpoint: /r/{subreddit}/comments/{post_id}.json
   method: GET
@@ -200,8 +194,7 @@
 - slug: reddit_get_comment
   name: Get Comment
   description: |
-    Get details of a specific comment including body, author, score, and parent information.
-    Use this to read a specific comment in a thread.
+    Get detailed information about a specific Reddit comment by its ID. Returns the comment body, author, score, and parent information.
   provider: reddit
   endpoint: /comments/{comment_id}.json
   method: GET
@@ -222,8 +215,7 @@
 - slug: reddit_create_comment
   name: Create Comment
   description: |
-    Create a new comment on a post or reply to an existing comment.
-    Use this to participate in discussions or respond to others.
+    Create a new comment on a Reddit post or reply to an existing comment. Returns the created comment with its unique ID.
   provider: reddit
   endpoint: /api/comment.json
   method: POST
@@ -249,8 +241,7 @@
 - slug: reddit_get_user_info
   name: Get User Info
   description: |
-    Get a user's profile information including karma, cake day, and public stats.
-    Use this to learn about someone before trusting their content.
+    Get detailed information about a specific Reddit user by their username. Returns the user's karma, cake day, and public statistics.
   provider: reddit
   endpoint: /user/{username}/about.json
   method: GET
@@ -271,8 +262,7 @@
 - slug: reddit_search_posts
   name: Search Posts
   description: |
-    Search for posts by keyword across Reddit. Returns matching posts sorted by relevance or recency.
-    Use this to find discussions, answers, or specific content.
+    Search for posts on Reddit by keyword. Returns post titles, IDs, authors, scores, and timestamps for each matching post.
   provider: reddit
   endpoint: /search.json
   method: GET

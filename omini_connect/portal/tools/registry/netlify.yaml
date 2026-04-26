@@ -1,7 +1,7 @@
 - slug: netlify_list_sites
   name: List Sites
   description: |
-    Retrieve all sites associated with the authenticated user or team.
+    List all sites in your Netlify account with optional pagination and filtering. Returns site names, IDs, custom domains, and deployment URLs for each site in your account.
   provider: netlify
   endpoint: /api/v1/sites
   method: GET
@@ -31,7 +31,7 @@
 - slug: netlify_get_site
   name: Get Site
   description: |
-    Retrieve details of a specific site including build settings and deploys.
+    Retrieve detailed information about a specific Netlify site by its ID. Returns the site name, custom domains, build settings, and deployment information for the site.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}
   method: GET
@@ -53,7 +53,7 @@
 - slug: netlify_create_site
   name: Create Site
   description: |
-    Create a new site in Netlify.
+    Create a new site in Netlify with the specified name and configuration. Returns the created site with its unique ID, URL, and initial deployment settings.
   provider: netlify
   endpoint: /api/v1/sites
   method: POST
@@ -90,7 +90,7 @@
 - slug: netlify_delete_site
   name: Delete Site
   description: |
-    Permanently delete a site and all its deploys.
+    Permanently delete a specific Netlify site and all its deploys by its ID. Returns confirmation of the successful deletion of the site and associated data.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}
   method: DELETE
@@ -115,7 +115,7 @@
 - slug: netlify_list_deploys
   name: List Deploys
   description: |
-    Retrieve all deploys for a specific site.
+    List all deploys for a specific Netlify site with optional pagination. Returns deploy IDs, states, URLs, and timestamps for each deployment of the site.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}/deploys
   method: GET
@@ -143,7 +143,7 @@
 - slug: netlify_get_deploy
   name: Get Deploy
   description: |
-    Retrieve details of a specific deploy including build logs and files.
+    Retrieve detailed information about a specific Netlify deploy by its ID. Returns the deploy state, build logs, file manifest, and deployment URL for the deploy.
   provider: netlify
   endpoint: /api/v1/deploys/{deployId}
   method: GET
@@ -165,7 +165,7 @@
 - slug: netlify_create_deploy
   name: Create Deploy
   description: |
-    Create a new deploy for a site.
+    Create a new deploy for a specific Netlify site. Returns the created deploy with its unique ID, URL, and initial build status.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}/deploys
   method: POST
@@ -199,7 +199,7 @@
 - slug: netlify_list_functions
   name: List Functions
   description: |
-    Retrieve all serverless functions for a site or account.
+    List all serverless functions for a specific Netlify site or account. Returns function names, IDs, and runtime information for each function deployed.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}/functions
   method: GET
@@ -224,7 +224,7 @@
 - slug: netlify_get_function
   name: Get Function
   description: |
-    Retrieve details and code of a specific serverless function.
+    Retrieve detailed information about a specific Netlify serverless function by its name. Returns the function code, runtime, and configuration settings for the function.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}/functions/{functionName}
   method: GET
@@ -250,7 +250,7 @@
 - slug: netlify_list_domains
   name: List Domains
   description: |
-    Retrieve all domains configured for a site.
+    List all domains configured for a specific Netlify site. Returns domain names, verification status, and DNS configuration for each domain associated with the site.
   provider: netlify
   endpoint: /api/v1/sites/{siteId}/domains
   method: GET

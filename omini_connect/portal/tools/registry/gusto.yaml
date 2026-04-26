@@ -17,8 +17,7 @@
 - slug: gusto_list_employees
   name: List Employees
   description: |
-    List all employees with optional filters for status, department, or location.
-    Returns names, titles, departments, employment status, and compensation info.
+    List all employees in the Gusto account with optional filtering by status, department, or location. Returns employee names, titles, employment status, and compensation information.
   provider: gusto
   endpoint: /employees
   method: GET
@@ -56,8 +55,7 @@
 - slug: gusto_get_employee
   name: Get Employee
   description: |
-    Get detailed employee information including personal details, job profile,
-    compensation, tax withholdings, direct deposit info, and employment history.
+    Retrieve detailed information about a specific Gusto employee including personal details, job profile, compensation data, tax withholdings, and employment history.
   provider: gusto
   endpoint: /employees/{employee_id}
   method: GET
@@ -80,8 +78,7 @@
 - slug: gusto_create_employee
   name: Create Employee
   description: |
-    Create a new employee record with personal info, compensation, and tax forms.
-    New employees can be onboarded with direct deposit and tax withholding setup.
+    Create a new employee in Gusto with personal information, compensation setup, and onboarding details. Returns the created employee with their unique identifier.
   provider: gusto
   endpoint: /employees
   method: POST
@@ -130,8 +127,7 @@
 - slug: gusto_list_contractors
   name: List Contractors
   description: |
-    List all contractors with optional filters for status or company.
-    Returns contractor names, companies, rates, and payment status.
+    List all contractors in the Gusto account with optional status filtering. Returns contractor names, companies, hourly rates, and payment status.
   provider: gusto
   endpoint: /contractors
   method: GET
@@ -163,8 +159,7 @@
 - slug: gusto_get_contractor
   name: Get Contractor
   description: |
-    Get detailed contractor information including company, contact details,
-    payment rates, tax status, and recent payment history.
+    Retrieve detailed information about a specific Gusto contractor including company info, contact details, payment rates, tax status, and recent payment history.
   provider: gusto
   endpoint: /contractors/{contractor_id}
   method: GET
@@ -187,8 +182,7 @@
 - slug: gusto_list_payrolls
   name: List Payrolls
   description: |
-    List all payroll runs with optional filters for status, employee, or date range.
-    Returns payroll totals, status, approval info, and payment dates.
+    List all payroll runs with optional filtering by status, employee, or date range. Returns payroll totals, approval status, payment dates, and employee breakdown.
   provider: gusto
   endpoint: /payrolls
   method: GET
@@ -227,8 +221,7 @@
 - slug: gusto_get_payroll
   name: Get Payroll
   description: |
-    Get detailed information about a specific payroll run including
-    employee breakdown, tax withholdings, deductions, and payment totals.
+    Retrieve detailed information about a specific Gusto payroll run including employee breakdown, tax withholdings, deduction details, net pay amounts, and payment status.
   provider: gusto
   endpoint: /payrolls/{payroll_id}
   method: GET
@@ -251,9 +244,7 @@
 - slug: gusto_run_payroll
   name: Run Payroll
   description: |
-    Execute a payroll run for the specified pay period. This processes employee
-    compensation, taxes, deductions, and sets up direct deposits.
-    Must be used after reviewing and approving the payroll preview.
+    Execute a Gusto payroll run for the specified pay period and process employee compensation, taxes, deductions, and direct deposits. Returns confirmation with payroll ID.
   provider: gusto
   endpoint: /payrolls
   method: POST
@@ -286,8 +277,7 @@
 - slug: gusto_list_time_off
   name: List Time Off
   description: |
-    List time off policies and/or requests with optional filters.
-    Returns time off types, accrual rates, balances, and pending requests.
+    List all time off policies and requests with optional filtering by employee, status, or date range. Returns accrual rates, balances, and pending request details.
   provider: gusto
   endpoint: /time_off
   method: GET
@@ -322,8 +312,7 @@
 - slug: gusto_get_time_off_request
   name: Get Time Off Request
   description: |
-    Get detailed information about a specific time off request including
-    dates, hours, type, approval status, and notes.
+    Retrieve detailed information about a specific Gusto time off request including dates, hours, type, status, notes, and authorization details.
   provider: gusto
   endpoint: /time_off/{request_id}
   method: GET

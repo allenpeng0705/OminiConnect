@@ -18,7 +18,7 @@
 - slug: looker_oauth_list_dashboards
   name: List Dashboards
   description: |
-    List all dashboards.
+    List all dashboards in your Looker account with pagination. Returns dashboard names, IDs, descriptions, and layouts for each dashboard.
   provider: looker-oauth
   endpoint: /dashboards
   method: GET
@@ -44,7 +44,7 @@
 - slug: looker_oauth_get_dashboard
   name: Get Dashboard
   description: |
-    Get details for a specific dashboard.
+    Retrieve details about a specific Looker dashboard by its ID. Returns the dashboard title, description, tile layout, filters, and visualization settings.
   provider: looker-oauth
   endpoint: /dashboards/{dashboard_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: looker_oauth_list_tiles
   name: List Dashboard Tiles
   description: |
-    List all tiles in a dashboard.
+    List all tiles (visualizations) in a specific Looker dashboard. Returns tile IDs, titles, types, query references, and position coordinates for each tile.
   provider: looker-oauth
   endpoint: /dashboards/{dashboard_id}/tiles
   method: GET
@@ -87,7 +87,7 @@
 - slug: looker_oauth_list_looks
   name: List Looks
   description: |
-    List all looks.
+    List all saved looks in your Looker account with pagination. Returns look titles, IDs, descriptions, and associated visualizations for each look.
   provider: looker-oauth
   endpoint: /looks
   method: GET
@@ -109,7 +109,7 @@
 - slug: looker_oauth_get_look
   name: Get Look
   description: |
-    Get details for a specific look.
+    Retrieve details about a specific Looker look by its ID. Returns the look title, description, query configuration, visualization type, and underlying data.
   provider: looker-oauth
   endpoint: /looks/{look_id}
   method: GET
@@ -130,7 +130,7 @@
 - slug: looker_oauth_list_queries
   name: List Saved Queries
   description: |
-    List all saved queries.
+    List all saved queries in your Looker account with pagination. Returns query IDs, titles, SQL definitions, and creation timestamps for each query.
   provider: looker-oauth
   endpoint: /queries
   method: GET
@@ -152,7 +152,7 @@
 - slug: looker_oauth_run_query
   name: Run Query
   description: |
-    Run a saved query.
+    Execute a saved Looker query and retrieve results in the specified format. Returns the query output data with column headers and row values.
   provider: looker-oauth
   endpoint: /queries/{query_id}/run
   method: GET
@@ -177,7 +177,7 @@
 - slug: looker_oauth_list_users
   name: List Users
   description: |
-    List all users.
+    List all users in your Looker instance with pagination. Returns user names, email addresses, roles, and account status for each user.
   provider: looker-oauth
   endpoint: /users
   method: GET
@@ -199,7 +199,7 @@
 - slug: looker_oauth_get_user
   name: Get User
   description: |
-    Get details for a specific user.
+    Retrieve details about a specific Looker user by their ID. Returns the user's name, email, role, permissions, and preferred settings.
   provider: looker-oauth
   endpoint: /users/{user_id}
   method: GET
@@ -220,7 +220,7 @@
 - slug: looker_oauth_list_spaces
   name: List Spaces
   description: |
-    List all spaces.
+    List all spaces (organizational folders) in your Looker account. Returns space names, IDs, parent hierarchies, and content counts for each space.
   provider: looker-oauth
   endpoint: /spaces
   method: GET

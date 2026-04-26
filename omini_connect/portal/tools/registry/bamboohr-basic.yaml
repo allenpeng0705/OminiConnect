@@ -18,7 +18,8 @@
 - slug: bamboohr_get_employee
   name: Get Employee
   description: |
-    Get details for a specific employee by ID or email.
+    Get details for a specific employee by their ID including contact information, job title, and employment status.
+    Returns comprehensive employee profile data for HR management.
   provider: bamboohr-basic
   endpoint: /v1/employees/{id}
   method: GET
@@ -39,7 +40,8 @@
 - slug: bamboohr_list_employees
   name: List Employees
   description: |
-    List all employees in the company.
+    List all employees in the company and return names, IDs, email addresses, and employment status.
+    Supports sorting and field filtering for efficient directory access.
   provider: bamboohr-basic
   endpoint: /v1/employees
   method: GET
@@ -62,7 +64,8 @@
 - slug: bamboohr_get_job_info
   name: Get Job Info
   description: |
-    Get job information for an employee (title, department, location).
+    Get job information for an employee including their title, department, location, and supervisor.
+    Returns employment hierarchy and job classification data.
   provider: bamboohr-basic
   endpoint: /v1/employees/{id}/jobInfo
   method: GET
@@ -83,7 +86,8 @@
 - slug: bamboohr_get_time_off
   name: Get Time Off
   description: |
-    Get time off requests and balances for an employee.
+    Get time off requests and remaining balances for an employee including vacation, sick leave, and personal days.
+    Returns request history and current balances for leave management.
   provider: bamboohr-basic
   endpoint: /v1/employees/{id}/timeOffRequests
   method: GET
@@ -110,7 +114,8 @@
 - slug: bamboohr_list_departments
   name: List Departments
   description: |
-    List all departments in the company.
+    List all departments in the company and return department names and IDs.
+    Use this to discover organizational structure for workforce management.
   provider: bamboohr-basic
   endpoint: /v1/departments
   method: GET
@@ -127,7 +132,8 @@
 - slug: bamboohr_list_locations
   name: List Locations
   description: |
-    List all locations in the company.
+    List all company locations and return addresses, names, and employee counts for each location.
+    Use this to discover workplace distribution for resource planning and office management.
   provider: bamboohr-basic
   endpoint: /v1/locations
   method: GET
@@ -144,7 +150,8 @@
 - slug: bamboohr_get_benefits
   name: Get Benefits
   description: |
-    Get benefits information for an employee.
+    Get benefits information for an employee including enrolled plans, coverage levels, and effective dates.
+    Returns the complete benefits enrollment for HR administration.
   provider: bamboohr-basic
   endpoint: /v1/employees/{id}/benefits
   method: GET
@@ -165,7 +172,8 @@
 - slug: bamboohr_get_compensation
   name: Get Compensation
   description: |
-    Get compensation information for an employee.
+    Get compensation information for an employee including salary, bonus structure, and pay frequency.
+    Returns the complete compensation package for payroll and HR planning.
   provider: bamboohr-basic
   endpoint: /v1/employees/{id}/compensation
   method: GET
@@ -186,7 +194,8 @@
 - slug: bamboohr_list_metadata_fields
   name: List Metadata Fields
   description: |
-    List all available employee fields (standard and custom).
+    List all available employee fields including standard fields and custom defined attributes.
+    Returns field names, types, and options for data import and integration.
   provider: bamboohr-basic
   endpoint: /v1/meta/fields
   method: GET
@@ -203,7 +212,8 @@
 - slug: bamboohr_get_reports
   name: Get Reports
   description: |
-    Get data from a saved BambooHR report.
+    Get data from a saved BambooHR report including employee metrics and custom data exports.
+    Returns tabular report data for analysis and reporting.
   provider: bamboohr-basic
   endpoint: /v1/reports/{reportId}
   method: GET

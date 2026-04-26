@@ -18,7 +18,7 @@
 - slug: yotpo_list_reviews
   name: List Reviews
   description: |
-    List all product reviews
+    Retrieve all product reviews with pagination support. Returns review content, ratings, product IDs, and customer information for each review.
   provider: yotpo
   endpoint: /v1/reviews
   method: GET
@@ -35,7 +35,7 @@
 - slug: yotpo_get_review
   name: Get Review
   description: |
-    Get review details
+    Retrieve the full details of a specific product review including the review text, star rating, author information, and verified purchase status.
   provider: yotpo
   endpoint: /v1/reviews/{id}
   method: GET
@@ -52,7 +52,7 @@
 - slug: yotpo_create_review
   name: Create Review
   description: |
-    Create a new review
+    Submit a new product review with rating, text content, and customer information. Returns the created review with its unique ID.
   provider: yotpo
   endpoint: /v1/reviews
   method: POST
@@ -69,7 +69,7 @@
 - slug: yotpo_list_products
   name: List Products
   description: |
-    List all products
+    Retrieve all products in the Yotpo catalog with pagination support. Returns product names, IDs, images, and average rating information.
   provider: yotpo
   endpoint: /v1/products
   method: GET
@@ -86,7 +86,7 @@
 - slug: yotpo_get_product
   name: Get Product
   description: |
-    Get product details
+    Retrieve detailed information for a specific product including name, description, images, and aggregated review statistics.
   provider: yotpo
   endpoint: /v1/products/{id}
   method: GET
@@ -103,7 +103,7 @@
 - slug: yotpo_list_customers
   name: List Customers
   description: |
-    List all customers
+    Retrieve all customers in the Yotpo database with pagination support. Returns customer names, email addresses, and purchase history.
   provider: yotpo
   endpoint: /v1/customers
   method: GET
@@ -120,7 +120,7 @@
 - slug: yotpo_get_loyalty_status
   name: Get Loyalty Status
   description: |
-    Get customer loyalty status
+    Retrieve the loyalty program status for a specific customer including points balance, tier level, and reward eligibility.
   provider: yotpo
   endpoint: /v1/loyalty/status
   method: GET
@@ -137,7 +137,7 @@
 - slug: yotpo_create_loyalty_event
   name: Create Loyalty Event
   description: |
-    Create a loyalty event
+    Record a new loyalty event for a customer such as a purchase, referral, or reward redemption. Returns the event ID and updated points balance.
   provider: yotpo
   endpoint: /v1/loyalty/events
   method: POST
@@ -154,7 +154,7 @@
 - slug: yotpo_list_coupons
   name: List Coupons
   description: |
-    List all coupons
+    Retrieve all active and inactive discount coupons with pagination support. Returns coupon codes, discount amounts, and expiration dates.
   provider: yotpo
   endpoint: /v1/coupons
   method: GET
@@ -171,7 +171,7 @@
 - slug: yotpo_create_coupon
   name: Create Coupon
   description: |
-    Create a new coupon
+    Create a new discount coupon with specified code, discount type, value, and expiration date. Returns the created coupon with its unique ID.
   provider: yotpo
   endpoint: /v1/coupons
   method: POST

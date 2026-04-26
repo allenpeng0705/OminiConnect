@@ -18,7 +18,7 @@
 - slug: google_gemini_list_models
   name: List Models
   description: |
-    List available Gemini models.
+    List all available Gemini models including names, versions, and capability descriptions. Returns model metadata for selecting appropriate AI models.
   provider: google-gemini
   endpoint: /v1beta/models
   method: GET
@@ -35,7 +35,7 @@
 - slug: google_gemini_get_model
   name: Get Model
   description: |
-    Get details about a specific model.
+    Retrieve detailed information about a specific Gemini model including capabilities, token limits, and supported features. Returns model configuration and availability status.
   provider: google-gemini
   endpoint: /v1beta/models/{model_name}
   method: GET
@@ -57,7 +57,7 @@
 - slug: google_gemini_generate_content
   name: Generate Content
   description: |
-    Generate content using a Gemini model.
+    Generate text content using a Gemini model with a specified text prompt and generation parameters. Returns generated content with usage statistics and model metadata.
   provider: google-gemini
   endpoint: /v1beta/models/{model_name}:generateContent
   method: POST
@@ -91,7 +91,7 @@
 - slug: google_gemini_count_tokens
   name: Count Tokens
   description: |
-    Count tokens in input content.
+    Count the number of tokens in input content for a specific Gemini model to estimate processing costs. Returns token counts for prompt engineering and billing estimation.
   provider: google-gemini
   endpoint: /v1beta/models/{model_name}:countTokens
   method: POST
@@ -117,7 +117,7 @@
 - slug: google_gemini_embed_content
   name: Embed Content
   description: |
-    Get embeddings for content.
+    Generate embedding vectors for text content using a Gemini model for similarity search and classification. Returns embedding arrays for vector-based AI applications.
   provider: google-gemini
   endpoint: /v1beta/models/{model_name}:embedContent
   method: POST
@@ -143,7 +143,7 @@
 - slug: google_gemini_list_tuned_models
   name: List Tuned Models
   description: |
-    List tuned models.
+    List all custom tuned models created from base Gemini models including tuning details and performance metrics. Returns tuned model identifiers for inference.
   provider: google-gemini
   endpoint: /v1beta/tunedModels
   method: GET
@@ -160,7 +160,7 @@
 - slug: google_gemini_create_tuned_model
   name: Create Tuned Model
   description: |
-    Create a tuned Gemini model.
+    Create a custom tuned Gemini model from a base model with specified training data and hyperparameters. Returns the tuned model identifier and training status.
   provider: google-gemini
   endpoint: /v1beta/tunedModels
   method: POST
@@ -189,7 +189,7 @@
 - slug: google_gemini_get_tuned_model
   name: Get Tuned Model
   description: |
-    Get details of a tuned model.
+    Retrieve detailed information about a specific tuned model including training progress, performance scores, and configuration. Returns tuned model metadata and operation status.
   provider: google-gemini
   endpoint: /v1beta/tunedModels/{tuned_model_name}
   method: GET
@@ -211,7 +211,7 @@
 - slug: google_gemini_delete_tuned_model
   name: Delete Tuned Model
   description: |
-    Delete a tuned model.
+    Delete a custom tuned model permanently removing it from the account. Returns confirmation of deletion with the model identifier.
   provider: google-gemini
   endpoint: /v1beta/tunedModels/{tuned_model_name}
   method: DELETE
@@ -233,7 +233,7 @@
 - slug: google_gemini_batch_embed_contents
   name: Batch Embed
   description: |
-    Batch embed multiple contents.
+    Generate embedding vectors for multiple text contents in a single API call for efficient batch processing. Returns multiple embedding arrays with corresponding indices.
   provider: google-gemini
   endpoint: /v1beta/models/{model_name}:batchEmbedContents
   method: POST

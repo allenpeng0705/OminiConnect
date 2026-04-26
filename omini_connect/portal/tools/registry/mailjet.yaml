@@ -18,8 +18,7 @@
 - slug: mailjet_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Mailjet.
-    Filter by lists, segments, or search.
+    List all contacts in your Mailjet account with optional filtering by lists, segments, or search terms. Returns contact names, email addresses, and subscription status for each contact.
   provider: mailjet
   endpoint: /v3/REST/contact
   method: GET
@@ -48,7 +47,7 @@
 - slug: mailjet_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a specific contact.
+    Retrieve detailed information about a specific Mailjet contact by their email address. Returns the contact name, email, properties, and subscription status.
   provider: mailjet
   endpoint: /v3/REST/contact/{email}
   method: GET
@@ -69,7 +68,7 @@
 - slug: mailjet_create_contact
   name: Create Contact
   description: |
-    Create a new contact in Mailjet.
+    Create a new contact in Mailjet with the specified email address and optional name and custom properties. Returns the created contact with confirmation of addition.
   provider: mailjet
   endpoint: /v3/REST/contact
   method: POST
@@ -96,7 +95,7 @@
 - slug: mailjet_update_contact
   name: Update Contact
   description: |
-    Update an existing contact.
+    Update an existing Mailjet contact with new name, email, or custom property values. Returns the updated contact confirming the changes made.
   provider: mailjet
   endpoint: /v3/REST/contact/{email}
   method: PUT
@@ -123,8 +122,7 @@
 - slug: mailjet_list_campaigns
   name: List Campaigns
   description: |
-    List all email campaigns in Mailjet.
-    Filter by status, date, or sender.
+    List all email campaigns in your Mailjet account with optional filtering by status, date, or sender. Returns campaign names, IDs, subjects, and send dates for each campaign.
   provider: mailjet
   endpoint: /v3/REST/campaign
   method: GET
@@ -153,7 +151,7 @@
 - slug: mailjet_get_campaign
   name: Get Campaign
   description: |
-    Get details of a specific campaign.
+    Retrieve detailed information about a specific Mailjet email campaign by its ID. Returns the campaign subject, content, recipient count, and delivery status.
   provider: mailjet
   endpoint: /v3/REST/campaign/{id}
   method: GET
@@ -174,7 +172,7 @@
 - slug: mailjet_send_campaign
   name: Send Campaign
   description: |
-    Send a campaign to its recipients.
+    Send a prepared Mailjet campaign to its configured recipients immediately. Returns the message IDs and delivery confirmation for each recipient.
   provider: mailjet
   endpoint: /v3/send
   method: POST
@@ -195,7 +193,7 @@
 - slug: mailjet_list_lists
   name: List Lists
   description: |
-    List all contact lists in Mailjet.
+    List all contact lists in your Mailjet account. Returns list names, descriptions, subscriber counts, and creation dates for each list.
   provider: mailjet
   endpoint: /v3/REST/contactslist
   method: GET
@@ -221,7 +219,7 @@
 - slug: mailjet_get_list
   name: Get List
   description: |
-    Get details of a specific contact list.
+    Retrieve detailed information about a specific Mailjet contact list by its ID. Returns the list name, description, subscriber count, and management settings.
   provider: mailjet
   endpoint: /v3/REST/contactslist/{id}
   method: GET
@@ -242,7 +240,7 @@
 - slug: mailjet_list_stats
   name: List Statistics
   description: |
-    Get email statistics from Mailjet.
+    Retrieve email delivery and engagement statistics from Mailjet within a specified time range. Returns open rates, click rates, bounce counts, and delivery metrics.
   provider: mailjet
   endpoint: /v3/REST/message
   method: GET

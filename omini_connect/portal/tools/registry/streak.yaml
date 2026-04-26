@@ -17,7 +17,7 @@
 - slug: streak_list_boxes
   name: List Boxes
   description: |
-    List all boxes (deals) in Streak. Filter by pipeline, stage, assignee, or search term.
+    List all boxes (deals) in Streak CRM with optional filtering. Returns box names, pipeline stages, assignees, and associated contacts.
   provider: streak
   endpoint: /boxes
   method: GET
@@ -52,7 +52,7 @@
 - slug: streak_get_box
   name: Get Box
   description: |
-    Get detailed information about a specific box.
+    Retrieve detailed information for a specific box including contacts, notes, and complete activity history.
   provider: streak
   endpoint: /boxes/{box_id}
   method: GET
@@ -74,7 +74,7 @@
 - slug: streak_create_box
   name: Create Box
   description: |
-    Create a new box (deal) in Streak. Set name, pipeline, stage, assignee, contacts.
+    Create a new box (deal) in Streak CRM with the specified name, pipeline, stage, assignee, and linked contacts.
   provider: streak
   endpoint: /boxes
   method: POST
@@ -112,7 +112,7 @@
 - slug: streak_update_box
   name: Update Box
   description: |
-    Update an existing box. Modify name, stage, assignee, notes, contacts.
+    Update an existing box with new values for name, stage, assignee, notes, or contacts.
   provider: streak
   endpoint: /boxes/{box_id}
   method: PUT
@@ -149,7 +149,7 @@
 - slug: streak_list_pipelines
   name: List Pipelines
   description: |
-    List all pipelines in Streak.
+    List all pipelines in Streak CRM. Returns pipeline names, stage configurations, and box counts for each pipeline.
   provider: streak
   endpoint: /pipelines
   method: GET
@@ -172,7 +172,7 @@
 - slug: streak_get_pipeline
   name: Get Pipeline
   description: |
-    Get detailed information about a specific pipeline including stages.
+    Retrieve detailed information for a specific pipeline including all stages and their configurations.
   provider: streak
   endpoint: /pipelines/{pipeline_id}
   method: GET
@@ -194,7 +194,7 @@
 - slug: streak_list_users
   name: List Users
   description: |
-    List all team members in Streak.
+    List all team members in Streak. Returns user names, email addresses, and permissions for each team member.
   provider: streak
   endpoint: /users
   method: GET
@@ -217,7 +217,7 @@
 - slug: streak_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Retrieve detailed information for a specific user including their permissions and assigned boxes.
   provider: streak
   endpoint: /users/{user_id}
   method: GET
@@ -239,7 +239,7 @@
 - slug: streak_list_files
   name: List Files
   description: |
-    List files attached to boxes in Streak.
+    List files attached to boxes in Streak CRM. Returns file names, sizes, upload dates, and associated box references.
   provider: streak
   endpoint: /files
   method: GET
@@ -265,7 +265,7 @@
 - slug: streak_get_file
   name: Get File
   description: |
-    Get detailed information about a specific file.
+    Retrieve detailed information for a specific file including download URL, metadata, and associated box.
   provider: streak
   endpoint: /files/{file_id}
   method: GET

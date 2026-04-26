@@ -17,8 +17,8 @@
 - slug: heroku_list_apps
   name: List Apps
   description: |
-    List all apps for the authenticated user.
-    Returns app details including name, region, stack, and creation date.
+    List all Heroku apps for the authenticated user with optional team filtering.
+    Returns app names, regions, and stack information.
   provider: heroku
   endpoint: /apps
   method: GET
@@ -47,7 +47,8 @@
 - slug: heroku_get_app
   name: Get App
   description: |
-    Get details of a specific app including region, stack, dynos, and add-ons.
+    Retrieve a specific Heroku app by ID with its region, stack, dynos, and add-ons.
+    Returns full app configuration and status information.
   provider: heroku
   endpoint: /apps/{app_id}
   method: GET
@@ -69,7 +70,8 @@
 - slug: heroku_create_app
   name: Create App
   description: |
-    Create a new app. Specify the name, region, and optional stack configuration.
+    Create a new Heroku app with specified name, region, and stack configuration.
+    Returns the created app with its unique ID and settings.
   provider: heroku
   endpoint: /apps
   method: POST
@@ -101,7 +103,8 @@
 - slug: heroku_delete_app
   name: Delete App
   description: |
-    Delete an existing app and all its data. This action is irreversible.
+    Permanently delete a Heroku app and all its associated data.
+    This destruction is irreversible and cannot be recovered.
   provider: heroku
   endpoint: /apps/{app_id}
   method: DELETE
@@ -123,8 +126,8 @@
 - slug: heroku_list_dynos
   name: List Dynos
   description: |
-    List all dynos running for a specific app.
-    Returns dyno type, state, and uptime information.
+    Retrieve all running dynos for a specific Heroku app.
+    Returns dyno types, current state, and uptime metrics.
   provider: heroku
   endpoint: /apps/{app_id}/dynos
   method: GET
@@ -146,7 +149,8 @@
 - slug: heroku_restart_dyno
   name: Restart Dyno
   description: |
-    Restart a specific dyno or all dynos of an app.
+    Restart a specific dyno or all dynos of a Heroku app.
+    Triggers a graceful restart of the specified process.
   provider: heroku
   endpoint: /apps/{app_id}/dynos/{dyno_id}/actions/restart
   method: POST
@@ -172,7 +176,8 @@
 - slug: heroku_list_releases
   name: List Releases
   description: |
-    List all releases for an app, including the version number, deploy date, and description.
+    Retrieve all releases for a Heroku app with version numbers and deploy dates.
+    Returns release history including descriptions and deployment order.
   provider: heroku
   endpoint: /apps/{app_id}/releases
   method: GET
@@ -194,7 +199,8 @@
 - slug: heroku_get_release
   name: Get Release
   description: |
-    Get details of a specific release including the slug, created date, and description.
+    Retrieve a specific Heroku release by version or ID with its slug and notes.
+    Returns deployment details and created timestamp.
   provider: heroku
   endpoint: /apps/{app_id}/releases/{release_id}
   method: GET
@@ -220,8 +226,8 @@
 - slug: heroku_list_config_vars
   name: List Config Vars
   description: |
-    List all config vars (environment variables) for an app.
-    Returns key-value pairs for the app's configuration.
+    Retrieve all environment variables for a Heroku app.
+    Returns configuration key-value pairs for the app's environment.
   provider: heroku
   endpoint: /apps/{app_id}/config-vars
   method: GET
@@ -243,8 +249,8 @@
 - slug: heroku_get_config_var
   name: Get Config Var
   description: |
-    Get a specific config var value for an app.
-    Returns the value for a single environment variable.
+    Retrieve a single environment variable value for a Heroku app.
+    Returns the configuration value for the specified key.
   provider: heroku
   endpoint: /apps/{app_id}/config-vars/{key}
   method: GET

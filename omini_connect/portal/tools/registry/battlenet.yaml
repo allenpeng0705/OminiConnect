@@ -18,7 +18,7 @@
 - slug: battlenet_get_account
   name: Get Account
   description: |
-    Get Battle.net account information.
+    Get Battle.net account information including email, region, and linked game accounts.
   provider: battlenet
   endpoint: /account/user
   method: GET
@@ -35,7 +35,7 @@
 - slug: battlenet_list_games
   name: List Games
   description: |
-    List available games linked to the Battle.net account.
+    List available games linked to the Battle.net account, returning game names and subscription status.
   provider: battlenet
   endpoint: /account/user/games
   method: GET
@@ -55,9 +55,10 @@
 - slug: battlenet_get_game_stats
   name: Get Game Stats
   description: |
-    Get statistics for a specific game.
+    Get statistics for a specific game including play time, achievements, and performance metrics.
+    Returns detailed gaming statistics for tracking player progress and achievements.
   provider: battlenet
-  endpoint: /profile/{region}/games/{gameId}"
+  endpoint: /profile/{region}/games/{gameId}
   method: GET
   scopes: []
   tags:
@@ -80,9 +81,10 @@
 - slug: battlenet_get_profile
   name: Get Profile
   description: |
-    Get Battle.net user profile.
+    Get Battle.net user profile including display name, friend connections, and game progress.
+    Returns comprehensive profile data for user identity and gaming activity.
   provider: battlenet
-  endpoint: /profile/{region}/player/{battletag}"
+  endpoint: /profile/{region}/player/{battletag}
   method: GET
   scopes: []
   tags:
@@ -105,9 +107,10 @@
 - slug: battlenet_list_sc2_profile
   name: Get SC2 Profile
   description: |
-    Get StarCraft 2 profile and statistics.
+    Get StarCraft 2 profile and statistics including league ranking, race preferences, and achievement progress.
+    Returns comprehensive gaming profile data for competitive tracking.
   provider: battlenet
-  endpoint: /sc2/profile/{region}/{realm}/{profileId}"
+  endpoint: /sc2/profile/{region}/{realm}/{profileId}
   method: GET
   scopes: []
   tags:
@@ -134,9 +137,10 @@
 - slug: battlenet_get_wow_character
   name: Get WoW Character
   description: |
-    Get World of Warcraft character details.
+    Get World of Warcraft character details including level, faction, class, gear, and achievements.
+    Returns comprehensive character data for progression tracking and guild management.
   provider: battlenet
-  endpoint: /wow/character/{realm}/{name}"
+  endpoint: /wow/character/{realm}/{name}
   method: GET
   scopes: []
   tags:
@@ -162,9 +166,10 @@
 - slug: battlenet_list_wow_achievements
   name: List WoW Achievements
   description: |
-    List achievements for a WoW character.
+    List achievements for a World of Warcraft character including completion dates and point values.
+    Returns achievement details for tracking character milestones and progress.
   provider: battlenet
-  endpoint: /wow/character/{realm}/{name}/achievements"
+  endpoint: /wow/character/{realm}/{name}/achievements
   method: GET
   scopes: []
   tags:
@@ -187,9 +192,10 @@
 - slug: battlenet_get_d3_profile
   name: Get D3 Profile
   description: |
-    Get Diablo 3 hero and seasonal data.
+    Get Diablo 3 hero and seasonal data including paragon level, seasonal progress, and gear statistics.
+    Returns detailed character and seasonal progression data for competitive play.
   provider: battlenet
-  endpoint: /d3/profile/{account}/"
+  endpoint: /d3/profile/{account}/
   method: GET
   scopes: []
   tags:
@@ -208,9 +214,10 @@
 - slug: battlenet_get_overwatch_profile
   name: Get Overwatch Profile
   description: |
-    Get Overwatch player profile and stats.
+    Get Overwatch player profile and stats including rank, play time, win rate, and achievement progress.
+    Returns comprehensive player statistics for competitive ranking and performance analysis.
   provider: battlenet
-  endpoint: /overwatch/profile/{region}/{platform}/{tag}"
+  endpoint: /overwatch/profile/{region}/{platform}/{tag}
   method: GET
   scopes: []
   tags:
@@ -237,9 +244,10 @@
 - slug: battlenet_list_news
   name: List News
   description: |
-    List latest game news and announcements.
+    List latest game news and announcements for Battle.net including patch notes and events.
+    Returns news articles with titles, dates, and summaries for staying updated.
   provider: battlenet
-  endpoint: /data/wow/news"
+  endpoint: /data/wow/news
   method: GET
   scopes: []
   tags:

@@ -1,7 +1,7 @@
 - slug: huggingface_list_models
   name: List Models
   description: |
-    Retrieve a list of all available Hugging Face models.
+    List all available machine learning models on Hugging Face Hub with optional filtering. Returns model names, tasks, downloads, and ratings.
   provider: huggingface
   endpoint: /v1/models
   method: GET
@@ -30,7 +30,7 @@
 - slug: huggingface_get_model
   name: Get Model
   description: |
-    Retrieve details for a specific model by ID.
+    Retrieve detailed information for a specific model including model card, capabilities, hardware requirements, and example code.
   provider: huggingface
   endpoint: /v1/models/{model_id}
   method: GET
@@ -51,7 +51,7 @@
 - slug: huggingface_list_datasets
   name: List Datasets
   description: |
-    Retrieve a list of available datasets on Hugging Face.
+    List all available datasets on Hugging Face Hub with optional filtering. Returns dataset names, sizes, tasks, and download counts.
   provider: huggingface
   endpoint: /v1/datasets
   method: GET
@@ -80,7 +80,7 @@
 - slug: huggingface_get_dataset
   name: Get Dataset
   description: |
-    Retrieve details for a specific dataset by ID.
+    Retrieve detailed information for a specific dataset including description, size, splits, and data preview.
   provider: huggingface
   endpoint: /v1/datasets/{dataset_id}
   method: GET
@@ -101,7 +101,7 @@
 - slug: huggingface_list_spaces
   name: List Spaces
   description: |
-    Retrieve a list of Hugging Face Spaces (ML apps).
+    List all available Hugging Face Spaces (ML applications) with optional filtering. Returns space names, SDKs, hardware, and Like counts.
   provider: huggingface
   endpoint: /v1/spaces
   method: GET
@@ -130,7 +130,7 @@
 - slug: huggingface_get_space
   name: Get Space
   description: |
-    Retrieve details for a specific Space.
+    Retrieve detailed information for a specific Space including hardware configuration, app content, and repository details.
   provider: huggingface
   endpoint: /v1/spaces/{space_id}
   method: GET
@@ -151,7 +151,7 @@
 - slug: huggingface_create_inference_endpoint
   name: Create Inference Endpoint
   description: |
-    Create a dedicated inference endpoint for a model.
+    Create a dedicated inference endpoint for deploying a model with specified hardware. Returns the endpoint URL and deployment status.
   provider: huggingface
   endpoint: /v1/endpoints
   method: POST
@@ -186,7 +186,7 @@
 - slug: huggingface_list_inference_endpoints
   name: List Inference Endpoints
   description: |
-    Retrieve a list of inference endpoints.
+    List all inference endpoints in the Hugging Face account. Returns endpoint names, status, URLs, and associated models.
   provider: huggingface
   endpoint: /v1/endpoints
   method: GET
@@ -206,7 +206,7 @@
 - slug: huggingface_get_inference_endpoint
   name: Get Inference Endpoint
   description: |
-    Retrieve details for a specific inference endpoint.
+    Retrieve detailed information for a specific inference endpoint including status, usage metrics, and scaling configuration.
   provider: huggingface
   endpoint: /v1/endpoints/{endpoint_id}
   method: GET
@@ -227,7 +227,7 @@
 - slug: huggingface_delete_inference_endpoint
   name: Delete Inference Endpoint
   description: |
-    Delete a specific inference endpoint.
+    Delete a specific inference endpoint and release all associated resources. This action cannot be undone.
   provider: huggingface
   endpoint: /v1/endpoints/{endpoint_id}
   method: DELETE

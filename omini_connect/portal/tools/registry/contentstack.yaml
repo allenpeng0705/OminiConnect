@@ -17,8 +17,7 @@
 - slug: contentstack_list_assets
   name: List Assets
   description: |
-    List all assets (images, videos, files) in a Contentstack stack with optional filtering.
-    Returns asset details including title, filename, URL, and metadata.
+    List all assets in a Contentstack stack, returning asset UIDs, titles, filenames, URLs, and metadata.
   provider: contentstack
   endpoint: /v3/assets
   method: GET
@@ -52,7 +51,7 @@
 - slug: contentstack_get_asset
   name: Get Asset
   description: |
-    Get details of a specific asset by its UID including title, filename, URL, and metadata.
+    Get details of a specific Contentstack asset by its UID including title, filename, URL, and file metadata.
   provider: contentstack
   endpoint: /v3/assets/{uid}
   method: GET
@@ -78,8 +77,7 @@
 - slug: contentstack_upload_asset
   name: Upload Asset
   description: |
-    Upload a new asset (image, video, or file) to Contentstack.
-    The asset will be available in the stack's asset library.
+    Upload a new asset to Contentstack, specifying the title, description, and file information.
   provider: contentstack
   endpoint: /v3/assets
   method: POST
@@ -108,8 +106,7 @@
 - slug: contentstack_list_entries
   name: List Entries
   description: |
-    List entries for a specific content type with optional filtering and sorting.
-    Returns entry details including fields, locale, and publishing information.
+    List entries for a Contentstack content type, returning entry UIDs, fields, locale, and publishing information.
   provider: contentstack
   endpoint: /v3/content_types/{content_type_uid}/entries
   method: GET
@@ -147,7 +144,7 @@
 - slug: contentstack_get_entry
   name: Get Entry
   description: |
-    Get details of a specific entry by its UID including all field values and metadata.
+    Get details of a specific Contentstack entry by its UID including all field values and metadata.
   provider: contentstack
   endpoint: /v3/content_types/{content_type_uid}/entries/{entry_uid}
   method: GET
@@ -178,8 +175,7 @@
 - slug: contentstack_create_entry
   name: Create Entry
   description: |
-    Create a new entry in a content type with the specified field values.
-    Entries represent content following a content type schema.
+    Create a new entry in a Contentstack content type, specifying the content type UID and field values.
   provider: contentstack
   endpoint: /v3/content_types/{content_type_uid}/entries
   method: POST
@@ -210,8 +206,7 @@
 - slug: contentstack_list_content_types
   name: List Content Types
   description: |
-    List all content types in a Contentstack stack.
-    Content types define the schema for entries (e.g., Blog Post, Product).
+    List all content types in a Contentstack stack, returning content type UIDs, names, and descriptions.
   provider: contentstack
   endpoint: /v3/content_types
   method: GET
@@ -237,7 +232,7 @@
 - slug: contentstack_get_content_type
   name: Get Content Type
   description: |
-    Get details of a specific content type including its schema, display field, and settings.
+    Get details of a specific Contentstack content type including its schema, display field, and configuration.
   provider: contentstack
   endpoint: /v3/content_types/{content_type_uid}
   method: GET
@@ -259,8 +254,7 @@
 - slug: contentstack_list_locales
   name: List Locales
   description: |
-    List all locales (languages/regional variants) configured in a Contentstack stack.
-    Locales enable multilingual content management.
+    List all locales configured in a Contentstack stack, returning locale codes, names, and fallback settings.
   provider: contentstack
   endpoint: /v3/locales
   method: GET
@@ -286,7 +280,7 @@
 - slug: contentstack_get_locale
   name: Get Locale
   description: |
-    Get details of a specific locale including its code, name, and fallback locale.
+    Get details of a specific Contentstack locale including its code, name, and fallback configuration.
   provider: contentstack
   endpoint: /v3/locales/{locale_code}
   method: GET

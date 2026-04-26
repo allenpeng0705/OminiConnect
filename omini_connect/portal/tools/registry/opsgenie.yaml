@@ -17,8 +17,7 @@
 - slug: opsgenie_list_alerts
   name: List Alerts
   description: |
-    List alerts in your OpsGenie account. Alerts are notifications
-    that can be assigned, acknowledged, and closed. Filter by status or priority.
+    List alerts in your OpsGenie account with optional filtering by status or priority. Returns alert IDs, messages, priorities, and current statuses.
   provider: opsgenie
   endpoint: /v2/alerts
   method: GET
@@ -55,8 +54,7 @@
 - slug: opsgenie_get_alert
   name: Get Alert
   description: |
-    Get details of a specific alert by ID. Returns title, description,
-    priority, status, and timeline of events and actions taken.
+    Get details of a specific alert by ID including title, description, priority, status, and timeline of events and actions taken.
   provider: opsgenie
   endpoint: /v2/alerts/{id}
   method: GET
@@ -78,8 +76,7 @@
 - slug: opsgenie_create_alert
   name: Create Alert
   description: |
-    Create a new alert in OpsGenie. Alerts notify designated responders
-    based on escalation rules. You can specify priority and add details.
+    Create a new alert with the specified message, priority, and responder teams. Returns the created alert with its unique identifier and acknowledgment instructions.
   provider: opsgenie
   endpoint: /v2/alerts
   method: POST
@@ -117,8 +114,7 @@
 - slug: opsgenie_close_alert
   name: Close Alert
   description: |
-    Close an existing alert. Closed alerts are resolved and no longer
-    require attention. You can add a note explaining the resolution.
+    Close an existing alert that has been resolved. Returns confirmation with closure timestamp and any notes added during the close action.
   provider: opsgenie
   endpoint: /v2/alerts/{id}/close
   method: POST
@@ -143,8 +139,7 @@
 - slug: opsgenie_list_users
   name: List Users
   description: |
-    List all users in your OpsGenie account. Users are people who can
-    be assigned to alerts and are part of escalation policies.
+    List all users in your OpsGenie account who can be assigned to alerts and are part of escalation policies. Returns user names, emails, and roles.
   provider: opsgenie
   endpoint: /v2/users
   method: GET
@@ -173,8 +168,7 @@
 - slug: opsgenie_get_user
   name: Get User
   description: |
-    Get details of a specific user including their contact information,
-    role, and current on-call responsibilities.
+    Get details of a specific user including their contact information, role, and current on-call responsibilities.
   provider: opsgenie
   endpoint: /v2/users/{id}
   method: GET
@@ -196,8 +190,7 @@
 - slug: opsgenie_list_schedules
   name: List Schedules
   description: |
-    List all on-call schedules in OpsGenie. Schedules define rotation
-    of on-call responders and are used for alert routing.
+    List all on-call schedules including their names, time zones, and team assignments. Returns schedule identifiers for finding current on-call responders.
   provider: opsgenie
   endpoint: /v2/schedules
   method: GET
@@ -226,8 +219,7 @@
 - slug: opsgenie_get_schedule
   name: Get Schedule
   description: |
-    Get details of a specific schedule including participants, rotation type,
-    and upcoming on-call shifts. Useful for finding who is currently on-call.
+    Get detailed information for a specific schedule including its rotation type, participants, and upcoming on-call shifts. Returns timeline data for identifying who is currently on-call.
   provider: opsgenie
   endpoint: /v2/schedules/{id}
   method: GET
@@ -252,8 +244,7 @@
 - slug: opsgenie_list_policies
   name: List Policies
   description: |
-    List all escalation policies in OpsGenie. Policies define the chain
-    of notification steps when alerts are created or escalated.
+    List all escalation policies including their names, descriptions, and step configurations. Returns policy identifiers for understanding alert routing chains.
   provider: opsgenie
   endpoint: /v2/policies
   method: GET
@@ -279,8 +270,7 @@
 - slug: opsgenie_get_policy
   name: Get Policy
   description: |
-    Get details of a specific escalation policy including the rules,
-    recipients, and notification steps for each escalation level.
+    Get detailed information for a specific escalation policy including its rules, notification steps, and target recipients at each escalation level.
   provider: opsgenie
   endpoint: /v2/policies/{id}
   method: GET

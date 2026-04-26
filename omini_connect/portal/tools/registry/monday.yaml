@@ -17,8 +17,7 @@
 - slug: monday_list_boards
   name: List Boards
   description: |
-    List all boards the user has access to.
-    Returns board details including name, state, views, activity.
+    List all boards in your Monday.com account. Returns board names, IDs, states, and view configurations for each board.
   provider: monday
   endpoint: /boards
   method: GET
@@ -44,8 +43,7 @@
 - slug: monday_get_board
   name: Get Board
   description: |
-    Get detailed information about a specific board.
-    Includes columns, views, groups, and activity log.
+    Get detailed information about a specific Monday.com board by its ID. Returns the board name, columns, views, groups, and activity log.
   provider: monday
   endpoint: /boards/{board_id}
   method: GET
@@ -67,8 +65,7 @@
 - slug: monday_create_board
   name: Create Board
   description: |
-    Create a new board in a workspace.
-    Set name, board type, and workspace.
+    Create a new board in Monday.com with the specified name and workspace. Returns the created board with its unique ID.
   provider: monday
   endpoint: /boards
   method: POST
@@ -97,8 +94,7 @@
 - slug: monday_list_items
   name: List Items
   description: |
-    List all items (tasks) in a board.
-    Can filter by group, column values, or item name.
+    List all items (tasks) in a Monday.com board. Returns item names, IDs, statuses, and assignees for each item.
   provider: monday
   endpoint: /boards/{board_id}/items
   method: GET
@@ -128,8 +124,7 @@
 - slug: monday_get_item
   name: Get Item
   description: |
-    Get detailed information about a specific item.
-    Includes all column values, assignees, and subitems.
+    Get detailed information about a specific Monday.com item by its ID. Returns the item name, column values, assignees, and subitems.
   provider: monday
   endpoint: /boards/{board_id}/items/{item_id}
   method: GET
@@ -155,8 +150,7 @@
 - slug: monday_create_item
   name: Create Item
   description: |
-    Create a new item (task) in a board.
-    Set name, column values, assignees, and group.
+    Create a new item (task) in a Monday.com board. Returns the created item with its unique ID.
   provider: monday
   endpoint: /boards/{board_id}/items
   method: POST
@@ -188,7 +182,7 @@
 - slug: monday_update_item
   name: Update Item
   description: |
-    Update an existing item. Can change name, column values, or move to different group.
+    Update an existing Monday.com item's name, column values, or group. Returns the updated item confirming the changes.
   provider: monday
   endpoint: /boards/{board_id}/items/{item_id}
   method: PUT
@@ -223,7 +217,7 @@
 - slug: monday_list_updates
   name: List Updates
   description: |
-    List all updates on an item. Includes text, author, and timestamp.
+    List all updates on a Monday.com item. Returns update IDs, text content, authors, and timestamps for each update.
   provider: monday
   endpoint: /boards/{board_id}/items/{item_id}/updates
   method: GET
@@ -254,7 +248,7 @@
 - slug: monday_get_update
   name: Get Update
   description: |
-    Get detailed information about a specific update.
+    Get detailed information about a specific Monday.com update by its ID. Returns the update text, author, timestamp, and replies.
   provider: monday
   endpoint: /updates/{update_id}
   method: GET
@@ -276,7 +270,7 @@
 - slug: monday_list_users
   name: List Users
   description: |
-    List all users in a workspace.
+    List all users in your Monday.com workspace. Returns user names, IDs, email addresses, and roles for each user.
   provider: monday
   endpoint: /users
   method: GET

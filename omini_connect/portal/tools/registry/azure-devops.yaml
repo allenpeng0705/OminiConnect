@@ -18,7 +18,8 @@
 - slug: azure_devops_list_projects
   name: List Projects
   description: |
-    List all projects in the Azure DevOps organization.
+    List all projects in the Azure DevOps organization and return project names, IDs, and visibility settings.
+    Use this to discover available projects for code and work management.
   provider: azure-devops
   endpoint: /_apis/projects
   method: GET
@@ -43,7 +44,8 @@
 - slug: azure_devops_get_project
   name: Get Project
   description: |
-    Get details for a specific project.
+    Get details for a specific project including description, process template, and source control settings.
+    Returns the complete project configuration for management.
   provider: azure-devops
   endpoint: /_apis/projects/{projectId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: azure_devops_list_pipelines
   name: List Pipelines
   description: |
-    List all pipelines in a project.
+    List all CI/CD pipelines in a project, returning pipeline names, IDs, and folder structure.
+    Use this to discover available pipelines for automation.
   provider: azure-devops
   endpoint: /{project}/_apis/pipelines
   method: GET
@@ -89,7 +92,8 @@
 - slug: azure_devops_get_pipeline
   name: Get Pipeline
   description: |
-    Get details for a specific pipeline.
+    Get details for a specific pipeline including trigger conditions, stages, and task definitions.
+    Returns the complete pipeline configuration for build management.
   provider: azure-devops
   endpoint: /{project}/_apis/pipelines/{pipelineId}
   method: GET
@@ -114,7 +118,8 @@
 - slug: azure_devops_list_runs
   name: List Runs
   description: |
-    List all runs (executions) for a pipeline.
+    List all pipeline runs (executions) for a specific pipeline, returning run IDs, statuses, and timestamps.
+    Use this to monitor build and deployment history.
   provider: azure-devops
   endpoint: /{project}/_apis/pipelines/{pipelineId}/runs
   method: GET
@@ -143,7 +148,8 @@
 - slug: azure_devops_get_run
   name: Get Run
   description: |
-    Get details for a specific pipeline run.
+    Get details for a specific pipeline run including status, duration, and output artifacts.
+    Returns the complete run log for troubleshooting builds.
   provider: azure-devops
   endpoint: /{project}/_apis/pipelines/{pipelineId}/runs/{runId}
   method: GET
@@ -173,7 +179,8 @@
 - slug: azure_devops_list_work_items
   name: List Work Items
   description: |
-    List work items (bugs, tasks, features, etc.) in a project.
+    List work items (bugs, tasks, features, user stories) in a project and return IDs, titles, and statuses.
+    Filter by work item type and state to find specific items.
   provider: azure-devops
   endpoint: /{project}/_apis/wit/workitems
   method: GET
@@ -204,7 +211,8 @@
 - slug: azure_devops_get_work_item
   name: Get Work Item
   description: |
-    Get details for a specific work item.
+    Get details for a specific work item including description, assignees, and iteration path.
+    Returns the complete work item data for project management.
   provider: azure-devops
   endpoint: /{project}/_apis/wit/workitems/{id}
   method: GET
@@ -229,7 +237,8 @@
 - slug: azure_devops_list_repos
   name: List Repositories
   description: |
-    List all Git repositories in a project.
+    List all Git repositories in a project and return repository names, IDs, and default branch names.
+    Use this to discover available code repositories.
   provider: azure-devops
   endpoint: /{project}/_apis/git/repositories
   method: GET
@@ -250,7 +259,8 @@
 - slug: azure_devops_list_builds
   name: List Builds
   description: |
-    List build definitions and recent builds.
+    List build definitions and recent build results in a project, returning build IDs, statuses, and durations.
+    Use this to monitor CI/CD pipeline health.
   provider: azure-devops
   endpoint: /{project}/_apis/build/builds
   method: GET

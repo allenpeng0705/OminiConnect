@@ -1,7 +1,8 @@
 - slug: postmark_send_email
   name: Send Email
   description: |
-    Send an email message via Postmark.
+    Send an email message through Postmark to a specified recipient with the given subject line and body content.
+    Returns the message ID and delivery status for tracking sent emails.
   provider: postmark
   endpoint: /v3/email
   method: POST
@@ -42,7 +43,8 @@
 - slug: postmark_list_templates
   name: List Templates
   description: |
-    Retrieve all email templates in your Postmark account.
+    Retrieve all email templates in your Postmark account with their names, subjects, and creation dates.
+    Returns template listings for managing email communication templates.
   provider: postmark
   endpoint: /v3/templates
   method: GET
@@ -65,7 +67,8 @@
 - slug: postmark_get_template
   name: Get Template
   description: |
-    Retrieve a specific email template by ID.
+    Retrieve detailed information for a specific email template including its subject line, HTML body, and text body content.
+    Returns template content and configuration for email campaign preparation.
   provider: postmark
   endpoint: /v3/templates/{template_id}
   method: GET
@@ -86,7 +89,8 @@
 - slug: postmark_create_template
   name: Create Template
   description: |
-    Create a new email template in Postmark.
+    Create a new email template in Postmark with the specified name, subject line, HTML body, and plain text body.
+    Returns the created template with its assigned ID for use in email campaigns.
   provider: postmark
   endpoint: /v3/templates
   method: POST
@@ -117,7 +121,8 @@
 - slug: postmark_list_bounces
   name: List Bounces
   description: |
-    Retrieve all bounces (failed deliveries) for your server.
+    Retrieve all bounces (failed email deliveries) for your Postmark server with their types, timestamps, and recipient information.
+    Returns bounce records for email delivery issue tracking and list maintenance.
   provider: postmark
   endpoint: /v3/bounces
   method: GET
@@ -146,7 +151,8 @@
 - slug: postmark_get_bounce
   name: Get Bounce
   description: |
-    Retrieve details about a specific bounce by ID.
+    Retrieve detailed information about a specific bounce including its type, error message, and the failed recipient address.
+    Returns bounce details for diagnosing email delivery failures.
   provider: postmark
   endpoint: /v3/bounces/{bounce_id}
   method: GET
@@ -167,7 +173,8 @@
 - slug: postmark_list_webhooks
   name: List Webhooks
   description: |
-    Retrieve all webhooks configured for your server.
+    Retrieve all webhooks configured for your Postmark server with their URLs, trigger settings, and authentication configurations.
+    Returns webhook listings for monitoring email event notifications.
   provider: postmark
   endpoint: /v3/webhooks
   method: GET
@@ -188,7 +195,8 @@
 - slug: postmark_create_webhook
   name: Create Webhook
   description: |
-    Create a new webhook for tracking email events.
+    Create a new webhook for tracking email events such as bounces, opens, and clicks with the specified callback URL.
+    Returns the created webhook configuration including its ID for event-driven integrations.
   provider: postmark
   endpoint: /v3/webhooks
   method: POST
@@ -222,7 +230,8 @@
 - slug: postmark_list_tags
   name: List Tags
   description: |
-    Retrieve all tags used for email tracking.
+    Retrieve all tags used for email tracking in your Postmark account with their names and usage statistics.
+    Returns tag listings for organizing and filtering email campaign data.
   provider: postmark
   endpoint: /v3/tags
   method: GET
@@ -245,7 +254,8 @@
 - slug: postmark_get_tag
   name: Get Tag
   description: |
-    Retrieve statistics and details for a specific tag.
+    Retrieve statistics and usage details for a specific email tag including sent count, open rate, and bounce metrics.
+    Returns tag performance data for email campaign analysis and optimization.
   provider: postmark
   endpoint: /v3/tags/{tag_name}
   method: GET

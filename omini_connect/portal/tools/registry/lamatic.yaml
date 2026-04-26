@@ -15,7 +15,7 @@
 - slug: lamatic_list_models
   name: List Models
   description: |
-    Retrieve a list of all available AI models in the Lamatic platform.
+    List all available AI models in your Lamatic account. Returns model names, provider names, capabilities, context window sizes, and pricing tiers.
   provider: lamatic
   endpoint: /models
   method: GET
@@ -33,7 +33,7 @@
 - slug: lamatic_get_model
   name: Get Model
   description: |
-    Get details for a specific model by ID.
+    Get details about a specific Lamatic AI model by ID. Returns model configuration, capabilities, and endpoint availability.
   provider: lamatic
   endpoint: /models/{model_id}
   method: GET
@@ -55,7 +55,7 @@
 - slug: lamatic_deploy_model
   name: Deploy Model
   description: |
-    Deploy a model to make it available for inference.
+    Deploy an AI model from your Lamatic account to make it available for inference. Specify the model and instance type. Returns the deployment details with its unique ID and status.
   provider: lamatic
   endpoint: /deployments
   method: POST
@@ -80,7 +80,7 @@
 - slug: lamatic_create_endpoint
   name: Create Endpoint
   description: |
-    Create a new API endpoint for accessing deployed models.
+    Create a new API endpoint in your Lamatic account for accessing deployed models. Specify the name and attached deployment. Returns the endpoint configuration with its unique ID.
   provider: lamatic
   endpoint: /endpoints
   method: POST
@@ -106,7 +106,7 @@
 - slug: lamatic_list_endpoints
   name: List Endpoints
   description: |
-    Retrieve a list of all API endpoints.
+    List all API endpoints in the Lamatic platform. Returns endpoint URLs, attached deployments, and status information.
   provider: lamatic
   endpoint: /endpoints
   method: GET
@@ -124,7 +124,7 @@
 - slug: lamatic_get_endpoint
   name: Get Endpoint
   description: |
-    Get details for a specific endpoint by ID.
+    Get details about a specific Lamatic endpoint by ID. Returns endpoint configuration, attached deployment, and usage statistics.
   provider: lamatic
   endpoint: /endpoints/{endpoint_id}
   method: GET
@@ -146,7 +146,7 @@
 - slug: lamatic_invoke_endpoint
   name: Invoke Endpoint
   description: |
-    Send an inference request to a deployed endpoint.
+    Send an inference request to a Lamatic deployed endpoint. Submit input data and receive model predictions or generated content.
   provider: lamatic
   endpoint: /endpoints/{endpoint_id}/invoke
   method: POST
@@ -172,7 +172,7 @@
 - slug: lamatic_list_deployments
   name: List Deployments
   description: |
-    Retrieve a list of all model deployments.
+    List all model deployments in Lamatic. Returns deployment status, attached models, instance types, and endpoint associations.
   provider: lamatic
   endpoint: /deployments
   method: GET
@@ -190,7 +190,7 @@
 - slug: lamatic_get_deployment
   name: Get Deployment
   description: |
-    Get details for a specific deployment by ID.
+    Get details about a specific Lamatic deployment by ID. Returns deployment configuration, model info, and operational status.
   provider: lamatic
   endpoint: /deployments/{deployment_id}
   method: GET
@@ -212,7 +212,7 @@
 - slug: lamatic_get_inference_log
   name: Get Inference Log
   description: |
-    Retrieve the inference log for a specific deployment or endpoint.
+    Retrieve the inference log from a Lamatic deployment. Returns request inputs, model outputs, latency, and error details.
   provider: lamatic
   endpoint: /inference-logs/{log_id}
   method: GET

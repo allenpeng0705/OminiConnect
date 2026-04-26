@@ -16,7 +16,7 @@
 - slug: shopify_more_list_orders
   name: List Orders
   description: |
-    List all orders in the Shopify store. Filter by status, fulfillment status, and date range.
+    List all orders in the Shopify store. Returns order IDs, customer names, financial statuses, fulfillment statuses, and order dates. Filter by status, fulfillment status, and date range.
   provider: shopify_more
   endpoint: /admin/api/2024-01/orders.json
   method: GET
@@ -70,7 +70,7 @@
 - slug: shopify_more_create_order
   name: Create Order
   description: |
-    Create a new order in the Shopify store. Include line items, shipping address, and payment details.
+    Create a new order in the Shopify store. Sets line items, shipping address, billing address, and payment details for the order.
   provider: shopify_more
   endpoint: /admin/api/2024-01/orders.json
   method: POST
@@ -101,7 +101,7 @@
 - slug: shopify_more_list_fulfillments
   name: List Fulfillments
   description: |
-    List all fulfillments for an order. Fulfillments represent shipments and tracking information.
+    List all fulfillments for an order in Shopify. Returns fulfillment IDs, tracking numbers, carrier information, and shipment statuses.
   provider: shopify_more
   endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
   method: GET
@@ -128,7 +128,7 @@
 - slug: shopify_more_create_fulfillment
   name: Create Fulfillment
   description: |
-    Create a fulfillment for an order. Add tracking numbers and notification emails.
+    Create a fulfillment for an order in Shopify. Adds tracking numbers, sets the tracking company, and optionally sends notification emails to customers.
   provider: shopify_more
   endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
   method: POST
@@ -160,7 +160,7 @@
 - slug: shopify_more_list_products
   name: List Products
   description: |
-    List all products in the Shopify store. Filter by collection, product type, and vendor.
+    List all products in the Shopify store. Returns product IDs, titles, descriptions, vendors, product types, and pricing information. Filter by collection, product type, and vendor.
   provider: shopify_more
   endpoint: /admin/api/2024-01/products.json
   method: GET
@@ -214,7 +214,7 @@
 - slug: shopify_more_create_product
   name: Create Product
   description: |
-    Create a new product in the Shopify store. Include title, description, variants, and images.
+    Create a new product in the Shopify store. Sets the product title, description, vendor, product type, and optional variants and images.
   provider: shopify_more
   endpoint: /admin/api/2024-01/products.json
   method: POST
@@ -248,7 +248,7 @@
 - slug: shopify_more_list_customers
   name: List Customers
   description: |
-    List all customers in the Shopify store. Filter by tags, accepts marketing, and date created.
+    List all customers in the Shopify store. Returns customer IDs, names, email addresses, phone numbers, and acceptance status for marketing. Filter by tags, marketing acceptance, and creation date.
   provider: shopify_more
   endpoint: /admin/api/2024-01/customers.json
   method: GET

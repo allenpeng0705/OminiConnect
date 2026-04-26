@@ -1,7 +1,7 @@
 - slug: expensify_list_reports
   name: List Reports
   description: |
-    Retrieve all expense reports with optional status filters.
+    List all expense reports in Expensify with optional filtering by status, date range, or policy. Returns report titles, amounts, submitters, and approval status.
   provider: expensify
   endpoint: /v1/reports
   method: GET
@@ -30,7 +30,7 @@
 - slug: expensify_get_report
   name: Get Report
   description: |
-    Get detailed information about a specific expense report.
+    Retrieve detailed information about a specific Expensify expense report including all line items, approval history, and current status.
   provider: expensify
   endpoint: /v1/reports/{reportID}
   method: GET
@@ -51,7 +51,7 @@
 - slug: expensify_create_report
   name: Create Report
   description: |
-    Create a new expense report.
+    Create a new expense report in Expensify with a specified title and policy assignment. Returns the created report with its unique identifier.
   provider: expensify
   endpoint: /v1/reports
   method: POST
@@ -78,7 +78,7 @@
 - slug: expensify_submit_report
   name: Submit Report
   description: |
-    Submit an expense report for approval.
+    Submit an expense report to Expensify for approval and notify designated approvers. Returns confirmation of submission status.
   provider: expensify
   endpoint: /v1/reports/{reportID}/submit
   method: POST
@@ -99,7 +99,7 @@
 - slug: expensify_list_expenses
   name: List Expenses
   description: |
-    Retrieve all expenses with optional filters.
+    List all expenses in Expensify with optional filtering by report, status, or date range. Returns merchant names, amounts, categories, and timestamps.
   provider: expensify
   endpoint: /v1/expenses
   method: GET
@@ -131,7 +131,7 @@
 - slug: expensify_get_expense
   name: Get Expense
   description: |
-    Get details of a specific expense.
+    Retrieve detailed information about a specific Expensify expense including merchant, amount, category, receipt image, and approval status.
   provider: expensify
   endpoint: /v1/expenses/{expenseID}
   method: GET
@@ -152,7 +152,7 @@
 - slug: expensify_create_expense
   name: Create Expense
   description: |
-    Create a new expense, optionally adding it to a report.
+    Create a new expense in Expensify with amount, currency, merchant, and date. Optionally assign it to an existing report for tracking.
   provider: expensify
   endpoint: /v1/expenses
   method: POST
@@ -190,7 +190,7 @@
 - slug: expensify_list_policies
   name: List Policies
   description: |
-    Retrieve all expense policies in the organization.
+    List all expense policies in the Expensify organization with policy names, approval rules, and category configurations.
   provider: expensify
   endpoint: /v1/policies
   method: GET
@@ -213,7 +213,7 @@
 - slug: expensify_get_policy
   name: Get Policy
   description: |
-    Get detailed information about a specific expense policy.
+    Retrieve detailed information about a specific Expensify expense policy including approval rules, spending limits, and category settings.
   provider: expensify
   endpoint: /v1/policies/{policyID}
   method: GET
@@ -234,7 +234,7 @@
 - slug: expensify_list_employees
   name: List Employees
   description: |
-    Retrieve all employees in the organization.
+    List all employees in the Expensify organization with optional filtering by employment status or policy. Returns employee names, emails, and roles.
   provider: expensify
   endpoint: /v1/employees
   method: GET

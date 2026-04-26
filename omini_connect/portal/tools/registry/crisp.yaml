@@ -16,8 +16,8 @@
 - slug: crisp_list_conversations
   name: List Conversations
   description: |
-    List conversations from your Crisp workspace.
-    Returns a paginated list of conversations with their status, participants, and latest message.
+    List all conversations in your Crisp workspace, returning conversation IDs, status, participants, and latest message preview.
+    Supports filtering by status (open, closed, all) with pagination.
   provider: crisp
   endpoint: /conversations
   method: GET
@@ -48,7 +48,7 @@
 - slug: crisp_get_conversation
   name: Get Conversation
   description: |
-    Get a specific conversation by ID. Returns full conversation details including messages, timeline, and metadata.
+    Get detailed information for a specific Crisp conversation including all messages, timeline, and metadata.
   provider: crisp
   endpoint: /conversations/{id}
   method: GET
@@ -71,7 +71,7 @@
 - slug: crisp_send_message
   name: Send Message
   description: |
-    Send a message in a conversation. Use this to respond to customers or proactively reach out to contacts.
+    Send a message in a Crisp conversation, either to respond to customers or proactively reach out to contacts.
   provider: crisp
   endpoint: /conversations/{id}/messages
   method: POST
@@ -103,7 +103,7 @@
 - slug: crisp_list_visitors
   name: List Visitors
   description: |
-    List all visitors on your website. Returns visitor profiles including location, device, and current page.
+    List all visitors on your Crisp-enabled website, returning visitor IDs, locations, devices, and current page information.
   provider: crisp
   endpoint: /visitors
   method: GET
@@ -132,7 +132,7 @@
 - slug: crisp_get_visitor
   name: Get Visitor
   description: |
-    Get a specific visitor by ID. Returns visitor details including location, device, browsing history, and conversation history.
+    Get detailed information for a specific Crisp visitor including their location, device, browsing history, and conversation history.
   provider: crisp
   endpoint: /visitors/{id}
   method: GET
@@ -155,7 +155,7 @@
 - slug: crisp_list_contacts
   name: List Contacts
   description: |
-    List all contacts in your Crisp workspace. Returns contact profiles including name, email, company, and activity.
+    List all contacts in your Crisp workspace, returning contact IDs, names, email addresses, companies, and activity status.
   provider: crisp
   endpoint: /contacts
   method: GET
@@ -184,7 +184,7 @@
 - slug: crisp_get_contact
   name: Get Contact
   description: |
-    Get a specific contact by ID. Returns full contact profile including custom attributes, conversation history, and activity.
+    Get detailed information for a specific Crisp contact including their profile, custom attributes, and conversation history.
   provider: crisp
   endpoint: /contacts/{id}
   method: GET
@@ -207,7 +207,7 @@
 - slug: crisp_list_operators
   name: List Operators
   description: |
-    List all operators in your Crisp workspace. Returns operator names, roles, and availability status.
+    List all operators in your Crisp workspace, returning operator IDs, names, roles, and availability status.
   provider: crisp
   endpoint: /operators
   method: GET
@@ -233,7 +233,7 @@
 - slug: crisp_get_operator
   name: Get Operator
   description: |
-    Get a specific operator by ID. Returns their profile including name, email, role, and permissions.
+    Get detailed information for a specific Crisp operator including their profile, role, and permissions.
   provider: crisp
   endpoint: /operators/{id}
   method: GET
@@ -256,7 +256,7 @@
 - slug: crisp_get_website
   name: Get Website
   description: |
-    Get website settings for your Crisp workspace. Returns configuration including name, domain, and integration settings.
+    Get website settings for your Crisp workspace, returning configuration details including name, domain, and integration settings.
   provider: crisp
   endpoint: /websites/{id}
   method: GET

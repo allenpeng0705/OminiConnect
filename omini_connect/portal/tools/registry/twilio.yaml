@@ -17,7 +17,8 @@
 - slug: twilio_list_messages
   name: List Messages
   description: |
-    List all SMS and MMS messages sent or received through Twilio.
+    List all SMS and MMS messages sent or received through Twilio with sender, recipient, status, and timestamp information.
+    Returns message records for communication history and delivery verification.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Messages.json
   method: GET
@@ -46,7 +47,8 @@
 - slug: twilio_get_message
   name: Get Message
   description: |
-    Get detailed information about a specific Twilio message.
+    Get detailed information about a specific Twilio message including content, status, and delivery receipts.
+    Returns message data for conversation tracking and verification.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}.json
   method: GET
@@ -68,7 +70,8 @@
 - slug: twilio_send_sms
   name: Send SMS
   description: |
-    Send an SMS message via Twilio.
+    Send an SMS message via Twilio to a specified recipient from your Twilio phone number.
+    Returns message SID for delivery tracking and status monitoring.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Messages.json
   method: POST
@@ -98,7 +101,8 @@
 - slug: twilio_list_calls
   name: List Calls
   description: |
-    List all phone calls made through Twilio.
+    List all phone calls made through Twilio with caller, recipient, duration, and status information.
+    Returns call records for communication tracking and billing verification.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Calls.json
   method: GET
@@ -130,7 +134,8 @@
 - slug: twilio_get_call
   name: Get Call
   description: |
-    Get detailed information about a specific Twilio call.
+    Get detailed information about a specific Twilio call including duration, recording URLs, and participant details.
+    Returns call data for performance review and recording access.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}.json
   method: GET
@@ -152,7 +157,8 @@
 - slug: twilio_create_call
   name: Create Call
   description: |
-    Initiate a new outbound phone call via Twilio.
+    Initiate a new outbound phone call via Twilio with specified recipient, caller ID, and TwiML handling instructions.
+    Returns call SID for status tracking and recording management.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Calls.json
   method: POST
@@ -188,7 +194,8 @@
 - slug: twilio_list_recordings
   name: List Recordings
   description: |
-    List all call recordings stored in Twilio.
+    List all call recordings stored in Twilio with dates, durations, and associated call information.
+    Returns recording metadata for compliance and quality assurance.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Recordings.json
   method: GET
@@ -214,7 +221,8 @@
 - slug: twilio_get_recording
   name: Get Recording
   description: |
-    Get details about a specific call recording.
+    Get details about a specific call recording including duration, transcription, and audio download URL.
+    Returns recording data for quality review and compliance documentation.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}.json
   method: GET
@@ -236,7 +244,8 @@
 - slug: twilio_list_conferences
   name: List Conferences
   description: |
-    List all conferences in your Twilio account.
+    List all conferences in your Twilio account with participant counts, durations, and status values.
+    Returns conference data for call management and participant tracking.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Conferences.json
   method: GET
@@ -262,7 +271,8 @@
 - slug: twilio_get_conference
   name: Get Conference
   description: |
-    Get detailed information about a specific conference.
+    Get detailed information about a specific conference including participants, duration, and status for call management.
+    Returns conference data for participant coordination and call control.
   provider: twilio
   endpoint: /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}.json
   method: GET

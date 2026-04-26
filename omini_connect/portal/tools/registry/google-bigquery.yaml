@@ -18,7 +18,7 @@
 - slug: google_bigquery_list_datasets
   name: List Datasets
   description: |
-    List all BigQuery datasets in the project.
+    List all BigQuery datasets in the specified project including names, descriptions, and default table expiration. Returns dataset metadata for data organization and access control.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets
   method: GET
@@ -40,7 +40,7 @@
 - slug: google_bigquery_get_dataset
   name: Get Dataset
   description: |
-    Get detailed information about a dataset.
+    Retrieve detailed information about a BigQuery dataset including tables, access controls, and metadata. Returns dataset configuration and partitioning settings.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}
   method: GET
@@ -66,7 +66,7 @@
 - slug: google_bigquery_list_tables
   name: List Tables
   description: |
-    List all tables in a dataset.
+    List all tables in a specified BigQuery dataset including names, schemas, and row counts. Returns table metadata for data discovery and schema inspection.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables
   method: GET
@@ -92,7 +92,7 @@
 - slug: google_bigquery_get_table
   name: Get Table
   description: |
-    Get detailed information about a table.
+    Retrieve detailed information about a BigQuery table including schema definition, partitioning, and clustering settings. Returns table metadata and storage statistics.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables/{tableId}
   method: GET
@@ -122,7 +122,7 @@
 - slug: google_bigquery_query
   name: Run Query
   description: |
-    Run a SQL query on BigQuery data.
+    Execute a SQL query on BigQuery data and return results including rows and schema. Returns query results with execution statistics and billed bytes.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/queries
   method: POST
@@ -152,7 +152,7 @@
 - slug: google_bigquery_list_jobs
   name: List Jobs
   description: |
-    List recent query jobs.
+    List recent query jobs including execution status, elapsed time, and billed bytes. Returns job history for monitoring query performance and troubleshooting.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/jobs
   method: GET
@@ -174,7 +174,7 @@
 - slug: google_bigquery_get_job
   name: Get Job
   description: |
-    Get details of a query job.
+    Retrieve detailed information about a specific query job including execution plan, statistics, and error details. Returns job configuration and performance metrics.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/jobs/{jobId}
   method: GET
@@ -200,7 +200,7 @@
 - slug: google_bigquery_insert_query
   name: Insert Query Job
   description: |
-    Insert a query job to run asynchronously.
+    Create and execute an asynchronous query job with results written to a destination table. Returns job configuration and execution handle for status tracking.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/jobs
   method: POST
@@ -229,7 +229,7 @@
 - slug: google_bigquery_list_routines
   name: List Routines
   description: |
-    List routines (stored procedures, functions) in a dataset.
+    List stored procedures and user-defined functions in a BigQuery dataset including function definitions and parameter types. Returns routine metadata for code organization.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/routines
   method: GET
@@ -255,7 +255,7 @@
 - slug: google_bigquery_list_models
   name: List Models
   description: |
-    List ML models in a dataset.
+    List machine learning models stored in a BigQuery dataset including model type, feature columns, and training statistics. Returns model metadata for ML workflows.
   provider: google-bigquery
   endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/models
   method: GET

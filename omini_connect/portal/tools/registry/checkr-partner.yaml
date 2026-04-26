@@ -18,7 +18,7 @@
 - slug: checkr_partner_list_candidates
   name: List Candidates
   description: |
-    List all candidates in the account.
+    Retrieve all job candidates with pagination support. Returns candidate names, IDs, application statuses, and submission dates.
   provider: checkr-partner
   endpoint: /api/v1/candidates
   method: GET
@@ -39,7 +39,7 @@
 - slug: checkr_partner_get_candidate
   name: Get Candidate
   description: |
-    Get details of a specific candidate.
+    Retrieve detailed information about a specific candidate by their unique ID. Returns the candidate name, email, and application status.
   provider: checkr-partner
   endpoint: /api/v1/candidates/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: checkr_partner_create_candidate
   name: Create Candidate
   description: |
-    Create a new candidate.
+    Create a new candidate with name, email, and zipcode for background screening. Returns the created candidate with their unique ID.
   provider: checkr-partner
   endpoint: /api/v1/candidates
   method: POST
@@ -92,7 +92,7 @@
 - slug: checkr_partner_list_background_checks
   name: List Background Checks
   description: |
-    List all background checks for a candidate.
+    Retrieve all background checks for a specific candidate. Returns check IDs, types, statuses, and completion dates.
   provider: checkr-partner
   endpoint: /api/v1/background_checks
   method: GET
@@ -113,7 +113,7 @@
 - slug: checkr_partner_get_background_check
   name: Get Background Check
   description: |
-    Get details of a specific background check.
+    Retrieve detailed information about a specific background check by its unique ID. Returns the check type, status, and completion information.
   provider: checkr-partner
   endpoint: /api/v1/background_checks/{id}
   method: GET
@@ -134,7 +134,7 @@
 - slug: checkr_partner_create_background_check
   name: Create Background Check
   description: |
-    Create a new background check for a candidate.
+    Initiate a new background check for a specific candidate with a specified package. Returns the created check with its unique ID.
   provider: checkr-partner
   endpoint: /api/v1/background_checks
   method: POST
@@ -159,7 +159,7 @@
 - slug: checkr_partner_list_reports
   name: List Reports
   description: |
-    List all reports for a background check.
+    Retrieve all reports generated for a specific background check. Returns report IDs, types, statuses, and completion dates.
   provider: checkr-partner
   endpoint: /api/v1/reports
   method: GET
@@ -180,7 +180,7 @@
 - slug: checkr_partner_get_report
   name: Get Report
   description: |
-    Get details of a specific report.
+    Retrieve detailed information about a specific report by its unique ID. Returns the verification results, findings, and overall status.
   provider: checkr-partner
   endpoint: /api/v1/reports/{id}
   method: GET
@@ -201,7 +201,7 @@
 - slug: checkr_partner_list_invitations
   name: List Invitations
   description: |
-    List all invitations sent to candidates.
+    Retrieve all invitations sent to candidates with pagination support. Returns invitation IDs, statuses, and sent dates.
   provider: checkr-partner
   endpoint: /api/v1/invitations
   method: GET
@@ -221,7 +221,7 @@
 - slug: checkr_partner_create_invitation
   name: Create Invitation
   description: |
-    Send an invitation to a candidate.
+    Send an invitation to a specific candidate to initiate the background check process. Returns the created invitation with its unique ID.
   provider: checkr-partner
   endpoint: /api/v1/invitations
   method: POST

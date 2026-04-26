@@ -1,7 +1,7 @@
 - slug: openai_list_models
   name: List Models
   description: |
-    Retrieve a list of all available OpenAI models.
+    List all available OpenAI models accessible to the account. Returns model IDs, owners, permissions, and capabilities for each model.
   provider: openai
   endpoint: /v1/models
   method: GET
@@ -18,7 +18,7 @@
 - slug: openai_get_model
   name: Get Model
   description: |
-    Retrieve details for a specific model by ID.
+    Get detailed information for a specific OpenAI model including capabilities, rate limits, and pricing details.
   provider: openai
   endpoint: /v1/models/{model}
   method: GET
@@ -39,7 +39,7 @@
 - slug: openai_create_completion
   name: Create Completion
   description: |
-    Create a text completion for a given prompt.
+    Create a text completion by sending a prompt to the specified OpenAI model. Returns the generated text with finish reason and usage statistics.
   provider: openai
   endpoint: /v1/completions
   method: POST
@@ -70,7 +70,7 @@
 - slug: openai_create_chat_completion
   name: Create Chat Completion
   description: |
-    Create a chat completion for a conversation.
+    Create a chat completion by sending a conversation with messages to the specified OpenAI model. Returns an assistant message with the generated content and role information.
   provider: openai
   endpoint: /v1/chat/completions
   method: POST
@@ -101,7 +101,7 @@
 - slug: openai_create_embedding
   name: Create Embedding
   description: |
-    Create an embedding vector for text input.
+    Create an embedding vector by sending text to the specified OpenAI embedding model. Returns a vector array representing the semantic meaning of the input text.
   provider: openai
   endpoint: /v1/embeddings
   method: POST
@@ -126,7 +126,7 @@
 - slug: openai_create_image
   name: Create Image
   description: |
-    Generate an image from a text description.
+    Create images from a text description using DALL-E models. Returns image URLs or base64-encoded image data with revise and variation options.
   provider: openai
   endpoint: /v1/images/generations
   method: POST
@@ -156,7 +156,7 @@
 - slug: openai_list_fine_tuning_jobs
   name: List Fine-tuning Jobs
   description: |
-    Retrieve a list of fine-tuning jobs.
+    List all fine-tuning jobs including their IDs, status, model type, training file ID, and completion details. Returns job listings for custom model training management.
   provider: openai
   endpoint: /v1/fine_tuning/jobs
   method: GET
@@ -179,7 +179,7 @@
 - slug: openai_get_fine_tuning_job
   name: Get Fine-tuning Job
   description: |
-    Retrieve a fine-tuning job by ID.
+    Get detailed information for a specific fine-tuning job including training and validation loss metrics, job status, and the final fine-tuned model identifier.
   provider: openai
   endpoint: /v1/fine_tuning/jobs/{job_id}
   method: GET
@@ -200,7 +200,7 @@
 - slug: openai_list_assistants
   name: List Assistants
   description: |
-    Retrieve a list of assistants.
+    List all assistants including their IDs, names, model configurations, and tool settings. Returns assistant listings for managing AI assistant deployments.
   provider: openai
   endpoint: /v1/assistants
   method: GET
@@ -223,7 +223,7 @@
 - slug: openai_get_assistant
   name: Get Assistant
   description: |
-    Retrieve an assistant by ID.
+    Get detailed information for a specific assistant including its name, instructions, model settings, and enabled tools like code interpreter and retrieval.
   provider: openai
   endpoint: /v1/assistants/{assistant_id}
   method: GET

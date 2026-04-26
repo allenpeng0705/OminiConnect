@@ -18,7 +18,7 @@
 - slug: google_calendar_list_calendars
   name: List Calendars
   description: |
-    List all calendars in the user's Google Calendar.
+    List all calendars available in the authenticated user's Google Calendar account. Returns calendar IDs, names, descriptions, and time zone settings for each calendar.
   provider: google-calendar
   endpoint: /calendar/v3/users/me/calendarList
   method: GET
@@ -35,7 +35,7 @@
 - slug: google_calendar_get_calendar
   name: Get Calendar
   description: |
-    Get detailed information about a calendar.
+    Get detailed information about a specific Google Calendar including its name, description, time zone, and access permissions.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}
   method: GET
@@ -57,7 +57,7 @@
 - slug: google_calendar_list_events
   name: List Events
   description: |
-    List events from a calendar.
+    List all events in a Google Calendar within a specified time range. Returns event IDs, titles, start/end times, locations, attendees, and conference details for each event.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/events
   method: GET
@@ -90,7 +90,7 @@
 - slug: google_calendar_get_event
   name: Get Event
   description: |
-    Get detailed information about an event.
+    Get detailed information about a specific calendar event including its title, description, start/end times, location, attendees, and conference data.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/events/{eventId}
   method: GET
@@ -117,7 +117,7 @@
 - slug: google_calendar_create_event
   name: Create Event
   description: |
-    Create a new event in a calendar.
+    Create a new event in a Google Calendar with title, description, start/end times, and location. Returns the created event ID and conference details.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/events
   method: POST
@@ -158,7 +158,7 @@
 - slug: google_calendar_update_event
   name: Update Event
   description: |
-    Update an existing event.
+    Update an existing calendar event with new title, description, or timing information. Returns the updated event with modified field values.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/events/{eventId}
   method: PUT
@@ -191,7 +191,7 @@
 - slug: google_calendar_delete_event
   name: Delete Event
   description: |
-    Delete an event from a calendar.
+    Delete a specific event from a Google Calendar. Returns confirmation of successful deletion.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/events/{eventId}
   method: DELETE
@@ -218,7 +218,7 @@
 - slug: google_calendar_list_acl
   name: List ACL
   description: |
-    List access control rules for a calendar.
+    List all access control rules for a Google Calendar. Returns rule IDs, principal emails, roles (reader, writer, owner), and scope types for each rule.
   provider: google-calendar
   endpoint: /calendar/v3/calendars/{calendarId}/acl
   method: GET
@@ -241,7 +241,7 @@
 - slug: google_calendar_list_freebusy
   name: List Free/Busy
   description: |
-    Get free/busy information for calendars.
+    Get free/busy information for multiple Google Calendars within a specified time range. Returns busy time slots for each calendar to help schedule meetings.
   provider: google-calendar
   endpoint: /calendar/v3/freeBusy
   method: POST
@@ -271,7 +271,7 @@
 - slug: google_calendar_list_settings
   name: List Settings
   description: |
-    List user settings for Calendar.
+    List all user settings for Google Calendar including default calendar, notification preferences, time zone, and view options.
   provider: google-calendar
   endpoint: /calendar/v3/users/me/settings
   method: GET

@@ -17,8 +17,8 @@
 - slug: xero_list_invoices
   name: List Invoices
   description: |
-    List all invoices in the Xero organization.
-    Returns invoice details including invoice number, contact, date, and total.
+    List all invoices in the Xero organization with optional filtering by status, contact, and modification date.
+    Returns invoice records including numbers, amounts, dates, and contact references.
   provider: xero
   endpoint: /api.xro/2.0/Invoices
   method: GET
@@ -53,8 +53,8 @@
 - slug: xero_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice by its ID.
-    Returns full invoice information including line items, totals, and status.
+    Get details of a specific invoice by its ID including line items, tax amounts, and payment status for financial review.
+    Returns invoice data for billing management and accounts receivable tracking.
   provider: xero
   endpoint: /api.xro/2.0/Invoices/{invoice_id}
   method: GET
@@ -76,8 +76,8 @@
 - slug: xero_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice in Xero.
-    Include contact, line items, and optional due date and invoice number.
+    Create a new invoice in Xero with contact reference, line items, dates, and optional invoice number for billing.
+    Returns the created invoice with ID for sending and payment tracking.
   provider: xero
   endpoint: /api.xro/2.0/Invoices
   method: POST
@@ -120,8 +120,8 @@
 - slug: xero_update_invoice
   name: Update Invoice
   description: |
-    Update an existing invoice in Xero.
-    You can update line items, dates, and other details for DRAFT or SUBMITTED invoices.
+    Update an existing invoice in Xero with new line items, dates, or status for draft or submitted invoices.
+    Returns the updated invoice with modified values for confirmation and sending.
   provider: xero
   endpoint: /api.xro/2.0/Invoices/{invoice_id}
   method: POST
@@ -155,8 +155,8 @@
 - slug: xero_list_contacts
   name: List Contacts
   description: |
-    List all contacts in the Xero organization.
-    Contacts include customers, suppliers, and other business entities.
+    List all contacts in the Xero organization including customers, suppliers, and other business entities with status filtering.
+    Returns contact records for relationship management and transaction tracking.
   provider: xero
   endpoint: /api.xro/2.0/Contacts
   method: GET
@@ -188,8 +188,8 @@
 - slug: xero_get_contact
   name: Get Contact
   description: |
-    Get details of a specific contact by their ID.
-    Returns full contact information including name, email, phone, and address.
+    Get details of a specific contact by their ID including name, email, phone, and address information for communication.
+    Returns contact data for relationship management and invoice preparation.
   provider: xero
   endpoint: /api.xro/2.0/Contacts/{contact_id}
   method: GET
@@ -211,8 +211,8 @@
 - slug: xero_list_accounts
   name: List Accounts
   description: |
-    List all accounts in the Xero organization.
-    Returns account details including name, type, and currency.
+    List all accounts in the Xero organization with optional modification date filtering for chart of accounts management.
+    Returns account records including names, types, currencies, and balance information.
   provider: xero
   endpoint: /api.xro/2.0/Accounts
   method: GET
@@ -233,8 +233,8 @@
 - slug: xero_get_account
   name: Get Account
   description: |
-    Get details of a specific account by its ID.
-    Returns full account information including type, balance, and metadata.
+    Get details of a specific account by its ID including type, balance, and metadata for financial reporting.
+    Returns account data for bookkeeping and reconciliation.
   provider: xero
   endpoint: /api.xro/2.0/Accounts/{account_id}
   method: GET
@@ -256,8 +256,8 @@
 - slug: xero_list_bank_transactions
   name: List Bank Transactions
   description: |
-    List all bank transactions in the Xero organization.
-    Returns transaction details including date, amount, and associated account.
+    List all bank transactions in the Xero organization with optional filtering by status, type, and modification date.
+    Returns transaction records including dates, amounts, and associated account information.
   provider: xero
   endpoint: /api.xro/2.0/BankTransactions
   method: GET
@@ -288,8 +288,8 @@
 - slug: xero_get_bank_transaction
   name: Get Bank Transaction
   description: |
-    Get details of a specific bank transaction by its ID.
-    Returns full transaction information including amount, date, and line items.
+    Get details of a specific bank transaction by its ID including amount, date, and line items for reconciliation.
+    Returns transaction data for bank feed matching and financial auditing.
   provider: xero
   endpoint: /api.xro/2.0/BankTransactions/{bank_transaction_id}
   method: GET

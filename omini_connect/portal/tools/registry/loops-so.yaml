@@ -18,8 +18,9 @@
 - slug: loops_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Loops.so.
-    Filter by segment, tags, or search query.
+    List all contacts in Loops.so with pagination and segment/tag filtering.
+    Returns contact IDs, emails, and names for each contact.
+    Use this to discover email marketing audience and manage subscriber lists.
   provider: loops-so
   endpoint: /v1/contacts
   method: GET
@@ -54,7 +55,9 @@
 - slug: loops_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a specific contact.
+    Get detailed information about a specific contact including tags and events.
+    Returns the complete contact data with all associated information.
+    This provides full contact data for email marketing and subscriber management.
   provider: loops-so
   endpoint: /v1/contacts/{contactId}
   method: GET
@@ -75,7 +78,9 @@
 - slug: loops_create_contact
   name: Create Contact
   description: |
-    Create a new contact in Loops.so.
+    Create a new contact in Loops.so with email, name, and tags.
+    Returns the created contact with its unique ID and confirmation.
+    This provisions a new subscriber for email marketing campaigns.
   provider: loops-so
   endpoint: /v1/contacts
   method: POST
@@ -109,7 +114,9 @@
 - slug: loops_update_contact
   name: Update Contact
   description: |
-    Update an existing contact.
+    Update an existing contact with new name, tags, or subscription status.
+    Returns the updated contact confirmation with modified fields.
+    This modifies contact information for subscriber management.
   provider: loops-so
   endpoint: /v1/contacts/{contactId}
   method: PUT
@@ -142,7 +149,9 @@
 - slug: loops_delete_contact
   name: Delete Contact
   description: |
-    Delete a contact from Loops.so.
+    Delete a contact from Loops.so to remove from subscriber list.
+    Returns deletion confirmation for the removed contact.
+    This removes unwanted contacts from your email marketing audience.
   provider: loops-so
   endpoint: /v1/contacts/{contactId}
   method: DELETE
@@ -163,7 +172,9 @@
 - slug: loops_list_campaigns
   name: List Campaigns
   description: |
-    List all email campaigns in Loops.so.
+    List all email campaigns in Loops.so with pagination and status filtering.
+    Returns campaign IDs, names, and statuses for each campaign.
+    Use this to discover email campaigns and manage marketing workflows.
   provider: loops-so
   endpoint: /v1/campaigns
   method: GET
@@ -192,7 +203,9 @@
 - slug: loops_get_campaign
   name: Get Campaign
   description: |
-    Get details of a specific campaign.
+    Get details of a specific campaign including metrics and settings.
+    Returns the complete campaign data with all associated information.
+    This provides full campaign data for email marketing analysis and optimization.
   provider: loops-so
   endpoint: /v1/campaigns/{campaignId}
   method: GET
@@ -213,7 +226,9 @@
 - slug: loops_send_transactional
   name: Send Transactional
   description: |
-    Send a transactional email to a contact.
+    Send a transactional email to a contact using a template and data variables.
+    Returns the sent email confirmation with delivery status.
+    This dispatches a personalized transactional email to a recipient.
   provider: loops-so
   endpoint: /v1/send
   method: POST
@@ -242,7 +257,9 @@
 - slug: loops_list_events
   name: List Events
   description: |
-    List events for a contact (opens, clicks, etc.).
+    List events for a contact with pagination and type filtering (opens, clicks, bounces).
+    Returns event IDs, types, and timestamps for each event.
+    Use this to discover contact engagement and track email interactions.
   provider: loops-so
   endpoint: /v1/events
   method: GET
@@ -274,7 +291,9 @@
 - slug: loops_create_event
   name: Create Event
   description: |
-    Track a custom event for a contact.
+    Track a custom event for a contact to record engagement actions.
+    Returns the created event with its unique ID and confirmation.
+    This records a custom event for contact behavior tracking and segmentation.
   provider: loops-so
   endpoint: /v1/events
   method: POST

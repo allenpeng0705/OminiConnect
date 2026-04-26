@@ -2,6 +2,8 @@
   name: List Campaigns
   description: |
     List all analytics campaigns in your Levelhead account.
+    Returns campaign names, IDs, status, and date ranges for each campaign.
+    Use this to discover available campaigns and track ongoing analytics efforts.
   provider: levelhead
   endpoint: /api/v1/campaigns
   method: GET
@@ -33,7 +35,9 @@
 - slug: levelhead_get_campaign
   name: Get Campaign
   description: |
-    Get detailed information for a specific analytics campaign.
+    Get detailed information for a specific analytics campaign including status and configuration.
+    Returns the complete campaign data with all associated metrics and settings.
+    This provides full campaign details for performance analysis and reporting.
   provider: levelhead
   endpoint: /api/v1/campaigns/{campaign_id}
   method: GET
@@ -55,6 +59,8 @@
   name: Create Campaign
   description: |
     Create a new analytics campaign with specified parameters.
+    Returns the created campaign with its unique ID and initial configuration.
+    This provisions a new analytics tracking campaign in Levelhead.
   provider: levelhead
   endpoint: /api/v1/campaigns
   method: POST
@@ -88,6 +94,8 @@
   name: List Audiences
   description: |
     List all audience segments defined in your Levelhead account.
+    Returns audience names, IDs, types, and member counts for each segment.
+    Use this to discover target audiences for campaign analytics.
   provider: levelhead
   endpoint: /api/v1/audiences
   method: GET
@@ -113,7 +121,9 @@
 - slug: levelhead_get_audience
   name: Get Audience
   description: |
-    Get detailed information for a specific audience segment.
+    Get detailed information for a specific audience segment including criteria and member count.
+    Returns the complete audience definition with all targeting parameters.
+    This provides full audience data for campaign targeting decisions.
   provider: levelhead
   endpoint: /api/v1/audiences/{audience_id}
   method: GET
@@ -134,7 +144,9 @@
 - slug: levelhead_create_audience
   name: Create Audience
   description: |
-    Create a new audience segment with defined criteria.
+    Create a new audience segment with defined criteria and data source.
+    Returns the created audience with its unique ID and member count estimate.
+    This defines a new target group for analytics and campaign tracking.
   provider: levelhead
   endpoint: /api/v1/audiences
   method: POST
@@ -166,6 +178,8 @@
   name: List Reports
   description: |
     List all analytics reports generated in your Levelhead account.
+    Returns report names, IDs, formats, creation dates, and associated campaigns.
+    Use this to discover available reports and track analytics output.
   provider: levelhead
   endpoint: /api/v1/reports
   method: GET
@@ -195,6 +209,8 @@
   name: Get Report
   description: |
     Get details and download URL for a specific analytics report.
+    Returns the complete report metadata including format, creation date, and download link.
+    This provides report data for sharing and further analysis.
   provider: levelhead
   endpoint: /api/v1/reports/{report_id}
   method: GET
@@ -215,7 +231,9 @@
 - slug: levelhead_list_segments
   name: List Segments
   description: |
-    List all data segments available for analytics queries.
+    List all data segments available for analytics queries in your Levelhead account.
+    Returns segment names, IDs, categories, and definitions for each segment.
+    Use this to discover available data breakdowns for detailed analytics.
   provider: levelhead
   endpoint: /api/v1/segments
   method: GET
@@ -241,7 +259,9 @@
 - slug: levelhead_get_segment
   name: Get Segment
   description: |
-    Get detailed information for a specific data segment.
+    Get detailed information for a specific data segment including definition and category.
+    Returns the complete segment configuration with all associated parameters.
+    This provides segment data for custom analytics queries and filtering.
   provider: levelhead
   endpoint: /api/v1/segments/{segment_id}
   method: GET

@@ -18,7 +18,7 @@
 - slug: get_user_profile
   name: Get User Profile
   description: |
-    Get current user profile
+    Get the current authenticated user's Spotify profile. Returns user ID, display name, email, and subscription level.
   provider: spotify-oauth2-cc
   endpoint: /me
   method: GET
@@ -35,7 +35,7 @@
 - slug: list_playlists
   name: List Playlists
   description: |
-    List user's playlists
+    List all playlists for the authenticated Spotify user. Returns playlist names, track counts, and cover images.
   provider: spotify-oauth2-cc
   endpoint: /me/playlists
   method: GET
@@ -52,7 +52,7 @@
 - slug: get_playlist
   name: Get Playlist
   description: |
-    Get playlist details
+    Get detailed information about a specific Spotify playlist including description, track list, and owner information.
   provider: spotify-oauth2-cc
   endpoint: /playlists/{id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: list_tracks
   name: List Tracks
   description: |
-    List tracks in playlist
+    List all tracks in a specific Spotify playlist. Returns track names, artists, durations, and album information.
   provider: spotify-oauth2-cc
   endpoint: /playlists/{id}/tracks
   method: GET
@@ -86,7 +86,7 @@
 - slug: get_artist
   name: Get Artist
   description: |
-    Get artist details
+    Get detailed information about a Spotify artist including genres, follower count, and popular tracks.
   provider: spotify-oauth2-cc
   endpoint: /artists/{id}
   method: GET
@@ -103,7 +103,7 @@
 - slug: get_album
   name: Get Album
   description: |
-    Get album details
+    Get detailed information about a Spotify album including tracks, release date, and artist details.
   provider: spotify-oauth2-cc
   endpoint: /albums/{id}
   method: GET
@@ -120,7 +120,7 @@
 - slug: search
   name: Search
   description: |
-    Search for tracks/artists/playlists
+    Search for tracks, artists, or playlists on Spotify by keyword. Returns matching results with preview URLs and metadata.
   provider: spotify-oauth2-cc
   endpoint: /search
   method: GET
@@ -137,7 +137,7 @@
 - slug: get_recommendations
   name: Get Recommendations
   description: |
-    Get track recommendations
+    Get track recommendations from Spotify based on seed artists, tracks, or genres. Returns recommended tracks with audio features.
   provider: spotify-oauth2-cc
   endpoint: /recommendations
   method: GET
@@ -154,7 +154,7 @@
 - slug: get_audio_features
   name: Get Audio Features
   description: |
-    Get audio features for track
+    Get audio features for a Spotify track including tempo, key, mode, danceability, and energy levels.
   provider: spotify-oauth2-cc
   endpoint: /audio-features/{id}
   method: GET
@@ -171,7 +171,7 @@
 - slug: list_followed
   name: List Followed Artists
   description: |
-    List followed artists
+    List all artists followed by the authenticated Spotify user. Returns artist names, images, and genre information.
   provider: spotify-oauth2-cc
   endpoint: /me/following
   method: GET

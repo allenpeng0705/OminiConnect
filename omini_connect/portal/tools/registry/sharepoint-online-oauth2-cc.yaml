@@ -18,7 +18,7 @@
 - slug: list_sites
   name: List Sites
   description: |
-    List SharePoint sites
+    List all SharePoint Online sites. Returns site names, URLs, descriptions, and storage usage information.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites
   method: GET
@@ -35,7 +35,7 @@
 - slug: get_site
   name: Get Site
   description: |
-    Get site details
+    Get detailed information about a specific SharePoint site including its description, web template, and access permissions.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}
   method: GET
@@ -52,7 +52,7 @@
 - slug: list_drives
   name: List Drives
   description: |
-    List document libraries
+    List all document libraries in a SharePoint site. Returns library names, descriptions, and storage quotas.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives
   method: GET
@@ -69,7 +69,7 @@
 - slug: list_files
   name: List Files
   description: |
-    List files in drive
+    List all files in a SharePoint document library. Returns file names, sizes, creation dates, and last modified information.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/root/children
   method: GET
@@ -86,7 +86,7 @@
 - slug: get_file
   name: Get File
   description: |
-    Get file metadata
+    Get metadata for a specific file in SharePoint including its size, creation date, modified date, and author information.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}
   method: GET
@@ -103,7 +103,7 @@
 - slug: download_file
   name: Download File
   description: |
-    Download file content
+    Download the content of a file from SharePoint. Returns the binary content of the file for local storage or processing.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}/content
   method: GET
@@ -120,7 +120,7 @@
 - slug: upload_file
   name: Upload File
   description: |
-    Upload a file
+    Upload a file to a SharePoint document library. Creates a new file with the provided content in the specified location.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/root/children
   method: POST
@@ -137,7 +137,7 @@
 - slug: create_folder
   name: Create Folder
   description: |
-    Create a folder
+    Create a new folder in a SharePoint document library. Sets the folder name and location within the document library.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/items/{parent_id}
   method: POST
@@ -154,7 +154,7 @@
 - slug: delete_file
   name: Delete File
   description: |
-    Delete a file or folder
+    Delete a file or folder from SharePoint. Removes the item from the document library and moves it to the recycle bin.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}
   method: DELETE
@@ -171,7 +171,7 @@
 - slug: list_permissions
   name: List Permissions
   description: |
-    List item permissions
+    List all permissions for a SharePoint file or folder. Returns user and group access levels including read, edit, and full control.
   provider: sharepoint-online-oauth2-cc
   endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}/permissions
   method: GET

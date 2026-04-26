@@ -2,6 +2,8 @@
   name: List Scenarios
   description: |
     Retrieve a list of all scenarios in a workspace.
+    Returns scenario names, IDs, status, and last run date for each scenario.
+    Use this to discover available automations and check their current state.
   provider: make
   endpoint: /scenarios
   method: GET
@@ -30,6 +32,8 @@
   name: Get Scenario
   description: |
     Retrieve details of a specific scenario by its ID.
+    Returns the complete scenario configuration including modules, connections, and schedule.
+    This provides full automation setup data for troubleshooting or cloning.
   provider: make
   endpoint: /scenarios/{scenario_id}
   method: GET
@@ -52,6 +56,8 @@
   name: Create Scenario
   description: |
     Create a new scenario with specified modules and connections.
+    Returns the created scenario with its unique ID and initial configuration.
+    This provisions a new automation workflow in the Make workspace.
   provider: make
   endpoint: /scenarios
   method: POST
@@ -81,6 +87,8 @@
   name: Update Scenario
   description: |
     Update an existing scenario's configuration or modules.
+    Modifies the modules, connections, or settings of an existing scenario.
+    This changes the automation behavior while preserving the scenario's ID.
   provider: make
   endpoint: /scenarios/{scenario_id}
   method: PUT
@@ -109,6 +117,8 @@
   name: List Executions
   description: |
     Retrieve a list of recent executions for a scenario.
+    Returns execution timestamps, status, and module results for each run.
+    Use this to monitor automation activity and troubleshoot failed executions.
   provider: make
   endpoint: /scenarios/{scenario_id}/executions
   method: GET
@@ -137,6 +147,8 @@
   name: Get Execution
   description: |
     Retrieve details of a specific execution by its ID.
+    Returns the complete execution data including all module inputs and outputs.
+    This provides detailed debugging information for a particular automation run.
   provider: make
   endpoint: /executions/{execution_id}
   method: GET
@@ -159,6 +171,8 @@
   name: Run Scenario
   description: |
     Trigger a manual run of a scenario with optional input data.
+    Returns the execution ID and initial status of the triggered run.
+    This starts the automation immediately with provided data rather than waiting for triggers.
   provider: make
   endpoint: /scenarios/{scenario_id}/run
   method: POST
@@ -184,6 +198,8 @@
   name: Activate Scenario
   description: |
     Activate a scenario to start processing triggers.
+    Returns the updated scenario status showing it is now active.
+    This enables the automation to run automatically when trigger events occur.
   provider: make
   endpoint: /scenarios/{scenario_id}/activate
   method: POST
@@ -206,6 +222,8 @@
   name: Deactivate Scenario
   description: |
     Deactivate a scenario to stop processing triggers.
+    Returns the updated scenario status showing it is now inactive.
+    This pauses the automation and prevents it from running automatically.
   provider: make
   endpoint: /scenarios/{scenario_id}/deactivate
   method: POST
@@ -228,6 +246,8 @@
   name: List Workspaces
   description: |
     Retrieve a list of all workspaces accessible to the user.
+    Returns workspace names, IDs, and member counts for each workspace.
+    Use this to discover available workspaces and switch between organizations.
   provider: make
   endpoint: /workspaces
   method: GET

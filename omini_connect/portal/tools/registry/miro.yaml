@@ -17,7 +17,7 @@
 - slug: miro_list_boards
   name: List Boards
   description: |
-    List all Miro boards the user has access to. Returns board names, IDs, and descriptions.
+    List all Miro boards the user has access to. Returns board names, IDs, descriptions, and owner info.
   provider: miro
   endpoint: /boards
   method: GET
@@ -43,7 +43,7 @@
 - slug: miro_get_board
   name: Get Board
   description: |
-    Get details about a specific Miro board including its structure and settings.
+    Retrieve details about a specific Miro board including its structure, settings, and sharing configuration.
   provider: miro
   endpoint: /boards/{board_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: miro_create_board
   name: Create Board
   description: |
-    Create a new Miro board in a team or workspace.
+    Create a new Miro board in a specified team or workspace with a name and optional description. Returns the created board with its unique ID.
   provider: miro
   endpoint: /boards
   method: POST
@@ -96,7 +96,7 @@
 - slug: miro_list_items
   name: List Items
   description: |
-    List all items on a Miro board. Items include frames, sticky notes, shapes, and more.
+    List all items on a Miro board. Items include frames, sticky notes, shapes, text, and other elements. Returns item IDs, types, positions, and content.
   provider: miro
   endpoint: /boards/{board_id}/items
   method: GET
@@ -127,7 +127,7 @@
 - slug: miro_get_item
   name: Get Item
   description: |
-    Get details about a specific item on a Miro board.
+    Retrieve details about a specific item on a Miro board including its type, position, and data content. Returns the complete item object with all properties and current configuration.
   provider: miro
   endpoint: /boards/{board_id}/items/{item_id}
   method: GET
@@ -154,7 +154,7 @@
 - slug: miro_create_item
   name: Create Item
   description: |
-    Create a new item on a Miro board. Supports various item types including sticky notes, shapes, and text.
+    Create a new item on a Miro board such as sticky notes, shapes, or text at a specified position. Returns the created item with its ID.
   provider: miro
   endpoint: /boards/{board_id}/items
   method: POST
@@ -187,7 +187,7 @@
 - slug: miro_list_members
   name: List Members
   description: |
-    List all members of a Miro board.
+    List all members of a Miro board. Returns member names, email addresses, and permission levels for each user with access to the board.
   provider: miro
   endpoint: /boards/{board_id}/members
   method: GET
@@ -215,7 +215,7 @@
 - slug: miro_get_member
   name: Get Member
   description: |
-    Get details about a specific member of a Miro board.
+    Retrieve details about a specific member of a Miro board including their permission level and role. Returns the member's user information and access rights on the board.
   provider: miro
   endpoint: /boards/{board_id}/members/{user_id}
   method: GET
@@ -242,7 +242,7 @@
 - slug: miro_list_teams
   name: List Teams
   description: |
-    List all Miro teams the user belongs to.
+    List all Miro teams the user belongs to. Returns team names, IDs, and member counts for each team in the organization.
   provider: miro
   endpoint: /teams
   method: GET
@@ -265,7 +265,7 @@
 - slug: miro_get_team
   name: Get Team
   description: |
-    Get details about a specific Miro team.
+    Retrieve details about a specific Miro team including its name, description, and member list. Returns the complete team object with all settings and configuration.
   provider: miro
   endpoint: /teams/{team_id}
   method: GET

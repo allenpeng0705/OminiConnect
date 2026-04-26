@@ -1,7 +1,9 @@
 - slug: gorgias_list_tickets
   name: List Tickets
   description: |
-    Retrieves a paginated list of support tickets from Gorgias.
+    Retrieves a paginated list of support tickets from Gorgias with filtering.
+    Returns ticket IDs, subjects, states, and timestamps for each ticket.
+    Use this to discover customer support issues and track ticket status.
   provider: gorgias
   endpoint: /tickets
   method: GET
@@ -27,7 +29,9 @@
 - slug: gorgias_get_ticket
   name: Get Ticket
   description: |
-    Retrieves a single support ticket by its ID.
+    Retrieves a single support ticket by its ID with full conversation history.
+    Returns the complete ticket data with all associated information.
+    This provides full ticket data for customer support management.
   provider: gorgias
   endpoint: /tickets/{id}
   method: GET
@@ -48,7 +52,9 @@
 - slug: gorgias_create_ticket
   name: Create Ticket
   description: |
-    Creates a new support ticket in Gorgias.
+    Creates a new support ticket in Gorgias with subject, body, and customer email.
+    Returns the created ticket with its unique ID and confirmation.
+    This opens a new customer support issue for resolution.
   provider: gorgias
   endpoint: /tickets
   method: POST
@@ -80,7 +86,9 @@
 - slug: gorgias_update_ticket
   name: Update Ticket
   description: |
-    Updates an existing support ticket.
+    Updates an existing support ticket with new subject, body, state, or priority.
+    Returns the updated ticket confirmation with modified fields.
+    This modifies ticket content for customer support resolution.
   provider: gorgias
   endpoint: /tickets/{id}
   method: PUT
@@ -113,7 +121,9 @@
 - slug: gorgias_list_customers
   name: List Customers
   description: |
-    Retrieves a list of customers from Gorgias.
+    Retrieves a list of customers from Gorgias with pagination and email filtering.
+    Returns customer IDs, names, and email addresses for each customer.
+    Use this to discover customer profiles and manage support relationships.
   provider: gorgias
   endpoint: /customers
   method: GET
@@ -139,7 +149,9 @@
 - slug: gorgias_get_customer
   name: Get Customer
   description: |
-    Retrieves a single customer by their ID.
+    Retrieves a single customer by their ID with full profile and history.
+    Returns the complete customer data with all associated information.
+    This provides full customer data for support and relationship management.
   provider: gorgias
   endpoint: /customers/{id}
   method: GET
@@ -160,7 +172,9 @@
 - slug: gorgias_list_macros
   name: List Macros
   description: |
-    Retrieves a list of canned responses/macros.
+    Retrieves a list of canned responses and macros with pagination.
+    Returns macro IDs, names, and templates for each macro.
+    Use this to discover templated responses and automate support workflows.
   provider: gorgias
   endpoint: /macros
   method: GET
@@ -183,7 +197,9 @@
 - slug: gorgias_get_macro
   name: Get Macro
   description: |
-    Retrieves a single macro by its ID.
+    Retrieves a single macro by its ID with full template and actions.
+    Returns the complete macro data with all associated information.
+    This provides full macro data for response automation and training.
   provider: gorgias
   endpoint: /macros/{id}
   method: GET
@@ -204,7 +220,9 @@
 - slug: gorgias_list_tags
   name: List Tags
   description: |
-    Retrieves a list of all tags used in Gorgias.
+    Retrieves a list of all tags used in Gorgias with pagination.
+    Returns tag IDs, names, and usage counts for each tag.
+    Use this to discover ticket categories and manage support organization.
   provider: gorgias
   endpoint: /tags
   method: GET
@@ -227,7 +245,9 @@
 - slug: gorgias_get_tag
   name: Get Tag
   description: |
-    Retrieves a single tag by its ID.
+    Retrieves a single tag by its ID with usage statistics and rules.
+    Returns the complete tag data with all associated information.
+    This provides full tag data for ticket organization and workflow management.
   provider: gorgias
   endpoint: /tags/{id}
   method: GET

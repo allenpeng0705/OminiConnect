@@ -16,7 +16,9 @@
 - slug: lightspeed_list_items
   name: List Items
   description: |
-    List all items (products) in the Lightspeed Retail POS. Filter by category, supplier, and availability.
+    List all items (products) in the Lightspeed Retail POS with filtering options.
+    Returns item names, SKUs, prices, and stock levels for each product.
+    Use this to discover products and manage inventory.
   provider: lightspeed
   endpoint: /api/v2/Item.json
   method: GET
@@ -49,6 +51,8 @@
   name: Get Item
   description: |
     Get detailed information about a specific item including variants, pricing, and stock levels.
+    Returns the complete item data with inventory counts and cost information.
+    This provides full product details for sales and inventory management.
   provider: lightspeed
   endpoint: /api/v2/Item/{itemID}.json
   method: GET
@@ -70,7 +74,9 @@
 - slug: lightspeed_create_item
   name: Create Item
   description: |
-    Create a new item in Lightspeed Retail POS. Include name, SKU, price, and inventory settings.
+    Create a new item in Lightspeed Retail POS with name, SKU, price, and inventory settings.
+    Returns the created item with its unique ID and configuration.
+    This adds a new product to your retail inventory.
   provider: lightspeed
   endpoint: /api/v2/Item.json
   method: POST
@@ -111,7 +117,9 @@
 - slug: lightspeed_list_customers
   name: List Customers
   description: |
-    List all customers in Lightspeed Retail POS. Filter by group, and registration date.
+    List all customers in Lightspeed Retail POS with filtering options.
+    Returns customer names, emails, phone numbers, and purchase history for each customer.
+    Use this to discover customers and track their buying patterns.
   provider: lightspeed
   endpoint: /api/v2/Customer.json
   method: GET
@@ -141,6 +149,8 @@
   name: Get Customer
   description: |
     Get detailed information about a specific customer including contact info, addresses, and purchase history.
+    Returns the complete customer profile with transaction records.
+    This provides full customer data for personalization and support.
   provider: lightspeed
   endpoint: /api/v2/Customer/{customerID}.json
   method: GET
@@ -162,7 +172,9 @@
 - slug: lightspeed_list_transactions
   name: List Transactions
   description: |
-    List all transactions (sales) in Lightspeed Retail POS. Filter by date, register, and employee.
+    List all transactions (sales) in Lightspeed Retail POS with filtering options.
+    Returns transaction IDs, dates, totals, and payment methods for each sale.
+    Use this to track sales and reconcile daily receipts.
   provider: lightspeed
   endpoint: /api/v2/Sale.json
   method: GET
@@ -195,6 +207,8 @@
   name: Get Transaction
   description: |
     Get detailed information about a specific transaction including line items, payments, and totals.
+    Returns the complete transaction data with item-level details.
+    This provides full transaction data for refunds and accounting.
   provider: lightspeed
   endpoint: /api/v2/Sale/{saleID}.json
   method: GET
@@ -216,7 +230,9 @@
 - slug: lightspeed_list_suppliers
   name: List Suppliers
   description: |
-    List all suppliers (vendors) in Lightspeed Retail POS. Filter by status and availability.
+    List all suppliers (vendors) in Lightspeed Retail POS with filtering options.
+    Returns supplier names, contact information, and account terms for each vendor.
+    Use this to discover suppliers and manage procurement.
   provider: lightspeed
   endpoint: /api/v2/Supplier.json
   method: GET
@@ -243,6 +259,8 @@
   name: Get Supplier
   description: |
     Get detailed information about a specific supplier including contact info and terms.
+    Returns the complete supplier profile with ordering information.
+    This provides full supplier data for procurement management.
   provider: lightspeed
   endpoint: /api/v2/Supplier/{supplierID}.json
   method: GET
@@ -264,7 +282,9 @@
 - slug: lightspeed_list_staff
   name: List Staff
   description: |
-    List all staff members (employees) in Lightspeed Retail POS. Filter by role and status.
+    List all staff members (employees) in Lightspeed Retail POS with filtering options.
+    Returns staff names, roles, email addresses, and clock-in status for each employee.
+    Use this to discover staff and manage workforce administration.
   provider: lightspeed
   endpoint: /api/v2/Employee.json
   method: GET

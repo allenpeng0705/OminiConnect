@@ -1,7 +1,8 @@
 - slug: quora_list_topics
   name: List Topics
   description: |
-    Retrieve a list of topics on Quora.
+    Retrieve a paginated list of topics on Quora including topic names, descriptions, and follower counts.
+    Returns topic data for content discovery and audience targeting.
   provider: quora
   endpoint: /topics
   method: GET
@@ -24,7 +25,8 @@
 - slug: quora_get_topic
   name: Get Topic
   description: |
-    Get details about a specific topic by its ID or slug.
+    Get details about a specific topic by its ID or slug including name, description, and related topics.
+    Returns topic data for content research and engagement planning.
   provider: quora
   endpoint: /topics/{topic_id}
   method: GET
@@ -45,7 +47,8 @@
 - slug: quora_list_questions
   name: List Questions
   description: |
-    Retrieve a list of questions, optionally filtered by topic.
+    Retrieve a paginated list of questions, optionally filtered by topic, including question text and author information.
+    Returns question data for content discovery and trending analysis.
   provider: quora
   endpoint: /questions
   method: GET
@@ -71,7 +74,8 @@
 - slug: quora_get_question
   name: Get Question
   description: |
-    Get details about a specific question by its ID.
+    Get details about a specific question by its ID including full text, topic tags, and view count.
+    Returns question data for content research and engagement tracking.
   provider: quora
   endpoint: /questions/{question_id}
   method: GET
@@ -92,7 +96,8 @@
 - slug: quora_create_question
   name: Create Question
   description: |
-    Create a new question on Quora.
+    Create a new question on Quora with specified text and topic assignments for the community to answer.
+    Returns the created question with its ID for sharing and tracking responses.
   provider: quora
   endpoint: /questions
   method: POST
@@ -118,7 +123,8 @@
 - slug: quora_list_answers
   name: List Answers
   description: |
-    Retrieve answers for a specific question.
+    Retrieve answers for a specific question including author information, answer text, and upvote counts.
+    Returns answer data for content review and engagement analysis.
   provider: quora
   endpoint: /questions/{question_id}/answers
   method: GET
@@ -145,7 +151,8 @@
 - slug: quora_get_answer
   name: Get Answer
   description: |
-    Get details about a specific answer by its ID.
+    Get details about a specific answer by its ID including full text, author profile, and engagement metrics.
+    Returns answer data for content analysis and response planning.
   provider: quora
   endpoint: /answers/{answer_id}
   method: GET
@@ -166,7 +173,8 @@
 - slug: quora_create_answer
   name: Create Answer
   description: |
-    Create an answer to a specific question.
+    Create an answer to a specific question with your expertise and knowledge for the community to view.
+    Returns the created answer with its ID for confirmation and engagement tracking.
   provider: quora
   endpoint: /questions/{question_id}/answers
   method: POST
@@ -191,7 +199,8 @@
 - slug: quora_get_user_info
   name: Get User Info
   description: |
-    Get profile information for a specific user.
+    Get profile information for a specific user including name, bio, credentials, and activity statistics.
+    Returns user profile data for identity verification and engagement analysis.
   provider: quora
   endpoint: /users/{user_id}
   method: GET
@@ -212,7 +221,8 @@
 - slug: quora_search_questions
   name: Search Questions
   description: |
-    Search for questions matching a query.
+    Search for questions matching a query string including question text, topics, and relevance rankings.
+    Returns matching questions for content discovery and research purposes.
   provider: quora
   endpoint: /search/questions
   method: GET

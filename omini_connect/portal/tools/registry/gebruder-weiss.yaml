@@ -18,7 +18,7 @@
 - slug: gebruder_weiss_list_shipments
   name: List Shipments
   description: |
-    List all shipments in the system.
+    List all shipments in the Gebruder Weiss logistics system with optional status filtering. Returns shipment IDs, tracking numbers, destinations, statuses, and estimated delivery dates.
   provider: gebruder-weiss
   endpoint: /shipments
   method: GET
@@ -44,7 +44,7 @@
 - slug: gebruder_weiss_get_shipment
   name: Get Shipment
   description: |
-    Get detailed information about a specific shipment.
+    Get detailed information about a specific shipment including tracking number, origin, destination, current status, and all tracking events.
   provider: gebruder-weiss
   endpoint: /shipments/{shipmentId}
   method: GET
@@ -66,7 +66,7 @@
 - slug: gebruder_weiss_list_orders
   name: List Orders
   description: |
-    List all orders in the system.
+    List all orders in the Gebruder Weiss system with optional status filtering. Returns order IDs, customer information, shipment counts, and total values for each order.
   provider: gebruder-weiss
   endpoint: /orders
   method: GET
@@ -87,7 +87,7 @@
 - slug: gebruder_weiss_get_order
   name: Get Order
   description: |
-    Get detailed information about a specific order.
+    Get detailed information about a specific order including customer details, associated shipments, and order status for logistics management.
   provider: gebruder-weiss
   endpoint: /orders/{orderId}
   method: GET
@@ -109,7 +109,7 @@
 - slug: gebruder_weiss_list_tracking
   name: List Tracking
   description: |
-    List tracking events for shipments.
+    List all tracking events for shipments with optional shipment filtering. Returns event timestamps, locations, status updates, and delivery confirmations.
   provider: gebruder-weiss
   endpoint: /tracking
   method: GET
@@ -130,7 +130,7 @@
 - slug: gebruder_weiss_track_shipment
   name: Track Shipment
   description: |
-    Track a shipment by tracking number.
+    Track a specific shipment by its tracking number. Returns the current location, status, and all tracking events for the shipment.
   provider: gebruder-weiss
   endpoint: /tracking/{trackingNumber}
   method: GET
@@ -152,7 +152,7 @@
 - slug: gebruder_weiss_list_pickups
   name: List Pickups
   description: |
-    List scheduled pickup requests.
+    List all scheduled pickup requests in the Gebruder Weiss system. Returns pickup IDs, addresses, scheduled dates, and shipment associations for each pickup.
   provider: gebruder-weiss
   endpoint: /pickups
   method: GET
@@ -169,7 +169,7 @@
 - slug: gebruder_weiss_create_pickup
   name: Create Pickup
   description: |
-    Create a new pickup request.
+    Create a new pickup request with address and scheduled date. Returns the created pickup with its unique ID and confirmation status.
   provider: gebruder-weiss
   endpoint: /pickups
   method: POST
@@ -198,7 +198,7 @@
 - slug: gebruder_weiss_list_addresses
   name: List Addresses
   description: |
-    List saved addresses in the address book.
+    List all saved addresses in the Gebruder Weiss address book including sender and recipient addresses for streamlined shipment creation.
   provider: gebruder-weiss
   endpoint: /addresses
   method: GET
@@ -215,7 +215,7 @@
 - slug: gebruder_weiss_estimate_rate
   name: Estimate Rate
   description: |
-    Get shipping rate estimate for a route.
+    Get a shipping rate estimate for a route based on origin, destination, and weight. Returns estimated shipping costs and service options.
   provider: gebruder-weiss
   endpoint: /rates
   method: POST

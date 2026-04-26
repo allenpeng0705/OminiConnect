@@ -17,7 +17,8 @@
 - slug: braintree_list_transactions
   name: List Transactions
   description: |
-    List transactions for the merchant. Returns a collection of transactions with amounts, statuses, and customer info.
+    List transactions for the merchant and return transaction IDs, amounts, statuses, and customer information.
+    Filter by merchant account, customer, status, or order ID to find specific payment records.
   provider: braintree
   endpoint: /v1/transactions
   method: GET
@@ -56,6 +57,7 @@
   name: Get Transaction
   description: |
     Get details of a specific transaction including amount, status, payment method, and gateway response.
+    Returns the complete transaction data for payment verification and dispute management.
   provider: braintree
   endpoint: /v1/transactions/{id}
   method: GET
@@ -78,7 +80,8 @@
 - slug: braintree_create_transaction
   name: Create Transaction
   description: |
-    Create a new transaction for collecting payment. Specify amount, payment method, and options.
+    Create a new transaction with amount, payment method nonce, and optional customer or order association.
+    Returns the created transaction ID and status for payment processing confirmation.
   provider: braintree
   endpoint: /v1/transactions
   method: POST
@@ -119,7 +122,8 @@
 - slug: braintree_void_transaction
   name: Void Transaction
   description: |
-    Void an authorized transaction before it is submitted for settlement. Cannot void settled transactions.
+    Void an authorized transaction before it is submitted for settlement to cancel the payment.
+    Returns confirmation of the void operation (note: cannot void settled transactions).
   provider: braintree
   endpoint: /v1/transactions/{id}/void
   method: POST
@@ -142,7 +146,8 @@
 - slug: braintree_list_customers
   name: List Customers
   description: |
-    List all customers for the merchant. Returns paginated list with names, emails, and company info.
+    List all customers for the merchant and return customer names, emails, phone numbers, and company information.
+    Filter by name, email, or company to find specific customers for payment management.
   provider: braintree
   endpoint: /v1/customers
   method: GET
@@ -181,6 +186,7 @@
   name: Get Customer
   description: |
     Get details of a specific customer including payment methods, addresses, and custom fields.
+    Returns the complete customer profile for billing and subscription management.
   provider: braintree
   endpoint: /v1/customers/{id}
   method: GET
@@ -203,7 +209,8 @@
 - slug: braintree_create_customer
   name: Create Customer
   description: |
-    Create a new customer with contact info and payment methods. Required for recurring billing.
+    Create a new customer with first name, last name, email, phone, and company information.
+    Returns the created customer ID for recurring billing and payment method association.
   provider: braintree
   endpoint: /v1/customers
   method: POST
@@ -240,7 +247,8 @@
 - slug: braintree_list_merchants
   name: List Merchants
   description: |
-    List all merchant accounts associated with the gateway. Returns merchant IDs, currencies, and status.
+    List all merchant accounts associated with the gateway and return merchant IDs, currencies, and status.
+    Use this to discover available merchant accounts for multi-currency transactions.
   provider: braintree
   endpoint: /v1/merchant_accounts
   method: GET
@@ -267,6 +275,7 @@
   name: Get Merchant
   description: |
     Get details of a specific merchant account including currency, status, and takings limits.
+    Returns the complete merchant configuration for payment routing and settlement.
   provider: braintree
   endpoint: /v1/merchant_accounts/{id}
   method: GET
@@ -289,7 +298,8 @@
 - slug: braintree_list_webhooks
   name: List Webhooks
   description: |
-    List webhook notification event types available for subscription. Use for configuring webhook endpoints.
+    List webhook notification event types available for subscription in Braintree.
+    Use this to discover available webhook events for integration configuration.
   provider: braintree
   endpoint: /v1/webhook_notifications/available
   method: GET

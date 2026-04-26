@@ -18,7 +18,7 @@
 - slug: egnyte_list_files
   name: List Files
   description: |
-    List files and folders in Egnyte.
+    List all files and folders in an Egnyte storage location. Returns file names, sizes, and modification timestamps.
   provider: egnyte
   endpoint: /pubapi/v1/fs
   method: GET
@@ -44,7 +44,7 @@
 - slug: egnyte_get_file
   name: Get File
   description: |
-    Get metadata for a specific file or folder.
+    Retrieve metadata for a specific file or folder in Egnyte including size, timestamps, and permissions.
   provider: egnyte
   endpoint: /pubapi/v1/fs/{path}
   method: GET
@@ -66,7 +66,7 @@
 - slug: egnyte_download_file
   name: Download File
   description: |
-    Download file content.
+    Download file content from Egnyte storage. Returns the file data for local storage or processing.
   provider: egnyte
   endpoint: /pubapi/v1/fs-content/{path}
   method: GET
@@ -88,7 +88,7 @@
 - slug: egnyte_upload_file
   name: Upload File
   description: |
-    Upload or create a file.
+    Upload or create a file in Egnyte storage with specified content. Returns confirmation of upload completion.
   provider: egnyte
   endpoint: /pubapi/v1/fs-content/{path}
   method: POST
@@ -114,7 +114,7 @@
 - slug: egnyte_create_folder
   name: Create Folder
   description: |
-    Create a new folder.
+    Create a new folder in Egnyte at the specified path. Returns confirmation with folder metadata.
   provider: egnyte
   endpoint: /pubapi/v1/fs/{path}
   method: POST
@@ -136,7 +136,7 @@
 - slug: egnyte_delete_file
   name: Delete File
   description: |
-    Delete a file or folder.
+    Permanently delete a file or folder from Egnyte storage. Folder deletion is recursive for all contents.
   provider: egnyte
   endpoint: /pubapi/v1/fs/{path}
   method: DELETE
@@ -158,7 +158,7 @@
 - slug: egnyte_list_permissions
   name: List Permissions
   description: |
-    List all permission policies.
+    List all permission policies configured in Egnyte. Returns policy names, types, and assigned users or groups.
   provider: egnyte
   endpoint: /pubapi/v1/permissions
   method: GET
@@ -180,7 +180,7 @@
 - slug: egnyte_get_permissions
   name: Get Permissions
   description: |
-    Get permissions for a specific path.
+    Retrieve permission settings for a specific file or folder path in Egnyte including user and group access levels.
   provider: egnyte
   endpoint: /pubapi/v1/permissions
   method: GET
@@ -202,7 +202,7 @@
 - slug: egnyte_list_users
   name: List Users
   description: |
-    List all users in Egnyte.
+    List all users in the Egnyte organization. Returns usernames, emails, storage quotas, and account statuses.
   provider: egnyte
   endpoint: /pubapi/v1/users
   method: GET
@@ -224,7 +224,7 @@
 - slug: egnyte_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve detailed information about a specific Egnyte user including storage usage, permissions, and account status.
   provider: egnyte
   endpoint: /pubapi/v1/users/{user_id}
   method: GET

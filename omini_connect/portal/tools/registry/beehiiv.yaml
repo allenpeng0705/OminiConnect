@@ -17,7 +17,8 @@
 - slug: beehiiv_list_publications
   name: List Publications
   description: |
-    List all publications in the Beehiiv account. Returns publication details including name, URL, and subscriber count.
+    List all publications in the Beehiiv account and return publication names, URLs, and subscriber counts.
+    Use this to discover available newsletters for content distribution.
   provider: beehiiv
   endpoint: /publications
   method: GET
@@ -35,7 +36,8 @@
 - slug: beehiiv_get_publication
   name: Get Publication
   description: |
-    Get details of a specific publication including name, description, settings, and growth statistics.
+    Get details of a specific publication including name, description, settings, and growth analytics.
+    Returns the complete publication configuration for content strategy.
   provider: beehiiv
   endpoint: /publications/{publication_id}
   method: GET
@@ -57,7 +59,8 @@
 - slug: beehiiv_list_posts
   name: List Posts
   description: |
-    List all posts in a publication. Returns post details including title, status, and publish date.
+    List all posts in a publication and return titles, statuses, publish dates, and open rates.
+    Filter by status (draft, scheduled, published) to manage content workflow.
   provider: beehiiv
   endpoint: /posts
   method: GET
@@ -90,7 +93,8 @@
 - slug: beehiiv_get_post
   name: Get Post
   description: |
-    Get details of a specific post including content, status, and engagement metrics.
+    Get details of a specific post including content, status, and engagement metrics such as open rate and clicks.
+    Returns the complete post data for content analysis.
   provider: beehiiv
   endpoint: /posts/{post_id}
   method: GET
@@ -112,7 +116,8 @@
 - slug: beehiiv_create_post
   name: Create Post
   description: |
-    Create a new post in a publication. Set as draft or schedule for future publishing.
+    Create a new post in a Beehiiv publication with title, content, and optional scheduling.
+    Set as draft for review or schedule for future publishing.
   provider: beehiiv
   endpoint: /posts
   method: POST
@@ -154,7 +159,8 @@
 - slug: beehiiv_list_subscribers
   name: List Subscribers
   description: |
-    List all subscribers in a publication. Returns subscriber details including email, status, and subscription date.
+    List all subscribers in a publication and return email addresses, subscription dates, and engagement status.
+    Filter by status (active, unsubscribed, bounced) for audience management.
   provider: beehiiv
   endpoint: /subscribers
   method: GET
@@ -187,7 +193,8 @@
 - slug: beehiiv_get_subscriber
   name: Get Subscriber
   description: |
-    Get details of a specific subscriber including email, subscription status, and engagement metrics.
+    Get details of a specific subscriber including email, subscription status, and engagement history.
+    Returns subscriber profile for audience analysis.
   provider: beehiiv
   endpoint: /subscribers/{subscriber_id}
   method: GET
@@ -209,7 +216,8 @@
 - slug: beehiiv_create_campaign
   name: Create Campaign
   description: |
-    Create a new email campaign for a publication. Set recipients, content, and schedule.
+    Create a new email campaign for a Beehiiv publication with subject, content, and recipient targeting.
+    Schedule immediately or set a future send time for newsletter distribution.
   provider: beehiiv
   endpoint: /campaigns
   method: POST
@@ -245,7 +253,8 @@
 - slug: beehiiv_get_analytics
   name: Get Analytics
   description: |
-    Get analytics for a publication including subscriber growth, open rates, and click rates.
+    Get analytics for a Beehiiv publication including subscriber growth, email open rates, and click-through rates.
+    Returns time-series data for performance tracking.
   provider: beehiiv
   endpoint: /analytics
   method: GET
@@ -274,6 +283,7 @@
   name: Get Report
   description: |
     Get detailed report data for a publication including subscriber demographics and engagement breakdown.
+    Returns aggregated statistics for newsletter performance analysis.
   provider: beehiiv
   endpoint: /reports
   method: GET

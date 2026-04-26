@@ -1,7 +1,9 @@
 - slug: ghost_list_posts
   name: List Posts
   description: |
-    Retrieve a list of posts from the Ghost CMS.
+    Retrieve a list of posts from the Ghost CMS with filtering and pagination.
+    Returns post titles, IDs, status, and publish dates for each post.
+    Use this to discover content and manage blog articles.
   provider: ghost
   endpoint: /posts
   method: GET
@@ -30,7 +32,9 @@
 - slug: ghost_get_post
   name: Get Post
   description: |
-    Get details about a specific post by its ID or slug.
+    Get details about a specific post by its ID or slug including content and metadata.
+    Returns the complete post data with all associated information.
+    This provides full post data for content management and editing.
   provider: ghost
   endpoint: /posts/{post_id}
   method: GET
@@ -54,7 +58,9 @@
 - slug: ghost_create_post
   name: Create Post
   description: |
-    Create a new post in Ghost.
+    Create a new post in Ghost with title, content, and publication status.
+    Returns the created post with its unique ID and confirmation.
+    This publishes a new article to your Ghost blog.
   provider: ghost
   endpoint: /posts
   method: POST
@@ -99,7 +105,9 @@
 - slug: ghost_update_post
   name: Update Post
   description: |
-    Update an existing post in Ghost.
+    Update an existing post in Ghost with new content, title, or status.
+    Returns the updated post confirmation with modified fields.
+    This modifies post content for editorial updates.
   provider: ghost
   endpoint: /posts/{post_id}
   method: PUT
@@ -138,7 +146,9 @@
 - slug: ghost_delete_post
   name: Delete Post
   description: |
-    Delete a post from Ghost.
+    Delete a post from Ghost. This action is permanent and cannot be undone.
+    Returns deletion confirmation for the removed post.
+    This removes unwanted content from your blog.
   provider: ghost
   endpoint: /posts/{post_id}
   method: DELETE
@@ -159,7 +169,9 @@
 - slug: ghost_list_pages
   name: List Pages
   description: |
-    Retrieve a list of pages from the Ghost CMS.
+    Retrieve a list of pages from the Ghost CMS with filtering and pagination.
+    Returns page titles, IDs, status, and visibility for each page.
+    Use this to discover static pages and manage site content.
   provider: ghost
   endpoint: /pages
   method: GET
@@ -188,7 +200,9 @@
 - slug: ghost_get_page
   name: Get Page
   description: |
-    Get details about a specific page by its ID or slug.
+    Get details about a specific page by its ID or slug including content and metadata.
+    Returns the complete page data with all associated information.
+    This provides full page data for content management.
   provider: ghost
   endpoint: /pages/{page_id}
   method: GET
@@ -212,7 +226,9 @@
 - slug: ghost_list_members
   name: List Members
   description: |
-    Retrieve a list of members from the Ghost CMS.
+    Retrieve a list of members from the Ghost CMS with filtering and pagination.
+    Returns member names, emails, subscription status, and engagement metrics for each member.
+    Use this to discover your audience and manage subscriber relationships.
   provider: ghost
   endpoint: /members
   method: GET
@@ -241,7 +257,9 @@
 - slug: ghost_get_member
   name: Get Member
   description: |
-    Get details about a specific member by their ID or email.
+    Get details about a specific member by their ID or email including subscription and history.
+    Returns the complete member data with all associated information.
+    This provides full member data for audience management and support.
   provider: ghost
   endpoint: /members/{member_id}
   method: GET
@@ -265,7 +283,9 @@
 - slug: ghost_list_tags
   name: List Tags
   description: |
-    Retrieve a list of tags from the Ghost CMS.
+    Retrieve a list of tags from the Ghost CMS with pagination.
+    Returns tag names, IDs, slug, and post counts for each tag.
+    Use this to discover content categories and manage taxonomy.
   provider: ghost
   endpoint: /tags
   method: GET

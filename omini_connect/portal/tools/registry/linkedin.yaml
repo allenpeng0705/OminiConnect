@@ -18,7 +18,7 @@
   name: Get Profile
   description: |
     Get the authenticated user's LinkedIn profile including name, headline, summary, and public profile URL.
-    Useful for personalization and context about the user.
+    Returns your profile information for personalization and context.
   provider: linkedin
   endpoint: /me
   method: GET
@@ -37,7 +37,7 @@
 - slug: linkedin_list_connections
   name: List Connections
   description: |
-    List the authenticated user's first-degree connections. Returns name, headline, and profile URL.
+    List the authenticated user's first-degree LinkedIn connections. Returns name, headline, and profile URL for each connection.
   provider: linkedin
   endpoint: /connections
   method: GET
@@ -64,7 +64,7 @@
 - slug: linkedin_get_company
   name: Get Company
   description: |
-    Get details about a LinkedIn company page including name, description, logo, and employee count.
+    Get details about a LinkedIn company page by its ID or universal name. Returns the company name, description, logo, and employee count.
   provider: linkedin
   endpoint: /companies/{id}
   method: GET
@@ -87,8 +87,7 @@
 - slug: linkedin_list_posts
   name: List Posts
   description: |
-    List posts from the authenticated user's profile or an organization.
-    Use this to see recent activity, shares, or content posted by the user.
+    List posts from your profile or an organization on LinkedIn. Returns post content, timestamps, and engagement metrics for each post.
   provider: linkedin
   endpoint: /ugcPosts
   method: GET
@@ -118,8 +117,7 @@
 - slug: linkedin_create_post
   name: Create Post
   description: |
-    Create a new text post on LinkedIn from the authenticated user's profile.
-    Use this to share thoughts, updates, or announcements.
+    Create a new text post on LinkedIn from your profile. Specify the author URN and post text content. Creates the post and returns it with its ID and timestamp.
   provider: linkedin
   endpoint: /ugcPosts
   method: POST
@@ -150,7 +148,7 @@
 - slug: linkedin_get_job
   name: Get Job
   description: |
-    Get details about a specific LinkedIn job posting including title, company, description, and requirements.
+    Get details about a specific LinkedIn job posting by its ID. Returns the job title, company, description, requirements, and posting date.
   provider: linkedin
   endpoint: /jobs/{id}
   method: GET
@@ -172,7 +170,7 @@
 - slug: linkedin_list_jobs
   name: List Jobs
   description: |
-    Search for jobs on LinkedIn. Filter by keywords, location, company, or job function.
+    Search for jobs on LinkedIn with optional filters for keywords, location, company, or job function. Returns job IDs, titles, companies, and locations for each job.
   provider: linkedin
   endpoint: /jobSearch
   method: GET
@@ -207,8 +205,7 @@
 - slug: linkedin_search_people
   name: Search People
   description: |
-    Search for LinkedIn users by keywords, location, industry, or company.
-    Returns profiles matching the search criteria.
+    Search for LinkedIn users by keywords, location, industry, or company. Returns profile information including name, headline, and profile URL for each matching user.
   provider: linkedin
   endpoint: /people
   method: GET
@@ -243,7 +240,7 @@
 - slug: linkedin_get_user_updates
   name: Get User Updates
   description: |
-    Get profile updates and activities for the authenticated user or their connections.
+    Get profile updates and activities for the authenticated user or their connections. Returns update types, timestamps, and content for each activity.
   provider: linkedin
   endpoint: /networkUpdates
   method: GET
@@ -273,8 +270,7 @@
 - slug: linkedin_share_post
   name: Share Post
   description: |
-    Share an article or link on LinkedIn with a commentary text.
-    Use this to share external content with your network.
+    Share an article or link on LinkedIn with commentary text. Specify the author URN, article URL, and title. Creates the shared post and returns it with its ID and timestamp.
   provider: linkedin
   endpoint: /ugcPosts
   method: POST

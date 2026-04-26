@@ -1,7 +1,8 @@
 - slug: guru_list_collections
   name: List Collections
   description: |
-    Retrieve a list of all collections in Guru.
+    Retrieve all collections in your Guru account with pagination.
+    Returns collection names and article counts.
   provider: guru
   endpoint: /collections
   method: GET
@@ -24,7 +25,8 @@
 - slug: guru_get_collection
   name: Get Collection
   description: |
-    Retrieve details of a specific collection by ID.
+    Retrieve a specific Guru collection by ID with its name and settings.
+    Returns collection details including description and visibility.
   provider: guru
   endpoint: /collections/{id}
   method: GET
@@ -45,7 +47,8 @@
 - slug: guru_list_cards
   name: List Cards
   description: |
-    Retrieve a list of all cards in Guru.
+    Retrieve all cards in your Guru account with optional collection filtering.
+    Returns card summaries with titles and content previews.
   provider: guru
   endpoint: /cards
   method: GET
@@ -71,7 +74,8 @@
 - slug: guru_get_card
   name: Get Card
   description: |
-    Retrieve details of a specific card by ID.
+    Retrieve a specific Guru card by ID with its full content and metadata.
+    Returns card details including answer content and tags.
   provider: guru
   endpoint: /cards/{id}
   method: GET
@@ -92,7 +96,8 @@
 - slug: guru_create_card
   name: Create Card
   description: |
-    Create a new card in a Guru collection.
+    Create a new card in a specified Guru collection with title and content.
+    Returns the created card with its assigned ID.
   provider: guru
   endpoint: /cards
   method: POST
@@ -129,7 +134,8 @@
 - slug: guru_list_users
   name: List Users
   description: |
-    Retrieve a list of all users in Guru.
+    Retrieve all users in your Guru account with pagination.
+    Returns user profiles with names and email addresses.
   provider: guru
   endpoint: /users
   method: GET
@@ -152,7 +158,8 @@
 - slug: guru_get_user
   name: Get User
   description: |
-    Retrieve details of a specific user by ID.
+    Retrieve a specific Guru user by ID with their profile information.
+    Returns user details including name and email.
   provider: guru
   endpoint: /users/{id}
   method: GET
@@ -173,7 +180,8 @@
 - slug: guru_get_suggestions
   name: Get Suggestions
   description: |
-    Retrieve suggested cards or collections based on context.
+    Retrieve AI-suggested cards and collections based on a search query.
+    Returns relevant Guru content for the given context.
   provider: guru
   endpoint: /suggestions
   method: GET
@@ -193,7 +201,8 @@
 - slug: guru_search_cards
   name: Search Cards
   description: |
-    Search for cards in Guru by keyword or phrase.
+    Search for Guru cards matching a keyword or phrase across all collections.
+    Returns matching card results with relevance ranking.
   provider: guru
   endpoint: /search
   method: GET
@@ -223,7 +232,8 @@
 - slug: guru_share_card
   name: Share Card
   description: |
-    Share a card with specific users or groups.
+    Share a Guru card with specific users or groups by their IDs.
+    Sends notification and grants access to the card content.
   provider: guru
   endpoint: /cards/{id}/share
   method: POST

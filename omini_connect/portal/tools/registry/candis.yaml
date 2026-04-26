@@ -18,7 +18,7 @@
 - slug: candis_list_accounts
   name: List Accounts
   description: |
-    List all accounts in the workspace.
+    Retrieve all financial accounts in the Candis workspace with pagination support. Returns account names, types, and current balances.
   provider: candis
   endpoint: /api/v1/accounts
   method: GET
@@ -39,7 +39,7 @@
 - slug: candis_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Retrieve detailed information about a specific account by its unique ID. Returns the account balance, type, and recent transaction history.
   provider: candis
   endpoint: /api/v1/accounts/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: candis_list_transactions
   name: List Transactions
   description: |
-    List all transactions.
+    Retrieve all financial transactions with optional filtering by account and date range. Returns transaction amounts, dates, categories, and statuses.
   provider: candis
   endpoint: /api/v1/transactions
   method: GET
@@ -90,7 +90,7 @@
 - slug: candis_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction.
+    Retrieve detailed information about a specific transaction by its unique ID. Returns the amount, date, category, description, and account information.
   provider: candis
   endpoint: /api/v1/transactions/{id}
   method: GET
@@ -111,7 +111,7 @@
 - slug: candis_list_invoices
   name: List Invoices
   description: |
-    List all invoices.
+    Retrieve all invoices with optional filtering by status. Returns invoice numbers, amounts, due dates, and payment status.
   provider: candis
   endpoint: /api/v1/invoices
   method: GET
@@ -135,7 +135,7 @@
 - slug: candis_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice.
+    Retrieve detailed information about a specific invoice by its unique ID. Returns line items, total amount, due date, and payment status.
   provider: candis
   endpoint: /api/v1/invoices/{id}
   method: GET
@@ -156,7 +156,7 @@
 - slug: candis_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice.
+    Create a new invoice with line items for a specific contact and due date. Returns the created invoice with its unique ID.
   provider: candis
   endpoint: /api/v1/invoices
   method: POST
@@ -186,7 +186,7 @@
 - slug: candis_list_contacts
   name: List Contacts
   description: |
-    List all contacts.
+    Retrieve all contacts in the Candis CRM with pagination support. Returns contact names, email addresses, and company associations.
   provider: candis
   endpoint: /api/v1/contacts
   method: GET
@@ -207,7 +207,7 @@
 - slug: candis_get_contact
   name: Get Contact
   description: |
-    Get details of a specific contact.
+    Retrieve detailed information about a specific contact by their unique ID. Returns the contact email, phone, company, and associated account information.
   provider: candis
   endpoint: /api/v1/contacts/{id}
   method: GET
@@ -228,7 +228,7 @@
 - slug: candis_list_bills
   name: List Bills
   description: |
-    List all bills.
+    Retrieve all bills with optional filtering by status. Returns bill numbers, amounts, due dates, and payment status.
   provider: candis
   endpoint: /api/v1/bills
   method: GET

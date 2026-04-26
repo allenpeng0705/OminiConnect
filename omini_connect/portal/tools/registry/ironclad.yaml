@@ -18,7 +18,7 @@
 - slug: ironclad_list_contracts
   name: List Contracts
   description: |
-    List all contracts with optional filtering by status, counterparty, or date range.
+    List all contracts in Ironclad with optional filtering by status, counterparty, or creation date. Returns contract titles, IDs, and current status.
   provider: ironclad
   endpoint: /api/v2/contracts
   method: GET
@@ -57,7 +57,7 @@
 - slug: ironclad_get_contract
   name: Get Contract
   description: |
-    Get detailed information about a specific contract including parties, terms, and metadata.
+    Retrieve detailed information about a specific contract by its ID. Includes involved parties, contract terms, and custom metadata.
   provider: ironclad
   endpoint: /api/v2/contracts/{id}
   method: GET
@@ -80,7 +80,7 @@
 - slug: ironclad_create_contract
   name: Create Contract
   description: |
-    Create a new contract in Ironclad with specified terms and parties.
+    Create a new contract in Ironclad. Specify the contract title, counterparty, template, and key dates like effective and expiration.
   provider: ironclad
   endpoint: /api/v2/contracts
   method: POST
@@ -115,7 +115,7 @@
 - slug: ironclad_update_contract
   name: Update Contract
   description: |
-    Update an existing contract's fields, status, or terms.
+    Update an existing contract's fields, status, or terms. Modify the title, status, effective date, or expiration date as needed.
   provider: ironclad
   endpoint: /api/v2/contracts/{id}
   method: PATCH
@@ -150,7 +150,7 @@
 - slug: ironclad_list_counterparties
   name: List Counterparties
   description: |
-    Retrieve a list of all counterparties (organizations you contract with).
+    List all counterparties (organizations you do business with). Returns counterparty names, contact information, and contract counts.
   provider: ironclad
   endpoint: /api/v2/counterparties
   method: GET
@@ -180,7 +180,7 @@
 - slug: ironclad_get_counterparty
   name: Get Counterparty
   description: |
-    Get detailed information about a specific counterparty including contact info and contract count.
+    Retrieve detailed information about a specific counterparty. Includes contact information, address, and the number of associated contracts.
   provider: ironclad
   endpoint: /api/v2/counterparties/{id}
   method: GET
@@ -203,7 +203,7 @@
 - slug: ironclad_list_templates
   name: List Templates
   description: |
-    Retrieve a list of contract templates available for creating new contracts.
+    List all contract templates available in Ironclad for creating new contracts. Returns template names and categories.
   provider: ironclad
   endpoint: /api/v2/templates
   method: GET
@@ -229,7 +229,7 @@
 - slug: ironclad_get_template
   name: Get Template
   description: |
-    Get detailed information about a contract template including fields and structure.
+    Retrieve detailed information about a contract template. Includes the template structure, available fields, and field configurations.
   provider: ironclad
   endpoint: /api/v2/templates/{id}
   method: GET
@@ -252,7 +252,7 @@
 - slug: ironclad_search_contracts
   name: Search Contracts
   description: |
-    Search for contracts using full-text search across contract titles, content, and metadata.
+    Search for contracts using full-text search across titles, content, and metadata. Filter by status or date range to narrow results.
   provider: ironclad
   endpoint: /api/v2/contracts/search
   method: POST
@@ -292,7 +292,7 @@
 - slug: ironclad_get_contract_metadata
   name: Get Contract Metadata
   description: |
-    Retrieve metadata and custom fields for a specific contract.
+    Retrieve metadata and custom fields for a specific contract. Returns all custom field values and their configurations.
   provider: ironclad
   endpoint: /api/v2/contracts/{id}/metadata
   method: GET

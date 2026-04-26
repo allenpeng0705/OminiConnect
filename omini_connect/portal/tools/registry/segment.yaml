@@ -17,8 +17,7 @@
 - slug: segment_list_sources
   name: List Sources
   description: |
-    List all sources in your Segment workspace.
-    Sources are data producers that send events to Segment (websites, apps, servers).
+    List all sources in the Segment workspace including websites, apps, and servers that produce event data. Returns source configurations for data pipeline management and debugging.
   provider: segment
   endpoint: /workspace/sources
   method: GET
@@ -43,8 +42,7 @@
 - slug: segment_get_source
   name: Get Source
   description: |
-    Get details of a specific source including its settings, catalog info, and connection status.
-    Use this to check source configuration before debugging data flow issues.
+    Get details of a specific source in Segment by ID including its settings, catalog information, and connection status. Returns configuration data for data flow verification and troubleshooting.
   provider: segment
   endpoint: /workspace/sources/{source_id}
   method: GET
@@ -66,8 +64,7 @@
 - slug: segment_create_source
   name: Create Source
   description: |
-    Create a new source in your Segment workspace.
-    Choose from catalog sources like websites, mobile apps, or server-side trackers.
+    Create a new source in the Segment workspace from catalog templates like websites, mobile apps, or server trackers. Returns the created source with ID for event tracking setup and data pipeline connection.
   provider: segment
   endpoint: /workspace/sources
   method: POST
@@ -95,8 +92,7 @@
 - slug: segment_list_destinations
   name: List Destinations
   description: |
-    List all destinations in your Segment workspace.
-    Destinations receive data from your sources and forward it to downstream tools.
+    List all destinations in the Segment workspace that receive and forward event data from sources. Returns destination configurations for integration management and data routing.
   provider: segment
   endpoint: /workspace/destinations
   method: GET
@@ -121,8 +117,7 @@
 - slug: segment_get_destination
   name: Get Destination
   description: |
-    Get details of a specific destination including its enabled status, settings, and source mappings.
-    Use this to verify destination configuration.
+    Get details of a specific destination in Segment by ID including enabled status, settings, and source mappings. Returns configuration data for integration testing and status monitoring.
   provider: segment
   endpoint: /workspace/destinations/{destination_id}
   method: GET
@@ -144,8 +139,7 @@
 - slug: segment_list_warehouses
   name: List Warehouses
   description: |
-    List all warehouses connected to your Segment workspace.
-    Warehouses store your event and user data for long-term analysis.
+    List all warehouses connected to the Segment workspace for long-term event and user data storage. Returns warehouse connections for analytics setup and data retention management.
   provider: segment
   endpoint: /workspace/warehouses
   method: GET
@@ -170,8 +164,7 @@
 - slug: segment_get_warehouse
   name: Get Warehouse
   description: |
-    Get details of a specific warehouse including connection status, schema, and sync schedule.
-    Use this to check warehouse health and configuration.
+    Get details of a specific warehouse in Segment by ID including connection status, schema structure, and sync schedule. Returns data for performance tracking and configuration verification.
   provider: segment
   endpoint: /workspace/warehouses/{warehouse_id}
   method: GET
@@ -193,8 +186,7 @@
 - slug: segment_track_event
   name: Track Event
   description: |
-    Track a customer event. Events are actions users take in your product.
-    Include properties for additional context about the event.
+    Track a customer event in Segment with properties for additional context about user actions. Returns event confirmation for analytics tracking and automation triggers.
   provider: segment
   endpoint: /track
   method: POST
@@ -229,8 +221,7 @@
 - slug: segment_identify_user
   name: Identify User
   description: |
-    Identify a user and associate traits with them. This links events to a user profile.
-    Use to store user attributes like name, email, and custom properties.
+    Identify a user in Segment and associate traits like name, email, and custom properties to link events to a user profile. Returns identification confirmation for user data enrichment.
   provider: segment
   endpoint: /identify
   method: POST
@@ -261,8 +252,7 @@
 - slug: segment_list_tracks
   name: List Tracks
   description: |
-    List tracked events for a user or across your workspace.
-    Useful for auditing event history and debugging data pipelines.
+    List tracked events in the Segment workspace for auditing event history and debugging data pipelines. Returns event records for data quality assurance and analytics verification.
   provider: segment
   endpoint: /workspace/trackingplans
   method: GET

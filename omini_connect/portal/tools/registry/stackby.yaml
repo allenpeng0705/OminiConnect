@@ -1,7 +1,7 @@
 - slug: stackby_list_databases
   name: List Databases
   description: |
-    Returns a list of all databases available in the Stackby account.
+    List all databases in your Stackby account with pagination support. Returns database IDs, names, and metadata for each database to help organize and locate your data storage.
   provider: stackby
   endpoint: /v1/databases
   method: GET
@@ -25,7 +25,7 @@
 - slug: stackby_get_database
   name: Get Database
   description: |
-    Get details and metadata for a specific database by ID.
+    Get detailed information about a specific database by its ID. Returns the database name, schema definitions, table count, and all associated metadata for the database.
   provider: stackby
   endpoint: /v1/databases/{databaseId}
   method: GET
@@ -47,7 +47,7 @@
 - slug: stackby_create_database
   name: Create Database
   description: |
-    Create a new database with specified name and schema.
+    Create a new database in Stackby with a specified name and schema definition. Returns the created database with its unique ID and confirmation of successful creation.
   provider: stackby
   endpoint: /v1/databases
   method: POST
@@ -72,7 +72,7 @@
 - slug: stackby_list_tables
   name: List Tables
   description: |
-    List all tables within a specific database.
+    List all tables within a specific database by database ID. Returns table names, IDs, row counts, and schema information for each table to help understand the data structure.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables
   method: GET
@@ -94,7 +94,7 @@
 - slug: stackby_get_table
   name: Get Table
   description: |
-    Get details, schema, and structure of a specific table.
+    Get detailed information about a specific table including its schema, field types, and structure. Returns the complete table definition with all columns and their data types.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}
   method: GET
@@ -120,7 +120,7 @@
 - slug: stackby_list_rows
   name: List Rows
   description: |
-    Retrieve all rows from a specific table with optional filtering and pagination.
+    List all rows from a specific table with optional filtering, sorting, and pagination. Returns row data as key-value pairs along with row IDs for each record found.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows
   method: GET
@@ -155,7 +155,7 @@
 - slug: stackby_get_row
   name: Get Row
   description: |
-    Get a single row by its unique identifier.
+    Get a single row from a table by its unique row ID. Returns all field values and data stored in that specific row for detailed inspection.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows/{rowId}
   method: GET
@@ -185,7 +185,7 @@
 - slug: stackby_create_row
   name: Create Row
   description: |
-    Insert a new row into a specified table.
+    Create a new row in a specified table with the provided field data. Returns the created row with its assigned unique ID confirming successful insertion.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows
   method: POST
@@ -215,7 +215,7 @@
 - slug: stackby_update_row
   name: Update Row
   description: |
-    Update an existing row with new data in a specified table.
+    Update an existing row in a specified table with new data values. Returns the updated row confirming the changes were applied successfully.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows/{rowId}
   method: PUT
@@ -249,7 +249,7 @@
 - slug: stackby_list_views
   name: List Views
   description: |
-    List all views available for a specific table.
+    List all saved views available for a specific table. Returns view names, IDs, filter configurations, and display settings for each view to help organize data presentation.
   provider: stackby
   endpoint: /v1/databases/{databaseId}/tables/{tableId}/views
   method: GET

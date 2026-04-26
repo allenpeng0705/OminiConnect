@@ -16,8 +16,8 @@
 - slug: sendgrid_send_email
   name: Send Email
   description: |
-    Send a transactional email to one or more recipients.
-    Supports HTML content, attachments, and custom headers.
+    Send a transactional email to one or more recipients with text or HTML content, attachments, and custom headers.
+    Returns send confirmation with message ID for delivery tracking and status monitoring.
   provider: sendgrid
   endpoint: /mail/send
   method: POST
@@ -58,8 +58,8 @@
 - slug: sendgrid_list_contacts
   name: List Contacts
   description: |
-    Retrieve all contacts in your SendGrid marketing lists.
-    Returns paginated results with contact details.
+    Retrieve all contacts in your SendGrid marketing lists with pagination for efficient data retrieval.
+    Returns contact records including email addresses, names, and custom field values.
   provider: sendgrid
   endpoint: /marketing/contacts
   method: GET
@@ -84,8 +84,8 @@
 - slug: sendgrid_get_contact
   name: Get Contact
   description: |
-    Retrieve a specific contact by their email address.
-    Returns all stored contact information and metadata.
+    Retrieve a specific contact by their email address including all stored information and metadata.
+    Returns contact data for personalized outreach and relationship management.
   provider: sendgrid
   endpoint: /marketing/contacts/{email}
   method: GET
@@ -107,8 +107,8 @@
 - slug: sendgrid_add_contact
   name: Add Contact
   description: |
-    Add a new contact to your SendGrid marketing lists.
-    Include custom field data and list associations.
+    Add a new contact to your SendGrid marketing lists with email, name, and custom field data.
+    Returns confirmation of contact creation for list management and campaign targeting.
   provider: sendgrid
   endpoint: /marketing/contacts
   method: PUT
@@ -139,8 +139,8 @@
 - slug: sendgrid_list_lists
   name: List Contact Lists
   description: |
-    Retrieve all contact lists in your SendGrid account.
-    Lists are used to organize contacts for targeted campaigns.
+    Retrieve all contact lists in your SendGrid account with member counts and creation dates.
+    Returns list data for campaign targeting and audience segmentation.
   provider: sendgrid
   endpoint: /marketing/lists
   method: GET
@@ -165,8 +165,8 @@
 - slug: sendgrid_get_list
   name: Get Contact List
   description: |
-    Get details of a specific contact list including member count.
-    Use this to verify list existence before adding contacts.
+    Get details of a specific contact list including member count and metadata for verification.
+    Returns list data for campaign setup and contact management.
   provider: sendgrid
   endpoint: /marketing/lists/{list_id}
   method: GET
@@ -188,8 +188,8 @@
 - slug: sendgrid_add_contact_to_list
   name: Add Contact to List
   description: |
-    Add an existing contact to a contact list by their email.
-    The contact must already exist in your SendGrid account.
+    Add an existing contact to a contact list by their email address for campaign targeting.
+    Returns confirmation of list membership for audience management.
   provider: sendgrid
   endpoint: /marketing/lists/{list_id}/contacts
   method: POST
@@ -217,8 +217,8 @@
 - slug: sendgrid_list_templates
   name: List Email Templates
   description: |
-    Retrieve all email templates in your SendGrid account.
-    Templates can be dynamic templates with Handlebars syntax.
+    Retrieve all email templates in your SendGrid account including dynamic and raw template versions.
+    Returns template metadata for campaign creation and personalization setup.
   provider: sendgrid
   endpoint: /templates
   method: GET
@@ -240,8 +240,8 @@
 - slug: sendgrid_get_template
   name: Get Email Template
   description: |
-    Get a specific email template by ID including versions.
-    Returns template body and settings for rendering.
+    Get a specific email template by ID including all versions and rendering settings for content creation.
+    Returns template body and settings for campaign personalization.
   provider: sendgrid
   endpoint: /templates/{template_id}
   method: GET
@@ -263,8 +263,8 @@
 - slug: sendgrid_create_campaign
   name: Create Campaign
   description: |
-    Create a new marketing email campaign.
-    Set recipients, subject, content, and send settings.
+    Create a new marketing email campaign with specified recipients, subject line, and content settings.
+    Returns the created campaign with ID for scheduling and sending management.
   provider: sendgrid
   endpoint: /marketing/campaigns
   method: POST

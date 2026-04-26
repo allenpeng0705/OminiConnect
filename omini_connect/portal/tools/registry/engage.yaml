@@ -1,7 +1,7 @@
 - slug: engage_list_customers
   name: List Customers
   description: |
-    Retrieve a paginated list of all customers in the engagement platform.
+    Retrieve a paginated list of all customers in the engagement platform including names, emails, phone numbers, and creation dates.
   provider: engage
   endpoint: /customers
   method: GET
@@ -24,7 +24,7 @@
 - slug: engage_get_customer
   name: Get Customer
   description: |
-    Retrieve detailed information for a specific customer by ID.
+    Retrieve detailed information for a specific customer including contact details, engagement history, and associated conversations.
   provider: engage
   endpoint: /customers/{id}
   method: GET
@@ -45,7 +45,7 @@
 - slug: engage_create_customer
   name: Create Customer
   description: |
-    Create a new customer in the engagement platform.
+    Create a new customer in the engagement platform with specified name, email address, and phone number.
   provider: engage
   endpoint: /customers
   method: POST
@@ -73,7 +73,7 @@
 - slug: engage_list_conversations
   name: List Conversations
   description: |
-    Retrieve a list of all customer conversations.
+    Retrieve a list of all customer conversations with optional filtering by customer or status. Returns conversation IDs, subjects, and timestamps.
   provider: engage
   endpoint: /conversations
   method: GET
@@ -99,7 +99,7 @@
 - slug: engage_get_conversation
   name: Get Conversation
   description: |
-    Retrieve detailed information for a specific conversation by ID.
+    Retrieve detailed information for a specific conversation including all messages, participants, and current status.
   provider: engage
   endpoint: /conversations/{id}
   method: GET
@@ -120,7 +120,7 @@
 - slug: engage_create_conversation
   name: Create Conversation
   description: |
-    Create a new conversation for a customer.
+    Create a new conversation for a customer with a specified subject and initial message content.
   provider: engage
   endpoint: /conversations
   method: POST
@@ -149,7 +149,7 @@
 - slug: engage_list_campaigns
   name: List Campaigns
   description: |
-    Retrieve a list of all customer engagement campaigns.
+    Retrieve a list of all customer engagement campaigns with optional filtering by status. Returns campaign names, types, and performance metrics.
   provider: engage
   endpoint: /campaigns
   method: GET
@@ -172,7 +172,7 @@
 - slug: engage_get_campaign
   name: Get Campaign
   description: |
-    Retrieve detailed information for a specific campaign by ID.
+    Retrieve detailed information for a specific campaign including targeting criteria, content, and engagement statistics.
   provider: engage
   endpoint: /campaigns/{id}
   method: GET
@@ -193,7 +193,7 @@
 - slug: engage_send_email
   name: Send Email
   description: |
-    Send an email to a customer using a template.
+    Send an email to a customer using a specified template with custom subject and body content through the engagement platform.
   provider: engage
   endpoint: /emails/send
   method: POST
@@ -224,7 +224,7 @@
 - slug: engage_get_email_status
   name: Get Email Status
   description: |
-    Retrieve the delivery status of a sent email.
+    Retrieve the delivery status of a sent email including whether it was delivered, opened, or bounced back.
   provider: engage
   endpoint: /emails/{id}/status
   method: GET

@@ -17,7 +17,9 @@
 - slug: wautomations_list_campaigns
   name: List Campaigns
   description: |
-    List all marketing campaigns with status, stats, and targeting info.
+    List all marketing campaigns with status, stats, and targeting information.
+    Returns campaign names, IDs, status, and performance metrics for each campaign.
+    Use this to discover ongoing campaigns and track their effectiveness.
   provider: wautomations
   endpoint: /api/campaigns
   method: GET
@@ -44,6 +46,8 @@
   name: Get Campaign
   description: |
     Get detailed information about a campaign including stats and settings.
+    Returns the complete campaign configuration with targeting and performance data.
+    This provides full campaign details for analysis and optimization.
   provider: wautomations
   endpoint: /api/campaigns/{campaign_id}
   method: GET
@@ -67,6 +71,8 @@
   name: Create Campaign
   description: |
     Create a new marketing campaign with targeting and content settings.
+    Returns the created campaign with its unique ID and initial configuration.
+    This provisions a new email marketing campaign in Wautomations.
   provider: wautomations
   endpoint: /api/campaigns
   method: POST
@@ -103,6 +109,8 @@
   name: List Contacts
   description: |
     List all contacts with filtering and pagination support.
+    Returns contact names, emails, tags, and subscription status for each contact.
+    Use this to discover contacts and manage your audience.
   provider: wautomations
   endpoint: /api/contacts
   method: GET
@@ -130,7 +138,9 @@
 - slug: wautomations_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a contact including tags and activity.
+    Get detailed information about a contact including tags and activity history.
+    Returns the complete contact profile with all associated data.
+    This provides full contact data for personalization and tracking.
   provider: wautomations
   endpoint: /api/contacts/{contact_id}
   method: GET
@@ -153,6 +163,8 @@
   name: Add Contact
   description: |
     Add a new contact to the system with optional list assignment and tags.
+    Returns the created contact with its unique ID and confirmation.
+    This adds a new subscriber to your Wautomations audience.
   provider: wautomations
   endpoint: /api/contacts
   method: POST
@@ -188,7 +200,9 @@
 - slug: wautomations_list_workflows
   name: List Workflows
   description: |
-    List all automation workflows with status and trigger info.
+    List all automation workflows with status and trigger information.
+    Returns workflow names, IDs, status, and trigger configurations for each workflow.
+    Use this to discover available automations and manage marketing sequences.
   provider: wautomations
   endpoint: /api/workflows
   method: GET
@@ -215,6 +229,8 @@
   name: Get Workflow
   description: |
     Get detailed workflow information including steps and trigger conditions.
+    Returns the complete workflow configuration with all automation steps.
+    This provides full workflow data for understanding and modification.
   provider: wautomations
   endpoint: /api/workflows/{workflow_id}
   method: GET
@@ -237,7 +253,9 @@
 - slug: wautomations_trigger_workflow
   name: Trigger Workflow
   description: |
-    Trigger a workflow manually for a specific contact.
+    Trigger a workflow manually for a specific contact to start automation.
+    Returns confirmation of the triggered workflow and contact ID.
+    This starts the automation sequence immediately for the specified contact.
   provider: wautomations
   endpoint: /api/workflows/{workflow_id}/trigger
   method: POST
@@ -264,7 +282,9 @@
 - slug: wautomations_list_emails
   name: List Emails
   description: |
-    List all email templates with subject and status info.
+    List all email templates with subject and status information.
+    Returns template names, IDs, subjects, and usage statistics for each template.
+    Use this to discover available templates for campaign creation.
   provider: wautomations
   endpoint: /api/emails
   method: GET

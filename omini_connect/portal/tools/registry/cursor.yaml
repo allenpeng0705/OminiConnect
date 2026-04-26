@@ -18,7 +18,7 @@
 - slug: cursor_list_projects
   name: List Projects
   description: |
-    List all projects in Cursor workspace.
+    List all projects in the Cursor workspace, returning project IDs, names, descriptions, and creation dates.
   provider: cursor
   endpoint: /v0/projects
   method: GET
@@ -40,7 +40,7 @@
 - slug: cursor_get_project
   name: Get Project
   description: |
-    Get details of a specific project including settings and metadata.
+    Get detailed information for a specific Cursor project including its settings, metadata, and file structure.
   provider: cursor
   endpoint: /v0/projects/{project_id}
   method: GET
@@ -62,7 +62,7 @@
 - slug: cursor_list_files
   name: List Files
   description: |
-    List all files in a Cursor project.
+    List all files in a Cursor project, returning file IDs, paths, names, and modification timestamps.
   provider: cursor
   endpoint: /v0/files
   method: GET
@@ -88,7 +88,7 @@
 - slug: cursor_get_file
   name: Get File
   description: |
-    Get content of a specific file in Cursor.
+    Get the content of a specific file in Cursor, returning the file data and metadata.
   provider: cursor
   endpoint: /v0/files/{file_id}
   method: GET
@@ -110,7 +110,7 @@
 - slug: cursor_create_file
   name: Create File
   description: |
-    Create a new file in Cursor project.
+    Create a new file in a Cursor project at the specified path with the provided content.
   provider: cursor
   endpoint: /v0/files
   method: POST
@@ -140,7 +140,7 @@
 - slug: cursor_update_file
   name: Update File
   description: |
-    Update content of an existing file in Cursor.
+    Update the content of an existing file in Cursor, replacing the current data with new content.
   provider: cursor
   endpoint: /v0/files/{file_id}
   method: PUT
@@ -166,7 +166,7 @@
 - slug: cursor_delete_file
   name: Delete File
   description: |
-    Delete a file from Cursor project.
+    Delete a file from a Cursor project, removing it from the workspace permanently.
   provider: cursor
   endpoint: /v0/files/{file_id}
   method: DELETE
@@ -188,7 +188,7 @@
 - slug: cursor_list_changelists
   name: List Changelists
   description: |
-    List all changelists (code changes) in a project.
+    List all changelists (code changes) in a Cursor project, returning changelist IDs, names, descriptions, and status.
   provider: cursor
   endpoint: /v0/changelists
   method: GET
@@ -214,7 +214,7 @@
 - slug: cursor_create_changelist
   name: Create Changelist
   description: |
-    Create a new changelist for code changes.
+    Create a new changelist in a Cursor project to track and organize code changes with a specified name and description.
   provider: cursor
   endpoint: /v0/changelists
   method: POST
@@ -243,7 +243,7 @@
 - slug: cursor_get_me
   name: Get Current User
   description: |
-    Get information about the currently authenticated Cursor user.
+    Get information about the currently authenticated Cursor user, returning their profile details and workspace association.
   provider: cursor
   endpoint: /v0/me
   method: GET

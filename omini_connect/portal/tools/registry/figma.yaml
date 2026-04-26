@@ -17,7 +17,7 @@
 - slug: figma_list_files
   name: List Files
   description: |
-    List all files in a Figma project. Returns file names, keys, and thumbnails.
+    List all files in a Figma project with optional filtering by pagination. Returns file names, keys, thumbnail URLs, and last modified dates for each file.
   provider: figma
   endpoint: /projects/{project_id}/files
   method: GET
@@ -41,7 +41,7 @@
 - slug: figma_get_file
   name: Get File
   description: |
-    Get full details of a Figma file including pages, frames, and components.
+    Retrieve full details of a Figma file by its key including all pages, frames, components, styles, and metadata. Returns the complete document structure for in-depth analysis.
   provider: figma
   endpoint: /files/{file_key}
   method: GET
@@ -74,7 +74,7 @@
 - slug: figma_get_file_nodes
   name: Get File Nodes
   description: |
-    Get specific nodes from a Figma file by their IDs.
+    Retrieve specific nodes from a Figma file by their IDs with optional version control. Returns the node hierarchy, properties, and styling information for each requested node.
   provider: figma
   endpoint: /files/{file_key}/nodes
   method: GET
@@ -103,7 +103,7 @@
 - slug: figma_list_comments
   name: List Comments
   description: |
-    List all comments on a Figma file. Returns comment text, author, and timestamp.
+    List all comments on a Figma file with optional filtering by file key. Returns comment IDs, message text, author names, timestamps, and position coordinates for each comment.
   provider: figma
   endpoint: /files/{file_key}/comments
   method: GET
@@ -127,7 +127,7 @@
 - slug: figma_get_comment
   name: Get Comment
   description: |
-    Get details about a specific comment on a Figma file.
+    Retrieve detailed information about a specific Figma comment by its ID. Returns the comment message, author profile, timestamp, and position information.
   provider: figma
   endpoint: /comments/{comment_id}
   method: GET
@@ -149,7 +149,7 @@
 - slug: figma_post_comment
   name: Post Comment
   description: |
-    Post a comment on a Figma file. Include message text and optional position.
+    Post a new comment on a Figma file with message text and optional position coordinates. Returns the created comment with its unique ID, timestamp, and confirmation.
   provider: figma
   endpoint: /files/{file_key}/comments
   method: POST
@@ -179,7 +179,7 @@
 - slug: figma_list_components
   name: List Components
   description: |
-    List all components in a Figma team library. Returns component names, keys, and descriptions.
+    List all components in a Figma team library with pagination support. Returns component names, keys, descriptions, and thumbnail URLs for each component.
   provider: figma
   endpoint: /teams/{team_id}/components
   method: GET
@@ -210,7 +210,7 @@
 - slug: figma_get_component
   name: Get Component
   description: |
-    Get details about a specific Figma component including its properties and variants.
+    Retrieve detailed information about a specific Figma component by its key. Returns the component name, description, properties, variants, and associated component set details.
   provider: figma
   endpoint: /components/{key}
   method: GET
@@ -236,7 +236,7 @@
 - slug: figma_list_styles
   name: List Styles
   description: |
-    List all styles in a Figma team library. Returns style names, keys, and types.
+    List all styles in a Figma team library with pagination support. Returns style names, keys, types (color, typography, effects), and thumbnail previews for each style.
   provider: figma
   endpoint: /teams/{team_id}/styles
   method: GET
@@ -264,7 +264,7 @@
 - slug: figma_get_style
   name: Get Style
   description: |
-    Get details about a specific Figma style including its properties and metadata.
+    Retrieve detailed information about a specific Figma style by its key. Returns the style name, description, type, and all style property values including colors, fonts, and effects.
   provider: figma
   endpoint: /styles/{key}
   method: GET

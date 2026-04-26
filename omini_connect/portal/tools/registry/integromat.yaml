@@ -1,7 +1,7 @@
 - slug: integromat_list_scenarios
   name: List Scenarios
   description: |
-    Retrieve a list of all scenarios in a workspace.
+    List all automation scenarios in your Make (Integromat) workspace with pagination. Returns scenario names, IDs, statuses, and last execution times.
   provider: integromat
   endpoint: /scenarios
   method: GET
@@ -29,7 +29,7 @@
 - slug: integromat_get_scenario
   name: Get Scenario
   description: |
-    Retrieve details of a specific scenario by its ID.
+    Get a specific Make scenario by ID with full module and connection configuration. Returns scenario details including all modules, mappings, and scheduling settings.
   provider: integromat
   endpoint: /scenarios/{scenario_id}
   method: GET
@@ -51,7 +51,7 @@
 - slug: integromat_create_scenario
   name: Create Scenario
   description: |
-    Create a new scenario with specified modules and connections.
+    Create a new automation scenario in Make with specified modules and connections. Returns the created scenario ID and initial configuration.
   provider: integromat
   endpoint: /scenarios
   method: POST
@@ -80,7 +80,7 @@
 - slug: integromat_list_bundles
   name: List Bundles
   description: |
-    Retrieve a list of data bundles processed by a scenario.
+    List data bundles processed by a specific Make scenario with pagination. Returns bundle counts, operation types, and timestamps.
   provider: integromat
   endpoint: /scenarios/{scenario_id}/bundles
   method: GET
@@ -105,7 +105,7 @@
 - slug: integromat_get_bundle
   name: Get Bundle
   description: |
-    Retrieve details of a specific bundle by its ID.
+    Get a specific Make bundle by ID with full operation details. Returns bundle data, operation type, and processing status.
   provider: integromat
   endpoint: /bundles/{bundle_id}
   method: GET
@@ -127,7 +127,7 @@
 - slug: integromat_list_logs
   name: List Logs
   description: |
-    Retrieve execution logs for a scenario.
+    List execution logs for a Make scenario with optional level filtering. Returns log timestamps, levels, messages, and operation details.
   provider: integromat
   endpoint: /scenarios/{scenario_id}/logs
   method: GET
@@ -155,7 +155,7 @@
 - slug: integromat_get_log
   name: Get Log
   description: |
-    Retrieve details of a specific log entry by its ID.
+    Get a specific Make log entry by ID with full execution details. Returns log message, timestamp, module context, and error information.
   provider: integromat
   endpoint: /logs/{log_id}
   method: GET
@@ -177,7 +177,7 @@
 - slug: integromat_run_scenario
   name: Run Scenario
   description: |
-    Trigger a manual run of a scenario with optional input data.
+    Trigger a manual execution of a Make scenario with optional input data. Returns the activation ID and initial execution status.
   provider: integromat
   endpoint: /scenarios/{scenario_id}/run
   method: POST
@@ -202,7 +202,7 @@
 - slug: integromat_start_scenario
   name: Start Scenario
   description: |
-    Start a scenario to begin processing on a schedule.
+    Start a Make scenario to begin automated processing on its schedule. Returns the scenario status confirmation.
   provider: integromat
   endpoint: /scenarios/{scenario_id}/start
   method: POST
@@ -224,7 +224,7 @@
 - slug: integromat_stop_scenario
   name: Stop Scenario
   description: |
-    Stop a running scenario.
+    Stop a running Make scenario to halt automated processing. Returns the scenario status confirmation.
   provider: integromat
   endpoint: /scenarios/{scenario_id}/stop
   method: POST

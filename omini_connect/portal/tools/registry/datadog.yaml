@@ -17,7 +17,7 @@
 - slug: datadog_list_monitors
   name: List Monitors
   description: |
-    List all Datadog monitors with optional filtering by status, tags, or monitor type.
+    List all Datadog monitors, returning monitor IDs, names, status, and types with optional filtering by tags or status.
   provider: datadog
   endpoint: /api/v1/monitor
   method: GET
@@ -44,7 +44,7 @@
 - slug: datadog_get_monitor
   name: Get Monitor
   description: |
-    Get detailed information about a specific Datadog monitor.
+    Get detailed information for a specific Datadog monitor including its query, alert conditions, notifications, and current state.
   provider: datadog
   endpoint: /api/v1/monitor/{monitorId}
   method: GET
@@ -66,7 +66,7 @@
 - slug: datadog_create_monitor
   name: Create Monitor
   description: |
-    Create a new Datadog monitor. Define the metric query, alert conditions, notifications, and tags.
+    Create a new Datadog monitor with a specified metric query, alert conditions, notification settings, and tags.
   provider: datadog
   endpoint: /api/v1/monitor
   method: POST
@@ -106,7 +106,7 @@
 - slug: datadog_update_monitor
   name: Update Monitor
   description: |
-    Update an existing Datadog monitor. Modify the query, alert conditions, message, or tags.
+    Update an existing Datadog monitor, modifying its query, alert conditions, message, or tags as specified.
   provider: datadog
   endpoint: /api/v1/monitor/{monitorId}
   method: PUT
@@ -145,7 +145,7 @@
 - slug: datadog_delete_monitor
   name: Delete Monitor
   description: |
-    Delete a Datadog monitor. This is permanent.
+    Delete a Datadog monitor permanently, removing it from the account along with its alert history.
   provider: datadog
   endpoint: /api/v1/monitor/{monitorId}
   method: DELETE
@@ -167,7 +167,7 @@
 - slug: datadog_list_dashboards
   name: List Dashboards
   description: |
-    List all Datadog dashboards including timeboards and screenboards.
+    List all Datadog dashboards, returning dashboard IDs, names, types, and modification dates.
   provider: datadog
   endpoint: /api/v1/dashboard
   method: GET
@@ -188,7 +188,7 @@
 - slug: datadog_get_dashboard
   name: Get Dashboard
   description: |
-    Get detailed information about a specific Datadog dashboard including all widgets and layout.
+    Get detailed information for a specific Datadog dashboard including all widgets, layout configuration, and visualization settings.
   provider: datadog
   endpoint: /api/v1/dashboard/{dashboard_id}
   method: GET
@@ -210,7 +210,7 @@
 - slug: datadog_list_hosts
   name: List Hosts
   description: |
-    List all hosts reporting to Datadog with optional filtering by tags.
+    List all hosts reporting to Datadog, returning host IDs, names, tags, and agent status with optional tag filtering.
   provider: datadog
   endpoint: /api/v1/hosts
   method: GET
@@ -235,7 +235,7 @@
 - slug: datadog_get_host
   name: Get Host
   description: |
-    Get detailed information about a specific host including metrics, tags, and agent version.
+    Get detailed information for a specific Datadog host including its metrics, tags, agent version, and overall status.
   provider: datadog
   endpoint: /api/v1/hosts/{host_id}
   method: GET
@@ -257,7 +257,7 @@
 - slug: datadog_list_metrics
   name: List Metrics
   description: |
-    List all metrics available in your Datadog account with optional filtering by tag.
+    List all metrics available in your Datadog account, returning metric names, descriptions, and tags with optional tag filtering.
   provider: datadog
   endpoint: /api/v1/metrics
   method: GET

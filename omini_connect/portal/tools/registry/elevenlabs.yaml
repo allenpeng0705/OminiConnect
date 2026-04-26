@@ -18,7 +18,7 @@
 - slug: elevenlabs_get_user
   name: Get User
   description: |
-    Get information about the current authenticated user.
+    Retrieve the authenticated ElevenLabs user account information including subscription tier, credit balance, and API usage statistics.
   provider: elevenlabs
   endpoint: /v1/user
   method: GET
@@ -36,7 +36,7 @@
 - slug: elevenlabs_list_voices
   name: List Voices
   description: |
-    List all available voices in the user's library.
+    List all available AI voices in the ElevenLabs library with voice IDs, names, labels, and audio preview URLs for text-to-speech generation.
   provider: elevenlabs
   endpoint: /v1/voices
   method: GET
@@ -62,7 +62,7 @@
 - slug: elevenlabs_get_voice
   name: Get Voice
   description: |
-    Get details of a specific voice including settings and preview.
+    Retrieve detailed information about a specific ElevenLabs voice including settings, labels, supported languages, and audio samples.
   provider: elevenlabs
   endpoint: /v1/voices/{voice_id}
   method: GET
@@ -84,7 +84,7 @@
 - slug: elevenlabs_list_models
   name: List Models
   description: |
-    List all available text-to-speech models.
+    List all available ElevenLabs text-to-speech models with model IDs, names, capabilities, and supported languages for voice generation.
   provider: elevenlabs
   endpoint: /v1/models
   method: GET
@@ -102,7 +102,7 @@
 - slug: elevenlabs_get_model
   name: Get Model
   description: |
-    Get details of a specific model.
+    Retrieve detailed information about a specific ElevenLabs TTS model including pricing tier, latency characteristics, and available voice settings.
   provider: elevenlabs
   endpoint: /v1/models/{model_id}
   method: GET
@@ -124,7 +124,7 @@
 - slug: elevenlabs_text_to_speech
   name: Text to Speech
   description: |
-    Convert text to speech using a specific voice and model.
+    Convert text to speech audio using a specified ElevenLabs voice and model. Returns the generated audio file as a download URL or base64 data.
   provider: elevenlabs
   endpoint: /v1/text-to-speech/{voice_id}
   method: POST
@@ -157,7 +157,7 @@
 - slug: elevenlabs_list_history
   name: List History
   description: |
-    List all history entries for the authenticated user.
+    List all audio generation history entries for the ElevenLabs user with timestamps, voice IDs used, and generation parameters for each request.
   provider: elevenlabs
   endpoint: /v1/history
   method: GET
@@ -182,7 +182,7 @@
 - slug: elevenlabs_get_history_item
   name: Get History Item
   description: |
-    Get details of a specific history item including audio.
+    Retrieve detailed information about a specific ElevenLabs history entry including the generated audio, text input, voice settings used, and generation timestamp.
   provider: elevenlabs
   endpoint: /v1/history/{history_id}
   method: GET
@@ -203,7 +203,7 @@
 - slug: elevenlabs_delete_history
   name: Delete History
   description: |
-    Delete one or more history entries.
+    Delete one or more audio generation history entries from the ElevenLabs user account and receive confirmation of successful deletion.
   provider: elevenlabs
   endpoint: /v1/history/delete
   method: POST
@@ -226,7 +226,7 @@
 - slug: elevenlabs_list_institutions
   name: List Institutions
   description: |
-    List all institutions the user has access to.
+    List all institutions associated with the ElevenLabs user account including institution names, member counts, and subscription status.
   provider: elevenlabs
   endpoint: /v1/institutions
   method: GET

@@ -18,7 +18,7 @@
 - slug: google_cloud_storage_list_buckets
   name: List Buckets
   description: |
-    List all buckets in the project.
+    List all Cloud Storage buckets in a project including names, locations, and storage classes. Returns bucket metadata for inventory and access management.
   provider: google-cloud-storage
   endpoint: /storage/v1/b
   method: GET
@@ -41,7 +41,7 @@
 - slug: google_cloud_storage_get_bucket
   name: Get Bucket
   description: |
-    Get detailed information about a bucket.
+    Retrieve detailed information about a Cloud Storage bucket including location, versioning status, and lifecycle policies. Returns bucket configuration and storage statistics.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}
   method: GET
@@ -64,7 +64,7 @@
 - slug: google_cloud_storage_list_objects
   name: List Objects
   description: |
-    List objects in a bucket.
+    List all objects in a Cloud Storage bucket including names, sizes, and content types. Returns object metadata with support for prefix filtering.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/o
   method: GET
@@ -90,7 +90,7 @@
 - slug: google_cloud_storage_get_object
   name: Get Object
   description: |
-    Get detailed information about an object.
+    Retrieve detailed information about a Cloud Storage object including metadata, content type, and custom headers. Returns object properties and storage class information.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/o/{object}
   method: GET
@@ -117,7 +117,7 @@
 - slug: google_cloud_storage_insert_object
   name: Upload Object
   description: |
-    Upload an object to a bucket.
+    Upload a new object to a Cloud Storage bucket with specified content and name. Creates the object and returns the storage location and ETag for verification.
   provider: google-cloud-storage
   endpoint: /upload/storage/v1/b/{bucket}/o
   method: POST
@@ -147,7 +147,7 @@
 - slug: google_cloud_storage_copy_object
   name: Copy Object
   description: |
-    Copy an object to a new location.
+    Copy an existing object to a new location within the same or different bucket. Creates a new object with identical content and returns the destination handle.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destBucket}/o/{destObject}
   method: POST
@@ -182,7 +182,7 @@
 - slug: google_cloud_storage_delete_object
   name: Delete Object
   description: |
-    Delete an object from a bucket.
+    Delete an object from a Cloud Storage bucket removing it from the filesystem. Returns confirmation of deletion with the object name.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/o/{object}
   method: DELETE
@@ -209,7 +209,7 @@
 - slug: google_cloud_storage_get_acl
   name: Get ACL
   description: |
-    Get ACL for an object.
+    Retrieve access control list for a Cloud Storage object including owners, readers, and writers. Returns permission entries with entity types and roles.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/o/{object}/acl
   method: GET
@@ -236,7 +236,7 @@
 - slug: google_cloud_storage_insert_acl
   name: Add ACL Entry
   description: |
-    Add an ACL entry for an object.
+    Add a new access control entry to an object specifying the entity and role. Creates the ACL entry and returns the updated permission set.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/o/{object}/acl
   method: POST
@@ -271,7 +271,7 @@
 - slug: google_cloud_storage_list_default_acl
   name: List Default ACL
   description: |
-    List default ACL for a bucket.
+    List default access control settings for a bucket including predefined ACL configurations. Returns default permission settings for new objects.
   provider: google-cloud-storage
   endpoint: /storage/v1/b/{bucket}/defaultObjectAcl
   method: GET

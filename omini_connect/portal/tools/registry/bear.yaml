@@ -17,7 +17,7 @@
 - slug: bear_list_notes
   name: List Notes
   description: |
-    List notes with optional filters for tag, search term, or archive status.
+    List notes with optional filtering by tag, search term, or archive status. Returns note IDs, titles, tags, and modification dates for each note.
   provider: bear
   endpoint: /notes
   method: GET
@@ -49,7 +49,7 @@
 - slug: bear_get_note
   name: Get Note
   description: |
-    Get full content and metadata of a specific Bear note.
+    Retrieve full content and metadata of a specific Bear note. Returns the note title, content, tags, color, and creation/modification dates.
   provider: bear
   endpoint: /notes/{note_id}
   method: GET
@@ -71,7 +71,7 @@
 - slug: bear_create_note
   name: Create Note
   description: |
-    Create a new note with title, content, and tags.
+    Create a new note with title, content, and tags. Returns the created note with its unique identifier.
   provider: bear
   endpoint: /notes
   method: POST
@@ -105,7 +105,7 @@
 - slug: bear_update_note
   name: Update Note
   description: |
-    Update an existing Bear note's title, content, or tags.
+    Update an existing Bear note's title, content, tags, or color. Returns the updated note confirming changes.
   provider: bear
   endpoint: /notes/{note_id}
   method: PUT
@@ -141,7 +141,7 @@
 - slug: bear_delete_note
   name: Delete Note
   description: |
-    Delete a Bear note. This moves it to archive first, then permanent trash after 30 days.
+    Delete a Bear note by moving it to archive and then permanent trash after 30 days. Returns confirmation of the deletion.
   provider: bear
   endpoint: /notes/{note_id}
   method: DELETE
@@ -163,7 +163,7 @@
 - slug: bear_list_tags
   name: List Tags
   description: |
-    List all tags in the user's Bear account.
+    List all tags in the user's Bear account. Returns tag names and note counts for each tag.
   provider: bear
   endpoint: /tags
   method: GET
@@ -181,7 +181,7 @@
 - slug: bear_get_tag
   name: Get Tag
   description: |
-    Get details about a specific tag including note count.
+    Retrieve details about a specific tag including its name and associated note count. Returns the complete tag information.
   provider: bear
   endpoint: /tags/{tag_id}
   method: GET
@@ -203,7 +203,7 @@
 - slug: bear_search_notes
   name: Search Notes
   description: |
-    Search notes by keyword across title and content.
+    Search notes by keyword across title and content with optional tag filtering. Returns matching note IDs, titles, and snippets.
   provider: bear
   endpoint: /notes/search
   method: GET
@@ -232,7 +232,7 @@
 - slug: bear_list_resources
   name: List Resources
   description: |
-    List all resources (images, files) in a note.
+    List all resources such as images and files attached to a note. Returns resource IDs, types, and file names for each resource.
   provider: bear
   endpoint: /notes/{note_id}/resources
   method: GET
@@ -254,7 +254,7 @@
 - slug: bear_get_resource
   name: Get Resource
   description: |
-    Get details about a specific resource (image, file attachment).
+    Retrieve details about a specific resource including its type, file name, and download URL. Returns the complete resource metadata.
   provider: bear
   endpoint: /resources/{resource_id}
   method: GET

@@ -18,7 +18,7 @@
 - slug: clerk_list_users
   name: List Users
   description: |
-    List all users in the Clerk instance.
+    List all users in the Clerk instance with pagination, returning user IDs, email addresses, and creation timestamps.
   provider: clerk
   endpoint: /v1/users
   method: GET
@@ -43,7 +43,7 @@
 - slug: clerk_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve details of a specific Clerk user including email addresses, phone numbers, and external IDs.
   provider: clerk
   endpoint: /v1/users/{id}
   method: GET
@@ -64,7 +64,7 @@
 - slug: clerk_create_user
   name: Create User
   description: |
-    Create a new user.
+    Create a new user in Clerk with email addresses, phone numbers, and optional password, returning the user ID.
   provider: clerk
   endpoint: /v1/users
   method: POST
@@ -101,7 +101,7 @@
 - slug: clerk_update_user
   name: Update User
   description: |
-    Update an existing user.
+    Update an existing Clerk user's first name, last name, or other attributes.
   provider: clerk
   endpoint: /v1/users/{id}
   method: PATCH
@@ -128,7 +128,7 @@
 - slug: clerk_delete_user
   name: Delete User
   description: |
-    Delete a user.
+    Delete a user from Clerk, removing their account, sessions, and associated metadata.
   provider: clerk
   endpoint: /v1/users/{id}
   method: DELETE
@@ -149,7 +149,7 @@
 - slug: clerk_list_organizations
   name: List Organizations
   description: |
-    List all organizations.
+    List all organizations in Clerk with their names, slugs, and membership counts.
   provider: clerk
   endpoint: /v1/organizations
   method: GET
@@ -170,7 +170,7 @@
 - slug: clerk_get_organization
   name: Get Organization
   description: |
-    Get details of a specific organization.
+    Retrieve details of a specific Clerk organization including members, roles, and settings.
   provider: clerk
   endpoint: /v1/organizations/{id}
   method: GET
@@ -191,7 +191,7 @@
 - slug: clerk_list_sessions
   name: List Sessions
   description: |
-    List all sessions.
+    List all active sessions in Clerk with optional filtering by user ID, returning session IDs and status.
   provider: clerk
   endpoint: /v1/sessions
   method: GET
@@ -211,7 +211,7 @@
 - slug: clerk_get_session
   name: Get Session
   description: |
-    Get details of a specific session.
+    Retrieve details of a specific Clerk session including status, user ID, and expiration time.
   provider: clerk
   endpoint: /v1/sessions/{id}
   method: GET
@@ -232,7 +232,7 @@
 - slug: clerk_create_organization
   name: Create Organization
   description: |
-    Create a new organization.
+    Create a new organization in Clerk with a name and optional creator assignment, returning the organization ID.
   provider: clerk
   endpoint: /v1/organizations
   method: POST

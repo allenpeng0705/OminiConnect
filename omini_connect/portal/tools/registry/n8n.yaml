@@ -1,7 +1,9 @@
 - slug: n8n_list_workflows
   name: List Workflows
   description: |
-    Retrieve a list of all workflows.
+    Retrieve a list of all workflows in the n8n instance.
+    Returns workflow names, IDs, active status, and last execution date for each workflow.
+    Use this to discover available automations and check their current state.
   provider: n8n
   endpoint: /workflows
   method: GET
@@ -26,6 +28,8 @@
   name: Get Workflow
   description: |
     Retrieve details of a specific workflow by its ID.
+    Returns the complete workflow configuration including nodes, connections, and settings.
+    This provides full automation setup data for troubleshooting or cloning.
   provider: n8n
   endpoint: /workflows/{workflow_id}
   method: GET
@@ -48,6 +52,8 @@
   name: Create Workflow
   description: |
     Create a new workflow with specified nodes and connections.
+    Returns the created workflow with its unique ID and initial configuration.
+    This provisions a new automation workflow in the n8n instance.
   provider: n8n
   endpoint: /workflows
   method: POST
@@ -76,6 +82,8 @@
   name: Update Workflow
   description: |
     Update an existing workflow's configuration.
+    Modifies the nodes, connections, or settings of an existing workflow.
+    This changes the automation behavior while preserving the workflow's ID.
   provider: n8n
   endpoint: /workflows/{workflow_id}
   method: PUT
@@ -106,7 +114,9 @@
 - slug: n8n_delete_workflow
   name: Delete Workflow
   description: |
-    Delete a workflow by its ID.
+    Delete a workflow by its ID from the n8n instance.
+    Permanently removes the workflow and all its execution history.
+    This cannot be undone - the workflow must be recreated if needed.
   provider: n8n
   endpoint: /workflows/{workflow_id}
   method: DELETE
@@ -129,6 +139,8 @@
   name: List Executions
   description: |
     Retrieve a list of executions, optionally filtered by workflow.
+    Returns execution timestamps, status, and error details for each run.
+    Use this to monitor automation activity and troubleshoot failed executions.
   provider: n8n
   endpoint: /executions
   method: GET
@@ -156,6 +168,8 @@
   name: Get Execution
   description: |
     Retrieve details of a specific execution by its ID.
+    Returns the complete execution data including all node inputs and outputs.
+    This provides detailed debugging information for a particular automation run.
   provider: n8n
   endpoint: /executions/{execution_id}
   method: GET
@@ -178,6 +192,8 @@
   name: Run Workflow
   description: |
     Trigger a manual run of a workflow with optional input data.
+    Returns the execution ID and initial status of the triggered run.
+    This starts the automation immediately with provided data rather than waiting for triggers.
   provider: n8n
   endpoint: /workflows/{workflow_id}/run
   method: POST
@@ -206,6 +222,8 @@
   name: Activate Workflow
   description: |
     Activate a workflow to enable scheduled and trigger-based runs.
+    Returns the updated workflow status showing it is now active.
+    This enables the automation to run automatically when trigger events occur.
   provider: n8n
   endpoint: /workflows/{workflow_id}/activate
   method: POST
@@ -228,6 +246,8 @@
   name: Deactivate Workflow
   description: |
     Deactivate a workflow to disable scheduled and trigger-based runs.
+    Returns the updated workflow status showing it is now inactive.
+    This pauses the automation and prevents it from running automatically.
   provider: n8n
   endpoint: /workflows/{workflow_id}/deactivate
   method: POST

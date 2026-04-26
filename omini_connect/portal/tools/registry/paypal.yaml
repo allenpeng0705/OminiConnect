@@ -17,7 +17,7 @@
 - slug: paypal_list_orders
   name: List Orders
   description: |
-    List orders from PayPal. Returns order details with status, amounts, and payer information.
+    Retrieve a paginated list of checkout orders including status, amounts, purchase units, and payer information.
   provider: paypal
   endpoint: /v2/checkout/orders
   method: GET
@@ -51,7 +51,7 @@
 - slug: paypal_get_order
   name: Get Order
   description: |
-    Get details of a specific PayPal order including status, purchase units, and payer info.
+    Retrieve full details of a specific checkout order including status, purchase units, payer info, and shipping address.
   provider: paypal
   endpoint: /v2/checkout/orders/{id}
   method: GET
@@ -74,7 +74,7 @@
 - slug: paypal_create_order
   name: Create Order
   description: |
-    Create a new PayPal order with amount and intent (CAPTURE or AUTHORIZE). Returns order ID for checkout.
+    Create a new PayPal checkout order with purchase units, amount, and intent (CAPTURE or AUTHORIZE). Returns the order ID for buyer approval.
   provider: paypal
   endpoint: /v2/checkout/orders
   method: POST
@@ -105,7 +105,7 @@
 - slug: paypal_capture_order
   name: Capture Order
   description: |
-    Capture payment for an order that was authorized. Completes the payment flow after buyer approval.
+    Capture payment for an authorized PayPal order after buyer approval. Completes the payment and returns capture details.
   provider: paypal
   endpoint: /v2/checkout/orders/{id}/capture
   method: POST
@@ -131,7 +131,7 @@
 - slug: paypal_list_payments
   name: List Payments
   description: |
-    List authorized payments (not yet captured) for the PayPal account.
+    Retrieve authorized payments that have not yet been captured, including status, amount, and expiration details.
   provider: paypal
   endpoint: /v2/payments/authorizations
   method: GET
@@ -159,7 +159,7 @@
 - slug: paypal_get_payment
   name: Get Payment
   description: |
-    Get details of a specific authorized payment including status, amount, and payer information.
+    Retrieve details of a specific authorized payment including status, amount, payer information, and expiration.
   provider: paypal
   endpoint: /v2/payments/authorizations/{id}
   method: GET
@@ -182,7 +182,7 @@
 - slug: paypal_list_subscriptions
   name: List Subscriptions
   description: |
-    List PayPal subscriptions. Returns subscription details with status, plan, and billing info.
+    Retrieve all PayPal subscriptions including status, plan details, billing info, and next billing date.
   provider: paypal
   endpoint: /v1/billing/subscriptions
   method: GET
@@ -217,7 +217,7 @@
 - slug: paypal_get_subscription
   name: Get Subscription
   description: |
-    Get details of a specific subscription including plan, status, billing cycles, and next billing date.
+    Retrieve full details of a specific subscription including plan, status, billing cycles, and next billing date.
   provider: paypal
   endpoint: /v1/billing/subscriptions/{id}
   method: GET
@@ -240,7 +240,7 @@
 - slug: paypal_create_subscription
   name: Create Subscription
   description: |
-    Create a new PayPal subscription with plan ID and subscriber info. Triggers billing agreement.
+    Create a new PayPal subscription with plan ID, subscriber info, and billing agreement. Triggers the billing cycle.
   provider: paypal
   endpoint: /v1/billing/subscriptions
   method: POST
@@ -275,7 +275,7 @@
 - slug: paypal_list_invoices
   name: List Invoices
   description: |
-    List invoices from PayPal. Returns invoice details with amounts, status, and payment terms.
+    Retrieve all PayPal invoices including amounts, status, payment terms, and due dates.
   provider: paypal
   endpoint: /v2/invoicing/invoices
   method: GET

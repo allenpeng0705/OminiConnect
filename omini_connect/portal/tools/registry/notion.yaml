@@ -17,8 +17,7 @@
 - slug: notion_list_pages
   name: List Pages
   description: |
-    List all pages accessible to the authenticated user.
-    Returns a paginated list of pages from the user's workspace.
+    List all pages in the user's Notion workspace with pagination. Returns page IDs, titles, icons, covers, and timestamps for each page.
   provider: notion
   endpoint: /v1/search
   method: POST
@@ -46,7 +45,7 @@
 - slug: notion_get_page
   name: Get Page
   description: |
-    Retrieve a page by its ID. Returns page properties, content blocks, and metadata.
+    Get detailed information about a specific Notion page by its ID. Returns the page title, properties, content blocks, and metadata including timestamps.
   provider: notion
   endpoint: /v1/pages/{page_id}
   method: GET
@@ -68,8 +67,7 @@
 - slug: notion_create_page
   name: Create Page
   description: |
-    Create a new page as a child of a parent page or inside a database.
-    Include properties and initial content blocks.
+    Create a new page in Notion as a child of a parent page or inside a database. Specify the parent, properties, and initial content blocks. Returns the created page with its ID.
   provider: notion
   endpoint: /v1/pages
   method: POST
@@ -101,7 +99,7 @@
 - slug: notion_list_databases
   name: List Databases
   description: |
-    List all databases accessible to the authenticated user in their workspace.
+    List all databases in the user's Notion workspace with pagination. Returns database IDs, titles, descriptions, and property schemas for each database.
   provider: notion
   endpoint: /v1/search
   method: POST
@@ -129,7 +127,7 @@
 - slug: notion_get_database
   name: Get Database
   description: |
-    Retrieve a database by its ID. Returns database title and property schema.
+    Get detailed information about a specific Notion database by its ID. Returns the database title, property schema (name and types), and sample rows.
   provider: notion
   endpoint: /v1/databases/{database_id}
   method: GET
@@ -151,7 +149,7 @@
 - slug: notion_create_database
   name: Create Database
   description: |
-    Create a new database as a child of a parent page. Define schema with property types.
+    Create a new database in Notion as a child of a parent page. Define the database title and property schema with name and type for each field. Returns the created database with its ID.
   provider: notion
   endpoint: /v1/databases
   method: POST
@@ -181,7 +179,7 @@
 - slug: notion_list_blocks
   name: List Blocks
   description: |
-    List all blocks (content elements) in a page. Returns block hierarchy with children nested.
+    List all content blocks in a Notion page with pagination. Returns block IDs, types, content, and nested children for each block.
   provider: notion
   endpoint: /v1/blocks/{block_id}/children
   method: GET
@@ -210,7 +208,7 @@
 - slug: notion_get_block
   name: Get Block
   description: |
-    Retrieve a specific block by its ID including content and children.
+    Get detailed information about a specific Notion block by its ID. Returns the block type, content, and list of child block IDs if applicable.
   provider: notion
   endpoint: /v1/blocks/{block_id}
   method: GET
@@ -232,7 +230,7 @@
 - slug: notion_get_user
   name: Get User
   description: |
-    Retrieve a user by their ID. Returns user profile and bot info if applicable.
+    Get detailed information about a specific Notion user by their ID. Returns the user's name, email, avatar URL, and type (person or bot).
   provider: notion
   endpoint: /v1/users/{user_id}
   method: GET
@@ -254,7 +252,7 @@
 - slug: notion_search
   name: Search
   description: |
-    Search pages and databases by title. Filter by object type and sort results.
+    Search all pages and databases in the user's Notion workspace by title. Filter by object type (page or database) and sort results by relevance or timestamp.
   provider: notion
   endpoint: /v1/search
   method: POST

@@ -18,7 +18,7 @@
 - slug: google_contacts_list_connections
   name: List Contacts
   description: |
-    List contacts from Google Contacts.
+    List all contacts from the authenticated user's Google contacts including names, email addresses, and phone numbers. Returns paginated contact list with field filtering support.
   provider: google-contacts
   endpoint: /v1/people/me/connections
   method: GET
@@ -44,7 +44,7 @@
 - slug: google_contacts_get_person
   name: Get Contact
   description: |
-    Get detailed information about a contact.
+    Retrieve detailed information about a specific contact including all email addresses, phone numbers, and physical addresses. Returns the complete contact profile with organizational data.
   provider: google-contacts
   endpoint: /v1/people/{resourceName}
   method: GET
@@ -66,7 +66,7 @@
 - slug: google_contacts_create_contact
   name: Create Contact
   description: |
-    Create a new contact.
+    Create a new contact in Google Contacts with name and contact information fields. Returns the created contact with its unique resource identifier.
   provider: google-contacts
   endpoint: /v1/people
   method: POST
@@ -97,7 +97,7 @@
 - slug: google_contacts_update_contact
   name: Update Contact
   description: |
-    Update an existing contact.
+    Update an existing contact's information including name, email, phone, or address fields. Modifies the contact record and returns the updated profile.
   provider: google-contacts
   endpoint: /v1/people/{resourceName}
   method: PATCH
@@ -125,7 +125,7 @@
 - slug: google_contacts_delete_contact
   name: Delete Contact
   description: |
-    Delete a contact.
+    Delete a contact from Google Contacts permanently removing it from the user's address book. Returns confirmation of deletion with the contact name.
   provider: google-contacts
   endpoint: /v1/people/{resourceName}
   method: DELETE
@@ -147,7 +147,7 @@
 - slug: google_contacts_list_contact_groups
   name: List Contact Groups
   description: |
-    List contact groups.
+    List all contact groups in the user's Google Contacts including group names and member counts. Returns group metadata for organizing and managing contacts.
   provider: google-contacts
   endpoint: /v1/contactGroups
   method: GET
@@ -164,7 +164,7 @@
 - slug: google_contacts_get_contact_group
   name: Get Contact Group
   description: |
-    Get a contact group by ID.
+    Retrieve detailed information about a specific contact group including members and group type. Returns the complete group configuration and member list.
   provider: google-contacts
   endpoint: /v1/contactGroups/{resourceName}
   method: GET
@@ -186,7 +186,7 @@
 - slug: google_contacts_search_contacts
   name: Search Contacts
   description: |
-    Search contacts by query.
+    Search contacts by name, email, or other fields with configurable result limits. Returns matching contacts ranked by relevance with full contact details.
   provider: google-contacts
   endpoint: /v1/people:searchContacts
   method: POST
@@ -212,7 +212,7 @@
 - slug: google_contacts_batch_get
   name: Batch Get Contacts
   description: |
-    Get multiple contacts by resource names.
+    Retrieve multiple contacts by their resource names in a single API request for efficient bulk operations. Returns all requested contact profiles with complete field data.
   provider: google-contacts
   endpoint: /v1/people:batchGet
   method: GET
@@ -234,7 +234,7 @@
 - slug: google_contacts_list_other_contacts
   name: List Other Contacts
   description: |
-    List contacts outside user's direct contacts.
+    List contacts outside the user's direct connections including previously interacted contacts and shared contacts. Returns external contact metadata for outreach workflows.
   provider: google-contacts
   endpoint: /v1/people/me/otherContacts
   method: GET

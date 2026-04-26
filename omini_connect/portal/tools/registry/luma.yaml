@@ -1,7 +1,7 @@
 - slug: luma_list_events
   name: List Events
   description: |
-    Retrieve a list of all events organized by the authenticated account.
+    List all events organized by the authenticated account with optional filtering by status. Returns event names, dates, locations, and ticket availability for each event.
   provider: luma
   endpoint: /v1/events
   method: GET
@@ -27,7 +27,7 @@
 - slug: luma_get_event
   name: Get Event
   description: |
-    Retrieve detailed information about a specific event by its ID or slug.
+    Retrieve detailed information for a specific event by its ID or slug. Returns the event name, description, dates, location, capacity, and ticket configuration.
   provider: luma
   endpoint: /v1/events/{event_id_or_slug}
   method: GET
@@ -48,7 +48,7 @@
 - slug: luma_create_event
   name: Create Event
   description: |
-    Create a new event with specified details including timing, location, and description.
+    Create a new event with specified timing, location, and description. Returns the created event with its unique identifier and URL slug.
   provider: luma
   endpoint: /v1/events
   method: POST
@@ -89,7 +89,7 @@
 - slug: luma_update_event
   name: Update Event
   description: |
-    Update an existing event's details including timing, location, and description.
+    Update an existing event's details including timing, location, description, or status. Returns the updated event configuration confirming changes.
   provider: luma
   endpoint: /v1/events/{event_id}
   method: PUT
@@ -131,7 +131,7 @@
 - slug: luma_list_tickets
   name: List Tickets
   description: |
-    Retrieve all ticket types available for a specific event.
+    List all ticket types available for a specific event. Returns ticket names, prices, availability, and access level for each ticket type.
   provider: luma
   endpoint: /v1/events/{event_id}/tickets
   method: GET
@@ -152,7 +152,7 @@
 - slug: luma_get_ticket
   name: Get Ticket
   description: |
-    Retrieve detailed information about a specific ticket type by ID.
+    Retrieve detailed information for a specific ticket type by its unique identifier. Returns the ticket name, price, quantity available, and access level configuration.
   provider: luma
   endpoint: /v1/tickets/{ticket_id}
   method: GET
@@ -173,7 +173,7 @@
 - slug: luma_list_orders
   name: List Orders
   description: |
-    Retrieve all orders (ticket purchases) for a specific event.
+    List all ticket purchase orders for a specific event with optional filtering by status. Returns order IDs, purchaser names, ticket quantities, and payment status.
   provider: luma
   endpoint: /v1/events/{event_id}/orders
   method: GET
@@ -197,7 +197,7 @@
 - slug: luma_get_order
   name: Get Order
   description: |
-    Retrieve detailed information about a specific order including items and payment status.
+    Retrieve detailed information for a specific order by its unique identifier. Returns the order items, purchaser details, quantities, and payment status.
   provider: luma
   endpoint: /v1/orders/{order_id}
   method: GET
@@ -218,7 +218,7 @@
 - slug: luma_list_attendees
   name: List Attendees
   description: |
-    Retrieve all attendees for a specific event with their registration details.
+    List all attendees for a specific event with optional filtering by status. Returns attendee names, email addresses, ticket types, and check-in status.
   provider: luma
   endpoint: /v1/events/{event_id}/attendees
   method: GET
@@ -242,7 +242,7 @@
 - slug: luma_check_in_attendee
   name: Check In Attendee
   description: |
-    Mark an attendee as checked in to an event using their ticket or registration ID.
+    Mark an attendee as checked in to an event using their ticket or registration ID. Returns the updated attendee status confirming check-in.
   provider: luma
   endpoint: /v1/attendees/{attendee_id}/check_in
   method: POST

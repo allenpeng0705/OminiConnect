@@ -17,8 +17,7 @@
 - slug: github_list_repos
   name: List Repositories
   description: |
-    List repositories for the authenticated user.
-    Returns a paginated list of public and private repositories the authenticated user has access to.
+    List all GitHub repositories for the authenticated user. Returns repository names, IDs, descriptions, visibility levels, and stats (stars, forks, open issues) for each repository.
   provider: github
   endpoint: /user/repos
   method: GET
@@ -52,7 +51,7 @@
 - slug: github_get_repo
   name: Get Repository
   description: |
-    Get details of a specific repository including description, visibility, default branch, and stats.
+    Get detailed information about a specific GitHub repository by owner and name. Returns the repository name, description, visibility, default branch, and stats including language info and CI/CD status.
   provider: github
   endpoint: /repos/{owner}/{repo}
   method: GET
@@ -78,7 +77,7 @@
 - slug: github_create_repo
   name: Create Repository
   description: |
-    Create a new repository under the authenticated user's account or an organization.
+    Create a new repository under the authenticated user's account or an organization. Specify the name, description, and visibility setting. Returns the created repository with its URL.
   provider: github
   endpoint: /user/repos
   method: POST
@@ -114,7 +113,7 @@
 - slug: github_list_issues
   name: List Issues
   description: |
-    List issues in a repository. Filter by state (open/closed), labels, or assignees.
+    List all issues in a GitHub repository. Returns issue numbers, titles, states, labels, assignees, and creation timestamps for each issue. Filter by state (open/closed), labels, or assignees.
   provider: github
   endpoint: /repos/{owner}/{repo}/issues
   method: GET
@@ -161,7 +160,7 @@
 - slug: github_get_issue
   name: Get Issue
   description: |
-    Get details of a specific issue including title, body, labels, assignees, and state.
+    Get detailed information about a specific GitHub issue by owner, repo, and issue number. Returns the issue title, body, state, labels, assignees, comments count, and timestamps.
   provider: github
   endpoint: /repos/{owner}/{repo}/issues/{issue_number}
   method: GET
@@ -191,8 +190,7 @@
 - slug: github_create_issue
   name: Create Issue
   description: |
-    Create a new issue in a repository. Include a clear title and optional body/description.
-    Optionally assign labels and assignees.
+    Create a new issue in a GitHub repository with title, optional body description, labels, and assignees. Returns the created issue with its number and URL.
   provider: github
   endpoint: /repos/{owner}/{repo}/issues
   method: POST
@@ -235,8 +233,7 @@
 - slug: github_list_pull_requests
   name: List Pull Requests
   description: |
-    List pull requests in a repository. Filter by state (open/closed/merged), author, or label.
-    Use for code review and merge tracking.
+    List all pull requests in a GitHub repository. Returns PR numbers, titles, states, source/target branches, authors, and timestamps for each PR. Filter by state (open/closed/merged), author, or label.
   provider: github
   endpoint: /repos/{owner}/{repo}/pulls
   method: GET
@@ -283,7 +280,7 @@
 - slug: github_get_pull_request
   name: Get Pull Request
   description: |
-    Get details of a specific pull request: title, body, state, reviews, and merge status.
+    Get detailed information about a specific GitHub pull request by owner, repo, and PR number. Returns the PR title, description, state, reviewers, changed files count, and merge status.
   provider: github
   endpoint: /repos/{owner}/{repo}/pulls/{pull_number}
   method: GET
@@ -313,7 +310,7 @@
 - slug: github_list_branches
   name: List Branches
   description: |
-    List all branches in a repository including protected branch info.
+    List all branches in a GitHub repository. Returns branch names, commit SHAs, protected status, and last commit dates for each branch.
   provider: github
   endpoint: /repos/{owner}/{repo}/branches
   method: GET
@@ -347,7 +344,7 @@
 - slug: github_get_branch
   name: Get Branch
   description: |
-    Get details of a specific branch including the commit SHA, protected status, and branch name.
+    Get detailed information about a specific GitHub branch by owner, repo, and branch name. Returns the branch name, commit SHA, protected status, and commit author details.
   provider: github
   endpoint: /repos/{owner}/{repo}/branches/{branch}
   method: GET

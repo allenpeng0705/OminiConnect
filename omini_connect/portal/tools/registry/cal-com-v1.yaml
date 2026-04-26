@@ -18,7 +18,8 @@
 - slug: cal_com_v1_list_event_types
   name: List Event Types
   description: |
-    List all event types available.
+    List all event types available and return event type IDs, names, durations, and descriptions.
+    Use this to discover booking options for scheduling appointments.
   provider: cal-com-v1
   endpoint: /event-types
   method: GET
@@ -38,7 +39,8 @@
 - slug: cal_com_v1_get_event_type
   name: Get Event Type
   description: |
-    Get details of a specific event type.
+    Get details of a specific event type including duration, description, and scheduling settings.
+    Returns the complete event type configuration for booking setup.
   provider: cal-com-v1
   endpoint: /event-types/{id}
   method: GET
@@ -59,7 +61,8 @@
 - slug: cal_com_v1_list_bookings
   name: List Bookings
   description: |
-    List all bookings.
+    List all bookings and return booking IDs, times, event types, and attendee information.
+    Filter by status to find upcoming, past, or cancelled bookings.
   provider: cal-com-v1
   endpoint: /bookings
   method: GET
@@ -84,7 +87,8 @@
 - slug: cal_com_v1_get_booking
   name: Get Booking
   description: |
-    Get details of a specific booking.
+    Get details of a specific booking including event type, time, attendees, and status.
+    Returns the complete booking data for scheduling management.
   provider: cal-com-v1
   endpoint: /bookings/{id}
   method: GET
@@ -105,7 +109,8 @@
 - slug: cal_com_v1_create_booking
   name: Create Booking
   description: |
-    Create a new booking.
+    Create a new booking with event type, start/end times, and attendee name and email.
+    Returns the created booking ID for confirmation and calendar integration.
   provider: cal-com-v1
   endpoint: /bookings
   method: POST
@@ -141,7 +146,8 @@
 - slug: cal_com_v1_cancel_booking
   name: Cancel Booking
   description: |
-    Cancel a booking.
+    Cancel a booking by ID to remove it from the schedule.
+    Returns confirmation of cancellation for scheduling updates.
   provider: cal-com-v1
   endpoint: /bookings/{id}
   method: DELETE
@@ -162,7 +168,8 @@
 - slug: cal_com_v1_get_current_user
   name: Get Current User
   description: |
-    Get the currently authenticated user.
+    Get the currently authenticated user profile including name, email, and scheduling availability.
+    Returns the complete user profile for personalization and booking management.
   provider: cal-com-v1
   endpoint: /me
   method: GET
@@ -179,7 +186,8 @@
 - slug: cal_com_v1_list_available_users
   name: List Available Users
   description: |
-    List users available for booking.
+    List users available for booking and return user names, emails, and scheduling availability.
+    Use this to find team members for appointment scheduling.
   provider: cal-com-v1
   endpoint: /users
   method: GET
@@ -196,7 +204,8 @@
 - slug: cal_com_v1_get_user
   name: Get User
   description: |
-    Get user details by username.
+    Get user details by username including profile information and scheduling settings.
+    Returns the complete user profile for booking and communication.
   provider: cal-com-v1
   endpoint: /users/{username}
   method: GET
@@ -217,7 +226,8 @@
 - slug: cal_com_v1_list_my_event_types
   name: List My Event Types
   description: |
-    List event types for the authenticated user.
+    List event types for the authenticated user and return event type IDs, names, and durations.
+    Use this to discover your own available booking options.
   provider: cal-com-v1
   endpoint: /event-types
   method: GET

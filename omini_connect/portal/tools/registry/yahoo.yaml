@@ -18,7 +18,7 @@
 - slug: yahoo_get_user
   name: Get User
   description: |
-    Get current user info
+    Retrieve the profile information of the authenticated Yahoo user including their name, email, and profile settings.
   provider: yahoo
   endpoint: /profile
   method: GET
@@ -35,7 +35,7 @@
 - slug: yahoo_list_emails
   name: List Emails
   description: |
-    List emails in inbox
+    Retrieve all emails from the Yahoo mailbox with pagination support. Returns message IDs, subjects, senders, and timestamps for each email.
   provider: yahoo
   endpoint: /messages
   method: GET
@@ -52,7 +52,7 @@
 - slug: yahoo_get_email
   name: Get Email
   description: |
-    Get email details
+    Retrieve the full content and metadata of a specific email including the body, attachments, headers, and sender information.
   provider: yahoo
   endpoint: /messages/{id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: yahoo_send_email
   name: Send Email
   description: |
-    Send an email
+    Send a new email message to specified recipients with subject, body, and optional attachments. Returns the sent message ID and status.
   provider: yahoo
   endpoint: /messages
   method: POST
@@ -86,7 +86,7 @@
 - slug: yahoo_delete_email
   name: Delete Email
   description: |
-    Delete an email
+    Permanently remove a specific email from the Yahoo mailbox by its ID. Returns confirmation of successful deletion.
   provider: yahoo
   endpoint: /messages/{id}
   method: DELETE
@@ -103,7 +103,7 @@
 - slug: yahoo_list_folders
   name: List Folders
   description: |
-    List all folders
+    Retrieve all mailbox folders including inbox, sent, drafts, and custom folders. Returns folder names, counts, and unread message counts.
   provider: yahoo
   endpoint: /folders
   method: GET
@@ -120,7 +120,7 @@
 - slug: yahoo_list_contacts
   name: List Contacts
   description: |
-    List all contacts
+    Retrieve all contacts from the Yahoo address book with pagination support. Returns contact names, email addresses, and phone numbers.
   provider: yahoo
   endpoint: /contacts
   method: GET
@@ -137,7 +137,7 @@
 - slug: yahoo_get_contact
   name: Get Contact
   description: |
-    Get contact details
+    Retrieve detailed information for a specific contact including their name, email addresses, phone numbers, and physical address.
   provider: yahoo
   endpoint: /contacts/{id}
   method: GET
@@ -154,7 +154,7 @@
 - slug: yahoo_create_contact
   name: Create Contact
   description: |
-    Create a new contact
+    Add a new contact to the Yahoo address book with name, email, phone, and address information. Returns the created contact with their unique ID.
   provider: yahoo
   endpoint: /contacts
   method: POST
@@ -171,7 +171,7 @@
 - slug: yahoo_list_calendars
   name: List Calendars
   description: |
-    List all calendars
+    Retrieve all calendars associated with the Yahoo account including primary and shared calendars. Returns calendar names, IDs, and colors.
   provider: yahoo
   endpoint: /calendars
   method: GET

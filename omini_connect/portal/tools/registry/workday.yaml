@@ -1,7 +1,9 @@
 - slug: workday_list_workers
   name: List Workers
   description: |
-    Retrieve a list of all workers (employees) in the Workday HR system.
+    Retrieve a list of all workers (employees) in the Workday HR system with organization and status filtering.
+    Returns worker names, IDs, positions, and employment status for each worker.
+    Use this to discover employees and manage workforce information.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/workers
   method: GET
@@ -30,7 +32,9 @@
 - slug: workday_get_worker
   name: Get Worker
   description: |
-    Retrieve detailed information for a specific worker by ID.
+    Retrieve detailed information for a specific worker by ID including employment details and organizational assignments.
+    Returns the complete worker data with all associated information.
+    This provides full worker data for HR management and employee lookup.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/workers/{worker_id}
   method: GET
@@ -51,7 +55,9 @@
 - slug: workday_list_jobs
   name: List Jobs
   description: |
-    Retrieve a list of all job positions in the Workday HR system.
+    Retrieve a list of all job positions in the Workday HR system with job family and status filtering.
+    Returns job titles, IDs, families, and availability for each position.
+    Use this to discover job openings and manage recruitment.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/jobs
   method: GET
@@ -80,7 +86,9 @@
 - slug: workday_get_job
   name: Get Job
   description: |
-    Retrieve detailed information for a specific job by ID.
+    Retrieve detailed information for a specific job by ID including responsibilities and qualifications.
+    Returns the complete job data with all associated details.
+    This provides full job data for recruitment and talent management.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/jobs/{job_id}
   method: GET
@@ -101,7 +109,9 @@
 - slug: workday_list_organizations
   name: List Organizations
   description: |
-    Retrieve a list of all organizations in the Workday HR system.
+    Retrieve a list of all organizations in the Workday HR system with type filtering.
+    Returns organization names, IDs, types, and hierarchies for each organization.
+    Use this to discover organizational structure and manage company hierarchy.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/organizations
   method: GET
@@ -127,7 +137,9 @@
 - slug: workday_get_organization
   name: Get Organization
   description: |
-    Retrieve detailed information for a specific organization by ID.
+    Retrieve detailed information for a specific organization by ID including hierarchy and member workers.
+    Returns the complete organization data with all associated information.
+    This provides full organization data for structure and management.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/organizations/{organization_id}
   method: GET
@@ -148,7 +160,9 @@
 - slug: workday_list_time_off_requests
   name: List Time Off Requests
   description: |
-    Retrieve a list of all time off requests in the Workday HR system.
+    Retrieve a list of all time off requests in the Workday HR system with worker and status filtering.
+    Returns request IDs, worker names, dates, and approval status for each request.
+    Use this to discover time off requests and manage leave approvals.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/time_off_requests
   method: GET
@@ -177,7 +191,9 @@
 - slug: workday_get_time_off_request
   name: Get Time Off Request
   description: |
-    Retrieve detailed information for a specific time off request by ID.
+    Retrieve detailed information for a specific time off request by ID including dates and approval history.
+    Returns the complete request data with all associated information.
+    This provides full request data for leave management and approvals.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/time_off_requests/{request_id}
   method: GET
@@ -198,7 +214,9 @@
 - slug: workday_list_expenses
   name: List Expenses
   description: |
-    Retrieve a list of all expense reports in the Workday financial system.
+    Retrieve a list of all expense reports in the Workday financial system with worker and status filtering.
+    Returns expense IDs, amounts, status, and submission dates for each report.
+    Use this to discover expense reports and manage reimbursements.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/expense_reports
   method: GET
@@ -227,7 +245,9 @@
 - slug: workday_get_expense
   name: Get Expense
   description: |
-    Retrieve detailed information for a specific expense report by ID.
+    Retrieve detailed information for a specific expense report by ID including line items and approval status.
+    Returns the complete expense data with all financial details.
+    This provides full expense data for accounting and reimbursement processing.
   provider: workday
   endpoint: /ccx/api/v1/{tenant_id}/expense_reports/{expense_id}
   method: GET

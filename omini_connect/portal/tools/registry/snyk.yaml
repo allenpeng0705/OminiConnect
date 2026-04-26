@@ -18,6 +18,8 @@
   name: List Projects
   description: |
     Retrieve all projects associated with the Snyk account or organization.
+    Returns project names, IDs, targets, and vulnerability counts for each project.
+    Use this to discover monitored repositories and track security posture.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects
   method: GET
@@ -41,7 +43,9 @@
 - slug: snyk_get_project
   name: Get Project
   description: |
-    Retrieve detailed information about a specific Snyk project.
+    Retrieve detailed information about a specific Snyk project including vulnerability summary.
+    Returns the complete project data with issue counts and dependency information.
+    This provides project details for security analysis and remediation planning.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects/{project_id}
   method: GET
@@ -67,6 +71,8 @@
   name: List Issues
   description: |
     Retrieve all issues (vulnerabilities and license issues) for a project.
+    Returns issue IDs, severity levels, package names, and fix information for each issue.
+    Use this to discover security problems and prioritize remediation efforts.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects/{project_id}/issues
   method: GET
@@ -100,7 +106,9 @@
 - slug: snyk_get_issue
   name: Get Issue
   description: |
-    Retrieve detailed information about a specific issue in a project.
+    Retrieve detailed information about a specific issue in a project including remediation steps.
+    Returns the complete issue data with CVSS score, affected versions, and fix recommendations.
+    This provides issue details for understanding and resolving security vulnerabilities.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/issues/{issue_id}
   method: GET
@@ -129,6 +137,8 @@
   name: List Vulnerabilities
   description: |
     Retrieve all vulnerabilities across projects in an organization.
+    Returns vulnerability identifiers, severity levels, and affected package information.
+    Use this to get a comprehensive view of security issues across all projects.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/vulns
   method: GET
@@ -155,7 +165,9 @@
 - slug: snyk_get_vulnerability
   name: Get Vulnerability
   description: |
-    Retrieve detailed information about a specific vulnerability by ID.
+    Retrieve detailed information about a specific vulnerability by ID including CVSS and references.
+    Returns the complete vulnerability data with description, exploitability, and remediation guidance.
+    This provides vulnerability details for risk assessment and security planning.
   provider: snyk
   endpoint: /v1/vulnerabilities/{vulnerability_id}
   method: GET
@@ -179,7 +191,9 @@
 - slug: snyk_list_dependencies
   name: List Dependencies
   description: |
-    Retrieve all dependencies for a specific project.
+    Retrieve all dependencies for a specific project with version information.
+    Returns dependency names, versions, and vulnerability status for each package.
+    Use this to discover project dependencies and track software supply chain.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects/{project_id}/dependencies
   method: GET
@@ -207,7 +221,9 @@
 - slug: snyk_get_dependency
   name: Get Dependency
   description: |
-    Retrieve detailed information about a specific dependency.
+    Retrieve detailed information about a specific dependency including version and vulnerabilities.
+    Returns the complete dependency data with associated security issues.
+    This provides dependency details for license compliance and security review.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects/{project_id}/dependencies/{dependency_id}
   method: GET
@@ -236,7 +252,9 @@
 - slug: snyk_get_test_report
   name: Get Test Report
   description: |
-    Retrieve a test report for a specific project showing vulnerability findings.
+    Retrieve a test report for a specific project showing vulnerability findings and metrics.
+    Returns comprehensive security test results with severity breakdown and trends.
+    Use this to track security posture over time and demonstrate compliance.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/projects/{project_id}/reports/test
   method: GET
@@ -265,6 +283,8 @@
   name: List API Tokens
   description: |
     Retrieve all API tokens for a service account or user in the organization.
+    Returns token names, scopes, creation dates, and last used timestamps.
+    Use this to manage API access and audit token usage for security.
   provider: snyk
   endpoint: /v1/orgs/{org_id}/members/{member_id}/tokens
   method: GET

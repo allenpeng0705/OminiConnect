@@ -1,7 +1,7 @@
 - slug: fly_list_apps
   name: List Apps
   description: |
-    List all applications in your Fly organization.
+    List all applications in the Fly.io organization. Returns app names, status, and region information for each application.
   provider: fly
   endpoint: /apps
   method: GET
@@ -24,7 +24,7 @@
 - slug: fly_get_app
   name: Get App
   description: |
-    Get details for a specific application.
+    Retrieve detailed information for a specific Fly.io application including configuration, status, and deployment details.
   provider: fly
   endpoint: /apps/{appName}
   method: GET
@@ -45,7 +45,7 @@
 - slug: fly_create_app
   name: Create App
   description: |
-    Create a new application on Fly.io.
+    Create a new application on Fly.io with the specified name, organization, and primary region.
   provider: fly
   endpoint: /apps
   method: POST
@@ -75,7 +75,7 @@
 - slug: fly_list_machines
   name: List Machines
   description: |
-    List all Machines for an application.
+    List all Machines for a Fly.io application. Returns machine IDs, status, region, and configuration for each machine.
   provider: fly
   endpoint: /apps/{appName}/machines
   method: GET
@@ -99,7 +99,7 @@
 - slug: fly_get_machine
   name: Get Machine
   description: |
-    Get details for a specific Machine.
+    Retrieve detailed information for a specific Fly.io machine including status, config, and runtime details.
   provider: fly
   endpoint: /machines/{machineId}
   method: GET
@@ -120,7 +120,7 @@
 - slug: fly_list_volumes
   name: List Volumes
   description: |
-    List all volumes in an organization or for an app.
+    List all volumes in the Fly.io organization or for a specific app. Returns volume IDs, names, region, and size information.
   provider: fly
   endpoint: /volumes
   method: GET
@@ -143,7 +143,7 @@
 - slug: fly_get_volume
   name: Get Volume
   description: |
-    Get details for a specific volume.
+    Retrieve detailed information for a specific Fly.io volume including size, region, and attached machines.
   provider: fly
   endpoint: /volumes/{volumeId}
   method: GET
@@ -164,7 +164,7 @@
 - slug: fly_list_certificates
   name: List Certificates
   description: |
-    List all certificates for an application.
+    List all TLS certificates for a Fly.io application. Returns certificate domains, issuance status, and expiration dates.
   provider: fly
   endpoint: /apps/{appName}/certs
   method: GET
@@ -185,7 +185,7 @@
 - slug: fly_get_certificate
   name: Get Certificate
   description: |
-    Get details for a specific certificate.
+    Retrieve detailed information for a specific certificate including verification status, DNS records, and expiration.
   provider: fly
   endpoint: /apps/{appName}/certs/{hostname}
   method: GET
@@ -210,7 +210,7 @@
 - slug: fly_list_secrets
   name: List Secrets
   description: |
-    List all secrets for an application.
+    List all secrets for a Fly.io application. Returns secret names and creation timestamps (values are not exposed).
   provider: fly
   endpoint: /apps/{appName}/secrets
   method: GET

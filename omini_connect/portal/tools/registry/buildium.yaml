@@ -18,7 +18,7 @@
 - slug: buildium_list_residents
   name: List Residents
   description: |
-    List all residents in Buildium.
+    List all residents in Buildium, returning resident names, units, contact information, and lease status.
   provider: buildium
   endpoint: /v1/residents
   method: GET
@@ -43,7 +43,7 @@
 - slug: buildium_get_resident
   name: Get Resident
   description: |
-    Get details for a specific resident.
+    Get details for a specific resident including unit assignment, contact info, and payment history.
   provider: buildium
   endpoint: /v1/residents/{residentId}
   method: GET
@@ -64,7 +64,7 @@
 - slug: buildium_list_rentals
   name: List Rentals
   description: |
-    List all rental units.
+    List all rental units, returning unit addresses, rental rates, vacancy status, and property details.
   provider: buildium
   endpoint: /v1/rentals
   method: GET
@@ -89,7 +89,7 @@
 - slug: buildium_get_rental
   name: Get Rental
   description: |
-    Get details for a specific rental unit.
+    Get details for a specific rental unit including rent amount, deposit, amenities, and current occupant.
   provider: buildium
   endpoint: /v1/rentals/{rentalId}
   method: GET
@@ -110,7 +110,7 @@
 - slug: buildium_list_leases
   name: List Leases
   description: |
-    List all leases.
+    List all leases, returning lease dates, rental amounts, security deposits, and associated units.
   provider: buildium
   endpoint: /v1/leases
   method: GET
@@ -138,7 +138,7 @@
 - slug: buildium_get_lease
   name: Get Lease
   description: |
-    Get details for a specific lease.
+    Get details for a specific lease including dates, rent amount, deposits, and tenant information.
   provider: buildium
   endpoint: /v1/leases/{leaseId}
   method: GET
@@ -159,7 +159,7 @@
 - slug: buildium_list_transactions
   name: List Transactions
   description: |
-    List all financial transactions.
+    List all financial transactions with optional date filters, returning amounts, types, and dates.
   provider: buildium
   endpoint: /v1/transactions
   method: GET
@@ -186,7 +186,7 @@
 - slug: buildium_get_transaction
   name: Get Transaction
   description: |
-    Get details for a specific transaction.
+    Get details for a specific transaction including amount, type, date, and associated unit or resident.
   provider: buildium
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -207,7 +207,7 @@
 - slug: buildium_list_maintenance
   name: List Maintenance
   description: |
-    List all maintenance requests.
+    List all maintenance requests with optional status filter, returning request details and priority levels.
   provider: buildium
   endpoint: /v1/maintenance
   method: GET
@@ -231,7 +231,7 @@
 - slug: buildium_get_maintenance
   name: Get Maintenance
   description: |
-    Get details for a specific maintenance request.
+    Get details for a specific maintenance request including description, status, assigned vendor, and costs.
   provider: buildium
   endpoint: /v1/maintenance/{maintenanceId}
   method: GET

@@ -17,8 +17,7 @@
 - slug: calendly_more_list_event_types
   name: List Event Types
   description: |
-    List all event types for the authenticated user or organization.
-    Event types define the scheduling options available to invitees.
+    Retrieve all event types available for scheduling with pagination support. Returns the name, duration, description, location options, and active status for each type.
   provider: calendly_more
   endpoint: /event_types
   method: GET
@@ -50,8 +49,7 @@
 - slug: calendly_more_get_event_type
   name: Get Event Type
   description: |
-    Get detailed information about a specific event type including
-    duration, description, and scheduling options.
+    Retrieve detailed information about a specific event type by its UUID. Returns the name, duration, description, color, and scheduling options.
   provider: calendly_more
   endpoint: /event_types/{uuid}
   method: GET
@@ -73,8 +71,7 @@
 - slug: calendly_more_create_event_type
   name: Create Event Type
   description: |
-    Create a new event type with name, duration, description,
-    and scheduling location options.
+    Create a new scheduling appointment type with name, duration, description, and location settings. Returns the created event type with its UUID.
   provider: calendly_more
   endpoint: /event_types
   method: POST
@@ -111,8 +108,7 @@
 - slug: calendly_more_list_scheduled_events
   name: List Scheduled Events
   description: |
-    List all scheduled events (invitations) for the authenticated user.
-    Filter by status, date range, or event type.
+    Retrieve all booked appointments with optional filtering by status, date range, or event type. Returns event details, timing, location, and invitee information.
   provider: calendly_more
   endpoint: /scheduled_events
   method: GET
@@ -150,8 +146,7 @@
 - slug: calendly_more_get_scheduled_event
   name: Get Scheduled Event
   description: |
-    Get detailed information about a specific scheduled event
-    including timing, invitees, and event type.
+    Retrieve detailed information about a specific scheduled event by its UUID. Returns the timing, location, invitee information, and event status.
   provider: calendly_more
   endpoint: /scheduled_events/{uuid}
   method: GET
@@ -173,8 +168,7 @@
 - slug: calendly_more_cancel_scheduled_event
   name: Cancel Scheduled Event
   description: |
-    Cancel a scheduled event (invitation). Optionally send
-    notification to invitee.
+    Cancel a scheduled event with optional notification to the invitee and cancellation reason. Returns confirmation of the cancellation.
   provider: calendly_more
   endpoint: /scheduled_events/{uuid}/cancel
   method: POST
@@ -204,8 +198,7 @@
 - slug: calendly_more_list_invitees
   name: List Invitees
   description: |
-    List all invitees for a specific scheduled event.
-    Shows who has been invited and their response status.
+    Retrieve all people invited to a specific scheduled event with pagination support. Returns invitee names, email addresses, and response status.
   provider: calendly_more
   endpoint: /scheduled_events/{uuid}/invitees
   method: GET
@@ -235,8 +228,7 @@
 - slug: calendly_more_get_invitee
   name: Get Invitee
   description: |
-    Get detailed information about a specific invitee including
-    their answers to event questions and cancellation status.
+    Retrieve detailed information about a specific invitee by their UUID. Returns the invitee name, email, answers to event questions, and cancellation status.
   provider: calendly_more
   endpoint: /invitees/{uuid}
   method: GET
@@ -258,8 +250,7 @@
 - slug: calendly_more_get_user_availability
   name: Get User Availability
   description: |
-    Get available time slots for a user based on their
-    calendar availability and event type settings.
+    Retrieve available time slots for a user based on their calendar and event type settings within a specified date range.
   provider: calendly_more
   endpoint: /users/{user_id}/availability
   method: GET
@@ -291,8 +282,7 @@
 - slug: calendly_more_list_organization_event_types
   name: List Organization Event Types
   description: |
-    List all event types for an organization. Includes
-    event types created by all organization members.
+    Retrieve all event types for an organization, including those created by all members. Returns event type names, durations, and active status.
   provider: calendly_more
   endpoint: /organizations/{organization_id}/event_types
   method: GET

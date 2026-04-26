@@ -17,7 +17,7 @@
 - slug: sinch_list_messages
   name: List Messages
   description: |
-    List all SMS messages sent or received through Sinch.
+    List all SMS messages sent or received through Sinch. Returns message IDs, timestamps, sender and recipient numbers, and delivery status.
   provider: sinch
   endpoint: /v1/projects/{project_id}/messages
   method: GET
@@ -43,7 +43,7 @@
 - slug: sinch_get_message
   name: Get Message
   description: |
-    Get detailed information about a specific Sinch message.
+    Get detailed information about a specific Sinch message including its content, delivery status, and timestamp.
   provider: sinch
   endpoint: /v1/projects/{project_id}/messages/{message_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: sinch_send_sms
   name: Send SMS
   description: |
-    Send an SMS message via Sinch.
+    Send an SMS message via Sinch to specified recipients. Sets the sender number, recipient numbers, and message body.
   provider: sinch
   endpoint: /v1/projects/{project_id}/messages:send
   method: POST
@@ -96,7 +96,7 @@
 - slug: sinch_send_whatsapp
   name: Send WhatsApp
   description: |
-    Send a WhatsApp message via Sinch.
+    Send a WhatsApp message via Sinch to specified recipients. Sets the sender WhatsApp number, recipient numbers, and message body.
   provider: sinch
   endpoint: /v1/projects/{project_id}/messages:send
   method: POST
@@ -130,7 +130,7 @@
 - slug: sinch_verify_number
   name: Verify Number
   description: |
-    Start a phone number verification via SMS or voice.
+    Start a phone number verification via Sinch using SMS or voice. Sets the phone number and verification method.
   provider: sinch
   endpoint: /v1/projects/{project_id}/verifications
   method: POST
@@ -159,7 +159,7 @@
 - slug: sinch_initiate_call
   name: Initiate Call
   description: |
-    Initiate a new outbound phone call via Sinch.
+    Initiate a new outbound phone call via Sinch. Sets the call destination, callout method, and domain settings.
   provider: sinch
   endpoint: /v1/projects/{project_id}/callouts
   method: POST
@@ -189,7 +189,7 @@
 - slug: sinch_list_voice_applications
   name: List Voice Applications
   description: |
-    List all voice applications in your Sinch project.
+    List all voice applications in your Sinch project. Returns application IDs, names, and configuration settings.
   provider: sinch
   endpoint: /v1/projects/{project_id}/applications
   method: GET
@@ -216,7 +216,7 @@
 - slug: sinch_get_voice_application
   name: Get Voice Application
   description: |
-    Get details about a specific voice application.
+    Get details about a specific voice application in Sinch including its configuration, callbacks, and voice settings.
   provider: sinch
   endpoint: /v1/projects/{project_id}/applications/{application_id}
   method: GET
@@ -239,7 +239,7 @@
 - slug: sinch_get_customer_support_ticket
   name: Get Customer Support Ticket
   description: |
-    Get details about a specific customer support ticket.
+    Get details about a specific customer support ticket in Sinch including its status, priority, and conversation history.
   provider: sinch
   endpoint: /v1/projects/{project_id}/tickets/{ticket_id}
   method: GET
@@ -262,7 +262,7 @@
 - slug: sinch_list_conversations
   name: List Conversations
   description: |
-    List all conversations in your Sinch project.
+    List all conversations in your Sinch project. Returns conversation IDs, participant information, and last message timestamps.
   provider: sinch
   endpoint: /v1/projects/{project_id}/conversations
   method: GET

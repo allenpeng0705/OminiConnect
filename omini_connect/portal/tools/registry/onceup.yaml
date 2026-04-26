@@ -18,6 +18,8 @@
   name: List Appointments
   description: |
     List all appointments, optionally filtered by date range, client, or status.
+    Returns appointment details including time, client, service, and current status.
+    Use this to discover available time slots and manage scheduling.
   provider: onceup
   endpoint: /appointments
   method: GET
@@ -52,7 +54,9 @@
 - slug: onceup_get_appointment
   name: Get Appointment
   description: |
-    Get detailed information about a specific appointment.
+    Get detailed information about a specific appointment including time, client, service, and notes.
+    Returns the complete appointment record with all associated details.
+    This provides full appointment data for rescheduling or cancellation decisions.
   provider: onceup
   endpoint: /appointments/{appointment_id}
   method: GET
@@ -75,6 +79,8 @@
   name: Create Appointment
   description: |
     Create a new appointment for a client with a service.
+    Returns the created appointment with its unique ID and confirmed time.
+    This schedules a new booking in the OnceUp calendar system.
   provider: onceup
   endpoint: /appointments
   method: POST
@@ -110,7 +116,9 @@
 - slug: onceup_cancel_appointment
   name: Cancel Appointment
   description: |
-    Cancel an existing appointment.
+    Cancel an existing appointment and optionally provide a cancellation reason.
+    Returns confirmation of the cancellation with the appointment ID.
+    This removes the appointment from the schedule and may trigger notifications.
   provider: onceup
   endpoint: /appointments/{appointment_id}
   method: DELETE
@@ -135,7 +143,9 @@
 - slug: onceup_list_clients
   name: List Clients
   description: |
-    List all clients in the account.
+    List all clients in the account with their contact information.
+    Returns client names, emails, phone numbers, and appointment history.
+    Use this to discover clients and prepare for upcoming appointments.
   provider: onceup
   endpoint: /clients
   method: GET
@@ -161,7 +171,9 @@
 - slug: onceup_get_client
   name: Get Client
   description: |
-    Get detailed information about a specific client.
+    Get detailed information about a specific client including contact details and appointment history.
+    Returns the complete client profile with all associated appointments.
+    This provides full client data for personalization and communication.
   provider: onceup
   endpoint: /clients/{client_id}
   method: GET
@@ -183,7 +195,9 @@
 - slug: onceup_list_services
   name: List Services
   description: |
-    List all services available for booking.
+    List all services available for booking with their durations and pricing.
+    Returns service names, descriptions, time requirements, and costs.
+    Use this to discover available offerings for appointment scheduling.
   provider: onceup
   endpoint: /services
   method: GET
@@ -209,7 +223,9 @@
 - slug: onceup_get_service
   name: Get Service
   description: |
-    Get detailed information about a specific service.
+    Get detailed information about a specific service including duration, pricing, and description.
+    Returns the complete service data for consultation planning.
+    This helps prepare for client appointments by understanding service details.
   provider: onceup
   endpoint: /services/{service_id}
   method: GET
@@ -231,7 +247,9 @@
 - slug: onceup_list_reminders
   name: List Reminders
   description: |
-    List all configured reminders for appointments.
+    List all configured reminders for appointments with their delivery status.
+    Returns reminder IDs, appointment associations, and whether they have been sent.
+    Use this to track upcoming notifications and their delivery status.
   provider: onceup
   endpoint: /reminders
   method: GET
@@ -260,7 +278,9 @@
 - slug: onceup_send_reminder
   name: Send Reminder
   description: |
-    Send a reminder notification for an appointment.
+    Send a reminder notification for an appointment via the specified channel.
+    Returns confirmation of the reminder delivery with timestamp.
+    This sends a notification to remind clients about their upcoming appointment.
   provider: onceup
   endpoint: /reminders/send
   method: POST

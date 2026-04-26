@@ -71,8 +71,9 @@
 - slug: grafana_list_folders
   name: List Folders
   description: |
-    List all folders in the organization.
-    Folders organize dashboards.
+    List all folders in the organization with pagination.
+    Returns folder names, IDs, and parent relationships for each folder.
+    Use this to discover dashboard organization and manage visual hierarchy.
   provider: grafana
   endpoint: /api/folders
   method: GET
@@ -90,8 +91,9 @@
 - slug: grafana_get_folder
   name: Get Folder
   description: |
-    Get detailed information about a specific folder.
-    Includes folder metadata and permissions.
+    Get detailed information about a specific folder including metadata and permissions.
+    Returns the complete folder data with all associated information.
+    This provides full folder data for dashboard organization and access management.
   provider: grafana
   endpoint: /api/folders/{uid}
   method: GET

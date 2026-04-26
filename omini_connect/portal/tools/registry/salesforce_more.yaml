@@ -1,7 +1,9 @@
 - slug: salesforce_more_list_cases
   name: List Cases
   description: |
-    Retrieve a list of all support cases in Salesforce.
+    Retrieve a list of all support cases in Salesforce with status and priority filtering.
+    Returns case IDs, subjects, status, priority, and created dates for each case.
+    Use this to discover support cases and track customer issues.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Case
   method: GET
@@ -30,7 +32,9 @@
 - slug: salesforce_more_get_case
   name: Get Case
   description: |
-    Retrieve detailed information for a specific case by ID.
+    Retrieve detailed information for a specific case by ID including description and resolution details.
+    Returns the complete case data with all associated information.
+    This provides full case data for support management and resolution tracking.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Case/{case_id}
   method: GET
@@ -51,7 +55,9 @@
 - slug: salesforce_more_create_case
   name: Create Case
   description: |
-    Create a new support case in Salesforce.
+    Create a new support case in Salesforce with subject, description, and priority.
+    Returns the created case with its unique ID and confirmation.
+    This logs a new customer issue for tracking and resolution.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Case
   method: POST
@@ -85,7 +91,9 @@
 - slug: salesforce_more_update_case
   name: Update Case
   description: |
-    Update an existing support case in Salesforce.
+    Update an existing support case in Salesforce with new status, priority, or resolution.
+    Returns the updated case confirmation with modified fields.
+    This modifies case information for status tracking and resolution management.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Case/{case_id}
   method: PATCH
@@ -115,7 +123,9 @@
 - slug: salesforce_more_list_solutions
   name: List Solutions
   description: |
-    Retrieve a list of all solutions in the Salesforce knowledge base.
+    Retrieve a list of all solutions in the Salesforce knowledge base with status filtering.
+    Returns solution IDs, titles, status, and created dates for each solution.
+    Use this to discover solutions and support knowledge management.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Solution
   method: GET
@@ -141,7 +151,9 @@
 - slug: salesforce_more_get_solution
   name: Get Solution
   description: |
-    Retrieve detailed information for a specific solution by ID.
+    Retrieve detailed information for a specific solution by ID including full content and related cases.
+    Returns the complete solution data with all associated information.
+    This provides full solution data for knowledge base management.
   provider: salesforce_more
   endpoint: /services/data/v59.0/sobjects/Solution/{solution_id}
   method: GET
@@ -162,7 +174,9 @@
 - slug: salesforce_more_list_reports
   name: List Reports
   description: |
-    Retrieve a list of all reports in the Salesforce Analytics Cloud.
+    Retrieve a list of all reports in the Salesforce Analytics Cloud with folder filtering.
+    Returns report IDs, names, folder locations, and types for each report.
+    Use this to discover analytics reports and business intelligence assets.
   provider: salesforce_more
   endpoint: /services/data/v59.0/analytics/reports
   method: GET
@@ -188,7 +202,9 @@
 - slug: salesforce_more_get_report
   name: Get Report
   description: |
-    Retrieve detailed information and metadata for a specific report by ID.
+    Retrieve detailed information and metadata for a specific report by ID including structure and filters.
+    Returns the complete report data with all configuration details.
+    This provides full report metadata for analytics and business intelligence.
   provider: salesforce_more
   endpoint: /services/data/v59.0/analytics/reports/{report_id}
   method: GET
@@ -209,7 +225,9 @@
 - slug: salesforce_more_list_dashboards
   name: List Dashboards
   description: |
-    Retrieve a list of all dashboards in the Salesforce Analytics Cloud.
+    Retrieve a list of all dashboards in the Salesforce Analytics Cloud with folder filtering.
+    Returns dashboard IDs, names, folder locations, and types for each dashboard.
+    Use this to discover dashboards and monitor business metrics.
   provider: salesforce_more
   endpoint: /services/data/v59.0/analytics/dashboards
   method: GET
@@ -235,7 +253,9 @@
 - slug: salesforce_more_get_dashboard
   name: Get Dashboard
   description: |
-    Retrieve detailed information and metadata for a specific dashboard by ID.
+    Retrieve detailed information and metadata for a specific dashboard by ID including components and data sources.
+    Returns the complete dashboard data with all configuration details.
+    This provides full dashboard metadata for analytics monitoring.
   provider: salesforce_more
   endpoint: /services/data/v59.0/analytics/dashboards/{dashboard_id}
   method: GET

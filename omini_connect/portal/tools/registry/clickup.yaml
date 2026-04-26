@@ -1,7 +1,7 @@
 - slug: clickup_list_tasks
   name: List Tasks
   description: |
-    Retrieve a list of tasks, optionally filtered by list or other criteria.
+    List all tasks in a Clickup list with optional filtering by status, priority, or assignee. Returns task names, IDs, statuses, assignees, and due dates for each task.
   provider: clickup
   endpoint: /list/{listId}/task
   method: GET
@@ -37,7 +37,7 @@
 - slug: clickup_get_task
   name: Get Task
   description: |
-    Retrieve details of a specific task by ID.
+    Get detailed information about a specific Clickup task by its ID. Returns the task name, description, assignees, due date, and priority.
   provider: clickup
   endpoint: /task/{taskId}
   method: GET
@@ -58,7 +58,7 @@
 - slug: clickup_create_task
   name: Create Task
   description: |
-    Create a new task in a list.
+    Create a new task in a Clickup list with name, description, assignees, and optional priority. Returns the created task with its unique ID.
   provider: clickup
   endpoint: /list/{listId}/task
   method: POST
@@ -100,7 +100,7 @@
 - slug: clickup_update_task
   name: Update Task
   description: |
-    Update an existing task with new values.
+    Update an existing Clickup task with new name, description, status, or priority values. Returns the updated task confirming the changes.
   provider: clickup
   endpoint: /task/{taskId}
   method: PUT
@@ -136,7 +136,7 @@
 - slug: clickup_list_lists
   name: List Lists
   description: |
-    Retrieve a list of lists, optionally filtered by folder or space.
+    List all lists in a Clickup space or folder. Returns list names, IDs, and task counts for each list.
   provider: clickup
   endpoint: /space/{spaceId}/list
   method: GET
@@ -163,7 +163,7 @@
 - slug: clickup_get_list
   name: Get List
   description: |
-    Retrieve details of a specific list by ID.
+    Get detailed information about a specific Clickup list by its ID. Returns the list name, description, status settings, and task count.
   provider: clickup
   endpoint: /list/{listId}
   method: GET
@@ -184,7 +184,7 @@
 - slug: clickup_list_spaces
   name: List Spaces
   description: |
-    Retrieve a list of all spaces in the workspace.
+    List all spaces in a Clickup workspace. Returns space names, IDs, and statuses for each space.
   provider: clickup
   endpoint: /workspace/{workspaceId}/space
   method: GET
@@ -208,7 +208,7 @@
 - slug: clickup_get_space
   name: Get Space
   description: |
-    Retrieve details of a specific space by ID.
+    Get detailed information about a specific Clickup space by its ID. Returns the space name, description, and list of folders and lists.
   provider: clickup
   endpoint: /space/{spaceId}
   method: GET
@@ -229,7 +229,7 @@
 - slug: clickup_list_folders
   name: List Folders
   description: |
-    Retrieve a list of folders, optionally within a space.
+    List all folders in a Clickup space. Returns folder names, IDs, and nested list counts for each folder.
   provider: clickup
   endpoint: /space/{spaceId}/folder
   method: GET
@@ -253,7 +253,7 @@
 - slug: clickup_get_folder
   name: Get Folder
   description: |
-    Retrieve details of a specific folder by ID.
+    Get detailed information about a specific Clickup folder by its ID. Returns the folder name, description, and contained lists.
   provider: clickup
   endpoint: /folder/{folderId}
   method: GET

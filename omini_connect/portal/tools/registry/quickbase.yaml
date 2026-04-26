@@ -18,7 +18,8 @@
 - slug: quickbase_list_tables
   name: List Tables
   description: |
-    Retrieve a list of all tables in your Quickbase realm.
+    Retrieve a list of all tables in your Quickbase realm including table names, record counts, and schema summaries.
+    Returns table metadata for database exploration and structure analysis.
   provider: quickbase
   endpoint: /tables
   method: GET
@@ -36,7 +37,8 @@
 - slug: quickbase_get_table
   name: Get Table
   description: |
-    Get details of a specific table by ID.
+    Get details of a specific table by ID including its fields, relationships, and permissions configuration.
+    Returns table schema data for application development and data modeling.
   provider: quickbase
   endpoint: /tables/{tableId}
   method: GET
@@ -58,7 +60,8 @@
 - slug: quickbase_list_records
   name: List Records
   description: |
-    Retrieve a list of records from a specific table.
+    Retrieve a paginated list of records from a specific table including all field values and record IDs.
+    Returns record data for data analysis and reporting workflows.
   provider: quickbase
   endpoint: /records
   method: GET
@@ -89,7 +92,8 @@
 - slug: quickbase_get_record
   name: Get Record
   description: |
-    Get a specific record by ID from a table.
+    Get a specific record by ID from a table including all field values and associated metadata.
+    Returns record data for detail viewing and editing operations.
   provider: quickbase
   endpoint: /records/{recordId}
   method: GET
@@ -116,7 +120,8 @@
 - slug: quickbase_create_record
   name: Create Record
   description: |
-    Create a new record in a specific table.
+    Create a new record in a specific table with field values as key-value pairs.
+    Returns the created record with assigned ID for confirmation and further operations.
   provider: quickbase
   endpoint: /records
   method: POST
@@ -143,7 +148,8 @@
 - slug: quickbase_update_record
   name: Update Record
   description: |
-    Update an existing record in a table.
+    Update an existing record in a table with new field values for specified columns.
+    Returns the updated record with modified values for confirmation and workflow continuation.
   provider: quickbase
   endpoint: /records/{recordId}
   method: PUT
@@ -174,7 +180,8 @@
 - slug: quickbase_delete_record
   name: Delete Record
   description: |
-    Delete a record from a table.
+    Delete a specific record from a table by its ID, permanently removing all associated data.
+    Returns deletion confirmation for record keeping and data management workflows.
   provider: quickbase
   endpoint: /records/{recordId}
   method: DELETE
@@ -201,7 +208,8 @@
 - slug: quickbase_run_query
   name: Run Query
   description: |
-    Run a query on a table to filter and retrieve records.
+    Run a Quickbase query string on a table to filter and retrieve specific records matching criteria.
+    Returns matching records with all field values for analysis and automation.
   provider: quickbase
   endpoint: /queries/run
   method: POST
@@ -233,7 +241,8 @@
 - slug: quickbase_list_fields
   name: List Fields
   description: |
-    List all fields (columns) in a specific table.
+    List all fields (columns) in a specific table including field names, types, and validation rules.
+    Returns field metadata for schema inspection and application development.
   provider: quickbase
   endpoint: /tables/{tableId}/fields
   method: GET
@@ -257,7 +266,8 @@
 - slug: quickbase_get_report
   name: Get Report
   description: |
-    Get a specific report from a table.
+    Get a specific report from a table including calculated values, charts, and filtered record sets.
+    Returns report data for dashboard display and executive summary generation.
   provider: quickbase
   endpoint: /reports/{reportId}
   method: GET

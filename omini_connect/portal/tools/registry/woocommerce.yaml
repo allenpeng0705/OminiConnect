@@ -16,7 +16,8 @@
 - slug: woocommerce_list_orders
   name: List Orders
   description: |
-    List all orders in the WooCommerce store. Filter by status, customer, and date range.
+    List all orders in the WooCommerce store with optional filtering by status, customer, and date range.
+    Returns order records including order numbers, totals, statuses, and customer references.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/orders
   method: GET
@@ -51,7 +52,8 @@
 - slug: woocommerce_get_order
   name: Get Order
   description: |
-    Get detailed information about a specific order including line items, shipping, and payment details.
+    Get detailed information about a specific order including line items, shipping address, and payment details for fulfillment processing.
+    Returns order data for shipping management and customer service.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/orders/{id}
   method: GET
@@ -73,7 +75,8 @@
 - slug: woocommerce_create_order
   name: Create Order
   description: |
-    Create a new order in WooCommerce. Include line items, shipping address, and payment details.
+    Create a new order in WooCommerce with line items, billing and shipping addresses, and payment method.
+    Returns the created order with ID for fulfillment tracking and inventory management.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/orders
   method: POST
@@ -108,7 +111,8 @@
 - slug: woocommerce_list_products
   name: List Products
   description: |
-    List all products in the WooCommerce store. Filter by category, tag, and status.
+    List all products in the WooCommerce store with optional filtering by category, tag, and publication status.
+    Returns product records including names, prices, images, and stock levels.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/products
   method: GET
@@ -140,7 +144,8 @@
 - slug: woocommerce_get_product
   name: Get Product
   description: |
-    Get detailed information about a specific product including variations, images, and attributes.
+    Get detailed information about a specific product including variations, images, attributes, and inventory levels.
+    Returns product data for catalog management and sales analysis.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/products/{id}
   method: GET
@@ -162,7 +167,8 @@
 - slug: woocommerce_create_product
   name: Create Product
   description: |
-    Create a new product in WooCommerce. Include name, description, prices, and images.
+    Create a new product in WooCommerce with name, description, pricing, and images for catalog expansion.
+    Returns the created product with ID for inventory management and sales listing.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/products
   method: POST
@@ -200,7 +206,8 @@
 - slug: woocommerce_list_customers
   name: List Customers
   description: |
-    List all customers in WooCommerce. Filter by role, and date registered.
+    List all customers in WooCommerce with optional filtering by role and registration date for CRM management.
+    Returns customer records including names, emails, and order histories.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/customers
   method: GET
@@ -232,7 +239,8 @@
 - slug: woocommerce_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer including orders, addresses, and billing info.
+    Get detailed information about a specific customer including orders, addresses, and billing info for account management.
+    Returns customer data for personalized service and order tracking.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/customers/{id}
   method: GET
@@ -254,7 +262,8 @@
 - slug: woocommerce_list_coupons
   name: List Coupons
   description: |
-    List all coupons in the WooCommerce store. Filter by discount type and usage limit.
+    List all coupons in the WooCommerce store with optional filtering by discount type and usage limits for promotion management.
+    Returns coupon data including codes, discount amounts, and usage restrictions.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/coupons
   method: GET
@@ -280,7 +289,8 @@
 - slug: woocommerce_get_coupon
   name: Get Coupon
   description: |
-    Get detailed information about a specific coupon including usage restrictions and limits.
+    Get detailed information about a specific coupon including usage restrictions, expiry dates, and discount conditions for promotion verification.
+    Returns coupon data for marketing campaign planning and validation.
   provider: woocommerce
   endpoint: /wp-json/wc/v3/coupons/{id}
   method: GET

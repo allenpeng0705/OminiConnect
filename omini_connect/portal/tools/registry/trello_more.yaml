@@ -1,7 +1,8 @@
 - slug: trello_more_list_boards
   name: List Boards
   description: |
-    Retrieve a list of all boards accessible to the authenticated user.
+    Retrieve a list of all boards accessible to the authenticated user including names, descriptions, and member counts.
+    Returns board data for project organization and team collaboration.
   provider: trello_more
   endpoint: /members/me/boards
   method: GET
@@ -18,7 +19,8 @@
 - slug: trello_more_get_board
   name: Get Board
   description: |
-    Get details for a specific board by ID.
+    Get details for a specific board by ID including name, description, and member information for project access.
+    Returns board data for task management and team coordination.
   provider: trello_more
   endpoint: /boards/{board_id}
   method: GET
@@ -39,7 +41,8 @@
 - slug: trello_more_create_board
   name: Create Board
   description: |
-    Create a new board with the given name and settings.
+    Create a new board with the given name, description, and settings for team collaboration.
+    Returns the created board with ID for list and card management.
   provider: trello_more
   endpoint: /boards
   method: POST
@@ -63,7 +66,8 @@
 - slug: trello_more_list_lists
   name: List Lists
   description: |
-    Retrieve all lists on a specific board.
+    Retrieve all lists on a specific board including names, positions, and card counts for workflow organization.
+    Returns list data for project tracking and sprint planning.
   provider: trello_more
   endpoint: /boards/{board_id}/lists
   method: GET
@@ -84,7 +88,8 @@
 - slug: trello_more_get_list
   name: Get List
   description: |
-    Get details for a specific list by ID.
+    Get details for a specific list by ID including name, position, and associated cards for workflow management.
+    Returns list data for task organization and status tracking.
   provider: trello_more
   endpoint: /lists/{list_id}
   method: GET
@@ -105,7 +110,8 @@
 - slug: trello_more_create_list
   name: Create List
   description: |
-    Create a new list on a board.
+    Create a new list on a board with a specified name for workflow organization and project tracking.
+    Returns the created list with ID for card management and team coordination.
   provider: trello_more
   endpoint: /boards/{board_id}/lists
   method: POST
@@ -130,7 +136,8 @@
 - slug: trello_more_list_cards
   name: List Cards
   description: |
-    Retrieve all cards on a board or list.
+    Retrieve all cards on a board or list including names, descriptions, assignees, and due dates for task tracking.
+    Returns card data for project management and team coordination.
   provider: trello_more
   endpoint: /boards/{board_id}/cards
   method: GET
@@ -151,7 +158,8 @@
 - slug: trello_more_get_card
   name: Get Card
   description: |
-    Get details for a specific card by ID.
+    Get details for a specific card by ID including name, description, assignees, labels, and activity for task review.
+    Returns card data for progress tracking and collaboration.
   provider: trello_more
   endpoint: /cards/{card_id}
   method: GET
@@ -172,7 +180,8 @@
 - slug: trello_more_create_card
   name: Create Card
   description: |
-    Create a new card in a list.
+    Create a new card in a list with name, description, and optional metadata for task creation and assignment.
+    Returns the created card with ID for tracking and workflow automation.
   provider: trello_more
   endpoint: /cards
   method: POST
@@ -200,7 +209,8 @@
 - slug: trello_more_get_board_actions
   name: Get Board Actions
   description: |
-    Retrieve recent actions performed on a board.
+    Retrieve recent actions performed on a board including card movements, comments, and member activities for audit tracking.
+    Returns action data for project monitoring and team accountability.
   provider: trello_more
   endpoint: /boards/{board_id}/actions
   method: GET

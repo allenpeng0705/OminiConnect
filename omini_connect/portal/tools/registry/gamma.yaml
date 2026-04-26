@@ -18,7 +18,7 @@
 - slug: gamma_list_folders
   name: List Folders
   description: |
-    List all folders in Gamma workspace.
+    List all folders in the Gamma workspace for organizing presentations and documents. Returns folder IDs, names, and item counts for each folder.
   provider: gamma
   endpoint: /v1.0/folders
   method: GET
@@ -35,7 +35,7 @@
 - slug: gamma_get_folder
   name: Get Folder
   description: |
-    Get details of a specific folder.
+    Get detailed information about a specific folder including its name, contents listing, and creation date in the Gamma workspace.
   provider: gamma
   endpoint: /v1.0/folders/{folder_id}
   method: GET
@@ -57,7 +57,7 @@
 - slug: gamma_list_cards
   name: List Cards
   description: |
-    List all cards (presentations, docs, webpages) in Gamma.
+    List all cards (presentations, documents, webpages) in Gamma with optional folder filtering. Returns card IDs, titles, types, and last modified dates for each card.
   provider: gamma
   endpoint: /v1.0/cards
   method: GET
@@ -78,7 +78,7 @@
 - slug: gamma_get_card
   name: Get Card
   description: |
-    Get detailed information about a specific card.
+    Get detailed information about a specific card including its title, content summary, type, collaborators, and sharing settings.
   provider: gamma
   endpoint: /v1.0/cards/{card_id}
   method: GET
@@ -100,7 +100,7 @@
 - slug: gamma_create_card
   name: Create Card
   description: |
-    Create a new card (presentation, doc, or webpage).
+    Create a new card in Gamma as a presentation, document, or webpage with a title. Returns the created card with its unique ID and shareable link.
   provider: gamma
   endpoint: /v1.0/cards
   method: POST
@@ -129,7 +129,7 @@
 - slug: gamma_update_card
   name: Update Card
   description: |
-    Update an existing card's content or settings.
+    Update an existing card's content or settings including title and content. Returns the updated card with confirmation and modified field values.
   provider: gamma
   endpoint: /v1.0/cards/{card_id}
   method: PUT
@@ -157,7 +157,7 @@
 - slug: gamma_delete_card
   name: Delete Card
   description: |
-    Delete a card from Gamma.
+    Delete a card from Gamma permanently. Returns confirmation of deletion for the removed card.
   provider: gamma
   endpoint: /v1.0/cards/{card_id}
   method: DELETE
@@ -179,7 +179,7 @@
 - slug: gamma_list_collaborators
   name: List Collaborators
   description: |
-    List all collaborators on a card.
+    List all collaborators on a specific Gamma card with their roles and permissions. Returns collaborator names, email addresses, and access levels.
   provider: gamma
   endpoint: /v1.0/cards/{card_id}/collaborators
   method: GET
@@ -202,7 +202,7 @@
 - slug: gamma_add_collaborator
   name: Add Collaborator
   description: |
-    Add a collaborator to a card.
+    Add a collaborator to a Gamma card with their email address and specified role. Returns confirmation with the collaborator's access status.
   provider: gamma
   endpoint: /v1.0/cards/{card_id}/collaborators
   method: POST
@@ -232,7 +232,7 @@
 - slug: gamma_list_templates
   name: List Templates
   description: |
-    List available templates for creating cards.
+    List available templates in Gamma for creating new cards with pre-designed layouts and styles. Returns template names, descriptions, and preview thumbnails.
   provider: gamma
   endpoint: /v1.0/templates
   method: GET

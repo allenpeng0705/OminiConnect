@@ -1,7 +1,7 @@
 - slug: cloudflare_more_list_logpull_configs
   name: List Logpull Configs
   description: |
-    List all logpush configurations for a Cloudflare zone.
+    List all logpush configurations for a Cloudflare zone, returning job IDs, destinations, and enabled status.
   provider: cloudflare_more
   endpoint: /zones/{zone_id}/logspush/ownership
   method: GET
@@ -22,7 +22,7 @@
 - slug: cloudflare_more_get_logpull_config
   name: Get Logpull Config
   description: |
-    Get details for a specific logpush configuration.
+    Get details for a specific logpush configuration including destination settings and filter rules.
   provider: cloudflare_more
   endpoint: /zones/{zone_id}/logspush/ownership/{job_id}
   method: GET
@@ -47,7 +47,7 @@
 - slug: cloudflare_more_update_logpull_config
   name: Update Logpull Config
   description: |
-    Update a logpush configuration to change destination or filters.
+    Update a logpush configuration to change the destination, filters, or enabled status.
   provider: cloudflare_more
   endpoint: /zones/{zone_id}/logspush/ownership/{job_id}
   method: PUT
@@ -81,7 +81,7 @@
 - slug: cloudflare_more_list_stream_videos
   name: List Stream Videos
   description: |
-    List all videos in your Cloudflare Stream library.
+    List all videos in your Cloudflare Stream library, returning video IDs, titles, duration, and status.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/stream
   method: GET
@@ -108,7 +108,7 @@
 - slug: cloudflare_more_get_stream_video
   name: Get Stream Video
   description: |
-    Get details and metadata for a specific Cloudflare Stream video.
+    Get details and metadata for a specific Cloudflare Stream video including duration, size, and playback URLs.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/stream/{video_id}
   method: GET
@@ -133,7 +133,7 @@
 - slug: cloudflare_more_upload_stream_video
   name: Upload Stream Video
   description: |
-    Upload a new video to Cloudflare Stream.
+    Upload a new video to Cloudflare Stream by providing a video URL and optional caption file.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/stream
   method: POST
@@ -166,7 +166,7 @@
 - slug: cloudflare_more_list_images
   name: List Images
   description: |
-    List all images in your Cloudflare Images storage.
+    List all images in your Cloudflare Images storage, returning image IDs, filenames, sizes, and upload dates.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/images/v1
   method: GET
@@ -193,7 +193,7 @@
 - slug: cloudflare_more_get_image
   name: Get Image
   description: |
-    Get metadata for a specific Cloudflare Images image.
+    Get metadata for a specific Cloudflare Images image including dimensions, size, and upload details.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/images/v1/{image_id}
   method: GET
@@ -218,7 +218,7 @@
 - slug: cloudflare_more_upload_image
   name: Upload Image
   description: |
-    Upload a new image to Cloudflare Images.
+    Upload a new image to Cloudflare Images by providing the image data or URL and optional metadata.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/images/v1
   method: POST
@@ -251,7 +251,7 @@
 - slug: cloudflare_more_list_workers
   name: List Workers
   description: |
-    List all Workers scripts deployed in your account.
+    List all Workers scripts deployed in your Cloudflare account, returning script names and deployment dates.
   provider: cloudflare_more
   endpoint: /accounts/{account_id}/workers/scripts
   method: GET

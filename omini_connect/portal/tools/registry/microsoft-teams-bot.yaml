@@ -18,7 +18,7 @@
 - slug: teams_bot_list_conversations
   name: List Conversations
   description: |
-    List all conversations the bot is part of.
+    List all conversations the bot is part of. Returns conversation IDs, names, and last activity timestamps for each active conversation.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations
   method: GET
@@ -36,7 +36,7 @@
 - slug: teams_bot_get_conversation
   name: Get Conversation
   description: |
-    Get details of a specific conversation.
+    Get details of a specific conversation including its name, participants, and messaging settings. Returns the full conversation object.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations/{conversationId}
   method: GET
@@ -57,7 +57,7 @@
 - slug: teams_bot_send_message
   name: Send Message
   description: |
-    Send a message to a conversation.
+    Send a message to a conversation from the bot. Returns confirmation of the sent message with its unique ID and timestamp.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations/{conversationId}/activities
   method: POST
@@ -86,7 +86,7 @@
 - slug: teams_bot_list_members
   name: List Members
   description: |
-    List all members in a conversation.
+    List all members in a conversation. Returns member names, IDs, and roles for each participant in the conversation.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations/{conversationId}/members
   method: GET
@@ -108,7 +108,7 @@
 - slug: teams_bot_update_activity
   name: Update Activity
   description: |
-    Update an existing message activity.
+    Update an existing message activity in a conversation. Returns confirmation of the update with the modified activity details.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations/{conversationId}/activities/{activityId}
   method: PUT
@@ -137,7 +137,7 @@
 - slug: teams_bot_delete_activity
   name: Delete Activity
   description: |
-    Delete a message activity.
+    Delete a message activity from a conversation. Returns confirmation of the successful deletion of the activity.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations/{conversationId}/activities/{activityId}
   method: DELETE
@@ -162,7 +162,7 @@
 - slug: teams_bot_create_conversation
   name: Create Conversation
   description: |
-    Create a new conversation with a user or channel.
+    Create a new conversation with a user or channel. Returns the created conversation with its unique ID and initial settings.
   provider: microsoft-teams-bot
   endpoint: /v3/conversations
   method: POST
@@ -185,7 +185,7 @@
 - slug: teams_bot_list_channels
   name: List Channels
   description: |
-    List all channels in a team.
+    List all channels in a team. Returns channel names, descriptions, and membership types for each channel in the team.
   provider: microsoft-teams-bot
   endpoint: /v3/teams/{teamId}/channels
   method: GET
@@ -207,7 +207,7 @@
 - slug: teams_bot_get_channel
   name: Get Channel
   description: |
-    Get details of a specific channel.
+    Get details of a specific channel including its name, description, and messaging settings. Returns the channel configuration object.
   provider: microsoft-teams-bot
   endpoint: /v3/teams/{teamId}/channels/{channelId}
   method: GET
@@ -232,7 +232,7 @@
 - slug: teams_bot_list_teams
   name: List Teams
   description: |
-    List all teams the bot is installed in.
+    List all teams the bot is installed in. Returns team names, IDs, and member counts for each team the bot has access to.
   provider: microsoft-teams-bot
   endpoint: /v3/teams
   method: GET

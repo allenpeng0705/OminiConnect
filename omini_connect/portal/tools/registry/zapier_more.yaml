@@ -2,6 +2,8 @@
   name: List Zaps
   description: |
     Retrieve a list of all Zaps in the user's Zapier account.
+    Returns Zap names, IDs, status, and last modification date for each Zap.
+    Use this to discover available automations and check their current state.
   provider: zapier_more
   endpoint: /zaps
   method: GET
@@ -26,6 +28,8 @@
   name: Get Zap
   description: |
     Retrieve details of a specific Zap by its ID.
+    Returns the full Zap configuration including trigger, actions, and status.
+    This provides complete automation setup data for troubleshooting or duplication.
   provider: zapier_more
   endpoint: /zaps/{zap_id}
   method: GET
@@ -48,6 +52,8 @@
   name: Create Zap
   description: |
     Create a new Zap with specified trigger and actions.
+    Returns the created Zap with its unique ID and initial configuration.
+    This provisions a new automation workflow in the user's Zapier account.
   provider: zapier_more
   endpoint: /zaps
   method: POST
@@ -76,6 +82,8 @@
   name: Update Zap
   description: |
     Update an existing Zap's configuration or settings.
+    Modifies the trigger, actions, or other properties of an existing Zap.
+    This changes the automation behavior while preserving the Zap's ID.
   provider: zapier_more
   endpoint: /zaps/{zap_id}
   method: PUT
@@ -107,6 +115,8 @@
   name: List Runs
   description: |
     Retrieve a list of recent runs for a specific zap.
+    Returns execution timestamps, status, and input/output data for each run.
+    Use this to monitor automation activity and troubleshoot failed executions.
   provider: zapier_more
   endpoint: /zaps/{zap_id}/runs
   method: GET
@@ -135,6 +145,8 @@
   name: Get Run
   description: |
     Retrieve details of a specific run by its ID.
+    Returns the complete execution data including step results and any error messages.
+    This provides detailed debugging information for a particular automation run.
   provider: zapier_more
   endpoint: /runs/{run_id}
   method: GET
@@ -157,6 +169,8 @@
   name: List History
   description: |
     Retrieve the full execution history across all zaps.
+    Returns all automation executions with timestamps, status, and Zap IDs.
+    Use this to audit overall automation activity and identify patterns in failures.
   provider: zapier_more
   endpoint: /history
   method: GET
@@ -187,6 +201,8 @@
   name: Get History Item
   description: |
     Retrieve details of a specific history item by its ID.
+    Returns the complete execution data for a single history entry.
+    This provides full debugging information for a specific automation event.
   provider: zapier_more
   endpoint: /history/{history_id}
   method: GET
@@ -208,7 +224,9 @@
 - slug: zapier_more_enable_zap
   name: Enable Zap
   description: |
-    Enable (activate) a zap so it can process triggers.
+    Enable (activate) a Zap so it can process triggers.
+    Returns the updated Zap status showing it is now active.
+    This starts the automation workflow so it executes when triggered.
   provider: zapier_more
   endpoint: /zaps/{zap_id}/enable
   method: POST
@@ -230,7 +248,9 @@
 - slug: zapier_more_disable_zap
   name: Disable Zap
   description: |
-    Disable (deactivate) a zap to stop processing triggers.
+    Disable (deactivate) a Zap to stop processing triggers.
+    Returns the updated Zap status showing it is now paused.
+    This pauses the automation workflow and prevents it from executing.
   provider: zapier_more
   endpoint: /zaps/{zap_id}/disable
   method: POST

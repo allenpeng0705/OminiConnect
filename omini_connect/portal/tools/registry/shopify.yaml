@@ -17,7 +17,7 @@
 - slug: shopify_list_orders
   name: List Orders
   description: |
-    List all orders in a Shopify store with optional status and date filtering.
+    List all orders in the Shopify store with pagination and optional status filtering. Returns order IDs, customer names, financial statuses, fulfillment statuses, and order dates for order management.
   provider: shopify
   endpoint: /admin/api/2024-01/orders.json
   method: GET
@@ -45,7 +45,7 @@
 - slug: shopify_get_order
   name: Get Order
   description: |
-    Get detailed information about a specific order including line items, customer, and shipping.
+    Get detailed information about a specific Shopify order by ID including line items, customer details, shipping address, financial status, and payment information. Returns data for order management and fulfillment tracking.
   provider: shopify
   endpoint: /admin/api/2024-01/orders/{order_id}.json
   method: GET
@@ -70,7 +70,7 @@
 - slug: shopify_create_order
   name: Create Order
   description: |
-    Create a new order in the Shopify store with line items and shipping details.
+    Create a new order in Shopify with line items, customer, and shipping address. Returns the created order with its ID and status for fulfillment processing and order tracking.
   provider: shopify
   endpoint: /admin/api/2024-01/orders.json
   method: POST
@@ -101,7 +101,7 @@
 - slug: shopify_list_products
   name: List Products
   description: |
-    List all products in a Shopify store with filtering by status, type, or collection.
+    List all products in the Shopify store with pagination and optional filtering by status, product type, or collection. Returns product IDs, titles, descriptions, vendors, types, and pricing information for catalog management.
   provider: shopify
   endpoint: /admin/api/2024-01/products.json
   method: GET
@@ -132,7 +132,7 @@
 - slug: shopify_get_product
   name: Get Product
   description: |
-    Get detailed information about a specific product including variants, images, and SEO.
+    Get detailed information about a specific Shopify product by ID including title, description, variants, images, pricing, inventory levels, and SEO information. Returns data for catalog management and inventory tracking.
   provider: shopify
   endpoint: /admin/api/2024-01/products/{product_id}.json
   method: GET
@@ -157,7 +157,7 @@
 - slug: shopify_create_product
   name: Create Product
   description: |
-    Create a new product in the Shopify store with variants, pricing, and media.
+    Create a new product in Shopify with title, description, vendor, product type, and variants. Returns the created product with its ID and status for inventory and catalog management.
   provider: shopify
   endpoint: /admin/api/2024-01/products.json
   method: POST
@@ -191,7 +191,7 @@
 - slug: shopify_list_customers
   name: List Customers
   description: |
-    List all customers in a Shopify store with filtering by tags or email.
+    List all customers in the Shopify store with pagination and optional filtering by email or tags. Returns customer IDs, names, email addresses, and tags for CRM management and customer segmentation.
   provider: shopify
   endpoint: /admin/api/2024-01/customers.json
   method: GET
@@ -219,7 +219,7 @@
 - slug: shopify_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer including orders and addresses.
+    Get detailed information about a specific Shopify customer by ID including name, email, addresses, order history, and tags. Returns data for customer relationship management and order tracking.
   provider: shopify
   endpoint: /admin/api/2024-01/customers/{customer_id}.json
   method: GET
@@ -244,7 +244,7 @@
 - slug: shopify_list_fulfillments
   name: List Fulfillments
   description: |
-    List all fulfillment orders for an order, showing shipment tracking information.
+    List all fulfillments for a Shopify order with pagination. Returns fulfillment IDs, tracking numbers, carrier names, shipment statuses, and fulfillment dates for shipment tracking and logistics management.
   provider: shopify
   endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
   method: GET
@@ -267,7 +267,7 @@
 - slug: shopify_get_fulfillment
   name: Get Fulfillment
   description: |
-    Get detailed information about a specific fulfillment including tracking events.
+    Get detailed information about a specific Shopify fulfillment by ID including tracking number, carrier, shipment status, tracking events, and estimated delivery date. Returns data for shipment tracking and delivery confirmation.
   provider: shopify
   endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments/{fulfillment_id}.json
   method: GET

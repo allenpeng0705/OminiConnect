@@ -18,7 +18,7 @@
 - slug: cisco_duo_list_users
   name: List Users
   description: |
-    List all users in the Duo directory.
+    List all users in the Cisco Duo directory, returning user IDs, usernames, email addresses, and activation status.
   provider: cisco-duo-admin
   endpoint: /admin/v1/users
   method: GET
@@ -39,7 +39,7 @@
 - slug: cisco_duo_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve details of a specific Cisco Duo user including username, email, phone, and authentication status.
   provider: cisco-duo-admin
   endpoint: /admin/v1/users/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: cisco_duo_create_user
   name: Create User
   description: |
-    Create a new user in Duo.
+    Create a new user in Cisco Duo with username, real name, and email address, returning the created user ID.
   provider: cisco-duo-admin
   endpoint: /admin/v1/users
   method: POST
@@ -87,7 +87,7 @@
 - slug: cisco_duo_delete_user
   name: Delete User
   description: |
-    Delete a user from Duo.
+    Remove a user from Cisco Duo directory, deleting their account, authentication methods, and associated settings.
   provider: cisco-duo-admin
   endpoint: /admin/v1/users/{id}
   method: DELETE
@@ -108,7 +108,7 @@
 - slug: cisco_duo_list_phones
   name: List Phones
   description: |
-    List all phones registered in Duo.
+    List all phones registered in Cisco Duo for two-factor authentication, returning phone IDs, models, and status.
   provider: cisco-duo-admin
   endpoint: /admin/v1/phones
   method: GET
@@ -129,7 +129,7 @@
 - slug: cisco_duo_get_phone
   name: Get Phone
   description: |
-    Get details of a specific phone.
+    Retrieve details of a specific Cisco Duo phone including model, platform, carrier, and activation status.
   provider: cisco-duo-admin
   endpoint: /admin/v1/phones/{id}
   method: GET
@@ -150,7 +150,7 @@
 - slug: cisco_duo_list_auth_logs
   name: List Auth Logs
   description: |
-    List all authentication logs.
+    List all Cisco Duo authentication events with optional filtering, returning user, method, and result for each event.
   provider: cisco-duo-admin
   endpoint: /admin/v1/logs/authentication
   method: GET
@@ -171,7 +171,7 @@
 - slug: cisco_duo_list_administrators
   name: List Administrators
   description: |
-    List all Duo administrators.
+    List all Cisco Duo administrators with their names, email addresses, and assigned admin roles.
   provider: cisco-duo-admin
   endpoint: /admin/v1/administrators
   method: GET
@@ -192,7 +192,7 @@
 - slug: cisco_duo_get_auth_log_entry
   name: Get Auth Log Entry
   description: |
-    Get details of a specific authentication log entry.
+    Retrieve details of a specific Cisco Duo authentication log entry including user, timestamp, method, and result.
   provider: cisco-duo-admin
   endpoint: /admin/v1/logs/authentication/{id}
   method: GET
@@ -213,7 +213,7 @@
 - slug: cisco_duo_list_directory_users
   name: List Directory Users
   description: |
-    List all users synced from directory.
+    List all users synced from the directory service to Cisco Duo, returning names, email addresses, and sync status.
   provider: cisco-duo-admin
   endpoint: /admin/v1/directory/users
   method: GET

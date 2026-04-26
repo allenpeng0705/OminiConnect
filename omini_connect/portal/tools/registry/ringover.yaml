@@ -18,7 +18,7 @@
 - slug: ringover_list_calls
   name: List Calls
   description: |
-    Retrieve a list of all calls in your RingOver account.
+    List all calls in your RingOver account with details on participants, duration, status, and timestamps. Returns call records for activity tracking and performance analysis.
   provider: ringover
   endpoint: /v1/calls
   method: GET
@@ -44,7 +44,7 @@
 - slug: ringover_get_call
   name: Get Call
   description: |
-    Get details of a specific call.
+    Get details of a specific RingOver call including participants, duration, status, notes, and recording availability. Returns call metadata for detailed activity review.
   provider: ringover
   endpoint: /v1/calls/{callId}
   method: GET
@@ -67,7 +67,7 @@
 - slug: ringover_make_call
   name: Make Call
   description: |
-    Initiate an outbound call.
+    Initiate an outbound call from RingOver to a specified phone number with optional caller ID and user assignment. Returns call initiation status and call ID for tracking.
   provider: ringover
   endpoint: /v1/calls
   method: POST
@@ -97,7 +97,7 @@
 - slug: ringover_end_call
   name: End Call
   description: |
-    End an active call.
+    End an active RingOver call by its ID. Returns confirmation of call termination and duration summary.
   provider: ringover
   endpoint: /v1/calls/{callId}
   method: DELETE
@@ -120,7 +120,7 @@
 - slug: ringover_list_contacts
   name: List Contacts
   description: |
-    Retrieve a list of all contacts.
+    List all contacts in your RingOver account with names, phone numbers, email addresses, and company information. Returns contact records for customer relationship management.
   provider: ringover
   endpoint: /v1/contacts
   method: GET
@@ -142,7 +142,7 @@
 - slug: ringover_create_contact
   name: Create Contact
   description: |
-    Create a new contact.
+    Create a new contact in RingOver with name, phone number, email, and company details. Returns the created contact with its unique ID for follow-up and tracking.
   provider: ringover
   endpoint: /v1/contacts
   method: POST
@@ -171,7 +171,7 @@
 - slug: ringover_list_users
   name: List Users
   description: |
-    Retrieve a list of all team users.
+    List all team users in your RingOver account including names, email addresses, roles, and availability status. Returns user profiles for team management and call routing.
   provider: ringover
   endpoint: /v1/users
   method: GET
@@ -194,7 +194,7 @@
 - slug: ringover_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Get details of a specific RingOver user including name, email, role, extension, and presence status. Returns user profile data for team coordination and call assignment.
   provider: ringover
   endpoint: /v1/users/{userId}
   method: GET
@@ -217,7 +217,7 @@
 - slug: ringover_update_call_note
   name: Update Call Note
   description: |
-    Add or update a note on a call.
+    Add or update a note on a RingOver call with the specified call ID and note content. Returns confirmation of note attachment to the call record.
   provider: ringover
   endpoint: /v1/calls/{callId}/note
   method: PUT
@@ -244,7 +244,7 @@
 - slug: ringover_get_call_recordings
   name: Get Call Recordings
   description: |
-    Get recordings for a specific call.
+    Get all recordings for a specific RingOver call including audio URLs, duration, and timestamps. Returns recording data for quality assurance and compliance review.
   provider: ringover
   endpoint: /v1/calls/{callId}/recordings
   method: GET

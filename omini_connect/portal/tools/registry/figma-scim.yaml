@@ -18,7 +18,7 @@
 - slug: figma_scim_list_users
   name: List Users
   description: |
-    List all users in the organization.
+    List all users in the Figma organization with pagination support. Returns email addresses, display names, roles, and account status for each user.
   provider: figma-scim
   endpoint: /Users
   method: GET
@@ -44,7 +44,7 @@
 - slug: figma_scim_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve detailed information about a specific Figma user including email address, display name, role, and provisioning status details.
   provider: figma-scim
   endpoint: /Users/{id}
   method: GET
@@ -66,7 +66,7 @@
 - slug: figma_scim_create_user
   name: Create User
   description: |
-    Create a new user in the organization.
+    Create a new user in the Figma organization with specified email, username, and display name via SCIM provisioning. Returns the created user with their unique identifier.
   provider: figma-scim
   endpoint: /Users
   method: POST
@@ -95,7 +95,7 @@
 - slug: figma_scim_update_user
   name: Update User
   description: |
-    Update user details.
+    Update user details for a specific Figma user including display name, email address, and role via SCIM provisioning. Returns the updated user information.
   provider: figma-scim
   endpoint: /Users/{id}
   method: PUT
@@ -123,7 +123,7 @@
 - slug: figma_scim_delete_user
   name: Delete User
   description: |
-    Delete a user from the organization.
+    Delete a user from the Figma organization via SCIM deprovisioning. Returns confirmation of successful removal with the deleted user identifier.
   provider: figma-scim
   endpoint: /Users/{id}
   method: DELETE
@@ -145,7 +145,7 @@
 - slug: figma_scim_list_groups
   name: List Groups
   description: |
-    List all groups in the organization.
+    List all groups in the Figma organization with pagination support. Returns group names, member counts, and descriptions for each group.
   provider: figma-scim
   endpoint: /Groups
   method: GET
@@ -167,7 +167,7 @@
 - slug: figma_scim_get_group
   name: Get Group
   description: |
-    Get details of a specific group.
+    Retrieve detailed information about a specific Figma group including name, description, and complete member list with user details.
   provider: figma-scim
   endpoint: /Groups/{id}
   method: GET
@@ -189,7 +189,7 @@
 - slug: figma_scim_create_group
   name: Create Group
   description: |
-    Create a new group.
+    Create a new group in the Figma organization with a specified display name via SCIM provisioning. Returns the created group with its unique identifier.
   provider: figma-scim
   endpoint: /Groups
   method: POST
@@ -211,7 +211,7 @@
 - slug: figma_scim_update_group
   name: Update Group
   description: |
-    Update group details.
+    Update group details for a specific Figma group including display name and membership via SCIM provisioning. Returns the updated group information.
   provider: figma-scim
   endpoint: /Groups/{id}
   method: PUT
@@ -236,7 +236,7 @@
 - slug: figma_scim_list_provisioning_logs
   name: List Provisioning Logs
   description: |
-    List provisioning activity logs.
+    List provisioning activity logs for the Figma organization with optional date range filtering. Returns user provisioning events, timestamps, and operation types.
   provider: figma-scim
   endpoint: /Logs
   method: GET

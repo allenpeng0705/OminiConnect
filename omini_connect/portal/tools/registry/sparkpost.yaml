@@ -1,7 +1,9 @@
 - slug: sparkpost_list_messages
   name: List Messages
   description: |
-    Retrieve all transmission messages from your SparkPost account.
+    Retrieve all transmission messages from your SparkPost account with pagination.
+    Returns message IDs, subjects, statuses, and timestamps for each transmission.
+    Use this to discover email campaigns and track message delivery status.
   provider: sparkpost
   endpoint: /v1/transmissions
   method: GET
@@ -27,7 +29,9 @@
 - slug: sparkpost_get_message
   name: Get Message
   description: |
-    Retrieve details of a specific transmission message.
+    Retrieve details of a specific transmission message by ID.
+    Returns the complete message data with all associated information.
+    This provides full message data for email tracking and analytics.
   provider: sparkpost
   endpoint: /v1/transmissions/{id}
   method: GET
@@ -48,7 +52,9 @@
 - slug: sparkpost_send_message
   name: Send Message
   description: |
-    Send an email message via SparkPost transmission API.
+    Send an email message via SparkPost transmission API to specified recipients.
+    Returns the sent message confirmation with delivery tracking ID.
+    This creates and dispatches a new email transmission.
   provider: sparkpost
   endpoint: /v1/transmissions
   method: POST
@@ -89,7 +95,9 @@
 - slug: sparkpost_list_templates
   name: List Templates
   description: |
-    Retrieve all email templates from your SparkPost account.
+    Retrieve all email templates from your SparkPost account with pagination.
+    Returns template IDs, names, and descriptions for each template.
+    Use this to discover email templates and manage campaign content.
   provider: sparkpost
   endpoint: /v1/templates
   method: GET
@@ -112,7 +120,9 @@
 - slug: sparkpost_get_template
   name: Get Template
   description: |
-    Retrieve a specific email template by ID.
+    Retrieve a specific email template by ID with full content and structure.
+    Returns the complete template data with all associated information.
+    This provides full template data for email campaign management.
   provider: sparkpost
   endpoint: /v1/templates/{id}
   method: GET
@@ -133,7 +143,9 @@
 - slug: sparkpost_create_template
   name: Create Template
   description: |
-    Create a new email template in SparkPost.
+    Create a new email template in SparkPost with HTML and plain text versions.
+    Returns the created template with its unique ID and confirmation.
+    This provisions a new email template for campaign usage.
   provider: sparkpost
   endpoint: /v1/templates
   method: POST
@@ -171,7 +183,9 @@
 - slug: sparkpost_list_webhooks
   name: List Webhooks
   description: |
-    Retrieve all configured webhooks for event streaming.
+    Retrieve all configured webhooks for event streaming with pagination.
+    Returns webhook IDs, names, and target URLs for each webhook.
+    Use this to discover webhook integrations and manage event notifications.
   provider: sparkpost
   endpoint: /v1/webhooks
   method: GET
@@ -191,7 +205,9 @@
 - slug: sparkpost_create_webhook
   name: Create Webhook
   description: |
-    Create a new webhook for receiving SparkPost event notifications.
+    Create a new webhook for receiving SparkPost event notifications at a target URL.
+    Returns the created webhook with its unique ID and confirmation.
+    This enables real-time integration with your applications for email events.
   provider: sparkpost
   endpoint: /v1/webhooks
   method: POST
@@ -223,7 +239,9 @@
 - slug: sparkpost_get_metrics
   name: Get Metrics
   description: |
-    Retrieve aggregate metrics for your SparkPost transmissions.
+    Retrieve aggregate metrics for your SparkPost transmissions within a date range.
+    Returns delivery statistics, open rates, and click rates for each metric.
+    Use this to discover email performance and track campaign analytics.
   provider: sparkpost
   endpoint: /v1/metrics
   method: GET
@@ -252,7 +270,9 @@
 - slug: sparkpost_list_domains
   name: List Domains
   description: |
-    Retrieve all verified sending domains in your SparkPost account.
+    Retrieve all verified sending domains in your SparkPost account with pagination.
+    Returns domain names, verification status, and DKIM keys for each domain.
+    Use this to discover sending domains and manage email deliverability.
   provider: sparkpost
   endpoint: /v1/sending-domains
   method: GET

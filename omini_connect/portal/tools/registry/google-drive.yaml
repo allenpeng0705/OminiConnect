@@ -18,7 +18,7 @@
 - slug: google_drive_list_files
   name: List Files
   description: |
-    List files in Google Drive.
+    List all files in the authenticated user's Google Drive. Returns file IDs, names, MIME types, created/modified dates, and parent folders for each file.
   provider: google-drive
   endpoint: /drive/v3/files
   method: GET
@@ -44,7 +44,7 @@
 - slug: google_drive_get_file
   name: Get File
   description: |
-    Get detailed information about a file.
+    Get detailed information about a specific Google Drive file including its name, MIME type, size, created/modified timestamps, and sharing permissions.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}
   method: GET
@@ -67,7 +67,7 @@
 - slug: google_drive_create_file
   name: Create File
   description: |
-    Create a new file in Google Drive.
+    Create a new file or Google Docs/Sheets/Slides document in Google Drive with specified name and MIME type. Returns the created file ID and metadata.
   provider: google-drive
   endpoint: /drive/v3/files
   method: POST
@@ -96,7 +96,7 @@
 - slug: google_drive_update_file
   name: Update File
   description: |
-    Update a file's metadata.
+    Update a file's metadata (name, description, or parent folder) in Google Drive. Returns the updated file with modified field values.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}
   method: PATCH
@@ -122,7 +122,7 @@
 - slug: google_drive_delete_file
   name: Delete File
   description: |
-    Delete a file from Google Drive.
+    Permanently delete a file from Google Drive. Returns confirmation of successful deletion.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}
   method: DELETE
@@ -145,7 +145,7 @@
 - slug: google_drive_list_permissions
   name: List Permissions
   description: |
-    List permissions for a file.
+    List all permissions for a Google Drive file. Returns permission IDs, principal emails, roles (reader, writer, commenter, owner), and type (user, group, domain) for each permission.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}/permissions
   method: GET
@@ -168,7 +168,7 @@
 - slug: google_drive_create_permission
   name: Create Permission
   description: |
-    Create a permission for a file.
+    Create a new permission for a Google Drive file to share with users, groups, or domains. Returns the created permission ID and details.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}/permissions
   method: POST
@@ -202,7 +202,7 @@
 - slug: google_drive_list_revisions
   name: List Revisions
   description: |
-    List revisions of a file.
+    List all revisions of a Google Drive file. Returns revision IDs, modified timestamps, editor emails, and file size for each revision.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}/revisions
   method: GET
@@ -225,7 +225,7 @@
 - slug: google_drive_get_revision
   name: Get Revision
   description: |
-    Get a specific revision of a file.
+    Get detailed information about a specific revision of a file including the modified timestamp, editor, and whether it is the current revision.
   provider: google-drive
   endpoint: /drive/v3/files/{fileId}/revisions/{revisionId}
   method: GET
@@ -252,7 +252,7 @@
 - slug: google_drive_search_files
   name: Search Files
   description: |
-    Search for files in Google Drive.
+    Search for files in Google Drive using query filters. Returns file IDs, names, types, and modification dates for matching files.
   provider: google-drive
   endpoint: /drive/v3/files
   method: GET

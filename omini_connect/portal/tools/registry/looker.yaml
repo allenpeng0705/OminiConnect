@@ -17,7 +17,7 @@
 - slug: looker_list_looks
   name: List Looks
   description: |
-    List all looks the user has access to.
+    List all saved looks in your Looker account with pagination. Returns look titles, IDs, descriptions, and query configurations for each look.
   provider: looker
   endpoint: /looks
   method: GET
@@ -42,7 +42,7 @@
 - slug: looker_get_look
   name: Get Look
   description: |
-    Get detailed information about a specific look.
+    Retrieve details about a specific Looker look by its ID. Returns the look title, description, query definition, visualization type, and result data.
   provider: looker
   endpoint: /looks/{lookId}
   method: GET
@@ -64,7 +64,7 @@
 - slug: looker_list_dashboards
   name: List Dashboards
   description: |
-    List all dashboards the user has access to.
+    List all dashboards in your Looker account with pagination. Returns dashboard names, IDs, descriptions, and tile layouts for each dashboard.
   provider: looker
   endpoint: /dashboards
   method: GET
@@ -89,7 +89,7 @@
 - slug: looker_get_dashboard
   name: Get Dashboard
   description: |
-    Get detailed information about a specific dashboard.
+    Retrieve details about a specific Looker dashboard by its ID. Returns the dashboard title, description, tiles, filters, and layout configuration.
   provider: looker
   endpoint: /dashboards/{dashboardId}
   method: GET
@@ -111,7 +111,7 @@
 - slug: looker_list_models
   name: List Models
   description: |
-    List all Looker models (containing views/explores).
+    List all data models in your Looker account with pagination. Returns model names, descriptions, and view counts for each model.
   provider: looker
   endpoint: /models
   method: GET
@@ -133,7 +133,7 @@
 - slug: looker_get_model
   name: Get Model
   description: |
-    Get detailed information about a specific model including available views and explores.
+    Retrieve details about a specific Looker data model by its name. Returns the model name, description, explores, and available views for querying.
   provider: looker
   endpoint: /models/{modelName}
   method: GET
@@ -155,7 +155,7 @@
 - slug: looker_list_users
   name: List Users
   description: |
-    List all users in the Looker instance.
+    List all users in your Looker instance with pagination. Returns user names, IDs, email addresses, and roles for each user.
   provider: looker
   endpoint: /users
   method: GET
@@ -180,7 +180,7 @@
 - slug: looker_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user including roles and permissions.
+    Retrieve details about a specific Looker user by their ID. Returns the user's name, email, roles, permissions, and preferences.
   provider: looker
   endpoint: /users/{userId}
   method: GET
@@ -202,7 +202,7 @@
 - slug: looker_run_look
   name: Run Look
   description: |
-    Run a Look look and get results.
+    Execute a saved Looker look and retrieve results in the specified format. Returns the query results with column headers and row data values.
   provider: looker
   endpoint: /looks/{lookId}/run
   method: GET
@@ -229,7 +229,7 @@
 - slug: looker_get_query
   name: Get Query
   description: |
-    Get details about a specific saved query.
+    Retrieve details about a specific saved Looker query by its ID. Returns the query SQL, parameters, model, explore, and result metadata.
   provider: looker
   endpoint: /queries/{queryId}
   method: GET

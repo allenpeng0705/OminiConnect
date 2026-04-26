@@ -18,7 +18,8 @@
 - slug: bird_list_messages
   name: List Messages
   description: |
-    List all messages sent through Bird.
+    List all messages sent through Bird and return message IDs, status, and delivery information.
+    Use this to track message history across all channels.
   provider: bird
   endpoint: /v1/messages
   method: GET
@@ -43,7 +44,8 @@
 - slug: bird_get_message
   name: Get Message
   description: |
-    Get details for a specific message.
+    Get details for a specific message including content, recipient, and delivery status.
+    Returns the complete message data for tracking and analytics.
   provider: bird
   endpoint: /v1/messages/{messageId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: bird_send_message
   name: Send Message
   description: |
-    Send a message through Bird.
+    Send a message through Bird across a specified channel (sms, email, whatsapp) to a recipient.
+    Returns message ID and delivery status for tracking.
   provider: bird
   endpoint: /v1/messages
   method: POST
@@ -93,7 +96,8 @@
 - slug: bird_list_templates
   name: List Templates
   description: |
-    List all message templates.
+    List all message templates available in Bird and return template names, channels, and content.
+    Use this to discover templates for consistent messaging.
   provider: bird
   endpoint: /v1/templates
   method: GET
@@ -118,7 +122,8 @@
 - slug: bird_create_template
   name: Create Template
   description: |
-    Create a new message template.
+    Create a new message template with name, channel, and content for outgoing communications.
+    Templates ensure consistent messaging across campaigns.
   provider: bird
   endpoint: /v1/templates
   method: POST
@@ -147,7 +152,8 @@
 - slug: bird_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Bird.
+    List all contacts in Bird and return contact names, IDs, and communication preferences.
+    Use this to discover your contact database for messaging campaigns.
   provider: bird
   endpoint: /v1/contacts
   method: GET
@@ -172,7 +178,8 @@
 - slug: bird_get_contact
   name: Get Contact
   description: |
-    Get details for a specific contact.
+    Get details for a specific contact including name, identifier, and channel preferences.
+    Returns the complete contact profile for personalized messaging.
   provider: bird
   endpoint: /v1/contacts/{contactId}
   method: GET
@@ -193,7 +200,8 @@
 - slug: bird_list_campaigns
   name: List Campaigns
   description: |
-    List all campaigns in Bird.
+    List all campaigns in Bird and return campaign names, status, and audience size.
+    Use this to track messaging campaign performance.
   provider: bird
   endpoint: /v1/campaigns
   method: GET
@@ -218,7 +226,8 @@
 - slug: bird_get_campaign
   name: Get Campaign
   description: |
-    Get details for a specific campaign.
+    Get details for a specific campaign including status, audience, and delivery metrics.
+    Returns campaign performance data for optimization.
   provider: bird
   endpoint: /v1/campaigns/{campaignId}
   method: GET
@@ -239,7 +248,8 @@
 - slug: bird_get_webhooks
   name: Get Webhooks
   description: |
-    Get webhook events and logs.
+    Get webhook events and logs for real-time notifications from Bird.
+    Returns recent webhook payloads for integration debugging.
   provider: bird
   endpoint: /v1/webhooks
   method: GET

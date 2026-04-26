@@ -17,7 +17,8 @@
 - slug: bookly_list_appointments
   name: List Appointments
   description: |
-    List all appointments, optionally filtered by date, customer, staff, or status.
+    List all appointments and return appointment IDs, dates, times, customer names, and staff assignments.
+    Filter by date range, customer, staff, or status to find specific booking records.
   provider: bookly
   endpoint: /appointments
   method: GET
@@ -55,7 +56,8 @@
 - slug: bookly_get_appointment
   name: Get Appointment
   description: |
-    Get detailed information about a specific appointment.
+    Get detailed information about a specific appointment including customer, service, staff, and time.
+    Returns the complete appointment data for scheduling management and conflict resolution.
   provider: bookly
   endpoint: /appointments/{appointment_id}
   method: GET
@@ -77,7 +79,8 @@
 - slug: bookly_create_appointment
   name: Create Appointment
   description: |
-    Create a new appointment for a customer with a staff member.
+    Create a new appointment for a customer with a specified service, staff member, and time slot.
+    Returns the created appointment ID for confirmation and further management.
   provider: bookly
   endpoint: /appointments
   method: POST
@@ -117,7 +120,8 @@
 - slug: bookly_cancel_appointment
   name: Cancel Appointment
   description: |
-    Cancel an existing appointment.
+    Cancel an existing appointment and optionally provide a cancellation reason for records.
+    Returns confirmation of the cancellation for scheduling updates.
   provider: bookly
   endpoint: /appointments/{appointment_id}
   method: DELETE
@@ -142,7 +146,8 @@
 - slug: bookly_list_customers
   name: List Customers
   description: |
-    List all customers in the system.
+    List all customers and return customer names, email addresses, phone numbers, and appointment history.
+    Search by name, email, or phone to find specific customers for booking management.
   provider: bookly
   endpoint: /customers
   method: GET
@@ -168,7 +173,8 @@
 - slug: bookly_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer.
+    Get detailed information about a specific customer including contact details and booking history.
+    Returns the complete customer profile for personalized service and relationship management.
   provider: bookly
   endpoint: /customers/{customer_id}
   method: GET
@@ -190,7 +196,8 @@
 - slug: bookly_list_services
   name: List Services
   description: |
-    List all services (treatments) available for booking.
+    List all services available for booking and return service names, durations, and prices.
+    Filter by category to discover specific treatment options for appointment scheduling.
   provider: bookly
   endpoint: /services
   method: GET
@@ -216,7 +223,8 @@
 - slug: bookly_get_service
   name: Get Service
   description: |
-    Get detailed information about a specific service.
+    Get detailed information about a specific service including duration, pricing, and category.
+    Returns the complete service data for accurate booking and customer consultation.
   provider: bookly
   endpoint: /services/{service_id}
   method: GET
@@ -238,7 +246,8 @@
 - slug: bookly_list_staff
   name: List Staff
   description: |
-    List all staff members who provide services.
+    List all staff members and return staff names, specialties, and availability for services.
+    Filter by service to find qualified staff for specific treatments.
   provider: bookly
   endpoint: /staff
   method: GET
@@ -264,7 +273,8 @@
 - slug: bookly_get_staff
   name: Get Staff
   description: |
-    Get detailed information about a specific staff member.
+    Get detailed information about a specific staff member including specialization, schedule, and services.
+    Returns the complete staff profile for availability checking and assignment management.
   provider: bookly
   endpoint: /staff/{staff_id}
   method: GET

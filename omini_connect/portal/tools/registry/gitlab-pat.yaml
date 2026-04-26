@@ -18,7 +18,7 @@
 - slug: gitlab_pat_list_projects
   name: List Projects
   description: |
-    List GitLab projects the authenticated user has access to.
+    List GitLab projects that the authenticated user has access to via personal access token. Returns project names, IDs, visibility levels, and default branches for each project.
   provider: gitlab-pat
   endpoint: /api/v4/projects
   method: GET
@@ -48,7 +48,7 @@
 - slug: gitlab_pat_get_project
   name: Get Project
   description: |
-    Get detailed information about a project.
+    Get detailed information about a specific GitLab project including its name, description, visibility, default branch, and CI/CD configuration status.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}
   method: GET
@@ -70,7 +70,7 @@
 - slug: gitlab_pat_list_issues
   name: List Issues
   description: |
-    List issues across projects or within a project.
+    List issues across GitLab projects or within a specific project with optional state filtering. Returns issue IDs, titles, states, and labels for each issue.
   provider: gitlab-pat
   endpoint: /api/v4/issues
   method: GET
@@ -95,7 +95,7 @@
 - slug: gitlab_pat_get_issue
   name: Get Issue
   description: |
-    Get detailed information about a specific issue.
+    Get detailed information about a specific GitLab issue including its title, description, state, labels, assignees, and timestamps.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{project_id}/issues/{issue_iid}
   method: GET
@@ -121,7 +121,7 @@
 - slug: gitlab_pat_list_mrs
   name: List Merge Requests
   description: |
-    List merge requests in a project.
+    List merge requests in a specific GitLab project with optional state filtering. Returns MR IDs, titles, states, source/target branches, and author information.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}/merge_requests
   method: GET
@@ -147,7 +147,7 @@
 - slug: gitlab_pat_get_mr
   name: Get Merge Request
   description: |
-    Get detailed information about a merge request.
+    Get detailed information about a specific GitLab merge request including its title, description, state, reviewers, diff stats, and merge status.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}/merge_requests/{mr_iid}
   method: GET
@@ -173,7 +173,7 @@
 - slug: gitlab_pat_list_members
   name: List Project Members
   description: |
-    List members of a project.
+    List all members of a GitLab project with their access levels and roles. Returns member IDs, names, usernames, and permission levels for each member.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}/members
   method: GET
@@ -195,7 +195,7 @@
 - slug: gitlab_pat_list_groups
   name: List Groups
   description: |
-    List GitLab groups the user has access to.
+    List GitLab groups that the authenticated user has access to with optional minimum access level filtering. Returns group names, IDs, visibility, and member counts.
   provider: gitlab-pat
   endpoint: /api/v4/groups
   method: GET
@@ -216,7 +216,7 @@
 - slug: gitlab_pat_list_branches
   name: List Branches
   description: |
-    List branches in a project.
+    List all branches in a GitLab project. Returns branch names, commit SHAs, protected status, and last commit dates for each branch.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}/repository/branches
   method: GET
@@ -238,7 +238,7 @@
 - slug: gitlab_pat_list_tags
   name: List Tags
   description: |
-    List tags in a project.
+    List all tags in a GitLab project. Returns tag names, commit SHAs, release notes, and creation dates for each tag.
   provider: gitlab-pat
   endpoint: /api/v4/projects/{id}/repository/tags
   method: GET

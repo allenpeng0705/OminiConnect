@@ -18,7 +18,7 @@
 - slug: fireflies_list_transcripts
   name: List Transcripts
   description: |
-    List all meeting transcripts.
+    List all meeting transcripts stored in Fireflies. Returns transcript IDs, meeting titles, dates, duration, and participant information for each transcript with pagination.
   provider: fireflies
   endpoint: /api/v1/transcripts
   method: GET
@@ -40,7 +40,7 @@
 - slug: fireflies_get_transcript
   name: Get Transcript
   description: |
-    Get details of a specific transcript.
+    Get the full transcript of a specific meeting including all speaker segments, timestamps, and conversation text with search capability.
   provider: fireflies
   endpoint: /api/v1/transcripts/{id}
   method: GET
@@ -62,7 +62,7 @@
 - slug: fireflies_list_users
   name: List Users
   description: |
-    List all team members.
+    List all team members in the Fireflies workspace. Returns member IDs, names, email addresses, and their availability status for scheduling.
   provider: fireflies
   endpoint: /api/v1/users
   method: GET
@@ -80,7 +80,7 @@
 - slug: fireflies_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Get detailed information about a specific team member including their name, email, role, permissions, and calendar integration settings.
   provider: fireflies
   endpoint: /api/v1/users/{id}
   method: GET
@@ -102,7 +102,7 @@
 - slug: fireflies_list_meetings
   name: List Meetings
   description: |
-    List all meetings.
+    List all meetings recorded in Fireflies. Returns meeting IDs, titles, dates, durations, participant counts, and associated transcript availability for each meeting.
   provider: fireflies
   endpoint: /api/v1/meetings
   method: GET
@@ -124,7 +124,7 @@
 - slug: fireflies_get_meeting
   name: Get Meeting
   description: |
-    Get details of a specific meeting.
+    Get detailed information about a specific meeting including its title, date, duration, participants, and links to the full transcript and AI-generated summary.
   provider: fireflies
   endpoint: /api/v1/meetings/{id}
   method: GET
@@ -146,7 +146,7 @@
 - slug: fireflies_list_summaries
   name: List Summaries
   description: |
-    List AI-generated summaries.
+    List AI-generated summaries for recorded meetings. Returns summary IDs, meeting associations, key topics, action items, and timestamps for each summary.
   provider: fireflies
   endpoint: /api/v1/summaries
   method: GET
@@ -167,7 +167,7 @@
 - slug: fireflies_search_transcript
   name: Search Transcript
   description: |
-    Search across transcripts.
+    Search across all meeting transcripts using keywords. Returns matching transcript segments with timestamps, speaker names, and meeting context.
   provider: fireflies
   endpoint: /api/v1/transcripts/search
   method: GET
@@ -189,7 +189,7 @@
 - slug: fireflies_list_analytics
   name: List Analytics
   description: |
-    List meeting analytics.
+    List meeting analytics and participation metrics. Returns metrics like total meeting time, participant speaking times, and engagement scores broken down by date range.
   provider: fireflies
   endpoint: /api/v1/analytics
   method: GET
@@ -213,7 +213,7 @@
 - slug: fireflies_get_overview
   name: Get Overview
   description: |
-    Get analytics overview.
+    Get an analytics overview including total meetings this period, average meeting duration, total participants, and overall team engagement scores.
   provider: fireflies
   endpoint: /api/v1/analytics/overview
   method: GET

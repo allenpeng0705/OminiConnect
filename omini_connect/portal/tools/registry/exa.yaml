@@ -18,7 +18,7 @@
 - slug: exa_search
   name: Search
   description: |
-    Search the web using natural language queries.
+    Search the web using natural language queries and return relevant webpages with titles, URLs, summaries, and publication dates.
   provider: exa
   endpoint: /search
   method: POST
@@ -50,7 +50,7 @@
 - slug: exa_search_contents
   name: Search and Get Contents
   description: |
-    Search the web and get the contents of matching pages.
+    Search the web and retrieve full content of matching pages including text, metadata, and highlighted passages relevant to the search query.
   provider: exa
   endpoint: /search
   method: POST
@@ -86,7 +86,7 @@
 - slug: exa_find_similar
   name: Find Similar
   description: |
-    Find documents similar to a given URL or text.
+    Find documents similar to a given URL or text query and return relevant webpages with similarity scores and content highlights.
   provider: exa
   endpoint: /find-similar
   method: POST
@@ -112,7 +112,7 @@
 - slug: exa_get_document
   name: Get Document
   description: |
-    Get a document by its ID.
+    Retrieve a specific document from Exa by its ID including full text content, metadata, and extraction data.
   provider: exa
   endpoint: /documents/{id}
   method: GET
@@ -133,7 +133,7 @@
 - slug: exa_list_collections
   name: List Collections
   description: |
-    List all collections.
+    List all document collections in Exa including collection names, descriptions, and document counts for each collection.
   provider: exa
   endpoint: /collections
   method: GET
@@ -150,7 +150,7 @@
 - slug: exa_create_collection
   name: Create Collection
   description: |
-    Create a new collection for storing documents.
+    Create a new document collection in Exa with a specified name and description for organizing stored documents. Returns the created collection identifier.
   provider: exa
   endpoint: /collections
   method: POST
@@ -174,7 +174,7 @@
 - slug: exa_delete_document
   name: Delete Document
   description: |
-    Delete a document from a collection.
+    Delete a specific document from an Exa collection by its ID and receive confirmation of successful deletion.
   provider: exa
   endpoint: /documents/{id}
   method: DELETE
@@ -195,7 +195,7 @@
 - slug: exa_get_stats
   name: Get Stats
   description: |
-    Get API usage statistics.
+    Retrieve API usage statistics including total searches performed, documents stored, and available quota information for the account.
   provider: exa
   endpoint: /stats
   method: GET
@@ -213,7 +213,7 @@
 - slug: exa_list_webpages
   name: List Webpages
   description: |
-    List discovered webpages from previous searches.
+    List discovered webpages from previous Exa searches including titles, URLs, scores, and publication dates for each result.
   provider: exa
   endpoint: /webpages
   method: GET
@@ -235,7 +235,7 @@
 - slug: exa_highlight
   name: Highlight
   description: |
-    Get highlights from search results.
+    Get highlighted text passages from Exa search results that match a specified query and return relevant snippets with source information.
   provider: exa
   endpoint: /highlight
   method: POST

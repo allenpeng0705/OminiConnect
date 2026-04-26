@@ -17,8 +17,7 @@
 - slug: contentful_list_spaces
   name: List Spaces
   description: |
-    List all spaces accessible to the authenticated user.
-    Returns a paginated list of spaces the user has access to.
+    List all spaces accessible to the authenticated Contentful user, returning space IDs, names, and status.
   provider: contentful
   endpoint: /spaces
   method: GET
@@ -44,7 +43,7 @@
 - slug: contentful_get_space
   name: Get Space
   description: |
-    Get details of a specific space including name, locales, and settings.
+    Get details of a specific Contentful space including its name, configured locales, and settings.
   provider: contentful
   endpoint: /spaces/{space_id}
   method: GET
@@ -66,8 +65,7 @@
 - slug: contentful_list_entries
   name: List Entries
   description: |
-    List entries in a space. Optionally filter by content type, tags, or status.
-    Returns paginated results with metadata.
+    List entries in a Contentful space, returning entry IDs, content types, fields, and version information.
   provider: contentful
   endpoint: /spaces/{space_id}/entries
   method: GET
@@ -108,7 +106,7 @@
 - slug: contentful_get_entry
   name: Get Entry
   description: |
-    Get a specific entry by ID including fields, metadata, and version info.
+    Get a specific Contentful entry by its ID including all fields, metadata, and version information.
   provider: contentful
   endpoint: /spaces/{space_id}/entries/{entry_id}
   method: GET
@@ -137,8 +135,7 @@
 - slug: contentful_create_entry
   name: Create Entry
   description: |
-    Create a new entry in a specified content type.
-    Provide field values in the locale of your choice.
+    Create a new entry in a Contentful space, specifying the content type, fields, and locale.
   provider: contentful
   endpoint: /spaces/{space_id}/entries
   method: POST
@@ -172,8 +169,7 @@
 - slug: contentful_list_assets
   name: List Assets
   description: |
-    List assets (images, videos, files) in a space.
-    Includes metadata like file size, content type, and processing status.
+    List assets in a Contentful space, returning asset IDs, filenames, file sizes, content types, and processing status.
   provider: contentful
   endpoint: /spaces/{space_id}/assets
   method: GET
@@ -206,7 +202,7 @@
 - slug: contentful_get_asset
   name: Get Asset
   description: |
-    Get a specific asset including file metadata, URL, and processing status.
+    Get a specific Contentful asset including its file metadata, URL, and processing status.
   provider: contentful
   endpoint: /spaces/{space_id}/assets/{asset_id}
   method: GET
@@ -232,7 +228,7 @@
 - slug: contentful_upload_asset
   name: Upload Asset
   description: |
-    Upload a media asset to a space. After upload, asset must be processed and published.
+    Upload a media asset to a Contentful space, providing the file content, filename, and MIME type.
   provider: contentful
   endpoint: /spaces/{space_id}/assets
   method: POST
@@ -273,8 +269,7 @@
 - slug: contentful_list_locales
   name: List Locales
   description: |
-    List all locales configured in a space.
-    Each locale has a code, name, and fallback configuration.
+    List all locales configured in a Contentful space, returning locale codes, names, and fallback settings.
   provider: contentful
   endpoint: /spaces/{space_id}/locales
   method: GET
@@ -300,7 +295,7 @@
 - slug: contentful_get_locale
   name: Get Locale
   description: |
-    Get details of a specific locale including code, name, and fallback settings.
+    Get details of a specific Contentful locale including its code, name, and fallback configuration.
   provider: contentful
   endpoint: /spaces/{space_id}/locales/{locale_id}
   method: GET

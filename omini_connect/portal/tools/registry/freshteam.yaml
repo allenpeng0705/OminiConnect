@@ -18,7 +18,9 @@
 - slug: freshteam_list_employees
   name: List Employees
   description: |
-    List all employees in the organization with optional filters.
+    List all employees in the organization with optional filters and pagination.
+    Returns employee IDs, names, departments, and status for each employee.
+    Use this to discover workforce members and manage HR operations.
   provider: freshteam
   endpoint: /employees
   method: GET
@@ -48,7 +50,9 @@
 - slug: freshteam_get_employee
   name: Get Employee
   description: |
-    Get detailed information about a specific employee.
+    Get detailed information about a specific employee including personal and employment details.
+    Returns the complete employee data with all associated information.
+    This provides full employee data for HR management and personnel lookup.
   provider: freshteam
   endpoint: /employees/{id}
   method: GET
@@ -70,7 +74,9 @@
 - slug: freshteam_create_employee
   name: Create Employee
   description: |
-    Create a new employee in Freshteam.
+    Create a new employee in Freshteam with name, email, department, and designation.
+    Returns the created employee with their unique ID and confirmation.
+    This provisions a new employee record in the HR system.
   provider: freshteam
   endpoint: /employees
   method: POST
@@ -109,7 +115,9 @@
 - slug: freshteam_update_employee
   name: Update Employee
   description: |
-    Update an existing employee's information.
+    Update an existing employee's information including name, department, or designation.
+    Returns the updated employee confirmation with modified fields.
+    This modifies employee records for HR management.
   provider: freshteam
   endpoint: /employees/{id}
   method: PUT
@@ -143,7 +151,9 @@
 - slug: freshteam_list_departments
   name: List Departments
   description: |
-    List all departments in the organization.
+    List all departments in the organization with hierarchy and manager information.
+    Returns department names, IDs, and manager assignments for each department.
+    Use this to discover organizational structure and manage team hierarchy.
   provider: freshteam
   endpoint: /departments
   method: GET
@@ -161,7 +171,9 @@
 - slug: freshteam_get_department
   name: Get Department
   description: |
-    Get detailed information about a specific department.
+    Get detailed information about a specific department including employees and hierarchy.
+    Returns the complete department data with all associated information.
+    This provides full department data for organizational management.
   provider: freshteam
   endpoint: /departments/{id}
   method: GET
@@ -183,7 +195,9 @@
 - slug: freshteam_list_job_postings
   name: List Job Postings
   description: |
-    List all job postings with optional status filter.
+    List all job postings with optional status filter and pagination.
+    Returns job titles, IDs, departments, and status for each posting.
+    Use this to discover open positions and manage recruitment campaigns.
   provider: freshteam
   endpoint: /job_postings
   method: GET
@@ -207,7 +221,9 @@
 - slug: freshteam_get_job_posting
   name: Get Job Posting
   description: |
-    Get detailed information about a specific job posting.
+    Get detailed information about a specific job posting including description and requirements.
+    Returns the complete job posting data with all associated information.
+    This provides full job posting data for recruitment and talent management.
   provider: freshteam
   endpoint: /job_postings/{id}
   method: GET
@@ -230,7 +246,9 @@
 - slug: freshteam_list_holidays
   name: List Holidays
   description: |
-    List all holidays configured in the organization.
+    List all holidays configured in the organization with year filtering.
+    Returns holiday names, dates, and descriptions for each holiday.
+    Use this to discover company holidays and plan leave calendars.
   provider: freshteam
   endpoint: /holidays
   method: GET
@@ -252,7 +270,9 @@
 - slug: freshteam_list_time_off_requests
   name: List Time Off Requests
   description: |
-    List all time off requests with optional filters.
+    List all time off requests with optional status and employee filters.
+    Returns request IDs, employee names, dates, and status for each request.
+    Use this to discover leave requests and manage approval workflows.
   provider: freshteam
   endpoint: /time_off_requests
   method: GET

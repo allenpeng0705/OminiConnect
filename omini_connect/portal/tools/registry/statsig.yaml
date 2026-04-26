@@ -17,8 +17,7 @@
 - slug: statsig_list_feature_gates
   name: List Feature Gates
   description: |
-    List all feature gates in a Statsig project.
-    Feature gates are boolean flags used for gradual rollouts and targeting.
+    List all feature gates in a Statsig project. Returns gate names, statuses, and targeting rules for each feature gate used in gradual rollouts.
   provider: statsig
   endpoint: /v1/feature_gates
   method: GET
@@ -43,7 +42,7 @@
 - slug: statsig_get_feature_gate
   name: Get Feature Gate
   description: |
-    Get detailed information about a specific feature gate including rules and targeting.
+    Retrieve details for a specific feature gate including its rules, default value, and targeting configuration. Returns the complete gate definition.
   provider: statsig
   endpoint: /v1/feature_gates/{gate_name}
   method: GET
@@ -65,8 +64,7 @@
 - slug: statsig_create_feature_gate
   name: Create Feature Gate
   description: |
-    Create a new feature gate in Statsig.
-    Set the gate name, description, project, and unit type for targeting.
+    Create a new feature gate in Statsig with specified name, description, project, and unit type for targeting. Returns the created gate configuration with its unique identifier.
   provider: statsig
   endpoint: /v1/feature_gates
   method: POST
@@ -98,7 +96,7 @@
 - slug: statsig_update_feature_gate
   name: Update Feature Gate
   description: |
-    Update an existing feature gate. Modify description, rules, or status.
+    Update an existing feature gate to modify its description, rules, or active status. Returns the updated gate configuration.
   provider: statsig
   endpoint: /v1/feature_gates/{gate_name}
   method: PATCH
@@ -126,8 +124,7 @@
 - slug: statsig_list_experiments
   name: List Experiments
   description: |
-    List all experiments in a Statsig project.
-    Experiments are multivariate tests with multiple variants.
+    List all experiments in a Statsig project. Returns experiment names, statuses, variants, and metric associations for each multivariate test.
   provider: statsig
   endpoint: /v1/experiments
   method: GET
@@ -152,7 +149,7 @@
 - slug: statsig_get_experiment
   name: Get Experiment
   description: |
-    Get detailed information about an experiment including variants, metrics, and results.
+    Retrieve details for a specific experiment including its variants, associated metrics, and current results. Returns the complete experiment configuration and statistical analysis.
   provider: statsig
   endpoint: /v1/experiments/{experiment_id}
   method: GET
@@ -174,7 +171,7 @@
 - slug: statsig_list_users
   name: List Users
   description: |
-    List all users in a Statsig project who have been evaluated.
+    List all users in a Statsig project who have been evaluated for feature gates and experiments. Returns user IDs, gate states, and experiment assignments.
   provider: statsig
   endpoint: /v1/users
   method: GET
@@ -199,7 +196,7 @@
 - slug: statsig_get_user
   name: Get User
   description: |
-    Get details about a specific user including their gate states and experiment assignments.
+    Retrieve details for a specific user including their feature gate states, experiment assignments, and evaluation history. Returns the complete user profile.
   provider: statsig
   endpoint: /v1/users/{user_id}
   method: GET
@@ -221,8 +218,7 @@
 - slug: statsig_list_metrics
   name: List Metrics
   description: |
-    List all metrics in a Statsig project.
-    Metrics are measurements tracked for experiments and feature gates.
+    List all metrics in a Statsig project. Returns metric names, types, and configurations for measuring experiment outcomes and feature gate impact.
   provider: statsig
   endpoint: /v1/metrics
   method: GET
@@ -247,7 +243,7 @@
 - slug: statsig_get_metric
   name: Get Metric
   description: |
-    Get details about a specific metric including its type and configuration.
+    Retrieve details for a specific metric including its type, aggregation method, and historical values. Returns the complete metric configuration and data source information.
   provider: statsig
   endpoint: /v1/metrics/{metric_id}
   method: GET

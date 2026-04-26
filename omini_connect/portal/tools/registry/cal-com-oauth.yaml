@@ -18,7 +18,8 @@
 - slug: cal_com_list_event_types
   name: List Event Types
   description: |
-    List all event types for the authenticated user or team.
+    List all event types for the authenticated user or team and return event type IDs, names, and durations.
+    Use this to discover available booking options for scheduling.
   provider: cal-com-oauth
   endpoint: /event-types
   method: GET
@@ -41,7 +42,8 @@
 - slug: cal_com_get_event_type
   name: Get Event Type
   description: |
-    Get details of a specific event type by ID.
+    Get details of a specific event type including duration, description, and booking settings.
+    Returns the complete event type configuration for scheduling setup.
   provider: cal-com-oauth
   endpoint: /event-types/{id}
   method: GET
@@ -62,7 +64,8 @@
 - slug: cal_com_list_bookings
   name: List Bookings
   description: |
-    List all bookings for the authenticated user.
+    List all bookings for the authenticated user and return booking IDs, times, event types, and attendees.
+    Filter by status (upcoming, past, cancelled) to manage scheduling.
   provider: cal-com-oauth
   endpoint: /bookings
   method: GET
@@ -90,7 +93,8 @@
 - slug: cal_com_get_booking
   name: Get Booking
   description: |
-    Get details of a specific booking by ID.
+    Get details of a specific booking including event type, time, attendees, and status.
+    Returns the complete booking data for scheduling management and verification.
   provider: cal-com-oauth
   endpoint: /bookings/{id}
   method: GET
@@ -111,7 +115,8 @@
 - slug: cal_com_create_booking
   name: Create Booking
   description: |
-    Create a new booking for an event type.
+    Create a new booking for an event type with specified start time and attendee information.
+    Returns the created booking ID for confirmation and calendar management.
   provider: cal-com-oauth
   endpoint: /bookings
   method: POST
@@ -144,7 +149,8 @@
 - slug: cal_com_cancel_booking
   name: Cancel Booking
   description: |
-    Cancel a specific booking by ID.
+    Cancel a specific booking by ID and optionally provide a cancellation reason.
+    Returns confirmation of the cancellation for scheduling updates.
   provider: cal-com-oauth
   endpoint: /bookings/{id}
   method: DELETE
@@ -168,7 +174,8 @@
 - slug: cal_com_list_users
   name: List Users
   description: |
-    List all users in the workspace.
+    List all users in the Cal.com workspace and return user names, emails, and scheduling availability.
+    Use this to find team members for collaborative scheduling.
   provider: cal-com-oauth
   endpoint: /users
   method: GET
@@ -189,7 +196,8 @@
 - slug: cal_com_get_current_user
   name: Get Current User
   description: |
-    Get the currently authenticated user profile.
+    Get the currently authenticated user profile including name, email, and scheduling settings.
+    Returns the complete user profile for personalization and availability checking.
   provider: cal-com-oauth
   endpoint: /me
   method: GET
@@ -206,7 +214,8 @@
 - slug: cal_com_list_webhooks
   name: List Webhooks
   description: |
-    List all webhooks for an event type.
+    List all webhooks for an event type and return webhook IDs, URLs, and subscribed events.
+    Use this to discover webhook configurations for event automation.
   provider: cal-com-oauth
   endpoint: /event-types/{id}/webhooks
   method: GET
@@ -227,7 +236,8 @@
 - slug: cal_com_create_webhook
   name: Create Webhook
   description: |
-    Create a webhook for an event type.
+    Create a webhook for an event type with specified URL and event subscriptions.
+    Returns the created webhook ID for event-driven automation setup.
   provider: cal-com-oauth
   endpoint: /event-types/{id}/webhooks
   method: POST

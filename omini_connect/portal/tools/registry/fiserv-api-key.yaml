@@ -18,7 +18,7 @@
 - slug: fiserv_api_key_get_balance
   name: Get Balance
   description: |
-    Get account balance information.
+    Get current account balance information including available balance, pending transactions, and total balance for the specified Fiserv account.
   provider: fiserv-api-key
   endpoint: /api/v1/accounts/balance
   method: GET
@@ -39,7 +39,7 @@
 - slug: fiserv_api_key_list_transactions
   name: List Transactions
   description: |
-    List all transactions.
+    List all transactions for a Fiserv account within a date range. Returns transaction IDs, dates, amounts, descriptions, and categories for each transaction.
   provider: fiserv-api-key
   endpoint: /api/v1/transactions
   method: GET
@@ -66,7 +66,7 @@
 - slug: fiserv_api_key_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction.
+    Get detailed information about a specific transaction including the date, amount, merchant name, category, and authorization status.
   provider: fiserv-api-key
   endpoint: /api/v1/transactions/{id}
   method: GET
@@ -88,7 +88,7 @@
 - slug: fiserv_api_key_create_payment
   name: Create Payment
   description: |
-    Create a new payment.
+    Create a new payment to a recipient with specified amount and currency. Returns the created payment with its unique ID and status.
   provider: fiserv-api-key
   endpoint: /api/v1/payments
   method: POST
@@ -115,7 +115,7 @@
 - slug: fiserv_api_key_get_payment
   name: Get Payment
   description: |
-    Get details of a specific payment.
+    Get detailed information about a specific payment including the amount, recipient, status, and scheduled or completed delivery date.
   provider: fiserv-api-key
   endpoint: /api/v1/payments/{id}
   method: GET
@@ -136,7 +136,7 @@
 - slug: fiserv_api_key_list_accounts
   name: List Accounts
   description: |
-    List all accounts.
+    List all accounts associated with the Fiserv profile. Returns account IDs, account types, balances, and status for each linked account.
   provider: fiserv-api-key
   endpoint: /api/v1/accounts
   method: GET
@@ -153,7 +153,7 @@
 - slug: fiserv_api_key_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Get detailed information about a specific account including its type, current balance, available balance, and account holder details.
   provider: fiserv-api-key
   endpoint: /api/v1/accounts/{id}
   method: GET
@@ -174,7 +174,7 @@
 - slug: fiserv_api_key_list_payments
   name: List Payments
   description: |
-    List all payments.
+    List all payments in the Fiserv system with optional status filtering. Returns payment IDs, amounts, recipients, statuses, and dates for each payment.
   provider: fiserv-api-key
   endpoint: /api/v1/payments
   method: GET
@@ -194,7 +194,7 @@
 - slug: fiserv_api_key_cancel_payment
   name: Cancel Payment
   description: |
-    Cancel a pending payment.
+    Cancel a pending payment by its ID. Returns confirmation of the cancellation and updates the payment status to cancelled.
   provider: fiserv-api-key
   endpoint: /api/v1/payments/{id}/cancel
   method: POST
@@ -215,7 +215,7 @@
 - slug: fiserv_api_key_get_merchant_info
   name: Get Merchant Info
   description: |
-    Get merchant information.
+    Get merchant profile information including business name, address, merchant category code, and processing capabilities for the Fiserv account.
   provider: fiserv-api-key
   endpoint: /api/v1/merchant
   method: GET

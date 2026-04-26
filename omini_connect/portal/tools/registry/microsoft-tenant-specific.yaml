@@ -18,7 +18,7 @@
 - slug: ms_tenant_list_users
   name: List Users
   description: |
-    List all users in the specific tenant.
+    List all user accounts in the Microsoft Entra ID tenant. Returns user names, emails, and account status for each user account in the directory.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/users
   method: GET
@@ -44,7 +44,7 @@
 - slug: ms_tenant_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Retrieve detailed information about a specific Microsoft Entra ID user including their profile, group memberships, and license assignments. Returns the complete user object with all attributes.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/users/{userId}
   method: GET
@@ -66,7 +66,7 @@
 - slug: ms_tenant_list_groups
   name: List Groups
   description: |
-    List all groups in the tenant.
+    List all security groups and Microsoft 365 groups in the tenant. Returns group names, types, and member counts for each group in the directory.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/groups
   method: GET
@@ -92,7 +92,7 @@
 - slug: ms_tenant_get_group
   name: Get Group
   description: |
-    Get details of a specific group.
+    Retrieve details about a specific Microsoft Entra ID group including its name, type, description, and member list. Returns the complete group object.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/groups/{groupId}
   method: GET
@@ -114,7 +114,7 @@
 - slug: ms_tenant_list_applications
   name: List Applications
   description: |
-    List all registered applications in the tenant.
+    List all registered applications in the Microsoft Entra ID tenant. Returns application names, client IDs, and configuration settings for each registered app.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/applications
   method: GET
@@ -140,7 +140,7 @@
 - slug: ms_tenant_get_application
   name: Get Application
   description: |
-    Get details of a specific application.
+    Retrieve detailed information about a specific registered application including its permissions, authentication settings, and API credentials. Returns the full application configuration.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/applications/{applicationId}
   method: GET
@@ -162,7 +162,7 @@
 - slug: ms_tenant_list_service_principals
   name: List Service Principals
   description: |
-    List all service principals in the tenant.
+    List all service principals in the tenant. Service principals represent applications with authentication permissions. Returns principal names, IDs, and permissions for each service principal.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/servicePrincipals
   method: GET
@@ -185,7 +185,7 @@
 - slug: ms_tenant_list_directory_roles
   name: List Directory Roles
   description: |
-    List all directory roles in the tenant.
+    List all directory roles available in the tenant. Returns role names, descriptions, and assigned member counts for each directory role.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/directoryRoles
   method: GET
@@ -204,7 +204,7 @@
 - slug: ms_tenant_list_audit_logs
   name: List Audit Logs
   description: |
-    List audit logs for the tenant.
+    List audit logs for the tenant. Returns information about directory changes, sign-ins, and user activities with timestamps for security and compliance monitoring.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/auditLogs/directoryAudits
   method: GET
@@ -232,7 +232,7 @@
 - slug: ms_tenant_list_sign_ins
   name: List Sign-ins
   description: |
-    List sign-in logs for the tenant.
+    List sign-in logs for the tenant. Returns user sign-in activities, locations, and authentication details with timestamps for security analysis.
   provider: microsoft-tenant-specific
   endpoint: /v1.0/auditLogs/signIns
   method: GET

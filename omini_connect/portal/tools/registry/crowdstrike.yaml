@@ -18,7 +18,7 @@
 - slug: crowdstrike_list_hosts
   name: List Hosts
   description: |
-    List all hosts (devices) in the CrowdStrike environment.
+    List all hosts (devices) in the CrowdStrike environment. Returns host IDs, names, statuses, operating systems, and security posture information for each host.
   provider: crowdstrike
   endpoint: /devices/entities/devices/v1
   method: GET
@@ -47,7 +47,7 @@
 - slug: crowdstrike_get_host
   name: Get Host
   description: |
-    Get detailed information for a specific host including security status.
+    Get detailed information for a specific CrowdStrike host by its ID. Returns the host name, operating system, security status, installed software, and vulnerability count.
   provider: crowdstrike
   endpoint: /devices/entities/devices/v1
   method: GET
@@ -72,7 +72,7 @@
 - slug: crowdstrike_list_vulnerabilities
   name: List Vulnerabilities
   description: |
-    List vulnerabilities detected across endpoints.
+    List all vulnerabilities detected across CrowdStrike endpoints. Returns vulnerability IDs, severity levels, CVE codes, affected hosts, and remediation status for each vulnerability.
   provider: crowdstrike
   endpoint: /vulnerabilities/entities/vulnerabilities/v2
   method: GET
@@ -97,7 +97,7 @@
 - slug: crowdstrike_get_vulnerability
   name: Get Vulnerability
   description: |
-    Get detailed vulnerability information including affected hosts.
+    Get detailed information for a specific CrowdStrike vulnerability by its ID. Returns the vulnerability description, severity, affected hosts, CVE details, and remediation recommendations.
   provider: crowdstrike
   endpoint: /vulnerabilities/entities/vulnerabilities/v2
   method: GET
@@ -121,7 +121,7 @@
 - slug: crowdstrike_list_incidents
   name: List Incidents
   description: |
-    List all incidents. Filter by status, severity, or date.
+    List all CrowdStrike incidents with pagination support. Returns incident IDs, severity levels, status, assigned user, and affected host counts for each incident.
   provider: crowdstrike
   endpoint: /incidents/entities/incidents/v1
   method: GET
@@ -146,7 +146,7 @@
 - slug: crowdstrike_get_incident
   name: Get Incident
   description: |
-    Get detailed incident information including timeline and affected hosts.
+    Get detailed information for a specific CrowdStrike incident by its ID. Returns the incident description, severity, timeline, affected hosts, and security findings with remediation guidance.
   provider: crowdstrike
   endpoint: /incidents/entities/incidents/v1
   method: GET
@@ -170,7 +170,7 @@
 - slug: crowdstrike_list_detection_summaries
   name: List Detection Summaries
   description: |
-    List detection summaries from the Falcon platform.
+    List all detection summaries from the CrowdStrike Falcon platform. Returns detection IDs, severity levels, status, timestamps, and associated threat intelligence for each detection.
   provider: crowdstrike
   endpoint: /detects/entities/summaries/GET/v1
   method: GET
@@ -195,7 +195,7 @@
 - slug: crowdstrike_get_detection
   name: Get Detection
   description: |
-    Get detailed detection information including threat intelligence.
+    Get detailed information for a specific CrowdStrike detection by its ID. Returns the detection description, severity, affected hosts, threat intelligence, and remediation guidance.
   provider: crowdstrike
   endpoint: /detects/entities/detects/v1
   method: GET
@@ -219,7 +219,7 @@
 - slug: crowdstrike_list_actors
   name: List Threat Actors
   description: |
-    List known threat actors and their associated indicators.
+    List all known threat actors in CrowdStrike intelligence. Returns actor IDs, names, associated malware families, known aliases, and indicators of compromise for each actor.
   provider: crowdstrike
   endpoint: /intel/entities/actors/v1
   method: GET
@@ -241,7 +241,7 @@
 - slug: crowdstrike_list_policies
   name: List Prevention Policies
   description: |
-    List prevention policies for endpoint protection.
+    List all prevention policies for CrowdStrike endpoint protection. Returns policy IDs, names, policy types, settings, and assignment rules for each policy.
   provider: crowdstrike
   endpoint: /policy/entities/policies/v1
   method: GET

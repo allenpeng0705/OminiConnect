@@ -17,8 +17,7 @@
 - slug: pinterest_list_pins
   name: List Pins
   description: |
-    List pins for the authenticated user. Returns a paginated list of pins the user has created or saved.
-    Use this to browse your pin collection or find specific content.
+    List all pins for the authenticated user including pin IDs, titles, descriptions, image URLs, and board assignments. Returns pin records for content discovery and organization.
   provider: pinterest
   endpoint: /v5/pins
   method: GET
@@ -43,7 +42,7 @@
 - slug: pinterest_get_pin
   name: Get Pin
   description: |
-    Get details of a specific pin by its ID. Returns the pin's description, images, link, and board information.
+    Get detailed information for a specific pin including its title, description, images, destination link, and board assignments. Returns pin data for content curation and analysis.
   provider: pinterest
   endpoint: /v5/pins/{pin_id}
   method: GET
@@ -65,8 +64,7 @@
 - slug: pinterest_create_pin
   name: Create Pin
   description: |
-    Create a new pin on a board. Include an image URL, title, description, and destination link.
-    Use this to save content to your boards programmatically.
+    Create a new pin on a specified board with an image URL, title, description, and optional destination link. Returns the created pin with its unique identifier for sharing.
   provider: pinterest
   endpoint: /v5/pins
   method: POST
@@ -101,8 +99,7 @@
 - slug: pinterest_list_boards
   name: List Boards
   description: |
-    List boards for the authenticated user. Returns boards the user owns or follows.
-    Use this to find boards before creating pins or understanding organization.
+    List all boards including their names, descriptions, privacy settings, and pin counts. Returns board listings for content organization and discovery.
   provider: pinterest
   endpoint: /v5/boards
   method: GET
@@ -127,7 +124,7 @@
 - slug: pinterest_get_board
   name: Get Board
   description: |
-    Get details of a specific board by its ID. Returns board name, description, and privacy settings.
+    Get detailed information for a specific board including its name, description, privacy setting, owner, and collaborator list. Returns board data for content curation and collaboration.
   provider: pinterest
   endpoint: /v5/boards/{board_id}
   method: GET
@@ -149,8 +146,7 @@
 - slug: pinterest_create_board
   name: Create Board
   description: |
-    Create a new board. Include a name, optional description, and privacy setting.
-    Use this to organize pins into specific collections.
+    Create a new board with the specified name, optional description, and privacy setting to organize pins into collections. Returns the created board with its unique identifier.
   provider: pinterest
   endpoint: /v5/boards
   method: POST
@@ -180,7 +176,7 @@
 - slug: pinterest_list_user_pins
   name: List User Pins
   description: |
-    List pins for a specific user on a specific board. Use this to view all content on a board.
+    List all pins on a specific board for a specified owner including pin titles, images, descriptions, and engagement metrics. Returns pin data for board content analysis.
   provider: pinterest
   endpoint: /v5/pins
   method: GET
@@ -213,8 +209,7 @@
 - slug: pinterest_get_user_info
   name: Get User Info
   description: |
-    Get the authenticated user's profile information including name, username, profile image, and counts.
-    Useful for personalization and context.
+    Get the authenticated user profile including name, username, profile image, and follower and following counts. Returns user data for profile display and analytics.
   provider: pinterest
   endpoint: /v5/users/me
   method: GET
@@ -232,8 +227,7 @@
 - slug: pinterest_search_pins
   name: Search Pins
   description: |
-    Search pins by keyword. Returns pins that match the query across public content.
-    Great for finding ideas, products, or inspiration.
+    Search for pins by keyword across the platform and return matching results with titles, images, descriptions, and board information. Returns pin data for content discovery.
   provider: pinterest
   endpoint: /v5/pins/search
   method: GET
@@ -262,8 +256,7 @@
 - slug: pinterest_list_ads
   name: List Ads
   description: |
-    List advertising campaigns for the authenticated user. Returns ad campaign details and performance metrics.
-    Use this to monitor advertising performance.
+    List all advertising campaigns including campaign names, status values, budget allocations, and performance metrics. Returns ad data for campaign management and analytics.
   provider: pinterest
   endpoint: /v5/ad_accounts/{ad_account_id}/ads
   method: GET

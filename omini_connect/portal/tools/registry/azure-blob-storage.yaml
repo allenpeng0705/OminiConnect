@@ -18,7 +18,8 @@
 - slug: azure_blob_list_containers
   name: List Containers
   description: |
-    List all blob containers in the storage account.
+    List all blob containers in the Azure storage account.
+    Returns container names and properties for discovering storage locations.
   provider: azure-blob-storage
   endpoint: /?comp=list
   method: GET
@@ -43,7 +44,8 @@
 - slug: azure_blob_list_blobs
   name: List Blobs
   description: |
-    List all blobs in a specific container.
+    List all blobs in a specific container, returning blob names, sizes, and last modified timestamps.
+    Supports prefix filtering to navigate large container contents.
   provider: azure-blob-storage
   endpoint: /{container}?restype=container&comp=list
   method: GET
@@ -71,7 +73,8 @@
 - slug: azure_blob_get_blob
   name: Get Blob Properties
   description: |
-    Get properties and metadata of a specific blob.
+    Get properties and metadata of a specific blob including content type, size, and custom headers.
+    Returns the complete blob metadata for management and access planning.
   provider: azure-blob-storage
   endpoint: /{container}/{blob}
   method: GET
@@ -97,7 +100,8 @@
 - slug: azure_blob_download_blob
   name: Download Blob
   description: |
-    Download the content of a blob.
+    Download the content of a blob and return it as binary data.
+    Use this to retrieve stored files, documents, or any blob content.
   provider: azure-blob-storage
   endpoint: /{container}/{blob}?comp=blocklist
   method: GET
@@ -123,7 +127,8 @@
 - slug: azure_blob_upload_blob
   name: Upload Blob
   description: |
-    Upload or create a blob with content.
+    Upload content to a blob in Azure storage, creating a new blob or overwriting an existing one.
+    Specify the content type and storage tier for the uploaded data.
   provider: azure-blob-storage
   endpoint: /{container}/{blob}?comp=blocklist
   method: PUT
@@ -157,7 +162,8 @@
 - slug: azure_blob_delete_blob
   name: Delete Blob
   description: |
-    Delete a specific blob.
+    Delete a specific blob from Azure storage, removing it permanently.
+    Use with caution as this action cannot be undone.
   provider: azure-blob-storage
   endpoint: /{container}/{blob}
   method: DELETE
@@ -183,7 +189,8 @@
 - slug: azure_blob_create_container
   name: Create Container
   description: |
-    Create a new blob container.
+    Create a new blob container in Azure storage for organizing blobs.
+    Set the public access level to control blob visibility.
   provider: azure-blob-storage
   endpoint: /{container}?restype=container
   method: PUT
@@ -209,7 +216,8 @@
 - slug: azure_blob_delete_container
   name: Delete Container
   description: |
-    Delete a container and all its blobs.
+    Delete a container and all its contents from Azure storage.
+    This permanently removes all blobs within the container.
   provider: azure-blob-storage
   endpoint: /{container}?restype=container
   method: DELETE
@@ -231,7 +239,8 @@
 - slug: azure_blob_get_container_props
   name: Get Container Properties
   description: |
-    Get properties of a container including metadata.
+    Get properties and metadata of a container including access settings and storage statistics.
+    Returns the complete container configuration for management.
   provider: azure-blob-storage
   endpoint: /{container}?restype=container
   method: HEAD
@@ -253,7 +262,8 @@
 - slug: azure_blob_copy_blob
   name: Copy Blob
   description: |
-    Copy a blob from source to destination.
+    Copy a blob from a source URL to a destination blob in the storage account.
+    Use this to duplicate data within or across containers.
   provider: azure-blob-storage
   endpoint: /{container}/{blob}?comp=copy
   method: PUT

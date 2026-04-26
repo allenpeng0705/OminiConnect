@@ -18,7 +18,8 @@
 - slug: brex_get_account_info
   name: Get Account Info
   description: |
-    Get Brex account information.
+    Get Brex account information including company name, region, and account settings.
+    Returns the complete account configuration for financial management setup.
   provider: brex-api-key
   endpoint: /v1/account_info
   method: GET
@@ -35,7 +36,8 @@
 - slug: brex_list_transactions
   name: List Transactions
   description: |
-    List all transactions in Brex.
+    List all transactions in Brex and return transaction IDs, amounts, dates, and status.
+    Filter by account or status to find specific payment records for reconciliation.
   provider: brex-api-key
   endpoint: /v1/transactions
   method: GET
@@ -62,7 +64,8 @@
 - slug: brex_get_transaction
   name: Get Transaction
   description: |
-    Get details for a specific transaction.
+    Get details for a specific transaction including amount, date, merchant, and category.
+    Returns the complete transaction data for expense tracking and reconciliation.
   provider: brex-api-key
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -83,7 +86,8 @@
 - slug: brex_list_cards
   name: List Cards
   description: |
-    List all Brex cards.
+    List all Brex cards and return card IDs, statuses, and associated user information.
+    Filter by user or status to find specific cards for expense management.
   provider: brex-api-key
   endpoint: /v1/cards
   method: GET
@@ -110,7 +114,8 @@
 - slug: brex_get_card
   name: Get Card
   description: |
-    Get details for a specific card.
+    Get details for a specific card including status, type, spending limits, and holder info.
+    Returns the complete card data for expense management and policy enforcement.
   provider: brex-api-key
   endpoint: /v1/cards/{cardId}
   method: GET
@@ -131,7 +136,8 @@
 - slug: brex_list_users
   name: List Users
   description: |
-    List all team members in Brex.
+    List all team members in Brex and return user names, emails, and roles.
+    Use this to discover team members for card assignment and policy management.
   provider: brex-api-key
   endpoint: /v1/users
   method: GET
@@ -152,7 +158,8 @@
 - slug: brex_get_user
   name: Get User
   description: |
-    Get details for a specific user.
+    Get details for a specific user including name, email, role, and spending permissions.
+    Returns the complete user profile for access management and expense tracking.
   provider: brex-api-key
   endpoint: /v1/users/{userId}
   method: GET
@@ -173,7 +180,8 @@
 - slug: brex_list_accounts
   name: List Accounts
   description: |
-    List all Brex accounts.
+    List all Brex accounts and return account IDs, types, and currency information.
+    Use this to discover available accounts for transaction routing and balance management.
   provider: brex-api-key
   endpoint: /v1/accounts
   method: GET
@@ -194,7 +202,8 @@
 - slug: brex_get_balance
   name: Get Balance
   description: |
-    Get balance for a specific account.
+    Get balance for a specific account including available balance and currency type.
+    Returns the current account balance for cash flow management and reconciliation.
   provider: brex-api-key
   endpoint: /v1/accounts/{accountId}/balance
   method: GET
@@ -215,7 +224,8 @@
 - slug: brex_get_limits
   name: Get Limits
   description: |
-    Get spending limits for a card.
+    Get spending limits for a card including daily limit, monthly limit, and category restrictions.
+    Returns the complete limit configuration for policy enforcement and expense control.
   provider: brex-api-key
   endpoint: /v1/cards/{cardId}/limits
   method: GET

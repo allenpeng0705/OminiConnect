@@ -17,7 +17,9 @@
 - slug: typeform_list_forms
   name: List Forms
   description: |
-    List all forms in the Typeform account.
+    List all forms in the Typeform account with pagination.
+    Returns form names, IDs, and settings for each form.
+    Use this to discover surveys and collect user feedback.
   provider: typeform
   endpoint: /forms
   method: GET
@@ -47,6 +49,8 @@
   name: Get Form
   description: |
     Get detailed information about a specific form including fields and settings.
+    Returns the complete form data with all associated information.
+    This provides full form data for survey configuration and management.
   provider: typeform
   endpoint: /forms/{form_id}
   method: GET
@@ -69,6 +73,8 @@
   name: Create Form
   description: |
     Create a new form with the specified title and fields.
+    Returns the created form with its unique ID and confirmation.
+    This provisions a new survey or questionnaire in your Typeform workspace.
   provider: typeform
   endpoint: /forms
   method: POST
@@ -96,7 +102,9 @@
 - slug: typeform_list_responses
   name: List Responses
   description: |
-    List all responses for a specific form.
+    List all responses for a specific form with pagination and time filtering.
+    Returns response IDs, submission times, and answers for each response.
+    Use this to discover survey results and analyze user feedback.
   provider: typeform
   endpoint: /forms/{form_id}/responses
   method: GET
@@ -130,6 +138,8 @@
   name: Get Response
   description: |
     Get detailed information about a specific response including all answers.
+    Returns the complete response data with all associated information.
+    This provides full response data for survey analysis and reporting.
   provider: typeform
   endpoint: /forms/{form_id}/responses/{response_id}
   method: GET
@@ -155,7 +165,9 @@
 - slug: typeform_list_fields
   name: List Fields
   description: |
-    List all fields (questions) in a specific form.
+    List all fields (questions) in a specific form with pagination.
+    Returns field IDs, types, and titles for each question.
+    Use this to discover form structure and understand survey layout.
   provider: typeform
   endpoint: /forms/{form_id}/fields
   method: GET
@@ -179,6 +191,8 @@
   name: Get Field
   description: |
     Get detailed information about a specific field including properties and validation.
+    Returns the complete field data with all associated information.
+    This provides full field data for form building and configuration.
   provider: typeform
   endpoint: /forms/{form_id}/fields/{field_id}
   method: GET
@@ -205,6 +219,8 @@
   name: Create Webhook
   description: |
     Create a webhook for a form to receive response notifications.
+    Returns the created webhook with its unique ID and confirmation.
+    This enables real-time integration with your applications for form responses.
   provider: typeform
   endpoint: /forms/{form_id}/webhooks
   method: POST
@@ -237,7 +253,9 @@
 - slug: typeform_list_webhooks
   name: List Webhooks
   description: |
-    List all webhooks configured for a form.
+    List all webhooks configured for a form with their status and URL.
+    Returns webhook IDs, URLs, and enabled status for each webhook.
+    Use this to discover webhook integrations and manage form notifications.
   provider: typeform
   endpoint: /forms/{form_id}/webhooks
   method: GET
@@ -261,6 +279,8 @@
   name: Calculate Form
   description: |
     Calculate form logic and get expected output for given answers.
+    Returns the computed logic results with any conditional paths.
+    This evaluates form calculations for preview and validation purposes.
   provider: typeform
   endpoint: /forms/{form_id}/calculate
   method: POST

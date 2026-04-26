@@ -1,7 +1,8 @@
 - slug: ibm_list_watson_assistants
   name: List Watson Assistants
   description: |
-    Retrieve a list of all Watson Assistant instances in the IBM Cloud account.
+    Retrieve all Watson Assistant instances in your IBM Cloud account with pagination.
+    Returns assistant names, IDs, language settings, and creation dates.
   provider: ibm
   endpoint: /v2/assistants
   method: GET
@@ -24,7 +25,8 @@
 - slug: ibm_get_watson_assistant
   name: Get Watson Assistant
   description: |
-    Retrieve detailed information for a specific Watson Assistant by ID.
+    Retrieve a specific Watson Assistant by ID with full configuration and skill settings.
+    Returns assistant details including skills, dialog settings, and integration options.
   provider: ibm
   endpoint: /v2/assistants/{assistant_id}
   method: GET
@@ -45,7 +47,8 @@
 - slug: ibm_create_watson_assistant
   name: Create Watson Assistant
   description: |
-    Create a new Watson Assistant instance in the IBM Cloud account.
+    Create a new Watson Assistant instance with name, description, and language settings.
+    Returns the created assistant ID and initial configuration.
   provider: ibm
   endpoint: /v2/assistants
   method: POST
@@ -73,7 +76,8 @@
 - slug: ibm_list_cloud_functions
   name: List Cloud Functions
   description: |
-    Retrieve a list of all Cloud Functions (actions) in the IBM Cloud account.
+    Retrieve all Cloud Functions (actions) in your IBM Cloud account with pagination.
+    Returns action names, namespaces, and runtime configurations.
   provider: ibm
   endpoint: /api/v1/namespaces/_/actions
   method: GET
@@ -96,7 +100,8 @@
 - slug: ibm_invoke_cloud_function
   name: Invoke Cloud Function
   description: |
-    Invoke a specific Cloud Function (action) with optional parameters.
+    Invoke a specific Cloud Function (action) with optional JSON parameters and blocking mode.
+    Returns the action output or activation ID based on blocking setting.
   provider: ibm
   endpoint: /api/v1/namespaces/_/actions/{action_name}
   method: POST
@@ -123,7 +128,8 @@
 - slug: ibm_list_containers
   name: List Containers
   description: |
-    Retrieve a list of all container clusters in IBM Kubernetes Service.
+    Retrieve all container clusters in your IBM Kubernetes Service with resource group filtering.
+    Returns cluster names, statuses, locations, and node counts.
   provider: ibm
   endpoint: /v2/vpc/getContainers
   method: GET
@@ -146,7 +152,8 @@
 - slug: ibm_get_container
   name: Get Container
   description: |
-    Retrieve detailed information for a specific container by ID.
+    Retrieve a specific container cluster by ID with full details and configuration.
+    Returns cluster information including VPC settings, worker nodes, and status.
   provider: ibm
   endpoint: /v2/vpc/getContainers/{container_id}
   method: GET
@@ -167,7 +174,8 @@
 - slug: ibm_list_databases
   name: List Databases
   description: |
-    Retrieve a list of all databases in the IBM Cloud Databases service.
+    Retrieve all databases in your IBM Cloud Databases service with optional type filtering.
+    Returns database names, types, versions, and resource group assignments.
   provider: ibm
   endpoint: /v4/ibm/databases
   method: GET
@@ -193,7 +201,8 @@
 - slug: ibm_get_database
   name: Get Database
   description: |
-    Retrieve detailed information for a specific database by ID.
+    Retrieve a specific database by ID with full configuration and connection details.
+    Returns database information including version, capacity, and endpoints.
   provider: ibm
   endpoint: /v4/ibm/databases/{database_id}
   method: GET
@@ -214,7 +223,8 @@
 - slug: ibm_list_objects
   name: List Objects
   description: |
-    Retrieve a list of all objects in IBM Cloud Object Storage bucket.
+    Retrieve all objects in an IBM Cloud Object Storage bucket with optional prefix filtering.
+    Returns object names, sizes, content types, and last modified dates.
   provider: ibm
   endpoint: /api/v1/buckets/{bucket}/objects
   method: GET

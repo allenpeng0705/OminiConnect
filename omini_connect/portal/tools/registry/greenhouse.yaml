@@ -17,8 +17,7 @@
 - slug: greenhouse_list_applications
   name: List Applications
   description: |
-    List all job applications with optional filters for status, job, or date range.
-    Returns candidate info, job applied to, current stage, and application status.
+    List all job applications in your Greenhouse account with filtering by job, status, and pagination. Returns application IDs, candidate names, job titles, stages, and statuses for each application.
   provider: greenhouse
   endpoint: /applications
   method: GET
@@ -51,8 +50,7 @@
 - slug: greenhouse_get_application
   name: Get Application
   description: |
-    Get detailed information about a specific application including candidate profile,
-    interview scorecards, offer details, and activity history.
+    Retrieve detailed information about a specific Greenhouse application by its ID. Returns the candidate profile, job, stage, interview scorecards, and activity history for the application.
   provider: greenhouse
   endpoint: /applications/{application_id}
   method: GET
@@ -75,8 +73,7 @@
 - slug: greenhouse_update_application
   name: Update Application
   description: |
-    Update an application's status, assigned recruiter, or custom fields.
-    Use this to move candidates through hiring stages or reject/hire candidates.
+    Update a Greenhouse application's status, recruiter, or custom fields. Modifies the application record and returns the updated data confirming the changes.
   provider: greenhouse
   endpoint: /applications/{application_id}
   method: PUT
@@ -108,8 +105,7 @@
 - slug: greenhouse_list_jobs
   name: List Jobs
   description: |
-    List all jobs with optional filters for status, department, or office location.
-    Returns job titles, descriptions, status, and hiring team info.
+    List all jobs in your Greenhouse account with filtering by status, department, and office. Returns job titles, IDs, statuses, departments, and office locations for each job.
   provider: greenhouse
   endpoint: /jobs
   method: GET
@@ -146,8 +142,7 @@
 - slug: greenhouse_get_job
   name: Get Job
   description: |
-    Get detailed information about a specific job including description, requirements,
-    hiring team, interview plan, and application statistics.
+    Retrieve detailed information about a specific Greenhouse job by its ID. Returns the job title, description, requirements, hiring team, and application statistics.
   provider: greenhouse
   endpoint: /jobs/{job_id}
   method: GET
@@ -169,8 +164,7 @@
 - slug: greenhouse_create_job
   name: Create Job
   description: |
-    Create a new job posting with title, description, department, and office.
-    Jobs are created in draft status by default and must be published to accept applications.
+    Create a new job posting in Greenhouse with title, description, department, and office assignment. Returns the created job with its unique ID for tracking.
   provider: greenhouse
   endpoint: /jobs
   method: POST
@@ -210,8 +204,7 @@
 - slug: greenhouse_list_offers
   name: List Offers
   description: |
-    List all offers with optional filters for status, candidate, or job.
-    Returns offer amounts, statuses, start dates, and associated applications.
+    List all offers in your Greenhouse account with filtering by application and status. Returns offer IDs, amounts, statuses, start dates, and associated applications for each offer.
   provider: greenhouse
   endpoint: /offers
   method: GET
@@ -244,8 +237,7 @@
 - slug: greenhouse_get_offer
   name: Get Offer
   description: |
-    Get detailed information about a specific offer including compensation details,
-    start date, approval status, and offer letter content.
+    Retrieve detailed information about a specific Greenhouse offer by its ID. Returns the offer compensation, start date, approval status, and offer letter content.
   provider: greenhouse
   endpoint: /offers/{offer_id}
   method: GET
@@ -268,8 +260,7 @@
 - slug: greenhouse_create_offer
   name: Create Offer
   description: |
-    Create an offer for a candidate who has completed the hiring process.
-    Includes salary, start date, and other compensation details.
+    Create a new offer in Greenhouse for a candidate with compensation details and start date. Returns the created offer with its unique ID for tracking.
   provider: greenhouse
   endpoint: /offers
   method: POST
@@ -297,8 +288,7 @@
 - slug: greenhouse_list_users
   name: List Users
   description: |
-    List all users in the organization including recruiters, hiring managers, and admins.
-    Returns names, email addresses, roles, and permission levels.
+    List all users in your Greenhouse organization with filtering by email and name. Returns user names, IDs, email addresses, roles, and permission levels for each user.
   provider: greenhouse
   endpoint: /users
   method: GET

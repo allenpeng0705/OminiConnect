@@ -17,8 +17,7 @@
 - slug: jira_list_issues
   name: List Issues
   description: |
-    Search and list issues using Jira Query Language (JQL).
-    Filter by project, status, assignee, labels, or custom fields.
+    Search and list Jira issues using JQL (Jira Query Language). Returns issue keys, summaries, statuses, and assignees for each issue.
   provider: jira
   endpoint: /rest/api/3/search
   method: GET
@@ -55,7 +54,7 @@
 - slug: jira_get_issue
   name: Get Issue
   description: |
-    Get details of a specific issue including description, status, assignee, and comments.
+    Retrieve detailed information about a specific Jira issue by its ID or key. Returns the issue summary, description, status, assignee, comments, and custom field values.
   provider: jira
   endpoint: /rest/api/3/issue/{issueIdOrKey}
   method: GET
@@ -85,8 +84,7 @@
 - slug: jira_create_issue
   name: Create Issue
   description: |
-    Create a new issue in a project. Include issue type, summary, and optional description.
-    Optionally set assignee, labels, and sprint.
+    Create a new issue in a Jira project with issue type, summary, description, and assignee. Returns the created issue with its unique key and ID.
   provider: jira
   endpoint: /rest/api/3/issue
   method: POST
@@ -129,7 +127,7 @@
 - slug: jira_update_issue
   name: Update Issue
   description: |
-    Update an existing issue: change summary, description, status, assignee, or add labels.
+    Update an existing Jira issue with new summary, description, status, or assignee. Returns the updated issue confirming the changes.
   provider: jira
   endpoint: /rest/api/3/issue/{issueIdOrKey}
   method: PUT
@@ -165,8 +163,7 @@
 - slug: jira_list_projects
   name: List Projects
   description: |
-    List all projects the authenticated user has access to.
-    Returns project keys, names, types, and lead information.
+    List all Jira projects the authenticated user has access to. Returns project keys, names, types, and project lead information for each project.
   provider: jira
   endpoint: /rest/api/3/project
   method: GET
@@ -195,7 +192,7 @@
 - slug: jira_get_project
   name: Get Project
   description: |
-    Get details of a specific project including description, lead, issue types, and versions.
+    Retrieve detailed information about a specific Jira project. Returns the project name, key, description, lead, issue types, and version information.
   provider: jira
   endpoint: /rest/api/3/project/{projectIdOrKey}
   method: GET
@@ -220,8 +217,7 @@
 - slug: jira_list_sprints
   name: List Sprints
   description: |
-    List sprints in a project. Filter by state (active, closed, future).
-    Use for agile planning and sprint management.
+    List all sprints in a Jira Agile board. Returns sprint names, IDs, states, start dates, and end dates for each sprint.
   provider: jira
   endpoint: /rest/agile/1.0/board/{boardId}/sprint
   method: GET
@@ -255,7 +251,7 @@
 - slug: jira_get_sprint
   name: Get Sprint
   description: |
-    Get details of a specific sprint including name, state, start/end dates, and issues.
+    Retrieve detailed information about a specific Jira sprint. Returns the sprint name, state, start and end dates, associated issues, and completion statistics.
   provider: jira
   endpoint: /rest/agile/1.0/sprint/{sprintId}
   method: GET
@@ -280,8 +276,7 @@
 - slug: jira_add_worklog
   name: Add Worklog
   description: |
-    Add a worklog entry to an issue to track time spent.
-    Include time spent and optional start date and comment.
+    Add a worklog entry to a Jira issue to track time spent. Returns the created worklog entry confirming the time was logged.
   provider: jira
   endpoint: /rest/api/3/issue/{issueIdOrKey}/worklog
   method: POST
@@ -313,7 +308,7 @@
 - slug: jira_get_worklog
   name: Get Worklog
   description: |
-    Get worklog entries for an issue. Shows time tracking data and comments.
+    Retrieve all worklog entries for a Jira issue. Returns time spent, authors, start times, and comments for each worklog entry.
   provider: jira
   endpoint: /rest/api/3/issue/{issueIdOrKey}/worklog
   method: GET

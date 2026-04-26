@@ -17,8 +17,7 @@
 - slug: fastly_list_services
   name: List Services
   description: |
-    List all Fastly services in your account.
-    Returns service IDs, names, and current versions.
+    List all Fastly services in the account with service IDs, names, current active versions, and last modified timestamps for each service.
   provider: fastly
   endpoint: /services
   method: GET
@@ -44,8 +43,7 @@
 - slug: fastly_get_service
   name: Get Service
   description: |
-    Get detailed information about a specific service including
-    versions, domains, backends, and configuration.
+    Retrieve detailed information about a specific Fastly service including versions, domains, backends, headers configuration, and cache settings.
   provider: fastly
   endpoint: /services/{service_id}
   method: GET
@@ -67,8 +65,7 @@
 - slug: fastly_list_versions
   name: List Versions
   description: |
-    List all versions for a service. Each version represents a
-    snapshot of your service configuration.
+    List all versions for a Fastly service with version numbers, active status, and creation timestamps for each configuration snapshot.
   provider: fastly
   endpoint: /services/{service_id}/versions
   method: GET
@@ -90,8 +87,7 @@
 - slug: fastly_get_version
   name: Get Version
   description: |
-    Get detailed configuration for a specific service version
-    including domains, backends, and VCL code.
+    Retrieve detailed configuration for a specific Fastly service version including domains, backends, VCL code, and response object settings.
   provider: fastly
   endpoint: /services/{service_id}/versions/{version_number}
   method: GET
@@ -117,8 +113,7 @@
 - slug: fastly_list_dictionaries
   name: List Dictionaries
   description: |
-    List all dictionaries for a service version.
-    Dictionaries store key-value pairs for configuration.
+    List all dictionaries for a Fastly service version with dictionary names, IDs, and item counts for key-value configuration management.
   provider: fastly
   endpoint: /services/{service_id}/versions/{version_number}/dictionaries
   method: GET
@@ -144,8 +139,7 @@
 - slug: fastly_get_dictionary
   name: Get Dictionary
   description: |
-    Get the contents of a dictionary including all key-value pairs.
-    Use this to read or sync dictionary data.
+    Retrieve the contents of a Fastly dictionary including all key-value pairs for reading configuration data or syncing external sources.
   provider: fastly
   endpoint: /services/{service_id}/dictionaries/{dictionary_id}/items
   method: GET
@@ -171,8 +165,7 @@
 - slug: fastly_list_logging_endpoints
   name: List Logging Endpoints
   description: |
-    List all logging endpoints for a service version.
-    Returns configured log destinations (s3, bigquery, syslog, etc.).
+    List all logging endpoints for a Fastly service version with endpoint names, types (s3, bigquery, syslog, etc.), and configuration status.
   provider: fastly
   endpoint: /services/{service_id}/versions/{version_number}/logging
   method: GET
@@ -198,8 +191,7 @@
 - slug: fastly_purge_url
   name: Purge URL
   description: |
-    Purge a single URL from Fastly cache immediately.
-    Use this to invalidate specific cached resources.
+    Purge a single URL from Fastly cache immediately and return the purge confirmation with status and affected edge nodes.
   provider: fastly
   endpoint: /purge/{url}
   method: POST
@@ -222,8 +214,7 @@
 - slug: fastly_create_invalidation
   name: Create Invalidation
   description: |
-    Create a cache invalidation request for multiple URLs or a path pattern.
-    Returns an invalidation ID to track status.
+    Create a cache invalidation request for multiple URLs or a path pattern on Fastly. Returns an invalidation ID for tracking progress and completion status.
   provider: fastly
   endpoint: /services/{service_id}/purge
   method: POST
@@ -256,8 +247,7 @@
 - slug: fastly_get_invalidation
   name: Get Invalidation
   description: |
-    Get the status of a cache invalidation request.
-    Returns progress and completion status.
+    Retrieve the status of a Fastly cache invalidation request including progress percentage, completion status, and affected URLs count.
   provider: fastly
   endpoint: /services/{service_id}/invocations/{invalidation_id}
   method: GET

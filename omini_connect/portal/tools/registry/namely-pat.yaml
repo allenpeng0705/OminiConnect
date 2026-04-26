@@ -18,7 +18,9 @@
 - slug: namely_list_employees
   name: List Employees
   description: |
-    List all employees in the organization.
+    List all employees in the organization with pagination and filters.
+    Returns employee IDs, names, and email addresses for each employee.
+    Use this to discover workforce members and manage HR directory.
   provider: namely-pat
   endpoint: /v1/employees
   method: GET
@@ -45,7 +47,9 @@
 - slug: namely_get_employee
   name: Get Employee
   description: |
-    Get detailed information for a specific employee.
+    Get detailed information for a specific employee including employment details.
+    Returns the complete employee data with all associated information.
+    This provides full employee data for HR management and directory lookup.
   provider: namely-pat
   endpoint: /v1/employees/{id}
   method: GET
@@ -68,7 +72,9 @@
 - slug: namely_list_departments
   name: List Departments
   description: |
-    List all departments in the organization.
+    List all departments in the organization with hierarchy information.
+    Returns department names, IDs, and manager IDs for each department.
+    Use this to discover organizational structure and manage team hierarchy.
   provider: namely-pat
   endpoint: /v1/departments
   method: GET
@@ -87,7 +93,9 @@
 - slug: namely_list_jobs
   name: List Jobs
   description: |
-    List all job postings in the organization.
+    List all job postings in the organization with status filtering.
+    Returns job titles, IDs, and status for each posting.
+    Use this to discover open positions and manage recruitment.
   provider: namely-pat
   endpoint: /v1/jobs
   method: GET
@@ -109,7 +117,9 @@
 - slug: namely_list_time_off
   name: List Time Off
   description: |
-    List time off requests for employees.
+    List time off requests for employees with filtering and pagination.
+    Returns request IDs, employee names, dates, and status for each request.
+    Use this to discover leave requests and manage approval workflows.
   provider: namely-pat
   endpoint: /v1/time_off_requests
   method: GET
@@ -134,7 +144,9 @@
 - slug: namely_create_time_off
   name: Create Time Off
   description: |
-    Create a new time off request for an employee.
+    Create a new time off request for an employee with specified dates and type.
+    Returns the created request with its unique ID and confirmation.
+    This submits a new leave request for employee time off.
   provider: namely-pat
   endpoint: /v1/time_off_requests
   method: POST
@@ -169,7 +181,9 @@
 - slug: namely_list_benefits
   name: List Benefits
   description: |
-    List benefits enrollment for employees.
+    List benefits enrollment for employees with filtering and pagination.
+    Returns benefit names, enrollment status, and plan details for each enrollment.
+    Use this to discover employee benefits and manage healthcare coverage.
   provider: namely-pat
   endpoint: /v1/benefits_enrollments
   method: GET
@@ -191,7 +205,9 @@
 - slug: namely_list_payroll
   name: List Payroll
   description: |
-    List payroll data for employees.
+    List payroll data for employees with filtering and pagination.
+    Returns payroll IDs, pay periods, and compensation amounts for each record.
+    Use this to discover salary information and manage compensation tracking.
   provider: namely-pat
   endpoint: /v1/payroll
   method: GET
@@ -216,7 +232,9 @@
 - slug: namely_list_company
   name: List Company
   description: |
-    Get company information and settings.
+    Get company information and settings for your organization.
+    Returns company name, settings, and configuration details.
+    Use this to discover organization details and manage company settings.
   provider: namely-pat
   endpoint: /v1/company
   method: GET
@@ -235,7 +253,9 @@
 - slug: namely_list_profiles
   name: List Profiles
   description: |
-    List employee profiles with detailed information.
+    List employee profiles with detailed information and department filtering.
+    Returns profile IDs, names, titles, and contact info for each profile.
+    Use this to discover staff members and manage employee directory.
   provider: namely-pat
   endpoint: /v1/profiles
   method: GET

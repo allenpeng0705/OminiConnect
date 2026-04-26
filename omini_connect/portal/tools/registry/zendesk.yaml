@@ -1,7 +1,7 @@
 - slug: zendesk_list_tickets
   name: List Tickets
   description: |
-    Retrieves a paginated list of tickets from Zendesk.
+    List all tickets in Zendesk with pagination support. Returns ticket IDs, subjects, statuses, priorities, and requester information for each ticket. Filter by status or sort by created date.
   provider: zendesk
   endpoint: /tickets
   method: GET
@@ -33,7 +33,7 @@
 - slug: zendesk_get_ticket
   name: Get Ticket
   description: |
-    Retrieves a single ticket by its ID.
+    Get detailed information about a specific Zendesk ticket by its ID. Returns the ticket subject, description, status, priority, requester, and comments.
   provider: zendesk
   endpoint: /tickets/{id}
   method: GET
@@ -54,7 +54,7 @@
 - slug: zendesk_create_ticket
   name: Create Ticket
   description: |
-    Creates a new ticket in Zendesk.
+    Create a new ticket in Zendesk with a subject, comment body, requester, and priority. Returns the created ticket with its unique ID.
   provider: zendesk
   endpoint: /tickets
   method: POST
@@ -88,7 +88,7 @@
 - slug: zendesk_update_ticket
   name: Update Ticket
   description: |
-    Updates an existing ticket.
+    Update an existing Zendesk ticket with new subject, comment, status, or priority. Returns the updated ticket confirming the changes.
   provider: zendesk
   endpoint: /tickets/{id}
   method: PUT
@@ -121,7 +121,7 @@
 - slug: zendesk_list_users
   name: List Users
   description: |
-    Retrieves a list of users from Zendesk.
+    List all users in Zendesk with pagination support. Returns user IDs, names, emails, roles, and authentication status for each user. Filter by role to find specific user types.
   provider: zendesk
   endpoint: /users
   method: GET
@@ -147,7 +147,7 @@
 - slug: zendesk_get_user
   name: Get User
   description: |
-    Retrieves a single user by their ID.
+    Get detailed information about a specific Zendesk user by their ID. Returns the user's name, email, role, timezone, and locale preferences.
   provider: zendesk
   endpoint: /users/{id}
   method: GET
@@ -168,7 +168,7 @@
 - slug: zendesk_list_views
   name: List Views
   description: |
-    Retrieves a list of views from Zendesk.
+    List all saved views in Zendesk. Returns view IDs, titles, and conditions for each view to help organize ticket searches.
   provider: zendesk
   endpoint: /views
   method: GET
@@ -191,7 +191,7 @@
 - slug: zendesk_get_view
   name: Get View
   description: |
-    Retrieves a single view by its ID.
+    Get detailed information about a specific Zendesk view. Returns the view title, conditions, columns, and shared checkbox status.
   provider: zendesk
   endpoint: /views/{id}
   method: GET
@@ -212,7 +212,7 @@
 - slug: zendesk_list_macros
   name: List Macros
   description: |
-    Retrieves a list of macros from Zendesk.
+    List all macros in Zendesk. Returns macro IDs, titles, and actions for each macro to help automate ticket responses.
   provider: zendesk
   endpoint: /macros
   method: GET
@@ -235,7 +235,7 @@
 - slug: zendesk_get_macro
   name: Get Macro
   description: |
-    Retrieves a single macro by its ID.
+    Get detailed information about a specific Zendesk macro. Returns the macro title, actions, and asset details for ticket automation.
   provider: zendesk
   endpoint: /macros/{id}
   method: GET

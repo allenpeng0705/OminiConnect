@@ -18,7 +18,7 @@
 - slug: canvas_list_courses
   name: List Courses
   description: |
-    List all courses the user is enrolled in.
+    Retrieve all courses the user is enrolled in with pagination support. Returns course names, IDs, enrollment types, and state information.
   provider: canvas-lms
   endpoint: /api/v1/courses
   method: GET
@@ -45,7 +45,7 @@
 - slug: canvas_get_course
   name: Get Course
   description: |
-    Get details of a specific course.
+    Retrieve detailed information about a specific course by its unique ID. Returns the course name, code, enrollment term, and instructor information.
   provider: canvas-lms
   endpoint: /api/v1/courses/{id}
   method: GET
@@ -66,7 +66,7 @@
 - slug: canvas_list_users
   name: List Users
   description: |
-    List all users in an account or course.
+    Retrieve all users in an account or course with optional search by name or email. Returns user names, IDs, and email addresses.
   provider: canvas-lms
   endpoint: /api/v1/accounts/{accountId}/users
   method: GET
@@ -94,7 +94,7 @@
 - slug: canvas_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Retrieve detailed information about a specific user by their unique ID. Returns the user name, email, and enrollment status.
   provider: canvas-lms
   endpoint: /api/v1/users/{id}
   method: GET
@@ -115,7 +115,7 @@
 - slug: canvas_list_assignments
   name: List Assignments
   description: |
-    List all assignments in a course.
+    Retrieve all assignments in a specific course with pagination support. Returns assignment titles, IDs, due dates, and point values.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/assignments
   method: GET
@@ -140,7 +140,7 @@
 - slug: canvas_get_assignment
   name: Get Assignment
   description: |
-    Get details of a specific assignment.
+    Retrieve detailed information about a specific assignment by its unique ID. Returns the assignment description, due date, points possible, and submission settings.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/assignments/{id}
   method: GET
@@ -165,7 +165,7 @@
 - slug: canvas_list_submissions
   name: List Submissions
   description: |
-    List all submissions for an assignment.
+    Retrieve all student submissions for a specific assignment with pagination support. Returns submission statuses, grades, and student IDs.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/assignments/{assignmentId}/submissions
   method: GET
@@ -190,7 +190,7 @@
 - slug: canvas_create_assignment
   name: Create Assignment
   description: |
-    Create a new assignment in a course.
+    Create a new homework or exam assignment in a course with title, description, and due date. Returns the created assignment with its unique ID.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/assignments
   method: POST
@@ -224,7 +224,7 @@
 - slug: canvas_list_modules
   name: List Modules
   description: |
-    List all modules in a course.
+    Retrieve all modules in a specific course with pagination support. Returns module names, IDs, and position in the course sequence.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/modules
   method: GET
@@ -245,7 +245,7 @@
 - slug: canvas_list_announcements
   name: List Announcements
   description: |
-    List all announcements in a course.
+    Retrieve all announcements posted in a specific course with pagination support. Returns announcement titles, post dates, and author information.
   provider: canvas-lms
   endpoint: /api/v1/courses/{courseId}/announcements
   method: GET

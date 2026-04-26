@@ -18,8 +18,7 @@
 - slug: gumroad_list_products
   name: List Products
   description: |
-    List all products in your Gumroad account.
-    Returns product details including name, price, and status.
+    List all products in your Gumroad account including names, prices, and publication status. Returns product metadata with pagination for inventory management.
   provider: gumroad
   endpoint: /v1/products
   method: GET
@@ -45,8 +44,7 @@
 - slug: gumroad_get_product
   name: Get Product
   description: |
-    Get detailed information about a specific product.
-    Includes product description, price, and sales stats.
+    Retrieve detailed information about a specific product including full description, pricing tiers, and sales statistics. Returns product configuration and revenue metrics.
   provider: gumroad
   endpoint: /v1/products/{product_id}
   method: GET
@@ -68,8 +66,7 @@
 - slug: gumroad_list_sales
   name: List Sales
   description: |
-    List all sales in your Gumroad account.
-    Returns sale details including product, customer, and amount.
+    List all sales transactions in your Gumroad account with optional product filtering. Returns sale records including product, customer email, and payment amount.
   provider: gumroad
   endpoint: /v1/sales
   method: GET
@@ -94,8 +91,7 @@
 - slug: gumroad_get_sale
   name: Get Sale
   description: |
-    Get detailed information about a specific sale.
-    Includes customer info, product, and payment details.
+    Retrieve detailed information about a specific sale including customer details, product purchased, and payment information. Returns the complete sale transaction record.
   provider: gumroad
   endpoint: /v1/sales/{sale_id}
   method: GET
@@ -117,8 +113,7 @@
 - slug: gumroad_list_customers
   name: List Customers
   description: |
-    List all customers in your Gumroad account.
-    Returns customer details including email and purchase history.
+    List all customers in your Gumroad account with pagination support. Returns customer email addresses and purchase history summaries.
   provider: gumroad
   endpoint: /v1/customers
   method: GET
@@ -140,8 +135,7 @@
 - slug: gumroad_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer.
-    Includes email, purchases, and subscription status.
+    Retrieve detailed information about a specific customer including their complete purchase history and subscription status. Returns the full customer profile with transaction records.
   provider: gumroad
   endpoint: /v1/customers/{customer_id}
   method: GET
@@ -163,8 +157,7 @@
 - slug: gumroad_list_subscribers
   name: List Subscribers
   description: |
-    List all subscribers for your Gumroad products.
-    Returns subscriber details including plan and status.
+    List all subscribers for your Gumroad products with optional product filtering. Returns subscriber details including plan type and billing cycle.
   provider: gumroad
   endpoint: /v1/subscribers
   method: GET
@@ -189,8 +182,7 @@
 - slug: gumroad_get_subscriber
   name: Get Subscriber
   description: |
-    Get detailed information about a specific subscriber.
-    Includes subscription details and billing info.
+    Retrieve detailed information about a specific subscriber including subscription details and payment history. Returns subscriber profile with billing information.
   provider: gumroad
   endpoint: /v1/subscribers/{subscriber_id}
   method: GET
@@ -212,8 +204,7 @@
 - slug: gumroad_list_webhooks
   name: List Webhooks
   description: |
-    List all configured webhooks in your Gumroad account.
-    Returns webhook details including URL and events.
+    List all configured webhooks in your Gumroad account including notification URLs and subscribed event types. Returns webhook configuration for integration management.
   provider: gumroad
   endpoint: /v1/webhooks
   method: GET
@@ -231,8 +222,7 @@
 - slug: gumroad_create_webhook
   name: Create Webhook
   description: |
-    Create a new webhook for Gumroad events.
-    Set URL and event types to receive.
+    Create a new webhook endpoint to receive Gumroad event notifications with specified URL and event subscriptions. Returns the created webhook with its identifier for management.
   provider: gumroad
   endpoint: /v1/webhooks
   method: POST

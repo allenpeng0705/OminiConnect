@@ -18,7 +18,9 @@
 - slug: nerdio_list_desktops
   name: List Desktops
   description: |
-    List all virtual desktops in the environment.
+    List all virtual desktops in the environment with pagination and status filtering.
+    Returns desktop IDs, names, and status for each desktop.
+    Use this to discover virtual desktops and manage VDI resources.
   provider: nerdio
   endpoint: /v1/desktops
   method: GET
@@ -44,7 +46,9 @@
 - slug: nerdio_get_desktop
   name: Get Desktop
   description: |
-    Get detailed information for a specific desktop.
+    Get detailed information for a specific desktop including configuration and status.
+    Returns the complete desktop data with all associated information.
+    This provides full desktop data for virtual infrastructure management.
   provider: nerdio
   endpoint: /v1/desktops/{id}
   method: GET
@@ -67,7 +71,9 @@
 - slug: nerdio_list_hosts
   name: List Hosts
   description: |
-    List all host servers in the environment.
+    List all host servers in the environment with status filtering.
+    Returns host names, IDs, and status for each host server.
+    Use this to discover host infrastructure and manage VDI capacity.
   provider: nerdio
   endpoint: /v1/hosts
   method: GET
@@ -89,7 +95,9 @@
 - slug: nerdio_list_sessions
   name: List Sessions
   description: |
-    List all active user sessions.
+    List all active user sessions with desktop filtering.
+    Returns session IDs, user names, and desktop assignments for each session.
+    Use this to discover active connections and manage user sessions.
   provider: nerdio
   endpoint: /v1/sessions
   method: GET
@@ -111,7 +119,9 @@
 - slug: nerdio_list_users
   name: List Users
   description: |
-    List all users in the Nerdio environment.
+    List all users in the Nerdio environment with pagination.
+    Returns user IDs, names, and email addresses for each user.
+    Use this to discover users and manage VDI access permissions.
   provider: nerdio
   endpoint: /v1/users
   method: GET
@@ -134,7 +144,9 @@
 - slug: nerdio_get_user
   name: Get User
   description: |
-    Get detailed information for a specific user.
+    Get detailed information for a specific user including permissions and assignments.
+    Returns the complete user data with all associated information.
+    This provides full user data for access management and authorization.
   provider: nerdio
   endpoint: /v1/users/{id}
   method: GET
@@ -157,7 +169,9 @@
 - slug: nerdio_list_policies
   name: List Policies
   description: |
-    List all management policies.
+    List all management policies with pagination.
+    Returns policy names, IDs, and types for each policy.
+    Use this to discover management policies and configure VDI settings.
   provider: nerdio
   endpoint: /v1/policies
   method: GET
@@ -176,7 +190,9 @@
 - slug: nerdio_list_reports
   name: List Reports
   description: |
-    List available management reports.
+    List available management reports with pagination.
+    Returns report names, IDs, and categories for each report.
+    Use this to discover analytics reports and monitor VDI performance.
   provider: nerdio
   endpoint: /v1/reports
   method: GET
@@ -195,7 +211,9 @@
 - slug: nerdio_list_settings
   name: List Settings
   description: |
-    List system settings and configuration.
+    List system settings and configuration with pagination.
+    Returns setting names, values, and categories for each setting.
+    Use this to discover system configuration and manage VDI settings.
   provider: nerdio
   endpoint: /v1/settings
   method: GET
@@ -214,7 +232,9 @@
 - slug: nerdio_get_status
   name: Get Status
   description: |
-    Get overall system status and health.
+    Get overall system status and health including resource utilization.
+    Returns system health metrics with all associated information.
+    This provides full status data for infrastructure monitoring.
   provider: nerdio
   endpoint: /v1/status
   method: GET

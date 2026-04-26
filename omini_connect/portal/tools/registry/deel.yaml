@@ -17,8 +17,7 @@
 - slug: deel_list_contracts
   name: List Contracts
   description: |
-    List all contracts in the Deel platform. Returns contract details, types (full-time, contractor), and status.
-    Use this to manage the workforce and track contractual relationships.
+    List all contracts in the Deel platform with optional filtering by status or contract type. Returns contract details, worker information, and statuses for workforce management.
   provider: deel
   endpoint: /v1/contracts
   method: GET
@@ -53,7 +52,7 @@
 - slug: deem_get_contract
   name: Get Contract
   description: |
-    Get details of a specific contract by ID. Returns full contract terms, parties, payment details, and status.
+    Retrieve details for a specific contract by its unique identifier. Returns the full contract terms, parties, payment details, and current status.
   provider: deel
   endpoint: /v1/contracts/{contract_id}
   method: GET
@@ -75,7 +74,7 @@
 - slug: deel_create_contract
   name: Create Contract
   description: |
-    Create a new contract for a worker. Specify worker details, compensation, contract type, and terms.
+    Create a new contract for a worker with specified details, compensation, contract type, and terms. Returns the created contract with its unique identifier.
   provider: deel
   endpoint: /v1/contracts
   method: POST
@@ -114,8 +113,7 @@
 - slug: deel_list_employees
   name: List Employees
   description: |
-    List all employees in the Deel platform. Returns employee profiles, employment status, and assigned contracts.
-    Use this to manage the HR workforce and track employee records.
+    List all employees in the Deel platform with optional filtering by employment status or type. Returns employee profiles, employment status, and assigned contracts for HR management.
   provider: deel
   endpoint: /v1/employees
   method: GET
@@ -150,7 +148,7 @@
 - slug: deel_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee by ID. Returns employee profile, employment details, and payroll information.
+    Retrieve details for a specific employee by their unique identifier. Returns the employee profile, employment details, and payroll information.
   provider: deel
   endpoint: /v1/employees/{employee_id}
   method: GET
@@ -173,7 +171,7 @@
 - slug: deel_create_employee
   name: Create Employee
   description: |
-    Create a new employee record in the Deel platform. Include personal details, employment terms, and payroll setup.
+    Create a new employee record in the Deel platform with personal details, employment terms, and payroll setup. Returns the created employee with their unique identifier.
   provider: deel
   endpoint: /v1/employees
   method: POST
@@ -214,8 +212,7 @@
 - slug: deel_list_time_off
   name: List Time Off
   description: |
-    List all time off requests across the organization. Returns request details, types (vacation, sick leave), status, and dates.
-    Use this to track leave balances and manage time off approvals.
+    List all time off requests across the organization with optional filtering by status, employee, or date range. Returns request details, leave types, statuses, and dates for leave management.
   provider: deel
   endpoint: /v1/time_off
   method: GET
@@ -255,7 +252,7 @@
 - slug: deel_get_time_off_request
   name: Get Time Off Request
   description: |
-    Get details of a specific time off request by ID. Returns employee, dates, leave type, status, and approver info.
+    Retrieve details for a specific time off request by its unique identifier. Returns the employee, dates, leave type, status, and approver information.
   provider: deel
   endpoint: /v1/time_off/{request_id}
   method: GET
@@ -278,7 +275,7 @@
 - slug: deel_approve_time_off
   name: Approve Time Off
   description: |
-    Approve a pending time off request. Use this to manage leave approvals from the HR workflow.
+    Approve a pending time off request with optional approval notes. Returns the updated request status confirming the approval.
   provider: deel
   endpoint: /v1/time_off/{request_id}/approve
   method: POST
@@ -304,8 +301,7 @@
 - slug: deel_list_invoices
   name: List Invoices
   description: |
-    List all invoices in the Deel platform. Returns invoice details, amounts, status, and worker information.
-    Use this to track payments, manage billing, and monitor contractor payments.
+    List all invoices in the Deel platform with optional filtering by status or contract. Returns invoice details, amounts, statuses, and worker information for payment tracking.
   provider: deel
   endpoint: /v1/invoices
   method: GET

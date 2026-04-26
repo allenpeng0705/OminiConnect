@@ -1,7 +1,7 @@
 - slug: charcle_list_customers
   name: List Customers
   description: |
-    Retrieve a list of all customers in the engagement platform.
+    Retrieve all customers in the Charcle engagement platform with optional filtering by segment or status. Returns customer names, emails, and segment information.
   provider: charcle
   endpoint: /customers
   method: GET
@@ -24,7 +24,7 @@
 - slug: charcle_get_customer
   name: Get Customer
   description: |
-    Retrieve details of a specific customer by ID.
+    Retrieve detailed information about a specific customer by their unique ID. Returns the contact information, segment membership, and activity status.
   provider: charcle
   endpoint: /customers/{customer_id}
   method: GET
@@ -45,7 +45,7 @@
 - slug: charcle_create_customer
   name: Create Customer
   description: |
-    Create a new customer in the engagement platform.
+    Create a new customer in the Charcle engagement platform with name, email, phone, and segment assignment. Returns the created customer with their unique ID.
   provider: charcle
   endpoint: /customers
   method: POST
@@ -76,7 +76,7 @@
 - slug: charcle_list_segments
   name: List Segments
   description: |
-    Retrieve a list of all customer segments.
+    Retrieve all customer segments with optional filtering by status. Returns segment names, IDs, descriptions, and customer counts.
   provider: charcle
   endpoint: /segments
   method: GET
@@ -96,7 +96,7 @@
 - slug: charcle_get_segment
   name: Get Segment
   description: |
-    Retrieve details of a specific segment by ID.
+    Retrieve detailed information about a specific segment by its unique ID. Returns the segment name, description, criteria rules, and customer count.
   provider: charcle
   endpoint: /segments/{segment_id}
   method: GET
@@ -117,7 +117,7 @@
 - slug: charcle_create_segment
   name: Create Segment
   description: |
-    Create a new customer segment.
+    Create a new customer segment with name, description, and criteria rules. Returns the created segment with its unique ID.
   provider: charcle
   endpoint: /segments
   method: POST
@@ -144,7 +144,7 @@
 - slug: charcle_list_campaigns
   name: List Campaigns
   description: |
-    Retrieve a list of all marketing campaigns.
+    Retrieve all marketing campaigns with optional filtering by status or channel type. Returns campaign names, IDs, statuses, and channel information.
   provider: charcle
   endpoint: /campaigns
   method: GET
@@ -167,7 +167,7 @@
 - slug: charcle_get_campaign
   name: Get Campaign
   description: |
-    Retrieve details of a specific campaign by ID.
+    Retrieve detailed information about a specific campaign by its unique ID. Returns the campaign status, channel, recipient count, and send statistics.
   provider: charcle
   endpoint: /campaigns/{campaign_id}
   method: GET
@@ -188,7 +188,7 @@
 - slug: charcle_send_message
   name: Send Message
   description: |
-    Send a message to customers through a campaign.
+    Send a message to selected customers through a specified campaign via email, SMS, or other channels. Returns the sent message with its unique ID.
   provider: charcle
   endpoint: /messages
   method: POST
@@ -222,7 +222,7 @@
 - slug: charcle_get_message_status
   name: Get Message Status
   description: |
-    Retrieve the delivery status of a sent message.
+    Retrieve the delivery status of a sent message by its unique ID. Returns open counts, click counts, and failure information.
   provider: charcle
   endpoint: /messages/{message_id}
   method: GET

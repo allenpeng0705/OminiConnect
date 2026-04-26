@@ -1,7 +1,7 @@
 - slug: clay_list_tables
   name: List Tables
   description: |
-    Retrieve a list of all tables in the Clay workspace.
+    List all tables in the Clay workspace, returning table IDs, names, column schemas, and row counts.
   provider: clay
   endpoint: /tables
   method: GET
@@ -20,7 +20,7 @@
 - slug: clay_get_table
   name: Get Table
   description: |
-    Retrieve details of a specific table by ID.
+    Retrieve details of a specific Clay table including column schema, row count, and table settings.
   provider: clay
   endpoint: /tables/{table_id}
   method: GET
@@ -40,7 +40,7 @@
 - slug: clay_add_row
   name: Add Row
   description: |
-    Add a new row to a specific table.
+    Add a new row to a specific Clay table with data values for each column, returning the created row ID.
   provider: clay
   endpoint: /tables/{table_id}/rows
   method: POST
@@ -64,7 +64,7 @@
 - slug: clay_update_row
   name: Update Row
   description: |
-    Update an existing row in a specific table.
+    Update an existing row in a Clay table with new data values, modifying the specified columns.
   provider: clay
   endpoint: /tables/{table_id}/rows/{row_id}
   method: PUT
@@ -92,7 +92,7 @@
 - slug: clay_list_enrichments
   name: List Enrichments
   description: |
-    Retrieve a list of all available enrichments in the workspace.
+    List all available data enrichments in the Clay workspace for enriching company and contact records, returning enrichment types and providers.
   provider: clay
   endpoint: /enrichments
   method: GET
@@ -111,7 +111,7 @@
 - slug: clay_get_enrichment
   name: Get Enrichment
   description: |
-    Retrieve details of a specific enrichment by ID.
+    Retrieve details of a specific Clay enrichment showing data fields, provider information, and credit cost.
   provider: clay
   endpoint: /enrichments/{enrichment_id}
   method: GET
@@ -131,7 +131,7 @@
 - slug: clay_list_integrations
   name: List Integrations
   description: |
-    Retrieve a list of all integrations connected to the workspace.
+    List all integrations connected to the Clay workspace for data import and export, returning integration status and types.
   provider: clay
   endpoint: /integrations
   method: GET
@@ -150,7 +150,7 @@
 - slug: clay_get_integration
   name: Get Integration
   description: |
-    Retrieve details of a specific integration by ID.
+    Retrieve details of a specific Clay integration including connection status, configured syncs, and last sync time.
   provider: clay
   endpoint: /integrations/{integration_id}
   method: GET
@@ -170,7 +170,7 @@
 - slug: clay_create_webhook
   name: Create Webhook
   description: |
-    Create a new webhook to receive real-time notifications.
+    Create a webhook in Clay to receive real-time notifications for specified table events, returning the webhook ID.
   provider: clay
   endpoint: /webhooks
   method: POST
@@ -196,7 +196,7 @@
 - slug: clay_list_contacts
   name: List Contacts
   description: |
-    Retrieve a list of all contacts in the Clay workspace.
+    List all contacts in the Clay workspace with pagination, returning names, email addresses, and company associations.
   provider: clay
   endpoint: /contacts
   method: GET

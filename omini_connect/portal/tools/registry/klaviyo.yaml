@@ -16,8 +16,7 @@
 - slug: klaviyo_list_profiles
   name: List Profiles
   description: |
-    Retrieve all profiles in your Klaviyo account.
-    Profiles contain customer data including email, name, and custom properties.
+    List all customer profiles in your Klaviyo account. Returns email addresses, names, phone numbers, and custom properties for each profile.
   provider: klaviyo
   endpoint: /api/profiles/
   method: GET
@@ -45,8 +44,7 @@
 - slug: klaviyo_get_profile
   name: Get Profile
   description: |
-    Get a specific profile by its ID.
-    Returns all profile attributes and subscription status.
+    Retrieve a specific Klaviyo profile by its UUID. Returns all profile attributes including email, phone, name, and subscription status.
   provider: klaviyo
   endpoint: /api/profiles/{profile_id}/
   method: GET
@@ -68,8 +66,7 @@
 - slug: klaviyo_create_profile
   name: Create Profile
   description: |
-    Create a new profile in Klaviyo.
-    Include email, phone, name, and custom properties.
+    Create a new profile in Klaviyo. Specify email, phone number, name, organization, and custom profile properties. Returns the created profile with its UUID.
   provider: klaviyo
   endpoint: /api/profiles/
   method: POST
@@ -105,8 +102,7 @@
 - slug: klaviyo_list_lists
   name: List Lists
   description: |
-    Get all lists in your Klaviyo account.
-    Lists are static groups of profiles for targeted campaigns.
+    Get all lists in your Klaviyo account. Lists are static groups of profiles for targeted email and SMS campaigns. Returns list names, IDs, and member counts.
   provider: klaviyo
   endpoint: /api/lists/
   method: GET
@@ -131,8 +127,7 @@
 - slug: klaviyo_get_list
   name: Get List
   description: |
-    Get details about a specific list including profile count.
-    Use this to verify a list before adding profiles.
+    Get details about a specific Klaviyo list by its UUID including profile count, creation date, and tags. Verify list details before adding profiles.
   provider: klaviyo
   endpoint: /api/lists/{list_id}/
   method: GET
@@ -154,8 +149,7 @@
 - slug: klaviyo_add_profile_to_list
   name: Add Profile to List
   description: |
-    Add an existing profile to a list.
-    The profile must already exist in your Klaviyo account.
+    Add an existing Klaviyo profile to a list. The profile must already exist in your account. Returns confirmation of the list membership addition.
   provider: klaviyo
   endpoint: /api/lists/{list_id}/relationships/profiles/
   method: POST
@@ -183,8 +177,7 @@
 - slug: klaviyo_list_segments
   name: List Segments
   description: |
-    Get all segments in your Klaviyo account.
-    Segments are dynamic groups based on profile criteria.
+    Get all segments in your Klaviyo account. Segments are dynamic groups that automatically update based on profile criteria. Returns segment names, IDs, and member counts.
   provider: klaviyo
   endpoint: /api/segments/
   method: GET
@@ -209,8 +202,7 @@
 - slug: klaviyo_get_segment
   name: Get Segment
   description: |
-    Get details about a specific segment including member count.
-    Segments update dynamically based on profile criteria.
+    Get details about a specific Klaviyo segment by its UUID including member count, creation date, and filtering criteria. Understand segment rules for targeted campaigns.
   provider: klaviyo
   endpoint: /api/segments/{segment_id}/
   method: GET
@@ -232,8 +224,7 @@
 - slug: klaviyo_list_campaigns
   name: List Campaigns
   description: |
-    Get all campaigns in your Klaviyo account.
-    Includes sent, scheduled, and draft campaigns.
+    Get all email and SMS campaigns in your Klaviyo account. Includes sent, scheduled, and draft campaigns. Filter by status, campaign type, or date range.
   provider: klaviyo
   endpoint: /api/campaigns/
   method: GET
@@ -262,8 +253,7 @@
 - slug: klaviyo_get_campaign
   name: Get Campaign
   description: |
-    Get details about a specific campaign.
-    Returns subject, content, send status, and tracking metrics.
+    Get details about a specific Klaviyo campaign by its UUID. Returns subject line, content, send status, scheduling details, and performance metrics.
   provider: klaviyo
   endpoint: /api/campaigns/{campaign_id}/
   method: GET

@@ -18,7 +18,7 @@
 - slug: docusign_list_envelopes
   name: List Envelopes
   description: |
-    List envelopes with optional filtering by status, date range, or folder.
+    List all DocuSign envelopes in the account with optional filtering by status, date range, or folder. Returns envelope IDs, subject lines, statuses, and recipient information.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes
   method: GET
@@ -61,7 +61,7 @@
 - slug: docusign_get_envelope
   name: Get Envelope
   description: |
-    Get detailed information about a specific envelope including status and recipients.
+    Retrieve detailed information about a specific DocuSign envelope including current status, recipient list, document count, and signing progress tracking.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}
   method: GET
@@ -88,7 +88,7 @@
 - slug: docusign_create_envelope
   name: Create Envelope
   description: |
-    Create a new envelope definition with documents and recipients.
+    Create a new DocuSign envelope for electronic signature with specified documents, recipients, and email subject. Returns the created envelope with its unique identifier.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes
   method: POST
@@ -124,7 +124,7 @@
 - slug: docusign_send_envelope
   name: Send Envelope
   description: |
-    Send an existing envelope draft for signature.
+    Send an existing DocuSign envelope draft to all recipients for signature and receive confirmation of delivery status.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}
   method: PUT
@@ -151,7 +151,7 @@
 - slug: docusign_list_documents
   name: List Documents
   description: |
-    List all documents in an envelope with their IDs and names.
+    List all documents contained in a specific DocuSign envelope with page counts and document IDs for each attachment.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/documents
   method: GET
@@ -178,7 +178,7 @@
 - slug: docusign_get_document
   name: Get Document
   description: |
-    Download or retrieve a specific document from an envelope.
+    Download or retrieve a specific document from a DocuSign envelope in PDF format with metadata including document name and page count.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/documents/{documentId}
   method: GET
@@ -209,7 +209,7 @@
 - slug: docusign_list_recipients
   name: List Recipients
   description: |
-    List all recipients for an envelope including signers, cc, and witness.
+    List all signers and other recipients for a specific DocuSign envelope with their email addresses, signing status, and timestamps.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/recipients
   method: GET
@@ -236,7 +236,7 @@
 - slug: docusign_get_recipient
   name: Get Recipient
   description: |
-    Get detailed information about a specific recipient including signature status.
+    Retrieve detailed information about a specific DocuSign envelope recipient including their signature status, delivery timestamp, and authentication method.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/recipients/{recipientId}
   method: GET
@@ -267,7 +267,7 @@
 - slug: docusign_list_templates
   name: List Templates
   description: |
-    List all templates available in the account for creating envelopes.
+    List all available DocuSign templates in the account for creating envelopes with reusable document configurations and recipient roles.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/templates
   method: GET
@@ -300,7 +300,7 @@
 - slug: docusign_get_template
   name: Get Template
   description: |
-    Get detailed information about a template including structure and recipients.
+    Retrieve detailed information about a specific DocuSign template including document structure, recipient roles, and field placement settings.
   provider: docusign
   endpoint: /v2.1/accounts/{accountId}/templates/{templateId}
   method: GET

@@ -2,6 +2,8 @@
   name: List Publications
   description: |
     Retrieve a list of publications the user is associated with.
+    Returns publication names, IDs, and subscriber counts for each publication.
+    Use this to discover newsletters and manage publication access.
   provider: substack
   endpoint: /publications
   method: GET
@@ -24,7 +26,9 @@
 - slug: substack_get_publication
   name: Get Publication
   description: |
-    Get details about a specific publication.
+    Get details about a specific publication including name, description, and audience size.
+    Returns the complete publication data with all associated information.
+    This provides full publication data for newsletter management.
   provider: substack
   endpoint: /publications/{publication_id}
   method: GET
@@ -45,7 +49,9 @@
 - slug: substack_list_posts
   name: List Posts
   description: |
-    Retrieve a list of posts for a publication.
+    Retrieve a list of posts for a publication with title, date, and status filtering.
+    Returns post IDs, titles, publish dates, and engagement metrics for each post.
+    Use this to discover published content and track newsletter articles.
   provider: substack
   endpoint: /publications/{publication_id}/posts
   method: GET
@@ -72,7 +78,9 @@
 - slug: substack_get_post
   name: Get Post
   description: |
-    Get details about a specific post.
+    Get details about a specific post including full content and publication status.
+    Returns the complete post data with all associated information.
+    This provides full post data for content analysis and management.
   provider: substack
   endpoint: /posts/{post_id}
   method: GET
@@ -93,7 +101,9 @@
 - slug: substack_create_post
   name: Create Post
   description: |
-    Create a new post in a publication.
+    Create a new post in a publication with title, content, and scheduling options.
+    Returns the created post with its unique ID and publication confirmation.
+    This publishes a new article to your Substack newsletter.
   provider: substack
   endpoint: /publications/{publication_id}/posts
   method: POST
@@ -132,7 +142,9 @@
 - slug: substack_list_subscribers
   name: List Subscribers
   description: |
-    Retrieve a list of subscribers for a publication.
+    Retrieve a list of subscribers for a publication with status filtering.
+    Returns subscriber IDs, email addresses, subscription status, and tiers for each subscriber.
+    Use this to discover your audience and manage subscription data.
   provider: substack
   endpoint: /publications/{publication_id}/subscribers
   method: GET
@@ -163,7 +175,9 @@
 - slug: substack_get_subscriber
   name: Get Subscriber
   description: |
-    Get details about a specific subscriber.
+    Get details about a specific subscriber including subscription tier and engagement history.
+    Returns the complete subscriber data with all associated information.
+    This provides full subscriber data for audience management.
   provider: substack
   endpoint: /subscribers/{subscriber_id}
   method: GET
@@ -184,7 +198,9 @@
 - slug: substack_send_email
   name: Send Email
   description: |
-    Send an email to subscribers of a publication.
+    Send an email to subscribers of a publication by post ID and recipient type.
+    Returns the sent email confirmation with delivery statistics.
+    This delivers a newsletter issue to your subscribers.
   provider: substack
   endpoint: /publications/{publication_id}/emails
   method: POST
@@ -213,7 +229,9 @@
 - slug: substack_get_email_stats
   name: Get Email Stats
   description: |
-    Get statistics for a sent email.
+    Get statistics for a sent email including open rates, click rates, and delivery status.
+    Returns the complete email performance data with engagement metrics.
+    This provides full email analytics for campaign optimization.
   provider: substack
   endpoint: /emails/{email_id}/stats
   method: GET
@@ -234,7 +252,9 @@
 - slug: substack_list_free_posts
   name: List Free Posts
   description: |
-    Retrieve a list of free (non-paid) posts for a publication.
+    Retrieve a list of free (non-paid) posts for a publication for content discovery.
+    Returns post IDs, titles, and publish dates for each free post.
+    Use this to discover accessible content and manage free article access.
   provider: substack
   endpoint: /publications/{publication_id}/posts/free
   method: GET

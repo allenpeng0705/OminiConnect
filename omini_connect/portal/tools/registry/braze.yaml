@@ -17,7 +17,8 @@
 - slug: braze_list_users
   name: List Users
   description: |
-    List users in Braze. Returns user details including external ID, email, and device information.
+    List users in Braze and return external IDs, emails, device information, and attributes.
+    Use this to discover your user base for audience segmentation and campaign targeting.
   provider: braze
   endpoint: /users/list
   method: GET
@@ -44,6 +45,7 @@
   name: Get User
   description: |
     Get details of a specific user including attributes, events, and purchase history.
+    Returns the complete user profile for behavior analysis and personalization.
   provider: braze
   endpoint: /users/{user_id}
   method: GET
@@ -65,7 +67,8 @@
 - slug: braze_track_event
   name: Track Event
   description: |
-    Track a custom event for a user. Used to record user actions for segmentation and analytics.
+    Track a custom event for a user with event name, timestamp, and optional properties.
+    Returns confirmation of the tracked event for analytics and segmentation.
   provider: braze
   endpoint: /events/track
   method: POST
@@ -98,7 +101,8 @@
 - slug: braze_list_campaigns
   name: List Campaigns
   description: |
-    List all campaigns in Braze. Returns campaign details including name, status, and performance metrics.
+    List all campaigns in Braze and return campaign names, IDs, status, and performance metrics.
+    Use this to discover active campaigns for marketing and engagement tracking.
   provider: braze
   endpoint: /campaigns/list
   method: GET
@@ -125,6 +129,7 @@
   name: Get Campaign
   description: |
     Get details of a specific campaign including settings, audience, and performance statistics.
+    Returns the complete campaign data for analytics and optimization.
   provider: braze
   endpoint: /campaigns/{campaign_id}
   method: GET
@@ -146,7 +151,8 @@
 - slug: braze_create_campaign
   name: Create Campaign
   description: |
-    Create a new campaign in Braze. Set audience, content, and delivery schedule.
+    Create a new campaign in Braze with name, description, channel, and target segment.
+    Returns the created campaign ID for message configuration and scheduling.
   provider: braze
   endpoint: /campaigns
   method: POST
@@ -183,7 +189,8 @@
 - slug: braze_list_content_cards
   name: List Content Cards
   description: |
-    List all content cards in Braze. Returns card details including title, message, and status.
+    List all content cards in Braze and return card IDs, titles, messages, and status.
+    Use this to discover available content cards for in-app messaging campaigns.
   provider: braze
   endpoint: /content_cards/list
   method: GET
@@ -209,7 +216,8 @@
 - slug: braze_get_content_card
   name: Get Content Card
   description: |
-    Get details of a specific content card including message, images, and performance data.
+    Get details of a specific content card including message content, images, and performance data.
+    Returns the complete content card data for messaging optimization.
   provider: braze
   endpoint: /content_cards/{card_id}
   method: GET
@@ -231,7 +239,8 @@
 - slug: braze_list_segments
   name: List Segments
   description: |
-    List all segments in Braze. Returns segment details including name, size, and filters.
+    List all segments in Braze and return segment names, IDs, sizes, and filter criteria.
+    Use this to discover audience segments for targeted marketing campaigns.
   provider: braze
   endpoint: /segments/list
   method: GET
@@ -258,6 +267,7 @@
   name: Get Segment
   description: |
     Get details of a specific segment including name, user count, and filter criteria.
+    Returns the complete segment configuration for audience analysis and campaign targeting.
   provider: braze
   endpoint: /segments/{segment_id}
   method: GET

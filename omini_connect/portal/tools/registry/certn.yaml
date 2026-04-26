@@ -18,7 +18,7 @@
 - slug: certn_list_teams
   name: List Teams
   description: |
-    List all teams in the account.
+    Retrieve all teams in the Certn account with pagination support. Returns team names, IDs, member counts, and background check settings.
   provider: certn
   endpoint: /api/v2/teams
   method: GET
@@ -39,7 +39,7 @@
 - slug: certn_get_team
   name: Get Team
   description: |
-    Get details of a specific team.
+    Retrieve detailed information about a specific team by its unique ID. Returns the team name, member list, and background check settings.
   provider: certn
   endpoint: /api/v2/teams/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: certn_list_applicants
   name: List Applicants
   description: |
-    List all applicants in a team.
+    Retrieve all job applicants in a specific team with pagination support. Returns applicant names, IDs, application status, and submission dates.
   provider: certn
   endpoint: /api/v2/teams/{teamId}/applicants
   method: GET
@@ -85,7 +85,7 @@
 - slug: certn_get_applicant
   name: Get Applicant
   description: |
-    Get details of a specific applicant.
+    Retrieve detailed information about a specific applicant by their unique ID. Returns the applicant name, email, and application status.
   provider: certn
   endpoint: /api/v2/applicants/{id}
   method: GET
@@ -106,7 +106,7 @@
 - slug: certn_list_background_checks
   name: List Background Checks
   description: |
-    List all background checks for an applicant.
+    Retrieve all background checks for a specific applicant. Returns check IDs, types, statuses, and completion dates.
   provider: certn
   endpoint: /api/v2/applicants/{applicantId}/background-checks
   method: GET
@@ -127,7 +127,7 @@
 - slug: certn_get_background_check
   name: Get Background Check
   description: |
-    Get details of a specific background check.
+    Retrieve detailed information about a specific background check by its unique ID. Returns the check type, status, and completion information.
   provider: certn
   endpoint: /api/v2/background-checks/{id}
   method: GET
@@ -148,7 +148,7 @@
 - slug: certn_create_background_check
   name: Create Background Check
   description: |
-    Create a new background check for an applicant.
+    Initiate a new background check for a specific applicant with a specified check type. Returns the created check with its unique ID.
   provider: certn
   endpoint: /api/v2/applicants/{applicantId}/background-checks
   method: POST
@@ -173,7 +173,7 @@
 - slug: certn_list_reports
   name: List Reports
   description: |
-    List all reports for a background check.
+    Retrieve all reports generated for a specific background check. Returns report IDs, types, statuses, and completion dates.
   provider: certn
   endpoint: /api/v2/background-checks/{checkId}/reports
   method: GET
@@ -194,7 +194,7 @@
 - slug: certn_get_report
   name: Get Report
   description: |
-    Get details of a specific report.
+    Retrieve detailed information about a specific report by its unique ID. Returns the verification results, findings, and overall status.
   provider: certn
   endpoint: /api/v2/reports/{id}
   method: GET
@@ -215,7 +215,7 @@
 - slug: certn_list_invites
   name: List Invites
   description: |
-    List all invites for a team.
+    Retrieve all invitations sent to applicants with pagination support. Returns invite IDs, statuses, and sent dates.
   provider: certn
   endpoint: /api/v2/teams/{teamId}/invites
   method: GET

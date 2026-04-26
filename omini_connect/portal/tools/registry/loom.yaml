@@ -17,8 +17,7 @@
 - slug: loom_list_videos
   name: List Videos
   description: |
-    List all videos for the authenticated user.
-    Filter by workspace, folder, or search term.
+    List all videos in your Loom account. Returns video names, IDs, durations, thumbnail URLs, and sharing settings for each video.
   provider: loom
   endpoint: /videos
   method: GET
@@ -54,8 +53,7 @@
 - slug: loom_get_video
   name: Get Video
   description: |
-    Get detailed information about a specific video including
-    duration, view count, thumbnail, and sharing settings.
+    Get detailed information about a specific Loom video by its ID. Returns the video title, duration, view count, thumbnail, and sharing settings.
   provider: loom
   endpoint: /videos/{videoId}
   method: GET
@@ -77,8 +75,7 @@
 - slug: loom_create_video
   name: Create Video
   description: |
-    Create a new video entry with title and metadata.
-    For actual video upload, use the upload endpoint.
+    Create a new video entry in Loom with the specified title and metadata. Returns the created video with its unique ID.
   provider: loom
   endpoint: /videos
   method: POST
@@ -112,7 +109,7 @@
 - slug: loom_delete_video
   name: Delete Video
   description: |
-    Delete a video permanently. This action cannot be undone.
+    Delete a specific Loom video by its ID. Returns confirmation of the deletion.
   provider: loom
   endpoint: /videos/{videoId}
   method: DELETE
@@ -134,8 +131,7 @@
 - slug: loom_list_workspaces
   name: List Workspaces
   description: |
-    List all workspaces available to the authenticated user.
-    Workspaces contain folders and videos.
+    List all workspaces in your Loom account. Returns workspace names, IDs, and member counts for each workspace.
   provider: loom
   endpoint: /workspaces
   method: GET
@@ -162,8 +158,7 @@
 - slug: loom_get_workspace
   name: Get Workspace
   description: |
-    Get detailed information about a specific workspace
-    including member list and settings.
+    Get detailed information about a specific Loom workspace by its ID. Returns the workspace name, member list, and settings.
   provider: loom
   endpoint: /workspaces/{workspaceId}
   method: GET
@@ -185,8 +180,7 @@
 - slug: loom_list_folders
   name: List Folders
   description: |
-    List all folders in a workspace or parent folder.
-    Folders organize videos within a workspace.
+    List all folders in your Loom account. Returns folder names, IDs, and video counts for each folder.
   provider: loom
   endpoint: /folders
   method: GET
@@ -219,8 +213,7 @@
 - slug: loom_get_folder
   name: Get Folder
   description: |
-    Get detailed information about a specific folder
-    including contents and subfolder listing.
+    Get detailed information about a specific Loom folder by its ID. Returns the folder name, contents, and subfolder listing.
   provider: loom
   endpoint: /folders/{folderId}
   method: GET
@@ -242,8 +235,7 @@
 - slug: loom_add_comment
   name: Add Comment
   description: |
-    Add a comment to a video at a specific timestamp.
-    Comments can be text or time-linked.
+    Add a comment to a specific Loom video at a timestamp. Returns the created comment with its unique ID.
   provider: loom
   endpoint: /videos/{videoId}/comments
   method: POST
@@ -272,8 +264,7 @@
 - slug: loom_update_thumbnail
   name: Update Thumbnail
   description: |
-    Update the thumbnail image for a video.
-    Can specify a timestamp to capture frame or upload custom image.
+    Update the thumbnail image for a specific Loom video. Returns the updated video confirming the new thumbnail.
   provider: loom
   endpoint: /videos/{videoId}/thumbnail
   method: PATCH

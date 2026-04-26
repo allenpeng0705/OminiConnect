@@ -18,6 +18,8 @@
   name: List Repositories
   description: |
     Retrieve all repositories configured with Renovate in the organization.
+    Returns repository names, IDs, and configuration status for each repo.
+    Use this to discover repositories managed by Renovate for dependency updates.
   provider: renovate
   endpoint: /api/repositories
   method: GET
@@ -42,6 +44,8 @@
   name: Get Repository
   description: |
     Retrieve detailed configuration and status for a Renovate repository.
+    Returns the complete repository configuration with update schedules and rules.
+    This provides repository details for understanding update policies.
   provider: renovate
   endpoint: /api/repositories/{repoName}
   method: GET
@@ -62,7 +66,9 @@
 - slug: renovate_list_pull_requests
   name: List Pull Requests
   description: |
-    Retrieve all Renovate-managed pull requests for repositories.
+    Retrieve all Renovate-managed pull requests for repositories with status information.
+    Returns PR numbers, titles, branches, and merge status for each PR.
+    Use this to track dependency update PRs and their review status.
   provider: renovate
   endpoint: /api/pull-requests
   method: GET
@@ -89,7 +95,9 @@
 - slug: renovate_get_pull_request
   name: Get Pull Request
   description: |
-    Retrieve details about a specific Renovate pull request.
+    Retrieve details about a specific Renovate pull request including files changed.
+    Returns the complete PR data with dependency updates and commit details.
+    This provides PR details for code review and merge decisions.
   provider: renovate
   endpoint: /api/pull-requests/{prNumber}
   method: GET
@@ -114,7 +122,9 @@
 - slug: renovate_get_config
   name: Get Config
   description: |
-    Retrieve the Renovate configuration for a repository.
+    Retrieve the Renovate configuration for a repository including presets and rules.
+    Returns the complete configuration with package rules and schedule settings.
+    Use this to understand the update policy for a repository.
   provider: renovate
   endpoint: /api/repositories/{repoName}/config
   method: GET
@@ -135,7 +145,9 @@
 - slug: renovate_update_config
   name: Update Config
   description: |
-    Update the Renovate configuration for a repository.
+    Update the Renovate configuration for a repository with new settings.
+    Returns the updated configuration confirming changes were applied.
+    This modifies the update policy and schedule for dependency updates.
   provider: renovate
   endpoint: /api/repositories/{repoName}/config
   method: PUT
@@ -172,7 +184,9 @@
 - slug: renovate_list_branches
   name: List Branches
   description: |
-    Retrieve all branches managed by Renovate for a repository.
+    Retrieve all branches managed by Renovate for a repository with status.
+    Returns branch names, last commit dates, and update status for each branch.
+    Use this to discover pending updates and track branch lifecycle.
   provider: renovate
   endpoint: /api/repositories/{repoName}/branches
   method: GET
@@ -196,7 +210,9 @@
 - slug: renovate_get_branch
   name: Get Branch
   description: |
-    Retrieve details about a specific Renovate-managed branch.
+    Retrieve details about a specific Renovate-managed branch including commits and files.
+    Returns the complete branch data with update contents and status.
+    This provides branch details for understanding pending dependency updates.
   provider: renovate
   endpoint: /api/repositories/{repoName}/branches/{branchName}
   method: GET
@@ -221,7 +237,9 @@
 - slug: renovate_create_branch
   name: Create Branch
   description: |
-    Create a new Renovate-managed branch for dependency updates.
+    Create a new Renovate-managed branch for dependency updates with custom rules.
+    Returns the created branch with its name and initial configuration.
+    This initiates a new dependency update outside the regular schedule.
   provider: renovate
   endpoint: /api/repositories/{repoName}/branches
   method: POST
@@ -251,7 +269,9 @@
 - slug: renovate_get_repository_status
   name: Get Repository Status
   description: |
-    Retrieve the overall Renovate status for a repository including dashboard state.
+    Retrieve the overall Renovate status for a repository including pending updates.
+    Returns dashboard state, branch count, and PR statistics for the repository.
+    Use this to get a summary of Renovate activity and pending changes.
   provider: renovate
   endpoint: /api/repositories/{repoName}/status
   method: GET

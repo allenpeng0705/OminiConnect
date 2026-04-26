@@ -17,8 +17,7 @@
 - slug: trello_list_boards
   name: List Boards
   description: |
-    List all Trello boards for the authenticated user.
-    Includes boards the user is a member of.
+    List all Trello boards for the authenticated user including boards they are a member of. Returns board names, IDs, descriptions, and visibility settings for each board.
   provider: trello
   endpoint: /1/members/me/boards
   method: GET
@@ -41,8 +40,7 @@
 - slug: trello_get_board
   name: Get Board
   description: |
-    Get detailed information about a specific Trello board.
-    Includes name, description, visibility, and settings.
+    Get detailed information about a specific Trello board by its ID. Returns the board name, description, visibility, settings, member list, and available lists.
   provider: trello
   endpoint: /1/boards/{boardId}
   method: GET
@@ -72,7 +70,7 @@
 - slug: trello_create_board
   name: Create Board
   description: |
-    Create a new Trello board. Set name, description, visibility, and add initial list columns.
+    Create a new Trello board with specified name, description, and visibility. Optionally add default lists (To Do, Doing, Done). Returns the created board with its unique ID.
   provider: trello
   endpoint: /1/boards
   method: POST
@@ -108,8 +106,7 @@
 - slug: trello_list_lists
   name: List Lists
   description: |
-    List all lists on a Trello board.
-    Lists are the columns in a board (e.g., To Do, In Progress, Done).
+    List all lists on a Trello board (columns like To Do, In Progress, Done). Returns list names, IDs, positions, and card counts for each list.
   provider: trello
   endpoint: /1/boards/{boardId}/lists
   method: GET
@@ -136,8 +133,7 @@
 - slug: trello_get_list
   name: Get List
   description: |
-    Get details about a specific Trello list.
-    Includes name, position, and card count.
+    Get detailed information about a specific Trello list by its ID. Returns the list name, position, card count, and optionally all cards in the list.
   provider: trello
   endpoint: /1/lists/{listId}
   method: GET
@@ -167,8 +163,7 @@
 - slug: trello_create_list
   name: Create List
   description: |
-    Create a new list on a Trello board.
-    Lists are the columns that contain cards.
+    Create a new list on a Trello board with a specified name. Lists are the columns that contain cards (e.g., To Do, In Progress). Returns the created list with its unique ID.
   provider: trello
   endpoint: /1/lists
   method: POST
@@ -198,8 +193,7 @@
 - slug: trello_list_cards
   name: List Cards
   description: |
-    List cards in a list or all cards on a board.
-    Can filter by open/closed status.
+    List all cards on a Trello board or in a specific list with optional status filtering. Returns card names, IDs, descriptions, due dates, and member assignments for each card.
   provider: trello
   endpoint: /1/boards/{boardId}/cards
   method: GET
@@ -228,8 +222,7 @@
 - slug: trello_get_card
   name: Get Card
   description: |
-    Get detailed information about a Trello card.
-    Includes description, due date, labels, members, and activity.
+    Get detailed information about a specific Trello card by its ID. Returns the card name, description, due date, labels, assigned members, checklist items, and activity history.
   provider: trello
   endpoint: /1/cards/{cardId}
   method: GET
@@ -255,8 +248,7 @@
 - slug: trello_create_card
   name: Create Card
   description: |
-    Create a new card on a Trello list.
-    Set name, description, due date, labels, and assign members.
+    Create a new card on a Trello list with specified name, description, due date, labels, and member assignments. Returns the created card with its unique ID.
   provider: trello
   endpoint: /1/cards
   method: POST
@@ -294,7 +286,7 @@
 - slug: trello_add_member_to_card
   name: Add Member to Card
   description: |
-    Add a member to a Trello card to assign them.
+    Add a specific member to a Trello card to assign them. Returns the updated card confirming the member was added.
   provider: trello
   endpoint: /1/cards/{cardId}/members
   method: POST

@@ -17,8 +17,7 @@
 - slug: azure_list_resource_groups
   name: List Resource Groups
   description: |
-    List all Azure resource groups in the subscription.
-    Resource groups are containers that hold related resources for an Azure solution.
+    List all Azure resource groups in the subscription. Returns resource group names, locations, and tag information for each group.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourcegroups
   method: GET
@@ -46,7 +45,7 @@
 - slug: azure_get_resource_group
   name: Get Resource Group
   description: |
-    Get details about a specific Azure resource group including its resources and tags.
+    Retrieve detailed information for a specific Azure resource group including all contained resources and applied tags.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}
   method: GET
@@ -72,7 +71,7 @@
 - slug: azure_create_resource_group
   name: Create Resource Group
   description: |
-    Create a new Azure resource group to organize resources and manage permissions.
+    Create a new Azure resource group in the specified location with optional tags for organizing resources.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}
   method: PUT
@@ -105,8 +104,7 @@
 - slug: azure_list_resources
   name: List Resources
   description: |
-    List all resources in a subscription or resource group.
-    Use this to discover what resources exist in your Azure environment.
+    List all resources in an Azure subscription or resource group. Returns resource names, types, locations, and provisioning states.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resources
   method: GET
@@ -137,7 +135,7 @@
 - slug: azure_get_resource
   name: Get Resource
   description: |
-    Get details about a specific Azure resource including provisioning state, tags, and metadata.
+    Retrieve detailed information for a specific Azure resource including provisioning state, tags, and resource metadata.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
   method: GET
@@ -178,8 +176,7 @@
 - slug: azure_list_storage_accounts
   name: List Storage Accounts
   description: |
-    List all Azure storage accounts in a subscription or resource group.
-    Storage accounts contain blob, file, table, and queue data.
+    List all Azure storage accounts in a subscription or resource group. Returns account names, locations, and access tiers.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageaccounts
   method: GET
@@ -207,7 +204,7 @@
 - slug: azure_get_storage_account
   name: Get Storage Account
   description: |
-    Get details about a specific Azure storage account including keys, endpoints, and properties.
+    Retrieve detailed information for a specific Azure storage account including connection endpoints, access keys, and properties.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}
   method: GET
@@ -237,8 +234,7 @@
 - slug: azure_list_virtual_machines
   name: List Virtual Machines
   description: |
-    List all virtual machines in a subscription or resource group.
-    Returns VM sizes, statuses, and basic configuration.
+    List all virtual machines in an Azure subscription or resource group. Returns VM names, sizes, statuses, and power states.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines
   method: GET
@@ -271,7 +267,7 @@
 - slug: azure_get_virtual_machine
   name: Get Virtual Machine
   description: |
-    Get detailed information about an Azure virtual machine including status, sizes, and configuration.
+    Retrieve detailed information for a specific Azure virtual machine including status, size, configuration, and network interfaces.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}
   method: GET
@@ -305,8 +301,7 @@
 - slug: azure_list_containers
   name: List Containers
   description: |
-    List blob containers in an Azure storage account.
-    Containers organize blobs similar to folders in a file system.
+    List all blob containers in an Azure storage account. Returns container names, public access levels, and metadata for each container.
   provider: azure
   endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/blobServices/default/containers
   method: GET

@@ -18,7 +18,7 @@
 - slug: pandadoc_list_documents
   name: List Documents
   description: |
-    List all documents in Pandadoc.
+    List all documents including their names, statuses, creation dates, and recipient information. Returns document records for tracking pending, sent, and completed documents.
   provider: pandadoc
   endpoint: /public/v1/documents
   method: GET
@@ -44,7 +44,7 @@
 - slug: pandadoc_get_document
   name: Get Document
   description: |
-    Get detailed information for a specific document.
+    Get detailed information for a specific document including its status, content, recipients, and signature tracking data. Returns document metadata for status monitoring.
   provider: pandadoc
   endpoint: /public/v1/documents/{id}
   method: GET
@@ -67,7 +67,7 @@
 - slug: pandadoc_create_document
   name: Create Document
   description: |
-    Create a new document in Pandadoc.
+    Create a new document from a template or blank document with the specified name. Returns the created document with its unique identifier for sending and signature collection.
   provider: pandadoc
   endpoint: /public/v1/documents
   method: POST
@@ -93,7 +93,7 @@
 - slug: pandadoc_send_document
   name: Send Document
   description: |
-    Send a document for signature.
+    Send a document to a recipient via email with an optional message for signature collection. Returns confirmation with tracking URL and delivery status.
   provider: pandadoc
   endpoint: /public/v1/documents/{id}/send
   method: POST
@@ -123,7 +123,7 @@
 - slug: pandadoc_list_templates
   name: List Templates
   description: |
-    List all templates in Pandadoc.
+    List all document templates including their names, descriptions, and field configurations. Returns template listings for selecting documents to create.
   provider: pandadoc
   endpoint: /public/v1/templates
   method: GET
@@ -142,7 +142,7 @@
 - slug: pandadoc_get_template
   name: Get Template
   description: |
-    Get detailed information for a specific template.
+    Get detailed information for a specific template including its fields, layout structure, and sample content placeholders. Returns template details for document creation configuration.
   provider: pandadoc
   endpoint: /public/v1/templates/{id}
   method: GET
@@ -165,7 +165,7 @@
 - slug: pandadoc_list_folders
   name: List Folders
   description: |
-    List all folders in Pandadoc.
+    List all folders for organizing documents and templates including their names and identifiers. Returns folder listings for document management and storage organization.
   provider: pandadoc
   endpoint: /public/v1/folders
   method: GET
@@ -184,7 +184,7 @@
 - slug: pandadoc_get_member
   name: Get Member
   description: |
-    Get details for the current member.
+    Get the current member account information including email, profile settings, and workspace configuration. Returns account details and subscription status.
   provider: pandadoc
   endpoint: /public/v1/members/current
   method: GET
@@ -203,7 +203,7 @@
 - slug: pandadoc_list_webhooks
   name: List Webhooks
   description: |
-    List all webhooks in Pandadoc.
+    List all webhooks for receiving event notifications including their URLs, event types, and activation status. Returns webhook configurations for integration setup.
   provider: pandadoc
   endpoint: /public/v1/webhooks
   method: GET
@@ -222,7 +222,7 @@
 - slug: pandadoc_get_analytics
   name: Get Analytics
   description: |
-    Get document analytics and tracking data.
+    Get analytics and tracking data for a specific document including view counts, completion rates, and signer activity timestamps. Returns engagement metrics for document performance monitoring.
   provider: pandadoc
   endpoint: /public/v1/documents/{id}/analytics
   method: GET

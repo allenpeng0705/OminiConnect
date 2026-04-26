@@ -17,8 +17,7 @@
 - slug: phabricator_list_projects
   name: List Projects
   description: |
-    List projects in your Phabricator instance. Projects are containers
-    for tasks, repositories, and team members to organize work.
+    List all projects in your Phabricator instance, including project names, statuses, member counts, and associated task and repository details.
   provider: phabricator
   endpoint: /project.query
   method: POST
@@ -52,8 +51,7 @@
 - slug: phabricator_get_project
   name: Get Project
   description: |
-    Get details of a specific project including its name, description,
-    members, and associated repositories and tasks.
+    Retrieve detailed information about a specific project, including its name, description, members, milestones, and linked repositories and tasks.
   provider: phabricator
   endpoint: /project.query
   method: POST
@@ -77,8 +75,7 @@
 - slug: phabricator_create_project
   name: Create Project
   description: |
-    Create a new project in Phabricator. Projects organize work,
-    track progress, and group team members together.
+    Create a new project in Phabricator, specifying the name, description, icon, and initial team members to assign.
   provider: phabricator
   endpoint: /project.create
   method: POST
@@ -112,8 +109,7 @@
 - slug: phabricator_list_tasks
   name: List Tasks
   description: |
-    List tasks (Maniphest tickets) in your Phabricator instance.
-    Tasks track work items, bugs, and features with status and priority.
+    List all tasks (Maniphest tickets) in your Phabricator instance, including titles, statuses, priorities, assignees, and associated projects.
   provider: phabricator
   endpoint: /maniphest.query
   method: POST
@@ -161,8 +157,7 @@
 - slug: phabricator_get_task
   name: Get Task
   description: |
-    Get details of a specific task including title, description,
-    status, priority, assignees, and comments.
+    Retrieve detailed information about a specific task, including its title, description, status, priority, assignees, and comment thread.
   provider: phabricator
   endpoint: /maniphest.query
   method: POST
@@ -186,8 +181,7 @@
 - slug: phabricator_create_task
   name: Create Task
   description: |
-    Create a new task (Maniphest ticket) in Phabricator. Tasks
-    represent work items that can be assigned, prioritized, and tracked.
+    Create a new task (Maniphest ticket) in Phabricator with the specified title, description, priority, and project assignments.
   provider: phabricator
   endpoint: /maniphest.create
   method: POST
@@ -224,8 +218,7 @@
 - slug: phabricator_list_repositories
   name: List Repositories
   description: |
-    List repositories (Diffusion) in your Phabricator instance.
-    Repositories host version control for projects.
+    List all repositories (Diffusion) in your Phabricator instance, including repository names, remote URLs, types, and last commit timestamps.
   provider: phabricator
   endpoint: /diffusion.repository.search
   method: POST
@@ -258,8 +251,7 @@
 - slug: phabricator_get_repository
   name: Get Repository
   description: |
-    Get details of a specific repository including name, remote URL,
-    tracking configuration, and recent commits.
+    Retrieve detailed information about a specific repository, including its name, remote URL, tracking configuration, branches, and recent commits.
   provider: phabricator
   endpoint: /diffusion.repository.search
   method: POST
@@ -283,8 +275,7 @@
 - slug: phabricator_list_users
   name: List Users
   description: |
-    List users in your Phabricator instance. Users are members
-    who can be assigned tasks, own repositories, and comment on work.
+    List all users in your Phabricator instance, including usernames, real names, email addresses, roles, and current status values.
   provider: phabricator
   endpoint: /user.search
   method: POST
@@ -317,8 +308,7 @@
 - slug: phabricator_get_user
   name: Get User
   description: |
-    Get details of a specific user including their username, real name,
-    avatar, roles, and current activities.
+    Retrieve detailed information about a specific user, including their username, real name, avatar, roles, permissions, and recent activities.
   provider: phabricator
   endpoint: /user.search
   method: POST

@@ -17,7 +17,7 @@
 - slug: sentry_list_projects
   name: List Projects
   description: |
-    List all Sentry projects in the organization.
+    List all projects in the Sentry organization with pagination. Returns project names, slugs, and platform information for error tracking configuration.
   provider: sentry
   endpoint: /api/0/projects/
   method: GET
@@ -38,7 +38,7 @@
 - slug: sentry_get_project
   name: Get Project
   description: |
-    Get detailed information about a specific Sentry project.
+    Get detailed information about a specific Sentry project by slug including its settings, team assignments, and alert configurations. Returns data for project management and monitoring setup.
   provider: sentry
   endpoint: /api/0/projects/{organizationSlug}/{projectSlug}/
   method: GET
@@ -64,7 +64,7 @@
 - slug: sentry_create_project
   name: Create Project
   description: |
-    Create a new project in a Sentry organization.
+    Create a new project in a Sentry organization with name, platform type, and team assignment. Returns the created project with its unique slug for error tracking setup.
   provider: sentry
   endpoint: /api/0/organizations/{organizationSlug}/projects/
   method: POST
@@ -99,7 +99,7 @@
 - slug: sentry_list_issues
   name: List Issues
   description: |
-    List Sentry issues with optional filtering by project, status, or assigned user.
+    List all Sentry issues with optional filtering by project, status, or assigned user. Returns issue titles, IDs, levels, and assignment details for bug tracking and triage.
   provider: sentry
   endpoint: /api/0/issues/
   method: GET
@@ -131,7 +131,7 @@
 - slug: sentry_get_issue
   name: Get Issue
   description: |
-    Get detailed information about a specific Sentry issue including tags, user reports, and activity.
+    Get detailed information about a specific Sentry issue by ID including tags, user reports, activity, and stack traces. Returns data for debugging and issue investigation.
   provider: sentry
   endpoint: /api/0/issues/{issueId}/
   method: GET
@@ -153,7 +153,7 @@
 - slug: sentry_list_events
   name: List Events
   description: |
-    List events (error occurrences) for a Sentry project or issue.
+    List all events (error occurrences) for a Sentry project or issue with pagination. Returns event IDs, timestamps, and error metadata for error monitoring and debugging.
   provider: sentry
   endpoint: /api/0/projects/{organizationSlug}/{projectSlug}/events/
   method: GET
@@ -185,7 +185,7 @@
 - slug: sentry_get_event
   name: Get Event
   description: |
-    Get detailed information about a specific Sentry event including stack trace, context, and breadcrumbs.
+    Get detailed information about a specific Sentry event by ID including stack trace, context variables, and breadcrumbs. Returns data for error debugging and troubleshooting.
   provider: sentry
   endpoint: /api/0/events/{eventId}/
   method: GET
@@ -207,7 +207,7 @@
 - slug: sentry_list_releases
   name: List Releases
   description: |
-    List all releases in an organization or project.
+    List all releases in an organization or project with pagination. Returns release versions, commit data, and deployment timestamps for deployment tracking and version management.
   provider: sentry
   endpoint: /api/0/releases/
   method: GET
@@ -235,7 +235,7 @@
 - slug: sentry_get_release
   name: Get Release
   description: |
-    Get detailed information about a specific release including commit data and deploys.
+    Get detailed information about a specific Sentry release by version including commit data, deploys, and associated issues. Returns data for release management and deployment tracking.
   provider: sentry
   endpoint: /api/0/releases/{organizationSlug}/{version}/
   method: GET
@@ -261,7 +261,7 @@
 - slug: sentry_list_teams
   name: List Teams
   description: |
-    List all Sentry teams in the organization.
+    List all teams in the Sentry organization with pagination. Returns team names, slugs, and member counts for access control and project assignment configuration.
   provider: sentry
   endpoint: /api/0/teams/
   method: GET

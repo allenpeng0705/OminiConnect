@@ -17,7 +17,7 @@
 - slug: dropboxpaper_list_docs
   name: List Docs
   description: |
-    List all Paper docs in the workspace. Returns doc metadata including title, owner, and dates.
+    List all Dropbox Paper documents in the workspace. Returns document metadata including titles, owners, and created/modified dates.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs
   method: GET
@@ -39,7 +39,7 @@
 - slug: dropboxpaper_get_doc
   name: Get Doc
   description: |
-    Get detailed information about a specific Paper doc including title, content, and sharing settings.
+    Retrieve detailed information about a specific Dropbox Paper doc including title, full content, and sharing settings.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}
   method: GET
@@ -61,7 +61,7 @@
 - slug: dropboxpaper_create_doc
   name: Create Doc
   description: |
-    Create a new Paper doc with title and optional initial content in Markdown format.
+    Create a new Dropbox Paper doc with a title and optional markdown content. Returns the created document with its ID.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs
   method: POST
@@ -89,7 +89,7 @@
 - slug: dropboxpaper_list_folders
   name: List Folders
   description: |
-    List all folders in the workspace. Returns folder metadata and hierarchy.
+    List all folders in the Dropbox Paper workspace. Returns folder metadata including names and document counts.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/folders
   method: GET
@@ -111,7 +111,7 @@
 - slug: dropboxpaper_get_folder
   name: Get Folder
   description: |
-    Get detailed information about a specific folder including name and contained docs.
+    Retrieve detailed information about a specific folder including name, contents list, and parent hierarchy.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/folders/{folderId}
   method: GET
@@ -133,7 +133,7 @@
 - slug: dropboxpaper_list_members
   name: List Members
   description: |
-    List all members of a Paper doc. Returns member info including email and permission level.
+    List all members of a Dropbox Paper doc with their email addresses and permission levels (view, edit, comment).
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}/members
   method: GET
@@ -155,7 +155,7 @@
 - slug: dropboxpaper_get_member
   name: Get Member
   description: |
-    Get detailed information about a specific member including name, email, and permission level.
+    Retrieve detailed information about a specific Paper doc member including name, email, and exact permission level.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}/members/{memberId}
   method: GET
@@ -181,7 +181,7 @@
 - slug: dropboxpaper_add_comment
   name: Add Comment
   description: |
-    Add a comment to a Paper doc at a specific position or as a general comment.
+    Add a comment to a Dropbox Paper doc at a specific position or as a general comment. Returns the created comment.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}/comments
   method: POST
@@ -210,7 +210,7 @@
 - slug: dropboxpaper_list_invites
   name: List Invites
   description: |
-    List all pending invites for a Paper doc. Returns invite details and status.
+    List all pending invites for a Dropbox Paper doc. Returns invite details including email addresses and invite status.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}/invites
   method: GET
@@ -232,7 +232,7 @@
 - slug: dropboxpaper_create_invite
   name: Create Invite
   description: |
-    Create an invite to a Paper doc for a specific email address with permission level.
+    Create and send an invite to a Dropbox Paper doc for a specific email address with the specified permission level.
   provider: dropboxpaper
   endpoint: /api/1.0/paper/docs/{docId}/invites
   method: POST

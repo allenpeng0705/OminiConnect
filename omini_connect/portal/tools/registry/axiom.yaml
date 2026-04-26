@@ -18,7 +18,7 @@
 - slug: axiom_list_datasets
   name: List Datasets
   description: |
-    List all available datasets in Axiom.
+    List all available datasets in Axiom, returning dataset names, schemas, and ingestion statistics.
   provider: axiom
   endpoint: /v1/datasets
   method: GET
@@ -39,7 +39,7 @@
 - slug: axiom_get_dataset
   name: Get Dataset
   description: |
-    Get details for a specific dataset including schema.
+    Get details for a specific dataset including schema, field types, and ingestion configuration.
   provider: axiom
   endpoint: /v1/datasets/{name}
   method: GET
@@ -60,7 +60,7 @@
 - slug: axiom_query_dataset
   name: Query Dataset
   description: |
-    Query a dataset using APL (Axiom Processing Language).
+    Query a dataset using APL (Axiom Processing Language), returning matching log entries and aggregated results.
   provider: axiom
   endpoint: /v1/datasets/{name}/query
   method: POST
@@ -95,7 +95,7 @@
 - slug: axiom_list_views
   name: List Views
   description: |
-    List all saved views in Axiom.
+    List all saved views in Axiom, returning view names, queries, and visualization configurations.
   provider: axiom
   endpoint: /v1/views
   method: GET
@@ -137,7 +137,7 @@
 - slug: axiom_list_alerts
   name: List Alerts
   description: |
-    List all alerting rules in Axiom.
+    List all alerting rules in Axiom, returning alert names, conditions, and notification configurations.
   provider: axiom
   endpoint: /v1/alerts
   method: GET
@@ -158,7 +158,7 @@
 - slug: axiom_get_alert
   name: Get Alert
   description: |
-    Get details of a specific alerting rule.
+    Get details of a specific alerting rule including trigger conditions, evaluation interval, and notification settings.
   provider: axiom
   endpoint: /v1/alerts/{id}
   method: GET
@@ -179,7 +179,7 @@
 - slug: axiom_list_monitors
   name: List Monitors
   description: |
-    List all monitors in Axiom.
+    List all monitors in Axiom, returning monitor names, query configurations, and status information.
   provider: axiom
   endpoint: /v1/monitors
   method: GET
@@ -200,7 +200,7 @@
 - slug: axiom_get_monitor
   name: Get Monitor
   description: |
-    Get details of a specific monitor.
+    Get details of a specific monitor including query configuration, trigger conditions, and alert destinations.
   provider: axiom
   endpoint: /v1/monitors/{id}
   method: GET
@@ -221,7 +221,7 @@
 - slug: axiom_get_usage
   name: Get Usage
   description: |
-    Get usage statistics for the Axiom account.
+    Get usage statistics for the Axiom account including data ingested, queries run, and storage consumed.
   provider: axiom
   endpoint: /v1/usage
   method: GET

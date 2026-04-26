@@ -17,7 +17,7 @@
 - slug: chatwork_list_rooms
   name: List Rooms
   description: |
-    Returns a list of all chat rooms the authenticated user belongs to. Includes direct messages and group chats.
+    Retrieve all chat rooms the authenticated user belongs to with pagination support. Returns room IDs, names, types, and member counts.
   provider: chatwork
   endpoint: /rooms
   method: GET
@@ -35,7 +35,7 @@
 - slug: chatwork_get_room
   name: Get Room
   description: |
-    Get details of a specific chat room including name, description, icon, and member count.
+    Retrieve detailed information about a specific chat room by its unique ID. Returns the room name, description, icon, and member count.
   provider: chatwork
   endpoint: /rooms/{room_id}
   method: GET
@@ -57,7 +57,7 @@
 - slug: chatwork_list_messages
   name: List Messages
   description: |
-    Returns a paginated list of messages in a specific chat room. Order from oldest to newest by default.
+    Retrieve all messages in a specific chat room with pagination support. Returns message IDs, texts, sender names, and timestamps.
   provider: chatwork
   endpoint: /rooms/{room_id}/messages
   method: GET
@@ -86,7 +86,7 @@
 - slug: chatwork_get_message
   name: Get Message
   description: |
-    Get a specific message by ID including content, sender, and timestamp.
+    Retrieve a specific message by its unique ID. Returns the message text, sender information, and timestamp.
   provider: chatwork
   endpoint: /rooms/{room_id}/messages/{message_id}
   method: GET
@@ -112,7 +112,7 @@
 - slug: chatwork_send_message
   name: Send Message
   description: |
-    Send a new message to a specific chat room. Supports text and optional to-user mentions.
+    Send a new message to a specific chat room with text content and optional user mentions. Returns the sent message with its unique ID.
   provider: chatwork
   endpoint: /rooms/{room_id}/messages
   method: POST
@@ -142,7 +142,7 @@
 - slug: chatwork_list_members
   name: List Members
   description: |
-    Returns a list of all members in a specific chat room including their role.
+    Retrieve all members in a specific chat room with pagination support. Returns member names, roles, and account information.
   provider: chatwork
   endpoint: /rooms/{room_id}/members
   method: GET
@@ -164,7 +164,7 @@
 - slug: chatwork_get_member
   name: Get Member
   description: |
-    Get details of a specific member in a room including their role and chatwork ID.
+    Retrieve detailed information about a specific room member by their account ID. Returns the member name, role, and Chatwork account information.
   provider: chatwork
   endpoint: /rooms/{room_id}/members/{account_id}
   method: GET
@@ -190,7 +190,7 @@
 - slug: chatwork_list_tasks
   name: List Tasks
   description: |
-    Returns a list of tasks in a specific chat room. Filter by assignee or completion status.
+    Retrieve all tasks in a specific chat room with optional filtering by assignee or status. Returns task IDs, descriptions, assignees, and due dates.
   provider: chatwork
   endpoint: /rooms/{room_id}/tasks
   method: GET
@@ -218,7 +218,7 @@
 - slug: chatwork_get_task
   name: Get Task
   description: |
-    Get details of a specific task including description, assignee, due date, and status.
+    Retrieve detailed information about a specific task by its unique ID. Returns the task description, assignee, due date, and completion status.
   provider: chatwork
   endpoint: /rooms/{room_id}/tasks/{task_id}
   method: GET
@@ -244,7 +244,7 @@
 - slug: chatwork_get_myprofile
   name: Get My Profile
   description: |
-    Get the authenticated user's Chatwork profile including name, email, avatar, and account ID.
+    Retrieve the authenticated user's Chatwork profile. Returns the user name, email, avatar URL, and account ID.
   provider: chatwork
   endpoint: /my/profile
   method: GET

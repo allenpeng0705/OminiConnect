@@ -16,8 +16,7 @@
 - slug: mural_list_rooms
   name: List Rooms
   description: |
-    List all rooms in the workspace. Rooms are virtual workspaces that contain murals and team members.
-    Use rooms to organize murals by project, team, or initiative.
+    List all rooms in the workspace with optional workspace filtering. Returns room names, IDs, member counts, and mural counts for organization.
   provider: mural
   endpoint: /v1/rooms
   method: GET
@@ -45,8 +44,7 @@
 - slug: mural_get_room
   name: Get Room
   description: |
-    Get details of a specific room including its name, description, member count, and mural count.
-    Use this to retrieve room information before accessing its murals.
+    Retrieve details for a specific room including name, description, member count, and mural count. Returns the complete room configuration.
   provider: mural
   endpoint: /v1/rooms/{roomId}
   method: GET
@@ -68,8 +66,7 @@
 - slug: mural_create_room
   name: Create Room
   description: |
-    Create a new room in a workspace. Rooms are containers for murals and provide a collaborative space for teams.
-    Specify a name to help identify the room's purpose.
+    Create a new room in a workspace with specified name and description. Returns the created room with its unique identifier.
   provider: mural
   endpoint: /v1/rooms
   method: POST
@@ -101,8 +98,7 @@
 - slug: mural_list_murals
   name: List Murals
   description: |
-    List all murals within a specific room. Murals are visual collaboration canvases where teams create and organize ideas.
-    Each mural can contain sticky notes, images, shapes, and other elements.
+    List all murals within a specific room with pagination support. Returns mural names, IDs, and last modified dates for each visual collaboration canvas.
   provider: mural
   endpoint: /v1/rooms/{roomId}/murals
   method: GET
@@ -131,8 +127,7 @@
 - slug: mural_get_mural
   name: Get Mural
   description: |
-    Get details of a specific mural including its name, description, size, and current state.
-    Use this to retrieve mural metadata before accessing its contents.
+    Retrieve details for a specific mural including name, description, size, and current state. Returns the complete mural configuration.
   provider: mural
   endpoint: /v1/murals/{muralId}
   method: GET
@@ -154,8 +149,7 @@
 - slug: mural_create_mural
   name: Create Mural
   description: |
-    Create a new mural in a specified room. Murals start as blank canvases that can be populated with visual elements.
-    Optionally use a template to get started with predefined structures.
+    Create a new mural in a specified room with name, description, and optional template. Returns the created mural with its unique identifier.
   provider: mural
   endpoint: /v1/rooms/{roomId}/murals
   method: POST
@@ -195,8 +189,7 @@
 - slug: mural_list_templates
   name: List Templates
   description: |
-    List all available templates in the workspace. Templates provide predefined structures for murals,
-    including frameworks for brainstorming, retrospectives, and workshops.
+    List all available templates in the workspace with optional workspace filtering. Returns template names, IDs, and descriptions for mural creation.
   provider: mural
   endpoint: /v1/templates
   method: GET
@@ -224,8 +217,7 @@
 - slug: mural_get_template
   name: Get Template
   description: |
-    Get details of a specific template including its name, description, and structure.
-    Use this to understand what a template offers before creating a mural from it.
+    Retrieve details for a specific template including its name, description, and structure. Returns the complete template configuration for mural creation.
   provider: mural
   endpoint: /v1/templates/{templateId}
   method: GET
@@ -247,8 +239,7 @@
 - slug: mural_list_users
   name: List Users
   description: |
-    List all users in the workspace. Returns user information including name, email, and role.
-    Use this to find team members or check workspace membership.
+    List all users in the workspace with optional workspace filtering. Returns user names, emails, and roles for workspace collaboration.
   provider: mural
   endpoint: /v1/users
   method: GET
@@ -276,8 +267,7 @@
 - slug: mural_get_user
   name: Get User
   description: |
-    Get details of a specific user including their name, email, avatar, and permissions.
-    Use this to verify user information or check their role in the workspace.
+    Retrieve details for a specific user including name, email, avatar, and permissions. Returns the complete user profile for workspace verification.
   provider: mural
   endpoint: /v1/users/{userId}
   method: GET

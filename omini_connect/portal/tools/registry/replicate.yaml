@@ -1,7 +1,7 @@
 - slug: replicate_list_models
   name: List Models
   description: |
-    Retrieve a list of all available Replicate models.
+    List all available machine learning models on Replicate. Returns model names, owners, descriptions, and download counts.
   provider: replicate
   endpoint: /v1/models
   method: GET
@@ -24,7 +24,7 @@
 - slug: replicate_get_model
   name: Get Model
   description: |
-    Retrieve details for a specific model by owner and name.
+    Retrieve detailed information for a specific model including version history, hardware requirements, and example predictions.
   provider: replicate
   endpoint: /v1/models/{owner}/{name}
   method: GET
@@ -49,7 +49,7 @@
 - slug: replicate_get_model_version
   name: Get Model Version
   description: |
-    Retrieve a specific version of a model.
+    Retrieve detailed information for a specific model version including training data, performance metrics, and configuration.
   provider: replicate
   endpoint: /v1/models/{owner}/{name}/versions/{version_id}
   method: GET
@@ -78,7 +78,7 @@
 - slug: replicate_create_prediction
   name: Create Prediction
   description: |
-    Start a new prediction with a model.
+    Start a new prediction with a specified model version on Replicate. Runs inference and returns the prediction output.
   provider: replicate
   endpoint: /v1/predictions
   method: POST
@@ -106,7 +106,7 @@
 - slug: replicate_get_prediction
   name: Get Prediction
   description: |
-    Retrieve a prediction by ID.
+    Retrieve the status and output of a specific prediction including any errors or completed results.
   provider: replicate
   endpoint: /v1/predictions/{prediction_id}
   method: GET
@@ -127,7 +127,7 @@
 - slug: replicate_list_predictions
   name: List Predictions
   description: |
-    Retrieve a list of predictions.
+    List all predictions in the Replicate account. Returns prediction IDs, statuses, model versions, and creation times.
   provider: replicate
   endpoint: /v1/predictions
   method: GET
@@ -147,7 +147,7 @@
 - slug: replicate_cancel_prediction
   name: Cancel Prediction
   description: |
-    Cancel a running prediction.
+    Cancel a running prediction that is currently being processed. Terminates the inference and stops resource usage.
   provider: replicate
   endpoint: /v1/predictions/{prediction_id}/cancel
   method: POST
@@ -168,7 +168,7 @@
 - slug: replicate_list_collections
   name: List Collections
   description: |
-    Retrieve a list of curated model collections.
+    List all curated collections of machine learning models on Replicate. Returns collection names, descriptions, and included models.
   provider: replicate
   endpoint: /v1/collections
   method: GET
@@ -188,7 +188,7 @@
 - slug: replicate_get_collection
   name: Get Collection
   description: |
-    Retrieve a specific collection by slug.
+    Retrieve detailed information for a specific collection including all models, curator information, and collection description.
   provider: replicate
   endpoint: /v1/collections/{slug}
   method: GET
@@ -209,7 +209,7 @@
 - slug: replicate_create_webhook
   name: Create Webhook
   description: |
-    Register a webhook for prediction events.
+    Register a webhook URL to receive notifications for prediction events such as completion or failure.
   provider: replicate
   endpoint: /v1/webhooks
   method: POST

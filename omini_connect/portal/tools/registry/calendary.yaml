@@ -17,7 +17,7 @@
 - slug: calendary_list_events
   name: List Events
   description: |
-    List all events, optionally filtered by calendar, date range, or status.
+    Retrieve all calendar events with optional filtering by calendar, date range, or status. Returns event titles, times, locations, and descriptions.
   provider: calendary
   endpoint: /events
   method: GET
@@ -52,7 +52,7 @@
 - slug: calendary_get_event
   name: Get Event
   description: |
-    Get detailed information about a specific event.
+    Retrieve detailed information about a specific calendar event by its unique ID. Returns the title, timing, location, description, and invitee list.
   provider: calendary
   endpoint: /events/{event_id}
   method: GET
@@ -74,7 +74,7 @@
 - slug: calendary_create_event
   name: Create Event
   description: |
-    Create a new event on a calendar.
+    Create a new calendar event with title, timing, location, and optional description. Returns the created event with its unique ID.
   provider: calendary
   endpoint: /events
   method: POST
@@ -114,7 +114,7 @@
 - slug: calendary_update_event
   name: Update Event
   description: |
-    Update an existing event.
+    Modify an existing calendar event by updating its title, timing, location, or description. Returns the updated event confirming the changes.
   provider: calendary
   endpoint: /events/{event_id}
   method: PUT
@@ -151,7 +151,7 @@
 - slug: calendary_delete_event
   name: Delete Event
   description: |
-    Delete an event from the calendar.
+    Permanently remove a specific calendar event by its unique ID, removing it from all invitees' schedules. Returns confirmation of deletion.
   provider: calendary
   endpoint: /events/{event_id}
   method: DELETE
@@ -173,7 +173,7 @@
 - slug: calendary_list_calendars
   name: List Calendars
   description: |
-    List all calendars available to the user.
+    Retrieve all calendars available to the user with pagination support. Returns calendar names, IDs, descriptions, and availability settings.
   provider: calendary
   endpoint: /calendars
   method: GET
@@ -196,7 +196,7 @@
 - slug: calendary_get_calendar
   name: Get Calendar
   description: |
-    Get detailed information about a specific calendar.
+    Retrieve detailed information about a specific calendar by its unique ID. Returns the calendar name, description, timezone, and sharing settings.
   provider: calendary
   endpoint: /calendars/{calendar_id}
   method: GET
@@ -218,7 +218,7 @@
 - slug: calendary_get_availability
   name: Get Availability
   description: |
-    Get available time slots for a calendar on specific dates.
+    Find available time slots for a calendar within a specified date range based on the desired meeting duration.
   provider: calendary
   endpoint: /availability
   method: GET
@@ -251,7 +251,7 @@
 - slug: calendary_create_scheduling_link
   name: Create Scheduling Link
   description: |
-    Create a new scheduling link for booking appointments.
+    Create a shareable scheduling link that allows invitees to book appointments on a calendar. Returns the unique scheduling link URL.
   provider: calendary
   endpoint: /scheduling-links
   method: POST
@@ -284,7 +284,7 @@
 - slug: calendary_list_scheduling_links
   name: List Scheduling Links
   description: |
-    List all scheduling links for the user.
+    Retrieve all scheduling links associated with the user's calendars. Returns link names, URLs, meeting durations, and usage statistics.
   provider: calendary
   endpoint: /scheduling-links
   method: GET

@@ -18,7 +18,7 @@
 - slug: jazzhr_list_candidates
   name: List Candidates
   description: |
-    List all candidates in JazzHR.
+    List all candidates in JazzHR. Returns candidate names, email addresses, and application status.
   provider: jazzhr
   endpoint: /v1/candidates
   method: GET
@@ -44,7 +44,7 @@
 - slug: jazzhr_get_candidate
   name: Get Candidate
   description: |
-    Get details for a specific candidate.
+    Retrieve details about a specific candidate by their ID. Includes contact information, resume, and application history.
   provider: jazzhr
   endpoint: /v1/candidates/{candidate_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: jazzhr_list_jobs
   name: List Jobs
   description: |
-    List all job postings.
+    List all job postings in JazzHR. Filter by status (open, closed) and return job titles and posting dates.
   provider: jazzhr
   endpoint: /v1/jobs
   method: GET
@@ -91,7 +91,7 @@
 - slug: jazzhr_get_job
   name: Get Job
   description: |
-    Get details for a specific job posting.
+    Retrieve details about a specific job posting by its ID. Includes job description, requirements, and hiring status.
   provider: jazzhr
   endpoint: /v1/jobs/{job_id}
   method: GET
@@ -112,7 +112,7 @@
 - slug: jazzhr_list_users
   name: List Users
   description: |
-    List all users in the organization.
+    List all users (recruiters and administrators) in the JazzHR organization. Returns names, email addresses, and roles.
   provider: jazzhr
   endpoint: /v1/users
   method: GET
@@ -130,7 +130,7 @@
 - slug: jazzhr_get_user
   name: Get User
   description: |
-    Get details for a specific user.
+    Retrieve details about a specific user by their ID. Includes name, email, and role information.
   provider: jazzhr
   endpoint: /v1/users/{user_id}
   method: GET
@@ -151,7 +151,7 @@
 - slug: jazzhr_list_notes
   name: List Notes
   description: |
-    List notes for candidates or jobs.
+    List notes associated with candidates or jobs. Filter by candidate ID or job ID and return note content and author.
   provider: jazzhr
   endpoint: /v1/notes
   method: GET
@@ -175,7 +175,7 @@
 - slug: jazzhr_create_note
   name: Create Note
   description: |
-    Create a note on a candidate or job.
+    Create a new note on a candidate or job. Attach the note to a specific candidate or job posting.
   provider: jazzhr
   endpoint: /v1/notes
   method: POST
@@ -204,7 +204,7 @@
 - slug: jazzhr_list_activities
   name: List Activities
   description: |
-    List activities for candidates or jobs.
+    List activities (events, updates) related to candidates or jobs. Filter by candidate ID or job ID to track timeline.
   provider: jazzhr
   endpoint: /v1/activities
   method: GET
@@ -228,7 +228,7 @@
 - slug: jazzhr_list_questionnaires
   name: List Questionnaires
   description: |
-    List all questionnaires.
+    List all questionnaires in JazzHR. Returns questionnaire names and associated job postings.
   provider: jazzhr
   endpoint: /v1/questionnaires
   method: GET

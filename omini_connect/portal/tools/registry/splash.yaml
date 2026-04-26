@@ -1,7 +1,7 @@
 - slug: splash_list_events
   name: List Events
   description: |
-    Retrieve all events created in Splash for the authenticated organization.
+    List all events created in Splash for the authenticated organization with optional filtering by status. Returns event names, dates, locations, and statuses for each event.
   provider: splash
   endpoint: /api/events
   method: GET
@@ -27,7 +27,7 @@
 - slug: splash_get_event
   name: Get Event
   description: |
-    Retrieve detailed information about a specific event including times, location, and settings.
+    Retrieve detailed information for a specific event including times, location, capacity, and configuration settings. Returns the complete event details.
   provider: splash
   endpoint: /api/events/{event_id}
   method: GET
@@ -48,7 +48,7 @@
 - slug: splash_create_event
   name: Create Event
   description: |
-    Create a new event in Splash with details like name, timing, location, and branding.
+    Create a new event in Splash with name, timing, location, and branding details. Returns the created event with its unique identifier.
   provider: splash
   endpoint: /api/events
   method: POST
@@ -94,7 +94,7 @@
 - slug: splash_list_guests
   name: List Guests
   description: |
-    Retrieve all guests for a specific event with their RSVP and attendance status.
+    List all guests for a specific event with optional filtering by RSVP or check-in status. Returns guest names, email addresses, RSVP status, and attendance information.
   provider: splash
   endpoint: /api/events/{event_id}/guests
   method: GET
@@ -121,7 +121,7 @@
 - slug: splash_get_guest
   name: Get Guest
   description: |
-    Retrieve detailed information about a specific guest including their RSVP details.
+    Retrieve detailed information for a specific guest including their RSVP details, contact information, and attendance status. Returns the complete guest profile.
   provider: splash
   endpoint: /api/guests/{guest_id}
   method: GET
@@ -142,7 +142,7 @@
 - slug: splash_invite_guest
   name: Invite Guest
   description: |
-    Create or update a guest record and send an invitation for a specific event.
+    Create or update a guest record and send an invitation for a specific event. Returns the guest record with their unique identifier and invitation status.
   provider: splash
   endpoint: /api/events/{event_id}/guests
   method: POST
@@ -176,7 +176,7 @@
 - slug: splash_send_invite
   name: Send Invite
   description: |
-    Send or resend an invitation email to a specific guest for an event.
+    Send or resend an invitation email to a specific guest for an event. Returns the updated invitation status confirming delivery.
   provider: splash
   endpoint: /api/guests/{guest_id}/send_invite
   method: POST
@@ -197,7 +197,7 @@
 - slug: splash_list_templates
   name: List Templates
   description: |
-    Retrieve all email or page templates available in Splash for event communications.
+    List all email or page templates available in Splash for event communications with optional filtering by template type. Returns template names, types, and content previews.
   provider: splash
   endpoint: /api/templates
   method: GET
@@ -217,7 +217,7 @@
 - slug: splash_get_template
   name: Get Template
   description: |
-    Retrieve the content and settings of a specific template.
+    Retrieve the content and settings of a specific template. Returns the full template content and configuration for customization.
   provider: splash
   endpoint: /api/templates/{template_id}
   method: GET
@@ -238,7 +238,7 @@
 - slug: splash_get_event_analytics
   name: Get Event Analytics
   description: |
-    Retrieve analytics and metrics for an event including views, RSVPs, and attendance data.
+    Retrieve analytics and metrics for an event including views, RSVPs, and attendance data. Returns the complete analytics dashboard with engagement metrics.
   provider: splash
   endpoint: /api/events/{event_id}/analytics
   method: GET

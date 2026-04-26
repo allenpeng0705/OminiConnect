@@ -17,8 +17,7 @@
 - slug: youtube_list_videos
   name: List Videos
   description: |
-    List videos from YouTube. Returns most popular videos (chart) or videos matching filters.
-    Use this to discover trending content or browse by category.
+    List videos from YouTube by chart or category filters. Returns video IDs, titles, thumbnails, channel information, and view counts for each video.
   provider: youtube
   endpoint: /youtube/v3/videos
   method: GET
@@ -51,8 +50,7 @@
 - slug: youtube_get_video
   name: Get Video
   description: |
-    Get details of a specific video by its ID. Returns title, description, view count, likes, and metadata.
-    Use this to get detailed information about a video.
+    Retrieve detailed information about a specific video by its unique ID. Returns the title, description, view count, like count, duration, and thumbnail URLs.
   provider: youtube
   endpoint: /youtube/v3/videos
   method: GET
@@ -78,8 +76,7 @@
 - slug: youtube_search_videos
   name: Search Videos
   description: |
-    Search for videos by keyword. Returns video IDs, titles, and thumbnails matching the query.
-    Great for finding specific content or researching topics.
+    Search for YouTube videos matching a keyword query. Returns video IDs, titles, channel names, thumbnails, and relevance sorting information.
   provider: youtube
   endpoint: /youtube/v3/search
   method: GET
@@ -119,8 +116,7 @@
 - slug: youtube_list_channels
   name: List Channels
   description: |
-    List channels. Returns channel information for authenticated user or specific channel IDs.
-    Use this to find channel details or manage subscriptions.
+    Retrieve all YouTube channels accessible to the authenticated user. Returns channel IDs, names, descriptions, subscriber counts, and thumbnail images.
   provider: youtube
   endpoint: /youtube/v3/channels
   method: GET
@@ -148,8 +144,7 @@
 - slug: youtube_get_channel
   name: Get Channel
   description: |
-    Get details of a specific channel by its ID. Returns channel name, description, subscriber count, and branding.
-    Use this to learn about a creator's channel.
+    Retrieve detailed information about a specific YouTube channel by its ID. Returns the channel name, description, subscriber count, branding settings, and upload playlist ID.
   provider: youtube
   endpoint: /youtube/v3/channels
   method: GET
@@ -175,8 +170,7 @@
 - slug: youtube_list_playlists
   name: List Playlists
   description: |
-    List playlists for the authenticated user. Returns playlists created or curated by the user.
-    Use this to organize videos or find saved collections.
+    Retrieve all playlists created or curated by the authenticated user. Returns playlist IDs, titles, descriptions, item counts, and privacy statuses.
   provider: youtube
   endpoint: /youtube/v3/playlists
   method: GET
@@ -205,8 +199,7 @@
 - slug: youtube_get_playlist
   name: Get Playlist
   description: |
-    Get details of a specific playlist by its ID. Returns playlist title, description, and video count.
-    Use this to view playlist contents or learn about a collection.
+    Retrieve detailed information about a specific playlist by its ID. Returns the playlist title, description, channel information, video count, and privacy status.
   provider: youtube
   endpoint: /youtube/v3/playlists
   method: GET
@@ -232,8 +225,7 @@
 - slug: youtube_add_video_to_playlist
   name: Add Video to Playlist
   description: |
-    Add a video to a playlist. Specify the video ID and playlist ID to add an item.
-    Use this to save videos or organize content into collections.
+    Insert a video into a specified playlist at a chosen position. Returns the created playlist item with its unique ID and position in the playlist.
   provider: youtube
   endpoint: /youtube/v3/playlistItems
   method: POST
@@ -262,8 +254,7 @@
 - slug: youtube_list_comments
   name: List Comments
   description: |
-    List comments on a video. Returns comment threads with replies and metadata.
-    Use this to read discussions, feedback, or community sentiment.
+    Retrieve all comment threads on a specific video with pagination support. Returns comment IDs, text content, author names, like counts, and reply counts.
   provider: youtube
   endpoint: /youtube/v3/commentThreads
   method: GET
@@ -294,8 +285,7 @@
 - slug: youtube_get_comment
   name: Get Comment
   description: |
-    Get details of a specific comment by its ID. Returns comment text, author, likes, and moderation status.
-    Use this to read a specific comment in a thread.
+    Retrieve the full content and metadata of a specific comment by its ID. Returns the comment text, author channel information, like count, moderation status, and parent ID.
   provider: youtube
   endpoint: /youtube/v3/comments
   method: GET

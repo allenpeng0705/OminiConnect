@@ -18,7 +18,8 @@
 - slug: booking_list_reservations
   name: List Reservations
   description: |
-    List reservations for the property.
+    List reservations for a property, returning guest names, check-in dates, room types, and booking status.
+    Filter by date range or status to find specific reservations.
   provider: booking-com
   endpoint: /reservation
   method: GET
@@ -51,7 +52,7 @@
 - slug: booking_get_reservation
   name: Get Reservation
   description: |
-    Get details for a specific reservation.
+    Get details of a specific reservation including guest information, room assignment, dates, and booking status.
   provider: booking-com
   endpoint: /reservation/{reservation_id}
   method: GET
@@ -96,7 +97,7 @@
 - slug: booking_get_guest
   name: Get Guest
   description: |
-    Get details for a specific guest.
+    Get details of a specific guest including contact information, preferences, and booking history.
   provider: booking-com
   endpoint: /guest/{guest_id}
   method: GET
@@ -117,7 +118,7 @@
 - slug: booking_list_properties
   name: List Properties
   description: |
-    List all properties in the account.
+    List all properties in the account, returning property IDs, names, locations, and contact information.
   provider: booking-com
   endpoint: /hotel
   method: GET
@@ -138,7 +139,7 @@
 - slug: booking_get_property
   name: Get Property
   description: |
-    Get details for a specific property.
+    Get details of a specific property including amenities, contact information, and configuration settings.
   provider: booking-com
   endpoint: /hotel/{hotel_id}
   method: GET
@@ -159,7 +160,7 @@
 - slug: booking_list_availability
   name: Get Availability
   description: |
-    Get room availability for dates.
+    Get room availability for specific dates, returning available room types, rates, and booking constraints.
   provider: booking-com
   endpoint: /availability
   method: GET
@@ -188,7 +189,7 @@
 - slug: booking_update_pricing
   name: Update Pricing
   description: |
-    Update room pricing for dates.
+    Update room pricing for specific dates, setting new rates for selected room types and validity periods.
   provider: booking-com
   endpoint: /price
   method: POST
@@ -225,7 +226,7 @@
 - slug: booking_list_reviews
   name: List Reviews
   description: |
-    List guest reviews for a property.
+    List guest reviews for a property, returning ratings, feedback comments, and reviewer information.
   provider: booking-com
   endpoint: /review
   method: GET
@@ -249,7 +250,7 @@
 - slug: booking_get_statistics
   name: Get Statistics
   description: |
-    Get performance statistics for a property.
+    Get performance statistics for a property including occupancy rates, revenue, and booking trends.
   provider: booking-com
   endpoint: /statistics
   method: GET

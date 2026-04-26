@@ -18,7 +18,7 @@
 - slug: google_mail_list_messages
   name: List Messages
   description: |
-    List messages in Gmail.
+    List email messages from Gmail with support for search queries and pagination. Returns message IDs, subjects, senders, and delivery status for each email.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages
   method: GET
@@ -45,7 +45,7 @@
 - slug: google_mail_get_message
   name: Get Message
   description: |
-    Get detailed information about a message.
+    Retrieve detailed information about a specific email message including headers, body content, and attachments. Returns the complete message data with formatting details.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages/{id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: google_mail_send_message
   name: Send Message
   description: |
-    Send an email message.
+    Send an email message to specified recipients with subject and body content. Creates and dispatches the email, returning the sent message metadata and server timestamp.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages/send
   method: POST
@@ -101,7 +101,7 @@
 - slug: google_mail_list_labels
   name: List Labels
   description: |
-    List all labels in Gmail.
+    List all email labels in Gmail including system labels and user-created labels. Returns label names, types, and message counts for mailbox organization.
   provider: google-mail
   endpoint: /gmail/v1/users/me/labels
   method: GET
@@ -118,7 +118,7 @@
 - slug: google_mail_create_label
   name: Create Label
   description: |
-    Create a new label.
+    Create a new email label in Gmail with a specified name and visibility settings. Returns the created label with its identifier for message filtering.
   provider: google-mail
   endpoint: /gmail/v1/users/me/labels
   method: POST
@@ -148,7 +148,7 @@
 - slug: google_mail_modify_message
   name: Modify Message
   description: |
-    Add or remove labels from a message.
+    Add or remove labels from an email message to organize or archive the message. Modifies the message labels and returns the updated message status.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages/{id}/modify
   method: POST
@@ -177,7 +177,7 @@
 - slug: google_mail_trash_message
   name: Trash Message
   description: |
-    Move a message to trash.
+    Move an email message to the trash folder for archival or deletion. Returns confirmation with the message ID and new label status.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages/{id}/trash
   method: POST
@@ -200,7 +200,7 @@
 - slug: google_mail_untrash_message
   name: Untrash Message
   description: |
-    Restore a message from trash.
+    Restore an email message from the trash folder back to the inbox. Returns the restored message with updated label assignments.
   provider: google-mail
   endpoint: /gmail/v1/users/me/messages/{id}/untrash
   method: POST
@@ -223,7 +223,7 @@
 - slug: google_mail_list_threads
   name: List Threads
   description: |
-    List email threads.
+    List email conversation threads in Gmail with support for search queries and filtering. Returns thread IDs, participants, and message counts for each conversation.
   provider: google-mail
   endpoint: /gmail/v1/users/me/threads
   method: GET
@@ -250,7 +250,7 @@
 - slug: google_mail_get_thread
   name: Get Thread
   description: |
-    Get a thread with all messages.
+    Retrieve a complete email thread including all messages in the conversation with sender and timestamp details. Returns the full thread content for context review.
   provider: google-mail
   endpoint: /gmail/v1/users/me/threads/{id}
   method: GET

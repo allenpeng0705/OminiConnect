@@ -18,7 +18,8 @@
 - slug: bliro_list_messages
   name: List Messages
   description: |
-    List all messages in Bliro.
+    List all messages in Bliro and return message IDs, content, timestamps, and participant information.
+    Use this to track conversation history and message status across all channels.
   provider: bliro
   endpoint: /v1/messages
   method: GET
@@ -43,7 +44,8 @@
 - slug: bliro_get_message
   name: Get Message
   description: |
-    Get details for a specific message.
+    Get details for a specific message including content, sender, recipient, and delivery status.
+    Returns the complete message data for conversation analysis and tracking.
   provider: bliro
   endpoint: /v1/messages/{messageId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: bliro_send_message
   name: Send Message
   description: |
-    Send a message through Bliro.
+    Send a message through Bliro to a specified recipient with content and channel selection.
+    Returns message ID and delivery status for tracking the sent message.
   provider: bliro
   endpoint: /v1/messages
   method: POST
@@ -92,7 +95,8 @@
 - slug: bliro_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Bliro.
+    List all contacts in Bliro and return contact names, IDs, email addresses, and tags.
+    Use this to discover and manage your contact database for messaging campaigns.
   provider: bliro
   endpoint: /v1/contacts
   method: GET
@@ -117,7 +121,8 @@
 - slug: bliro_get_contact
   name: Get Contact
   description: |
-    Get details for a specific contact.
+    Get details for a specific contact including name, email, phone number, and metadata.
+    Returns the complete contact profile for personalized messaging and relationship management.
   provider: bliro
   endpoint: /v1/contacts/{contactId}
   method: GET
@@ -138,7 +143,8 @@
 - slug: bliro_list_conversations
   name: List Conversations
   description: |
-    List all conversations in Bliro.
+    List all conversations in Bliro and return conversation IDs, participants, and last activity timestamps.
+    Use this to track ongoing discussions and message threads across your communication channels.
   provider: bliro
   endpoint: /v1/conversations
   method: GET
@@ -163,7 +169,8 @@
 - slug: bliro_get_conversation
   name: Get Conversation
   description: |
-    Get details for a specific conversation.
+    Get details for a specific conversation including participants, message history, and metadata.
+    Returns the complete conversation data for context and communication tracking.
   provider: bliro
   endpoint: /v1/conversations/{conversationId}
   method: GET
@@ -184,7 +191,8 @@
 - slug: bliro_list_teams
   name: List Teams
   description: |
-    List all teams in Bliro.
+    List all teams in Bliro and return team names, IDs, member counts, and permissions.
+    Use this to discover organizational units for team-based messaging and collaboration.
   provider: bliro
   endpoint: /v1/teams
   method: GET
@@ -201,7 +209,8 @@
 - slug: bliro_get_team
   name: Get Team
   description: |
-    Get details for a specific team.
+    Get details for a specific team including team members, roles, and permission settings.
+    Returns the complete team configuration for organization and access management.
   provider: bliro
   endpoint: /v1/teams/{teamId}
   method: GET
@@ -222,7 +231,8 @@
 - slug: bliro_get_webhooks
   name: Get Webhooks
   description: |
-    Get webhook event logs.
+    Get webhook event logs and recent payloads from Bliro for debugging and monitoring.
+    Returns webhook history including event types, timestamps, and delivery status.
   provider: bliro
   endpoint: /v1/webhooks
   method: GET

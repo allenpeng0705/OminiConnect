@@ -17,8 +17,8 @@
 - slug: pipedrive_list_persons
   name: List Persons
   description: |
-    Retrieve a list of persons (contacts) from Pipedrive CRM.
-    Filter by name, email, organization, or custom fields.
+    Retrieve all persons (contacts) in Pipedrive CRM with their names, email addresses, phone numbers, and organization associations.
+    Returns contact listings for customer relationship management and outreach.
   provider: pipedrive
   endpoint: /v1/persons
   method: GET
@@ -58,7 +58,8 @@
 - slug: pipedrive_get_person
   name: Get Person
   description: |
-    Retrieve detailed information for a specific person by ID including name, email, phone, and organization.
+    Retrieve detailed information for a specific person including their name, email addresses, phone numbers, organization, and deal associations.
+    Returns contact details for customer profile review and relationship mapping.
   provider: pipedrive
   endpoint: /v1/persons/{id}
   method: GET
@@ -81,7 +82,8 @@
 - slug: pipedrive_create_person
   name: Create Person
   description: |
-    Create a new person (contact) in Pipedrive CRM. Set name, email, phone, and organization.
+    Create a new person (contact) in Pipedrive CRM with the specified name, email, phone, and organization assignment.
+    Returns the created contact with its assigned ID for further operations.
   provider: pipedrive
   endpoint: /v1/persons
   method: POST
@@ -130,8 +132,8 @@
 - slug: pipedrive_list_deals
   name: List Deals
   description: |
-    Retrieve a list of deals from Pipedrive CRM.
-    Filter by stage, status, pipeline, or organization.
+    Retrieve all deals in Pipedrive CRM with their titles, values, currencies, stages, and associated person and organization details.
+    Returns deal listings for sales pipeline management and forecasting.
   provider: pipedrive
   endpoint: /v1/deals
   method: GET
@@ -175,7 +177,8 @@
 - slug: pipedrive_get_deal
   name: Get Deal
   description: |
-    Retrieve detailed information for a specific deal by ID including title, value, stage, and activities.
+    Retrieve detailed information for a specific deal including its title, value, stage, expected close date, and associated activities.
+    Returns deal details for sales opportunity review and planning.
   provider: pipedrive
   endpoint: /v1/deals/{id}
   method: GET
@@ -198,7 +201,8 @@
 - slug: pipedrive_create_deal
   name: Create Deal
   description: |
-    Create a new deal in Pipedrive CRM. Set title, value, currency, stage, and associations.
+    Create a new deal in Pipedrive CRM with the specified title, value, currency, stage, and person or organization associations.
+    Returns the created deal with its assigned ID for pipeline management.
   provider: pipedrive
   endpoint: /v1/deals
   method: POST
@@ -246,8 +250,8 @@
 - slug: pipedrive_list_activities
   name: List Activities
   description: |
-    Retrieve a list of activities (calls, meetings, tasks, notes) from Pipedrive.
-    Filter by type, assignee, or date range.
+    Retrieve all activities in Pipedrive including calls, meetings, tasks, and notes with their types, subjects, assignees, and completion status.
+    Returns activity listings for task management and follow-up tracking.
   provider: pipedrive
   endpoint: /v1/activities
   method: GET
@@ -293,7 +297,8 @@
 - slug: pipedrive_get_activity
   name: Get Activity
   description: |
-    Retrieve detailed information for a specific activity by ID including type, subject, and participants.
+    Retrieve detailed information for a specific activity including its type, subject, description, due date, assignee, and participants.
+    Returns activity details for task review and status updates.
   provider: pipedrive
   endpoint: /v1/activities/{id}
   method: GET
@@ -316,8 +321,8 @@
 - slug: pipedrive_list_pipelines
   name: List Pipelines
   description: |
-    Retrieve all sales pipelines and their stages from Pipedrive.
-    Use to see available pipelines and stage definitions.
+    Retrieve all sales pipelines in Pipedrive with their names, stage definitions, deal counts, and total values per stage.
+    Returns pipeline listings for sales process visualization and management.
   provider: pipedrive
   endpoint: /v1/pipelines
   method: GET
@@ -348,7 +353,8 @@
 - slug: pipedrive_get_pipeline
   name: Get Pipeline
   description: |
-    Retrieve detailed information for a specific pipeline by ID including stages, deal counts, and totals.
+    Retrieve detailed information for a specific pipeline including its stages, deal distribution across stages, and weighted totals.
+    Returns pipeline details for sales performance analysis and forecasting.
   provider: pipedrive
   endpoint: /v1/pipelines/{id}
   method: GET

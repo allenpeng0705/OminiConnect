@@ -17,8 +17,8 @@
 - slug: spotify_list_playlists
   name: List Playlists
   description: |
-    List playlists for the authenticated user.
-    Returns user's playlists with name, description, track count, and owner info.
+    List playlists for the authenticated user with names, descriptions, track counts, and owner information.
+    Returns playlist data for music management and content curation.
   provider: spotify
   endpoint: /me/playlists
   method: GET
@@ -46,8 +46,8 @@
 - slug: spotify_get_playlist
   name: Get Playlist
   description: |
-    Get detailed information about a specific playlist.
-    Returns playlist metadata, description, cover image, and owner info.
+    Get detailed information about a specific playlist including metadata, description, cover image, and owner info.
+    Returns playlist data for content review and playback management.
   provider: spotify
   endpoint: /playlists/{playlist_id}
   method: GET
@@ -70,8 +70,8 @@
 - slug: spotify_create_playlist
   name: Create Playlist
   description: |
-    Create a new playlist for the authenticated user.
-    Returns playlist ID and initial configuration.
+    Create a new playlist for the authenticated user with specified name, description, and visibility settings.
+    Returns the created playlist with ID for adding tracks and sharing.
   provider: spotify
   endpoint: /users/{user_id}/playlists
   method: POST
@@ -105,8 +105,8 @@
 - slug: spotify_list_tracks
   name: List Tracks
   description: |
-    List tracks in a playlist with full details.
-    Returns track items including name, artists, album, duration, and added info.
+    List tracks in a playlist with full details including names, artists, albums, duration, and added timestamps.
+    Returns track listings for playlist management and content analysis.
   provider: spotify
   endpoint: /playlists/{playlist_id}/tracks
   method: GET
@@ -138,8 +138,8 @@
 - slug: spotify_get_track
   name: Get Track
   description: |
-    Get detailed information about a specific track.
-    Returns track name, artists, album, duration, popularity, and preview URL.
+    Get detailed information about a specific track including name, artists, album, duration, popularity, and preview URL.
+    Returns track data for music information and playback preparation.
   provider: spotify
   endpoint: /tracks/{track_id}
   method: GET
@@ -160,8 +160,8 @@
 - slug: spotify_search_tracks
   name: Search Tracks
   description: |
-    Search for tracks by keyword query.
-    Returns matching tracks with artist, album, and preview info.
+    Search for tracks by keyword query returning matching tracks with artist, album, and preview information.
+    Returns search results for music discovery and playlist building.
   provider: spotify
   endpoint: /search
   method: GET
@@ -195,8 +195,8 @@
 - slug: spotify_list_artists
   name: List Artists
   description: |
-    List artists, optionally from a user's followed artists or search results.
-    Returns artist profiles with images, genres, and follower counts.
+    List artists from the user's followed artists or search results with profiles, images, genres, and follower counts.
+    Returns artist data for social tracking and music discovery.
   provider: spotify
   endpoint: /me/following
   method: GET
@@ -227,8 +227,8 @@
 - slug: spotify_get_artist
   name: Get Artist
   description: |
-    Get detailed information about an artist.
-    Returns artist name, images, genres, follower count, and popularity metrics.
+    Get detailed information about an artist including name, images, genres, follower count, and popularity metrics.
+    Returns artist data for profile analysis and music recommendations.
   provider: spotify
   endpoint: /artists/{artist_id}
   method: GET
@@ -249,8 +249,8 @@
 - slug: spotify_list_albums
   name: List Albums
   description: |
-    List albums, optionally from an artist's discography or search results.
-    Returns album metadata with images, release dates, and track counts.
+    List albums from an artist's discography or search results with metadata, images, release dates, and track counts.
+    Returns album data for discography exploration and music discovery.
   provider: spotify
   endpoint: /artist/{artist_id}/albums
   method: GET
@@ -280,8 +280,8 @@
 - slug: spotify_get_album
   name: Get Album
   description: |
-    Get detailed information about an album.
-    Returns album name, artist, cover art, release date, and track listing.
+    Get detailed information about an album including name, artist, cover art, release date, and complete track listing.
+    Returns album data for music research and listening preparation.
   provider: spotify
   endpoint: /albums/{album_id}
   method: GET

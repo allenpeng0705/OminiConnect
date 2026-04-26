@@ -17,8 +17,8 @@
 - slug: heap_list_events
   name: List Events
   description: |
-    List all events in your Heap application.
-    Returns event names, types, and metadata.
+    Retrieve all events captured in your Heap application with pagination.
+    Returns event names, types, and occurrence counts.
   provider: heap
   endpoint: /api/v1/events
   method: GET
@@ -47,8 +47,8 @@
 - slug: heap_get_event
   name: Get Event
   description: |
-    Get details about a specific event including property analysis and occurrence counts.
-    Use this to understand event structure and verify tracking.
+    Retrieve a specific Heap event with its property analysis and occurrence metrics.
+    Returns event structure and verification status.
   provider: heap
   endpoint: /api/v1/events/{event_id}
   method: GET
@@ -73,8 +73,8 @@
 - slug: heap_track_event
   name: Track Event
   description: |
-    Track an event. Events are actions users take in your application.
-    Heap automatically captures many events; use this for custom events.
+    Record a custom user action event in Heap with optional properties.
+    Captures user interactions for analytics and segmentation.
   provider: heap
   endpoint: /api/v1/track
   method: POST
@@ -109,8 +109,8 @@
 - slug: heap_list_users
   name: List Users
   description: |
-    List users matching specific criteria or properties.
-    Use for audience segmentation and user research.
+    Retrieve users matching specific criteria or property filters with pagination.
+    Returns user profiles for audience segmentation and research.
   provider: heap
   endpoint: /api/v1/users
   method: GET
@@ -142,8 +142,8 @@
 - slug: heap_get_user
   name: Get User
   description: |
-    Get a user profile with all associated properties and event history.
-    Use for user research and debugging user-specific issues.
+    Retrieve a specific Heap user profile with all properties and event history.
+    Returns user attributes and behavioral data for debugging.
   provider: heap
   endpoint: /api/v1/users/{user_id}
   method: GET
@@ -168,8 +168,8 @@
 - slug: heap_get_funnel
   name: Get Funnel
   description: |
-    Get funnel analysis data. Funnels show conversion rates between sequential steps.
-    Define steps by event names and analyze drop-off.
+    Analyze conversion rates between sequential user actions using funnel definitions.
+    Returns step-by-step drop-off data and conversion metrics.
   provider: heap
   endpoint: /api/v1/funnels
   method: GET
@@ -203,8 +203,8 @@
 - slug: heap_get_session
   name: Get Session
   description: |
-    Get session data for a user or list of sessions.
-    Sessions group events by user activity within a time window.
+    Retrieve session data containing user activity within a time window.
+    Returns all events and actions during the session.
   provider: heap
   endpoint: /api/v1/sessions/{session_id}
   method: GET
@@ -230,8 +230,8 @@
 - slug: heap_list_reports
   name: List Reports
   description: |
-    List saved reports in your Heap application.
-    Reports contain saved analysis configurations for quick access.
+    Retrieve saved analysis reports in your Heap application with pagination.
+    Returns report configurations and result summaries.
   provider: heap
   endpoint: /api/v1/reports
   method: GET
@@ -260,8 +260,8 @@
 - slug: heap_get_report
   name: Get Report
   description: |
-    Get details of a specific report including configuration and results.
-    Use this to retrieve saved analysis data.
+    Retrieve a specific Heap report with its configuration and computed results.
+    Returns saved analysis data and visualization settings.
   provider: heap
   endpoint: /api/v1/reports/{report_id}
   method: GET
@@ -286,8 +286,8 @@
 - slug: heap_list_properties
   name: List Properties
   description: |
-    List all custom properties defined in your Heap application.
-    Properties are attributes that can be used for segmentation and filtering.
+    Retrieve all custom user and event properties defined in your Heap application.
+    Returns property names, types, and usage statistics.
   provider: heap
   endpoint: /api/v1/properties
   method: GET

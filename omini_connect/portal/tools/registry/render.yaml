@@ -1,7 +1,7 @@
 - slug: render_list_services
   name: List Services
   description: |
-    List all services (web services, background workers, cron jobs) in your Render account.
+    List all services including web services, background workers, and cron jobs in the Render account. Returns service names, URLs, status, and deployment information for infrastructure management.
   provider: render
   endpoint: /services
   method: GET
@@ -24,7 +24,7 @@
 - slug: render_get_service
   name: Get Service
   description: |
-    Get details for a specific service by ID.
+    Get details about a specific Render service including its environment variables, scaling configuration, and deployment history for troubleshooting and management.
   provider: render
   endpoint: /services/{serviceId}
   method: GET
@@ -45,7 +45,7 @@
 - slug: render_create_service
   name: Create Service
   description: |
-    Create a new service (web service, background worker, or cron job) on Render.
+    Create a new service on Render with the specified type, name, region, and deployment configuration. Returns the created service with its ID and initial status.
   provider: render
   endpoint: /services
   method: POST
@@ -88,7 +88,7 @@
 - slug: render_update_service
   name: Update Service
   description: |
-    Update an existing service's configuration, environment variables, or scaling.
+    Update an existing Render service with new configuration, environment variables, scaling settings, or plan changes. Returns the updated service with modified values.
   provider: render
   endpoint: /services/{serviceId}
   method: PATCH
@@ -121,7 +121,7 @@
 - slug: render_delete_service
   name: Delete Service
   description: |
-    Delete a service and all associated resources.
+    Delete a service and all associated resources from Render. This action permanently removes the service and returns a confirmation of deletion.
   provider: render
   endpoint: /services/{serviceId}
   method: DELETE
@@ -142,7 +142,7 @@
 - slug: render_list_deploys
   name: List Deploys
   description: |
-    List all deployments for a specific service.
+    List all deployments for a specific Render service. Returns deployment IDs, statuses, commit information, and timestamps for tracking deployment history.
   provider: render
   endpoint: /services/{serviceId}/deploys
   method: GET
@@ -169,7 +169,7 @@
 - slug: render_get_deploy
   name: Get Deploy
   description: |
-    Get details for a specific deployment.
+    Get details about a specific deployment including build logs, status, and deployed commit details for debugging and verification.
   provider: render
   endpoint: /deploys/{deployId}
   method: GET
@@ -190,7 +190,7 @@
 - slug: render_create_deploy
   name: Create Deploy
   description: |
-    Trigger a new manual deployment for a service.
+    Trigger a new manual deployment for a Render service from the specified branch. Returns the deployment ID and initial status.
   provider: render
   endpoint: /services/{serviceId}/deploys
   method: POST
@@ -217,7 +217,7 @@
 - slug: render_list_disks
   name: List Disks
   description: |
-    List all persistent disks attached to services.
+    List all persistent disks attached to Render services. Returns disk names, sizes, mount paths, and associated services for storage management.
   provider: render
   endpoint: /disks
   method: GET
@@ -240,7 +240,7 @@
 - slug: render_get_disk
   name: Get Disk
   description: |
-    Get details for a specific persistent disk.
+    Get details about a specific persistent disk including size, mount status, and associated service for storage configuration.
   provider: render
   endpoint: /disks/{diskId}
   method: GET

@@ -17,8 +17,7 @@
 - slug: anchor_list_podcasts
   name: List Podcasts
   description: |
-    List all podcasts for the authenticated user.
-    Returns podcast title, description, and episode count.
+    List all podcasts for the authenticated user. Returns podcast title, description, and episode count.
   provider: anchor
   endpoint: /podcasts
   method: GET
@@ -45,8 +44,7 @@
 - slug: anchor_get_podcast
   name: Get Podcast
   description: |
-    Get detailed information about a specific podcast.
-    Returns podcast metadata, artwork, and settings.
+    Get detailed information about a specific podcast including metadata, artwork, and settings.
   provider: anchor
   endpoint: /podcasts/{podcast_id}
   method: GET
@@ -68,8 +66,7 @@
 - slug: anchor_create_podcast
   name: Create Podcast
   description: |
-    Create a new podcast show.
-    Returns podcast ID and initial configuration.
+    Create a new podcast show with title, description, language, and category.
   provider: anchor
   endpoint: /podcasts
   method: POST
@@ -101,8 +98,7 @@
 - slug: anchor_list_episodes
   name: List Episodes
   description: |
-    List episodes for a specific podcast.
-    Returns episode title, description, publish date, and duration.
+    List episodes for a specific podcast with pagination. Returns episode title, description, publish date, and duration.
   provider: anchor
   endpoint: /podcasts/{podcast_id}/episodes
   method: GET
@@ -133,8 +129,7 @@
 - slug: anchor_get_episode
   name: Get Episode
   description: |
-    Get detailed information about a specific episode.
-    Returns title, description, audio URL, and metadata.
+    Get detailed information about a specific episode including title, description, audio URL, and metadata.
   provider: anchor
   endpoint: /episodes/{episode_id}
   method: GET
@@ -156,8 +151,7 @@
 - slug: anchor_create_episode
   name: Create Episode
   description: |
-    Create a new episode for a podcast.
-    Includes title, description, and audio upload.
+    Create a new episode for a podcast with title, description, and audio URL.
   provider: anchor
   endpoint: /episodes
   method: POST
@@ -192,8 +186,7 @@
 - slug: anchor_get_analytics
   name: Get Analytics
   description: |
-    Get analytics data for a podcast.
-    Returns listen counts, audience demographics, and engagement.
+    Get analytics data for a podcast including listen counts, audience demographics, and engagement.
   provider: anchor
   endpoint: /analytics/{podcast_id}
   method: GET
@@ -221,8 +214,7 @@
 - slug: anchor_list_distributions
   name: List Distributions
   description: |
-    List distribution destinations for a podcast.
-    Returns supported platforms and their status.
+    List distribution destinations for a podcast. Returns supported platforms and their status.
   provider: anchor
   endpoint: /distributions
   method: GET
@@ -244,8 +236,7 @@
 - slug: anchor_distribute_episode
   name: Distribute Episode
   description: |
-    Distribute an episode to all configured platforms.
-    Triggers distribution to podcast directories.
+    Distribute an episode to all configured platforms to publish to podcast directories.
   provider: anchor
   endpoint: /episodes/{episode_id}/distribute
   method: POST
@@ -268,8 +259,7 @@
 - slug: anchor_get_distribution_status
   name: Get Distribution Status
   description: |
-    Get distribution status for an episode.
-    Returns per-platform status and any errors.
+    Get distribution status for an episode including per-platform status and any errors.
   provider: anchor
   endpoint: /episodes/{episode_id}/distribution
   method: GET

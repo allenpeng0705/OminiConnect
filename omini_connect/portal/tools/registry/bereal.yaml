@@ -16,8 +16,8 @@
 - slug: bereal_list_moments
   name: List Moments
   description: |
-    List BeReal moments from the authenticated user or their friends.
-    Returns photos, captions, location, and reaction counts for each moment.
+    List BeReal moments from the authenticated user or their friends' feeds.
+    Returns photos, captions, location data, and reaction counts for each moment.
   provider: bereal
   endpoint: /v1/moments
   method: GET
@@ -52,8 +52,8 @@
 - slug: bereal_get_moment
   name: Get Moment
   description: |
-    Get details of a specific BeReal moment including photos, caption, location, and reactions.
-    Use this to view a specific memory in full detail.
+    Get details of a specific BeReal moment including photos, caption, location, and all reactions.
+    Returns the complete moment data for viewing specific memories.
   provider: bereal
   endpoint: /v1/moments/{moment_id}
   method: GET
@@ -75,8 +75,8 @@
 - slug: bereal_post_moment
   name: Post Moment
   description: |
-    Post a new BeReal moment with front and back camera photos.
-    Includes optional caption and location data.
+    Post a new BeReal moment with simultaneous front and back camera photos.
+    Include optional caption, location data, or mark as late posted.
   provider: bereal
   endpoint: /v1/moments
   method: POST
@@ -116,8 +116,8 @@
 - slug: bereal_list_friends
   name: List Friends
   description: |
-    List all friends of the authenticated user.
-    Returns friend profiles with their current status and last moment time.
+    List all friends of the authenticated user and return friend profiles with current status and last moment time.
+    Use this to discover which friends are active on BeReal.
   provider: bereal
   endpoint: /v1/friends
   method: GET
@@ -147,8 +147,8 @@
 - slug: bereal_get_friend
   name: Get Friend
   description: |
-    Get a specific friend's profile including their BeReal stats and last posted moment.
-    Use this to check if a friend has posted recently.
+    Get a specific friend's profile including their display name, avatar, and statistics.
+    Use this to check if a friend has posted recently or view their profile.
   provider: bereal
   endpoint: /v1/friends/{user_id}
   method: GET
@@ -170,8 +170,8 @@
 - slug: bereal_add_friend
   name: Add Friend
   description: |
-    Send a friend request to another BeReal user.
-    Use this to connect with friends and see their moments.
+    Send a friend request to another BeReal user by their user ID or username.
+    The recipient must accept the request before appearing in your friends list.
   provider: bereal
   endpoint: /v1/friends
   method: POST
@@ -196,7 +196,7 @@
 - slug: bereal_react_to_moment
   name: React to Moment
   description: |
-    Add a reaction emoji to a friend's BeReal moment.
+    Add a reaction emoji to a friend's BeReal moment such as haha, wow, sad, angry, or love.
     Reactions appear alongside the moment for all friends to see.
   provider: bereal
   endpoint: /v1/moments/{moment_id}/reactions
@@ -225,8 +225,8 @@
 - slug: bereal_list_notifications
   name: List Notifications
   description: |
-    List notifications for the authenticated user including friend requests, reactions, and comments.
-    Use this to stay updated on interactions with your moments and profile.
+    List notifications for the authenticated user including friend requests, reactions, and comments on your moments.
+    Filter by notification type to focus on specific interactions.
   provider: bereal
   endpoint: /v1/notifications
   method: GET
@@ -261,7 +261,7 @@
 - slug: bereal_get_user_profile
   name: Get User Profile
   description: |
-    Get the authenticated user's profile including username, display name, bio, avatar, and statistics.
+    Get the authenticated user's profile including username, display name, bio, avatar, and posting statistics.
     Use this to view or manage your own profile information.
   provider: bereal
   endpoint: /v1/users/me

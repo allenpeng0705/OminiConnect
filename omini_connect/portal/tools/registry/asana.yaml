@@ -17,7 +17,8 @@
 - slug: asana_list_tasks
   name: List Tasks
   description: |
-    List tasks. Filter by project, assignee, completed status, or due date.
+    List tasks in Asana with optional filtering by project, assignee, completion status, or due date. Returns task names, IDs, assignees, and due dates.
+    Use this to find and manage work items across your organization.
   provider: asana
   endpoint: /api/1.0/tasks
   method: GET
@@ -52,7 +53,8 @@
 - slug: asana_get_task
   name: Get Task
   description: |
-    Get detailed information about a task.
+    Get detailed information about a specific Asana task by its ID. Returns the task name, description, assignee, due date, and completion status.
+    This provides complete task details for tracking and management.
   provider: asana
   endpoint: /api/1.0/tasks/{task_gid}
   method: GET
@@ -74,7 +76,8 @@
 - slug: asana_create_task
   name: Create Task
   description: |
-    Create a new task in a project or workspace.
+    Create a new task in an Asana project or workspace with name, description, assignee, and due date. Returns the created task with its unique ID.
+    This adds new work items to your project management workflow.
   provider: asana
   endpoint: /api/1.0/tasks
   method: POST
@@ -110,7 +113,8 @@
 - slug: asana_update_task
   name: Update Task
   description: |
-    Update a task's name, description, assignee, due date, or completion status.
+    Update an existing Asana task with new name, description, assignee, due date, or completion status. Returns the updated task confirming the changes.
+    This modifies existing tasks to keep work organized and current.
   provider: asana
   endpoint: /api/1.0/tasks/{task_gid}
   method: PUT
@@ -147,7 +151,8 @@
 - slug: asana_list_portfolios
   name: List Portfolios
   description: |
-    List portfolios in a workspace. Filter by color or owner.
+    List all portfolios in an Asana workspace. Returns portfolio names, IDs, colors, and project counts. Filter by color or owner to find specific portfolios.
+    Use this to get an overview of multiple projects across your organization.
   provider: asana
   endpoint: /api/1.0/portfolios
   method: GET
@@ -179,7 +184,8 @@
 - slug: asana_get_portfolio
   name: Get Portfolio
   description: |
-    Get detailed information about a portfolio including its projects and metrics.
+    Get detailed information about a specific Asana portfolio by its ID. Returns the portfolio name, color, projects, and metrics overview.
+    This provides comprehensive portfolio data for executive-level tracking.
   provider: asana
   endpoint: /api/1.0/portfolios/{portfolio_gid}
   method: GET
@@ -201,7 +207,8 @@
 - slug: asana_list_projects
   name: List Projects
   description: |
-    List projects in a workspace. Filter by team or archived status.
+    List all projects in an Asana workspace. Returns project names, IDs, statuses, and team associations. Filter by team or archived status to find specific projects.
+    This discovers available projects for work tracking and collaboration.
   provider: asana
   endpoint: /api/1.0/projects
   method: GET
@@ -234,7 +241,8 @@
 - slug: asana_get_project
   name: Get Project
   description: |
-    Get detailed information about a project.
+    Get detailed information about a specific Asana project by its ID. Returns the project name, description, status, team, and member information.
+    This provides complete project details for status updates and team coordination.
   provider: asana
   endpoint: /api/1.0/projects/{project_gid}
   method: GET
@@ -256,7 +264,8 @@
 - slug: asana_list_teams
   name: List Teams
   description: |
-    List all teams in the organization.
+    List all teams in an Asana organization. Returns team names, IDs, and member counts for each team.
+    Use this to discover teams for project assignment and collaboration.
   provider: asana
   endpoint: /api/1.0/teams
   method: GET
@@ -282,7 +291,8 @@
 - slug: asana_get_team
   name: Get Team
   description: |
-    Get detailed information about a team.
+    Get detailed information about a specific Asana team by its ID. Returns the team name, description, and member list.
+    This provides team overview for member management and coordination.
   provider: asana
   endpoint: /api/1.0/teams/{team_gid}
   method: GET

@@ -17,7 +17,7 @@
 - slug: supabase_list_projects
   name: List Projects
   description: |
-    List all Supabase projects the authenticated user has access to.
+    List all Supabase projects accessible to the authenticated user. Returns project names, IDs, regions, and status for each project.
   provider: supabase
   endpoint: /projects
   method: GET
@@ -35,7 +35,7 @@
 - slug: supabase_get_project
   name: Get Project
   description: |
-    Get details about a specific Supabase project including region, status, and configuration.
+    Retrieve detailed information for a specific Supabase project including region, status, configuration, and API keys.
   provider: supabase
   endpoint: /projects/{ref}
   method: GET
@@ -57,8 +57,7 @@
 - slug: supabase_list_databases
   name: List Databases
   description: |
-    List all databases in a Supabase project.
-    Each project typically has a default PostgreSQL database.
+    List all databases in a Supabase project. Returns database names, types, and connection details for each database.
   provider: supabase
   endpoint: /projects/{ref}/databases
   method: GET
@@ -80,8 +79,7 @@
 - slug: supabase_query_table
   name: Query Table
   description: |
-    Execute a query against a PostgreSQL table in the Supabase database.
-    Supports filtering, ordering, and pagination.
+    Execute a SQL query against a PostgreSQL table in the Supabase database. Returns matching rows with support for filtering, ordering, and pagination.
   provider: supabase
   endpoint: /projects/{ref}/databases/query
   method: POST
@@ -128,8 +126,7 @@
 - slug: supabase_list_tables
   name: List Tables
   description: |
-    List all tables in a specific schema of the Supabase database.
-    Common schemas include 'public', 'storage', 'auth'.
+    List all tables in a specific schema of the Supabase database. Returns table names and row counts for each table.
   provider: supabase
   endpoint: /projects/{ref}/tables
   method: GET
@@ -156,7 +153,7 @@
 - slug: supabase_get_table
   name: Get Table
   description: |
-    Get the schema and column definitions of a specific table.
+    Retrieve the schema and column definitions for a specific table including column names, types, and constraints.
   provider: supabase
   endpoint: /projects/{ref}/tables/{tableId}
   method: GET
@@ -183,8 +180,7 @@
 - slug: supabase_list_auth_users
   name: List Auth Users
   description: |
-    List all users authenticated through Supabase Auth.
-    Returns user metadata, creation time, and last sign-in.
+    List all users authenticated through Supabase Auth. Returns user IDs, email addresses, metadata, and last sign-in times.
   provider: supabase
   endpoint: /projects/{ref}/auth/users
   method: GET
@@ -215,8 +211,7 @@
 - slug: supabase_create_auth_user
   name: Create Auth User
   description: |
-    Create a new user in Supabase Auth.
-    Sends a confirmation email to the user.
+    Create a new user in Supabase Auth with the specified email and password. Sends a confirmation email to the user.
   provider: supabase
   endpoint: /projects/{ref}/auth/users
   method: POST
@@ -250,8 +245,7 @@
 - slug: supabase_list_storage_buckets
   name: List Storage Buckets
   description: |
-    List all storage buckets in a Supabase project.
-    Buckets contain files organized in folders.
+    List all storage buckets in a Supabase project. Returns bucket names, IDs, and public/private status for each bucket.
   provider: supabase
   endpoint: /storage/v1/buckets
   method: GET
@@ -270,8 +264,7 @@
 - slug: supabase_upload_file
   name: Upload File
   description: |
-    Upload a file to a Supabase Storage bucket.
-    Creates parent folders if they do not exist.
+    Upload a file to a Supabase Storage bucket with the specified content type. Creates parent folders if they do not exist.
   provider: supabase
   endpoint: /storage/v1/bucket/{bucketId}/file
   method: POST

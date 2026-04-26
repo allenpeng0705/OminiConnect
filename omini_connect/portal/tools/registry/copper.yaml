@@ -17,7 +17,7 @@
 - slug: copper_list_companies
   name: List Companies
   description: |
-    List all companies in Copper CRM. Filter by city, state, country, or industry.
+    List all companies in Copper CRM with optional filtering by location or industry, returning company IDs, names, locations, and industry information.
   provider: copper
   endpoint: /companies
   method: GET
@@ -52,7 +52,7 @@
 - slug: copper_get_company
   name: Get Company
   description: |
-    Get detailed information about a specific company.
+    Retrieve detailed information about a specific Copper CRM company including its profile, address, contacts, and all associated opportunities.
   provider: copper
   endpoint: /companies/{company_id}
   method: GET
@@ -74,7 +74,7 @@
 - slug: copper_create_company
   name: Create Company
   description: |
-    Create a new company in Copper CRM.
+    Create a new company in Copper CRM with name, location, industry, and contact information, returning the created company ID.
   provider: copper
   endpoint: /companies
   method: POST
@@ -114,7 +114,7 @@
 - slug: copper_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Copper CRM. Filter by company, email, or name.
+    List all contacts in Copper CRM with optional filtering by company, email, or name, returning contact IDs, names, email addresses, and company associations.
   provider: copper
   endpoint: /contacts
   method: GET
@@ -146,7 +146,7 @@
 - slug: copper_get_contact
   name: Get Contact
   description: |
-    Get detailed information about a specific contact.
+    Retrieve detailed information about a specific Copper CRM contact including their profile, company association, and communication history.
   provider: copper
   endpoint: /contacts/{contact_id}
   method: GET
@@ -168,7 +168,7 @@
 - slug: copper_create_contact
   name: Create Contact
   description: |
-    Create a new contact in Copper CRM.
+    Create a new contact in Copper CRM with first name, last name, email, phone, and company assignment, returning the created contact ID.
   provider: copper
   endpoint: /contacts
   method: POST
@@ -206,7 +206,7 @@
 - slug: copper_list_opportunities
   name: List Opportunities
   description: |
-    List all opportunities (deals) in Copper CRM. Filter by status, owner, or pipeline.
+    List all opportunities in Copper CRM with optional filtering by status, owner, or pipeline, returning opportunity IDs, names, values, pipeline stages, and status.
   provider: copper
   endpoint: /opportunities
   method: GET
@@ -238,7 +238,7 @@
 - slug: copper_get_opportunity
   name: Get Opportunity
   description: |
-    Get detailed information about a specific opportunity.
+    Retrieve detailed information about a specific Copper CRM opportunity including its value, stage, probability, and associated contacts.
   provider: copper
   endpoint: /opportunities/{opportunity_id}
   method: GET
@@ -260,7 +260,7 @@
 - slug: copper_list_tasks
   name: List Tasks
   description: |
-    List all tasks in Copper CRM. Filter by status, assignee, due date, or related entity.
+    List all tasks in Copper CRM with optional filtering by status, assignee, or due date, returning task IDs, titles, status, assignees, and due dates.
   provider: copper
   endpoint: /tasks
   method: GET
@@ -298,7 +298,7 @@
 - slug: copper_get_task
   name: Get Task
   description: |
-    Get detailed information about a specific task.
+    Retrieve detailed information about a specific Copper CRM task including its title, description, assignee, related entity, and due date.
   provider: copper
   endpoint: /tasks/{task_id}
   method: GET

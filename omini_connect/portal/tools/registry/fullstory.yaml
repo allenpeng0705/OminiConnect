@@ -1,7 +1,9 @@
 - slug: fullstory_list_recordings
   name: List Recordings
   description: |
-    Retrieve a list of session recordings with filtering options.
+    Retrieve a list of session recordings with filtering options and pagination.
+    Returns recording IDs, user IDs, and duration for each recording.
+    Use this to discover user sessions and analyze behavior patterns.
   provider: fullstory
   endpoint: /v1/recordings
   method: GET
@@ -28,6 +30,8 @@
   name: Get Recording
   description: |
     Retrieve a specific session recording by its ID.
+    Returns the complete recording data with all associated information.
+    This provides full recording data for user behavior analysis.
   provider: fullstory
   endpoint: /v1/recordings/{recording_id}
   method: GET
@@ -48,7 +52,9 @@
 - slug: fullstory_list_events
   name: List Events
   description: |
-    Retrieve a list of custom events with filtering options.
+    Retrieve a list of custom events with filtering options and pagination.
+    Returns event names, timestamps, and properties for each event.
+    Use this to discover analytics events and track user interactions.
   provider: fullstory
   endpoint: /v1/events
   method: GET
@@ -75,6 +81,8 @@
   name: Get Event
   description: |
     Retrieve a specific custom event by its ID.
+    Returns the complete event data with all associated information.
+    This provides full event data for analytics and tracking.
   provider: fullstory
   endpoint: /v1/events/{event_id}
   method: GET
@@ -95,7 +103,9 @@
 - slug: fullstory_list_users
   name: List Users
   description: |
-    Retrieve a list of identified users with their attributes.
+    Retrieve a list of identified users with their attributes and pagination.
+    Returns user IDs, emails, and custom properties for each user.
+    Use this to discover user profiles and manage analytics segments.
   provider: fullstory
   endpoint: /v1/users
   method: GET
@@ -118,7 +128,9 @@
 - slug: fullstory_get_user
   name: Get User
   description: |
-    Retrieve a specific user by their ID with session history.
+    Retrieve a specific user by their ID with session history and properties.
+    Returns the complete user data with all associated information.
+    This provides full user data for behavior analysis and support.
   provider: fullstory
   endpoint: /v1/users/{user_id}
   method: GET
@@ -139,7 +151,9 @@
 - slug: fullstory_list_segments
   name: List Segments
   description: |
-    Retrieve a list of user segments for targeting.
+    Retrieve a list of user segments for targeting with pagination.
+    Returns segment names, IDs, and member counts for each segment.
+    Use this to discover audience segments and manage user targeting.
   provider: fullstory
   endpoint: /v1/segments
   method: GET
@@ -159,7 +173,9 @@
 - slug: fullstory_get_segment
   name: Get Segment
   description: |
-    Retrieve a specific segment by its ID with membership rules.
+    Retrieve a specific segment by its ID with membership rules and criteria.
+    Returns the complete segment data with all associated information.
+    This provides full segment data for audience management and targeting.
   provider: fullstory
   endpoint: /v1/segments/{segment_id}
   method: GET
@@ -181,6 +197,8 @@
   name: Search Sessions
   description: |
     Search for sessions matching specific criteria and filters.
+    Returns session IDs, user IDs, and timestamps for each matching session.
+    Use this to discover user sessions and investigate behavior issues.
   provider: fullstory
   endpoint: /v1/sessions/search
   method: POST
@@ -208,7 +226,9 @@
 - slug: fullstory_get_session
   name: Get Session
   description: |
-    Retrieve a specific session by its ID with full details.
+    Retrieve a specific session by its ID with full details and events.
+    Returns the complete session data with all associated information.
+    This provides full session data for detailed user analysis.
   provider: fullstory
   endpoint: /v1/sessions/{session_id}
   method: GET

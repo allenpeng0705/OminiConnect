@@ -18,7 +18,7 @@
 - slug: klaviyo_list_profiles
   name: List Profiles
   description: |
-    List all profiles in Klaviyo.
+    List all customer profiles in your Klaviyo account with pagination. Returns profile IDs, email addresses, names, phone numbers, and custom properties for each profile.
   provider: klaviyo-oauth
   endpoint: /api/profiles/
   method: GET
@@ -44,7 +44,7 @@
 - slug: klaviyo_get_profile
   name: Get Profile
   description: |
-    Get details for a specific profile.
+    Retrieve details about a specific Klaviyo profile by its ID. Returns all profile attributes including email, phone, name, location, and subscription status with consent timestamps.
   provider: klaviyo-oauth
   endpoint: /api/profiles/{profile_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: klaviyo_create_profile
   name: Create Profile
   description: |
-    Create a new profile.
+    Create a new customer profile in Klaviyo with specified attributes. Returns the created profile including its unique ID and assigned properties.
   provider: klaviyo-oauth
   endpoint: /api/profiles/
   method: POST
@@ -96,7 +96,7 @@
 - slug: klaviyo_update_profile
   name: Update Profile
   description: |
-    Update an existing profile.
+    Update an existing Klaviyo profile with new attribute values. Returns the updated profile confirming all modified properties have been changed.
   provider: klaviyo-oauth
   endpoint: /api/profiles/{profile_id}
   method: PUT
@@ -121,7 +121,7 @@
 - slug: klaviyo_list_lists
   name: List Lists
   description: |
-    List all lists.
+    List all static lists in your Klaviyo account for targeted email campaigns. Returns list names, IDs, descriptions, and subscriber counts for each list.
   provider: klaviyo-oauth
   endpoint: /api/lists/
   method: GET
@@ -143,7 +143,7 @@
 - slug: klaviyo_get_list
   name: Get List
   description: |
-    Get details for a specific list.
+    Retrieve details about a specific Klaviyo list by its ID. Returns the list name, description, subscriber count, and creation timestamp.
   provider: klaviyo-oauth
   endpoint: /api/lists/{list_id}
   method: GET
@@ -164,7 +164,7 @@
 - slug: klaviyo_list_campaigns
   name: List Campaigns
   description: |
-    List all campaigns.
+    List all email and SMS campaigns in your Klaviyo account. Returns campaign names, IDs, statuses, scheduled times, and send statistics for each campaign.
   provider: klaviyo-oauth
   endpoint: /api/campaigns/
   method: GET
@@ -186,7 +186,7 @@
 - slug: klaviyo_get_campaign
   name: Get Campaign
   description: |
-    Get details for a specific campaign.
+    Retrieve details about a specific Klaviyo campaign by its ID. Returns the campaign subject, content preview, recipient count, and delivery status with timestamps.
   provider: klaviyo-oauth
   endpoint: /api/campaigns/{campaign_id}
   method: GET
@@ -207,7 +207,7 @@
 - slug: klaviyo_list_metrics
   name: List Metrics
   description: |
-    List all metrics.
+    List all available metrics in Klaviyo for tracking customer engagement. Returns metric names, IDs, and descriptions for analytics events like opens, clicks, and conversions.
   provider: klaviyo-oauth
   endpoint: /api/metrics/
   method: GET
@@ -225,7 +225,7 @@
 - slug: klaviyo_get_metrics_event
   name: Get Metrics Event
   description: |
-    Get a metrics event.
+    Retrieve details about a specific Klaviyo metrics event by its ID. Returns the event name, associated data schema, and timestamp information for the analytics event.
   provider: klaviyo-oauth
   endpoint: /api/metrics/{metric_id}
   method: GET

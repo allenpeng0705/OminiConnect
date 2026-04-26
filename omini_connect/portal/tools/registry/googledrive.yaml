@@ -18,7 +18,9 @@
 - slug: googledrive_list_files
   name: List Files
   description: |
-    List files and folders in Google Drive.
+    List files and folders in Google Drive with pagination and folder filtering.
+    Returns file names, IDs, types, and modification dates for each item.
+    Use this to discover documents and manage cloud storage.
   provider: googledrive
   endpoint: /drive/v3/files
   method: GET
@@ -48,7 +50,9 @@
 - slug: googledrive_get_file
   name: Get File
   description: |
-    Get metadata for a Google Drive file.
+    Get metadata for a Google Drive file including size, type, and sharing status.
+    Returns the complete file data with all associated information.
+    This provides full file metadata for document management.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}
   method: GET
@@ -71,7 +75,9 @@
 - slug: googledrive_create_file
   name: Create File
   description: |
-    Create a new file in Google Drive.
+    Create a new file in Google Drive with name and MIME type.
+    Returns the created file with its unique ID and confirmation.
+    This provisions a new document in your cloud storage.
   provider: googledrive
   endpoint: /drive/v3/files
   method: POST
@@ -99,7 +105,9 @@
 - slug: googledrive_upload_file
   name: Upload File
   description: |
-    Upload content to a Google Drive file.
+    Upload content to a Google Drive file with base64-encoded content.
+    Returns the updated file confirmation with modified metadata.
+    This updates file content in your cloud storage.
   provider: googledrive
   endpoint: /upload/drive/v3/files/{file_id}
   method: PATCH
@@ -126,7 +134,9 @@
 - slug: googledrive_create_folder
   name: Create Folder
   description: |
-    Create a new folder in Google Drive.
+    Create a new folder in Google Drive with a specified name and parent.
+    Returns the created folder with its unique ID and confirmation.
+    This organizes documents into new directory structures.
   provider: googledrive
   endpoint: /drive/v3/files
   method: POST
@@ -152,7 +162,9 @@
 - slug: googledrive_share_file
   name: Share File
   description: |
-    Share a Google Drive file with a user or group.
+    Share a Google Drive file with a user or group using specified permissions.
+    Returns the created permission confirmation for access control.
+    This grants document access to collaborators.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}/permissions
   method: POST
@@ -186,7 +198,9 @@
 - slug: googledrive_list_permissions
   name: List Permissions
   description: |
-    List all permissions on a file.
+    List all permissions on a file showing who has access and what level.
+    Returns permission IDs, roles, and recipient types for each access grant.
+    Use this to audit document access and manage sharing settings.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}/permissions
   method: GET
@@ -209,7 +223,9 @@
 - slug: googledrive_get_permission
   name: Get Permission
   description: |
-    Get details of a specific permission on a file.
+    Get details of a specific permission on a file including role and recipient.
+    Returns the complete permission data with all associated information.
+    This provides full permission details for access review.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}/permissions/{permission_id}
   method: GET
@@ -236,7 +252,9 @@
 - slug: googledrive_list_comments
   name: List Comments
   description: |
-    List comments on a Google Drive file.
+    List comments on a Google Drive file with author and timestamp information.
+    Returns comment IDs, content, author names, and status for each comment.
+    Use this to discover discussions and track file collaboration.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}/comments
   method: GET
@@ -263,7 +281,9 @@
 - slug: googledrive_get_comment
   name: Get Comment
   description: |
-    Get details of a specific comment.
+    Get details of a specific comment including full content and reply thread.
+    Returns the complete comment data with all associated information.
+    This provides full comment data for collaboration tracking.
   provider: googledrive
   endpoint: /drive/v3/files/{file_id}/comments/{comment_id}
   method: GET

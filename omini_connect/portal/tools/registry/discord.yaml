@@ -18,7 +18,7 @@
 - slug: discord_list_guilds
   name: List Guilds
   description: |
-    List all guilds (servers) the bot is connected to. Returns guild IDs, names, and icons.
+    List all guilds (servers) your Discord bot is connected to. Returns guild names, IDs, and icons for each guild.
   provider: discord
   endpoint: /users/@me/guilds
   method: GET
@@ -43,7 +43,7 @@
 - slug: discord_get_guild
   name: Get Guild
   description: |
-    Get information about a specific guild (server). Returns name, description, member count, and features.
+    Get detailed information about a specific Discord guild by its ID. Returns the guild name, description, member count, and features.
   provider: discord
   endpoint: /guilds/{guild_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: discord_list_channels
   name: List Channels
   description: |
-    List all channels in a guild. Returns channel IDs, names, and types.
+    List all channels in a specific Discord guild. Returns channel names, IDs, and types for each channel.
   provider: discord
   endpoint: /guilds/{guild_id}/channels
   method: GET
@@ -88,7 +88,7 @@
 - slug: discord_get_channel
   name: Get Channel
   description: |
-    Get information about a specific channel.
+    Get detailed information about a specific Discord channel by its ID. Returns the channel name, type, topic, and position.
   provider: discord
   endpoint: /channels/{channel_id}
   method: GET
@@ -110,7 +110,7 @@
 - slug: discord_list_messages
   name: List Messages
   description: |
-    List messages in a channel. Returns recent messages with author info.
+    List recent messages in a Discord channel. Returns message IDs, content, authors, and timestamps for each message.
   provider: discord
   endpoint: /channels/{channel_id}/messages
   method: GET
@@ -140,7 +140,7 @@
 - slug: discord_get_message
   name: Get Message
   description: |
-    Get a specific message by ID.
+    Get detailed information about a specific Discord message by its ID. Returns the message content, author, timestamp, and attachments.
   provider: discord
   endpoint: /channels/{channel_id}/messages/{message_id}
   method: GET
@@ -166,7 +166,7 @@
 - slug: discord_post_message
   name: Post Message
   description: |
-    Send a message to a Discord channel.
+    Send a message to a Discord channel with the specified content. Returns the posted message with its unique ID and timestamp.
   provider: discord
   endpoint: /channels/{channel_id}/messages
   method: POST
@@ -193,7 +193,7 @@
 - slug: discord_list_members
   name: List Members
   description: |
-    List members in a guild. Requires permission to view member list.
+    List all members in a Discord guild. Returns member IDs, usernames, nicknames, and roles for each member.
   provider: discord
   endpoint: /guilds/{guild_id}/members
   method: GET
@@ -220,7 +220,7 @@
 - slug: discord_get_member
   name: Get Member
   description: |
-    Get information about a specific guild member.
+    Get detailed information about a specific Discord guild member by their ID. Returns the member username, nickname, roles, and join date.
   provider: discord
   endpoint: /guilds/{guild_id}/members/{user_id}
   method: GET
@@ -247,7 +247,7 @@
 - slug: discord_list_roles
   name: List Roles
   description: |
-    List all roles in a guild. Returns role IDs, names, colors, and permissions.
+    List all roles in a Discord guild. Returns role names, IDs, colors, and permissions for each role.
   provider: discord
   endpoint: /guilds/{guild_id}/roles
   method: GET

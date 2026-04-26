@@ -17,8 +17,7 @@
 - slug: helpscout_list_conversations
   name: List Conversations
   description: |
-    List all conversations with optional filtering.
-    Returns conversation details including subject, status, and assignees.
+    List all Help Scout conversations with optional filtering by status or mailbox. Returns conversation subjects, statuses, assignees, and customer information.
   provider: helpscout
   endpoint: /conversations
   method: GET
@@ -51,8 +50,7 @@
 - slug: helpscout_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a specific conversation.
-    Includes messages, threads, and customer information.
+    Get a specific Help Scout conversation by ID with all messages and customer details. Returns the full conversation thread including message parts and attachments.
   provider: helpscout
   endpoint: /conversations/{conversation_id}
   method: GET
@@ -74,8 +72,7 @@
 - slug: helpscout_create_conversation
   name: Create Conversation
   description: |
-    Create a new conversation with subject, customer, and initial message.
-    Set mailbox, assignee, and status.
+    Create a new conversation in Help Scout with subject, customer, mailbox, and initial message. Returns the created conversation with its assigned ID and thread.
   provider: helpscout
   endpoint: /conversations
   method: POST
@@ -115,8 +112,7 @@
 - slug: helpscout_list_mailboxes
   name: List Mailboxes
   description: |
-    List all mailboxes in your Help Scout account.
-    Returns mailbox details including name, email, and settings.
+    List all Help Scout mailboxes in your account with pagination. Returns mailbox names, email addresses, and configuration settings for each mailbox.
   provider: helpscout
   endpoint: /mailboxes
   method: GET
@@ -143,8 +139,7 @@
 - slug: helpscout_get_mailbox
   name: Get Mailbox
   description: |
-    Get detailed information about a specific mailbox.
-    Includes email address, settings, and custom fields.
+    Get a specific Help Scout mailbox by ID with its settings and custom fields. Returns full mailbox configuration including email, folders, and workflow rules.
   provider: helpscout
   endpoint: /mailboxes/{mailbox_id}
   method: GET
@@ -166,8 +161,7 @@
 - slug: helpscout_list_customers
   name: List Customers
   description: |
-    List all customers in your Help Scout account.
-    Returns customer details including name, email, and company.
+    List all Help Scout customers with pagination. Returns customer names, emails, phone numbers, and company associations for each customer.
   provider: helpscout
   endpoint: /customers
   method: GET
@@ -194,8 +188,7 @@
 - slug: helpscout_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer.
-    Includes contact info, notes, and conversation history.
+    Get a specific Help Scout customer by ID with contact information and history. Returns the full customer profile including notes, tags, and conversation history.
   provider: helpscout
   endpoint: /customers/{customer_id}
   method: GET
@@ -217,8 +210,7 @@
 - slug: helpscout_list_reports
   name: List Reports
   description: |
-    List all available reports in Help Scout.
-    Returns report types including inbox, team, and individual metrics.
+    List all available Help Scout reports with pagination. Returns report types including inbox, team, and individual metrics with summary data.
   provider: helpscout
   endpoint: /reports
   method: GET
@@ -241,8 +233,7 @@
 - slug: helpscout_get_report
   name: Get Report
   description: |
-    Get detailed report data for a specific report type.
-    Includes metrics, charts, and filtering options.
+    Get a specific Help Scout report by type with detailed metrics and filtering options. Returns report data with customizable date ranges and chart configurations.
   provider: helpscout
   endpoint: /reports/{report_type}
   method: GET
@@ -270,8 +261,7 @@
 - slug: helpscout_list_workflows
   name: List Workflows
   description: |
-    List all workflows in your Help Scout account.
-    Returns workflow details including name, status, and rules.
+    List all Help Scout workflows with pagination. Returns workflow names, statuses, and automation rules for each workflow.
   provider: helpscout
   endpoint: /workflows
   method: GET

@@ -17,7 +17,7 @@
 - slug: calendly_list_event_types
   name: List Event Types
   description: |
-    List all event types (appointment types) available for a user or organization.
+    Retrieve all event types available for scheduling appointments. Returns the name, duration, description, and scheduling URL for each appointment type.
   provider: calendly
   endpoint: /event_types
   method: GET
@@ -46,7 +46,7 @@
 - slug: calendly_get_event_type
   name: Get Event Type
   description: |
-    Get detailed information about a specific event type.
+    Retrieve detailed information about a specific event type by its unique ID. Returns the name, duration, description, location, and scheduling URL.
   provider: calendly
   endpoint: /event_types/{event_type_id}
   method: GET
@@ -68,7 +68,7 @@
 - slug: calendly_list_scheduled_events
   name: List Scheduled Events
   description: |
-    List scheduled events (booked appointments). Filter by user, date range, status.
+    Retrieve all booked appointments with optional filtering by user, date range, or status. Returns event details, timing, location, and invitee information.
   provider: calendly
   endpoint: /scheduled_events
   method: GET
@@ -103,7 +103,7 @@
 - slug: calendly_get_scheduled_event
   name: Get Scheduled Event
   description: |
-    Get detailed information about a specific scheduled event.
+    Retrieve detailed information about a specific scheduled event by its unique ID. Returns the timing, location, invitee information, and event status.
   provider: calendly
   endpoint: /scheduled_events/{event_id}
   method: GET
@@ -125,7 +125,7 @@
 - slug: calendly_cancel_scheduled_event
   name: Cancel Scheduled Event
   description: |
-    Cancel a scheduled event and notify invitees.
+    Cancel a scheduled event and optionally notify invitees with a cancellation reason. Returns confirmation of the cancellation.
   provider: calendly
   endpoint: /scheduled_events/{event_id}/cancellation
   method: POST
@@ -150,7 +150,7 @@
 - slug: calendly_list_invitees
   name: List Invitees
   description: |
-    List all invitees for a specific scheduled event.
+    Retrieve all people invited to a specific scheduled event. Returns invitee names, email addresses, and their response status.
   provider: calendly
   endpoint: /scheduled_events/{event_id}/invitees
   method: GET
@@ -177,7 +177,7 @@
 - slug: calendly_get_invitee
   name: Get Invitee
   description: |
-    Get detailed information about a specific invitee.
+    Retrieve detailed information about a specific invitee by their unique ID. Returns the invitee name, email, cancellation status, and response answers.
   provider: calendly
   endpoint: /scheduled_events/{event_id}/invitees/{invitee_id}
   method: GET
@@ -203,7 +203,7 @@
 - slug: calendly_get_current_user
   name: Get Current User
   description: |
-    Get the current authenticated user's profile information.
+    Retrieve the profile information of the authenticated Calendly user. Returns the user name, email, scheduling URL, and organization details.
   provider: calendly
   endpoint: /users/me
   method: GET
@@ -221,7 +221,7 @@
 - slug: calendly_list_organization_event_types
   name: List Organization Event Types
   description: |
-    List all event types for an organization.
+    Retrieve all event types created within an organization, including those created by team members. Returns event type names, durations, and active status.
   provider: calendly
   endpoint: /organizations/{organization_id}/event_types
   method: GET
@@ -252,7 +252,7 @@
 - slug: calendly_get_user_availability
   name: Get User Availability
   description: |
-    Get availability schedule for a user or event type.
+    Retrieve available time slots for a user or event type within a specified date range. Returns the available dates and times for scheduling.
   provider: calendly
   endpoint: /users/{user_id}/availability
   method: GET

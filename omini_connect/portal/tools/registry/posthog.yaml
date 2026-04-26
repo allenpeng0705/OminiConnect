@@ -1,7 +1,8 @@
 - slug: posthog_list_events
   name: List Events
   description: |
-    List events from PostHog with optional filtering and pagination.
+    Retrieve events from PostHog analytics within a specified date range, including event names, properties, timestamps, and distinct IDs.
+    Returns event records for analytics review and user behavior analysis.
   provider: posthog
   endpoint: /api/events
   method: GET
@@ -32,7 +33,8 @@
 - slug: posthog_get_event
   name: Get Event
   description: |
-    Get details for a specific event by its ID.
+    Retrieve detailed information for a specific event by its unique identifier, including the full event record with all properties and metadata.
+    Returns event data for detailed analysis and debugging.
   provider: posthog
   endpoint: /api/events/{event_id}
   method: GET
@@ -58,7 +60,8 @@
 - slug: posthog_track_event
   name: Track Event
   description: |
-    Track a custom event.
+    Record a custom event in PostHog with the specified properties and timestamp for analytics and segmentation purposes.
+    Returns confirmation of the tracked event for verification.
   provider: posthog
   endpoint: /api/track
   method: POST
@@ -86,7 +89,8 @@
 - slug: posthog_list_persons
   name: List Persons
   description: |
-    List all persons in PostHog.
+    Retrieve all persons (users) tracked in PostHog with their identifiers, properties, and last seen timestamps.
+    Returns person listings for user analysis and segmentation.
   provider: posthog
   endpoint: /api/persons
   method: GET
@@ -111,7 +115,8 @@
 - slug: posthog_get_person
   name: Get Person
   description: |
-    Get details for a specific person by their ID.
+    Retrieve detailed information for a specific person including their properties, events, and complete behavioral timeline.
+    Returns person profile data for user behavior analysis and segmentation.
   provider: posthog
   endpoint: /api/persons/{person_id}
   method: GET
@@ -137,7 +142,8 @@
 - slug: posthog_list_trends
   name: List Trends
   description: |
-    List trend calculations.
+    Retrieve trend calculations showing how metrics change over time, including data points with values and timestamps for visualization.
+    Returns trend data for analytics dashboard and reporting.
   provider: posthog
   endpoint: /api/trends
   method: GET
@@ -162,7 +168,8 @@
 - slug: posthog_get_trend
   name: Get Trend
   description: |
-    Get details for a specific trend by its ID.
+    Retrieve detailed information for a specific trend including the metric definition, time range, and complete data series.
+    Returns trend details for in-depth analytics analysis.
   provider: posthog
   endpoint: /api/trends/{trend_id}
   method: GET
@@ -188,7 +195,8 @@
 - slug: posthog_list_funnels
   name: List Funnels
   description: |
-    List funnel analyses.
+    Retrieve all funnel analyses showing conversion paths, including funnel names, steps, and conversion rates.
+    Returns funnel listings for conversion analysis and optimization.
   provider: posthog
   endpoint: /api/funnels
   method: GET
@@ -210,7 +218,8 @@
 - slug: posthog_get_funnel
   name: Get Funnel
   description: |
-    Get details for a specific funnel by its ID.
+    Retrieve detailed information for a specific funnel including all steps, drop-off rates, and conversion percentages.
+    Returns funnel analysis for conversion optimization and user journey analysis.
   provider: posthog
   endpoint: /api/funnels/{funnel_id}
   method: GET
@@ -236,7 +245,8 @@
 - slug: posthog_list_cohorts
   name: List Cohorts
   description: |
-    List all cohorts.
+    Retrieve all cohorts (user groups) defined in PostHog with their names, member counts, and creation dates.
+    Returns cohort listings for user segmentation and targeted analytics.
   provider: posthog
   endpoint: /api/cohorts
   method: GET
@@ -261,7 +271,8 @@
 - slug: posthog_get_cohort
   name: Get Cohort
   description: |
-    Get details for a specific cohort by its ID.
+    Retrieve detailed information for a specific cohort including the definition criteria, member list, and associated properties.
+    Returns cohort data for user analysis and targeted campaign management.
   provider: posthog
   endpoint: /api/cohorts/{cohort_id}
   method: GET

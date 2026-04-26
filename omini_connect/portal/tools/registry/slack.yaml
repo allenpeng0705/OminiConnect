@@ -17,8 +17,7 @@
 - slug: slack_list_channels
   name: List Channels
   description: |
-    List all conversations in the workspace (channels, direct messages, group DMs).
-    Use this to find channels to post to or browse available conversations.
+    List all conversations in the Slack workspace including channels, direct messages, and group DMs. Returns channel names, IDs, topics, and member counts.
   provider: slack
   endpoint: /conversations.list
   method: GET
@@ -70,7 +69,7 @@
 - slug: slack_post_message
   name: Post Message
   description: |
-    Post a message to a Slack channel or DM. Include text content and optionally thread replies.
+    Post a message to a Slack channel or direct message with specified channel and text content. Optionally reply to a thread by specifying the parent message timestamp. Returns the posted message with its timestamp and unique ID.
   provider: slack
   endpoint: /chat.postMessage
   method: POST
@@ -99,7 +98,7 @@
 - slug: slack_list_messages
   name: List Messages
   description: |
-    Get the message history of a conversation (channel or DM). Use this to read past messages.
+    Get the message history of a Slack conversation. Returns messages with content, timestamps, user information, and thread details.
   provider: slack
   endpoint: /conversations.history
   method: GET
@@ -132,7 +131,7 @@
 - slug: slack_get_message
   name: Get Message
   description: |
-    Get a specific message by its timestamp. Useful for reading full message content and metadata.
+    Get a specific message by its timestamp in Slack. Returns the full message content, metadata, and thread information.
   provider: slack
   endpoint: /conversations.history
   method: GET
@@ -158,7 +157,7 @@
 - slug: slack_upload_file
   name: Upload File
   description: |
-    Upload a file to Slack — can share to a channel or as a DM.
+    Upload a file to Slack and share it to specified channels or direct messages. Specify the file content, filename, and title. Returns the uploaded file with its unique ID and download URL.
   provider: slack
   endpoint: /files.upload
   method: POST
@@ -190,7 +189,7 @@
 - slug: slack_list_users
   name: List Users
   description: |
-    List all users in the workspace. Use this to find team members or get user IDs.
+    List all users in the Slack workspace. Returns user names, email addresses, roles, and presence status information.
   provider: slack
   endpoint: /users.list
   method: GET
@@ -215,7 +214,7 @@
 - slug: slack_get_user
   name: Get User
   description: |
-    Get information about a workspace user by their ID.
+    Get detailed information about a Slack user by their ID. Returns profile details, status, timezone, and contact information.
   provider: slack
   endpoint: /users.info
   method: GET
@@ -237,7 +236,7 @@
 - slug: slack_list_files
   name: List Files
   description: |
-    List files in the workspace or a specific channel.
+    List all files in the Slack workspace or filtered by channel. Returns file names, sizes, uploaders, and timestamps.
   provider: slack
   endpoint: /files.list
   method: GET
@@ -268,7 +267,7 @@
 - slug: slack_get_file
   name: Get File
   description: |
-    Get information about a specific file including its metadata, shares, and comments.
+    Get detailed information about a specific Slack file including its metadata, shares, comments, and download URL.
   provider: slack
   endpoint: /files.info
   method: GET

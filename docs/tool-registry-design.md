@@ -255,16 +255,17 @@ function generateToolsFromOpenAPI(
    - Generator used to produce tool definitions for the full provider catalog
    - All providers now have tool definitions loaded at startup
 
-### Phase 3: LLM UX ✅ (Partial)
+### Phase 3: LLM UX ✅ (Done)
 1. ✅ Implemented search endpoint `GET /api/tools/search?q=...` (keyword search across name, description, tags, slug)
 2. ✅ MCP server endpoint at `POST /api/mcp` with JSON-RPC 2.0:
    - `tools/list` - Returns available tools in MCP format
    - `tools/call` - Executes a tool
    - Same auth as other endpoints (Bearer token)
-3. ⏳ **LLM-optimized tool descriptions** — pending
-   - Descriptions are currently minimal (endpoint paths, basic summaries)
-   - Need to enrich descriptions across all 886 provider YAML files
-   - Use LLM to generate clear descriptions that help LLM agents select the right tool
+3. ✅ **LLM-optimized tool descriptions** — complete
+   - All 886 provider YAML files enriched with improved descriptions
+   - Each description: 2-3 sentences, action-verb-first, specific about entity type and data returned/created
+   - No endpoint paths in descriptions
+   - All other fields (slug, name, endpoint, method, scopes, tags, input_schema) preserved exactly
 
 ---
 

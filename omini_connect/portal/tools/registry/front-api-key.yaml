@@ -18,7 +18,9 @@
 - slug: front_list_conversations
   name: List Conversations
   description: |
-    List conversations from Front with optional filters.
+    List conversations from Front with optional filters and pagination.
+    Returns conversation IDs, subjects, and statuses for each conversation.
+    Use this to discover customer messages and manage inbox workflows.
   provider: front-api-key
   endpoint: /conversations
   method: GET
@@ -46,7 +48,9 @@
 - slug: front_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a specific conversation.
+    Get detailed information about a specific conversation including messages and metadata.
+    Returns the complete conversation data with all associated information.
+    This provides full conversation data for customer communication management.
   provider: front-api-key
   endpoint: /conversations/{conversation_id}
   method: GET
@@ -68,7 +72,9 @@
 - slug: front_list_comments
   name: List Comments
   description: |
-    List all comments on a specific conversation.
+    List all comments on a specific conversation with pagination.
+    Returns comment IDs, authors, bodies, and timestamps for each comment.
+    Use this to discover internal discussions and track conversation collaboration.
   provider: front-api-key
   endpoint: /conversations/{conversation_id}/comments
   method: GET
@@ -91,7 +97,9 @@
 - slug: front_list_teammates
   name: List Teammates
   description: |
-    List all team members in Front.
+    List all team members in Front with pagination.
+    Returns teammate names, emails, and availability for each member.
+    Use this to discover team members and manage inbox assignments.
   provider: front-api-key
   endpoint: /team
   method: GET
@@ -108,7 +116,9 @@
 - slug: front_get_teammate
   name: Get Teammate
   description: |
-    Get detailed information about a specific teammate.
+    Get detailed information about a specific teammate including profile and permissions.
+    Returns the complete teammate data with all associated information.
+    This provides full teammate data for team management and performance tracking.
   provider: front-api-key
   endpoint: /team/{teammate_id}
   method: GET
@@ -130,7 +140,9 @@
 - slug: front_list_inboxes
   name: List Inboxes
   description: |
-    List all inboxes in Front.
+    List all inboxes in Front with pagination.
+    Returns inbox names, IDs, and member counts for each inbox.
+    Use this to discover inboxes and manage team communication workflows.
   provider: front-api-key
   endpoint: /inboxes
   method: GET
@@ -147,7 +159,9 @@
 - slug: front_get_inbox
   name: Get Inbox
   description: |
-    Get detailed information about a specific inbox.
+    Get detailed information about a specific inbox including settings and statistics.
+    Returns the complete inbox data with all associated information.
+    This provides full inbox data for workflow management and performance analysis.
   provider: front-api-key
   endpoint: /inboxes/{inbox_id}
   method: GET
@@ -169,7 +183,9 @@
 - slug: front_list_tags
   name: List Tags
   description: |
-    List all tags used in Front.
+    List all tags used in Front with pagination.
+    Returns tag names, IDs, and usage counts for each tag.
+    Use this to discover tag categories and manage conversation organization.
   provider: front-api-key
   endpoint: /tags
   method: GET
@@ -186,7 +202,9 @@
 - slug: front_list_rules
   name: List Rules
   description: |
-    List all automation rules in Front.
+    List all automation rules in Front with pagination.
+    Returns rule names, IDs, and conditions for each rule.
+    Use this to discover automation workflows and manage inbox rules.
   provider: front-api-key
   endpoint: /rules
   method: GET
@@ -204,7 +222,9 @@
 - slug: front_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Front with optional search.
+    List all contacts in Front with optional search and pagination.
+    Returns contact names, emails, and company info for each contact.
+    Use this to discover customer profiles and manage contact relationships.
   provider: front-api-key
   endpoint: /contacts
   method: GET

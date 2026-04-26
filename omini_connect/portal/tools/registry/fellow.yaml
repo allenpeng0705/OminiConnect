@@ -18,7 +18,7 @@
 - slug: fellow_get_user
   name: Get User
   description: |
-    Get current authenticated user profile.
+    Retrieve the authenticated user's Fellow profile including name, email, avatar URL, workspace role, and notification preferences.
   provider: fellow
   endpoint: /v1/me
   method: GET
@@ -36,7 +36,7 @@
 - slug: fellow_list_meetings
   name: List Meetings
   description: |
-    List all meetings in the workspace.
+    List all meetings in the Fellow workspace with titles, dates, times, participant counts, and meeting status for each scheduled meeting.
   provider: fellow
   endpoint: /v1/meetings
   method: GET
@@ -58,7 +58,7 @@
 - slug: fellow_get_meeting
   name: Get Meeting
   description: |
-    Get details of a specific meeting.
+    Retrieve detailed information about a specific Fellow meeting including agenda items, notes, action items, participants, and meeting location.
   provider: fellow
   endpoint: /v1/meetings/{id}
   method: GET
@@ -80,7 +80,7 @@
 - slug: fellow_list_notes
   name: List Notes
   description: |
-    List all notes in the workspace.
+    List all notes in the Fellow workspace with optional filtering by meeting. Returns note titles, content previews, timestamps, and author names.
   provider: fellow
   endpoint: /v1/notes
   method: GET
@@ -101,7 +101,7 @@
 - slug: fellow_get_note
   name: Get Note
   description: |
-    Get details of a specific note.
+    Retrieve detailed information about a specific Fellow note including full content, author, creation timestamp, and associated meeting details.
   provider: fellow
   endpoint: /v1/notes/{id}
   method: GET
@@ -123,7 +123,7 @@
 - slug: fellow_list_agenda_items
   name: List Agenda Items
   description: |
-    List agenda items for a meeting.
+    List all agenda items for a specific Fellow meeting with titles, descriptions, allotted time, speaker assignments, and completion status.
   provider: fellow
   endpoint: /v1/meetings/{meetingId}/agenda_items
   method: GET
@@ -145,7 +145,7 @@
 - slug: fellow_list_actions
   name: List Actions
   description: |
-    List all action items.
+    List all action items in Fellow with optional filtering by meeting. Returns action descriptions, assignee names, due dates, and completion status.
   provider: fellow
   endpoint: /v1/action_items
   method: GET
@@ -166,7 +166,7 @@
 - slug: fellow_get_action
   name: Get Action
   description: |
-    Get details of a specific action item.
+    Retrieve detailed information about a specific Fellow action item including description, assignee, due date, status, and associated meeting.
   provider: fellow
   endpoint: /v1/action_items/{id}
   method: GET
@@ -188,7 +188,7 @@
 - slug: fellow_list_reflections
   name: List Reflections
   description: |
-    List all reflections.
+    List all reflections in the Fellow workspace with content, author names, timestamps, meeting associations, and reflection categories.
   provider: fellow
   endpoint: /v1/reflections
   method: GET
@@ -206,7 +206,7 @@
 - slug: fellow_get_workspace
   name: Get Workspace
   description: |
-    Get workspace information.
+    Retrieve workspace information for Fellow including workspace name, settings, member count, subscription status, and configured integrations.
   provider: fellow
   endpoint: /v1/workspace
   method: GET

@@ -1,7 +1,9 @@
 - slug: tencent_list_cvm_instances
   name: List CVM Instances
   description: |
-    List all Cloud Virtual Machine (CVM) instances in Tencent Cloud.
+    List all Cloud Virtual Machine (CVM) instances in Tencent Cloud with filtering options.
+    Returns instance IDs, names, status, and configuration for each instance.
+    Use this to discover cloud servers and manage compute resources.
   provider: tencent
   endpoint: /cvm/v1/instances
   method: GET
@@ -33,7 +35,9 @@
 - slug: tencent_get_cvm_instance
   name: Get CVM Instance
   description: |
-    Get details of a specific CVM instance by ID.
+    Get details of a specific CVM instance by ID including configuration and network settings.
+    Returns the complete instance data with IP addresses and resource details.
+    This provides full instance data for cloud server management.
   provider: tencent
   endpoint: /cvm/v1/instances/{instance_id}
   method: GET
@@ -60,7 +64,9 @@
 - slug: tencent_list_cos_buckets
   name: List COS Buckets
   description: |
-    List all Cloud Object Storage (COS) buckets in Tencent Cloud.
+    List all Cloud Object Storage (COS) buckets in Tencent Cloud for data management.
+    Returns bucket names, regions, and creation dates for each bucket.
+    Use this to discover storage containers and manage cloud data.
   provider: tencent
   endpoint: /cos/v1/buckets
   method: GET
@@ -83,7 +89,9 @@
 - slug: tencent_list_cos_objects
   name: List COS Objects
   description: |
-    List objects in a COS bucket.
+    List objects in a COS bucket with prefix filtering and pagination.
+    Returns object keys, sizes, and last modified dates for each object.
+    Use this to browse bucket contents and discover stored files.
   provider: tencent
   endpoint: /cos/v1/buckets/{bucket}/objects
   method: GET
@@ -119,7 +127,9 @@
 - slug: tencent_upload_cos_object
   name: Upload COS Object
   description: |
-    Upload a file to COS bucket in Tencent Cloud.
+    Upload a file to COS bucket in Tencent Cloud with specified content and key.
+    Returns the uploaded object confirmation with metadata.
+    This adds new files to your cloud object storage.
   provider: tencent
   endpoint: /cos/v1/buckets/{bucket}/objects
   method: POST
@@ -157,7 +167,9 @@
 - slug: tencent_list_cbs_volumes
   name: List CBS Volumes
   description: |
-    List all Cloud Block Storage (CBS) volumes in Tencent Cloud.
+    List all Cloud Block Storage (CBS) volumes in Tencent Cloud with filtering options.
+    Returns volume IDs, sizes, status, and attached instances for each volume.
+    Use this to discover storage volumes and manage disk resources.
   provider: tencent
   endpoint: /cbs/v1/volumes
   method: GET
@@ -189,7 +201,9 @@
 - slug: tencent_get_cbs_volume
   name: Get CBS Volume
   description: |
-    Get details of a specific CBS volume by ID.
+    Get details of a specific CBS volume by ID including capacity and attachment status.
+    Returns the complete volume data with configuration and billing information.
+    This provides full volume data for storage management.
   provider: tencent
   endpoint: /cbs/v1/volumes/{volume_id}
   method: GET
@@ -216,7 +230,9 @@
 - slug: tencent_list_vpcs
   name: List VPCs
   description: |
-    List all Virtual Private Cloud (VPC) networks in Tencent Cloud.
+    List all Virtual Private Cloud (VPC) networks in Tencent Cloud for network isolation.
+    Returns VPC IDs, CIDR blocks, and status for each network.
+    Use this to discover virtual networks and manage cloud infrastructure.
   provider: tencent
   endpoint: /vpc/v1/vpcs
   method: GET
@@ -245,7 +261,9 @@
 - slug: tencent_get_vpc
   name: Get VPC
   description: |
-    Get details of a specific VPC by ID.
+    Get details of a specific VPC by ID including subnets and routing configuration.
+    Returns the complete VPC data with network topology.
+    This provides full VPC data for network planning and security.
   provider: tencent
   endpoint: /vpc/v1/vpcs/{vpc_id}
   method: GET
@@ -272,7 +290,9 @@
 - slug: tencent_list_load_balancers
   name: List Load Balancers
   description: |
-    List all CLB (Cloud Load Balancer) instances in Tencent Cloud.
+    List all CLB (Cloud Load Balancer) instances in Tencent Cloud for traffic distribution.
+    Returns load balancer IDs, types, and status for each instance.
+    Use this to discover load balancers and manage application traffic.
   provider: tencent
   endpoint: /clb/v1/loadbalancers
   method: GET

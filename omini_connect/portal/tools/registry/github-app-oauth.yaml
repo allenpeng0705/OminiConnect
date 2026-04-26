@@ -18,7 +18,7 @@
 - slug: github_app_oauth_list_repos
   name: List Repositories
   description: |
-    List repositories the authenticated user has access to.
+    List repositories that the authenticated user has access to through the GitHub App installation. Returns repository names, IDs, visibility levels, and languages for each repository.
   provider: github-app-oauth
   endpoint: /installation/repositories
   method: GET
@@ -44,7 +44,7 @@
 - slug: github_app_oauth_get_repo
   name: Get Repository
   description: |
-    Get detailed information about a repository.
+    Get detailed information about a specific repository including its name, description, visibility, default branch, and CI/CD configuration status.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}
   method: GET
@@ -70,7 +70,7 @@
 - slug: github_app_oauth_list_issues
   name: List Issues
   description: |
-    List issues in repositories the user has access to.
+    List issues in repositories that the user has access to with optional state and repository filtering. Returns issue numbers, titles, states, and labels.
   provider: github-app-oauth
   endpoint: /issues
   method: GET
@@ -95,7 +95,7 @@
 - slug: github_app_oauth_get_issue
   name: Get Issue
   description: |
-    Get detailed information about a specific issue.
+    Get detailed information about a specific issue including its title, body, state, labels, assignees, and comment count.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/issues/{issue_number}
   method: GET
@@ -125,7 +125,7 @@
 - slug: github_app_oauth_list_pulls
   name: List Pull Requests
   description: |
-    List pull requests in a repository.
+    List pull requests in a repository with optional state filtering. Returns PR numbers, titles, states, source/target branches, and author information.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/pulls
   method: GET
@@ -155,7 +155,7 @@
 - slug: github_app_oauth_get_pull
   name: Get Pull Request
   description: |
-    Get detailed information about a pull request.
+    Get detailed information about a specific pull request including its title, description, state, reviewers, changed files count, and merge readiness.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/pulls/{pull_number}
   method: GET
@@ -185,7 +185,7 @@
 - slug: github_app_oauth_list_comments
   name: List Issue Comments
   description: |
-    List comments on an issue or pull request.
+    List all comments on a specific issue or pull request. Returns comment IDs, authors, timestamps, and comment text for each comment.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/issues/{issue_number}/comments
   method: GET
@@ -215,7 +215,7 @@
 - slug: github_app_oauth_create_comment
   name: Create Issue Comment
   description: |
-    Create a comment on an issue or pull request.
+    Create a comment on an issue or pull request with the specified body text. Returns the created comment with its ID and timestamp.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/issues/{issue_number}/comments
   method: POST
@@ -249,7 +249,7 @@
 - slug: github_app_oauth_list_labels
   name: List Labels
   description: |
-    List labels in a repository.
+    List all labels in a repository. Returns label names, colors, descriptions, and issue/PR counts for each label.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/labels
   method: GET
@@ -275,7 +275,7 @@
 - slug: github_app_oauth_list_milestones
   name: List Milestones
   description: |
-    List milestones in a repository.
+    List all milestones in a repository with optional state filtering. Returns milestone numbers, titles, descriptions, due dates, and progress statistics.
   provider: github-app-oauth
   endpoint: /repos/{owner}/{repo}/milestones
   method: GET

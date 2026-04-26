@@ -19,7 +19,8 @@
 - slug: brex_staging_get_account_info
   name: Get Account Info
   description: |
-    Get Brex staging account information.
+    Get Brex staging account information including company name, region, and test configuration.
+    Returns the complete account setup for testing financial workflows in staging environment.
   provider: brex-staging
   endpoint: /v1/account_info
   method: GET
@@ -36,7 +37,8 @@
 - slug: brex_staging_list_transactions
   name: List Transactions
   description: |
-    List all transactions in Brex staging.
+    List all transactions in Brex staging and return transaction IDs, amounts, dates, and status.
+    Use this to test transaction filtering and reconciliation workflows in staging.
   provider: brex-staging
   endpoint: /v1/transactions
   method: GET
@@ -63,7 +65,8 @@
 - slug: brex_staging_get_transaction
   name: Get Transaction
   description: |
-    Get details for a specific transaction.
+    Get details for a specific transaction including amount, date, merchant, and category.
+    Returns the complete transaction data for testing expense tracking scenarios.
   provider: brex-staging
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -84,7 +87,8 @@
 - slug: brex_staging_list_cards
   name: List Cards
   description: |
-    List all Brex cards in staging.
+    List all Brex cards in staging and return card IDs, statuses, and holder information.
+    Use this to test card filtering and management workflows in the staging environment.
   provider: brex-staging
   endpoint: /v1/cards
   method: GET
@@ -111,7 +115,8 @@
 - slug: brex_staging_get_card
   name: Get Card
   description: |
-    Get details for a specific card.
+    Get details for a specific card including status, type, spending limits, and holder info.
+    Returns the complete card data for testing expense management features in staging.
   provider: brex-staging
   endpoint: /v1/cards/{cardId}
   method: GET
@@ -132,7 +137,8 @@
 - slug: brex_staging_list_users
   name: List Users
   description: |
-    List all team members in Brex staging.
+    List all team members in Brex staging and return user names, emails, and roles.
+    Use this to discover test team members for card assignment testing.
   provider: brex-staging
   endpoint: /v1/users
   method: GET
@@ -153,7 +159,8 @@
 - slug: brex_staging_get_user
   name: Get User
   description: |
-    Get details for a specific user.
+    Get details for a specific user including name, email, role, and spending permissions.
+    Returns the complete user profile for testing access management in staging.
   provider: brex-staging
   endpoint: /v1/users/{userId}
   method: GET
@@ -174,7 +181,8 @@
 - slug: brex_staging_list_accounts
   name: List Accounts
   description: |
-    List all Brex accounts in staging.
+    List all Brex accounts in staging and return account IDs, types, and currency information.
+    Use this to discover available accounts for transaction routing testing.
   provider: brex-staging
   endpoint: /v1/accounts
   method: GET
@@ -195,7 +203,8 @@
 - slug: brex_staging_get_balance
   name: Get Balance
   description: |
-    Get balance for a specific account.
+    Get balance for a specific account including available balance and currency type.
+    Returns the current account balance for testing cash flow management in staging.
   provider: brex-staging
   endpoint: /v1/accounts/{accountId}/balance
   method: GET
@@ -216,7 +225,8 @@
 - slug: brex_staging_get_limits
   name: Get Limits
   description: |
-    Get spending limits for a card.
+    Get spending limits for a card including daily limit, monthly limit, and category restrictions.
+    Returns the complete limit configuration for testing policy enforcement in staging.
   provider: brex-staging
   endpoint: /v1/cards/{cardId}/limits
   method: GET

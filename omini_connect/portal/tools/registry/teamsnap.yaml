@@ -17,8 +17,7 @@
 - slug: teamsnap_list_teams
   name: List Teams
   description: |
-    List all teams for the authenticated user.
-    Filter by sport, name, or member status.
+    List all teams associated with the authenticated user with optional filtering by sport, name, or membership status. Returns team IDs, names, sports, and member counts for each team.
   provider: teamsnap
   endpoint: /teams
   method: GET
@@ -54,8 +53,7 @@
 - slug: teamsnap_get_team
   name: Get Team
   description: |
-    Get detailed information about a specific team including
-    members, events, and team settings.
+    Get details for a specific team by its unique ID. Returns the team name, sport type, location, member roster, upcoming events, and all team settings.
   provider: teamsnap
   endpoint: /teams/{teamId}
   method: GET
@@ -77,8 +75,7 @@
 - slug: teamsnap_create_team
   name: Create Team
   description: |
-    Create a new team with name, sport type, and settings.
-    Can optionally invite members during creation.
+    Create a new team with the specified name, sport type, location, and settings. Optionally invite initial members during team creation. Returns the created team with its unique ID.
   provider: teamsnap
   endpoint: /teams
   method: POST
@@ -117,8 +114,7 @@
 - slug: teamsnap_list_events
   name: List Events
   description: |
-    List all events for a team including games, practices,
-    and other team activities.
+    List all events for a team including games, practices, and other team activities with date range filtering. Returns event IDs, titles, types, dates, locations, and RSVP counts.
   provider: teamsnap
   endpoint: /teams/{teamId}/events
   method: GET
@@ -158,8 +154,7 @@
 - slug: teamsnap_get_event
   name: Get Event
   description: |
-    Get detailed information about a specific event including
-    location, time, and participant RSVPs.
+    Get details for a specific event by its unique ID. Returns the event title, type, date, time, location, opponent, notes, and participant RSVP status.
   provider: teamsnap
   endpoint: /events/{eventId}
   method: GET
@@ -181,8 +176,7 @@
 - slug: teamsnap_create_event
   name: Create Event
   description: |
-    Create a new event for a team such as a game, practice,
-    or team meeting.
+    Create a new event for a team such as a game, practice, or team meeting with the specified title, type, date, and location. Returns the created event with its unique ID.
   provider: teamsnap
   endpoint: /teams/{teamId}/events
   method: POST
@@ -227,8 +221,7 @@
 - slug: teamsnap_list_members
   name: List Members
   description: |
-    List all members of a team including players, coaches,
-    and staff with their roles and contact info.
+    List all members of a team including players, coaches, and staff with optional role and status filtering. Returns member IDs, names, roles, contact information, and availability status.
   provider: teamsnap
   endpoint: /teams/{teamId}/members
   method: GET
@@ -265,8 +258,7 @@
 - slug: teamsnap_get_member
   name: Get Member
   description: |
-    Get detailed information about a specific team member
-    including contact info, role, and availability.
+    Get details for a specific team member by their unique ID. Returns the member's name, email, phone, role, position, and availability information.
   provider: teamsnap
   endpoint: /members/{memberId}
   method: GET
@@ -288,8 +280,7 @@
 - slug: teamsnap_list_schedules
   name: List Schedules
   description: |
-    List all schedules for a team including game schedules,
-    practice schedules, and event calendars.
+    List all schedules for a team including game schedules, practice schedules, and event calendars with date range and type filtering. Returns schedule IDs, types, and associated event counts.
   provider: teamsnap
   endpoint: /teams/{teamId}/schedules
   method: GET
@@ -321,8 +312,7 @@
 - slug: teamsnap_get_schedule
   name: Get Schedule
   description: |
-    Get detailed information about a specific schedule
-    including all events and recurring schedule rules.
+    Get details for a specific schedule by its unique ID. Returns the schedule name, type, all associated events, recurring schedule rules, and time slots.
   provider: teamsnap
   endpoint: /schedules/{scheduleId}
   method: GET

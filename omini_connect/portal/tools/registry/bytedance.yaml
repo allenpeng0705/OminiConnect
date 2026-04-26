@@ -17,8 +17,8 @@
 - slug: bytedance_list_ad_campaigns
   name: List Ad Campaigns
   description: |
-    List all advertising campaigns in the user's TikTok Ads account.
-    Returns campaign details including status, budget, and performance metrics.
+    List all advertising campaigns in TikTok Ads and return campaign IDs, names, status, and budget.
+    Filter by campaign status to find active or paused campaigns for management.
   provider: bytedance
   endpoint: /campaign/list
   method: GET
@@ -53,8 +53,8 @@
 - slug: bytedance_get_ad_campaign
   name: Get Ad Campaign
   description: |
-    Get detailed information about a specific advertising campaign.
-    Includes budget, schedule, targeting, and current status.
+    Get detailed information about a specific advertising campaign including budget, schedule, and targeting.
+    Returns the complete campaign configuration for performance analysis and optimization.
   provider: bytedance
   endpoint: /campaign/get
   method: GET
@@ -81,8 +81,8 @@
 - slug: bytedance_create_ad_campaign
   name: Create Ad Campaign
   description: |
-    Create a new advertising campaign in TikTok Ads.
-    Set budget, scheduling, and campaign objectives.
+    Create a new advertising campaign in TikTok Ads with specified name, objective, and budget.
+    Returns the created campaign ID for ad group and ad creation.
   provider: bytedance
   endpoint: /campaign/create
   method: POST
@@ -127,8 +127,8 @@
 - slug: bytedance_list_ad_groups
   name: List Ad Groups
   description: |
-    List all ad groups within a specific campaign.
-    Ad groups contain ads and define targeting, placement, and scheduling.
+    List all ad groups within a specific campaign and return ad group IDs, names, and targeting settings.
+    Ad groups define targeting, placement, and scheduling for contained ads.
   provider: bytedance
   endpoint: /adgroup/list
   method: GET
@@ -165,8 +165,8 @@
 - slug: bytedance_get_ad_group
   name: Get Ad Group
   description: |
-    Get detailed information about a specific ad group.
-    Includes targeting, bidding, placement, and performance data.
+    Get detailed information about a specific ad group including targeting, bidding, and placement.
+    Returns the complete ad group configuration for campaign optimization.
   provider: bytedance
   endpoint: /adgroup/get
   method: GET
@@ -193,8 +193,8 @@
 - slug: bytedance_create_ad
   name: Create Ad
   description: |
-    Create a new ad within an ad group.
-    Define creative assets, ad copy, and targeting for the specific ad.
+    Create a new ad within an ad group with specified creative assets, ad copy, and call to action.
+    Returns the created ad ID for creative management and performance tracking.
   provider: bytedance
   endpoint: /ad/create
   method: POST
@@ -245,8 +245,8 @@
 - slug: bytedance_list_ads
   name: List Ads
   description: |
-    List all ads within a specific ad group.
-    Use this to view ad performance and status within a campaign structure.
+    List all ads within a specific ad group and return ad IDs, names, status, and performance metrics.
+    Use this to monitor ad performance and manage creative optimization.
   provider: bytedance
   endpoint: /ad/list
   method: GET
@@ -283,8 +283,8 @@
 - slug: bytedance_get_ad
   name: Get Ad
   description: |
-    Get detailed information about a specific ad.
-    Includes creative assets, targeting, and real-time performance metrics.
+    Get detailed information about a specific ad including creative assets, targeting, and metrics.
+    Returns the complete ad data for performance analysis and creative testing.
   provider: bytedance
   endpoint: /ad/get
   method: GET
@@ -312,7 +312,7 @@
   name: Get Campaign Report
   description: |
     Get performance report for a specific campaign including impressions, clicks, spend, and conversions.
-    Use this to analyze campaign effectiveness and ROI.
+    Returns aggregated metrics for campaign effectiveness analysis and ROI calculation.
   provider: bytedance
   endpoint: /reports/get
   method: GET
@@ -360,8 +360,8 @@
 - slug: bytedance_list_audiences
   name: List Audiences
   description: |
-    List custom audiences created for targeted advertising.
-    Audiences can be based on user interactions, customer lists, or lookalike profiles.
+    List custom audiences in TikTok Ads and return audience IDs, names, types, and sizes.
+    Audiences can be based on user interactions, customer lists, or lookalike profiles for targeting.
   provider: bytedance
   endpoint: /audience/list
   method: GET

@@ -17,8 +17,7 @@
 - slug: datocms_list_sites
   name: List Sites
   description: |
-    List all DatoCMS sites (accounts) the authenticated user has access to.
-    Returns site names, subdomains, and plan information.
+    List all DatoCMS sites the authenticated user has access to, returning site IDs, names, subdomains, and plan information.
   provider: datocms
   endpoint: /sites
   method: GET
@@ -66,8 +65,7 @@
 - slug: datocms_list_items
   name: List Items
   description: |
-    List all content items in a DatoCMS site. Filter by model type, tags, or search query.
-    Returns items with all field values and metadata.
+    List all content items in a DatoCMS site, returning item IDs, types, and field values with optional filtering by model, tags, or search query.
   provider: datocms
   endpoint: /items
   method: GET
@@ -141,7 +139,7 @@
 - slug: datocms_create_item
   name: Create Item
   description: |
-    Create a new content item in DatoCMS. Specify the model type and field values.
+    Create a new content item in DatoCMS with a specified model type and field values, returning the created item ID.
   provider: datocms
   endpoint: /items
   method: POST
@@ -264,7 +262,7 @@
 - slug: datocms_list_assets
   name: List Assets
   description: |
-    List all media assets in a DatoCMS site. Filter by type (image, file, video) or folder.
+    List all media assets in a DatoCMS site, returning asset IDs, names, types, and URLs with optional filtering by type or folder.
   provider: datocms
   endpoint: /assets
   method: GET
@@ -301,7 +299,7 @@
 - slug: datocms_get_asset
   name: Get Asset
   description: |
-    Get detailed information about a media asset including dimensions, file size, and URLs.
+    Get detailed information for a specific DatoCMS media asset including its dimensions, file size, format, and URLs.
   provider: datocms
   endpoint: /assets/{asset_id}
   method: GET

@@ -18,7 +18,7 @@
 - slug: checkhq_list_accounts
   name: List Accounts
   description: |
-    List all accounts in the organization.
+    Retrieve all financial accounts in the CheckHQ organization with pagination support. Returns account names, types, and current balances.
   provider: checkhq
   endpoint: /api/v1/accounts
   method: GET
@@ -39,7 +39,7 @@
 - slug: checkhq_get_account
   name: Get Account
   description: |
-    Get details of a specific account.
+    Retrieve detailed information about a specific account by its unique ID. Returns the account balance, type, and recent transaction history.
   provider: checkhq
   endpoint: /api/v1/accounts/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: checkhq_list_transactions
   name: List Transactions
   description: |
-    List all transactions.
+    Retrieve all financial transactions with optional filtering by account. Returns transaction amounts, dates, categories, and statuses.
   provider: checkhq
   endpoint: /api/v1/transactions
   method: GET
@@ -84,7 +84,7 @@
 - slug: checkhq_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction.
+    Retrieve detailed information about a specific transaction by its unique ID. Returns the amount, date, category, and description.
   provider: checkhq
   endpoint: /api/v1/transactions/{id}
   method: GET
@@ -105,7 +105,7 @@
 - slug: checkhq_list_invoices
   name: List Invoices
   description: |
-    List all invoices.
+    Retrieve all invoices with optional filtering by status. Returns invoice IDs, amounts, due dates, and payment status.
   provider: checkhq
   endpoint: /api/v1/invoices
   method: GET
@@ -129,7 +129,7 @@
 - slug: checkhq_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice.
+    Retrieve detailed information about a specific invoice by its unique ID. Returns line items, total amount, due date, and payment status.
   provider: checkhq
   endpoint: /api/v1/invoices/{id}
   method: GET
@@ -150,7 +150,7 @@
 - slug: checkhq_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice.
+    Create a new invoice with line items for a specific contact and due date. Returns the created invoice with its unique ID.
   provider: checkhq
   endpoint: /api/v1/invoices
   method: POST
@@ -180,7 +180,7 @@
 - slug: checkhq_list_payments
   name: List Payments
   description: |
-    List all payments.
+    Retrieve all payments received with pagination support. Returns payment IDs, methods, amounts, and dates.
   provider: checkhq
   endpoint: /api/v1/payments
   method: GET
@@ -201,7 +201,7 @@
 - slug: checkhq_get_payment
   name: Get Payment
   description: |
-    Get details of a specific payment.
+    Retrieve detailed information about a specific payment by its unique ID. Returns the payment method, amount, date, and associated invoice.
   provider: checkhq
   endpoint: /api/v1/payments/{id}
   method: GET
@@ -222,7 +222,7 @@
 - slug: checkhq_list_contacts
   name: List Contacts
   description: |
-    List all contacts.
+    Retrieve all contacts with pagination support. Returns contact names, email addresses, and company associations.
   provider: checkhq
   endpoint: /api/v1/contacts
   method: GET

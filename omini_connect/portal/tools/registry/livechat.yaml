@@ -17,8 +17,7 @@
 - slug: livechat_list_conversations
   name: List Conversations
   description: |
-    List all conversations in Livechat.
-    Filter by status, agent, or date range.
+    List all conversations in your Livechat account with optional filtering by status, agent, or date range. Returns conversation IDs, subjects, assignees, and status for each conversation.
   provider: livechat
   endpoint: /conversations
   method: GET
@@ -57,7 +56,7 @@
 - slug: livechat_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a specific Livechat conversation.
+    Get detailed information about a specific Livechat conversation by its ID. Returns the messages, participants, and metadata for the conversation.
   provider: livechat
   endpoint: /conversations/{id}
   method: GET
@@ -79,8 +78,7 @@
 - slug: livechat_send_message
   name: Send Message
   description: |
-    Send a message in a Livechat conversation.
-    Use to reply to visitors.
+    Send a message in a Livechat conversation to reply to visitors. Specify the conversation ID and message body content. Sends the message and returns it with its ID and timestamp.
   provider: livechat
   endpoint: /conversations/{id}/messages
   method: POST
@@ -109,8 +107,7 @@
 - slug: livechat_list_visitors
   name: List Visitors
   description: |
-    List all visitors in Livechat.
-    Filter by name, email, or country.
+    List all visitors in your Livechat account with optional filtering by name, email, or country. Returns visitor names, emails, locations, and current page for each visitor.
   provider: livechat
   endpoint: /visitors
   method: GET
@@ -146,7 +143,7 @@
 - slug: livechat_get_visitor
   name: Get Visitor
   description: |
-    Get detailed information about a specific Livechat visitor.
+    Get detailed information about a specific Livechat visitor by their ID. Returns the visitor's chat history and engagement data.
   provider: livechat
   endpoint: /visitors/{id}
   method: GET
@@ -168,8 +165,7 @@
 - slug: livechat_list_agents
   name: List Agents
   description: |
-    List all agents in Livechat.
-    Agents handle incoming conversations.
+    List all agents in your Livechat account. Agents handle incoming conversations. Returns agent names, emails, status, and permission levels for each agent.
   provider: livechat
   endpoint: /agents
   method: GET
@@ -199,7 +195,7 @@
 - slug: livechat_get_agent
   name: Get Agent
   description: |
-    Get detailed information about a specific Livechat agent.
+    Get detailed information about a specific Livechat agent by their ID. Returns the agent's role, permissions, and availability status.
   provider: livechat
   endpoint: /agents/{id}
   method: GET
@@ -221,8 +217,7 @@
 - slug: livechat_list_canned_responses
   name: List Canned Responses
   description: |
-    List all canned responses in Livechat.
-    Pre-written responses for common questions.
+    List all canned responses in your Livechat account. Canned responses are pre-written replies for common questions. Returns response tags, messages, and shortcuts for each response.
   provider: livechat
   endpoint: /canned_responses
   method: GET
@@ -249,7 +244,7 @@
 - slug: livechat_get_canned_response
   name: Get Canned Response
   description: |
-    Get detailed information about a specific canned response.
+    Get detailed information about a specific canned response by its ID. Returns the message content, tags, and usage shortcuts.
   provider: livechat
   endpoint: /canned_responses/{id}
   method: GET
@@ -271,8 +266,7 @@
 - slug: livechat_get_report
   name: Get Report
   description: |
-    Get reporting data from Livechat.
-    Includes chat metrics and agent performance.
+    Get reporting data from Livechat for chat metrics, agent performance, and customer satisfaction scores. Specify the report type and date range.
   provider: livechat
   endpoint: /reports/{type}
   method: GET

@@ -18,7 +18,8 @@
 - slug: builder_io_private_list_pages
   name: List Pages
   description: |
-    List all pages in Builder.io.
+    List all pages in Builder.io and return page IDs, names, slugs, and metadata.
+    Use this to discover available pages for content management and updates.
   provider: builder-io-private
   endpoint: /api/v1/pages
   method: GET
@@ -43,7 +44,8 @@
 - slug: builder_io_private_get_page
   name: Get Page
   description: |
-    Get content for a specific page.
+    Get content for a specific page including name, slug, and structured content data.
+    Returns the complete page content for editing and customization.
   provider: builder-io-private
   endpoint: /api/v1/pages/{pageId}
   method: GET
@@ -64,7 +66,8 @@
 - slug: builder_io_private_create_page
   name: Create Page
   description: |
-    Create a new page in Builder.io.
+    Create a new page in Builder.io with name, URL slug, and JSON content structure.
+    Returns the created page ID for further content management.
   provider: builder-io-private
   endpoint: /api/v1/pages
   method: POST
@@ -92,7 +95,8 @@
 - slug: builder_io_private_update_page
   name: Update Page
   description: |
-    Update an existing page.
+    Update an existing page with new name, slug, or content data.
+    Returns confirmation of the update for content management workflows.
   provider: builder-io-private
   endpoint: /api/v1/pages/{pageId}
   method: PUT
@@ -119,7 +123,8 @@
 - slug: builder_io_private_delete_page
   name: Delete Page
   description: |
-    Delete a page from Builder.io.
+    Delete a page from Builder.io to remove it from your website.
+    Returns confirmation of deletion for content management and site maintenance.
   provider: builder-io-private
   endpoint: /api/v1/pages/{pageId}
   method: DELETE
@@ -140,7 +145,8 @@
 - slug: builder_io_private_list_models
   name: List Models
   description: |
-    List all content models in Builder.io.
+    List all content models in Builder.io and return model names, IDs, and field schemas.
+    Use this to discover available models for content entry management.
   provider: builder-io-private
   endpoint: /api/v1/models
   method: GET
@@ -157,7 +163,8 @@
 - slug: builder_io_private_get_model
   name: Get Model
   description: |
-    Get details for a specific content model.
+    Get details for a specific content model including field definitions and schema.
+    Returns the complete model configuration for content structure design.
   provider: builder-io-private
   endpoint: /api/v1/models/{modelId}
   method: GET
@@ -178,7 +185,8 @@
 - slug: builder_io_private_list_entries
   name: List Entries
   description: |
-    List content entries for a model.
+    List content entries for a model and return entry IDs, data, and timestamps.
+    Filter by model to discover content for specific content types.
   provider: builder-io-private
   endpoint: /api/v1/entries/{modelId}
   method: GET
@@ -207,7 +215,8 @@
 - slug: builder_io_private_get_entry
   name: Get Entry
   description: |
-    Get details for a specific content entry.
+    Get details for a specific content entry including all fields and metadata.
+    Returns the complete entry data for content review and editing.
   provider: builder-io-private
   endpoint: /api/v1/entries/{modelId}/{entryId}
   method: GET
@@ -232,7 +241,8 @@
 - slug: builder_io_private_create_entry
   name: Create Entry
   description: |
-    Create a new content entry.
+    Create a new content entry for a specified model with JSON data payload.
+    Returns the created entry ID for content management and publishing.
   provider: builder-io-private
   endpoint: /api/v1/entries/{modelId}
   method: POST

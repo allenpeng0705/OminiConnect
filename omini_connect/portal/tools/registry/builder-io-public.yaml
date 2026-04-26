@@ -18,7 +18,8 @@
 - slug: builder_io_public_list_pages
   name: List Pages
   description: |
-    List all pages in Builder.io (public).
+    List all pages in Builder.io and return page IDs, names, slugs, and metadata.
+    Use this to discover publicly accessible pages for content reading.
   provider: builder-io-public
   endpoint: /api/v1/pages
   method: GET
@@ -43,7 +44,8 @@
 - slug: builder_io_public_get_page
   name: Get Page
   description: |
-    Get content for a specific page.
+    Get content for a specific page by ID or URL path including name, slug, and content data.
+    Returns the complete page content for reading and analysis.
   provider: builder-io-public
   endpoint: /api/v1/pages/{pageIdOrPath}
   method: GET
@@ -64,7 +66,8 @@
 - slug: builder_io_public_list_models
   name: List Models
   description: |
-    List all content models in Builder.io.
+    List all content models in Builder.io and return model names, IDs, and field schemas.
+    Use this to discover available content structures for data organization.
   provider: builder-io-public
   endpoint: /api/v1/models
   method: GET
@@ -81,7 +84,8 @@
 - slug: builder_io_public_get_model
   name: Get Model
   description: |
-    Get details for a specific content model.
+    Get details for a specific content model including field definitions and schema structure.
+    Returns the complete model configuration for understanding content data formats.
   provider: builder-io-public
   endpoint: /api/v1/models/{modelId}
   method: GET
@@ -102,7 +106,8 @@
 - slug: builder_io_public_list_entries
   name: List Entries
   description: |
-    List content entries for a model.
+    List content entries for a model and return entry IDs, data, and timestamps.
+    Filter by model to discover content for specific content types.
   provider: builder-io-public
   endpoint: /api/v1/entries/{modelId}
   method: GET
@@ -131,7 +136,8 @@
 - slug: builder_io_public_get_entry
   name: Get Entry
   description: |
-    Get details for a specific content entry.
+    Get details for a specific content entry including all fields and metadata.
+    Returns the complete entry data for content analysis and review.
   provider: builder-io-public
   endpoint: /api/v1/entries/{modelId}/{entryId}
   method: GET
@@ -156,7 +162,8 @@
 - slug: builder_io_public_get_site_info
   name: Get Site Info
   description: |
-    Get site information and configuration.
+    Get site information and configuration including site name, domain, and settings.
+    Returns the complete site configuration for Builder.io integration.
   provider: builder-builder-io-public
   endpoint: /api/v1/site-info
   method: GET
@@ -173,7 +180,8 @@
 - slug: builder_io_public_search_content
   name: Search Content
   description: |
-    Search across Builder.io content.
+    Search across Builder.io content with query string and optional model filter.
+    Returns matching entries with content snippets for discovery.
   provider: builder-io-public
   endpoint: /api/v1/search
   method: GET
@@ -201,7 +209,8 @@
 - slug: builder_io_public_get_model_json
   name: Get Model JSON
   description: |
-    Get the JSON schema for a content model.
+    Get the JSON schema for a content model including field types and validation rules.
+    Returns the complete schema definition for programmatic content handling.
   provider: builder-io-public
   endpoint: /api/v1/models/{modelId}/json
   method: GET
@@ -222,7 +231,8 @@
 - slug: builder_io_public_list_namespaces
   name: List Namespaces
   description: |
-    List content namespaces in Builder.io.
+    List content namespaces in Builder.io and return namespace IDs and names.
+    Use this to organize content across different spaces or applications.
   provider: builder-io-public
   endpoint: /api/v1/namespaces
   method: GET

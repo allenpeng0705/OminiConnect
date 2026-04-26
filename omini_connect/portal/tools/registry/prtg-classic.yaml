@@ -18,7 +18,8 @@
 - slug: prtg_list_sensors
   name: List Sensors
   description: |
-    List all sensors in the monitoring system.
+    List all monitoring sensors in PRTG including their current status, type, and last check times.
+    Returns sensor records for infrastructure monitoring and alerting configuration.
   provider: prtg-classic
   endpoint: /api/table.json
   method: GET
@@ -44,7 +45,8 @@
 - slug: prtg_get_sensor
   name: Get Sensor
   description: |
-    Get detailed information about a specific sensor.
+    Retrieve detailed information about a specific sensor including its current readings, uptime status, and alert thresholds.
+    Returns sensor data for troubleshooting and performance analysis.
   provider: prtg-classic
   endpoint: /api/sensors/{sensorId}
   method: GET
@@ -66,7 +68,8 @@
 - slug: prtg_list_devices
   name: List Devices
   description: |
-    List all devices in the monitoring system.
+    List all devices in the PRTG monitoring system including their hostnames, IP addresses, and group associations.
+    Returns device records for network inventory and monitoring management.
   provider: prtg-classic
   endpoint: /api/table.json
   method: GET
@@ -92,7 +95,8 @@
 - slug: prtg_get_device
   name: Get Device
   description: |
-    Get detailed information about a specific device.
+    Retrieve detailed information about a specific device including its sensors, status, and configuration details.
+    Returns device data for infrastructure management and troubleshooting.
   provider: prtg-classic
   endpoint: /api/devices/{deviceId}
   method: GET
@@ -114,7 +118,8 @@
 - slug: prtg_list_groups
   name: List Groups
   description: |
-    List all groups in the monitoring system.
+    List all device groups in PRTG including their names, parent groups, and device counts.
+    Returns group hierarchies for organizing monitoring targets and access control.
   provider: prtg-classic
   endpoint: /api/table.json
   method: GET
@@ -140,7 +145,8 @@
 - slug: prtg_get_group
   name: Get Group
   description: |
-    Get detailed information about a specific group.
+    Retrieve detailed information about a specific group including its devices, subgroups, and monitoring configuration.
+    Returns group data for organizational management and access planning.
   provider: prtg-classic
   endpoint: /api/groups/{groupId}
   method: GET
@@ -162,7 +168,8 @@
 - slug: prtg_list_alerts
   name: List Alerts
   description: |
-    List all active alerts.
+    List all active alerts in PRTG including their severity levels, affected sensors, and trigger times.
+    Returns alert records for incident response and monitoring oversight.
   provider: prtg-classic
   endpoint: /api/alarms.json
   method: GET
@@ -184,7 +191,8 @@
 - slug: prtg_get_ticket
   name: Get Ticket
   description: |
-    Get detailed information about a specific ticket.
+    Retrieve detailed information about a specific support ticket including its status, assignee, and resolution history.
+    Returns ticket data for customer support management and escalation tracking.
   provider: prtg-classic
   endpoint: /api/tickets/{ticketId}
   method: GET
@@ -206,7 +214,8 @@
 - slug: prtg_list_channels
   name: List Channels
   description: |
-    List all channels for a sensor.
+    List all measurement channels for a specific sensor including temperature, bandwidth, latency, and custom metrics.
+    Returns channel data for trend analysis and performance reporting.
   provider: prtg-classic
   endpoint: /api/channels/{sensorId}
   method: GET
@@ -228,7 +237,8 @@
 - slug: prtg_get_system_status
   name: Get System Status
   description: |
-    Get PRTG system status.
+    Retrieve the current PRTG system status including server health, database connectivity, and overall monitoring coverage.
+    Returns system-wide health data for infrastructure monitoring and capacity planning.
   provider: prtg-classic
   endpoint: /api/status.json
   method: GET

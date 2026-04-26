@@ -17,7 +17,8 @@
 - slug: qualtrics_list_surveys
   name: List Surveys
   description: |
-    List all surveys in the Qualtrics account.
+    List all surveys in the Qualtrics account including their names, statuses, creation dates, and response counts.
+    Returns survey listings for research management and participation tracking.
   provider: qualtrics
   endpoint: /surveys
   method: GET
@@ -44,7 +45,8 @@
 - slug: qualtrics_get_survey
   name: Get Survey
   description: |
-    Get detailed information about a specific survey including questions.
+    Retrieve detailed information about a specific survey including its questions, response options, and settings.
+    Returns survey structure for questionnaire design and analysis preparation.
   provider: qualtrics
   endpoint: /surveys/{survey_id}
   method: GET
@@ -66,7 +68,8 @@
 - slug: qualtrics_list_responses
   name: List Responses
   description: |
-    List all responses for a specific survey.
+    List all responses for a specific survey including respondent data, completion status, and submission timestamps.
+    Returns response data for statistical analysis and trend identification.
   provider: qualtrics
   endpoint: /surveys/{survey_id}/responses
   method: GET
@@ -99,7 +102,8 @@
 - slug: qualtrics_get_response
   name: Get Response
   description: |
-    Get detailed information about a specific survey response.
+    Retrieve detailed information about a specific survey response including all answers and metadata.
+    Returns individual response data for detailed analysis and follow-up actions.
   provider: qualtrics
   endpoint: /surveys/{survey_id}/responses/{response_id}
   method: GET
@@ -125,7 +129,8 @@
 - slug: qualtrics_distribute_survey
   name: Distribute Survey
   description: |
-    Distribute a survey via email, link, or social media.
+    Distribute a survey via email, link, or social media to specified recipients with custom messaging.
+    Returns distribution confirmation with send status and tracking information.
   provider: qualtrics
   endpoint: /surveys/{survey_id}/distributions
   method: POST
@@ -161,7 +166,8 @@
 - slug: qualtrics_get_distribution
   name: Get Distribution
   description: |
-    Get details about a specific survey distribution.
+    Retrieve detailed information about a specific survey distribution including recipient status and completion rates.
+    Returns distribution data for tracking participation and send campaign analysis.
   provider: qualtrics
   endpoint: /distributions/{distribution_id}
   method: GET
@@ -183,7 +189,8 @@
 - slug: qualtrics_list_users
   name: List Users
   description: |
-    List all users in the Qualtrics account.
+    List all users in the Qualtrics account including names, email addresses, and role assignments.
+    Returns user listings for account management and permission configuration.
   provider: qualtrics
   endpoint: /users
   method: GET
@@ -209,7 +216,8 @@
 - slug: qualtrics_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Retrieve detailed information about a specific user including their profile, permissions, and team memberships.
+    Returns user data for access management and collaboration setup.
   provider: qualtrics
   endpoint: /users/{user_id}
   method: GET
@@ -231,7 +239,8 @@
 - slug: qualtrics_get_report
   name: Get Report
   description: |
-    Get survey report with response statistics and analytics.
+    Retrieve survey report with response statistics including completion rates, average scores, and demographic breakdowns.
+    Returns analytics data for insight generation and decision making.
   provider: qualtrics
   endpoint: /surveys/{survey_id}/reports
   method: GET
@@ -258,7 +267,8 @@
 - slug: qualtrics_list_exports
   name: List Exports
   description: |
-    List all data exports for a survey.
+    List all data exports for a survey including export formats, creation dates, and download statuses.
+    Returns export listings for data warehouse integration and backup management.
   provider: qualtrics
   endpoint: /surveys/{survey_id}/exports
   method: GET

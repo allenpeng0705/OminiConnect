@@ -17,8 +17,7 @@
 - slug: metabase_list_databases
   name: List Databases
   description: |
-    List all databases connected to Metabase. Returns database names, descriptions, and connection status.
-    Use this to discover available data sources for querying.
+    List all databases connected to your Metabase instance. Returns database names, descriptions, and connection status for discovering available data sources.
   provider: metabase
   endpoint: /api/database
   method: GET
@@ -40,7 +39,7 @@
 - slug: metabase_get_database
   name: Get Database
   description: |
-    Get detailed information about a specific database including tables, features, and connection details.
+    Retrieve detailed information about a specific Metabase database by its ID. Returns the database name, tables, features, and connection configuration.
   provider: metabase
   endpoint: /api/database/{database_id}
   method: GET
@@ -62,8 +61,7 @@
 - slug: metabase_list_tables
   name: List Tables
   description: |
-    List all tables across databases in Metabase. Returns table names, schemas, and database associations.
-    Use this to discover available tables for querying.
+    List all tables across all databases in your Metabase instance. Returns table names, schemas, database associations, and visibility status for discovering available data structures.
   provider: metabase
   endpoint: /api/table
   method: GET
@@ -85,7 +83,7 @@
 - slug: metabase_get_table
   name: Get Table
   description: |
-    Get detailed information about a specific table including column definitions, types, and visibility.
+    Retrieve detailed information about a specific Metabase table by its ID. Returns the table name, column definitions, data types, and visibility settings.
   provider: metabase
   endpoint: /api/table/{table_id}
   method: GET
@@ -107,8 +105,7 @@
 - slug: metabase_list_questions
   name: List Questions
   description: |
-    List all saved questions (cards) in Metabase. Returns question names, collections, and query types.
-    Use this to discover existing analyses.
+    List all saved questions (cards) in your Metabase instance with optional pagination. Returns question names, collections, query types, and creation dates for discovering existing analyses.
   provider: metabase
   endpoint: /api/card
   method: GET
@@ -134,7 +131,7 @@
 - slug: metabase_get_question
   name: Get Question
   description: |
-    Get detailed information about a specific question including the query definition and results metadata.
+    Retrieve detailed information about a specific Metabase question by its ID. Returns the question name, query definition, visualization type, and results metadata.
   provider: metabase
   endpoint: /api/card/{card_id}
   method: GET
@@ -156,7 +153,7 @@
 - slug: metabase_create_question
   name: Create Question
   description: |
-    Create a new saved question in Metabase. Specify the query, display type, and optional collection.
+    Create a new saved question in Metabase with the specified query definition and visualization type. Returns the created question with its unique ID and URL.
   provider: metabase
   endpoint: /api/card
   method: POST
@@ -189,8 +186,7 @@
 - slug: metabase_list_dashboards
   name: List Dashboards
   description: |
-    List all dashboards in Metabase. Returns dashboard names, descriptions, and owner information.
-    Use this to discover available dashboards.
+    List all dashboards in your Metabase instance. Returns dashboard names, descriptions, owner information, and card counts for discovering available dashboards.
   provider: metabase
   endpoint: /api/dashboard
   method: GET
@@ -212,7 +208,7 @@
 - slug: metabase_get_dashboard
   name: Get Dashboard
   description: |
-    Get detailed information about a specific dashboard including cards, tabs, and parameters.
+    Retrieve detailed information about a specific Metabase dashboard by its ID. Returns the dashboard name, description, cards, tabs, and parameter configurations.
   provider: metabase
   endpoint: /api/dashboard/{dashboard_id}
   method: GET
@@ -234,7 +230,7 @@
 - slug: metabase_get_pulse
   name: Get Pulse
   description: |
-    Get detailed information about a pulse (scheduled report/subscription) including schedule and recipients.
+    Retrieve detailed information about a specific Metabase pulse (scheduled report or subscription) by its ID. Returns the pulse name, schedule configuration, recipients, and delivery status.
   provider: metabase
   endpoint: /api/pulse/{pulse_id}
   method: GET

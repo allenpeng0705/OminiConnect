@@ -18,8 +18,7 @@
 - slug: itglue_list_organizations
   name: List Organizations
   description: |
-    List all organizations in IT Glue.
-    Returns organization details including name and domain.
+    List all organizations in IT Glue. Returns organization names, domains, and contact information.
   provider: itglue
   endpoint: /organizations
   method: GET
@@ -41,8 +40,7 @@
 - slug: itglue_get_organization
   name: Get Organization
   description: |
-    Get detailed information about a specific organization.
-    Includes organization details and configurations.
+    Retrieve detailed information about a specific organization by its ID. Includes organization details, configurations, and associated assets.
   provider: itglue
   endpoint: /organizations/{id}
   method: GET
@@ -64,8 +62,7 @@
 - slug: itglue_list_configs
   name: List Configurations
   description: |
-    List all configurations in IT Glue.
-    Returns configuration details including type and status.
+    List all configurations (assets and items) in IT Glue. Filter by organization and return configuration types and status.
   provider: itglue
   endpoint: /configurations
   method: GET
@@ -90,8 +87,7 @@
 - slug: itglue_get_config
   name: Get Configuration
   description: |
-    Get detailed information about a specific configuration.
-    Includes configuration details and passwords.
+    Retrieve detailed information about a specific configuration. Includes configuration details, associated passwords, and related assets.
   provider: itglue
   endpoint: /configurations/{id}
   method: GET
@@ -113,8 +109,7 @@
 - slug: itglue_list_passwords
   name: List Passwords
   description: |
-    List all passwords in IT Glue.
-    Returns password details including name and username.
+    List all passwords stored in IT Glue. Filter by organization and return password names, usernames, and associated assets.
   provider: itglue
   endpoint: /passwords
   method: GET
@@ -135,8 +130,7 @@
 - slug: itglue_get_password
   name: Get Password
   description: |
-    Get detailed information about a specific password.
-    Includes password details and related configurations.
+    Retrieve detailed information about a specific password. Includes the actual password value, username, and associated configurations.
   provider: itglue
   endpoint: /passwords/{id}
   method: GET
@@ -158,8 +152,7 @@
 - slug: itglue_list_exports
   name: List Exports
   description: |
-    List all exports in IT Glue.
-    Returns export details including format and status.
+    List all exports generated in IT Glue. Returns export format, creation date, and current status.
   provider: itglue
   endpoint: /exports
   method: GET
@@ -177,8 +170,7 @@
 - slug: itglue_get_export
   name: Get Export
   description: |
-    Get detailed information about a specific export.
-    Includes export details and download URL.
+    Retrieve detailed information about a specific export. Includes export details and the download URL for the exported file.
   provider: itglue
   endpoint: /exports/{id}
   method: GET
@@ -200,8 +192,7 @@
 - slug: itglue_list_flexible_assets
   name: List Flexible Assets
   description: |
-    List all flexible assets in IT Glue.
-    Returns flexible asset details including type and name.
+    List all flexible assets in IT Glue. Flexible assets are custom asset types. Returns asset names, types, and associated data.
   provider: itglue
   endpoint: /flexible_assets
   method: GET
@@ -226,8 +217,7 @@
 - slug: itglue_list_users
   name: List Users
   description: |
-    List all users in IT Glue.
-    Returns user details including name and email.
+    List all users in IT Glue. Returns user names, email addresses, and permission levels.
   provider: itglue
   endpoint: /users
   method: GET

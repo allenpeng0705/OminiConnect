@@ -17,7 +17,9 @@
 - slug: whitesource_list_projects
   name: List Projects
   description: |
-    Retrieve all projects in the WhiteSource organization.
+    Retrieve all projects in the WhiteSource organization for security tracking.
+    Returns project names, IDs, languages, and vulnerability counts for each project.
+    Use this to discover monitored projects and track security posture.
   provider: whitesource
   endpoint: /api/v1/projects
   method: GET
@@ -48,7 +50,9 @@
 - slug: whitesource_get_project
   name: Get Project
   description: |
-    Retrieve detailed information about a specific WhiteSource project.
+    Retrieve detailed information about a specific WhiteSource project including libraries and vulnerabilities.
+    Returns the complete project data with dependency analysis and security findings.
+    This provides project details for security review and remediation planning.
   provider: whitesource
   endpoint: /api/v1/projects/{projectToken}
   method: GET
@@ -74,6 +78,8 @@
   name: List Licenses
   description: |
     Retrieve all licenses identified across projects in the organization.
+    Returns license types, names, and usage counts for compliance tracking.
+    Use this to discover open source licenses and ensure compliance.
   provider: whitesource
   endpoint: /api/v1/licenses
   method: GET
@@ -99,7 +105,9 @@
 - slug: whitesource_get_license
   name: Get License
   description: |
-    Retrieve detailed information about a specific license.
+    Retrieve detailed information about a specific license including usage and obligations.
+    Returns the complete license data with policy compliance information.
+    This provides license details for legal review and compliance verification.
   provider: whitesource
   endpoint: /api/v1/licenses/{licenseId}
   method: GET
@@ -124,7 +132,9 @@
 - slug: whitesource_list_vulnerabilities
   name: List Vulnerabilities
   description: |
-    Retrieve all vulnerabilities detected across projects.
+    Retrieve all vulnerabilities detected across projects in the organization.
+    Returns vulnerability IDs, severity levels, and affected libraries for each finding.
+    Use this to discover security issues and prioritize remediation efforts.
   provider: whitesource
   endpoint: /api/v1/vulnerabilities
   method: GET
@@ -151,7 +161,9 @@
 - slug: whitesource_get_vulnerability
   name: Get Vulnerability
   description: |
-    Retrieve detailed information about a specific vulnerability.
+    Retrieve detailed information about a specific vulnerability including CVSS score and remediation.
+    Returns the complete vulnerability data with description and fix recommendations.
+    This provides vulnerability details for risk assessment and security planning.
   provider: whitesource
   endpoint: /api/v1/vulnerabilities/{vulnerabilityId}
   method: GET
@@ -176,7 +188,9 @@
 - slug: whitesource_get_license_report
   name: Get License Report
   description: |
-    Generate and retrieve a license compliance report.
+    Generate and retrieve a license compliance report for the organization.
+    Returns detailed license usage, violations, and policy compliance status.
+    Use this to audit open source usage and ensure license compliance.
   provider: whitesource
   endpoint: /api/v1/reports/licenses
   method: GET
@@ -206,6 +220,8 @@
   name: Get Vulnerability Report
   description: |
     Generate and retrieve a vulnerability report for the organization.
+    Returns comprehensive security findings with severity breakdown and trends.
+    Use this to track security posture and demonstrate compliance efforts.
   provider: whitesource
   endpoint: /api/v1/reports/vulnerabilities
   method: GET
@@ -234,7 +250,9 @@
 - slug: whitesource_list_alerts
   name: List Alerts
   description: |
-    Retrieve all active alerts for the organization.
+    Retrieve all active alerts for the organization including security and license issues.
+    Returns alert types, severities, and affected projects for each alert.
+    Use this to discover urgent issues requiring immediate attention.
   provider: whitesource
   endpoint: /api/v1/alerts
   method: GET
@@ -261,7 +279,9 @@
 - slug: whitesource_get_alert
   name: Get Alert
   description: |
-    Retrieve detailed information about a specific alert.
+    Retrieve detailed information about a specific alert including resolution steps.
+    Returns the complete alert data with affected components and remediation guidance.
+    This provides alert details for incident response and issue resolution.
   provider: whitesource
   endpoint: /api/v1/alerts/{alertId}
   method: GET

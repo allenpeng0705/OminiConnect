@@ -17,8 +17,7 @@
 - slug: nextiva_list_users
   name: List Users
   description: |
-    List all users in Nextiva.
-    Returns user details including name, email, and department.
+    List all users in the Nextiva communication platform. Returns user names, email addresses, departments, and presence status for each user.
   provider: nextiva
   endpoint: /users
   method: GET
@@ -45,8 +44,7 @@
 - slug: nextiva_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
-    Includes extension, role, and presence status.
+    Retrieve detailed information for a specific user including their extension number, role, and current presence status.
   provider: nextiva
   endpoint: /users/{user_id}
   method: GET
@@ -68,8 +66,7 @@
 - slug: nextiva_list_call_logs
   name: List Call Logs
   description: |
-    List all call logs in Nextiva.
-    Returns call details including duration, direction, and participants.
+    List all call logs from the Nextiva platform within a date range. Returns call duration, direction, participants, and disposition for each record.
   provider: nextiva
   endpoint: /call_logs
   method: GET
@@ -102,8 +99,7 @@
 - slug: nextiva_get_call_log
   name: Get Call Log
   description: |
-    Get detailed information about a specific call log.
-    Includes recording, duration, and call disposition.
+    Retrieve detailed information for a specific call log including any recording URL, duration, and complete call disposition details.
   provider: nextiva
   endpoint: /call_logs/{call_log_id}
   method: GET
@@ -125,8 +121,7 @@
 - slug: nextiva_list_voicemails
   name: List Voicemails
   description: |
-    List all voicemails in Nextiva.
-    Returns voicemail details including caller and duration.
+    List all voicemails with optional filtering by read status. Returns caller information, duration, timestamp, and read status for each voicemail.
   provider: nextiva
   endpoint: /voicemails
   method: GET
@@ -156,8 +151,7 @@
 - slug: nextiva_get_voicemail
   name: Get Voicemail
   description: |
-    Get detailed information about a specific voicemail.
-    Includes audio recording URL and transcription.
+    Retrieve detailed information for a specific voicemail including the audio recording URL and any transcription if available.
   provider: nextiva
   endpoint: /voicemails/{voicemail_id}
   method: GET
@@ -179,8 +173,7 @@
 - slug: nextiva_list_extensions
   name: List Extensions
   description: |
-    List all extensions in Nextiva.
-    Returns extension details including user and department.
+    List all extensions in the Nextiva system. Returns extension numbers, associated users, and department assignments.
   provider: nextiva
   endpoint: /extensions
   method: GET
@@ -207,8 +200,7 @@
 - slug: nextiva_get_extension
   name: Get Extension
   description: |
-    Get detailed information about a specific extension.
-    Includes user assignment and features.
+    Retrieve detailed information for a specific extension including user assignment, enabled features, and configuration settings.
   provider: nextiva
   endpoint: /extensions/{extension_id}
   method: GET
@@ -230,8 +222,7 @@
 - slug: nextiva_create_call
   name: Create Call
   description: |
-    Initiate a new outbound call.
-    Connect an extension to a phone number.
+    Initiate a new outbound call from a specified extension to a phone number. Establishes a voice connection through the Nextiva platform.
   provider: nextiva
   endpoint: /calls
   method: POST
@@ -257,7 +248,7 @@
 - slug: nextiva_send_sms
   name: Send SMS
   description: |
-    Send an SMS message from a Nextiva extension.
+    Send an SMS message from a Nextiva extension to a destination phone number. Delivers the specified message text to the recipient.
   provider: nextiva
   endpoint: /sms
   method: POST

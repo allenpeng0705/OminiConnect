@@ -1,7 +1,8 @@
 - slug: printify_list_products
   name: List Products
   description: |
-    Retrieve a list of all products in your Printify catalog with variant details.
+    Retrieve all products in your Printify catalog with their variants, blueprints, and pricing information.
+    Returns product listings for print-on-demand inventory management.
   provider: printify
   endpoint: /v1/catalog/products
   method: GET
@@ -27,7 +28,8 @@
 - slug: printify_get_product
   name: Get Product
   description: |
-    Retrieve detailed information about a specific product including variants and blueprints.
+    Retrieve detailed information for a specific product including its variants, blueprints, and pricing.
+    Returns product details for inventory and design management.
   provider: printify
   endpoint: /v1/catalog/products/{id}
   method: GET
@@ -48,7 +50,8 @@
 - slug: printify_list_orders
   name: List Orders
   description: |
-    Retrieve a list of orders with filtering options for status and date range.
+    Retrieve all orders in Printify with their status, line items, shipping details, and date ranges.
+    Returns order listings for fulfillment tracking and management.
   provider: printify
   endpoint: /v1/orders
   method: GET
@@ -80,7 +83,8 @@
 - slug: printify_get_order
   name: Get Order
   description: |
-    Retrieve detailed information about a specific order including line items and shipping.
+    Retrieve detailed information for a specific order including its line items, shipping address, and fulfillment status.
+    Returns order details for tracking and customer service.
   provider: printify
   endpoint: /v1/orders/{id}
   method: GET
@@ -101,7 +105,8 @@
 - slug: printify_create_order
   name: Create Order
   description: |
-    Create a new order by specifying items, shipping address, and print provider.
+    Create a new order in Printify with specified line items, shipping address, and print provider.
+    Returns the created order with its ID for fulfillment tracking.
   provider: printify
   endpoint: /v1/orders
   method: POST
@@ -132,7 +137,8 @@
 - slug: printify_list_shipments
   name: List Shipments
   description: |
-    Retrieve a list of shipments with tracking information for shipped orders.
+    Retrieve all shipments in Printify with tracking information, carrier details, and delivery status.
+    Returns shipment listings for order fulfillment tracking.
   provider: printify
   endpoint: /v1/shipments
   method: GET
@@ -155,7 +161,8 @@
 - slug: printify_get_shipment
   name: Get Shipment
   description: |
-    Retrieve detailed tracking information for a specific shipment.
+    Retrieve detailed tracking information for a specific shipment including carrier, tracking number, and delivery status.
+    Returns shipment details for customer notification and support.
   provider: printify
   endpoint: /v1/shipments/{id}
   method: GET
@@ -176,7 +183,8 @@
 - slug: printify_list_returns
   name: List Returns
   description: |
-    Retrieve a list of return requests with their status and details.
+    Retrieve all return requests in Printify with their statuses, reasons, and associated order information.
+    Returns return listings for customer service and inventory management.
   provider: printify
   endpoint: /v1/returns
   method: GET
@@ -202,7 +210,8 @@
 - slug: printify_get_return
   name: Get Return
   description: |
-    Retrieve detailed information about a specific return request.
+    Retrieve detailed information for a specific return request including its status, reason, and resolution.
+    Returns return details for customer service and inventory reconciliation.
   provider: printify
   endpoint: /v1/returns/{id}
   method: GET
@@ -223,7 +232,8 @@
 - slug: printify_get_product_catalog
   name: Get Product Catalog
   description: |
-    Browse the full Printify product catalog with blueprints and available providers.
+    Browse the full Printify product catalog with available blueprints, product types, and print providers.
+    Returns catalog information for product sourcing and design planning.
   provider: printify
   endpoint: /v1/catalog
   method: GET

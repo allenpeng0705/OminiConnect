@@ -1,7 +1,7 @@
 - slug: medium_list_posts
   name: List Posts
   description: |
-    Retrieve a list of posts for the authenticated user.
+    Retrieve all posts written by a specific Medium user with optional pagination. Returns post titles, publication dates, URLs, and reading times for each post.
   provider: medium
   endpoint: /users/{user_id}/posts
   method: GET
@@ -28,7 +28,7 @@
 - slug: medium_get_post
   name: Get Post
   description: |
-    Get details about a specific post by its ID.
+    Retrieve detailed information about a specific Medium post by its ID. Returns the post title, content, author, publication date, and associated tags.
   provider: medium
   endpoint: /posts/{post_id}
   method: GET
@@ -49,7 +49,7 @@
 - slug: medium_create_post
   name: Create Post
   description: |
-    Create a new post on Medium.
+    Create and publish a new post on Medium with the specified title, content, and optional tags. Returns the created post with its unique ID and URL.
   provider: medium
   endpoint: /users/{user_id}/posts
   method: POST
@@ -91,7 +91,7 @@
 - slug: medium_update_post
   name: Update Post
   description: |
-    Update an existing post on Medium.
+    Update an existing Medium post with new title, content, tags, or publication status. Returns the updated post confirming the changes.
   provider: medium
   endpoint: /posts/{post_id}
   method: PUT
@@ -131,7 +131,7 @@
 - slug: medium_delete_post
   name: Delete Post
   description: |
-    Delete a post from Medium.
+    Permanently delete a specific Medium post by its ID. Returns confirmation of successful deletion.
   provider: medium
   endpoint: /posts/{post_id}
   method: DELETE
@@ -152,7 +152,7 @@
 - slug: medium_list_publication_posts
   name: List Publication Posts
   description: |
-    Retrieve posts from a specific publication.
+    Retrieve all posts from a specific Medium publication with optional pagination. Returns post titles, publication dates, URLs, and author information for each post.
   provider: medium
   endpoint: /publications/{publication_id}/posts
   method: GET
@@ -179,7 +179,7 @@
 - slug: medium_get_user_info
   name: Get User Info
   description: |
-    Get profile information for the authenticated user.
+    Retrieve profile information for a specific Medium user including their name, bio, profile image, and follower statistics.
   provider: medium
   endpoint: /users/{user_id}
   method: GET
@@ -200,7 +200,7 @@
 - slug: medium_list_followers
   name: List Followers
   description: |
-    Retrieve the list of followers for a user.
+    Retrieve all followers of a specific Medium user with optional pagination. Returns follower names, usernames, and profile image URLs.
   provider: medium
   endpoint: /users/{user_id}/followers
   method: GET
@@ -227,7 +227,7 @@
 - slug: medium_get_follower
   name: Get Follower
   description: |
-    Get details about a specific follower.
+    Retrieve detailed information about a specific Medium follower by their user ID. Returns the follower's name, username, bio, and follower count.
   provider: medium
   endpoint: /users/{user_id}/followers/{follower_id}
   method: GET
@@ -252,7 +252,7 @@
 - slug: medium_search_posts
   name: Search Posts
   description: |
-    Search for posts matching a query.
+    Search for Medium posts matching a specified query string with optional pagination. Returns post titles, URLs, publication dates, and relevance scores.
   provider: medium
   endpoint: /search/posts
   method: GET

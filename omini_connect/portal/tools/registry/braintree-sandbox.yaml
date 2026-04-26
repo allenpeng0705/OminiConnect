@@ -19,7 +19,8 @@
 - slug: braintree_sandbox_list_transactions
   name: List Transactions
   description: |
-    List all transactions in sandbox.
+    List all transactions in sandbox and return transaction IDs, amounts, statuses, and customer references.
+    Filter by merchant account or status to find specific payment records for testing.
   provider: braintree-sandbox
   endpoint: /v1/transactions
   method: GET
@@ -46,7 +47,8 @@
 - slug: braintree_sandbox_get_transaction
   name: Get Transaction
   description: |
-    Get details for a specific transaction.
+    Get details for a specific transaction including amount, status, payment method, and gateway response.
+    Returns the complete transaction data for payment verification in sandbox testing.
   provider: braintree-sandbox
   endpoint: /v1/transactions/{transactionId}
   method: GET
@@ -67,7 +69,8 @@
 - slug: braintree_sandbox_create_transaction
   name: Create Transaction
   description: |
-    Create a new transaction (sale or authorization).
+    Create a new transaction (sale or authorization) with amount and payment method nonce from client SDK.
+    Returns the created transaction ID and status for sandbox payment testing.
   provider: braintree-sandbox
   endpoint: /v1/transactions"
   method: POST
@@ -98,7 +101,8 @@
 - slug: braintree_sandbox_void_transaction
   name: Void Transaction
   description: |
-    Void an existing transaction.
+    Void an existing transaction to cancel payment before settlement occurs.
+    Returns confirmation of the void operation for testing transaction cancellation flows.
   provider: braintree-sandbox
   endpoint: /v1/transactions/{transactionId}/void"
   method: PUT
@@ -119,7 +123,8 @@
 - slug: braintree_sandbox_refund_transaction
   name: Refund Transaction
   description: |
-    Refund a transaction.
+    Refund a transaction fully or partially with optional specific amount.
+    Returns confirmation of the refund for testing payment reversal scenarios.
   provider: braintree-sandbox
   endpoint: /v1/transactions/{transactionId}/refund"
   method: PUT
@@ -143,7 +148,8 @@
 - slug: braintree_sandbox_list_customers
   name: List Customers
   description: |
-    List all customers in sandbox.
+    List all customers in sandbox and return customer names, emails, and IDs.
+    Use this to discover test customer data for sandbox payment testing scenarios.
   provider: braintree-sandbox
   endpoint: /v1/customers"
   method: GET
@@ -164,7 +170,8 @@
 - slug: braintree_sandbox_get_customer
   name: Get Customer
   description: |
-    Get details for a specific customer.
+    Get details for a specific customer including name, email, phone, and payment methods.
+    Returns the complete customer profile for testing customer-related payment flows.
   provider: braintree-sandbox
   endpoint: /v1/customers/{customerId}"
   method: GET
@@ -185,7 +192,8 @@
 - slug: braintree_sandbox_create_customer
   name: Create Customer
   description: |
-    Create a new customer.
+    Create a new customer with first name, last name, email, and phone number for testing.
+    Returns the created customer ID for sandbox customer management testing.
   provider: braintree-sandbox
   endpoint: /v1/customers"
   method: POST
@@ -214,7 +222,8 @@
 - slug: braintree_sandbox_list_subscriptions
   name: List Subscriptions
   description: |
-    List all subscriptions in sandbox.
+    List all subscriptions in sandbox and return subscription IDs, status, and billing information.
+    Filter by status to find active, past due, or canceled subscriptions for testing.
   provider: braintree-sandbox
   endpoint: /v1/subscriptions"
   method: GET
@@ -238,7 +247,8 @@
 - slug: braintree_sandbox_get_subscription
   name: Get Subscription
   description: |
-    Get details for a specific subscription.
+    Get details for a specific subscription including billing cycle, amount, and status.
+    Returns the complete subscription data for testing recurring billing scenarios.
   provider: braintree-sandbox
   endpoint: /v1/subscriptions/{subscriptionId}"
   method: GET

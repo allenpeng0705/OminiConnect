@@ -17,7 +17,7 @@
 - slug: invision_list_prototypes
   name: List Prototypes
   description: |
-    List all InVision prototypes the user has access to.
+    List all InVision prototypes accessible to the authenticated user. Returns prototype names, thumbnails, and creation dates.
   provider: invision
   endpoint: /api/v1/prototypes
   method: GET
@@ -43,7 +43,7 @@
 - slug: invision_get_prototype
   name: Get Prototype
   description: |
-    Get details about a specific InVision prototype.
+    Retrieve details about a specific InVision prototype by its ID. Includes the prototype name, description, and owner information.
   provider: invision
   endpoint: /api/v1/prototypes/{prototype_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: invision_list_screens
   name: List Screens
   description: |
-    List all screens in an InVision prototype.
+    List all screens within a specific InVision prototype. Returns screen names, thumbnails, and order information.
   provider: invision
   endpoint: /api/v1/prototypes/{prototype_id}/screens
   method: GET
@@ -96,7 +96,7 @@
 - slug: invision_get_screen
   name: Get Screen
   description: |
-    Get details about a specific screen in a prototype.
+    Retrieve details about a specific screen within an InVision prototype. Includes screen name, dimensions, and metadata.
   provider: invision
   endpoint: /api/v1/screens/{screen_id}
   method: GET
@@ -118,7 +118,7 @@
 - slug: invision_list_comments
   name: List Comments
   description: |
-    List all comments on an InVision screen or prototype.
+    List all comments on a specific InVision screen. Returns comment text, author information, and timestamp.
   provider: invision
   endpoint: /api/v1/screens/{screen_id}/comments
   method: GET
@@ -146,7 +146,7 @@
 - slug: invision_get_comment
   name: Get Comment
   description: |
-    Get details about a specific comment on a screen.
+    Retrieve details about a specific comment by its ID. Includes comment text, author details, and creation timestamp.
   provider: invision
   endpoint: /api/v1/comments/{comment_id}
   method: GET
@@ -168,7 +168,7 @@
 - slug: invision_list_users
   name: List Users
   description: |
-    List all users in the InVision workspace.
+    List all users in the InVision workspace or team. Returns user names, email addresses, and avatar URLs.
   provider: invision
   endpoint: /api/v1/users
   method: GET
@@ -194,7 +194,7 @@
 - slug: invision_get_user
   name: Get User
   description: |
-    Get details about a specific InVision user.
+    Retrieve details about a specific InVision user by their ID. Includes name, email, avatar, and role information.
   provider: invision
   endpoint: /api/v1/users/{user_id}
   method: GET
@@ -216,7 +216,7 @@
 - slug: invision_list_teams
   name: List Teams
   description: |
-    List all teams in the InVision workspace.
+    List all teams in the InVision workspace. Returns team names, member counts, and creation dates.
   provider: invision
   endpoint: /api/v1/teams
   method: GET
@@ -239,7 +239,7 @@
 - slug: invision_get_team
   name: Get Team
   description: |
-    Get details about a specific InVision team.
+    Retrieve details about a specific InVision team by its ID. Includes team name, description, and member list.
   provider: invision
   endpoint: /api/v1/teams/{team_id}
   method: GET

@@ -17,8 +17,8 @@
 - slug: ringcentral_list_messages
   name: List Messages
   description: |
-    List messages (SMS, MMS, voicemail) for the authenticated user or a specific extension.
-    Returns message details including sender, recipient, timestamp, and read status.
+    List messages (SMS, MMS, voicemail) for the authenticated user or a specific extension, including sender, recipient, timestamp, and read status.
+    Returns message records for communication history and notification management.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/message-store
   method: GET
@@ -66,8 +66,8 @@
 - slug: ringcentral_get_message
   name: Get Message
   description: |
-    Get details of a specific message including content, attachments, and delivery status.
-    Use this to read full message content or check attachment availability.
+    Get details of a specific message including content, attachments, and delivery status for review and follow-up.
+    Returns message data for communication tracking and content retrieval.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/message-store/{messageId}
   method: GET
@@ -93,8 +93,8 @@
 - slug: ringcentral_send_sms
   name: Send SMS
   description: |
-    Send an SMS message to a phone number. Include text content and optional attachments.
-    Use this to send notifications, alerts, or two-factor authentication codes.
+    Send an SMS message to a phone number with text content and optional attachments for notifications and alerts.
+    Returns send confirmation with message ID for delivery tracking.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/sms
   method: POST
@@ -134,8 +134,8 @@
 - slug: ringcentral_list_call_logs
   name: List Call Logs
   description: |
-    List call history for an extension. Returns call details including duration,
-    direction, result, and timestamps. Filter by date range or call type.
+    List call history for an extension including duration, direction, result, and timestamps with date range filtering.
+    Returns call records for communication tracking and performance analysis.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/call-log
   method: GET
@@ -182,8 +182,8 @@
 - slug: ringcentral_get_call_log
   name: Get Call Log
   description: |
-    Get details of a specific call record including duration, recording URL, and participants.
-    Use this to retrieve detailed call information or access call recordings.
+    Get details of a specific call record including duration, recording URL, and participant information for review.
+    Returns call data for performance evaluation and recording access.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/call-log/{callId}
   method: GET
@@ -209,8 +209,8 @@
 - slug: ringcentral_list_meetings
   name: List Meetings
   description: |
-    List scheduled RingCentral Video or cloud meetings for an extension.
-    Returns meeting details including topic, start time, and join URLs.
+    List scheduled RingCentral Video or cloud meetings for an extension including topic, start time, and join URLs.
+    Returns meeting listings for schedule management and calendar integration.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/meeting
   method: GET
@@ -246,8 +246,8 @@
 - slug: ringcentral_get_meeting
   name: Get Meeting
   description: |
-    Get details of a specific meeting including topic, timing, host info, and join URLs.
-    Use this to retrieve meeting details before starting or joining.
+    Get details of a specific meeting including topic, timing, host information, and join URLs for participation.
+    Returns meeting data for calendar management and pre-meeting preparation.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/meeting/{meetingId}
   method: GET
@@ -273,8 +273,8 @@
 - slug: ringcentral_send_fax
   name: Send Fax
   description: |
-    Send a fax message with optional attachments (PDF, TIFF).
-    Use this to send documents via fax programmatically.
+    Send a fax message with optional PDF or TIFF attachments to specified recipient fax numbers.
+    Returns send confirmation with fax ID for delivery tracking and document records.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/fax
   method: POST
@@ -324,8 +324,8 @@
 - slug: ringcentral_get_presence
   name: Get Presence
   description: |
-    Get presence status for a user or specific extension.
-    Returns availability, call status, and Do Not Disturb settings.
+    Get presence status for a user or specific extension including availability, call status, and Do Not Disturb settings.
+    Returns presence data for communication routing and availability monitoring.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/presence
   method: GET
@@ -351,8 +351,8 @@
 - slug: ringcentral_update_presence
   name: Update Presence
   description: |
-    Update presence status for the authenticated user.
-    Set availability, DND status, and user-visible status message.
+    Update presence status for the authenticated user including availability, DND status, and custom status message.
+    Returns updated presence confirmation for communication management.
   provider: ringcentral
   endpoint: /restapi/v1.0/account/~/extension/~/presence
   method: PUT

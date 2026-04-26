@@ -18,8 +18,7 @@
 - slug: missive_list_conversations
   name: List Conversations
   description: |
-    List all conversations in Missive.
-    Filter by status, assignee, or folder.
+    List all conversations in your Missive account with optional filtering by status, assignee, or folder. Returns conversation IDs, subjects, assignees, and status for each conversation.
   provider: missive
   endpoint: /v1/conversations
   method: GET
@@ -54,7 +53,7 @@
 - slug: missive_get_conversation
   name: Get Conversation
   description: |
-    Get details of a specific conversation.
+    Retrieve detailed information about a specific Missive conversation by its ID. Returns the conversation subject, messages, assignees, and status.
   provider: missive
   endpoint: /v1/conversations/{conversationId}
   method: GET
@@ -75,7 +74,7 @@
 - slug: missive_list_messages
   name: List Messages
   description: |
-    List messages in a conversation.
+    List all messages in a specific Missive conversation with optional pagination. Returns message content, sender information, timestamps, and attachment details for each message in the conversation.
   provider: missive
   endpoint: /v1/conversations/{conversationId}/messages
   method: GET
@@ -101,7 +100,7 @@
 - slug: missive_get_message
   name: Get Message
   description: |
-    Get details of a specific message.
+    Retrieve detailed information about a specific Missive message by its ID. Returns the message content, sender details, timestamp, and any attachments associated with the message.
   provider: missive
   endpoint: /v1/messages/{messageId}
   method: GET
@@ -122,7 +121,7 @@
 - slug: missive_send_message
   name: Send Message
   description: |
-    Send a message in a conversation.
+    Send a new message to a specific Missive conversation from a designated author. Returns the sent message with confirmation and timestamp.
   provider: missive
   endpoint: /v1/conversations/{conversationId}/messages
   method: POST
@@ -150,8 +149,7 @@
 - slug: missive_list_contacts
   name: List Contacts
   description: |
-    List all contacts in Missive.
-    Filter by search or organization.
+    List all contacts in your Missive account with optional search or organization filtering. Returns contact names, email addresses, phone numbers, and organization information for each contact.
   provider: missive
   endpoint: /v1/contacts
   method: GET
@@ -179,7 +177,7 @@
 - slug: missive_get_contact
   name: Get Contact
   description: |
-    Get details of a specific contact.
+    Retrieve detailed information about a specific Missive contact by their ID. Returns the contact name, email, phone, organization, and recent activity for the contact.
   provider: missive
   endpoint: /v1/contacts/{contactId}
   method: GET
@@ -200,7 +198,7 @@
 - slug: missive_list_groups
   name: List Groups
   description: |
-    List all groups in Missive.
+    List all groups in your Missive account. Returns group names, member counts, and shared mailbox settings for each group in the workspace.
   provider: missive
   endpoint: /v1/groups
   method: GET
@@ -218,7 +216,7 @@
 - slug: missive_get_group
   name: Get Group
   description: |
-    Get details of a specific group.
+    Retrieve detailed information about a specific Missive group by its ID. Returns the group name, member list, and settings configuration for the group.
   provider: missive
   endpoint: /v1/groups/{groupId}
   method: GET
@@ -239,7 +237,7 @@
 - slug: missive_create_comment
   name: Create Comment
   description: |
-    Create a comment on a conversation.
+    Create a new comment on a specific Missive conversation from a designated author. Returns the created comment with confirmation and timestamp.
   provider: missive
   endpoint: /v1/conversations/{conversationId}/comments
   method: POST

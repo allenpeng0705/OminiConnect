@@ -18,7 +18,8 @@
 - slug: aws_iam_list_users
   name: List Users
   description: |
-    List all IAM users in the AWS account.
+    List all IAM users in the AWS account and return user names, IDs, and creation dates.
+    Use this to discover accounts for permission management and access control.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -42,7 +43,8 @@
 - slug: aws_iam_get_user
   name: Get User
   description: |
-    Get details for a specific IAM user including attached policies.
+    Get details for a specific IAM user including their attached managed policies and inline permissions.
+    Returns the complete permission configuration for access review.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -63,7 +65,8 @@
 - slug: aws_iam_list_groups
   name: List Groups
   description: |
-    List all IAM groups in the account.
+    List all IAM groups in the account and return group names and IDs.
+    Use this to discover groups for user membership management.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -84,7 +87,8 @@
 - slug: aws_iam_list_attached_policies
   name: List Attached Policies
   description: |
-    List all managed policies attached to a user, group, or role.
+    List all managed policies attached to a specific IAM user, group, or role.
+    Returns the policy ARNs and attachment details for each policy.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -108,7 +112,8 @@
 - slug: aws_iam_list_roles
   name: List Roles
   description: |
-    List all IAM roles in the account.
+    List all IAM roles in the account and return role names, IDs, and creation dates.
+    Use this to discover roles for cross-account access and service delegation.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -132,7 +137,8 @@
 - slug: aws_iam_get_role
   name: Get Role
   description: |
-    Get details for a specific IAM role including trust policy.
+    Get details for a specific IAM role including the trust policy and permission boundaries.
+    Returns the complete role configuration for access analysis.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -153,7 +159,8 @@
 - slug: aws_iam_list_access_keys
   name: List Access Keys
   description: |
-    List access keys for a specific IAM user.
+    List access keys for a specific IAM user and return key IDs, status, and last usage dates.
+    Use this to audit active credentials and manage security.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -174,7 +181,8 @@
 - slug: aws_iam_list_policies
   name: List Policies
   description: |
-    List all managed policies in the account.
+    List all managed policies in the account and return policy names, ARNs, and attachment counts.
+    Use this to discover available permissions for role configuration.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -199,7 +207,8 @@
 - slug: aws_iam_get_policy
   name: Get Policy
   description: |
-    Get details of a managed policy including default version.
+    Get details of a managed policy including the default version document and attachment targets.
+    Returns the full policy permissions for access review.
   provider: aws-iam
   endpoint: /
   method: GET
@@ -220,7 +229,8 @@
 - slug: aws_iam_list_account_aliases
   name: List Account Aliases
   description: |
-    List account aliases associated with the AWS account.
+    List account aliases associated with the AWS account for friendly identification.
+    Returns the alias name used in the account URL and sign-in page.
   provider: aws-iam
   endpoint: /
   method: GET

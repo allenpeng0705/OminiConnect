@@ -2,6 +2,8 @@
   name: List Documents
   description: |
     Retrieve a list of all accessible Grist documents.
+    Returns document names, IDs, and last modified dates for each document.
+    Use this to discover available spreadsheets and track recent changes.
   provider: grist
   endpoint: /documents
   method: GET
@@ -26,6 +28,8 @@
   name: Get Document
   description: |
     Get details and metadata for a specific document by ID.
+    Returns the complete document metadata including workspace, permissions, and schema.
+    This provides full document data for understanding structure and access.
   provider: grist
   endpoint: /documents/{documentId}
   method: GET
@@ -47,7 +51,9 @@
 - slug: grist_create_document
   name: Create Document
   description: |
-    Create a new Grist document with specified name.
+    Create a new Grist document with specified name and workspace.
+    Returns the created document with its unique ID and initial configuration.
+    This provisions a new spreadsheet document in Grist.
   provider: grist
   endpoint: /documents
   method: POST
@@ -73,6 +79,8 @@
   name: List Tables
   description: |
     List all tables within a specific document.
+    Returns table names, IDs, and record counts for each table.
+    Use this to discover available data structures in a document.
   provider: grist
   endpoint: /documents/{documentId}/tables
   method: GET
@@ -95,6 +103,8 @@
   name: Get Table
   description: |
     Get details, schema, and structure of a specific table.
+    Returns the complete table definition including column types and field configurations.
+    This provides table metadata for understanding data organization.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}
   method: GET
@@ -121,6 +131,8 @@
   name: List Records
   description: |
     Retrieve all records from a specific table with optional filtering and pagination.
+    Returns record data with all column values for each matching row.
+    Use this to query table data for analysis and reporting.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records
   method: GET
@@ -155,7 +167,9 @@
 - slug: grist_get_record
   name: Get Record
   description: |
-    Get a single record by its unique identifier.
+    Get a single record by its unique identifier from a table.
+    Returns the complete record data with all column values.
+    This provides detailed record information for specific data lookup.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records/{recordId}
   method: GET
@@ -185,7 +199,9 @@
 - slug: grist_create_record
   name: Create Record
   description: |
-    Insert a new record into a specified table.
+    Insert a new record into a specified table with provided data.
+    Returns the created record with its assigned ID.
+    This adds new data rows to a Grist table.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records
   method: POST
@@ -216,6 +232,8 @@
   name: Update Record
   description: |
     Update an existing record with new data in a specified table.
+    Returns the updated record with modified values.
+    This modifies existing data in a Grist table.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records/{recordId}
   method: PUT
@@ -250,6 +268,8 @@
   name: List Views
   description: |
     List all views available for a specific document.
+    Returns view names, IDs, and configurations for each view.
+    Use this to discover available visualizations and custom layouts.
   provider: grist
   endpoint: /documents/{documentId}/views
   method: GET

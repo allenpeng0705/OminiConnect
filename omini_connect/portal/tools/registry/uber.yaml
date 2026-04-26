@@ -18,7 +18,7 @@
 - slug: uber_get_user_profile
   name: Get User Profile
   description: |
-    Get user profile information
+    Retrieve the authenticated Uber user's profile information including their name, email, and profile picture URL.
   provider: uber
   endpoint: /v1/me
   method: GET
@@ -35,7 +35,7 @@
 - slug: uber_get_user_history
   name: Get User History
   description: |
-    Get user trip history
+    Retrieve the complete trip history for the authenticated user including trip IDs, dates, origins, destinations, and fare amounts.
   provider: uber
   endpoint: /v1.2/history
   method: GET
@@ -52,7 +52,7 @@
 - slug: uber_list_products
   name: List Products
   description: |
-    List available Uber products
+    List all available Uber products at a given location including ride options like UberX, UberXL, and UberBlack with their capacity and pricing.
   provider: uber
   endpoint: /v1/products
   method: GET
@@ -69,7 +69,7 @@
 - slug: uber_get_product
   name: Get Product
   description: |
-    Get product details
+    Retrieve detailed information about a specific Uber product including its display name, description, capacity, and service details.
   provider: uber
   endpoint: /v1/products/{product_id}
   method: GET
@@ -86,7 +86,7 @@
 - slug: uber_get_price_estimate
   name: Get Price Estimate
   description: |
-    Get price estimate for a trip
+    Get price estimates for a trip between specified pickup and dropoff locations including the minimum and maximum fare ranges.
   provider: uber
   endpoint: /v1.2/price
   method: GET
@@ -103,7 +103,7 @@
 - slug: uber_get_time_estimate
   name: Get Time Estimate
   description: |
-    Get time estimate for pickup
+    Get estimated pickup times for Uber products at a specified location including the number of cars available and wait times.
   provider: uber
   endpoint: /v1.2/time
   method: GET
@@ -120,7 +120,7 @@
 - slug: uber_request_ride
   name: Request Ride
   description: |
-    Request a ride
+    Request a new ride with specified pickup and dropoff locations. Returns the request ID and status for tracking the ride.
   provider: uber
   endpoint: /v1/requests
   method: POST
@@ -137,7 +137,7 @@
 - slug: uber_get_request
   name: Get Request
   description: |
-    Get request details
+    Retrieve details about a specific ride request including the driver's location, ETA, and current status of the trip.
   provider: uber
   endpoint: /v1/requests/{request_id}
   method: GET
@@ -154,7 +154,7 @@
 - slug: uber_cancel_request
   name: Cancel Request
   description: |
-    Cancel a ride request
+    Cancel an existing ride request by its ID. Returns confirmation of successful cancellation.
   provider: uber
   endpoint: /v1/requests/{request_id}
   method: DELETE
@@ -171,7 +171,7 @@
 - slug: uber_list_places
   name: List Places
   description: |
-    List saved places
+    List all saved places for the authenticated user including home, work, and custom saved locations with their addresses.
   provider: uber
   endpoint: /v1/places/{user_id}
   method: GET

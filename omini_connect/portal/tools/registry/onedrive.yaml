@@ -18,7 +18,7 @@
 - slug: onedrive_list_files
   name: List Files
   description: |
-    List files and folders in a OneDrive folder.
+    List files and folders in a OneDrive folder. Returns file names, types, sizes, and last modified dates for each item in the folder.
   provider: onedrive
   endpoint: /v1.0/me/drive/root/children
   method: GET
@@ -45,7 +45,7 @@
 - slug: onedrive_get_file
   name: Get File
   description: |
-    Get metadata for a OneDrive file or folder.
+    Get metadata for a specific file or folder in OneDrive including its name, size, type, created date, and last modified information.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}
   method: GET
@@ -68,7 +68,7 @@
 - slug: onedrive_upload_file
   name: Upload File
   description: |
-    Create or update a file with content in OneDrive.
+    Upload a file to OneDrive with the specified name and content. Creates a new file or updates an existing one in the specified folder.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{parent_id}:/{name}:/content
   method: PUT
@@ -99,7 +99,7 @@
 - slug: onedrive_download_file
   name: Download File
   description: |
-    Download file content from OneDrive.
+    Download the content of a file from OneDrive. Returns the file content as base64-encoded data for storage or processing.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}/content
   method: GET
@@ -122,7 +122,7 @@
 - slug: onedrive_create_folder
   name: Create Folder
   description: |
-    Create a new folder in OneDrive.
+    Create a new folder in OneDrive within a specified parent folder. Returns the created folder with its unique identifier.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{parent_id}/children
   method: POST
@@ -149,7 +149,7 @@
 - slug: onedrive_delete_file
   name: Delete File
   description: |
-    Delete a file or folder from OneDrive.
+    Delete a file or folder from OneDrive. Returns a confirmation of successful deletion for the specified item.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}
   method: DELETE
@@ -171,7 +171,7 @@
 - slug: onedrive_list_permissions
   name: List Permissions
   description: |
-    List all permissions on a file or folder.
+    List all permissions on a file or folder in OneDrive. Returns permission types, granted users, and access levels for each sharing entry.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}/permissions
   method: GET
@@ -194,7 +194,7 @@
 - slug: onedrive_get_permission
   name: Get Permission
   description: |
-    Get details of a specific permission on a file or folder.
+    Get details of a specific permission on a file or folder in OneDrive including the permission type, granted identity, and access scope.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}/permissions/{permission_id}
   method: GET
@@ -221,7 +221,7 @@
 - slug: onedrive_share_file
   name: Share File
   description: |
-    Create a sharing link or grant access to a file or folder.
+    Share a file or folder in OneDrive by creating a sharing link or directly granting access to specific recipients with specified roles.
   provider: onedrive
   endpoint: /v1.0/me/drive/items/{item_id}/invite
   method: POST
@@ -258,7 +258,7 @@
 - slug: onedrive_list_drives
   name: List Drives
   description: |
-    List all drives (OneDrive instances) available to the user.
+    List all OneDrive drives available to the authenticated user including personal drive and any shared organization drives. Returns drive names, IDs, and storage information for each available drive.
   provider: onedrive
   endpoint: /v1.0/me/drives
   method: GET

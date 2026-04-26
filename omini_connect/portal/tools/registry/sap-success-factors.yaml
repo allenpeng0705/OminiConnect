@@ -18,7 +18,7 @@
 - slug: sap-success-factors_list_employees
   name: List Employees
   description: |
-    Retrieve a list of all employees.
+    List all employees in the organization with optional filtering by department. Returns employee IDs, names, job titles, and employment status for each record.
   provider: sap-success-factors
   endpoint: /v1/employees
   method: GET
@@ -44,7 +44,7 @@
 - slug: sap-success-factors_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee.
+    Retrieve comprehensive details for a specific employee including contact information, job assignment, compensation details, and employment history.
   provider: sap-success-factors
   endpoint: /v1/employees/{employeeId}
   method: GET
@@ -67,7 +67,7 @@
 - slug: sap-success-factors_list_departments
   name: List Departments
   description: |
-    Retrieve a list of all departments.
+    List all departments in the organization structure. Returns department identifiers, names, manager information, and headcount for each department.
   provider: sap-success-factors
   endpoint: /v1/departments
   method: GET
@@ -90,7 +90,7 @@
 - slug: sap-success-factors_get_department
   name: Get Department
   description: |
-    Get details of a specific department.
+    Retrieve detailed information for a specific department including organizational hierarchy, budget information, and list of employees within the department.
   provider: sap-success-factors
   endpoint: /v1/departments/{departmentId}
   method: GET
@@ -113,7 +113,7 @@
 - slug: sap-success-factors_list_positions
   name: List Positions
   description: |
-    Retrieve a list of all positions.
+    List all positions/job roles in the organization with optional department filtering. Returns position titles, job codes, pay grades, and department assignments.
   provider: sap-success-factors
   endpoint: /v1/positions
   method: GET
@@ -139,7 +139,7 @@
 - slug: sap-success-factors_get_position
   name: Get Position
   description: |
-    Get details of a specific position.
+    Retrieve detailed information for a specific position including job description, competency requirements, salary band, and incumbent employee if filled.
   provider: sap-success-factors
   endpoint: /v1/positions/{positionId}
   method: GET
@@ -162,7 +162,7 @@
 - slug: sap-success-factors_list_time_off
   name: List Time Off
   description: |
-    Retrieve a list of all time off records.
+    List all time off requests and balances with optional status filtering. Returns leave type, dates, hours, approval status, and remaining balances for each record.
   provider: sap-success-factors
   endpoint: /v1/timeOff
   method: GET
@@ -188,7 +188,7 @@
 - slug: sap-success-factors_approve_time_off
   name: Approve Time Off
   description: |
-    Approve a time off request.
+    Approve a pending time off request. Updates the request status to approved and notifies the employee of the decision.
   provider: sap-success-factors
   endpoint: /v1/timeOff/{timeOffId}/approve
   method: POST
@@ -212,7 +212,7 @@
 - slug: sap-success-factors_list_performance
   name: List Performance Reviews
   description: |
-    Retrieve a list of all performance reviews.
+    List all performance review records with optional status filtering. Returns review period, ratings, goals, and completion status for each performance evaluation.
   provider: sap-success-factors
   endpoint: /v1/performance
   method: GET
@@ -238,7 +238,7 @@
 - slug: sap-success-factors_get_employee_profile
   name: Get Employee Profile
   description: |
-    Get employee profile information.
+    Retrieve the complete employee profile including biographical information, skills, certifications, work experience, and education history.
   provider: sap-success-factors
   endpoint: /v1/employees/{employeeId}/profile
   method: GET

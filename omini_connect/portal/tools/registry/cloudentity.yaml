@@ -18,7 +18,7 @@
 - slug: cloudentity_list_users
   name: List Users
   description: |
-    List all users in the tenant.
+    List all users in the tenant, returning user IDs, usernames, email addresses, and current status.
   provider: cloudentity
   endpoint: /admin/users
   method: GET
@@ -39,7 +39,7 @@
 - slug: cloudentity_get_user
   name: Get User
   description: |
-    Get details of a specific user.
+    Get details of a specific user including their profile information, assigned roles, and permissions.
   provider: cloudentity
   endpoint: /admin/users/{id}
   method: GET
@@ -60,7 +60,7 @@
 - slug: cloudentity_create_user
   name: Create User
   description: |
-    Create a new user.
+    Create a new user in the tenant, specifying the username, email address, and password.
   provider: cloudentity
   endpoint: /admin/users
   method: POST
@@ -88,7 +88,7 @@
 - slug: cloudentity_delete_user
   name: Delete User
   description: |
-    Delete a user.
+    Delete a specific user from the tenant, removing their access and associated permissions.
   provider: cloudentity
   endpoint: /admin/users/{id}
   method: DELETE
@@ -109,7 +109,7 @@
 - slug: cloudentity_list_applications
   name: List Applications
   description: |
-    List all applications.
+    List all applications in the tenant, returning application IDs, names, types, and current status.
   provider: cloudentity
   endpoint: /admin/applications
   method: GET
@@ -130,7 +130,7 @@
 - slug: cloudentity_get_application
   name: Get Application
   description: |
-    Get details of a specific application.
+    Get details of a specific application including its configuration, permissions, and current status.
   provider: cloudentity
   endpoint: /admin/applications/{id}
   method: GET
@@ -151,7 +151,7 @@
 - slug: cloudentity_create_application
   name: Create Application
   description: |
-    Create a new application.
+    Create a new application in the tenant, specifying the application name and type.
   provider: cloudentity
   endpoint: /admin/applications
   method: POST
@@ -175,7 +175,7 @@
 - slug: cloudentity_list_authorizations
   name: List Authorizations
   description: |
-    List all authorizations.
+    List all authorizations in the tenant, returning authorization IDs, user associations, and application permissions.
   provider: cloudentity
   endpoint: /admin/authorizations
   method: GET
@@ -196,7 +196,7 @@
 - slug: cloudentity_get_authorization
   name: Get Authorization
   description: |
-    Get details of a specific authorization.
+    Get details of a specific authorization including the user, application, and permission grants.
   provider: cloudentity
   endpoint: /admin/authorizations/{id}
   method: GET
@@ -217,7 +217,7 @@
 - slug: cloudentity_list_identities
   name: List Identities
   description: |
-    List all identities.
+    List all identities in the tenant, returning identity IDs, associated users, and identity provider details.
   provider: cloudentity
   endpoint: /admin/identities
   method: GET

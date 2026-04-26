@@ -17,7 +17,8 @@
 - slug: craft_list_docs
   name: List Documents
   description: |
-    List all documents in Craft. Filter by folder, status, or keyword.
+    List all documents in Craft, returning document IDs, titles, status, and folder locations.
+    Supports filtering by folder, status, or keyword search.
   provider: craft
   endpoint: /api/v1/docs
   method: GET
@@ -52,7 +53,7 @@
 - slug: craft_get_doc
   name: Get Document
   description: |
-    Get detailed information about a specific document including title, content, author, and timestamps.
+    Get detailed information about a specific Craft document including its title, content, author, and timestamps.
   provider: craft
   endpoint: /api/v1/docs/{id}
   method: GET
@@ -74,7 +75,7 @@
 - slug: craft_create_doc
   name: Create Document
   description: |
-    Create a new document in Craft. Set title, content, folder, and initial status.
+    Create a new document in Craft, specifying the title, content, folder location, and initial status.
   provider: craft
   endpoint: /api/v1/docs
   method: POST
@@ -105,7 +106,7 @@
 - slug: craft_list_folders
   name: List Folders
   description: |
-    List all folders in Craft. Filter by parent folder or name.
+    List all folders in Craft, returning folder IDs, names, and parent folder hierarchy.
   provider: craft
   endpoint: /api/v1/folders
   method: GET
@@ -137,7 +138,7 @@
 - slug: craft_get_folder
   name: Get Folder
   description: |
-    Get detailed information about a specific folder including name, parent, and document count.
+    Get detailed information about a specific Craft folder including its name, parent folder, and document count.
   provider: craft
   endpoint: /api/v1/folders/{id}
   method: GET
@@ -159,7 +160,7 @@
 - slug: craft_create_folder
   name: Create Folder
   description: |
-    Create a new folder in Craft. Set name and parent folder.
+    Create a new folder in Craft, specifying the folder name and optional parent folder location.
   provider: craft
   endpoint: /api/v1/folders
   method: POST
@@ -184,7 +185,7 @@
 - slug: craft_list_users
   name: List Users
   description: |
-    List all users in Craft. Filter by role or status.
+    List all users in Craft, returning user IDs, names, email addresses, and roles.
   provider: craft
   endpoint: /api/v1/users
   method: GET
@@ -213,7 +214,7 @@
 - slug: craft_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user including name, email, and role.
+    Get detailed information about a specific Craft user including their name, email, and role.
   provider: craft
   endpoint: /api/v1/users/{id}
   method: GET
@@ -235,7 +236,7 @@
 - slug: craft_export_doc
   name: Export Document
   description: |
-    Export a document from Craft in a specific format (PDF, Markdown, HTML).
+    Export a Craft document to a specific format, returning the document data in PDF, Markdown, or HTML format.
   provider: craft
   endpoint: /api/v1/docs/{id}/export
   method: POST
@@ -265,7 +266,7 @@
 - slug: craft_share_doc
   name: Share Document
   description: |
-    Share a document with specific users or make it publicly accessible.
+    Share a Craft document with specific users or make it publicly accessible with configurable permissions.
   provider: craft
   endpoint: /api/v1/docs/{id}/share
   method: POST

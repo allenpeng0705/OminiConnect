@@ -17,7 +17,7 @@
 - slug: stripe_list_charges
   name: List Charges
   description: |
-    List charges (payments) for the account. Returns a paginated list of charges with details like amount, currency, status, and customer.
+    List all charges (payments) in the Stripe account with pagination support. Returns charge IDs, amounts, currencies, payment methods, and statuses for each charge. Filter by customer or creation date to find specific payments.
   provider: stripe
   endpoint: /v1/charges
   method: GET
@@ -48,7 +48,7 @@
 - slug: stripe_get_charge
   name: Get Charge
   description: |
-    Get details of a specific charge including amount, currency, payment method, and status.
+    Get details for a specific Stripe charge by its unique ID. Returns the charge amount, currency, payment method details, billing status, and failure reason if applicable.
   provider: stripe
   endpoint: /v1/charges/{id}
   method: GET
@@ -71,7 +71,7 @@
 - slug: stripe_create_charge
   name: Create Charge
   description: |
-    Create a new charge for a customer. Specify amount, currency, and optional payment method details.
+    Create a new charge for a customer in Stripe with specified amount and currency. Optionally specify payment method and description. Returns the created charge with its status and payment details.
   provider: stripe
   endpoint: /v1/charges
   method: POST
@@ -108,7 +108,7 @@
 - slug: stripe_list_customers
   name: List Customers
   description: |
-    List all customers for the account. Returns a paginated list with email, name, and metadata.
+    List all customers in the Stripe account with pagination support. Returns customer IDs, names, email addresses, and metadata for each customer. Filter by email or creation date to find specific customers.
   provider: stripe
   endpoint: /v1/customers
   method: GET
@@ -139,7 +139,7 @@
 - slug: stripe_get_customer
   name: Get Customer
   description: |
-    Get details of a specific customer including email, name, address, and default payment method.
+    Get details for a specific Stripe customer by their unique ID. Returns the customer's name, email, phone, address, default payment method, and all associated metadata.
   provider: stripe
   endpoint: /v1/customers/{id}
   method: GET
@@ -162,7 +162,7 @@
 - slug: stripe_create_customer
   name: Create Customer
   description: |
-    Create a new customer with email, name, and optional metadata. Required before recurring billing.
+    Create a new customer in Stripe with email, name, phone, and optional metadata. Returns the created customer with their unique ID.
   provider: stripe
   endpoint: /v1/customers
   method: POST
@@ -196,7 +196,7 @@
 - slug: stripe_list_subscriptions
   name: List Subscriptions
   description: |
-    List subscriptions for the account. Filter by customer, status, or plan to find active or past subscriptions.
+    List all subscriptions in the Stripe account with pagination support. Returns subscription IDs, customer IDs, plan details, statuses, and current period end dates. Filter by customer or status to find specific subscriptions.
   provider: stripe
   endpoint: /v1/subscriptions
   method: GET
@@ -228,7 +228,7 @@
 - slug: stripe_get_subscription
   name: Get Subscription
   description: |
-    Get details of a specific subscription including plan, status, current period, and cancel date.
+    Get details for a specific Stripe subscription by its unique ID. Returns the subscription status, plan details, current period dates, cancel date, and associated customer information.
   provider: stripe
   endpoint: /v1/subscriptions/{id}
   method: GET
@@ -251,7 +251,7 @@
 - slug: stripe_list_invoices
   name: List Invoices
   description: |
-    List invoices for the account or a specific customer. Returns pending, open, and paid invoices.
+    List all invoices in the Stripe account with pagination support. Returns invoice IDs, amounts due, statuses, customer names, and due dates. Filter by customer or status to find specific invoices.
   provider: stripe
   endpoint: /v1/invoices
   method: GET
@@ -283,7 +283,7 @@
 - slug: stripe_get_invoice
   name: Get Invoice
   description: |
-    Get details of a specific invoice including line items, amount due, tax, and payment status.
+    Get details for a specific Stripe invoice by its unique ID. Returns the invoice amount due, tax amounts, line items, payment status, and customer information.
   provider: stripe
   endpoint: /v1/invoices/{id}
   method: GET

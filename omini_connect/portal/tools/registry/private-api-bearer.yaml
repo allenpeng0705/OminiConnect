@@ -19,7 +19,7 @@
 - slug: private_bearer_list_resources
   name: List Resources
   description: |
-    List all resources from the private API.
+    List all resources from the private API, including resource IDs, names, types, and creation timestamps.
   provider: private-api-bearer
   endpoint: /resources
   method: GET
@@ -40,7 +40,7 @@
 - slug: private_bearer_get_resource
   name: Get Resource
   description: |
-    Get detailed information about a specific resource.
+    Retrieve detailed information about a specific resource, including its ID, name, data contents, and metadata.
   provider: private-api-bearer
   endpoint: /resources/{resourceId}
   method: GET
@@ -61,7 +61,7 @@
 - slug: private_bearer_create_resource
   name: Create Resource
   description: |
-    Create a new resource.
+    Create a new resource with the specified name and data, returning the created resource details.
   provider: private-api-bearer
   endpoint: /resources
   method: POST
@@ -85,7 +85,7 @@
 - slug: private_bearer_update_resource
   name: Update Resource
   description: |
-    Update an existing resource.
+    Update an existing resource with new name or data values, returning the updated resource details.
   provider: private-api-bearer
   endpoint: /resources/{resourceId}
   method: PUT
@@ -112,7 +112,7 @@
 - slug: private_bearer_delete_resource
   name: Delete Resource
   description: |
-    Delete a resource.
+    Delete a specific resource by its ID, removing it from the system and returning a deletion confirmation.
   provider: private-api-bearer
   endpoint: /resources/{resourceId}
   method: DELETE
@@ -133,7 +133,7 @@
 - slug: private_bearer_list_items
   name: List Items
   description: |
-    List all items from the private API.
+    List all items from the private API, including item IDs, names, types, and associated resource identifiers.
   provider: private-api-bearer
   endpoint: /items
   method: GET
@@ -154,7 +154,7 @@
 - slug: private_bearer_get_item
   name: Get Item
   description: |
-    Get detailed information about a specific item.
+    Retrieve detailed information about a specific item, including its ID, name, data contents, and metadata.
   provider: private-api-bearer
   endpoint: /items/{itemId}
   method: GET
@@ -175,7 +175,7 @@
 - slug: private_bearer_search
   name: Search
   description: |
-    Search resources by query.
+    Search for resources by keyword query, returning matching resource names, IDs, and relevance scores.
   provider: private-api-bearer
   endpoint: /search
   method: GET
@@ -195,7 +195,7 @@
 - slug: private_bearer_get_status
   name: Get Status
   description: |
-    Get API status information.
+    Retrieve API status information, including service health, version, and availability metrics.
   provider: private-api-bearer
   endpoint: /status
   method: GET
@@ -211,7 +211,7 @@
 - slug: private_bearer_get_health
   name: Get Health
   description: |
-    Get health check information.
+    Retrieve health check information for the API service, including database connectivity and service uptime status.
   provider: private-api-bearer
   endpoint: /health
   method: GET

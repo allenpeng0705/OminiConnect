@@ -18,8 +18,9 @@
 - slug: gorgias_list_tickets
   name: List Tickets
   description: |
-    List all support tickets with optional filtering.
-    Returns ticket details including subject, status, assignee, and customer.
+    List all support tickets with optional filtering and pagination.
+    Returns ticket IDs, subjects, statuses, and assignees for each ticket.
+    Use this to discover customer support issues and track ticket resolution.
   provider: gorgias-basic
   endpoint: /tickets
   method: GET
@@ -49,8 +50,9 @@
 - slug: gorgias_get_ticket
   name: Get Ticket
   description: |
-    Get detailed information about a specific ticket.
-    Includes messages, customer info, and metadata.
+    Get detailed information about a specific ticket including messages and customer info.
+    Returns the complete ticket data with all associated information.
+    This provides full ticket data for customer support management.
   provider: gorgias-basic
   endpoint: /tickets/{id}
   method: GET
@@ -72,8 +74,9 @@
 - slug: gorgias_create_ticket
   name: Create Ticket
   description: |
-    Create a new support ticket.
-    Set subject, customer, assignee, and initial message.
+    Create a new support ticket with subject, customer email, and initial details.
+    Returns the created ticket with its unique ID and confirmation.
+    This opens a new customer support issue for resolution.
   provider: gorgias-basic
   endpoint: /tickets
   method: POST
@@ -110,8 +113,9 @@
 - slug: gorgias_update_ticket
   name: Update Ticket
   description: |
-    Update an existing ticket.
-    Change status, assignee, or priority.
+    Update an existing ticket with new status, assignee, or priority.
+    Returns the updated ticket confirmation with modified fields.
+    This modifies ticket content for customer support resolution.
   provider: gorgias-basic
   endpoint: /tickets/{id}
   method: PUT
@@ -142,8 +146,9 @@
 - slug: gorgias_list_customers
   name: List Customers
   description: |
-    List all customers in your Gorgias account.
-    Returns customer details including email, name, and company.
+    List all customers in your Gorgias account with pagination.
+    Returns customer IDs, names, emails, and companies for each customer.
+    Use this to discover customer profiles and manage support relationships.
   provider: gorgias-basic
   endpoint: /customers
   method: GET
@@ -169,8 +174,9 @@
 - slug: gorgias_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer.
-    Includes contact info, ticket history, and notes.
+    Get detailed information about a specific customer including contact info and history.
+    Returns the complete customer data with all associated information.
+    This provides full customer data for support and relationship management.
   provider: gorgias-basic
   endpoint: /customers/{id}
   method: GET
@@ -192,8 +198,9 @@
 - slug: gorgias_list_messages
   name: List Messages
   description: |
-    List messages for a specific ticket.
-    Returns message details including sender, body, and timestamp.
+    List messages for a specific ticket with pagination and filtering.
+    Returns message IDs, senders, bodies, and timestamps for each message.
+    Use this to discover conversation history and track ticket communications.
   provider: gorgias-basic
   endpoint: /tickets/{ticket_id}/messages
   method: GET
@@ -215,8 +222,9 @@
 - slug: gorgias_create_message
   name: Create Message
   description: |
-    Create a new message in a ticket.
-    Add a reply or note to an existing ticket.
+    Create a new message in a ticket to add a reply or internal note.
+    Returns the created message with its unique ID and confirmation.
+    This sends a response or creates an internal annotation for the ticket.
   provider: gorgias-basic
   endpoint: /tickets/{ticket_id}/messages
   method: POST
@@ -246,8 +254,9 @@
 - slug: gorgias_list_macros
   name: List Macros
   description: |
-    List all available macros in your Gorgias account.
-    Macros are templated responses for common tickets.
+    List all available macros in your Gorgias account with pagination.
+    Returns macro IDs, names, and templates for each macro.
+    Use this to discover templated responses and automate support workflows.
   provider: gorgias-basic
   endpoint: /macros
   method: GET
@@ -265,8 +274,9 @@
 - slug: gorgias_list_users
   name: List Users
   description: |
-    List all agents/users in your Gorgias account.
-    Returns user details including email, name, and role.
+    List all agents and users in your Gorgias account with pagination.
+    Returns user IDs, names, emails, and roles for each user.
+    Use this to discover team members and manage support agent assignments.
   provider: gorgias-basic
   endpoint: /users
   method: GET

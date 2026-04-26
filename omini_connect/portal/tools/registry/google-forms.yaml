@@ -18,7 +18,7 @@
 - slug: google_forms_list_forms
   name: List Forms
   description: |
-    List forms in Google Forms.
+    List all Google Forms accessible to the user including titles, owners, and last modified dates. Returns form metadata for document discovery and management.
   provider: google-forms
   endpoint: /forms/v1/forms
   method: GET
@@ -35,7 +35,7 @@
 - slug: google_forms_get_form
   name: Get Form
   description: |
-    Get detailed information about a form.
+    Retrieve detailed information about a Google Form including settings, responder counts, and published URLs. Returns form configuration and summary statistics.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}
   method: GET
@@ -57,7 +57,7 @@
 - slug: google_forms_create_form
   name: Create Form
   description: |
-    Create a new Google Form.
+    Create a new blank Google Form with a specified title. Returns the created form with its unique identifier and editing URL.
   provider: google-forms
   endpoint: /forms/v1/forms
   method: POST
@@ -79,7 +79,7 @@
 - slug: google_forms_update_form
   name: Update Form
   description: |
-    Update a form's settings.
+    Update a Google Form's settings including title, description, and response collection preferences. Modifies form settings and returns the updated configuration.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}
   method: PATCH
@@ -104,7 +104,7 @@
 - slug: google_forms_list_questions
   name: List Questions
   description: |
-    List questions in a form.
+    List all questions in a Google Form including question types, text, and answer options. Returns question metadata for form structure analysis.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/questions
   method: GET
@@ -126,7 +126,7 @@
 - slug: google_forms_create_question
   name: Create Question
   description: |
-    Create a question in a form.
+    Create a new question in a Google Form with specified text, type, and answer options. Adds the question to the form and returns the question identifier.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/questions
   method: POST
@@ -152,7 +152,7 @@
 - slug: google_forms_list_responses
   name: List Responses
   description: |
-    List responses to a form.
+    List all responses to a Google Form including submission timestamps and individual answers. Returns response data for analysis and result compilation.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/responses
   method: GET
@@ -174,7 +174,7 @@
 - slug: google_forms_get_response
   name: Get Response
   description: |
-    Get details of a form response.
+    Retrieve detailed information about a specific form response including all answers and submission metadata. Returns individual response data with timestamp and scores.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/responses/{responseId}
   method: GET
@@ -200,7 +200,7 @@
 - slug: google_forms_list_watches
   name: List Watches
   description: |
-    List watches on a form.
+    List all webhook watches configured for a Google Form including notification URLs and event types. Returns watch configuration for form event integration.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/watches
   method: GET
@@ -222,7 +222,7 @@
 - slug: google_forms_create_watch
   name: Create Watch
   description: |
-    Create a watch (webhook) on a form.
+    Create a webhook watch on a Google Form to receive notifications for new responses. Configures the endpoint and event types, returning the watch identifier.
   provider: google-forms
   endpoint: /forms/v1/forms/{formId}/watches
   method: POST

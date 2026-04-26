@@ -18,7 +18,7 @@
 - slug: garmin_list_activities
   name: List Activities
   description: |
-    List user's fitness activities from Garmin Connect.
+    List all fitness activities recorded on Garmin Connect. Returns activity IDs, types, dates, durations, distances, and heart rate summaries for each activity.
   provider: garmin
   endpoint: /activitylist-service/activities
   method: GET
@@ -45,7 +45,7 @@
 - slug: garmin_get_activity
   name: Get Activity
   description: |
-    Get detailed information about a specific activity.
+    Get detailed information about a specific fitness activity including route map, split times, heart rate zones, power data (if available), and performance metrics.
   provider: garmin
   endpoint: /activitylist-service/activities/{activityId}
   method: GET
@@ -68,7 +68,7 @@
 - slug: garmin_list_sleep_data
   name: List Sleep Data
   description: |
-    List user's sleep data from Garmin Connect.
+    List sleep data recorded by Garmin devices within a date range. Returns sleep durations, quality scores, sleep stages (light/deep/REM), and restless moments for each night.
   provider: garmin
   endpoint: /sleep-data-service/sleep
   method: GET
@@ -93,7 +93,7 @@
 - slug: garmin_list_body_composition
   name: List Body Composition
   description: |
-    List user's body composition data (weight, BMI, etc).
+    List body composition measurements from Garmin Connect including weight, body fat percentage, BMI, and bone mass over time for tracking physical changes.
   provider: garmin
   endpoint: /body-composition-service/users/{userId}/weights
   method: GET
@@ -118,7 +118,7 @@
 - slug: garmin_list_daily_summaries
   name: List Daily Summaries
   description: |
-    List daily health summaries for the user.
+    List daily health summaries from Garmin Connect including steps, calories burned, active minutes, heart rate, and stress levels for each day.
   provider: garmin
   endpoint: /daily-summary-service/users/{userId}/dailySummaries
   method: GET
@@ -143,7 +143,7 @@
 - slug: garmin_list_pulse_ox
   name: List Pulse Ox
   description: |
-    List pulse oximetry data from Garmin Connect.
+    List pulse oximetry measurements from Garmin Connect including oxygen saturation percentages recorded during sleep and waking hours for health monitoring.
   provider: garmin
   endpoint: /pulse-ox-user-summary-service/users/{userId}/dailyPulseOxSummaries
   method: GET
@@ -168,7 +168,7 @@
 - slug: garmin_list_stress
   name: List Stress
   description: |
-    List stress level data from Garmin Connect.
+    List stress level data from Garmin Connect throughout the day. Returns stress scores, duration in each stress zone, and recovery recommendations for each day.
   provider: garmin
   endpoint: /stress-data-service/users/{userId}/stressDailySummaries
   method: GET
@@ -193,7 +193,7 @@
 - slug: garmin_list_heart_rate
   name: List Heart Rate
   description: |
-    List heart rate data from Garmin Connect.
+    List heart rate data from Garmin Connect including resting heart rate trends, heart rate variability (HRV), and全天 heart rate patterns for fitness assessment.
   provider: garmin
   endpoint: /heartrate-service/users/{userId}/dailyHeartSummaries
   method: GET
@@ -218,7 +218,7 @@
 - slug: garmin_list_respiration
   name: List Respiration
   description: |
-    List respiration data from Garmin Connect.
+    List respiration rate data from Garmin Connect including breathing rates during sleep and activities, plus oxygen saturation levels for respiratory health tracking.
   provider: garmin
   endpoint: /respiration-service/users/{userId}/dailyRespirationSummaries
   method: GET
@@ -243,7 +243,7 @@
 - slug: garmin_list_spO2
   name: List SpO2
   description: |
-    List blood oxygen saturation data from Garmin Connect.
+    List blood oxygen saturation (SpO2) data from Garmin Connect recorded during sleep and daily activities for monitoring respiratory health trends.
   provider: garmin
   endpoint: /pulse-ox-user-summary-service/users/{userId}/dailyPulseOxSummaries
   method: GET

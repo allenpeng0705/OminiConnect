@@ -18,8 +18,9 @@
 - slug: loop_list_returns
   name: List Returns
   description: |
-    List all returns in Loop Returns.
-    Filter by status, date, customer, or order.
+    List all returns in Loop Returns with pagination and filtering.
+    Returns return IDs, statuses, and dates for each return.
+    Use this to discover returns and manage refund workflows.
   provider: loop-returns
   endpoint: /v1/returns
   method: GET
@@ -60,7 +61,9 @@
 - slug: loop_get_return
   name: Get Return
   description: |
-    Get detailed information about a specific return.
+    Get detailed information about a specific return including items and timeline.
+    Returns the complete return data with all associated information.
+    This provides full return data for refund processing and customer service.
   provider: loop-returns
   endpoint: /v1/returns/{returnId}
   method: GET
@@ -81,7 +84,9 @@
 - slug: loop_create_return
   name: Create Return
   description: |
-    Create a new return request.
+    Create a new return request with order, customer, and item information.
+    Returns the created return with its unique ID and confirmation.
+    This opens a new return request for customer refunds.
   provider: loop-returns
   endpoint: /v1/returns
   method: POST
@@ -117,7 +122,9 @@
 - slug: loop_update_return
   name: Update Return
   description: |
-    Update an existing return request.
+    Update an existing return request with new status or internal notes.
+    Returns the updated return confirmation with modified fields.
+    This modifies return content for refund processing.
   provider: loop-returns
   endpoint: /v1/returns/{returnId}
   method: PUT
@@ -144,7 +151,9 @@
 - slug: loop_list_policies
   name: List Policies
   description: |
-    List all return policies configured in Loop.
+    List all return policies configured in Loop with pagination.
+    Returns policy names, IDs, and rules for each policy.
+    Use this to discover return policies and manage refund rules.
   provider: loop-returns
   endpoint: /v1/policies
   method: GET
@@ -170,7 +179,9 @@
 - slug: loop_get_policy
   name: Get Policy
   description: |
-    Get details of a specific return policy.
+    Get details of a specific return policy including rules and eligibility.
+    Returns the complete policy data with all associated information.
+    This provides full policy data for return management and customer service.
   provider: loop-returns
   endpoint: /v1/policies/{policyId}
   method: GET
@@ -191,7 +202,9 @@
 - slug: loop_list_customers
   name: List Customers
   description: |
-    List all customers in Loop Returns.
+    List all customers in Loop Returns with pagination and email filtering.
+    Returns customer IDs, names, and email addresses for each customer.
+    Use this to discover customer records and manage return relationships.
   provider: loop-returns
   endpoint: /v1/customers
   method: GET
@@ -220,7 +233,9 @@
 - slug: loop_get_customer
   name: Get Customer
   description: |
-    Get details of a specific customer.
+    Get details of a specific customer including return history and preferences.
+    Returns the complete customer data with all associated information.
+    This provides full customer data for support and relationship management.
   provider: loop-returns
   endpoint: /v1/customers/{customerId}
   method: GET
@@ -241,7 +256,9 @@
 - slug: loop_create_exchange
   name: Create Exchange
   description: |
-    Create an exchange for a return.
+    Create an exchange for a return to replace items with new products.
+    Returns the created exchange with its unique ID and confirmation.
+    This provisions a new exchange for customer replacement requests.
   provider: loop-returns
   endpoint: /v1/exchanges
   method: POST
@@ -270,7 +287,9 @@
 - slug: loop_list_reasons
   name: List Reasons
   description: |
-    List all configured return reasons.
+    List all configured return reasons with pagination.
+    Returns reason names, IDs, and usage counts for each reason.
+    Use this to discover return categories and manage quality tracking.
   provider: loop-returns
   endpoint: /v1/return-reasons
   method: GET

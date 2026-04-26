@@ -17,8 +17,7 @@
 - slug: papaya_list_employees
   name: List Employees
   description: |
-    List all employees in the Papaya Global payroll platform. Returns employee profiles, employment status, and location info.
-    Use this to manage a global workforce and track employee records across countries.
+    List all employees in the Papaya Global payroll platform with optional filtering by status, country, or department. Returns employee profiles, employment status, and location information for global workforce management.
   provider: papaya_global
   endpoint: /v1/employees
   method: GET
@@ -55,7 +54,7 @@
 - slug: papaya_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee by ID. Returns full employee profile, employment terms, payroll info, and benefits enrollment.
+    Retrieve details for a specific employee by their unique identifier. Returns the full employee profile, employment terms, payroll information, and benefits enrollment.
   provider: papaya_global
   endpoint: /v1/employees/{employee_id}
   method: GET
@@ -78,8 +77,7 @@
 - slug: papaya_create_employee
   name: Create Employee
   description: |
-    Create a new employee record in Papaya Global. Include personal details, employment terms, location, and payroll configuration.
-    Supports onboarding across multiple countries.
+    Create a new employee record in Papaya Global with personal details, employment terms, location, and payroll configuration. Supports onboarding across multiple countries and returns the created employee with their unique identifier.
   provider: papaya_global
   endpoint: /v1/employees
   method: POST
@@ -124,8 +122,7 @@
 - slug: papaya_list_payrolls
   name: List Payrolls
   description: |
-    List all payroll runs in the Papaya Global platform. Returns payroll periods, status, total amounts, and worker counts.
-    Use this to track payroll cycles and manage global payroll operations.
+    List all payroll runs in the Papaya Global platform with optional filtering by status, period, or country. Returns payroll periods, statuses, total amounts, and worker counts for payroll cycle tracking.
   provider: papaya_global
   endpoint: /v1/payrolls
   method: GET
@@ -165,7 +162,7 @@
 - slug: papaya_get_payroll
   name: Get Payroll
   description: |
-    Get details of a specific payroll run by ID. Returns payroll period, total amounts, worker breakdown, and processing status.
+    Retrieve details for a specific payroll run by its unique identifier. Returns the payroll period, total amounts, worker breakdown, and current processing status.
   provider: papaya_global
   endpoint: /v1/payrolls/{payroll_id}
   method: GET
@@ -188,7 +185,7 @@
 - slug: papaya_run_payroll
   name: Run Payroll
   description: |
-    Initiate or process a payroll run for a specific period. Specify the pay period, employees, and processing options.
+    Initiate or process a payroll run for a specified period with employees and processing options. Returns the payroll run status and unique identifier for tracking.
   provider: papaya_global
   endpoint: /v1/payrolls/run
   method: POST
@@ -228,8 +225,7 @@
 - slug: papaya_list_benefits
   name: List Benefits
   description: |
-    List all benefits and benefits plans available in the Papaya Global platform. Returns benefit types, coverage details, and enrollment info.
-    Use this to manage employee benefits across global operations.
+    List all benefits and benefit plans available in the Papaya Global platform with optional filtering by employee, benefit type, or country. Returns benefit types, coverage details, and enrollment information.
   provider: papaya_global
   endpoint: /v1/benefits
   method: GET
@@ -266,7 +262,7 @@
 - slug: papaya_get_benefit
   name: Get Benefit
   description: |
-    Get details of a specific benefit plan by ID. Returns coverage details, costs, enrollment rules, and associated employees.
+    Retrieve details for a specific benefit plan by its unique identifier. Returns the coverage details, costs, enrollment rules, and associated employees.
   provider: papaya_global
   endpoint: /v1/benefits/{benefit_id}
   method: GET
@@ -289,8 +285,7 @@
 - slug: papaya_list_time_off
   name: List Time Off
   description: |
-    List all time off policies configured in the Papaya Global platform. Returns policy details, leave types, accrual rules, and entitlements.
-    Use this to understand time off accruals and manage leave policies.
+    List all time off policies configured in the Papaya Global platform with optional filtering by employee, leave type, or country. Returns policy details, leave types, accrual rules, and entitlements.
   provider: papaya_global
   endpoint: /v1/time_off
   method: GET
@@ -327,7 +322,7 @@
 - slug: papaya_get_time_off_policy
   name: Get Time Off Policy
   description: |
-    Get details of a specific time off policy by ID. Returns policy rules, accrual rates, carryover limits, and entitlements.
+    Retrieve details for a specific time off policy by its unique identifier. Returns the policy rules, accrual rates, carryover limits, and entitlement configurations.
   provider: papaya_global
   endpoint: /v1/time_off/{policy_id}
   method: GET

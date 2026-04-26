@@ -18,8 +18,7 @@
 - slug: intuit_list_companies
   name: List Companies
   description: |
-    List all companies in QuickBooks.
-    Returns company details including name and company ID.
+    List all companies associated with the QuickBooks account. Returns company names and unique company identifiers.
   provider: intuit
   endpoint: /v3/company
   method: GET
@@ -37,8 +36,7 @@
 - slug: intuit_get_company
   name: Get Company
   description: |
-    Get detailed information about a specific company.
-    Includes company settings and fiscal year.
+    Retrieve detailed information about a specific company by its ID. Includes company settings, fiscal year information, and configuration details.
   provider: intuit
   endpoint: /v3/company/{companyId}
   method: GET
@@ -60,8 +58,7 @@
 - slug: intuit_list_accounts
   name: List Accounts
   description: |
-    List all accounts in QuickBooks.
-    Returns account details including name and type.
+    List all chart of accounts in QuickBooks for a specific company. Returns account names, types, and balance information.
   provider: intuit
   endpoint: /v3/company/{companyId}/query
   method: GET
@@ -83,8 +80,7 @@
 - slug: intuit_get_account
   name: Get Account
   description: |
-    Get detailed information about a specific account.
-    Includes account balance and transactions.
+    Retrieve detailed information about a specific account. Includes current balance, account type, and recent transactions.
   provider: intuit
   endpoint: /v3/company/{companyId}/account/{accountId}
   method: GET
@@ -110,8 +106,7 @@
 - slug: intuit_list_customers
   name: List Customers
   description: |
-    List all customers in QuickBooks.
-    Returns customer details including name and email.
+    List all customers in QuickBooks for a specific company. Returns customer names, email addresses, and contact information.
   provider: intuit
   endpoint: /v3/company/{companyId}/query
   method: GET
@@ -133,8 +128,7 @@
 - slug: intuit_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific customer.
-    Includes customer details and balance.
+    Retrieve detailed information about a specific customer. Includes contact details, address, and outstanding balance.
   provider: intuit
   endpoint: /v3/company/{companyId}/customer/{customerId}
   method: GET
@@ -160,8 +154,7 @@
 - slug: intuit_list_vendors
   name: List Vendors
   description: |
-    List all vendors in QuickBooks.
-    Returns vendor details including name and balance.
+    List all vendors in QuickBooks for a specific company. Returns vendor names, contact information, and payable balances.
   provider: intuit
   endpoint: /v3/company/{companyId}/query
   method: GET
@@ -183,8 +176,7 @@
 - slug: intuit_get_vendor
   name: Get Vendor
   description: |
-    Get detailed information about a specific vendor.
-    Includes vendor details and balance.
+    Retrieve detailed information about a specific vendor. Includes contact details, payment terms, and outstanding balance.
   provider: intuit
   endpoint: /v3/company/{companyId}/vendor/{vendorId}
   method: GET
@@ -210,8 +202,7 @@
 - slug: intuit_list_invoices
   name: List Invoices
   description: |
-    List all invoices in QuickBooks.
-    Returns invoice details including number and status.
+    List all invoices in QuickBooks for a specific company. Returns invoice numbers, amounts, dates, and payment status.
   provider: intuit
   endpoint: /v3/company/{companyId}/query
   method: GET
@@ -233,8 +224,7 @@
 - slug: intuit_get_invoice
   name: Get Invoice
   description: |
-    Get detailed information about a specific invoice.
-    Includes invoice lines and payment status.
+    Retrieve detailed information about a specific invoice. Includes all line items, totals, and current payment status.
   provider: intuit
   endpoint: /v3/company/{companyId}/invoice/{invoiceId}
   method: GET

@@ -18,7 +18,7 @@
 - slug: list_incidents
   name: List Incidents
   description: |
-    List all incidents
+    List all incidents in ServiceNow. Returns incident IDs, descriptions, states, priorities, and assigned support team information.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/incident
   method: GET
@@ -35,7 +35,7 @@
 - slug: get_incident
   name: Get Incident
   description: |
-    Get incident details
+    Get detailed information about a specific incident including state, priority, assignment, work notes, and activity history.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/incident/{id}
   method: GET
@@ -52,7 +52,7 @@
 - slug: create_incident
   name: Create Incident
   description: |
-    Create a new incident
+    Create a new incident in ServiceNow. Sets the incident description, impact, urgency, and optionally assigns it to a support team.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/incident
   method: POST
@@ -69,7 +69,7 @@
 - slug: list_users
   name: List Users
   description: |
-    List all users
+    List all users in ServiceNow. Returns user names, email addresses, departments, roles, and active status information.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/sys_user
   method: GET
@@ -86,7 +86,7 @@
 - slug: get_user
   name: Get User
   description: |
-    Get user details
+    Get detailed information about a specific user including their roles, groups, manager, location, and contact details.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/sys_user/{id}
   method: GET
@@ -103,7 +103,7 @@
 - slug: list_groups
   name: List Groups
   description: |
-    List all groups
+    List all groups in ServiceNow. Returns group names, descriptions, members, and assigned roles.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/sys_user_group
   method: GET
@@ -120,7 +120,7 @@
 - slug: list_kb_articles
   name: List KB Articles
   description: |
-    List knowledge articles
+    List all knowledge base articles in ServiceNow. Returns article titles, text, views count, and publication status.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/kb_knowledge
   method: GET
@@ -137,7 +137,7 @@
 - slug: list_changes
   name: List Changes
   description: |
-    List change requests
+    List all change requests in ServiceNow. Returns change IDs, descriptions, states, risk levels, and approval status.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/change_request
   method: GET
@@ -154,7 +154,7 @@
 - slug: get_catalogue
   name: Get Catalogue
   description: |
-    Get service catalogue
+    Get the service catalogue with available catalog items. Returns item names, descriptions, categories, and order details.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/sc_cat_item
   method: GET
@@ -171,7 +171,7 @@
 - slug: get_record
   name: Get Record
   description: |
-    Get any table record
+    Get any record from a specified ServiceNow table by sys ID. Returns all field values for the requested record.
   provider: servicenow-oauth2-cc
   endpoint: /api/now/table/{table}/{sys_id}
   method: GET

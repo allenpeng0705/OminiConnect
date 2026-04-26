@@ -18,7 +18,7 @@
 - slug: query_data
   name: Query Data
   description: |
-    Execute a SQL query
+    Execute a SQL query against Snowflake. Returns query results including column headers and data rows.
   provider: snowflake-jwt
   endpoint: /api/v2/statements
   method: POST
@@ -35,7 +35,7 @@
 - slug: list_databases
   name: List Databases
   description: |
-    List all databases
+    List all databases in the Snowflake account. Returns database names, created dates, and comment descriptions.
   provider: snowflake-jwt
   endpoint: /api/v2/databases
   method: GET
@@ -52,7 +52,7 @@
 - slug: list_schemas
   name: List Schemas
   description: |
-    List schemas in database
+    List all schemas in a Snowflake database. Returns schema names, created dates, and ownership information.
   provider: snowflake-jwt
   endpoint: /api/v2/databases/{db}/schemas
   method: GET
@@ -69,7 +69,7 @@
 - slug: list_tables
   name: List Tables
   description: |
-    List tables in schema
+    List all tables in a Snowflake schema. Returns table names, table types, and column counts.
   provider: snowflake-jwt
   endpoint: /api/v2/databases/{db}/schemas/{schema}/tables
   method: GET
@@ -86,7 +86,7 @@
 - slug: get_query_status
   name: Get Query Status
   description: |
-    Check query execution status
+    Check the execution status of a SQL query. Returns query state, error messages, and result availability.
   provider: snowflake-jwt
   endpoint: /api/v2/statements/{id}
   method: GET
@@ -103,7 +103,7 @@
 - slug: cancel_query
   name: Cancel Query
   description: |
-    Cancel a running query
+    Cancel a running SQL query in Snowflake. Terminates the query execution and releases associated resources.
   provider: snowflake-jwt
   endpoint: /api/v2/statements/{id}/cancel
   method: POST
@@ -120,7 +120,7 @@
 - slug: list_pipes
   name: List Pipes
   description: |
-    List pipes in schema
+    List all pipes in a Snowflake schema. Returns pipe names, definitions, and processing status.
   provider: snowflake-jwt
   endpoint: /api/v2/databases/{db}/schemas/{schema}/pipes
   method: GET
@@ -137,7 +137,7 @@
 - slug: list_streams
   name: List Streams
   description: |
-    List streams in schema
+    List all streams in a Snowflake schema. Returns stream names, source tables, and offset information.
   provider: snowflake-jwt
   endpoint: /api/v2/databases/{db}/schemas/{schema}/streams
   method: GET
@@ -154,7 +154,7 @@
 - slug: list_tasks
   name: List Tasks
   description: |
-    List tasks in schema
+    List all tasks in a Snowflake schema. Returns task names, schedules, states, and predecessor dependencies.
   provider: snowflake-jwt
   endpoint: /api/v2/databases/{db}/schemas/{schema}/tasks
   method: GET
@@ -171,7 +171,7 @@
 - slug: get_warehouse
   name: Get Warehouse
   description: |
-    Get warehouse details
+    Get detailed information about a Snowflake warehouse including size, status, and compute resource allocation.
   provider: snowflake-jwt
   endpoint: /api/v2/warehouses/{name}
   method: GET

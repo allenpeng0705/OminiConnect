@@ -18,7 +18,8 @@
 - slug: bitdefender_list_endpoints
   name: List Endpoints
   description: |
-    List all endpoints (devices) managed by Bitdefender.
+    List all endpoints (devices) managed by Bitdefender and return device names, operating systems, and protection status.
+    Use this to discover managed devices for security monitoring.
   provider: bitdefender
   endpoint: /endpoints
   method: GET
@@ -43,7 +44,8 @@
 - slug: bitdefender_get_endpoint
   name: Get Endpoint
   description: |
-    Get details for a specific endpoint.
+    Get details for a specific endpoint including operating system, protection status, and last scan results.
+    Returns the complete endpoint data for security management.
   provider: bitdefender
   endpoint: /endpoints/{id}
   method: GET
@@ -64,7 +66,8 @@
 - slug: bitdefender_list_policies
   name: List Policies
   description: |
-    List all security policies.
+    List all security policies configured in Bitdefender and return policy names, targets, and settings.
+    Use this to discover available security configurations.
   provider: bitdefender
   endpoint: /policies
   method: GET
@@ -89,7 +92,8 @@
 - slug: bitdefender_get_policy
   name: Get Policy
   description: |
-    Get details for a specific security policy.
+    Get details for a specific security policy including protection settings and target groups.
+    Returns the complete policy configuration for security management.
   provider: bitdefender
   endpoint: /policies/{id}
   method: GET
@@ -110,7 +114,8 @@
 - slug: bitdefender_list_tasks
   name: List Tasks
   description: |
-    List all tasks (scans, updates, etc.).
+    List all scheduled tasks in Bitdefender including scans, updates, and maintenance operations.
+    Returns task names, schedules, and execution status for IT operations.
   provider: bitdefender
   endpoint: /tasks
   method: GET
@@ -138,7 +143,8 @@
 - slug: bitdefender_get_task
   name: Get Task
   description: |
-    Get details for a specific task.
+    Get details for a specific task including schedule, execution history, and current status.
+    Returns the complete task data for operations monitoring.
   provider: bitdefender
   endpoint: /tasks/{id}
   method: GET
@@ -159,7 +165,8 @@
 - slug: bitdefender_list_alerts
   name: List Alerts
   description: |
-    List all security alerts.
+    List all security alerts in Bitdefender and return alert types, severity levels, and affected endpoints.
+    Filter by severity to prioritize critical security events.
   provider: bitdefender
   endpoint: /alerts
   method: GET
@@ -187,7 +194,8 @@
 - slug: bitdefender_get_alert
   name: Get Alert
   description: |
-    Get details for a specific alert.
+    Get details for a specific security alert including description, severity, and recommended actions.
+    Returns the complete alert data for security response.
   provider: bitdefender
   endpoint: /alerts/{id}
   method: GET
@@ -208,7 +216,8 @@
 - slug: bitdefender_list_groups
   name: List Groups
   description: |
-    List all endpoint groups.
+    List all endpoint groups in Bitdefender and return group names and member counts.
+    Use this to organize endpoints for policy assignment and management.
   provider: bitdefender
   endpoint: /groups
   method: GET
@@ -225,7 +234,8 @@
 - slug: bitdefender_get_quarantine
   name: Get Quarantine
   description: |
-    Get quarantine items from endpoints.
+    Get quarantine items from Bitdefender endpoints including file names, threats detected, and quarantine dates.
+    Returns the complete quarantine list for threat management.
   provider: bitdefender
   endpoint: /quarantine
   method: GET

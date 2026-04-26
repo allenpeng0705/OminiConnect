@@ -16,8 +16,7 @@
 - slug: canva_list_designs
   name: List Designs
   description: |
-    List all designs in the user's account or folder. Designs are visual content created in Canva.
-    Use this to browse designs or find a specific design to work with.
+    Retrieve all visual designs in the user's Canva account with pagination support. Returns design titles, thumbnails, creation dates, and edit URLs.
   provider: canva
   endpoint: /v1/designs
   method: GET
@@ -45,8 +44,7 @@
 - slug: canva_get_design
   name: Get Design
   description: |
-    Get details of a specific design including its title, thumbnail, creation date, and edit URL.
-    Use this to retrieve design metadata before exporting or modifying it.
+    Retrieve detailed information about a specific design by its unique ID. Returns the title, thumbnail URL, creation date, edit URL, and design type.
   provider: canva
   endpoint: /v1/designs/{designId}
   method: GET
@@ -68,8 +66,7 @@
 - slug: canva_create_design
   name: Create Design
   description: |
-    Create a new design in Canva. Specify the design type (e.g., social media post, presentation, document)
-    and optional title. The design opens in the Canva editor where it can be customized.
+    Create a new visual design with a specified design type and optional title in the Canva editor. Returns the created design with its unique ID and edit URL.
   provider: canva
   endpoint: /v1/designs
   method: POST
@@ -104,8 +101,7 @@
 - slug: canva_list_folders
   name: List Folders
   description: |
-    List all folders in the user's account or within a specific parent folder.
-    Use folders to organize designs by project, client, or category.
+    Retrieve all folders in the user's account or within a specific parent folder. Returns folder names, IDs, and creation dates.
   provider: canva
   endpoint: /v1/folders
   method: GET
@@ -133,8 +129,7 @@
 - slug: canva_get_folder
   name: Get Folder
   description: |
-    Get details of a specific folder including its name, parent folder, and creation date.
-    Use this to retrieve folder information before listing its contents.
+    Retrieve detailed information about a specific folder by its unique ID. Returns the folder name, parent folder, creation date, and item count.
   provider: canva
   endpoint: /v1/folders/{folderId}
   method: GET
@@ -156,8 +151,7 @@
 - slug: canva_create_folder
   name: Create Folder
   description: |
-    Create a new folder to organize designs. Specify the folder name and optional parent folder
-    to create the folder within an existing folder structure.
+    Create a new folder to organize designs with an optional parent folder for hierarchy. Returns the created folder with its unique ID.
   provider: canva
   endpoint: /v1/folders
   method: POST
@@ -182,8 +176,7 @@
 - slug: canva_list_assets
   name: List Assets
   description: |
-    List all assets in the user's account. Assets include images, videos, and other files
-    uploaded to Canva for use in designs.
+    Retrieve all assets uploaded to Canva including images, videos, and other files with pagination support. Returns asset names, types, and URLs.
   provider: canva
   endpoint: /v1/assets
   method: GET
@@ -208,8 +201,7 @@
 - slug: canva_upload_asset
   name: Upload Asset
   description: |
-    Upload a new asset to Canva. The asset can be an image, video, or other supported file type.
-    Once uploaded, the asset can be used in designs.
+    Upload a new image, video, or file asset to Canva for use in designs. Returns the uploaded asset with its unique ID and URL.
   provider: canva
   endpoint: /v1/assets
   method: POST
@@ -242,8 +234,7 @@
 - slug: canva_list_users
   name: List Users
   description: |
-    List all users in a Canva team. Returns user information including name, email, and role.
-    Use this to see team members or find specific users.
+    Retrieve all users in a Canva team with pagination support. Returns user names, emails, and team roles.
   provider: canva
   endpoint: /v1/users
   method: GET
@@ -268,8 +259,7 @@
 - slug: canva_get_user
   name: Get User
   description: |
-    Get details of a specific user including their name, email, avatar, and team role.
-    Use this to retrieve user information for personalization or permissions.
+    Retrieve detailed information about a specific user by their unique ID. Returns the user name, email, avatar URL, and team role.
   provider: canva
   endpoint: /v1/users/{userId}
   method: GET

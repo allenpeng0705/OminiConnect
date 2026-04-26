@@ -17,7 +17,7 @@
 - slug: circle_so_list_communities
   name: List Communities
   description: |
-    Returns a paginated list of communities the authenticated user has access to.
+    List all Circle.so communities accessible to the authenticated user, returning community IDs, names, and member counts.
   provider: circle-so
   endpoint: /communities
   method: GET
@@ -43,7 +43,7 @@
 - slug: circle_so_get_community
   name: Get Community
   description: |
-    Get details of a specific community including name, description, member count, and settings.
+    Retrieve details of a specific Circle.so community including name, description, member count, and owner information.
   provider: circle-so
   endpoint: /communities/{community_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: circle_so_list_members
   name: List Members
   description: |
-    Returns a paginated list of members in a specific community. Filter by role or join date.
+    List all members in a specific Circle.so community with optional filtering by role or join date.
   provider: circle-so
   endpoint: /communities/{community_id}/members
   method: GET
@@ -99,7 +99,7 @@
 - slug: circle_so_get_member
   name: Get Member
   description: |
-    Get details of a specific community member including name, email, role, and join date.
+    Retrieve details of a specific Circle.so community member including their name, email, role, and join date.
   provider: circle-so
   endpoint: /communities/{community_id}/members/{member_id}
   method: GET
@@ -125,7 +125,7 @@
 - slug: circle_so_list_posts
   name: List Posts
   description: |
-    Returns a paginated list of posts in a community. Filter by author, tag, or content type.
+    List all posts in a specific Circle.so community with optional filtering by author, tag, or content type.
   provider: circle-so
   endpoint: /communities/{community_id}/posts
   method: GET
@@ -161,7 +161,7 @@
 - slug: circle_so_get_post
   name: Get Post
   description: |
-    Get full details of a specific post including title, body, author, likes, and comments count.
+    Retrieve full details of a specific Circle.so post including title, body content, author, and engagement metrics.
   provider: circle-so
   endpoint: /communities/{community_id}/posts/{post_id}
   method: GET
@@ -187,7 +187,7 @@
 - slug: circle_so_create_post
   name: Create Post
   description: |
-    Create a new post in a community. Include title, body content, and optional tags.
+    Create a new post in a Circle.so community with title, body content, and optional tags, returning the post ID.
   provider: circle-so
   endpoint: /communities/{community_id}/posts
   method: POST
@@ -226,7 +226,7 @@
 - slug: circle_so_list_comments
   name: List Comments
   description: |
-    Returns a paginated list of comments on a specific post. Includes author and timestamps.
+    List all comments on a specific Circle.so post with author information, timestamps, and content.
   provider: circle-so
   endpoint: /communities/{community_id}/posts/{post_id}/comments
   method: GET
@@ -260,7 +260,7 @@
 - slug: circle_so_get_comment
   name: Get Comment
   description: |
-    Get details of a specific comment including text, author, and creation date.
+    Retrieve details of a specific Circle.so comment including text content, author, and creation timestamp.
   provider: circle-so
   endpoint: /communities/{community_id}/posts/{post_id}/comments/{comment_id}
   method: GET
@@ -290,7 +290,7 @@
 - slug: circle_so_list_events
   name: List Events
   description: |
-    Returns a paginated list of events in a community. Filter by date, type, or status.
+    List all events in a specific Circle.so community with optional filtering by date, type, or status.
   provider: circle-so
   endpoint: /communities/{community_id}/events
   method: GET

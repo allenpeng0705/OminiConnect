@@ -17,7 +17,8 @@
 - slug: groove_list_conversations
   name: List Conversations
   description: |
-    List conversations in Groove. Filter by status, assignee, mailbox, or tag.
+    List support conversations in Groove, filtered by status, assignee, mailbox, or tag.
+    Returns conversation summaries with subject, state, and assignees.
   provider: groove
   endpoint: /api/v2/conversations
   method: GET
@@ -43,7 +44,8 @@
 - slug: groove_get_conversation
   name: Get Conversation
   description: |
-    Get detailed information about a Groove conversation including messages and assignee.
+    Retrieve a specific Groove conversation with its messages, thread history, and assignee.
+    Returns full conversation details including all message content.
   provider: groove
   endpoint: /api/v2/conversations/{conversationId}
   method: GET
@@ -66,7 +68,8 @@
 - slug: groove_reply_to_conversation
   name: Reply to Conversation
   description: |
-    Reply to a Groove conversation with a new message. Supports text and HTML.
+    Send a reply message to an existing Groove conversation thread.
+    Creates a new message entry in the conversation with text or HTML content.
   provider: groove
   endpoint: /api/v2/conversations/{conversationId}/messages
   method: POST
@@ -97,7 +100,8 @@
 - slug: groove_list_customers
   name: List Customers
   description: |
-    List customers in Groove. Filter by name, email, or created date.
+    List all customers in your Groove account, filterable by name, email, or creation date.
+    Returns customer records with contact information and metadata.
   provider: groove
   endpoint: /api/v2/customers
   method: GET
@@ -123,7 +127,8 @@
 - slug: groove_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a Groove customer including contact info and conversation history.
+    Retrieve a specific Groove customer with their contact details and conversation history.
+    Returns full customer profile including all associated support conversations.
   provider: groove
   endpoint: /api/v2/customers/{customerId}
   method: GET
@@ -146,7 +151,8 @@
 - slug: groove_list_agents
   name: List Agents
   description: |
-    List agents in Groove. Filter by name, email, or availability status.
+    List all support agents in your Groove account, filterable by name, email, or availability.
+    Returns agent profiles with their roles and current status.
   provider: groove
   endpoint: /api/v2/agents
   method: GET
@@ -172,7 +178,8 @@
 - slug: groove_get_agent
   name: Get Agent
   description: |
-    Get detailed information about a Groove agent including name, email, and role.
+    Retrieve a specific Groove agent profile including name, email, and role.
+    Returns agent details and their assigned conversation statistics.
   provider: groove
   endpoint: /api/v2/agents/{agentId}
   method: GET
@@ -195,7 +202,8 @@
 - slug: groove_list_macros
   name: List Macros
   description: |
-    List macros in Groove. Filter by name, category, or shared status.
+    List all saved macros in your Groove account, filterable by name, category, or sharing status.
+    Returns macro templates with their steps and actions.
   provider: groove
   endpoint: /api/v2/macros
   method: GET
@@ -221,7 +229,8 @@
 - slug: groove_get_macro
   name: Get Macro
   description: |
-    Get detailed information about a Groove macro including steps and actions.
+    Retrieve a specific Groove macro template with its defined steps and actions.
+    Returns the complete macro configuration for applying to conversations.
   provider: groove
   endpoint: /api/v2/macros/{macroId}
   method: GET
@@ -244,7 +253,8 @@
 - slug: groove_get_reports
   name: Get Reports
   description: |
-    Get reports and analytics from Groove including response times and resolution rates.
+    Retrieve support performance reports including response times and resolution rates.
+    Returns analytics data filtered by report type and date range.
   provider: groove
   endpoint: /api/v2/reports
   method: GET

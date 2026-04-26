@@ -18,7 +18,7 @@
 - slug: fillout_list_forms
   name: List Forms
   description: |
-    List all forms.
+    List all forms created in your Fillout account. Returns form names, IDs, question counts, and response totals for each form.
   provider: fillout
   endpoint: /v1/api/forms
   method: GET
@@ -40,7 +40,7 @@
 - slug: fillout_get_form
   name: Get Form
   description: |
-    Get details of a specific form.
+    Get detailed information about a specific Fillout form including its questions, settings, and外观 configuration.
   provider: fillout
   endpoint: /v1/api/forms/{id}
   method: GET
@@ -62,7 +62,7 @@
 - slug: fillout_list_responses
   name: List Responses
   description: |
-    List all responses to a form.
+    List all responses submitted to a specific Fillout form. Returns response IDs, submission timestamps, and answers for each response.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/responses
   method: GET
@@ -88,7 +88,7 @@
 - slug: fillout_get_response
   name: Get Response
   description: |
-    Get details of a specific response.
+    Get detailed information about a specific Fillout form response including all question answers and submission metadata.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/responses/{responseId}
   method: GET
@@ -114,7 +114,7 @@
 - slug: fillout_list_questions
   name: List Questions
   description: |
-    List all questions in a form.
+    List all questions defined in a specific Fillout form. Returns question IDs, types, and option lists for each question.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/questions
   method: GET
@@ -136,7 +136,7 @@
 - slug: fillout_get_question
   name: Get Question
   description: |
-    Get details of a specific question.
+    Get detailed information about a specific Fillout form question including its type, options, and validation rules.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/questions/{questionId}
   method: GET
@@ -162,7 +162,7 @@
 - slug: fillout_list_answers
   name: List Answers
   description: |
-    List all answers to questions.
+    List all answers for a specific question in a Fillout form. Returns answer IDs, response references, and answer values.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/questions/{questionId}/answers
   method: GET
@@ -188,7 +188,7 @@
 - slug: fillout_get_answer
   name: Get Answer
   description: |
-    Get a specific answer.
+    Get detailed information about a specific answer to a Fillout form question including the response it belongs to and the answer value.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/questions/{questionId}/answers/{answerId}
   method: GET
@@ -218,7 +218,7 @@
 - slug: fillout_list_captures
   name: List Captures
   description: |
-    List file captures from form responses.
+    List all file captures (uploaded files) from Fillout form responses. Returns capture IDs, file names, and associated response information.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/captures
   method: GET
@@ -240,7 +240,7 @@
 - slug: fillout_get_workflow
   name: Get Workflow
   description: |
-    Get workflow status for a form.
+    Get the automation workflow status for a Fillout form including triggered actions, integration logs, and execution history.
   provider: fillout
   endpoint: /v1/api/forms/{formId}/workflow
   method: GET

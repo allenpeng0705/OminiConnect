@@ -17,8 +17,7 @@
 - slug: brex_list_transactions
   name: List Transactions
   description: |
-    List all transactions across accounts. Returns transactions with amounts, descriptions, dates, and status.
-    Use this to monitor spending, reconcile accounts, or track expenses.
+    List all transactions across Brex accounts with optional filtering by account, status, or date range. Returns transaction amounts, descriptions, dates, and statuses for reconciliation and expense tracking.
   provider: brex
   endpoint: /v2/transactions
   method: GET
@@ -58,7 +57,7 @@
 - slug: brex_get_transaction
   name: Get Transaction
   description: |
-    Get details of a specific transaction by ID. Returns the full transaction record including amounts, dates, merchant info, and status.
+    Retrieve details for a specific transaction by its unique identifier. Returns the full transaction record including amounts, dates, merchant information, and current status.
   provider: brex
   endpoint: /v2/transactions/{transaction_id}
   method: GET
@@ -81,8 +80,7 @@
 - slug: brex_list_accounts
   name: List Accounts
   description: |
-    List all Brex accounts including checking, savings, and credit accounts.
-    Returns account balances, types, and status. Use this to understand available funds.
+    List all Brex accounts including checking, savings, and credit accounts. Returns account balances, types, currencies, and statuses to understand available funds.
   provider: brex
   endpoint: /v2/accounts
   method: GET
@@ -113,7 +111,7 @@
 - slug: brex_get_account
   name: Get Account
   description: |
-    Get details of a specific account by ID. Returns balance, account type, currency, and status.
+    Retrieve details for a specific account by its unique identifier. Returns the account balance, type, currency, and current status.
   provider: brex
   endpoint: /v2/accounts/{account_id}
   method: GET
@@ -136,8 +134,7 @@
 - slug: brex_list_cards
   name: List Cards
   description: |
-    List all Brex cards including virtual and physical cards. Returns card details, spending limits, and status.
-    Use this to manage corporate cards or see all issued cards.
+    List all Brex cards including virtual and physical corporate cards. Returns card details, spending limits, and statuses for card management.
   provider: brex
   endpoint: /v2/cards
   method: GET
@@ -171,7 +168,7 @@
 - slug: brex_get_card
   name: Get Card
   description: |
-    Get details of a specific card by ID. Returns card number (masked), spending limit, status, and linked account.
+    Retrieve details for a specific card by its unique identifier. Returns the masked card number, spending limit, status, and linked account information.
   provider: brex
   endpoint: /v2/cards/{card_id}
   method: GET
@@ -193,8 +190,7 @@
 - slug: brex_list_employees
   name: List Employees
   description: |
-    List all employees in the Brex account. Returns employee details, roles, and spending permissions.
-    Use this to manage corporate spenders and their access levels.
+    List all employees in the Brex account with optional filtering by role or status. Returns employee details, roles, and spending permissions for access management.
   provider: brex
   endpoint: /v2/employees
   method: GET
@@ -229,7 +225,7 @@
 - slug: brex_get_employee
   name: Get Employee
   description: |
-    Get details of a specific employee by ID. Returns employee profile, spending limits, and card associations.
+    Retrieve details for a specific employee by their unique identifier. Returns the employee profile, spending limits, and associated card information.
   provider: brex
   endpoint: /v2/employees/{employee_id}
   method: GET
@@ -252,7 +248,7 @@
 - slug: brex_create_card
   name: Create Card
   description: |
-    Create a new Brex card for an employee. Set spending limits, card type (virtual/physical), and linked account.
+    Create a new Brex card for a specified employee with spending limits, card type, and linked account. Returns the created card configuration with its unique identifier.
   provider: brex
   endpoint: /v2/cards
   method: POST
@@ -289,7 +285,7 @@
 - slug: brex_set_spending_limit
   name: Set Spending Limit
   description: |
-    Update the spending limit on an existing Brex card. Specify the limit amount and optionally the interval.
+    Update the spending limit on an existing Brex card with specified amount and optional time interval. Returns the updated card configuration confirming the new limit.
   provider: brex
   endpoint: /v2/cards/{card_id}/spending_limit
   method: PUT

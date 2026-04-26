@@ -17,7 +17,7 @@
 - slug: note_list_notes
   name: List Notes
   description: |
-    List notes with optional filters for notebook, tag, or status.
+    List notes with optional filtering by notebook, tag, or status. Returns note IDs, titles, and modification dates for each note.
   provider: note
   endpoint: /notes
   method: GET
@@ -48,7 +48,7 @@
 - slug: note_get_note
   name: Get Note
   description: |
-    Get detailed information about a specific note.
+    Retrieve detailed information about a specific note including title, content, and metadata. Returns the complete note configuration.
   provider: note
   endpoint: /notes/{note_id}
   method: GET
@@ -70,7 +70,7 @@
 - slug: note_create_note
   name: Create Note
   description: |
-    Create a new note with title, content, and metadata.
+    Create a new note with title, content, notebook, and tags. Returns the created note with its unique identifier.
   provider: note
   endpoint: /notes
   method: POST
@@ -104,7 +104,7 @@
 - slug: note_update_note
   name: Update Note
   description: |
-    Update an existing note's title, content, or metadata.
+    Update an existing note's title, content, or metadata. Returns the updated note confirming changes.
   provider: note
   endpoint: /notes/{note_id}
   method: PUT
@@ -137,7 +137,7 @@
 - slug: note_delete_note
   name: Delete Note
   description: |
-    Delete a note permanently.
+    Delete a note permanently from the account. Returns confirmation of the deletion.
   provider: note
   endpoint: /notes/{note_id}
   method: DELETE
@@ -159,7 +159,7 @@
 - slug: note_list_notebooks
   name: List Notebooks
   description: |
-    List all notebooks in the account.
+    List all notebooks in the account. Returns notebook names, IDs, and note counts for each notebook.
   provider: note
   endpoint: /notebooks
   method: GET
@@ -177,7 +177,7 @@
 - slug: note_get_notebook
   name: Get Notebook
   description: |
-    Get details about a specific notebook.
+    Retrieve details about a specific notebook including its name and note count. Returns the complete notebook configuration.
   provider: note
   endpoint: /notebooks/{notebook_id}
   method: GET
@@ -199,7 +199,7 @@
 - slug: note_list_tags
   name: List Tags
   description: |
-    List all tags available in the account.
+    List all tags available in the account. Returns tag names and associated note counts.
   provider: note
   endpoint: /tags
   method: GET
@@ -217,7 +217,7 @@
 - slug: note_search_notes
   name: Search Notes
   description: |
-    Search notes by keyword across title and content.
+    Search notes by keyword across title and content with optional notebook or tag filtering. Returns matching note titles and content snippets.
   provider: note
   endpoint: /notes/search
   method: GET
@@ -249,7 +249,7 @@
 - slug: note_share_note
   name: Share Note
   description: |
-    Share a note by creating a public link or sharing with specific users.
+    Share a note by creating a public link or sharing with specific users. Returns the shareable link and sharing status.
   provider: note
   endpoint: /notes/{note_id}/share
   method: POST

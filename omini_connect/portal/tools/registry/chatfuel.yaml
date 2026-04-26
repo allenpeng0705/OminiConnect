@@ -1,8 +1,7 @@
 - slug: chatfuel_list_flows
   name: List Flows
   description: |
-    Retrieve a list of chatbot flows in your ChatFuel account.
-    Flows define the conversation paths and triggers for your chatbot.
+    Retrieve all chatbot conversation flows with pagination support. Returns flow names, IDs, trigger types, and block configuration counts.
   provider: chatfuel
   endpoint: /flows
   method: GET
@@ -28,7 +27,7 @@
 - slug: chatfuel_get_flow
   name: Get Flow
   description: |
-    Get details of a specific flow including its blocks, elements, and configuration.
+    Retrieve detailed information about a specific flow by its unique ID. Returns the flow name, blocks, elements, and trigger configuration.
   provider: chatfuel
   endpoint: /flows/{flow_id}
   method: GET
@@ -50,8 +49,7 @@
 - slug: chatfuel_create_flow
   name: Create Flow
   description: |
-    Create a new chatbot flow with specified blocks and elements.
-    Flows define how the chatbot responds to user inputs.
+    Create a new chatbot conversation flow with trigger settings and message blocks. Returns the created flow with its unique ID.
   provider: chatfuel
   endpoint: /flows
   method: POST
@@ -83,8 +81,7 @@
 - slug: chatfuel_list_subscribers
   name: List Subscribers
   description: |
-    Retrieve a list of subscribers (users who have interacted with your chatbot).
-    Shows subscription status, attributes, and last activity.
+    Retrieve all users who have interacted with the chatbot with pagination support. Returns subscriber names, IDs, status, and attribute information.
   provider: chatfuel
   endpoint: /subscribers
   method: GET
@@ -115,7 +112,7 @@
 - slug: chatfuel_get_subscriber
   name: Get Subscriber
   description: |
-    Get detailed information about a specific subscriber including their attributes, tags, and conversation history.
+    Retrieve detailed information about a specific subscriber by their unique ID. Returns the subscriber attributes, tags, and conversation history.
   provider: chatfuel
   endpoint: /subscribers/{subscriber_id}
   method: GET
@@ -137,8 +134,7 @@
 - slug: chatfuel_update_subscriber_attribute
   name: Update Subscriber Attribute
   description: |
-    Update a subscriber's custom attributes or tags.
-    Used to store user preferences, segment, or track custom data.
+    Modify a subscriber's custom attributes or tags for segmentation and personalization. Returns the updated subscriber information.
   provider: chatfuel
   endpoint: /subscribers/{subscriber_id}/attributes
   method: PUT
@@ -168,8 +164,7 @@
 - slug: chatfuel_create_broadcast
   name: Create Broadcast
   description: |
-    Create a broadcast message to send to multiple subscribers or segments.
-    Broadcasts are used for marketing campaigns or announcements.
+    Create a broadcast message to send to specific subscribers or segments immediately or on a schedule. Returns the created broadcast with its unique ID.
   provider: chatfuel
   endpoint: /broadcasts
   method: POST
@@ -222,8 +217,7 @@
 - slug: chatfuel_get_broadcast_stats
   name: Get Broadcast Stats
   description: |
-    Get statistics for a broadcast including delivery, open, and click rates.
-    Used to measure campaign effectiveness.
+    Retrieve delivery statistics for a specific broadcast by its unique ID. Returns sent, delivered, opened, and clicked counts.
   provider: chatfuel
   endpoint: /broadcasts/{broadcast_id}/stats
   method: GET
@@ -245,8 +239,7 @@
 - slug: chatfuel_list_attributes
   name: List Attributes
   description: |
-    Retrieve a list of custom attributes configured for subscribers.
-    Attributes store user data like preferences, location, or custom fields.
+    Retrieve all custom attributes configured for subscribers with pagination support. Returns attribute names, types, and default values.
   provider: chatfuel
   endpoint: /attributes
   method: GET
@@ -272,8 +265,7 @@
 - slug: chatfuel_get_plugin_settings
   name: Get Plugin Settings
   description: |
-    Get configuration settings for ChatFuel plugins like the live chat plugin or customer chat.
-    Includes widget settings, appearance, and behavior configuration.
+    Retrieve configuration settings for a specific ChatFuel plugin by its ID. Returns the widget appearance, behavior settings, and integration options.
   provider: chatfuel
   endpoint: /plugins/{plugin_id}/settings
   method: GET

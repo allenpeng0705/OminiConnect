@@ -18,8 +18,8 @@
 - slug: incident_list_incidents
   name: List Incidents
   description: |
-    List all incidents in incident.io.
-    Returns incident details including title, status, and severity.
+    Retrieve all incidents in your incident.io account with optional status filtering.
+    Returns incident titles, statuses, severities, and creation timestamps.
   provider: incident-io
   endpoint: /v1/incidents
   method: GET
@@ -44,8 +44,8 @@
 - slug: incident_get_incident
   name: Get Incident
   description: |
-    Get detailed information about a specific incident.
-    Includes timeline, severity, and affected services.
+    Retrieve a specific incident by ID with full timeline and affected services.
+    Returns incident details including status, severity, timeline events, and commander.
   provider: incident-io
   endpoint: /v1/incidents/{id}
   method: GET
@@ -67,8 +67,8 @@
 - slug: incident_list_severities
   name: List Severities
   description: |
-    List all severity levels in incident.io.
-    Returns severity details including name and rank.
+    Retrieve all severity levels configured in your incident.io account.
+    Returns severity names, ranks, and descriptions.
   provider: incident-io
   endpoint: /v1/severities
   method: GET
@@ -86,8 +86,8 @@
 - slug: incident_list_urgencies
   name: List Urgencies
   description: |
-    List all urgency levels in incident.io.
-    Returns urgency details including name and rank.
+    Retrieve all urgency levels configured in your incident.io account.
+    Returns urgency names, ranks, and response time targets.
   provider: incident-io
   endpoint: /v1/urgencies
   method: GET
@@ -105,8 +105,8 @@
 - slug: incident_list_status_pages
   name: List Status Pages
   description: |
-    List all status pages in incident.io.
-    Returns status page details including name and subdomain.
+    Retrieve all status pages in your incident.io account for public incident communication.
+    Returns status page names, subdomains, and current status.
   provider: incident-io
   endpoint: /v1/status-pages
   method: GET
@@ -124,8 +124,8 @@
 - slug: incident_list_members
   name: List Members
   description: |
-    List all team members in incident.io.
-    Returns member details including name and email.
+    Retrieve all team members in your incident.io account with roles and contact info.
+    Returns member names, emails, roles, and on-call status.
   provider: incident-io
   endpoint: /v1/members
   method: GET
@@ -143,8 +143,8 @@
 - slug: incident_list_roles
   name: List Roles
   description: |
-    List all incident roles in incident.io.
-    Returns role details including name and description.
+    Retrieve all incident roles defined in your incident.io account for incident management.
+    Returns role names, descriptions, and default assignments.
   provider: incident-io
   endpoint: /v1/roles
   method: GET
@@ -162,8 +162,8 @@
 - slug: incident_list_catalog
   name: List Catalog
   description: |
-    List all catalog items in incident.io.
-    Returns catalog item details including type and name.
+    Retrieve all catalog items in your incident.io account with optional type filtering.
+    Returns catalog entries including services, teams, and their relationships.
   provider: incident-io
   endpoint: /v1/catalog
   method: GET
@@ -184,8 +184,8 @@
 - slug: incident_get_catalog
   name: Get Catalog Item
   description: |
-    Get detailed information about a specific catalog item.
-    Includes catalog item properties and links.
+    Retrieve a specific catalog item by ID with full properties and linked services.
+    Returns catalog entry details including metadata, dependencies, and owner information.
   provider: incident-io
   endpoint: /v1/catalog/{id}
   method: GET
@@ -207,8 +207,8 @@
 - slug: incident_list_metrics
   name: List Metrics
   description: |
-    List all metrics in incident.io.
-    Returns metric details including name and type.
+    Retrieve all incident metrics configured in your incident.io account for reporting.
+    Returns metric names, types, and calculation formulas.
   provider: incident-io
   endpoint: /v1/metrics
   method: GET

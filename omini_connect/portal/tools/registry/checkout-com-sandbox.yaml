@@ -18,7 +18,7 @@
 - slug: checkout_com_sandbox_list_payments
   name: List Payments
   description: |
-    List all payments in sandbox.
+    Retrieve all payment transactions in the Checkout.com Sandbox environment with pagination support. Returns payment IDs, amounts, currencies, and statuses.
   provider: checkout-com-sandbox
   endpoint: /payments
   method: GET
@@ -42,7 +42,7 @@
 - slug: checkout_com_sandbox_get_payment
   name: Get Payment
   description: |
-    Get details of a specific payment.
+    Retrieve detailed information about a specific payment by its unique ID. Returns the amount, currency, processing status, and transaction details.
   provider: checkout-com-sandbox
   endpoint: /payments/{id}
   method: GET
@@ -63,7 +63,7 @@
 - slug: checkout_com_sandbox_create_payment
   name: Create Payment
   description: |
-    Create a new payment.
+    Create a new payment with specified amount, currency, and reference in the sandbox environment. Returns the created payment with its unique ID.
   provider: checkout-com-sandbox
   endpoint: /payments
   method: POST
@@ -91,7 +91,7 @@
 - slug: checkout_com_sandbox_capture_payment
   name: Capture Payment
   description: |
-    Capture an authorized payment.
+    Capture an authorized payment to initiate the fund transfer. Returns the capture status and amount captured.
   provider: checkout-com-sandbox
   endpoint: /payments/{id}/captures
   method: POST
@@ -115,7 +115,7 @@
 - slug: checkout_com_sandbox_void_payment
   name: Void Payment
   description: |
-    Void an authorized payment.
+    Void an authorized payment to cancel it before capture. Returns the void status confirming cancellation.
   provider: checkout-com-sandbox
   endpoint: /payments/{id}/voids
   method: POST
@@ -136,7 +136,7 @@
 - slug: checkout_com_sandbox_list_refunds
   name: List Refunds
   description: |
-    List all refunds for a payment.
+    Retrieve all refunds for a specific payment with pagination support. Returns refund IDs, amounts, and processing statuses.
   provider: checkout-com-sandbox
   endpoint: /payments/{paymentId}/refunds
   method: GET
@@ -157,7 +157,7 @@
 - slug: checkout_com_sandbox_get_refund
   name: Get Refund
   description: |
-    Get details of a specific refund.
+    Retrieve detailed information about a specific refund by its unique ID. Returns the refund amount and processing status.
   provider: checkout-com-sandbox
   endpoint: /refunds/{id}
   method: GET
@@ -178,7 +178,7 @@
 - slug: checkout_com_sandbox_list_chargebacks
   name: List Chargebacks
   description: |
-    List all chargebacks.
+    Retrieve all chargebacks with pagination support. Returns chargeback IDs, disputed amounts, and resolution statuses.
   provider: checkout-com-sandbox
   endpoint: /chargebacks
   method: GET
@@ -199,7 +199,7 @@
 - slug: checkout_com_sandbox_get_chargeback
   name: Get Chargeback
   description: |
-    Get details of a specific chargeback.
+    Retrieve detailed information about a specific chargeback by its unique ID. Returns the disputed amount, reason, and current status.
   provider: checkout-com-sandbox
   endpoint: /chargebacks/{id}
   method: GET
@@ -220,7 +220,7 @@
 - slug: checkout_com_sandbox_list_transactions
   name: List Transactions
   description: |
-    List all transactions.
+    Retrieve all transactions including payments, captures, voids, and refunds with pagination support. Returns transaction IDs, types, and statuses.
   provider: checkout-com-sandbox
   endpoint: /transactions
   method: GET

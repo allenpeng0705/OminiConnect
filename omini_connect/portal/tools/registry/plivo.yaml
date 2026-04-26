@@ -17,7 +17,7 @@
 - slug: plivo_list_messages
   name: List Messages
   description: |
-    List all SMS messages sent or received through Plivo.
+    List all SMS messages sent or received through Plivo, including message IDs, sender and receiver numbers, status values, and timestamps.
   provider: plivo
   endpoint: /Account/{auth_id}/Message/
   method: GET
@@ -44,7 +44,7 @@
 - slug: plivo_get_message
   name: Get Message
   description: |
-    Get detailed information about a specific Plivo message.
+    Retrieve detailed information about a specific Plivo message, including its content, sender, recipient, status, and error details if any.
   provider: plivo
   endpoint: /Account/{auth_id}/Message/{message_uuid}/
   method: GET
@@ -66,7 +66,7 @@
 - slug: plivo_send_sms
   name: Send SMS
   description: |
-    Send an SMS to a single recipient via Plivo.
+    Send an SMS message to a specified recipient phone number using a Plivo phone number as the sender.
   provider: plivo
   endpoint: /Account/{auth_id}/Message/
   method: POST
@@ -97,7 +97,7 @@
 - slug: plivo_list_calls
   name: List Calls
   description: |
-    List all phone calls made through Plivo.
+    List all phone calls made through Plivo, including call IDs, caller and callee numbers, duration, status values, and timestamps.
   provider: plivo
   endpoint: /Account/{auth_id}/Call/
   method: GET
@@ -124,7 +124,7 @@
 - slug: plivo_get_call
   name: Get Call
   description: |
-    Get detailed information about a specific Plivo call.
+    Retrieve detailed information about a specific Plivo call, including its duration, start time, end time, status, and audio recordings.
   provider: plivo
   endpoint: /Account/{auth_id}/Call/{call_uuid}/
   method: GET
@@ -146,7 +146,7 @@
 - slug: plivo_create_call
   name: Create Call
   description: |
-    Initiate a new outbound phone call via Plivo.
+    Initiate a new outbound phone call from a Plivo phone number to a specified recipient, returning the call ID and status.
   provider: plivo
   endpoint: /Account/{auth_id}/Call/
   method: POST
@@ -182,7 +182,7 @@
 - slug: plivo_list_recordings
   name: List Recordings
   description: |
-    List all call recordings stored in Plivo.
+    List all call recordings stored in Plivo, including recording IDs, call associations, durations, and file URLs.
   provider: plivo
   endpoint: /Account/{auth_id}/Recording/
   method: GET
@@ -209,7 +209,7 @@
 - slug: plivo_get_recording
   name: Get Recording
   description: |
-    Get details about a specific call recording.
+    Retrieve detailed information about a specific call recording, including its duration, file format, call association, and download URL.
   provider: plivo
   endpoint: /Account/{auth_id}/Recording/{recording_id}/
   method: GET
@@ -231,7 +231,7 @@
 - slug: plivo_list_applications
   name: List Applications
   description: |
-    List all Plivo applications.
+    List all Plivo applications, including application names, IDs, endpoints, and enabled features.
   provider: plivo
   endpoint: /Account/{auth_id}/Application/
   method: GET
@@ -254,7 +254,7 @@
 - slug: plivo_get_application
   name: Get Application
   description: |
-    Get details about a specific Plivo application.
+    Retrieve detailed information about a specific Plivo application, including its configuration, endpoints, webhook URLs, and enabled features.
   provider: plivo
   endpoint: /Account/{auth_id}/Application/{application_id}/
   method: GET

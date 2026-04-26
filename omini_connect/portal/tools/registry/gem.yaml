@@ -18,7 +18,7 @@
 - slug: gem_list_candidates
   name: List Candidates
   description: |
-    List all candidates in the ATS.
+    List all candidates in the Gem ATS system with optional job and stage filtering. Returns candidate IDs, names, email addresses, current stages, and source information.
   provider: gem
   endpoint: /v0/users
   method: GET
@@ -47,7 +47,7 @@
 - slug: gem_get_candidate
   name: Get Candidate
   description: |
-    Get detailed information about a specific candidate.
+    Get detailed information about a specific candidate including their name, email, current stage, interview history, and application materials.
   provider: gem
   endpoint: /v0/users/{user_id}
   method: GET
@@ -69,7 +69,7 @@
 - slug: gem_create_candidate
   name: Create Candidate
   description: |
-    Create a new candidate in the ATS.
+    Create a new candidate in the Gem ATS with name and email, optionally associated with a job. Returns the created candidate with their unique ID.
   provider: gem
   endpoint: /v0/users
   method: POST
@@ -98,7 +98,7 @@
 - slug: gem_update_candidate
   name: Update Candidate
   description: |
-    Update a candidate's information.
+    Update a candidate's information in the Gem ATS including name and stage. Returns the updated candidate with modified field values.
   provider: gem
   endpoint: /v0/users/{user_id}
   method: PUT
@@ -126,7 +126,7 @@
 - slug: gem_list_jobs
   name: List Jobs
   description: |
-    List all jobs in the ATS.
+    List all jobs in the Gem ATS with optional status filtering. Returns job IDs, titles, departments, status, and candidate counts for each job.
   provider: gem
   endpoint: /v0/jobs
   method: GET
@@ -147,7 +147,7 @@
 - slug: gem_get_job
   name: Get Job
   description: |
-    Get detailed information about a specific job.
+    Get detailed information about a specific job including its title, department, status, hiring manager, and all associated candidates.
   provider: gem
   endpoint: /v0/jobs/{job_id}
   method: GET
@@ -169,7 +169,7 @@
 - slug: gem_list_interviews
   name: List Interviews
   description: |
-    List all scheduled interviews.
+    List all scheduled interviews in the Gem ATS with optional job and status filtering. Returns interview IDs, candidate names, interview types, dates, and statuses.
   provider: gem
   endpoint: /v0/interviews
   method: GET
@@ -193,7 +193,7 @@
 - slug: gem_list_offers
   name: List Offers
   description: |
-    List all offers in the system.
+    List all offers in the Gem ATS with optional status filtering. Returns offer IDs, candidate names, job titles, salary amounts, and acceptance statuses.
   provider: gem
   endpoint: /v0/offers
   method: GET
@@ -214,7 +214,7 @@
 - slug: gem_list_sources
   name: List Sources
   description: |
-    List all candidate sources (referrals, job boards, etc).
+    List all candidate sources in the Gem ATS including referrals, job boards, and direct applications. Returns source names and candidate counts for each source.
   provider: gem
   endpoint: /v0/sources
   method: GET
@@ -231,7 +231,7 @@
 - slug: gem_list_analytics
   name: List Analytics
   description: |
-    List analytics and metrics data.
+    List hiring analytics and metrics from the Gem ATS including source effectiveness, funnel conversion rates, and time-to-hire statistics.
   provider: gem
   endpoint: /v0/analytics
   method: GET

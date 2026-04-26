@@ -17,7 +17,8 @@
 - slug: stripe_more_list_invoices
   name: List Invoices
   description: |
-    List all invoices in Stripe. Filter by customer, status, or date range.
+    List all invoices in Stripe with optional filtering by customer, status, or due date range.
+    Returns invoice records including numbers, amounts, statuses, and customer references.
   provider: stripe_more
   endpoint: /v1/invoices
   method: GET
@@ -55,7 +56,8 @@
 - slug: stripe_more_get_invoice
   name: Get Invoice
   description: |
-    Get detailed information about a specific Stripe invoice.
+    Get detailed information about a specific Stripe invoice including line items, tax amounts, and payment status.
+    Returns invoice data for billing review and financial reconciliation.
   provider: stripe_more
   endpoint: /v1/invoices/{id}
   method: GET
@@ -77,7 +79,8 @@
 - slug: stripe_more_create_invoice
   name: Create Invoice
   description: |
-    Create a new invoice in Stripe. Set customer, items, and billing details.
+    Create a new invoice in Stripe with customer reference, items, and billing details for payment collection.
+    Returns the created invoice with ID for sending and tracking.
   provider: stripe_more
   endpoint: /v1/invoices
   method: POST
@@ -111,7 +114,8 @@
 - slug: stripe_more_list_subscriptions
   name: List Subscriptions
   description: |
-    List all subscriptions in Stripe. Filter by customer, status, or plan.
+    List all subscriptions in Stripe with optional filtering by customer, status, or price plan.
+    Returns subscription records including plans, amounts, and renewal dates.
   provider: stripe_more
   endpoint: /v1/subscriptions
   method: GET
@@ -146,7 +150,8 @@
 - slug: stripe_more_get_subscription
   name: Get Subscription
   description: |
-    Get detailed information about a specific Stripe subscription.
+    Get detailed information about a specific Stripe subscription including plan details, billing cycle, and status.
+    Returns subscription data for customer account management.
   provider: stripe_more
   endpoint: /v1/subscriptions/{id}
   method: GET
@@ -168,7 +173,8 @@
 - slug: stripe_more_create_subscription
   name: Create Subscription
   description: |
-    Create a new subscription for a customer in Stripe.
+    Create a new subscription for a customer in Stripe with specified items, billing cycle, and trial settings.
+    Returns the created subscription with ID for recurring billing management.
   provider: stripe_more
   endpoint: /v1/subscriptions
   method: POST
@@ -206,7 +212,8 @@
 - slug: stripe_more_list_customers
   name: List Customers
   description: |
-    List all customers in Stripe. Filter by email, name, or created date.
+    List all customers in Stripe with optional filtering by email, name, or creation date range.
+    Returns customer records including contact information and account balances.
   provider: stripe_more
   endpoint: /v1/customers
   method: GET
@@ -241,7 +248,8 @@
 - slug: stripe_more_get_customer
   name: Get Customer
   description: |
-    Get detailed information about a specific Stripe customer.
+    Get detailed information about a specific Stripe customer including name, email, phone, and payment methods.
+    Returns customer data for account management and transaction history.
   provider: stripe_more
   endpoint: /v1/customers/{id}
   method: GET
@@ -263,7 +271,8 @@
 - slug: stripe_more_create_customer
   name: Create Customer
   description: |
-    Create a new customer in Stripe. Set name, email, and payment details.
+    Create a new customer in Stripe with name, email, phone, and optional description for account creation.
+    Returns the created customer with ID for payment processing and record keeping.
   provider: stripe_more
   endpoint: /v1/customers
   method: POST
@@ -296,7 +305,8 @@
 - slug: stripe_more_list_payment_methods
   name: List Payment Methods
   description: |
-    List all payment methods for a customer in Stripe.
+    List all payment methods for a customer in Stripe including cards and bank accounts with type filtering.
+    Returns payment method records for customer billing setup and management.
   provider: stripe_more
   endpoint: /v1/payment_methods
   method: GET

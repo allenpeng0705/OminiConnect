@@ -68,8 +68,9 @@
 - slug: grain_list_transcripts
   name: List Transcripts
   description: |
-    List all transcripts from Grain recordings.
-    Returns transcript details including language and duration.
+    List all transcripts from Grain recordings with pagination and filtering.
+    Returns transcript IDs, languages, and durations for each transcript.
+    Use this to discover meeting transcripts and manage documentation.
   provider: grain-api-key
   endpoint: /api/v1/transcripts
   method: GET
@@ -90,8 +91,9 @@
 - slug: grain_get_transcript
   name: Get Transcript
   description: |
-    Get detailed transcript for a specific recording.
-    Includes speaker segments and timestamps.
+    Get detailed transcript for a specific recording including speaker segments and timestamps.
+    Returns the complete transcript data with all associated information.
+    This provides full transcript data for meeting documentation and analysis.
   provider: grain-api-key
   endpoint: /api/v1/transcripts/{id}
   method: GET
@@ -113,8 +115,9 @@
 - slug: grain_list_highlights
   name: List Highlights
   description: |
-    List all highlights from Grain recordings.
-    Highlights are key moments marked by users.
+    List all highlights from Grain recordings with pagination and recording filter.
+    Returns highlight IDs, labels, and timestamps for each highlight.
+    Use this to discover key moments and track important meeting segments.
   provider: grain-api-key
   endpoint: /api/v1/highlights
   method: GET
@@ -135,8 +138,9 @@
 - slug: grain_create_highlight
   name: Create Highlight
   description: |
-    Create a new highlight in a recording.
-    Mark a key moment for easy reference.
+    Create a new highlight in a recording to mark a key moment for easy reference.
+    Returns the created highlight with its unique ID and confirmation.
+    This creates a bookmark for an important moment in a meeting recording.
   provider: grain-api-key
   endpoint: /api/v1/highlights
   method: POST
@@ -169,8 +173,9 @@
 - slug: grain_list_participants
   name: List Participants
   description: |
-    List all participants from recordings.
-    Returns participant details including name and email.
+    List all participants from recordings with pagination and recording filter.
+    Returns participant names, emails, and roles for each participant.
+    Use this to discover meeting attendees and manage collaboration tracking.
   provider: grain-api-key
   endpoint: /api/v1/participants
   method: GET
@@ -191,8 +196,9 @@
 - slug: grain_list_workspaces
   name: List Workspaces
   description: |
-    List all workspaces in your Grain account.
-    Returns workspace details including name and settings.
+    List all workspaces in your Grain account with pagination.
+    Returns workspace names, IDs, and member counts for each workspace.
+    Use this to discover Grain workspaces and manage team collaboration settings.
   provider: grain-api-key
   endpoint: /api/v1/workspaces
   method: GET
@@ -210,8 +216,9 @@
 - slug: grain_list_speakers
   name: List Speakers
   description: |
-    List all speakers identified in recordings.
-    Returns speaker details including name and profile.
+    List all speakers identified in recordings with pagination.
+    Returns speaker names, IDs, and recording counts for each speaker.
+    Use this to discover meeting participants and analyze speaking patterns.
   provider: grain-api-key
   endpoint: /api/v1/speakers
   method: GET

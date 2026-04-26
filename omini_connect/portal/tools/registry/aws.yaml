@@ -22,8 +22,8 @@
 - slug: aws_list_ec2_instances
   name: List EC2 Instances
   description: |
-    List EC2 instances in the AWS account. Returns instance IDs, types, states, and tags.
-    Filter by instance state, tags, or other criteria.
+    List EC2 instances in the AWS account and return instance IDs, types, states, and tags.
+    Supports filtering by instance state, tags, and other criteria to find specific virtual machines.
   provider: aws
   endpoint: /ec2/instances
   method: GET
@@ -49,7 +49,8 @@
 - slug: aws_get_ec2_instance
   name: Get EC2 Instance
   description: |
-    Get detailed information about a specific EC2 instance including state, type, security groups, and networking.
+    Get detailed information about a specific EC2 instance including its state, type, security groups, and network configuration.
+    Returns comprehensive metadata for managing and monitoring the virtual machine.
   provider: aws
   endpoint: /ec2/instances/{instance_id}
   method: GET
@@ -73,7 +74,7 @@
   name: List S3 Buckets
   description: |
     List all S3 buckets owned by the authenticated AWS account.
-    Returns bucket names, creation dates, and regional information.
+    Returns bucket names, creation dates, and regional endpoints for each bucket.
   provider: aws
   endpoint: /
   method: GET
@@ -92,8 +93,8 @@
 - slug: aws_list_s3_objects
   name: List S3 Objects
   description: |
-    List objects in a specified S3 bucket. Returns object keys, sizes, and last modified dates.
-    Supports pagination and prefix filtering.
+    List objects in a specified S3 bucket, returning object keys, sizes, and last modified timestamps.
+    Supports pagination and prefix filtering to navigate large bucket contents efficiently.
   provider: aws
   endpoint: /{bucket}
   method: GET
@@ -126,8 +127,8 @@
 - slug: aws_get_s3_object
   name: Get S3 Object
   description: |
-    Retrieve an object from S3. Returns object content, metadata, and version info.
-    Use this to read files, configuration, or any stored content.
+    Retrieve an S3 object and return its content, metadata, and version information.
+    Use this to read files, retrieve configuration data, or access stored content.
   provider: aws
   endpoint: /{bucket}/{key}
   method: GET
@@ -157,7 +158,8 @@
 - slug: aws_list_lambda_functions
   name: List Lambda Functions
   description: |
-    List all Lambda functions in the AWS account. Returns function names, ARNs, runtimes, and memory configurations.
+    List all Lambda functions in the AWS account, returning function names, ARNs, runtimes, and memory configurations.
+    Use this to discover available serverless functions for integration.
   provider: aws
   endpoint: /lambda/functions
   method: GET
@@ -183,7 +185,8 @@
 - slug: aws_get_lambda_function
   name: Get Lambda Function
   description: |
-    Get configuration details of a Lambda function including runtime, handler, environment variables, and resource usage.
+    Get configuration details of a Lambda function including runtime, handler, environment variables, and resource settings.
+    Returns the complete configuration for deploying or invoking the function.
   provider: aws
   endpoint: /lambda/functions/{function_name}
   method: GET
@@ -206,7 +209,8 @@
 - slug: aws_list_iam_users
   name: List IAM Users
   description: |
-    List all IAM users in the AWS account. Returns user names, IDs, creation dates, and last activity.
+    List all IAM users in the AWS account and return user names, IDs, creation dates, and last activity timestamps.
+    Use this to discover users for permission management and access auditing.
   provider: aws
   endpoint: /iam/users
   method: GET
@@ -232,7 +236,8 @@
 - slug: aws_get_iam_user
   name: Get IAM User
   description: |
-    Get details about a specific IAM user including policies, groups, and access keys.
+    Get details about a specific IAM user including their attached policies, group memberships, and access keys.
+    Returns complete identity and permissions information for security audits.
   provider: aws
   endpoint: /iam/users/{user_name}
   method: GET
@@ -255,7 +260,8 @@
 - slug: aws_list_rds_instances
   name: List RDS Instances
   description: |
-    List all RDS database instances in the AWS account. Returns instance identifiers, engines, states, and configurations.
+    List all RDS database instances in the AWS account and return instance identifiers, engines, states, and configurations.
+    Use this to discover available databases for connection and management.
   provider: aws
   endpoint: /rds/instances
   method: GET

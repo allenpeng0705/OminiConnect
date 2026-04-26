@@ -18,7 +18,7 @@
 - slug: jira_data_center_get_current_user
   name: Get Current User
   description: |
-    Get the current authenticated user.
+    Get the profile of the currently authenticated Jira user. Returns account details and permissions.
   provider: jira-data-center
   endpoint: /rest/api/3/myself
   method: GET
@@ -36,7 +36,7 @@
 - slug: jira_data_center_list_projects
   name: List Projects
   description: |
-    List all projects the user has access to.
+    List all Jira projects the authenticated user has access to. Returns project keys, names, and types.
   provider: jira-data-center
   endpoint: /rest/api/3/project
   method: GET
@@ -54,7 +54,7 @@
 - slug: jira_data_center_get_project
   name: Get Project
   description: |
-    Get details for a specific project.
+    Get details about a specific Jira project by its ID or key. Returns project description, lead, and issue types.
   provider: jira-data-center
   endpoint: /rest/api/3/project/{project_id_or_key}
   method: GET
@@ -75,7 +75,7 @@
 - slug: jira_data_center_list_issues
   name: List Issues
   description: |
-    List issues in a project.
+    List issues in a Jira project using JQL query. Returns issue keys, summaries, statuses, and assignees.
   provider: jira-data-center
   endpoint: /rest/api/3/search
   method: GET
@@ -104,7 +104,7 @@
 - slug: jira_data_center_get_issue
   name: Get Issue
   description: |
-    Get details for a specific issue.
+    Get details about a specific Jira issue by its ID or key. Returns description, status, assignee, and comments. Also includes priority, labels, and custom field values.
   provider: jira-data-center
   endpoint: /rest/api/3/issue/{issue_id_or_key}
   method: GET
@@ -125,7 +125,7 @@
 - slug: jira_data_center_create_issue
   name: Create Issue
   description: |
-    Create a new issue.
+    Create a new issue in a Jira project. Returns the created issue with its unique key and ID.
   provider: jira-data-center
   endpoint: /rest/api/3/issue
   method: POST
@@ -161,7 +161,7 @@
 - slug: jira_data_center_update_issue
   name: Update Issue
   description: |
-    Update an existing issue.
+    Update an existing Jira issue. Returns the updated issue confirming the changes.
   provider: jira-data-center
   endpoint: /rest/api/3/issue/{issue_id_or_key}
   method: PUT
@@ -192,7 +192,7 @@
 - slug: jira_data_center_list_comments
   name: List Comments
   description: |
-    List comments on an issue.
+    List all comments on a specific Jira issue. Returns comment text, author, and creation timestamp.
   provider: jira-data-center
   endpoint: /rest/api/3/issue/{issue_id_or_key}/comment
   method: GET
@@ -214,7 +214,7 @@
 - slug: jira_data_center_add_comment
   name: Add Comment
   description: |
-    Add a comment to an issue.
+    Add a new comment to a Jira issue. Returns the created comment confirming delivery.
   provider: jira-data-center
   endpoint: /rest/api/3/issue/{issue_id_or_key}/comment
   method: POST
@@ -240,7 +240,7 @@
 - slug: jira_data_center_search_issues
   name: Search Issues
   description: |
-    Search for issues using JQL.
+    Search for Jira issues using JQL (Jira Query Language). Returns issue keys, summaries, statuses, and assignees.
   provider: jira-data-center
   endpoint: /rest/api/3/search
   method: GET

@@ -18,7 +18,7 @@
 - slug: document360_list_articles
   name: List Articles
   description: |
-    List all articles in Document360.
+    List all knowledge base articles in Document360 with optional category filtering. Returns article titles, IDs, status flags, and last updated timestamps.
   provider: document360
   endpoint: /v2/articles
   method: GET
@@ -43,7 +43,7 @@
 - slug: document360_get_article
   name: Get Article
   description: |
-    Get details of a specific article.
+    Retrieve detailed information about a specific Document360 article including full content, author information, and metadata such as views and ratings.
   provider: document360
   endpoint: /v2/articles/{article_id}
   method: GET
@@ -65,7 +65,7 @@
 - slug: document360_create_article
   name: Create Article
   description: |
-    Create a new article in Document360.
+    Create a new knowledge base article in Document360 with title, markdown content, and category assignment. Returns the created article with its unique identifier.
   provider: document360
   endpoint: /v2/articles
   method: POST
@@ -93,7 +93,7 @@
 - slug: document360_update_article
   name: Update Article
   description: |
-    Update an existing article.
+    Update an existing Document360 article with new title, content, or category changes. Returns the updated article with its modification timestamp.
   provider: document360
   endpoint: /v2/articles/{article_id}
   method: PUT
@@ -121,7 +121,7 @@
 - slug: document360_list_categories
   name: List Categories
   description: |
-    List all categories in Document360.
+    List all article categories in Document360 with optional pagination. Returns category names, IDs, descriptions, and article counts for each category.
   provider: document360
   endpoint: /v2/categories
   method: GET
@@ -143,7 +143,7 @@
 - slug: document360_get_category
   name: Get Category
   description: |
-    Get details of a specific category.
+    Retrieve detailed information about a specific Document360 category including its description, article list, and subcategory structure.
   provider: document360
   endpoint: /v2/categories/{category_id}
   method: GET
@@ -165,7 +165,7 @@
 - slug: document360_list_tags
   name: List Tags
   description: |
-    List all tags in Document360.
+    List all tags used for categorizing articles in Document360 with optional pagination. Returns tag names, IDs, and the number of articles using each tag.
   provider: document360
   endpoint: /v2/tags
   method: GET
@@ -187,7 +187,7 @@
 - slug: document360_get_tag
   name: Get Tag
   description: |
-    Get details of a specific tag.
+    Retrieve detailed information about a specific Document360 tag including associated article count and list of articles with that tag.
   provider: document360
   endpoint: /v2/tags/{tag_id}
   method: GET
@@ -209,7 +209,7 @@
 - slug: document360_list_versions
   name: List Versions
   description: |
-    List all versions of an article.
+    List all version history for a specific Document360 article with optional pagination. Returns version numbers, timestamps, and author names for each revision.
   provider: document360
   endpoint: /v2/articles/{article_id}/versions
   method: GET
@@ -235,7 +235,7 @@
 - slug: document360_search_articles
   name: Search Articles
   description: |
-    Search articles by keyword.
+    Search knowledge base articles in Document360 using keywords and return matching results with relevance scores and article previews.
   provider: document360
   endpoint: /v2/articles/search
   method: GET

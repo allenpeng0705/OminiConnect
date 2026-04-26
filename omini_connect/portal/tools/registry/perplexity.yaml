@@ -18,7 +18,7 @@
 - slug: perplexity_list_threads
   name: List Threads
   description: |
-    List all conversation threads.
+    List all conversation threads, including thread titles, creation dates, last message timestamps, and status values.
   provider: perplexity
   endpoint: /threads
   method: GET
@@ -39,7 +39,7 @@
 - slug: perplexity_get_thread
   name: Get Thread
   description: |
-    Get detailed information about a specific thread.
+    Retrieve detailed information about a specific thread, including its title, creation date, message count, and participant details.
   provider: perplexity
   endpoint: /threads/{threadId}
   method: GET
@@ -61,7 +61,7 @@
 - slug: perplexity_create_thread
   name: Create Thread
   description: |
-    Create a new conversation thread.
+    Create a new conversation thread with the specified title, returning the thread ID and creation timestamp.
   provider: perplexity
   endpoint: /threads
   method: POST
@@ -83,7 +83,7 @@
 - slug: perplexity_post_message
   name: Post Message
   description: |
-    Post a message to a thread.
+    Post a message to a specific thread, specifying the content and model to use, and receive a response with the AI reply.
   provider: perplexity
   endpoint: /threads/{threadId}/messages
   method: POST
@@ -112,7 +112,7 @@
 - slug: perplexity_list_messages
   name: List Messages
   description: |
-    List messages in a thread.
+    List all messages in a specific thread, including message content, timestamps, sender information, and model used for AI responses.
   provider: perplexity
   endpoint: /threads/{threadId}/messages
   method: GET
@@ -134,7 +134,7 @@
 - slug: perplexity_get_user_info
   name: Get User Info
   description: |
-    Get user account information.
+    Retrieve the authenticated user account information, including email, subscription plan, and API usage limits.
   provider: perplexity
   endpoint: /user
   method: GET
@@ -152,7 +152,7 @@
 - slug: perplexity_list_models
   name: List Models
   description: |
-    List available Perplexity models.
+    List all available Perplexity models, including model names, context windows, pricing tiers, and capability descriptions.
   provider: perplexity
   endpoint: /models
   method: GET
@@ -170,7 +170,7 @@
 - slug: perplexity_get_usage
   name: Get Usage
   description: |
-    Get API usage statistics.
+    Retrieve API usage statistics, including total requests made, tokens consumed, remaining credits, and cost breakdown.
   provider: perplexity
   endpoint: /usage
   method: GET
@@ -188,7 +188,7 @@
 - slug: perplexity_list_collections
   name: List Collections
   description: |
-    List all collections.
+    List all collections in the knowledge base, including collection names, item counts, creation dates, and sharing settings.
   provider: perplexity
   endpoint: /collections
   method: GET
@@ -206,7 +206,7 @@
 - slug: perplexity_get_collection
   name: Get Collection
   description: |
-    Get detailed information about a specific collection.
+    Retrieve detailed information about a specific collection, including its name, description, item list, and access permissions.
   provider: perplexity
   endpoint: /collections/{collectionId}
   method: GET

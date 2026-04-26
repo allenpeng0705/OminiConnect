@@ -17,7 +17,7 @@
 - slug: evernote_list_notes
   name: List Notes
   description: |
-    List notes in a specific notebook or all notes if no notebook specified.
+    List notes from the Evernote account with optional notebook or tag filtering. Returns note titles, IDs, modification timestamps, and content previews.
   provider: evernote
   endpoint: /notes
   method: GET
@@ -49,7 +49,7 @@
 - slug: evernote_get_note
   name: Get Note
   description: |
-    Get full content and metadata of a specific Evernote note.
+    Retrieve full content and metadata of a specific Evernote note including title, ENML content, creation and update timestamps, and associated tags.
   provider: evernote
   endpoint: /notes/{guid}
   method: GET
@@ -79,7 +79,7 @@
 - slug: evernote_create_note
   name: Create Note
   description: |
-    Create a new note in a specific notebook with title, content, and tags.
+    Create a new note in a specified Evernote notebook with title, ENML content, and optional tag assignments. Returns the created note with its unique identifier.
   provider: evernote
   endpoint: /notes
   method: POST
@@ -113,7 +113,7 @@
 - slug: evernote_update_note
   name: Update Note
   description: |
-    Update an existing Evernote note's title, content, or attributes.
+    Update an existing Evernote note with new title, ENML content, or tag assignments. Automatically updates the modification timestamp.
   provider: evernote
   endpoint: /notes/{guid}
   method: PUT
@@ -146,7 +146,7 @@
 - slug: evernote_list_notebooks
   name: List Notebooks
   description: |
-    List all Evernote notebooks in the user's account.
+    List all Evernote notebooks in the user's account with names, IDs, creation dates, and note counts for each notebook.
   provider: evernote
   endpoint: /notebooks
   method: GET
@@ -164,7 +164,7 @@
 - slug: evernote_get_notebook
   name: Get Notebook
   description: |
-    Get detailed information about a specific Evernote notebook.
+    Retrieve detailed information about a specific Evernote notebook including description, publishing settings, note count, and stack assignment.
   provider: evernote
   endpoint: /notebooks/{guid}
   method: GET
@@ -186,7 +186,7 @@
 - slug: evernote_list_tags
   name: List Tags
   description: |
-    List all tags in the user's Evernote account.
+    List all tags in the user's Evernote account with tag names, IDs, and the number of notes using each tag for organization.
   provider: evernote
   endpoint: /tags
   method: GET
@@ -204,7 +204,7 @@
 - slug: evernote_get_tag
   name: Get Tag
   description: |
-    Get details about a specific Evernote tag.
+    Retrieve detailed information about a specific Evernote tag including its name, ID, and count of associated notes.
   provider: evernote
   endpoint: /tags/{guid}
   method: GET
@@ -226,7 +226,7 @@
 - slug: evernote_search_notes
   name: Search Notes
   description: |
-    Search notes using Evernote's search query syntax.
+    Search Evernote notes using keywords with optional notebook or tag filtering. Returns matching note titles, IDs, and relevance snippets.
   provider: evernote
   endpoint: /notes/search
   method: GET
@@ -258,7 +258,7 @@
 - slug: evernote_list_resources
   name: List Resources
   description: |
-    List all resources (attachments) in a note.
+    List all attachments and resources in a specific Evernote note including file names, MIME types, sizes, and recognition data.
   provider: evernote
   endpoint: /notes/{guid}/resources
   method: GET

@@ -18,8 +18,7 @@
 - slug: microsoft_list_users
   name: List Users
   description: |
-    List all users in the organization via Microsoft Graph.
-    Filter by department, role, or search query.
+    List all user accounts in the Microsoft organization via Microsoft Graph. Returns user names, emails, and department info.
   provider: microsoft
   endpoint: /v1.0/users
   method: GET
@@ -51,7 +50,7 @@
 - slug: microsoft_get_user
   name: Get User
   description: |
-    Get detailed information about a specific user.
+    Get detailed information about a specific Microsoft 365 user, including their profile and license assignments.
   provider: microsoft
   endpoint: /v1.0/users/{userId}
   method: GET
@@ -76,7 +75,7 @@
 - slug: microsoft_list_groups
   name: List Groups
   description: |
-    List all groups in the organization.
+    List all Microsoft 365 groups and security groups in the organization. Returns group names, types, and member counts.
   provider: microsoft
   endpoint: /v1.0/groups
   method: GET
@@ -105,7 +104,7 @@
 - slug: microsoft_get_group
   name: Get Group
   description: |
-    Get details of a specific group.
+    Get details about a specific Microsoft 365 group, including its name, type, and member list.
   provider: microsoft
   endpoint: /v1.0/groups/{groupId}
   method: GET
@@ -130,8 +129,7 @@
 - slug: microsoft_list_messages
   name: List Messages
   description: |
-    List messages in the authenticated user's mailbox.
-    Filter by folder, sender, or date.
+    List all email messages in the authenticated user's mailbox. Returns message subjects, senders, and timestamps.
   provider: microsoft
   endpoint: /v1.0/me/messages
   method: GET
@@ -160,7 +158,7 @@
 - slug: microsoft_get_message
   name: Get Message
   description: |
-    Get details of a specific email message.
+    Get detailed information about a specific email message, including body content and attachments.
   provider: microsoft
   endpoint: /v1.0/me/messages/{messageId}
   method: GET
@@ -186,7 +184,7 @@
 - slug: microsoft_list_calendars
   name: List Calendars
   description: |
-    List calendars for the authenticated user.
+    List all calendars in the authenticated user's mailbox. Returns calendar names and sharing permissions.
   provider: microsoft
   endpoint: /v1.0/me/calendars
   method: GET
@@ -209,7 +207,7 @@
 - slug: microsoft_get_calendar_event
   name: Get Calendar Event
   description: |
-    Get details of a specific calendar event.
+    Get details about a specific calendar event, including attendees, location, and start time.
   provider: microsoft
   endpoint: /v1.0/me/events/{eventId}
   method: GET
@@ -232,7 +230,7 @@
 - slug: microsoft_list_files
   name: List Files
   description: |
-    List files in the authenticated user's OneDrive.
+    List all files in the authenticated user's OneDrive. Returns file names, types, and modification dates.
   provider: microsoft
   endpoint: /v1.0/me/drive/root/children
   method: GET
@@ -258,7 +256,7 @@
 - slug: microsoft_get_file
   name: Get File
   description: |
-    Get details of a specific file in OneDrive.
+    Get details about a specific file in OneDrive, including size, creation date, and sharing permissions.
   provider: microsoft
   endpoint: /v1.0/me/drive/items/{itemId}
   method: GET

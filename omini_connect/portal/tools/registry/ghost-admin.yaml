@@ -18,7 +18,7 @@
 - slug: ghost_admin_list_posts
   name: List Posts
   description: |
-    List all posts in Ghost with optional filters.
+    List all posts in the Ghost admin with optional status filtering. Returns post IDs, titles, status, publication dates, and author information for each post.
   provider: ghost-admin
   endpoint: /posts
   method: GET
@@ -44,7 +44,7 @@
 - slug: ghost_admin_get_post
   name: Get Post
   description: |
-    Get detailed information about a specific post.
+    Get detailed information about a specific post including its title, content, status, author, tags, and publication date.
   provider: ghost-admin
   endpoint: /posts/{id}
   method: GET
@@ -66,7 +66,7 @@
 - slug: ghost_admin_create_post
   name: Create Post
   description: |
-    Create a new post in Ghost.
+    Create a new post in Ghost with title, HTML content, and publication status. Returns the created post with its unique ID and URL.
   provider: ghost-admin
   endpoint: /posts
   method: POST
@@ -98,7 +98,7 @@
 - slug: ghost_admin_update_post
   name: Update Post
   description: |
-    Update an existing post.
+    Update an existing post's content, title, or status. Returns the updated post with modified field values and confirmation.
   provider: ghost-admin
   endpoint: /posts/{id}
   method: PUT
@@ -129,7 +129,7 @@
 - slug: ghost_admin_delete_post
   name: Delete Post
   description: |
-    Delete a post from Ghost.
+    Delete a post from Ghost permanently. Returns confirmation of deletion for the removed post.
   provider: ghost-admin
   endpoint: /posts/{id}
   method: DELETE
@@ -151,7 +151,7 @@
 - slug: ghost_admin_list_pages
   name: List Pages
   description: |
-    List all pages in Ghost.
+    List all pages in Ghost with optional status filtering. Returns page IDs, titles, status, and visibility settings for each page.
   provider: ghost-admin
   endpoint: /pages
   method: GET
@@ -172,7 +172,7 @@
 - slug: ghost_admin_get_page
   name: Get Page
   description: |
-    Get detailed information about a specific page.
+    Get detailed information about a specific page including its title, content, status, and visibility settings.
   provider: ghost-admin
   endpoint: /pages/{id}
   method: GET
@@ -194,7 +194,7 @@
 - slug: ghost_admin_list_tags
   name: List Tags
   description: |
-    List all tags in Ghost.
+    List all tags in Ghost for organizing content. Returns tag IDs, names, slugs, and post counts for each tag.
   provider: ghost-admin
   endpoint: /tags
   method: GET
@@ -211,7 +211,7 @@
 - slug: ghost_admin_list_users
   name: List Users
   description: |
-    List all users in Ghost.
+    List all users in Ghost including admins, editors, and authors. Returns user IDs, names, email addresses, and roles for each user.
   provider: ghost-admin
   endpoint: /users
   method: GET
@@ -228,7 +228,7 @@
 - slug: ghost_admin_get_settings
   name: Get Settings
   description: |
-    Get Ghost site settings.
+    Get Ghost site settings including site title, description, URL, timezone, and publication settings.
   provider: ghost-admin
   endpoint: /settings
   method: GET

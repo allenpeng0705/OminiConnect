@@ -17,7 +17,8 @@
 - slug: airtable_list_bases
   name: List Bases
   description: |
-    Retrieve all Airtable bases accessible to the authenticated user.
+    List all Airtable bases accessible to the authenticated user. Returns base IDs, names, and permission settings for each base.
+    Use this to discover available bases for data access and management.
   provider: airtable
   endpoint: /v0/meta/bases
   method: GET
@@ -36,7 +37,8 @@
 - slug: airtable_get_base
   name: Get Base
   description: |
-    Retrieve metadata for a specific Airtable base.
+    Get metadata for a specific Airtable base by its ID. Returns the base name, description, and table information.
+    This provides a complete overview of the base structure and contents.
   provider: airtable
   endpoint: /v0/meta/bases/{baseId}
   method: GET
@@ -58,7 +60,8 @@
 - slug: airtable_list_tables
   name: List Tables
   description: |
-    Retrieve all tables in a specific Airtable base.
+    List all tables in a specific Airtable base. Returns table IDs, names, and field counts for each table.
+    Use this to explore the structure of a base before reading or writing records.
   provider: airtable
   endpoint: /v0/meta/bases/{baseId}/tables
   method: GET
@@ -80,7 +83,8 @@
 - slug: airtable_get_table
   name: Get Table
   description: |
-    Retrieve metadata for a specific table in an Airtable base.
+    Get metadata for a specific table in an Airtable base. Returns the table name, field definitions, and view information.
+    This helps understand the schema before querying or modifying records.
   provider: airtable
   endpoint: /v0/meta/bases/{baseId}/tables/{tableId}
   method: GET
@@ -106,7 +110,8 @@
 - slug: airtable_list_records
   name: List Records
   description: |
-    Retrieve records from a specific table with optional filtering and sorting.
+    List records from a specific Airtable table with pagination support. Returns record IDs, field values, and created timestamps.
+    Filter, sort, and select specific fields to customize results for your needs.
   provider: airtable
   endpoint: /v0/{baseId}/{tableId}
   method: GET
@@ -145,7 +150,8 @@
 - slug: airtable_get_record
   name: Get Record
   description: |
-    Retrieve a single record by ID from a specific table.
+    Get a single record from a specific Airtable table by its ID. Returns all field values and metadata for the record.
+    Use this to retrieve complete details of a specific record.
   provider: airtable
   endpoint: /v0/{baseId}/{tableId}/{recordId}
   method: GET
@@ -175,7 +181,8 @@
 - slug: airtable_create_record
   name: Create Record
   description: |
-    Create a new record in a specific table with field values.
+    Create a new record in a specific Airtable table with field values. Returns the created record with its unique ID.
+    This enables adding new data entries to your Airtable base.
   provider: airtable
   endpoint: /v0/{baseId}/{tableId}
   method: POST
@@ -205,7 +212,8 @@
 - slug: airtable_update_record
   name: Update Record
   description: |
-    Update specific fields of an existing record.
+    Update specific fields of an existing record in an Airtable table. Returns the updated record confirming the changes.
+    This modifies existing data while preserving unspecified fields.
   provider: airtable
   endpoint: /v0/{baseId}/{tableId}/{recordId}
   method: PATCH
@@ -239,7 +247,8 @@
 - slug: airtable_list_fields
   name: List Fields
   description: |
-    Retrieve all field definitions for a specific table.
+    List all field definitions for a specific Airtable table. Returns field IDs, names, types, and options for each field.
+    Use this to understand the data structure before querying records.
   provider: airtable
   endpoint: /v0/meta/bases/{baseId}/tables/{tableId}/fields
   method: GET
@@ -266,7 +275,8 @@
 - slug: airtable_get_field
   name: Get Field
   description: |
-    Retrieve metadata for a specific field in a table.
+    Get metadata for a specific field in an Airtable table. Returns the field name, type, options, and description.
+    This provides detailed schema information for a specific column.
   provider: airtable
   endpoint: /v0/meta/bases/{baseId}/tables/{tableId}/fields/{fieldId}
   method: GET

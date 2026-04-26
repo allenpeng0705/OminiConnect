@@ -17,7 +17,9 @@
 - slug: zeplin_list_projects
   name: List Projects
   description: |
-    List all Zeplin projects the user has access to.
+    List all Zeplin projects the user has access to with pagination.
+    Returns project names, IDs, and descriptions for each project.
+    Use this to discover design collaboration workspaces.
   provider: zeplin
   endpoint: /api/v1/projects
   method: GET
@@ -44,6 +46,8 @@
   name: Get Project
   description: |
     Get details about a specific Zeplin project including its stories and members.
+    Returns the complete project data with all associated information.
+    This provides full project data for design collaboration management.
   provider: zeplin
   endpoint: /api/v1/projects/{project_id}
   method: GET
@@ -65,7 +69,9 @@
 - slug: zeplin_list_screens
   name: List Screens
   description: |
-    List all screens in a Zeplin project or story.
+    List all screens in a Zeplin project or story with pagination.
+    Returns screen names, IDs, and thumbnails for each screen.
+    Use this to discover design assets and manage project visuals.
   provider: zeplin
   endpoint: /api/v1/projects/{project_id}/screens
   method: GET
@@ -100,6 +106,8 @@
   name: Get Screen
   description: |
     Get details about a specific screen including its layers and assets.
+    Returns the complete screen data with all associated information.
+    This provides full screen data for design inspection and handoff.
   provider: zeplin
   endpoint: /api/v1/screens/{screen_id}
   method: GET
@@ -121,7 +129,9 @@
 - slug: zeplin_list_users
   name: List Users
   description: |
-    List all users in a Zeplin project.
+    List all users in a Zeplin project with their roles and permissions.
+    Returns user names, IDs, and email addresses for each member.
+    Use this to discover team members and manage project access.
   provider: zeplin
   endpoint: /api/v1/projects/{project_id}/members
   method: GET
@@ -149,7 +159,9 @@
 - slug: zeplin_get_user
   name: Get User
   description: |
-    Get details about a specific Zeplin user.
+    Get details about a specific Zeplin user including their profile and activity.
+    Returns the complete user data with all associated information.
+    This provides full user data for team management and collaboration.
   provider: zeplin
   endpoint: /api/v1/users/{user_id}
   method: GET
@@ -171,7 +183,9 @@
 - slug: zeplin_list_comments
   name: List Comments
   description: |
-    List all comments on a Zeplin screen.
+    List all comments on a Zeplin screen with author and timestamp information.
+    Returns comment IDs, content, and status for each comment.
+    Use this to discover design feedback and track collaboration.
   provider: zeplin
   endpoint: /api/v1/screens/{screen_id}/comments
   method: GET
@@ -199,7 +213,9 @@
 - slug: zeplin_get_comment
   name: Get Comment
   description: |
-    Get details about a specific comment on a screen.
+    Get details about a specific comment on a screen including replies.
+    Returns the complete comment data with all associated information.
+    This provides full comment data for design discussion tracking.
   provider: zeplin
   endpoint: /api/v1/comments/{comment_id}
   method: GET
@@ -222,6 +238,8 @@
   name: Get Styleguide
   description: |
     Get the styleguide for a Zeplin project including colors, typography, and components.
+    Returns the complete styleguide data with all design tokens.
+    This provides full styleguide data for design system management.
   provider: zeplin
   endpoint: /api/v1/projects/{project_id}/styleguide
   method: GET
@@ -245,6 +263,8 @@
   name: Get Spec
   description: |
     Get the specification for a screen including dimensions, spacing, and assets.
+    Returns the complete spec data with all measurement details.
+    This provides full spec data for design implementation and handoff.
   provider: zeplin
   endpoint: /api/v1/screens/{screen_id}/spec
   method: GET

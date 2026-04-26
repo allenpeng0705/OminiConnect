@@ -23,8 +23,7 @@
 - slug: google_workspace_list_gmail_messages
   name: List Gmail Messages
   description: |
-    List messages in the authenticated user's Gmail mailbox.
-    Supports filtering by label, query, and pagination.
+    List email messages from the authenticated user's Gmail mailbox with support for filtering by labels and search queries. Returns message IDs, subjects, senders, and read status for each email.
   provider: google_workspace
   endpoint: /gmail/v1/users/me/messages
   method: GET
@@ -53,7 +52,7 @@
 - slug: google_workspace_get_gmail_message
   name: Get Gmail Message
   description: |
-    Get a specific email message by ID including headers, body, and metadata.
+    Retrieve a specific email message including headers, body content, attachments, and metadata. Returns the complete email data with formatting and delivery information.
   provider: google_workspace
   endpoint: /gmail/v1/users/me/messages/{id}
   method: GET
@@ -80,7 +79,7 @@
 - slug: google_workspace_send_gmail_message
   name: Send Gmail Message
   description: |
-    Send an email message. Include recipients, subject, and body.
+    Send an email message to specified recipients with subject and body content. Creates and dispatches the email through Gmail, returning the sent message metadata.
   provider: google_workspace
   endpoint: /gmail/v1/users/me/messages/send
   method: POST
@@ -117,8 +116,7 @@
 - slug: google_workspace_list_drive_files
   name: List Drive Files
   description: |
-    List files in the authenticated user's Google Drive.
-    Supports filtering by name, type, and folder.
+    List files stored in the authenticated user's Google Drive with support for filtering by name, type, and folder location. Returns file IDs, names, MIME types, and sharing status for each file.
   provider: google_workspace
   endpoint: /drive/v3/files
   method: GET
@@ -147,7 +145,7 @@
 - slug: google_workspace_get_drive_file
   name: Get Drive File
   description: |
-    Get metadata for a specific file in Google Drive.
+    Retrieve metadata for a specific file in Google Drive including ownership, sharing settings, and modification history. Returns detailed file properties and cloud storage information.
   provider: google_workspace
   endpoint: /drive/v3/files/{fileId}
   method: GET
@@ -173,8 +171,7 @@
 - slug: google_workspace_list_calendar_events
   name: List Calendar Events
   description: |
-    List calendar events for the authenticated user.
-    Supports filtering by time range, calendar ID, and query.
+    List calendar events for the authenticated user with support for filtering by time range, calendar, and search queries. Returns event IDs, titles, times, locations, and attendee lists.
   provider: google_workspace
   endpoint: /calendar/v3/calendars/primary/events
   method: GET
@@ -218,7 +215,7 @@
 - slug: google_workspace_get_calendar_event
   name: Get Calendar Event
   description: |
-    Get a specific calendar event by ID.
+    Retrieve detailed information about a specific calendar event including attendees, location, description, and recurrence rules. Returns the complete event details with conferencing information.
   provider: google_workspace
   endpoint: /calendar/v3/calendars/primary/events/{eventId}
   method: GET
@@ -245,7 +242,7 @@
 - slug: google_workspace_list_contacts
   name: List Contacts
   description: |
-    List contacts from the authenticated user's Google contacts.
+    List contacts from the authenticated user's Google contacts including names, email addresses, and phone numbers. Returns a paginated list of personal and shared contacts.
   provider: google_workspace
   endpoint: /contacts/v3/people/me/connections
   method: GET
@@ -270,7 +267,7 @@
 - slug: google_workspace_get_contact
   name: Get Contact
   description: |
-    Get details of a specific contact by resource name.
+    Retrieve detailed information about a specific contact including all phone numbers, email addresses, and physical addresses. Returns the complete contact profile with organizational details.
   provider: google_workspace
   endpoint: /contacts/v3/people/{resourceName}
   method: GET
@@ -292,7 +289,7 @@
 - slug: google_workspace_list_sheets
   name: List Sheets
   description: |
-    List spreadsheets in Google Sheets that the user has access to.
+    List Google Sheets spreadsheets accessible to the user including names, owners, and last modified dates. Returns spreadsheet IDs and metadata for document discovery.
   provider: google_workspace
   endpoint: /sheets/v4/spreadsheets
   method: GET
@@ -318,7 +315,7 @@
 - slug: google_workspace_get_sheets
   name: Get Sheets Data
   description: |
-    Get data from a Google Sheets spreadsheet. Specify the spreadsheet ID and range.
+    Retrieve data from a specified Google Sheets spreadsheet including cell values, formulas, and formatting. Returns tabular data from a specific range within the spreadsheet.
   provider: google_workspace
   endpoint: /sheets/v4/spreadsheets/{spreadsheetId}/values/{range}
   method: GET

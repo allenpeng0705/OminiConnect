@@ -17,8 +17,7 @@
 - slug: elasticsearch_list_indices
   name: List Indices
   description: |
-    List all indices in the Elasticsearch cluster.
-    Returns index names, document counts, and storage size.
+    List all indices in the Elasticsearch cluster. Returns index names, document counts, and storage sizes in human-readable format.
   provider: elasticsearch
   endpoint: /_cat/indices
   method: GET
@@ -47,8 +46,7 @@
 - slug: elasticsearch_get_index
   name: Get Index
   description: |
-    Get detailed information about a specific index including
-    mappings, settings, and statistics.
+    Retrieve detailed information about a specific Elasticsearch index including field mappings, settings, and cluster statistics.
   provider: elasticsearch
   endpoint: /{index_name}
   method: GET
@@ -70,8 +68,7 @@
 - slug: elasticsearch_create_index
   name: Create Index
   description: |
-    Create a new index with optional mappings and settings.
-    Supports custom analyzers, aliases, and number of shards.
+    Create a new Elasticsearch index with optional field mappings and custom settings such as analyzers and shard configuration.
   provider: elasticsearch
   endpoint: /{index_name}
   method: PUT
@@ -102,8 +99,7 @@
 - slug: elasticsearch_delete_index
   name: Delete Index
   description: |
-    Delete an index and all its documents permanently.
-    Use with caution as this cannot be undone.
+    Permanently delete an Elasticsearch index and all its documents. Exercise caution as this action cannot be undone.
   provider: elasticsearch
   endpoint: /{index_name}
   method: DELETE
@@ -125,8 +121,7 @@
 - slug: elasticsearch_index_document
   name: Index Document
   description: |
-    Index a single document into an existing index.
-    If document ID is not provided, one will be generated.
+    Index a single document into an existing Elasticsearch index. If no document ID is provided, one will be auto-generated.
   provider: elasticsearch
   endpoint: /{index_name}/_doc/{document_id}
   method: PUT
@@ -159,8 +154,7 @@
 - slug: elasticsearch_search
   name: Search
   description: |
-    Search for documents in an index using query DSL.
-    Supports full-text search, filters, aggregations, and sorting.
+    Search for documents in an Elasticsearch index using Query DSL. Supports full-text search, filters, aggregations, and sorting options.
   provider: elasticsearch
   endpoint: /{index_name}/_search
   method: POST
@@ -209,8 +203,7 @@
 - slug: elasticsearch_delete_document
   name: Delete Document
   description: |
-    Delete a single document by its ID from an index.
-    Use the bulk API to delete multiple documents.
+    Delete a single document by ID from an Elasticsearch index. Use the bulk API for deleting multiple documents.
   provider: elasticsearch
   endpoint: /{index_name}/_doc/{document_id}
   method: DELETE
@@ -240,8 +233,7 @@
 - slug: elasticsearch_list_clusters
   name: List Clusters
   description: |
-    List connected clusters in a cross-cluster setup.
-    Returns cluster names, statuses, and connectivity info.
+    List all connected clusters in an Elasticsearch cross-cluster setup. Returns cluster names, health statuses, and connectivity information.
   provider: elasticsearch
   endpoint: /_cluster/state
   method: GET
@@ -263,8 +255,7 @@
 - slug: elasticsearch_get_cluster_health
   name: Get Cluster Health
   description: |
-    Get the health status of the cluster (green, yellow, red).
-    Returns cluster state, number of nodes, and shard allocation.
+    Retrieve the health status of an Elasticsearch cluster (green, yellow, or red). Returns cluster state, node count, and shard allocation details.
   provider: elasticsearch
   endpoint: /_cluster/health
   method: GET
@@ -295,8 +286,7 @@
 - slug: elasticsearch_get_node_stats
   name: Get Node Stats
   description: |
-    Get detailed statistics for nodes in the cluster including
-    CPU, memory, disk usage, and thread pool information.
+    Retrieve detailed statistics for nodes in an Elasticsearch cluster including CPU usage, memory consumption, disk I/O, and thread pools.
   provider: elasticsearch
   endpoint: /_nodes/stats
   method: GET
