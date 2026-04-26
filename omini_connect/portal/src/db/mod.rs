@@ -143,6 +143,16 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
             key_hash TEXT PRIMARY KEY,
             username TEXT NOT NULL,
             label TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            agent_id TEXT
+        )"#,
+        // Agents table
+        r#"CREATE TABLE IF NOT EXISTS agents (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL DEFAULT '',
+            owner_username TEXT NOT NULL,
+            active INTEGER NOT NULL DEFAULT 1,
             created_at TEXT NOT NULL
         )"#,
         // Connectors table
@@ -188,6 +198,22 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
             // Ignore duplicate-column errors across sqlite/postgres/mysql variants.
             tracing::debug!("Skipping connector migration statement '{}': {}", statement, e);
         }
+    }
+
+    // Add agent_id column to api_keys (optional column for agent-scoped keys)
+    if let Err(e) = sqlx::query("ALTER TABLE api_keys ADD COLUMN agent_id TEXT")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping api_keys agent_id migration: {}", e);
+    }
+
+    // Add active column to agents
+    if let Err(e) = sqlx::query("ALTER TABLE agents ADD COLUMN active INTEGER NOT NULL DEFAULT 1")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping agents active migration: {}", e);
     }
 
     // Rename legacy built-in engine label (pre–OminiConnect naming).
@@ -335,7 +361,7 @@ impl SqlxApiKeyRepo {
 impl ApiKeyRepository for SqlxApiKeyRepo {
     async fn get_by_hash(&self, key_hash: &str) -> anyhow::Result<Option<ApiKey>> {
         let row: Option<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at FROM api_keys WHERE key_hash = $1",
+            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys WHERE key_hash = $1",
         )
         .bind(key_hash)
         .fetch_optional(&self.pool)
@@ -346,12 +372,13 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
     async fn insert(&self, api_key: &ApiKey) -> anyhow::Result<()> {
         sqlx::query(
-            "INSERT INTO api_keys (key_hash, username, label, created_at) VALUES ($1, $2, $3, $4)",
+            "INSERT INTO api_keys (key_hash, username, label, created_at, agent_id) VALUES ($1, $2, $3, $4, $5)",
         )
         .bind(&api_key.key_hash)
         .bind(&api_key.username)
         .bind(&api_key.label)
         .bind(api_key.created_at.to_rfc3339())
+        .bind(&api_key.agent_id)
         .execute(&self.pool)
         .await?;
         Ok(())
@@ -359,7 +386,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
     async fn list_all(&self) -> anyhow::Result<Vec<ApiKey>> {
         let rows: Vec<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at FROM api_keys",
+            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys",
         )
         .fetch_all(&self.pool)
         .await?;
@@ -368,7 +395,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
     async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>> {
         let rows: Vec<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at FROM api_keys WHERE username = $1",
+            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys WHERE username = $1",
         )
         .bind(username)
         .fetch_all(&self.pool)
@@ -486,6 +513,85 @@ impl ConnectorRepository for SqlxConnectorRepo {
 }
 
 // ------------------------------------------------------------------------------------------------
+// Agent repository
+// ------------------------------------------------------------------------------------------------
+
+#[async_trait::async_trait]
+pub trait AgentRepository: Send + Sync {
+    async fn get(&self, id: &str) -> anyhow::Result<Option<crate::auth::models::Agent>>;
+    async fn insert(&self, agent: &crate::auth::models::Agent) -> anyhow::Result<()>;
+    async fn list_by_owner(&self, owner: &str) -> anyhow::Result<Vec<crate::auth::models::Agent>>;
+    async fn set_active(&self, id: &str, active: bool) -> anyhow::Result<()>;
+    async fn delete(&self, id: &str) -> anyhow::Result<()>;
+}
+
+pub struct SqlxAgentRepo {
+    pool: sqlx::AnyPool,
+}
+
+impl SqlxAgentRepo {
+    pub fn new(pool: sqlx::AnyPool) -> Self {
+        Self { pool }
+    }
+}
+
+#[async_trait::async_trait]
+impl AgentRepository for SqlxAgentRepo {
+    async fn get(&self, id: &str) -> anyhow::Result<Option<crate::auth::models::Agent>> {
+        let row: Option<models::AgentRow> = sqlx::query_as(
+            "SELECT id, name, description, owner_username, active, created_at FROM agents WHERE id = $1",
+        )
+        .bind(id)
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(row.map(|r| r.into()))
+    }
+
+    async fn insert(&self, agent: &crate::auth::models::Agent) -> anyhow::Result<()> {
+        sqlx::query(
+            "INSERT INTO agents (id, name, description, owner_username, active, created_at) VALUES ($1, $2, $3, $4, $5, $6)",
+        )
+        .bind(&agent.id)
+        .bind(&agent.name)
+        .bind(&agent.description)
+        .bind(&agent.owner_username)
+        .bind(if agent.active { 1 } else { 0 })
+        .bind(agent.created_at.to_rfc3339())
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn list_by_owner(&self, owner: &str) -> anyhow::Result<Vec<crate::auth::models::Agent>> {
+        let rows: Vec<models::AgentRow> = sqlx::query_as(
+            "SELECT id, name, description, owner_username, active, created_at FROM agents WHERE owner_username = $1 ORDER BY created_at DESC",
+        )
+        .bind(owner)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows.into_iter().map(|r| r.into()).collect())
+    }
+
+    async fn set_active(&self, id: &str, active: bool) -> anyhow::Result<()> {
+        sqlx::query("UPDATE agents SET active = $1 WHERE id = $2")
+            .bind(if active { 1 } else { 0 })
+            .bind(id)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+
+    async fn delete(&self, id: &str) -> anyhow::Result<()> {
+        sqlx::query("DELETE FROM agents WHERE id = $1")
+            .bind(id)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+}
+
+// ------------------------------------------------------------------------------------------------
 // Seed
 // ------------------------------------------------------------------------------------------------
 
@@ -566,6 +672,7 @@ mod models {
         pub username: String,
         pub label: String,
         pub created_at: String,
+        pub agent_id: Option<String>,
     }
 
     impl From<ApiKeyRow> for ApiKey {
@@ -574,6 +681,32 @@ mod models {
                 key_hash: r.key_hash,
                 username: r.username,
                 label: r.label,
+                created_at: DateTime::parse_from_rfc3339(&r.created_at)
+                    .map(|dt| dt.with_timezone(&Utc))
+                    .unwrap_or_else(|_| Utc::now()),
+                agent_id: r.agent_id,
+            }
+        }
+    }
+
+    #[derive(FromRow)]
+    pub struct AgentRow {
+        pub id: String,
+        pub name: String,
+        pub description: String,
+        pub owner_username: String,
+        pub active: i32,
+        pub created_at: String,
+    }
+
+    impl From<AgentRow> for crate::auth::models::Agent {
+        fn from(r: AgentRow) -> Self {
+            crate::auth::models::Agent {
+                id: r.id,
+                name: r.name,
+                description: r.description,
+                owner_username: r.owner_username,
+                active: r.active != 0,
                 created_at: DateTime::parse_from_rfc3339(&r.created_at)
                     .map(|dt| dt.with_timezone(&Utc))
                     .unwrap_or_else(|_| Utc::now()),

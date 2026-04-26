@@ -479,6 +479,7 @@ pub async fn generate_api_key(
         username: username.clone(),
         label: req.label.clone(),
         created_at: chrono::Utc::now(),
+        agent_id: None,
     };
 
     if let Err(e) = state.api_keys.insert(&api_key).await {
