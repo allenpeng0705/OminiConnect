@@ -243,7 +243,7 @@ function generateToolsFromOpenAPI(
 - `src/api/tools.rs` - API handlers (list, execute)
 - `tools/registry/github.yaml` - GitHub tool definitions (9 tools)
 
-### Phase 2: Tool Generation ✅ (Partial)
+### Phase 2: Tool Generation ✅ (Done)
 1. ✅ Built OpenAPI → tool generator (`tools/generator/src/main.rs`) with allowlist support:
    - `--operation-ids` for explicit operation ID filtering
    - `--tags` for tag-based filtering
@@ -251,15 +251,20 @@ function generateToolsFromOpenAPI(
 2. ✅ Scope filtering implemented:
    - `scope_satisfied: "yes" | "no" | "unknown"` added to tool response
    - Uses connector-configured scopes from DB
-3. ⏳ Expand to Slack, Notion, Google — repeat allowlist approach per provider (pending OpenAPI specs)
+3. ✅ Expand to all providers — 886 provider YAML files in `tools/registry/`
+   - Generator used to produce tool definitions for the full provider catalog
+   - All providers now have tool definitions loaded at startup
 
-### Phase 3: LLM UX ✅
+### Phase 3: LLM UX ✅ (Partial)
 1. ✅ Implemented search endpoint `GET /api/tools/search?q=...` (keyword search across name, description, tags, slug)
 2. ✅ MCP server endpoint at `POST /api/mcp` with JSON-RPC 2.0:
    - `tools/list` - Returns available tools in MCP format
    - `tools/call` - Executes a tool
    - Same auth as other endpoints (Bearer token)
-3. ⏳ LLM-optimized descriptions - pending (requires manual curation per tool)
+3. ⏳ **LLM-optimized tool descriptions** — pending
+   - Descriptions are currently minimal (endpoint paths, basic summaries)
+   - Need to enrich descriptions across all 886 provider YAML files
+   - Use LLM to generate clear descriptions that help LLM agents select the right tool
 
 ---
 

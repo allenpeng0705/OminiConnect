@@ -13,22 +13,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [checking, setChecking] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
-  console.log('[ProtectedRoute] Rendering, checking:', checking, 'authenticated:', authenticated);
-
   useEffect(() => {
-    console.log('[ProtectedRoute] useEffect firing, calling getMe()');
     getMe().then(me => {
-      console.log('[ProtectedRoute] getMe returned:', me, 'setting authenticated:', !!me);
       setAuthenticated(!!me);
       setChecking(false);
-    }).catch(err => {
-      console.error('[ProtectedRoute] getMe error:', err);
+    }).catch(() => {
       setAuthenticated(false);
       setChecking(false);
     });
   }, []);
-
-  console.log('[ProtectedRoute] About to render, checking:', checking, 'authenticated:', authenticated);
 
   if (checking) {
     return (

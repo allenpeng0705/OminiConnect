@@ -189,9 +189,7 @@ export default function Dashboard() {
 
   async function loadMe() {
     try {
-      console.log('[Dashboard] loadMe calling getMe()');
       const me = await getMe();
-      console.log('[Dashboard] loadMe got:', me);
       if (me?.username) setUsername(me.username);
     } catch (e) {
       console.error('[Dashboard] loadMe error:', e);
