@@ -1,0 +1,267 @@
+# Duda Tools - Allowlist
+# Curated subset of Duda API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. duda_list_sites     - List all sites
+# 2. duda_get_site       - Get site details
+# 3. duda_create_site    - Create a new site
+# 4. duda_list_pages     - List pages in a site
+# 5. duda_get_page       - Get page details
+# 6. duda_create_page    - Create a new page
+# 7. duda_list_widgets   - List widgets in a site
+# 8. duda_get_widget     - Get widget details
+# 9. duda_list_users     - List users in a site
+# 10. duda_get_user      - Get user details
+
+- slug: duda_list_sites
+  name: List Sites
+  description: |
+    List all websites associated with your Duda account.
+  provider: duda
+  endpoint: /api/sites
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of sites to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of sites to skip for pagination"
+    required: []
+
+- slug: duda_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a specific website by site name or ID.
+  provider: duda
+  endpoint: /api/sites/{site_name}
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site (site_name)"
+    required:
+      - site_name
+
+- slug: duda_create_site
+  name: Create Site
+  description: |
+    Create a new website in your Duda account with specified template and settings.
+  provider: duda
+  endpoint: /api/sites
+  method: POST
+  scopes:
+    - sites:write
+  tags:
+    - sites
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a site
+    properties:
+      template_id:
+        type: string
+        description: "Template ID to use for the new site"
+      site_title:
+        type: string
+        description: "Title for the new site"
+      domain:
+        type: string
+        description: "Custom domain for the site (optional)"
+    required:
+      - template_id
+      - site_title
+
+- slug: duda_list_pages
+  name: List Pages
+  description: |
+    List all pages within a specific Duda website.
+  provider: duda
+  endpoint: /api/sites/{site_name}/pages
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - pages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_name
+
+- slug: duda_get_page
+  name: Get Page
+  description: |
+    Get detailed information about a specific page including content and settings.
+  provider: duda
+  endpoint: /api/sites/{site_name}/pages/{page_uuid}
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+      page_uuid:
+        type: string
+        description: "Unique identifier of the page"
+    required:
+      - site_name
+      - page_uuid
+
+- slug: duda_create_page
+  name: Create Page
+  description: |
+    Create a new page within a Duda website.
+  provider: duda
+  endpoint: /api/sites/{site_name}/pages
+  method: POST
+  scopes:
+    - pages:write
+  tags:
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+      page_title:
+        type: string
+        description: "Title for the new page"
+      page_type:
+        type: string
+        description: "Type of page to create (e.g., template, blank)"
+    required:
+      - site_name
+      - page_title
+
+- slug: duda_list_widgets
+  name: List Widgets
+  description: |
+    List all widgets available in a Duda website.
+  provider: duda
+  endpoint: /api/sites/{site_name}/widgets
+  method: GET
+  scopes:
+    - widgets:read
+  tags:
+    - widgets
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing widgets
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_name
+
+- slug: duda_get_widget
+  name: Get Widget
+  description: |
+    Get detailed configuration and content of a specific widget.
+  provider: duda
+  endpoint: /api/sites/{site_name}/widgets/{widget_uuid}
+  method: GET
+  scopes:
+    - widgets:read
+  tags:
+    - widgets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a widget
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+      widget_uuid:
+        type: string
+        description: "Unique identifier of the widget"
+    required:
+      - site_name
+      - widget_uuid
+
+- slug: duda_list_users
+  name: List Users
+  description: |
+    List all team members and collaborators with access to a Duda site.
+  provider: duda
+  endpoint: /api/sites/{site_name}/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_name
+
+- slug: duda_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific team member or collaborator.
+  provider: duda
+  endpoint: /api/sites/{site_name}/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      site_name:
+        type: string
+        description: "Unique identifier of the site"
+      user_id:
+        type: string
+        description: "Unique identifier of the user"
+    required:
+      - site_name
+      - user_id

@@ -1,0 +1,274 @@
+# Avaza Tools - Allowlist
+# Curated subset of Avaza REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. avaza_list_projects       - List projects
+# 2. avaza_get_project         - Get project details
+# 3. avaza_create_project      - Create a project
+# 4. avaza_list_tasks          - List tasks
+# 5. avaza_get_task            - Get task details
+# 6. avaza_list_time_entries   - List time entries
+# 7. avaza_get_time_entry      - Get time entry details
+# 8. avaza_list_invoices       - List invoices
+# 9. avaza_get_invoice         - Get invoice details
+# 10. avaza_list_expenses      - List expenses
+
+- slug: avaza_list_projects
+  name: List Projects
+  description: |
+    List all projects in Avaza.
+  provider: avaza
+  endpoint: /api/projects
+  method: GET
+  scopes:
+    - projectread
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Active, Draft, Closed)"
+      pageSize:
+        type: integer
+        description: "Number of results per page"
+        default: 20
+      pageNumber:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: avaza_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: avaza
+  endpoint: /api/projects/{projectGuid}
+  method: GET
+  scopes:
+    - projectread
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectGuid:
+        type: string
+        description: "Project GUID"
+    required:
+      - projectGuid
+
+- slug: avaza_create_project
+  name: Create Project
+  description: |
+    Create a new project in Avaza.
+  provider: avaza
+  endpoint: /api/projects
+  method: POST
+  scopes:
+    - projectwrite
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      description:
+        type: string
+        description: "Project description"
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - name
+
+- slug: avaza_list_tasks
+  name: List Tasks
+  description: |
+    List tasks in a project or across all projects.
+  provider: avaza
+  endpoint: /api/tasks
+  method: GET
+  scopes:
+    - taskread
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectGuid:
+        type: string
+        description: "Filter by project GUID"
+      assigneeGuid:
+        type: string
+        description: "Filter by assignee GUID"
+      isCompleted:
+        type: boolean
+        description: "Filter by completion status"
+    required: []
+
+- slug: avaza_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a task.
+  provider: avaza
+  endpoint: /api/tasks/{taskGuid}
+  method: GET
+  scopes:
+    - taskread
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskGuid:
+        type: string
+        description: "Task GUID"
+    required:
+      - taskGuid
+
+- slug: avaza_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries for tracking work hours.
+  provider: avaza
+  endpoint: /api/timeentries
+  method: GET
+  scopes:
+    - timeread
+  tags:
+    - time-tracking
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      projectGuid:
+        type: string
+        description: "Filter by project GUID"
+      userGuid:
+        type: string
+        description: "Filter by user GUID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: avaza_get_time_entry
+  name: Get Time Entry
+  description: |
+    Get detailed information about a time entry.
+  provider: avaza
+  endpoint: /api/timeentries/{timeEntryGuid}
+  method: GET
+  scopes:
+    - timeread
+  tags:
+    - time-tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      timeEntryGuid:
+        type: string
+        description: "Time entry GUID"
+    required:
+      - timeEntryGuid
+
+- slug: avaza_list_invoices
+  name: List Invoices
+  description: |
+    List invoices in Avaza.
+  provider: avaza
+  endpoint: /api/invoices
+  method: GET
+  scopes:
+    - invoiceread
+  tags:
+    - invoices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Draft, Sent, Paid, Overdue)"
+      projectGuid:
+        type: string
+        description: "Filter by project GUID"
+    required: []
+
+- slug: avaza_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about an invoice.
+  provider: avaza
+  endpoint: /api/invoices/{invoiceGuid}
+  method: GET
+  scopes:
+    - invoiceread
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceGuid:
+        type: string
+        description: "Invoice GUID"
+    required:
+      - invoiceGuid
+
+- slug: avaza_list_expenses
+  name: List Expenses
+  description: |
+    List expenses recorded in Avaza.
+  provider: avaza
+  endpoint: /api/expenses
+  method: GET
+  scopes:
+    - expanseread
+  tags:
+    - expenses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      projectGuid:
+        type: string
+        description: "Filter by project GUID"
+      category:
+        type: string
+        description: "Filter by expense category"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []

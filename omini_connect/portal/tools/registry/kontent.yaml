@@ -1,0 +1,308 @@
+# Kontent.ai Tools - Allowlist
+# Curated subset of the Kontent.ai Management API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. kontent_list_projects - List all projects (subscriptions)
+# 2. kontent_get_project   - Get project details and configuration
+# 3. kontent_list_items    - List content items
+# 4. kontent_get_item      - Get a specific item by ID
+# 5. kontent_create_item   - Create a new content item
+# 6. kontent_update_item   - Update an existing item
+# 7. kontent_list_types    - List all content types
+# 8. kontent_get_type      - Get a specific type schema
+# 9. kontent_list_assets   - List digital assets
+# 10. kontent_get_asset    - Get asset details
+
+- slug: kontent_list_projects
+  name: List Projects
+  description: |
+    List all Kontent.ai projects (subscriptions) the authenticated user has access to.
+    Returns project names, IDs, and environments.
+  provider: kontent
+  endpoint: /v2/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (max 50, default 25)"
+        default: 25
+    required: []
+
+- slug: kontent_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a Kontent.ai project including settings, languages, and workflow info.
+  provider: kontent
+  endpoint: /v2/projects/{project_id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (GUID)"
+    required:
+      - project_id
+
+- slug: kontent_list_items
+  name: List Items
+  description: |
+    List all content items in a Kontent.ai project. Filter by type, collection, or search term.
+    Returns items with their codenames, metadata, and workflow status.
+  provider: kontent
+  endpoint: /v2/items
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      filter:
+        type: string
+        description: "Filter expression (e.g., type eq 'article')"
+      order:
+        type: string
+        description: "Order by field (e.g., system.name asc)"
+      skip:
+        type: integer
+        description: "Number of items to skip (for pagination)"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of items to return (max 100, default 25)"
+        default: 25
+    required:
+      - project_id
+
+- slug: kontent_get_item
+  name: Get Item
+  description: |
+    Get a specific content item by its ID. Returns all elements and system metadata.
+  provider: kontent
+  endpoint: /v2/items/{item_id}
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      item_id:
+        type: string
+        description: "Item ID (GUID)"
+    required:
+      - project_id
+      - item_id
+
+- slug: kontent_create_item
+  name: Create Item
+  description: |
+    Create a new content item in Kontent.ai. Specify the content type and initial element values.
+  provider: kontent
+  endpoint: /v2/items
+  method: POST
+  scopes:
+    - items:cud
+  tags:
+    - items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      name:
+        type: string
+        description: "Item name (required)"
+      type:
+        type: object
+        description: "Content type reference (required, needs id property)"
+      elements:
+        type: object
+        description: "Element values as JSON object (codename: value pairs)"
+    required:
+      - project_id
+      - name
+      - type
+
+- slug: kontent_update_item
+  name: Update Item
+  description: |
+    Update an existing content item. Can modify element values or metadata.
+  provider: kontent
+  endpoint: /v2/items/{item_id}
+  method: PUT
+  scopes:
+    - items:cud
+  tags:
+    - items
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an item
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      item_id:
+        type: string
+        description: "Item ID (GUID)"
+      name:
+        type: string
+        description: "New item name"
+      elements:
+        type: object
+        description: "Updated element values"
+    required:
+      - project_id
+      - item_id
+
+- slug: kontent_list_types
+  name: List Types
+  description: |
+    List all content types in a Kontent.ai project. Returns type names, codenames, and element counts.
+  provider: kontent
+  endpoint: /v2/types
+  method: GET
+  scopes:
+    - types:read
+  tags:
+    - types
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing types
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      skip:
+        type: integer
+        description: "Number of types to skip"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of types to return (max 100, default 25)"
+        default: 25
+    required:
+      - project_id
+
+- slug: kontent_get_type
+  name: Get Type
+  description: |
+    Get the complete schema definition of a content type including all elements and their configurations.
+  provider: kontent
+  endpoint: /v2/types/{type_id}
+  method: GET
+  scopes:
+    - types:read
+  tags:
+    - types
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a type
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      type_id:
+        type: string
+        description: "Type ID (GUID)"
+    required:
+      - project_id
+      - type_id
+
+- slug: kontent_list_assets
+  name: List Assets
+  description: |
+    List all digital assets in a Kontent.ai project. Filter by type or mime type.
+    Returns asset metadata including file size, dimensions, and URLs.
+  provider: kontent
+  endpoint: /v2/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      filter:
+        type: string
+        description: "Filter expression (e.g., mime_type eq 'image/png')"
+      skip:
+        type: integer
+        description: "Number of assets to skip"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of assets to return (max 100, default 25)"
+        default: 25
+    required:
+      - project_id
+
+- slug: kontent_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information about a digital asset including file info, dimensions, and available renditions.
+  provider: kontent
+  endpoint: /v2/assets/{asset_id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      asset_id:
+        type: string
+        description: "Asset ID (GUID)"
+    required:
+      - project_id
+      - asset_id

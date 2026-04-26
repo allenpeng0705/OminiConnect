@@ -1,0 +1,250 @@
+# Buildium Tools - Allowlist
+# Curated subset of Buildium API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. buildium_list_residents       - List residents
+# 2. buildium_get_resident         - Get resident details
+# 3. buildium_list_rentals         - List rental units
+# 4. buildium_get_rental          - Get rental unit details
+# 5. buildium_list_leases         - List leases
+# 6. buildium_get_lease           - Get lease details
+# 7. buildium_list_transactions    - List transactions
+# 8. buildium_get_transaction      - Get transaction details
+# 9. buildium_list_maintenance     - List maintenance requests
+# 10. buildium_get_maintenance    - Get maintenance request details
+
+- slug: buildium_list_residents
+  name: List Residents
+  description: |
+    List all residents in Buildium.
+  provider: buildium
+  endpoint: /v1/residents
+  method: GET
+  scopes: []
+  tags:
+    - residents
+    - property-management
+  input_schema:
+    type: object
+    description: Parameters for listing residents
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Residents per page"
+        default: 20
+    required: []
+
+- slug: buildium_get_resident
+  name: Get Resident
+  description: |
+    Get details for a specific resident.
+  provider: buildium
+  endpoint: /v1/residents/{residentId}
+  method: GET
+  scopes: []
+  tags:
+    - residents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a resident
+    properties:
+      residentId:
+        type: integer
+        description: "Resident ID"
+    required:
+      - residentId
+
+- slug: buildium_list_rentals
+  name: List Rentals
+  description: |
+    List all rental units.
+  provider: buildium
+  endpoint: /v1/rentals
+  method: GET
+  scopes: []
+  tags:
+    - rentals
+    - property
+  input_schema:
+    type: object
+    description: Parameters for listing rentals
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Rentals per page"
+        default: 20
+    required: []
+
+- slug: buildium_get_rental
+  name: Get Rental
+  description: |
+    Get details for a specific rental unit.
+  provider: buildium
+  endpoint: /v1/rentals/{rentalId}
+  method: GET
+  scopes: []
+  tags:
+    - rentals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a rental
+    properties:
+      rentalId:
+        type: integer
+        description: "Rental ID"
+    required:
+      - rentalId
+
+- slug: buildium_list_leases
+  name: List Leases
+  description: |
+    List all leases.
+  provider: buildium
+  endpoint: /v1/leases
+  method: GET
+  scopes: []
+  tags:
+    - leases
+    - contracts
+  input_schema:
+    type: object
+    description: Parameters for listing leases
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Leases per page"
+        default: 20
+    required: []
+
+- slug: buildium_get_lease
+  name: Get Lease
+  description: |
+    Get details for a specific lease.
+  provider: buildium
+  endpoint: /v1/leases/{leaseId}
+  method: GET
+  scopes: []
+  tags:
+    - leases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lease
+    properties:
+      leaseId:
+        type: integer
+        description: "Lease ID"
+    required:
+      - leaseId
+
+- slug: buildium_list_transactions
+  name: List Transactions
+  description: |
+    List all financial transactions.
+  provider: buildium
+  endpoint: /v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: buildium_get_transaction
+  name: Get Transaction
+  description: |
+    Get details for a specific transaction.
+  provider: buildium
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: integer
+        description: "Transaction ID"
+    required:
+      - transactionId
+
+- slug: buildium_list_maintenance
+  name: List Maintenance
+  description: |
+    List all maintenance requests.
+  provider: buildium
+  endpoint: /v1/maintenance
+  method: GET
+  scopes: []
+  tags:
+    - maintenance
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for listing maintenance
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: buildium_get_maintenance
+  name: Get Maintenance
+  description: |
+    Get details for a specific maintenance request.
+  provider: buildium
+  endpoint: /v1/maintenance/{maintenanceId}
+  method: GET
+  scopes: []
+  tags:
+    - maintenance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting maintenance
+    properties:
+      maintenanceId:
+        type: integer
+        description: "Maintenance ID"
+    required:
+      - maintenanceId

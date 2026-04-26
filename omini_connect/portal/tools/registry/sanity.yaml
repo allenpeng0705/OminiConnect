@@ -1,0 +1,314 @@
+# Sanity Tools - Allowlist
+# Curated subset of the Sanity API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sanity_list_datasets     - List all datasets in the project
+# 2. sanity_get_dataset      - Get dataset configuration and stats
+# 3. sanity_list_documents    - Query documents in a dataset
+# 4. sanity_get_document      - Get a specific document by ID
+# 5. sanity_create_document    - Create a new document
+# 6. sanity_update_document    - Update an existing document
+# 7. sanity_delete_document    - Delete a document
+# 8. sanity_list_users        - List project users
+# 9. sanity_get_user          - Get user details
+# 10. sanity_get_projection   - Get a projected document view
+
+- slug: sanity_list_datasets
+  name: List Datasets
+  description: |
+    List all datasets in the Sanity project.
+    Each dataset is a separate content repository.
+  provider: sanity
+  endpoint: /projects/{project_id}/datasets
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - datasets
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+    required:
+      - project_id
+
+- slug: sanity_get_dataset
+  name: Get Dataset
+  description: |
+    Get configuration and statistics for a specific dataset.
+    Includes document count, name, and acl config.
+  provider: sanity
+  endpoint: /projects/{project_id}/datasets/{dataset}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - datasets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name (default: production)"
+        default: production
+    required:
+      - project_id
+      - dataset
+
+- slug: sanity_list_documents
+  name: List Documents
+  description: |
+    Query documents in a dataset using GROQ.
+    Filter by type, tags, or custom criteria.
+  provider: sanity
+  endpoint: /data/projects/{project_id}/documents
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - documents
+    - query
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+      type:
+        type: string
+        description: "Document type filter"
+      limit:
+        type: integer
+        description: "Number of results (max 1000)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - project_id
+
+- slug: sanity_get_document
+  name: Get Document
+  description: |
+    Get a specific document by ID including all fields and metadata.
+  provider: sanity
+  endpoint: /documents/{document_id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      document_id:
+        type: string
+        description: "Document ID (starts with id://)"
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+    required:
+      - document_id
+      - project_id
+
+- slug: sanity_create_document
+  name: Create Document
+  description: |
+    Create a new document in a dataset.
+    Provide the document type and initial field values.
+  provider: sanity
+  endpoint: /documents/{project_id}/{dataset}
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+      type:
+        type: string
+        description: "Document type (e.g., post, author)"
+      body:
+        type: object
+        description: "Document fields as key-value pairs"
+    required:
+      - project_id
+      - type
+      - body
+
+- slug: sanity_update_document
+  name: Update Document
+  description: |
+    Update an existing document. Uses revision for optimistic locking.
+  provider: sanity
+  endpoint: /documents/{project_id}/{dataset}/{document_id}
+  method: PUT
+  scopes:
+    - projects:write
+  tags:
+    - documents
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a document
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+      document_id:
+        type: string
+        description: "Document ID"
+      body:
+        type: object
+        description: "Updated field values"
+      ifRevisionID:
+        type: string
+        description: "Expected revision ID for optimistic locking"
+    required:
+      - project_id
+      - document_id
+      - body
+
+- slug: sanity_delete_document
+  name: Delete Document
+  description: |
+    Delete a document from a dataset by ID.
+    This action is irreversible.
+  provider: sanity
+  endpoint: /documents/{project_id}/{dataset}/{document_id}
+  method: DELETE
+  scopes:
+    - projects:write
+  tags:
+    - documents
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a document
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - project_id
+      - document_id
+
+- slug: sanity_list_users
+  name: List Users
+  description: |
+    List all users in the Sanity project.
+    Returns email, name, and role for each user.
+  provider: sanity
+  endpoint: /users
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - users
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+    required:
+      - project_id
+
+- slug: sanity_get_user
+  name: Get User
+  description: |
+    Get details of a specific user by email or ID.
+    Includes role, name, and email.
+  provider: sanity
+  endpoint: /users/{identifier}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      identifier:
+        type: string
+        description: "User email or ID"
+    required:
+      - identifier
+
+- slug: sanity_get_projection
+  name: Get Projection
+  description: |
+    Get a projected (flattened) view of a document.
+    Resolves references and includes nested data.
+  provider: sanity
+  endpoint: /data/proj/{project_id}/{dataset}/{document_id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - documents
+    - projection
+  input_schema:
+    type: object
+    description: Parameters for getting a projection
+    properties:
+      project_id:
+        type: string
+        description: "Sanity project ID"
+      dataset:
+        type: string
+        description: "Dataset name"
+        default: production
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - project_id
+      - document_id

@@ -1,0 +1,187 @@
+# ServiceNow (Client Credentials) Tools - Allowlist
+# Curated subset of ServiceNow (Client Credentials) API for AI agent use.
+# Auth mode: OAUTH2_CC.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_incidents                           - List all incidents
+# 2. get_incident                             - Get incident details
+# 3. create_incident                          - Create a new incident
+# 4. list_users                               - List all users
+# 5. get_user                                 - Get user details
+# 6. list_groups                              - List all groups
+# 7. list_kb_articles                         - List knowledge articles
+# 8. list_changes                             - List change requests
+# 9. get_catalogue                            - Get service catalogue
+# 10. get_record                               - Get any table record
+
+- slug: list_incidents
+  name: List Incidents
+  description: |
+    List all incidents
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/incident
+  method: GET
+  scopes: []
+  tags:
+    - incidents
+    - ticketing
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_incident
+  name: Get Incident
+  description: |
+    Get incident details
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/incident/{id}
+  method: GET
+  scopes: []
+  tags:
+    - incidents
+    - ticketing
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_incident
+  name: Create Incident
+  description: |
+    Create a new incident
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/incident
+  method: POST
+  scopes: []
+  tags:
+    - incidents
+    - ticketing
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_users
+  name: List Users
+  description: |
+    List all users
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/sys_user
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_user
+  name: Get User
+  description: |
+    Get user details
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/sys_user/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_groups
+  name: List Groups
+  description: |
+    List all groups
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/sys_user_group
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_kb_articles
+  name: List KB Articles
+  description: |
+    List knowledge articles
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/kb_knowledge
+  method: GET
+  scopes: []
+  tags:
+    - knowledge
+    - kb
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_changes
+  name: List Changes
+  description: |
+    List change requests
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/change_request
+  method: GET
+  scopes: []
+  tags:
+    - changes
+    - itil
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_catalogue
+  name: Get Catalogue
+  description: |
+    Get service catalogue
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/sc_cat_item
+  method: GET
+  scopes: []
+  tags:
+    - catalogue
+    - service
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_record
+  name: Get Record
+  description: |
+    Get any table record
+  provider: servicenow-oauth2-cc
+  endpoint: /api/now/table/{table}/{sys_id}
+  method: GET
+  scopes: []
+  tags:
+    - records
+    - data
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

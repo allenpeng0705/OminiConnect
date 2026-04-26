@@ -1,0 +1,287 @@
+# Snyk Tools - Allowlist
+# Curated subset of Snyk REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. snyk_list_projects         - List all projects in an org
+# 2. snyk_get_project           - Get project details
+# 3. snyk_list_issues           - List issues for a project
+# 4. snyk_get_issue             - Get issue details
+# 5. snyk_list_vulnerabilities  - List vulnerabilities
+# 6. snyk_get_vulnerability     - Get vulnerability details
+# 7. snyk_list_dependencies     - List project dependencies
+# 8. snyk_get_dependency        - Get dependency details
+# 9. snyk_get_test_report       - Get test report for a project
+# 10. snyk_list_api_tokens      - List API tokens
+
+- slug: snyk_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects associated with the Snyk account or organization.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing Snyk projects
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+    required:
+      - org_id
+
+- slug: snyk_get_project
+  name: Get Project
+  description: |
+    Retrieve detailed information about a specific Snyk project.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects/{project_id}
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a Snyk project
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      project_id:
+        type: string
+        description: "The Snyk project ID"
+    required:
+      - org_id
+      - project_id
+
+- slug: snyk_list_issues
+  name: List Issues
+  description: |
+    Retrieve all issues (vulnerabilities and license issues) for a project.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects/{project_id}/issues
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for listing project issues
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      project_id:
+        type: string
+        description: "The Snyk project ID"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+      include_vulnerabilities:
+        type: boolean
+        description: "Include vulnerability issues (default: true)"
+      include_license_issues:
+        type: boolean
+        description: "Include license issues (default: true)"
+    required:
+      - org_id
+      - project_id
+
+- slug: snyk_get_issue
+  name: Get Issue
+  description: |
+    Retrieve detailed information about a specific issue in a project.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/issues/{issue_id}
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for getting a specific issue
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      issue_id:
+        type: string
+        description: "The issue ID (e.g., SNYK-JS-LODASH-450201)"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+    required:
+      - org_id
+      - issue_id
+
+- slug: snyk_list_vulnerabilities
+  name: List Vulnerabilities
+  description: |
+    Retrieve all vulnerabilities across projects in an organization.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/vulns
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - vulnerabilities
+  input_schema:
+    type: object
+    description: Parameters for listing vulnerabilities
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+      pagination:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - org_id
+
+- slug: snyk_get_vulnerability
+  name: Get Vulnerability
+  description: |
+    Retrieve detailed information about a specific vulnerability by ID.
+  provider: snyk
+  endpoint: /v1/vulnerabilities/{vulnerability_id}
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - vulnerabilities
+  input_schema:
+    type: object
+    description: Parameters for getting vulnerability details
+    properties:
+      vulnerability_id:
+        type: string
+        description: "The vulnerability identifier (e.g., SNYK-JS-LODASH-450201)"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+    required:
+      - vulnerability_id
+
+- slug: snyk_list_dependencies
+  name: List Dependencies
+  description: |
+    Retrieve all dependencies for a specific project.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects/{project_id}/dependencies
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - dependencies
+  input_schema:
+    type: object
+    description: Parameters for listing project dependencies
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      project_id:
+        type: string
+        description: "The Snyk project ID"
+      version:
+        type: string
+        description: "API version (default: 2024-01-29)"
+    required:
+      - org_id
+      - project_id
+
+- slug: snyk_get_dependency
+  name: Get Dependency
+  description: |
+    Retrieve detailed information about a specific dependency.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects/{project_id}/dependencies/{dependency_id}
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - dependencies
+  input_schema:
+    type: object
+    description: Parameters for getting dependency details
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      project_id:
+        type: string
+        description: "The Snyk project ID"
+      dependency_id:
+        type: string
+        description: "The dependency ID"
+    required:
+      - org_id
+      - project_id
+      - dependency_id
+
+- slug: snyk_get_test_report
+  name: Get Test Report
+  description: |
+    Retrieve a test report for a specific project showing vulnerability findings.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/projects/{project_id}/reports/test
+  method: GET
+  scopes:
+    - snyk_orgs_read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting test report
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      project_id:
+        type: string
+        description: "The Snyk project ID"
+      report_type:
+        type: string
+        description: "Type of report (full, summary)"
+    required:
+      - org_id
+      - project_id
+
+- slug: snyk_list_api_tokens
+  name: List API Tokens
+  description: |
+    Retrieve all API tokens for a service account or user in the organization.
+  provider: snyk
+  endpoint: /v1/orgs/{org_id}/members/{member_id}/tokens
+  method: GET
+  scopes:
+    - snyk_orgs_admin
+  tags:
+    - tokens
+  input_schema:
+    type: object
+    description: Parameters for listing API tokens
+    properties:
+      org_id:
+        type: string
+        description: "The Snyk organization ID"
+      member_id:
+        type: string
+        description: "The member ID"
+    required:
+      - org_id
+      - member_id

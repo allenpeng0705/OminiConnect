@@ -1,0 +1,229 @@
+# HeyReach Tools - Allowlist
+# Curated subset of HeyReach API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. heyreach_list_campaigns       - List campaigns
+# 2. heyreach_get_campaign        - Get campaign details
+# 3. heyreach_list_sequences      - List sequences
+# 4. heyreach_get_sequence        - Get sequence details
+# 5. heyreach_list_prospects      - List prospects
+# 6. heyreach_get_prospect        - Get prospect details
+# 7. heyreach_list_accounts       - List accounts
+# 8. heyreach_get_account         - Get account details
+# 9. heyreach_list_tasks          - List tasks
+# 10. heyreach_list_stats          - List statistics
+
+- slug: heyreach_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in HeyReach.
+    Returns campaign details including name, status, and stats.
+  provider: heyreach
+  endpoint: /public/campaigns
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: heyreach_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+    Includes campaign settings and performance metrics.
+  provider: heyreach
+  endpoint: /public/campaigns/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: heyreach_list_sequences
+  name: List Sequences
+  description: |
+    List all sequences in HeyReach.
+    Returns sequence details including steps and timing.
+  provider: heyreach
+  endpoint: /public/sequences
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sequences
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties: {}
+    required: []
+
+- slug: heyreach_get_sequence
+  name: Get Sequence
+  description: |
+    Get detailed information about a specific sequence.
+    Includes sequence steps and settings.
+  provider: heyreach
+  endpoint: /public/sequences/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sequences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      id:
+        type: string
+        description: "Sequence ID"
+    required:
+      - id
+
+- slug: heyreach_list_prospects
+  name: List Prospects
+  description: |
+    List all prospects in HeyReach.
+    Returns prospect details including name and status.
+  provider: heyreach
+  endpoint: /public/prospects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - prospects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing prospects
+    properties:
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: heyreach_get_prospect
+  name: Get Prospect
+  description: |
+    Get detailed information about a specific prospect.
+    Includes prospect activities and sequence status.
+  provider: heyreach
+  endpoint: /public/prospects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - prospects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a prospect
+    properties:
+      id:
+        type: string
+        description: "Prospect ID"
+    required:
+      - id
+
+- slug: heyreach_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in HeyReach.
+    Returns account details including name and domain.
+  provider: heyreach
+  endpoint: /public/accounts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: heyreach_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific account.
+    Includes account details and associated prospects.
+  provider: heyreach
+  endpoint: /public/accounts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: heyreach_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in HeyReach.
+    Returns task details including type and status.
+  provider: heyreach
+  endpoint: /public/tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties: {}
+    required: []
+
+- slug: heyreach_list_stats
+  name: List Statistics
+  description: |
+    List campaign statistics in HeyReach.
+    Returns stats including sent, opened, and replied.
+  provider: heyreach
+  endpoint: /public/stats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stats
+    - statistics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing statistics
+    properties:
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []

@@ -1,0 +1,259 @@
+# Document360 Tools - Allowlist
+# Curated subset of the Document360 API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. document360_list_articles       - List articles
+# 2. document360_get_article        - Get article details
+# 3. document360_create_article     - Create an article
+# 4. document360_update_article     - Update an article
+# 5. document360_list_categories    - List categories
+# 6. document360_get_category       - Get category details
+# 7. document360_list_tags          - List tags
+# 8. document360_get_tag            - Get tag details
+# 9. document360_list_versions      - List article versions
+# 10. document360_search_articles   - Search articles
+
+- slug: document360_list_articles
+  name: List Articles
+  description: |
+    List all articles in Document360.
+  provider: document360
+  endpoint: /v2/articles
+  method: GET
+  scopes: []
+  tags:
+    - articles
+    - documentation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing articles
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      category_id:
+        type: string
+        description: "Filter by category ID"
+    required: []
+
+- slug: document360_get_article
+  name: Get Article
+  description: |
+    Get details of a specific article.
+  provider: document360
+  endpoint: /v2/articles/{article_id}
+  method: GET
+  scopes: []
+  tags:
+    - articles
+    - documentation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an article
+    properties:
+      article_id:
+        type: string
+        description: "Article ID"
+    required:
+      - article_id
+
+- slug: document360_create_article
+  name: Create Article
+  description: |
+    Create a new article in Document360.
+  provider: document360
+  endpoint: /v2/articles
+  method: POST
+  scopes: []
+  tags:
+    - articles
+    - documentation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an article
+    properties:
+      title:
+        type: string
+        description: "Article title"
+      content:
+        type: string
+        description: "Article content (markdown)"
+      category_id:
+        type: string
+        description: "Category ID to assign"
+    required:
+      - title
+
+- slug: document360_update_article
+  name: Update Article
+  description: |
+    Update an existing article.
+  provider: document360
+  endpoint: /v2/articles/{article_id}
+  method: PUT
+  scopes: []
+  tags:
+    - articles
+    - documentation
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an article
+    properties:
+      article_id:
+        type: string
+        description: "Article ID"
+      title:
+        type: string
+        description: "Article title"
+      content:
+        type: string
+        description: "Article content (markdown)"
+    required:
+      - article_id
+
+- slug: document360_list_categories
+  name: List Categories
+  description: |
+    List all categories in Document360.
+  provider: document360
+  endpoint: /v2/categories
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - documentation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: document360_get_category
+  name: Get Category
+  description: |
+    Get details of a specific category.
+  provider: document360
+  endpoint: /v2/categories/{category_id}
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - documentation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      category_id:
+        type: string
+        description: "Category ID"
+    required:
+      - category_id
+
+- slug: document360_list_tags
+  name: List Tags
+  description: |
+    List all tags in Document360.
+  provider: document360
+  endpoint: /v2/tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - documentation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: document360_get_tag
+  name: Get Tag
+  description: |
+    Get details of a specific tag.
+  provider: document360
+  endpoint: /v2/tags/{tag_id}
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - documentation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      tag_id:
+        type: string
+        description: "Tag ID"
+    required:
+      - tag_id
+
+- slug: document360_list_versions
+  name: List Versions
+  description: |
+    List all versions of an article.
+  provider: document360
+  endpoint: /v2/articles/{article_id}/versions
+  method: GET
+  scopes: []
+  tags:
+    - versions
+    - documentation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing versions
+    properties:
+      article_id:
+        type: string
+        description: "Article ID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - article_id
+
+- slug: document360_search_articles
+  name: Search Articles
+  description: |
+    Search articles by keyword.
+  provider: document360
+  endpoint: /v2/articles/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - documentation
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching articles
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - q

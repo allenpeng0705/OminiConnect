@@ -1,0 +1,236 @@
+# Looker OAuth Tools - Allowlist
+# Curated subset of Looker API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. looker_oauth_list_dashboards    - List dashboards
+# 2. looker_oauth_get_dashboard     - Get dashboard details
+# 3. looker_oauth_list_tiles        - List dashboard tiles
+# 4. looker_oauth_list_looks       - List looks
+# 5. looker_oauth_get_look          - Get look details
+# 6. looker_oauth_list_queries     - List saved queries
+# 7. looker_oauth_run_query        - Run a query
+# 8. looker_oauth_list_users       - List users
+# 9. looker_oauth_get_user         - Get user details
+# 10. looker_oauth_list_spaces     - List spaces
+
+- slug: looker_oauth_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards.
+  provider: looker-oauth
+  endpoint: /dashboards
+  method: GET
+  scopes: []
+  tags:
+    - dashboards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: looker_oauth_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get details for a specific dashboard.
+  provider: looker-oauth
+  endpoint: /dashboards/{dashboard_id}
+  method: GET
+  scopes: []
+  tags:
+    - dashboards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboard_id:
+        type: integer
+        description: "Dashboard ID"
+    required:
+      - dashboard_id
+
+- slug: looker_oauth_list_tiles
+  name: List Dashboard Tiles
+  description: |
+    List all tiles in a dashboard.
+  provider: looker-oauth
+  endpoint: /dashboards/{dashboard_id}/tiles
+  method: GET
+  scopes: []
+  tags:
+    - tiles
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing dashboard tiles
+    properties:
+      dashboard_id:
+        type: integer
+        description: "Dashboard ID"
+    required:
+      - dashboard_id
+
+- slug: looker_oauth_list_looks
+  name: List Looks
+  description: |
+    List all looks.
+  provider: looker-oauth
+  endpoint: /looks
+  method: GET
+  scopes: []
+  tags:
+    - looks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing looks
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: looker_oauth_get_look
+  name: Get Look
+  description: |
+    Get details for a specific look.
+  provider: looker-oauth
+  endpoint: /looks/{look_id}
+  method: GET
+  scopes: []
+  tags:
+    - looks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a look
+    properties:
+      look_id:
+        type: integer
+        description: "Look ID"
+    required:
+      - look_id
+
+- slug: looker_oauth_list_queries
+  name: List Saved Queries
+  description: |
+    List all saved queries.
+  provider: looker-oauth
+  endpoint: /queries
+  method: GET
+  scopes: []
+  tags:
+    - queries
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing saved queries
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: looker_oauth_run_query
+  name: Run Query
+  description: |
+    Run a saved query.
+  provider: looker-oauth
+  endpoint: /queries/{query_id}/run
+  method: GET
+  scopes: []
+  tags:
+    - queries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for running a query
+    properties:
+      query_id:
+        type: integer
+        description: "Query ID"
+      format:
+        type: string
+        description: "Output format (json, csv, html)"
+        default: json
+    required:
+      - query_id
+
+- slug: looker_oauth_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: looker-oauth
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: looker_oauth_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: looker-oauth
+  endpoint: /users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: integer
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: looker_oauth_list_spaces
+  name: List Spaces
+  description: |
+    List all spaces.
+  provider: looker-oauth
+  endpoint: /spaces
+  method: GET
+  scopes: []
+  tags:
+    - spaces
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties: {}
+    required: []

@@ -1,0 +1,385 @@
+# RingCentral Tools - Allowlist
+# Curated subset of the RingCentral API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ringcentral_list_messages     - List messages (SMS, MMS, voicemail)
+# 2. ringcentral_get_message      - Get details of a specific message
+# 3. ringcentral_send_sms         - Send an SMS message
+# 4. ringcentral_list_call_logs   - List call history
+# 5. ringcentral_get_call_log     - Get details of a specific call
+# 6. ringcentral_list_meetings    - List scheduled meetings
+# 7. ringcentral_get_meeting      - Get meeting details
+# 8. ringcentral_send_fax         - Send a fax
+# 9. ringcentral_get_presence     - Get user presence status
+# 10. ringcentral_update_presence - Update user presence status
+
+- slug: ringcentral_list_messages
+  name: List Messages
+  description: |
+    List messages (SMS, MMS, voicemail) for the authenticated user or a specific extension.
+    Returns message details including sender, recipient, timestamp, and read status.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/message-store
+  method: GET
+  scopes:
+    - ReadMessages
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      extensionId:
+        type: string
+        description: "Extension ID (use ~ for current user)"
+        default: "~"
+      type:
+        type: array
+        items:
+          type: string
+        description: "Message type: SMS, MMS, Fax, Voicemail"
+      direction:
+        type: string
+        description: "Direction: Inbound or Outbound"
+        enum: [Inbound, Outbound]
+      readStatus:
+        type: string
+        description: "Read status: Read or Unread"
+      dateFrom:
+        type: string
+        description: "Start date filter (ISO 8601)"
+      dateTo:
+        type: string
+        description: "End date filter (ISO 8601)"
+      per_page:
+        type: integer
+        description: "Results per page (default 100, max 1000)"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: ringcentral_get_message
+  name: Get Message
+  description: |
+    Get details of a specific message including content, attachments, and delivery status.
+    Use this to read full message content or check attachment availability.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/message-store/{messageId}
+  method: GET
+  scopes:
+    - ReadMessages
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+    required:
+      - messageId
+
+- slug: ringcentral_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message to a phone number. Include text content and optional attachments.
+    Use this to send notifications, alerts, or two-factor authentication codes.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/sms
+  method: POST
+  scopes:
+    - SMS
+  tags:
+    - sms
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending SMS
+    properties:
+      from:
+        type: object
+        description: "Sender phone number"
+        properties:
+          phoneNumber:
+            type: string
+            description: "Sender phone number"
+      to:
+        type: array
+        items:
+          type: object
+        description: "Recipient phone numbers"
+        properties:
+          phoneNumber:
+            type: string
+            description: "Recipient phone number"
+      text:
+        type: string
+        description: "SMS text content (required)"
+    required:
+      - from
+      - to
+      - text
+
+- slug: ringcentral_list_call_logs
+  name: List Call Logs
+  description: |
+    List call history for an extension. Returns call details including duration,
+    direction, result, and timestamps. Filter by date range or call type.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/call-log
+  method: GET
+  scopes:
+    - ReadCallLog
+  tags:
+    - calls
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing call logs
+    properties:
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+      type:
+        type: string
+        description: "Call type: Voice, Fax"
+      direction:
+        type: string
+        description: "Direction: Inbound, Outbound"
+        enum: [Inbound, Outbound]
+      dateFrom:
+        type: string
+        description: "Start date (ISO 8601)"
+      dateTo:
+        type: string
+        description: "End date (ISO 8601)"
+      view:
+        type: string
+        description: "Detail level: Simple or Detailed"
+        default: Simple
+      per_page:
+        type: integer
+        description: "Results per page (default 100, max 1000)"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: ringcentral_get_call_log
+  name: Get Call Log
+  description: |
+    Get details of a specific call record including duration, recording URL, and participants.
+    Use this to retrieve detailed call information or access call recordings.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/call-log/{callId}
+  method: GET
+  scopes:
+    - ReadCallLog
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call log
+    properties:
+      callId:
+        type: string
+        description: "Call log ID"
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+    required:
+      - callId
+
+- slug: ringcentral_list_meetings
+  name: List Meetings
+  description: |
+    List scheduled RingCentral Video or cloud meetings for an extension.
+    Returns meeting details including topic, start time, and join URLs.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/meeting
+  method: GET
+  scopes:
+    - Meeting:Read
+  tags:
+    - meetings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+      type:
+        type: string
+        description: "Meeting type: Scheduled or Instant"
+      status:
+        type: string
+        description: "Status: Scheduled, Started, Finished"
+      per_page:
+        type: integer
+        description: "Results per page (default 100, max 1000)"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: ringcentral_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting including topic, timing, host info, and join URLs.
+    Use this to retrieve meeting details before starting or joining.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/meeting/{meetingId}
+  method: GET
+  scopes:
+    - Meeting:Read
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+    required:
+      - meetingId
+
+- slug: ringcentral_send_fax
+  name: Send Fax
+  description: |
+    Send a fax message with optional attachments (PDF, TIFF).
+    Use this to send documents via fax programmatically.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/fax
+  method: POST
+  scopes:
+    - Faxes
+  tags:
+    - fax
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending fax
+    properties:
+      to:
+        type: array
+        items:
+          type: object
+        description: "Recipient fax numbers"
+        properties:
+          phoneNumber:
+            type: string
+            description: "Fax recipient number"
+      faxResolution:
+        type: string
+        description: "Fax resolution: High or Low"
+        default: High
+      coverPageText:
+        type: string
+        description: "Cover page text"
+      attachments:
+        type: array
+        items:
+          type: object
+        description: "Fax attachments (PDF, TIFF)"
+        properties:
+          filename:
+            type: string
+            description: "Attachment filename"
+          contentType:
+            type: string
+            description: "MIME content type"
+          content:
+            type: string
+            description: "Base64 encoded content"
+    required:
+      - to
+
+- slug: ringcentral_get_presence
+  name: Get Presence
+  description: |
+    Get presence status for a user or specific extension.
+    Returns availability, call status, and Do Not Disturb settings.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/presence
+  method: GET
+  scopes:
+    - ReadPresence
+  tags:
+    - presence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting presence
+    properties:
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+      detailed:
+        type: boolean
+        description: "Return detailed presence info"
+        default: false
+    required: []
+
+- slug: ringcentral_update_presence
+  name: Update Presence
+  description: |
+    Update presence status for the authenticated user.
+    Set availability, DND status, and user-visible status message.
+  provider: ringcentral
+  endpoint: /restapi/v1.0/account/~/extension/~/presence
+  method: PUT
+  scopes:
+    - EditPresence
+  tags:
+    - presence
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating presence
+    properties:
+      extensionId:
+        type: string
+        description: "Extension ID"
+        default: "~"
+      availability:
+        type: string
+        description: "Availability: Available, Busy, Away, Offline"
+        enum: [Available, Busy, Away, Offline]
+      userStatus:
+        type: string
+        description: "User status: Busy or Available"
+      dndStatus:
+        type: string
+        description: "Do Not Disturb: Disabled or Enabled"
+      statusMessage:
+        type: string
+        description: "Custom status message (max 100 chars)"
+    required: []

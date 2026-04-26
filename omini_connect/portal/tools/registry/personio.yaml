@@ -1,0 +1,236 @@
+# Personio Tools - Allowlist
+# Curated subset of Personio API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. personio_list_employees            - List employees
+# 2. personio_get_employee             - Get employee details
+# 3. personio_list_absences            - List absences
+# 4. personio_get_absence             - Get absence details
+# 5. personio_list_attendances         - List attendances
+# 6. personio_get_attendance          - Get attendance details
+# 7. personio_list_contracts           - List contracts
+# 8. personio_get_contract            - Get contract details
+# 9. personio_list_departments        - List departments
+# 10. personio_get_company            - Get company information
+
+- slug: personio_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: personio
+  endpoint: /v1/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      departmentId:
+        type: string
+        description: "Filter by department ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: personio_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about a specific employee.
+  provider: personio
+  endpoint: /v1/employees/{employeeId}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID"
+    required:
+      - employeeId
+
+- slug: personio_list_absences
+  name: List Absences
+  description: |
+    List all absences in the organization.
+  provider: personio
+  endpoint: /v1/absences
+  method: GET
+  scopes: []
+  tags:
+    - absences
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing absences
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: personio_get_absence
+  name: Get Absence
+  description: |
+    Get detailed information about a specific absence.
+  provider: personio
+  endpoint: /v1/absences/{absenceId}
+  method: GET
+  scopes: []
+  tags:
+    - absences
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an absence
+    properties:
+      absenceId:
+        type: string
+        description: "Absence ID"
+    required:
+      - absenceId
+
+- slug: personio_list_attendances
+  name: List Attendances
+  description: |
+    List all attendances in the organization.
+  provider: personio
+  endpoint: /v1/attendances
+  method: GET
+  scopes: []
+  tags:
+    - attendances
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing attendances
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: personio_get_attendance
+  name: Get Attendance
+  description: |
+    Get detailed information about a specific attendance record.
+  provider: personio
+  endpoint: /v1/attendances/{attendanceId}
+  method: GET
+  scopes: []
+  tags:
+    - attendances
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an attendance
+    properties:
+      attendanceId:
+        type: string
+        description: "Attendance ID"
+    required:
+      - attendanceId
+
+- slug: personio_list_contracts
+  name: List Contracts
+  description: |
+    List all employment contracts.
+  provider: personio
+  endpoint: /v1/contracts
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties: {}
+    required: []
+
+- slug: personio_get_contract
+  name: Get Contract
+  description: |
+    Get detailed information about a specific contract.
+  provider: personio
+  endpoint: /v1/contracts/{contractId}
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contract
+    properties:
+      contractId:
+        type: string
+        description: "Contract ID"
+    required:
+      - contractId
+
+- slug: personio_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: personio
+  endpoint: /v1/departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: personio_get_company
+  name: Get Company
+  description: |
+    Get company/organization information.
+  provider: personio
+  endpoint: /v1/company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

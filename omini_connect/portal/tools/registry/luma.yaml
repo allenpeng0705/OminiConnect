@@ -1,0 +1,264 @@
+- slug: luma_list_events
+  name: List Events
+  description: |
+    Retrieve a list of all events organized by the authenticated account.
+  provider: luma
+  endpoint: /v1/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of events to return (default: 50)"
+      offset:
+        type: integer
+        description: "Number of events to skip for pagination"
+      status:
+        type: string
+        description: "Filter by event status (draft, published, canceled, completed)"
+    required: []
+
+- slug: luma_get_event
+  name: Get Event
+  description: |
+    Retrieve detailed information about a specific event by its ID or slug.
+  provider: luma
+  endpoint: /v1/events/{event_id_or_slug}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      event_id_or_slug:
+        type: string
+        description: "The unique identifier or URL slug of the event"
+    required:
+      - event_id_or_slug
+
+- slug: luma_create_event
+  name: Create Event
+  description: |
+    Create a new event with specified details including timing, location, and description.
+  provider: luma
+  endpoint: /v1/events
+  method: POST
+  scopes:
+    - events:write
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      name:
+        type: string
+        description: "The name/title of the event"
+      start_date:
+        type: string
+        description: "Event start date and time in ISO 8601 format"
+      end_date:
+        type: string
+        description: "Event end date and time in ISO 8601 format"
+      timezone:
+        type: string
+        description: "Timezone for the event (e.g., America/New_York)"
+      location:
+        type: string
+        description: "Physical or virtual location of the event"
+      description:
+        type: string
+        description: "HTML description of the event"
+      capacity:
+        type: integer
+        description: "Maximum number of attendees allowed"
+    required:
+      - name
+      - start_date
+      - end_date
+
+- slug: luma_update_event
+  name: Update Event
+  description: |
+    Update an existing event's details including timing, location, and description.
+  provider: luma
+  endpoint: /v1/events/{event_id}
+  method: PUT
+  scopes:
+    - events:write
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for updating an event
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      name:
+        type: string
+        description: "Updated name/title of the event"
+      start_date:
+        type: string
+        description: "Updated start date and time in ISO 8601 format"
+      end_date:
+        type: string
+        description: "Updated end date and time in ISO 8601 format"
+      timezone:
+        type: string
+        description: "Updated timezone for the event"
+      location:
+        type: string
+        description: "Updated location of the event"
+      description:
+        type: string
+        description: "Updated HTML description of the event"
+      status:
+        type: string
+        description: "Updated status (draft, published, canceled)"
+    required:
+      - event_id
+
+- slug: luma_list_tickets
+  name: List Tickets
+  description: |
+    Retrieve all ticket types available for a specific event.
+  provider: luma
+  endpoint: /v1/events/{event_id}/tickets
+  method: GET
+  scopes:
+    - tickets:read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+    required:
+      - event_id
+
+- slug: luma_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieve detailed information about a specific ticket type by ID.
+  provider: luma
+  endpoint: /v1/tickets/{ticket_id}
+  method: GET
+  scopes:
+    - tickets:read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      ticket_id:
+        type: string
+        description: "The unique identifier of the ticket type"
+    required:
+      - ticket_id
+
+- slug: luma_list_orders
+  name: List Orders
+  description: |
+    Retrieve all orders (ticket purchases) for a specific event.
+  provider: luma
+  endpoint: /v1/events/{event_id}/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      status:
+        type: string
+        description: "Filter by order status (pending, completed, refunded, canceled)"
+    required:
+      - event_id
+
+- slug: luma_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order including items and payment status.
+  provider: luma
+  endpoint: /v1/orders/{order_id}
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "The unique identifier of the order"
+    required:
+      - order_id
+
+- slug: luma_list_attendees
+  name: List Attendees
+  description: |
+    Retrieve all attendees for a specific event with their registration details.
+  provider: luma
+  endpoint: /v1/events/{event_id}/attendees
+  method: GET
+  scopes:
+    - attendees:read
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for listing attendees
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      status:
+        type: string
+        description: "Filter by attendee status (registered, checked_in, canceled, no_show)"
+    required:
+      - event_id
+
+- slug: luma_check_in_attendee
+  name: Check In Attendee
+  description: |
+    Mark an attendee as checked in to an event using their ticket or registration ID.
+  provider: luma
+  endpoint: /v1/attendees/{attendee_id}/check_in
+  method: POST
+  scopes:
+    - attendees:write
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for checking in an attendee
+    properties:
+      attendee_id:
+        type: string
+        description: "The unique identifier of the attendee or ticket"
+      event_id:
+        type: string
+        description: "The event ID where checking in (required if not in path)"
+    required:
+      - attendee_id

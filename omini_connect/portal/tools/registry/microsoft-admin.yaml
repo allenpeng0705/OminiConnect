@@ -1,0 +1,307 @@
+# Microsoft Admin Tools - Allowlist
+# Curated subset of Microsoft Graph Admin API for AI agent use.
+# OAUTH2 via Nango (Admin consent).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. microsoft_admin_list_users        - List all users (admin)
+# 2. microsoft_admin_get_user          - Get user details (admin)
+# 3. microsoft_admin_create_user       - Create a user (admin)
+# 4. microsoft_admin_update_user       - Update a user (admin)
+# 5. microsoft_admin_delete_user       - Delete a user (admin)
+# 6. microsoft_admin_list_groups       - List groups (admin)
+# 7. microsoft_admin_get_group         - Get group details (admin)
+# 8. microsoft_admin_create_group      - Create a group (admin)
+# 9. microsoft_admin_list_directory    - List directory roles
+# 10. microsoft_admin_assign_role     - Assign directory role
+
+- slug: microsoft_admin_list_users
+  name: List Users (Admin)
+  description: |
+    List all users in the organization with admin privileges.
+  provider: microsoft-admin
+  endpoint: /v1.0/users
+  method: GET
+  scopes:
+    - User.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - users
+    - admin
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+      $select:
+        type: string
+        description: "Fields to select"
+    required: []
+
+- slug: microsoft_admin_get_user
+  name: Get User (Admin)
+  description: |
+    Get detailed information about any user in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes:
+    - User.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - users
+    - admin
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: microsoft_admin_create_user
+  name: Create User (Admin)
+  description: |
+    Create a new user in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/users
+  method: POST
+  scopes:
+    - User.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - users
+    - admin
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      accountEnabled:
+        type: boolean
+        description: "Enable user account"
+        default: true
+      displayName:
+        type: string
+        description: "Display name"
+      mailNickname:
+        type: string
+        description: "Mail nickname"
+      userPrincipalName:
+        type: string
+        description: "User principal name (email)"
+      passwordProfile:
+        type: object
+        description: "Password profile"
+        properties:
+          password:
+            type: string
+          forceChangePasswordNextSignIn:
+            type: boolean
+    required:
+      - displayName
+      - userPrincipalName
+      - passwordProfile
+
+- slug: microsoft_admin_update_user
+  name: Update User (Admin)
+  description: |
+    Update an existing user in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/users/{userId}
+  method: PATCH
+  scopes:
+    - User.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - users
+    - admin
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+      displayName:
+        type: string
+        description: "Display name"
+      department:
+        type: string
+        description: "Department"
+      jobTitle:
+        type: string
+        description: "Job title"
+    required:
+      - userId
+
+- slug: microsoft_admin_delete_user
+  name: Delete User (Admin)
+  description: |
+    Delete a user from the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/users/{userId}
+  method: DELETE
+  scopes:
+    - User.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - users
+    - admin
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: microsoft_admin_list_groups
+  name: List Groups (Admin)
+  description: |
+    List all groups in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/groups
+  method: GET
+  scopes:
+    - Group.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - groups
+    - admin
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: microsoft_admin_get_group
+  name: Get Group (Admin)
+  description: |
+    Get details of a specific group.
+  provider: microsoft-admin
+  endpoint: /v1.0/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - groups
+    - admin
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: microsoft_admin_create_group
+  name: Create Group (Admin)
+  description: |
+    Create a new group in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/groups
+  method: POST
+  scopes:
+    - Group.ReadWrite.All
+    - Directory.ReadWrite.All
+  tags:
+    - groups
+    - admin
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a group
+    properties:
+      displayName:
+        type: string
+        description: "Group display name"
+      mailNickname:
+        type: string
+        description: "Mail nickname"
+      description:
+        type: string
+        description: "Group description"
+      securityEnabled:
+        type: boolean
+        description: "Enable security group"
+        default: true
+      mailEnabled:
+        type: boolean
+        description: "Enable mail group"
+        default: false
+    required:
+      - displayName
+      - mailNickname
+
+- slug: microsoft_admin_list_directory
+  name: List Directory Roles
+  description: |
+    List all directory roles in the organization.
+  provider: microsoft-admin
+  endpoint: /v1.0/directoryRoles
+  method: GET
+  scopes:
+    - Directory.ReadWrite.All
+  tags:
+    - directory
+    - admin
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing directory roles
+    properties: {}
+    required: []
+
+- slug: microsoft_admin_assign_role
+  name: Assign Directory Role
+  description: |
+    Assign a directory role to a user.
+  provider: microsoft-admin
+  endpoint: /v1.0/directoryRoles/{roleId}/members/$ref
+  method: POST
+  scopes:
+    - Directory.ReadWrite.All
+  tags:
+    - directory
+    - admin
+    - assign
+  input_schema:
+    type: object
+    description: Parameters for assigning a directory role
+    properties:
+      roleId:
+        type: string
+        description: "Directory role ID"
+      userId:
+        type: string
+        description: "User ID to assign"
+    required:
+      - roleId
+      - userId

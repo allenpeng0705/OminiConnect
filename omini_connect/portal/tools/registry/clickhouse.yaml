@@ -1,0 +1,210 @@
+- slug: clickhouse_list_databases
+  name: List Databases
+  description: |
+    Retrieve a list of all databases in the ClickHouse server.
+  provider: clickhouse
+  endpoint: /
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - databases
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties: {}
+    required: []
+- slug: clickhouse_get_database
+  name: Get Database
+  description: |
+    Retrieve details of a specific database.
+  provider: clickhouse
+  endpoint: /database/{database}
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - databases
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database:
+        type: string
+        description: "The name of the database"
+    required:
+      - database
+- slug: clickhouse_list_tables
+  name: List Tables
+  description: |
+    Retrieve a list of all tables in a specific database.
+  provider: clickhouse
+  endpoint: /database/{database}/tables
+  method: GET
+  scopes:
+    - table:read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      database:
+        type: string
+        description: "The name of the database"
+    required:
+      - database
+- slug: clickhouse_get_table
+  name: Get Table
+  description: |
+    Retrieve details of a specific table including schema.
+  provider: clickhouse
+  endpoint: /database/{database}/tables/{table}
+  method: GET
+  scopes:
+    - table:read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      database:
+        type: string
+        description: "The name of the database"
+      table:
+        type: string
+        description: "The name of the table"
+    required:
+      - database
+      - table
+- slug: clickhouse_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users in the ClickHouse server.
+  provider: clickhouse
+  endpoint: /users
+  method: GET
+  scopes:
+    - user:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+- slug: clickhouse_get_user
+  name: Get User
+  description: |
+    Retrieve details of a specific user.
+  provider: clickhouse
+  endpoint: /users/{user}
+  method: GET
+  scopes:
+    - user:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user:
+        type: string
+        description: "The name of the user"
+    required:
+      - user
+- slug: clickhouse_create_user
+  name: Create User
+  description: |
+    Create a new user in the ClickHouse server.
+  provider: clickhouse
+  endpoint: /users
+  method: POST
+  scopes:
+    - user:write
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      name:
+        type: string
+        description: "The name of the new user"
+      password:
+        type: string
+        description: "The password for the new user"
+      quotas:
+        type: array
+        items:
+          type: string
+        description: "List of quotas to assign to the user"
+    required:
+      - name
+      - password
+- slug: clickhouse_execute_query
+  name: Execute Query
+  description: |
+    Execute a SQL query on the ClickHouse server.
+  provider: clickhouse
+  endpoint: /query
+  method: POST
+  scopes:
+    - query:execute
+  tags:
+    - queries
+  input_schema:
+    type: object
+    description: Parameters for executing a query
+    properties:
+      query:
+        type: string
+        description: "The SQL query to execute"
+      database:
+        type: string
+        description: "The database to execute the query on"
+      default_format:
+        type: string
+        description: "The output format for results (e.g., JSON, CSV)"
+    required:
+      - query
+- slug: clickhouse_get_query_result
+  name: Get Query Result
+  description: |
+    Retrieve the results of a previously executed query.
+  provider: clickhouse
+  endpoint: /query/{query_id}
+  method: GET
+  scopes:
+    - query:read
+  tags:
+    - queries
+  input_schema:
+    type: object
+    description: Parameters for getting query results
+    properties:
+      query_id:
+        type: string
+        description: "The unique identifier of the query"
+    required:
+      - query_id
+- slug: clickhouse_list_dictionaries
+  name: List Dictionaries
+  description: |
+    Retrieve a list of all dictionaries in the ClickHouse server.
+  provider: clickhouse
+  endpoint: /dictionaries
+  method: GET
+  scopes:
+    - dictionary:read
+  tags:
+    - dictionaries
+  input_schema:
+    type: object
+    description: Parameters for listing dictionaries
+    properties:
+      database:
+        type: string
+        description: "Filter dictionaries by database name"
+    required: []

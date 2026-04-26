@@ -1,0 +1,286 @@
+# Razorpay Tools - Allowlist
+# Curated subset of Razorpay API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. razorpay_list_payments        - List all payments
+# 2. razorpay_get_payment          - Get payment details
+# 3. razorpay_create_payment_link   - Create a payment link
+# 4. razorpay_list_refunds         - List all refunds
+# 5. razorpay_get_refund          - Get refund details
+# 6. razorpay_list_invoices       - List invoices
+# 7. razorpay_create_invoice      - Create an invoice
+# 8. razorpay_list_customers      - List customers
+# 9. razorpay_create_customer     - Create a customer
+# 10. razorpay_get_balance        - Get account balance
+
+- slug: razorpay_list_payments
+  name: List Payments
+  description: |
+    Retrieve a list of all payments received via Razorpay.
+  provider: razorpay
+  endpoint: /v1/payments
+  method: GET
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - billing
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      from:
+        type: string
+        description: "Start date (Unix timestamp)"
+      to:
+        type: string
+        description: "End date (Unix timestamp)"
+      count:
+        type: integer
+        description: "Number of payments to return (default 100, max 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Payments to skip for pagination"
+        default: 0
+    required: []
+
+- slug: razorpay_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment by ID.
+  provider: razorpay
+  endpoint: /v1/payments/{paymentId}
+  method: GET
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - billing
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      paymentId:
+        type: string
+        description: "The payment ID"
+    required:
+      - paymentId
+
+- slug: razorpay_create_payment_link
+  name: Create Payment Link
+  description: |
+    Create a new payment link to collect payments.
+  provider: razorpay
+  endpoint: /v1/payment_links
+  method: POST
+  scopes:
+    - payments:write
+  tags:
+    - payments
+    - billing
+    - links
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment link
+    properties:
+      amount:
+        type: integer
+        description: "Amount in paise (smallest currency unit)"
+      currency:
+        type: string
+        description: "Currency code (default INR)"
+        default: INR
+      description:
+        type: string
+        description: "Payment link description"
+      customer:
+        type: object
+        description: "Customer details"
+    required:
+      - amount
+
+- slug: razorpay_list_refunds
+  name: List Refunds
+  description: |
+    Retrieve a list of all refunds processed.
+  provider: razorpay
+  endpoint: /v1/refunds
+  method: GET
+  scopes:
+    - refunds:read
+  tags:
+    - refunds
+    - billing
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing refunds
+    properties:
+      paymentId:
+        type: string
+        description: "Filter by payment ID"
+      count:
+        type: integer
+        description: "Number of refunds to return"
+        default: 100
+    required: []
+
+- slug: razorpay_get_refund
+  name: Get Refund
+  description: |
+    Get details of a specific refund by ID.
+  provider: razorpay
+  endpoint: /v1/refunds/{refundId}
+  method: GET
+  scopes:
+    - refunds:read
+  tags:
+    - refunds
+    - billing
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for getting a refund
+    properties:
+      refundId:
+        type: string
+        description: "The refund ID"
+    required:
+      - refundId
+
+- slug: razorpay_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices.
+  provider: razorpay
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      customerId:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: issued, paid, expired"
+      count:
+        type: integer
+        description: "Number of invoices"
+        default: 100
+    required: []
+
+- slug: razorpay_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice with line items.
+  provider: razorpay
+  endpoint: /v1/invoices
+  method: POST
+  scopes:
+    - invoices:write
+  tags:
+    - invoices
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      amount:
+        type: integer
+        description: "Total amount in paise"
+      currency:
+        type: string
+        description: "Currency code"
+        default: INR
+      customerId:
+        type: string
+        description: "Customer ID"
+      line_items:
+        type: array
+        description: "Invoice line items"
+    required:
+      - amount
+
+- slug: razorpay_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers.
+  provider: razorpay
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Number of customers"
+        default: 100
+    required: []
+
+- slug: razorpay_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer.
+  provider: razorpay
+  endpoint: /v1/customers
+  method: POST
+  scopes:
+    - customers:write
+  tags:
+    - customers
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      name:
+        type: string
+        description: "Customer name"
+      email:
+        type: string
+        description: "Customer email"
+      phone:
+        type: string
+        description: "Customer phone"
+    required:
+      - name
+
+- slug: razorpay_get_balance
+  name: Get Balance
+  description: |
+    Get your Razorpay account balance.
+  provider: razorpay
+  endpoint: /v1/balance
+  method: GET
+  scopes:
+    - balance:read
+  tags:
+    - balance
+    - account
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties: {}
+    required: []

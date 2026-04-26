@@ -1,0 +1,256 @@
+- slug: teespring_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve a list of all marketing campaigns with performance metrics.
+  provider: teespring
+  endpoint: /v2/campaigns
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of campaigns per page (default 20)"
+      status:
+        type: string
+        description: "Filter by status: draft, published, archived"
+    required: []
+
+- slug: teespring_get_campaign
+  name: Get Campaign
+  description: |
+    Retrieve detailed information about a specific campaign including design and settings.
+  provider: teespring
+  endpoint: /v2/campaigns/{id}
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: teespring_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new campaign with title, design, products, and pricing.
+  provider: teespring
+  endpoint: /v2/campaigns
+  method: POST
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      title:
+        type: string
+        description: "Campaign title"
+      design_id:
+        type: string
+        description: "Design ID to apply to products"
+      products:
+        type: array
+        description: "Array of product types and variants to include"
+      pricing:
+        type: object
+        description: "Pricing configuration per product"
+      start_date:
+        type: string
+        description: "Campaign start date (ISO 8601 format)"
+    required:
+      - title
+      - products
+
+- slug: teespring_list_products
+  name: List Products
+  description: |
+    Retrieve all products available in the Teespring catalog.
+  provider: teespring
+  endpoint: /v2/products
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of products per page (default 50)"
+      category:
+        type: string
+        description: "Filter by product category"
+    required: []
+
+- slug: teespring_get_product
+  name: Get Product
+  description: |
+    Retrieve detailed information about a specific product including variants and sizing.
+  provider: teespring
+  endpoint: /v2/products/{id}
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: teespring_list_orders
+  name: List Orders
+  description: |
+    Retrieve orders with filtering by campaign, status, and date range.
+  provider: teespring
+  endpoint: /v2/orders
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of orders per page (default 50)"
+      campaign_id:
+        type: string
+        description: "Filter by specific campaign ID"
+      status:
+        type: string
+        description: "Filter by status: pending, processing, shipped, delivered, canceled"
+      from_date:
+        type: string
+        description: "Start date filter (ISO 8601 format)"
+      to_date:
+        type: string
+        description: "End date filter (ISO 8601 format)"
+    required: []
+
+- slug: teespring_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order including items and shipping.
+  provider: teespring
+  endpoint: /v2/orders/{id}
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: teespring_list_designs
+  name: List Designs
+  description: |
+    Retrieve all designs uploaded to your Teespring account.
+  provider: teespring
+  endpoint: /v2/designs
+  method: GET
+  scopes:
+    - designs
+  tags:
+    - designs
+  input_schema:
+    type: object
+    description: Parameters for listing designs
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of designs per page (default 50)"
+    required: []
+
+- slug: teespring_get_design
+  name: Get Design
+  description: |
+    Retrieve detailed information about a specific design including artwork and layers.
+  provider: teespring
+  endpoint: /v2/designs/{id}
+  method: GET
+  scopes:
+    - designs
+  tags:
+    - designs
+  input_schema:
+    type: object
+    description: Parameters for getting a design
+    properties:
+      id:
+        type: string
+        description: "Design ID"
+    required:
+      - id
+
+- slug: teespring_get_analytics
+  name: Get Analytics
+  description: |
+    Retrieve analytics data including sales, revenue, and conversion metrics.
+  provider: teespring
+  endpoint: /v2/analytics
+  method: GET
+  scopes:
+    - analytics
+  tags:
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for retrieving analytics
+    properties:
+      campaign_id:
+        type: string
+        description: "Specific campaign ID for analytics (optional for global)"
+      from_date:
+        type: string
+        description: "Start date for analytics period (ISO 8601 format)"
+      to_date:
+        type: string
+        description: "End date for analytics period (ISO 8601 format)"
+      metrics:
+        type: array
+        description: "Specific metrics to retrieve: sales, revenue, views, conversions"
+    required: []

@@ -164,6 +164,7 @@ export default function IntegrationCatalog() {
                   onAddConnector={(providerKey) =>
                     navigate(`/connectors/add-managed?provider_key=${encodeURIComponent(providerKey)}`)
                   }
+                  onOpenConnector={(platform) => navigate(`/connectors/${encodeURIComponent(platform)}`)}
                 />
               ))}
             </div>

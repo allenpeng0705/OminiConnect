@@ -1,0 +1,187 @@
+# Strava (Web) Tools - Allowlist
+# Curated subset of Strava (Web) API for AI agent use.
+# Auth mode: OAUTH2.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. get_athlete                              - Get current athlete profile
+# 2. list_activities                          - List athlete activities
+# 3. get_activity                             - Get activity details
+# 4. list_clubs                               - List athlete clubs
+# 5. get_club                                 - Get club details
+# 6. list_gear                                - List athlete gear
+# 7. get_segment_efforts                      - Get segment efforts
+# 8. list_zones                               - List athlete zones
+# 9. get_stats                                - Get athlete statistics
+# 10. upload_activity                          - Upload activity data
+
+- slug: get_athlete
+  name: Get Athlete
+  description: |
+    Get current athlete profile
+  provider: strava-web
+  endpoint: /athlete
+  method: GET
+  scopes: []
+  tags:
+    - athlete
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_activities
+  name: List Activities
+  description: |
+    List athlete activities
+  provider: strava-web
+  endpoint: /activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_activity
+  name: Get Activity
+  description: |
+    Get activity details
+  provider: strava-web
+  endpoint: /activities/{id}
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_clubs
+  name: List Clubs
+  description: |
+    List athlete clubs
+  provider: strava-web
+  endpoint: /clubs
+  method: GET
+  scopes: []
+  tags:
+    - clubs
+    - social
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_club
+  name: Get Club
+  description: |
+    Get club details
+  provider: strava-web
+  endpoint: /clubs/{id}
+  method: GET
+  scopes: []
+  tags:
+    - clubs
+    - social
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_gear
+  name: List Gear
+  description: |
+    List athlete gear
+  provider: strava-web
+  endpoint: /gear
+  method: GET
+  scopes: []
+  tags:
+    - gear
+    - equipment
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_segment_efforts
+  name: Get Segment Efforts
+  description: |
+    Get segment efforts
+  provider: strava-web
+  endpoint: /segments/{id}/all_efforts
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_zones
+  name: List Zones
+  description: |
+    List athlete zones
+  provider: strava-web
+  endpoint: /zones
+  method: GET
+  scopes: []
+  tags:
+    - zones
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_stats
+  name: Get Stats
+  description: |
+    Get athlete statistics
+  provider: strava-web
+  endpoint: /athletes/{id}/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: upload_activity
+  name: Upload Activity
+  description: |
+    Upload activity data
+  provider: strava-web
+  endpoint: /uploads
+  method: POST
+  scopes: []
+  tags:
+    - activities
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

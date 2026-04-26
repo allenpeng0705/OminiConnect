@@ -1,0 +1,309 @@
+# Redshift Tools - Allowlist
+# Curated subset of the Amazon Redshift Data API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. redshift_list_databases      - List databases in the cluster
+# 2. redshift_get_database        - Get database details
+# 3. redshift_list_schemas        - List schemas in a database
+# 4. redshift_get_schema          - Get schema details
+# 5. redshift_list_tables          - List tables in a schema
+# 6. redshift_get_table            - Get table details and columns
+# 7. redshift_execute_query        - Execute a SQL query
+# 8. redshift_list_users           - List database users
+# 9. redshift_get_user             - Get user details
+# 10. redshift_get_query_results   - Get query execution results
+
+- slug: redshift_list_databases
+  name: List Databases
+  description: |
+    List all databases in the Redshift cluster. Returns database names and descriptions.
+    Use this to discover available data sources.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - database
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+    required:
+      - clusterIdentifier
+
+- slug: redshift_get_database
+  name: Get Database
+  description: |
+    Get detailed information about a specific database including name, created date, and table count.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+
+- slug: redshift_list_schemas
+  name: List Schemas
+  description: |
+    List all schemas in a Redshift database. Returns schema names like public, information_schema.
+    Schemas organize tables and views within a database.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - schema
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing schemas
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+
+- slug: redshift_get_schema
+  name: Get Schema
+  description: |
+    Get detailed information about a specific schema including name and created date.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - schema
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schema
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      schemaName:
+        type: string
+        description: "Schema name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+      - schemaName
+
+- slug: redshift_list_tables
+  name: List Tables
+  description: |
+    List all tables in a Redshift schema. Returns table names, types, and column counts.
+    Use this to discover available tables for querying.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      schemaName:
+        type: string
+        description: "Schema name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+      - schemaName
+
+- slug: redshift_get_table
+  name: Get Table
+  description: |
+    Get detailed information about a specific table including column definitions, types, and distribution keys.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      schemaName:
+        type: string
+        description: "Schema name (required)"
+      tableName:
+        type: string
+        description: "Table name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+      - schemaName
+      - tableName
+
+- slug: redshift_execute_query
+  name: Execute Query
+  description: |
+    Execute a SQL query against Redshift and return results. Use for SELECT, INSERT, UPDATE, DELETE, or DDL.
+  provider: redshift
+  endpoint: /
+  method: POST
+  scopes:
+    - redshift_data
+  tags:
+    - query
+    - execute
+    - sql
+  input_schema:
+    type: object
+    description: Parameters for executing a query
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      sql:
+        type: string
+        description: "SQL query string (required)"
+      withCredentials:
+        type: boolean
+        description: "Execute with user credentials"
+        default: false
+    required:
+      - clusterIdentifier
+      - databaseName
+      - sql
+
+- slug: redshift_list_users
+  name: List Users
+  description: |
+    List all users in the Redshift cluster. Returns usernames, session defaults, and create status.
+    Use this to audit database access.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - user
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+
+- slug: redshift_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific database user including their permissions and session settings.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - user
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      userName:
+        type: string
+        description: "User name (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+      - userName
+
+- slug: redshift_get_query_results
+  name: Get Query Results
+  description: |
+    Retrieve the results of a previously executed query by its ID.
+    Use this to fetch results after running an async query.
+  provider: redshift
+  endpoint: /
+  method: GET
+  scopes:
+    - redshift_data
+  tags:
+    - query
+    - results
+  input_schema:
+    type: object
+    description: Parameters for getting query results
+    properties:
+      clusterIdentifier:
+        type: string
+        description: "Redshift cluster identifier (required)"
+      databaseName:
+        type: string
+        description: "Database name (required)"
+      queryId:
+        type: string
+        description: "Query execution ID (required)"
+    required:
+      - clusterIdentifier
+      - databaseName
+      - queryId

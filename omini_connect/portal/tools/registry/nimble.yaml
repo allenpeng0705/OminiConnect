@@ -1,0 +1,322 @@
+# Nimble Tools - Allowlist
+# Curated subset of Nimble CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nimble_list_contacts        - List contacts
+# 2. nimble_get_contact         - Get contact details
+# 3. nimble_create_contact      - Create a contact
+# 4. nimble_update_contact      - Update a contact
+# 5. nimble_list_tasks          - List tasks
+# 6. nimble_get_task            - Get task details
+# 7. nimble_create_task         - Create a task
+# 8. nimble_list_calendar       - List calendar events
+# 9. nimble_get_calendar_event  - Get calendar event details
+# 10. nimble_get_analytics      - Get analytics data
+
+- slug: nimble_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Nimble. Filter by name, email, tags, or company.
+  provider: nimble
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      search:
+        type: string
+        description: "Search by name or email"
+      tag:
+        type: string
+        description: "Filter by tag"
+      company_id:
+        type: string
+        description: "Filter by company ID"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: nimble_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: nimble
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: nimble_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Nimble. Set name, email, phone, company, tags.
+  provider: nimble
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: string
+        description: "Company ID"
+      tags:
+        type: array
+        description: "Array of tag names"
+    required:
+      - first_name
+      - last_name
+
+- slug: nimble_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact. Modify name, email, phone, company, tags.
+  provider: nimble
+  endpoint: /contacts/{contact_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "New first name"
+      last_name:
+        type: string
+        description: "New last name"
+      email:
+        type: string
+        description: "New email address"
+      phone:
+        type: string
+        description: "New phone number"
+      company_id:
+        type: string
+        description: "New company ID"
+      tags:
+        type: array
+        description: "New array of tag names"
+    required:
+      - contact_id
+
+- slug: nimble_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Nimble. Filter by status, assignee, due date.
+  provider: nimble
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status: pending, completed"
+      assignee_id:
+        type: string
+        description: "Filter by assignee user ID"
+      due_before:
+        type: string
+        description: "Due before date (ISO 8601)"
+      due_after:
+        type: string
+        description: "Due after date (ISO 8601)"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: nimble_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: nimble
+  endpoint: /tasks/{task_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: nimble_create_task
+  name: Create Task
+  description: |
+    Create a new task in Nimble. Set title, description, assignee, due date.
+  provider: nimble
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      name:
+        type: string
+        description: "Task title"
+      description:
+        type: string
+        description: "Task description"
+      assignee_id:
+        type: string
+        description: "Assignee user ID"
+      due_date:
+        type: string
+        description: "Due date (ISO 8601)"
+      status:
+        type: string
+        description: "Initial status: pending, completed"
+    required:
+      - name
+
+- slug: nimble_list_calendar
+  name: List Calendar
+  description: |
+    List calendar events in Nimble. Filter by date range, user, or type.
+  provider: nimble
+  endpoint: /calendar
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calendar
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calendar events
+    properties:
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      type:
+        type: string
+        description: "Event type: call, meeting, event"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: nimble_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get detailed information about a specific calendar event.
+  provider: nimble
+  endpoint: /calendar/{event_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calendar
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a calendar event
+    properties:
+      event_id:
+        type: string
+        description: "Event ID"
+    required:
+      - event_id
+
+- slug: nimble_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics data from Nimble. Returns activity metrics, contact stats, task completion rates.
+  provider: nimble
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      metrics:
+        type: array
+        description: "Array of metric names to include"
+    required: []

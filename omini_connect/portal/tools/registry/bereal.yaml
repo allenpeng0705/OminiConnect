@@ -1,0 +1,278 @@
+# BeReal Tools - Allowlist
+# Curated subset of the BeReal API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bereal_list_moments         - List BeReal moments (user's own or friends)
+# 2. bereal_get_moment           - Get a specific moment's details
+# 3. bereal_post_moment          - Post a new BeReal moment
+# 4. bereal_list_friends         - List friends
+# 5. bereal_get_friend           - Get friend profile details
+# 6. bereal_add_friend          - Add a friend
+# 7. bereal_react_to_moment      - React to a friend's moment
+# 8. bereal_list_notifications   - List notifications
+# 9. bereal_get_user_profile     - Get user profile
+
+- slug: bereal_list_moments
+  name: List Moments
+  description: |
+    List BeReal moments from the authenticated user or their friends.
+    Returns photos, captions, location, and reaction counts for each moment.
+  provider: bereal
+  endpoint: /v1/moments
+  method: GET
+  scopes:
+    - moments:read
+  tags:
+    - moments
+    - feed
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing moments
+    properties:
+      user_id:
+        type: string
+        description: "Filter moments by user ID (optional, omit for friends feed)"
+      feed_type:
+        type: string
+        description: "Feed type: friends or user"
+        enum: [friends, user]
+        default: friends
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Number of results (max 20)"
+        default: 10
+    required: []
+
+- slug: bereal_get_moment
+  name: Get Moment
+  description: |
+    Get details of a specific BeReal moment including photos, caption, location, and reactions.
+    Use this to view a specific memory in full detail.
+  provider: bereal
+  endpoint: /v1/moments/{moment_id}
+  method: GET
+  scopes:
+    - moments:read
+  tags:
+    - moments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a moment
+    properties:
+      moment_id:
+        type: string
+        description: "Moment ID"
+    required:
+      - moment_id
+
+- slug: bereal_post_moment
+  name: Post Moment
+  description: |
+    Post a new BeReal moment with front and back camera photos.
+    Includes optional caption and location data.
+  provider: bereal
+  endpoint: /v1/moments
+  method: POST
+  scopes:
+    - moments:write
+  tags:
+    - moments
+    - create
+    - post
+  input_schema:
+    type: object
+    description: Parameters for posting a moment
+    properties:
+      front_photo:
+        type: string
+        description: "Base64 encoded front camera photo (required)"
+      back_photo:
+        type: string
+        description: "Base64 encoded back camera photo (required)"
+      caption:
+        type: string
+        description: "Moment caption (optional, max 150 characters)"
+      latitude:
+        type: number
+        description: "Location latitude"
+      longitude:
+        type: number
+        description: "Location longitude"
+      is_late:
+        type: boolean
+        description: "Mark as late BeReal (taken after the notification window)"
+        default: false
+    required:
+      - front_photo
+      - back_photo
+
+- slug: bereal_list_friends
+  name: List Friends
+  description: |
+    List all friends of the authenticated user.
+    Returns friend profiles with their current status and last moment time.
+  provider: bereal
+  endpoint: /v1/friends
+  method: GET
+  scopes:
+    - friends:read
+  tags:
+    - friends
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing friends
+    properties:
+      status:
+        type: string
+        description: "Filter by friendship status"
+        enum: [accepted, pending, incoming, outgoing]
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: bereal_get_friend
+  name: Get Friend
+  description: |
+    Get a specific friend's profile including their BeReal stats and last posted moment.
+    Use this to check if a friend has posted recently.
+  provider: bereal
+  endpoint: /v1/friends/{user_id}
+  method: GET
+  scopes:
+    - friends:read
+  tags:
+    - friends
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting a friend
+    properties:
+      user_id:
+        type: string
+        description: "User ID of the friend"
+    required:
+      - user_id
+
+- slug: bereal_add_friend
+  name: Add Friend
+  description: |
+    Send a friend request to another BeReal user.
+    Use this to connect with friends and see their moments.
+  provider: bereal
+  endpoint: /v1/friends
+  method: POST
+  scopes:
+    - friends:write
+  tags:
+    - friends
+    - social
+  input_schema:
+    type: object
+    description: Parameters for adding a friend
+    properties:
+      user_id:
+        type: string
+        description: "User ID to send friend request to"
+      username:
+        type: string
+        description: "Or username of the user"
+    required:
+      - user_id
+
+- slug: bereal_react_to_moment
+  name: React to Moment
+  description: |
+    Add a reaction emoji to a friend's BeReal moment.
+    Reactions appear alongside the moment for all friends to see.
+  provider: bereal
+  endpoint: /v1/moments/{moment_id}/reactions
+  method: POST
+  scopes:
+    - moments:write
+  tags:
+    - moments
+    - reactions
+    - engagement
+  input_schema:
+    type: object
+    description: Parameters for reacting to a moment
+    properties:
+      moment_id:
+        type: string
+        description: "Moment ID to react to"
+      emoji:
+        type: string
+        description: "Reaction emoji"
+        enum: [haha, wow, sad, angry, love, fire, clap, 100]
+    required:
+      - moment_id
+      - emoji
+
+- slug: bereal_list_notifications
+  name: List Notifications
+  description: |
+    List notifications for the authenticated user including friend requests, reactions, and comments.
+    Use this to stay updated on interactions with your moments and profile.
+  provider: bereal
+  endpoint: /v1/notifications
+  method: GET
+  scopes:
+    - notifications:read
+  tags:
+    - notifications
+    - engagement
+  input_schema:
+    type: object
+    description: Parameters for listing notifications
+    properties:
+      type:
+        type: string
+        description: "Filter by notification type"
+        enum: [friend_request, reaction, comment, mention, all]
+        default: all
+      unread_only:
+        type: boolean
+        description: "Only show unread notifications"
+        default: false
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: bereal_get_user_profile
+  name: Get User Profile
+  description: |
+    Get the authenticated user's profile including username, display name, bio, avatar, and statistics.
+    Use this to view or manage your own profile information.
+  provider: bereal
+  endpoint: /v1/users/me
+  method: GET
+  scopes:
+    - user:read
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting user profile
+    properties: {}
+    required: []

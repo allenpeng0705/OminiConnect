@@ -3,8 +3,9 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { createNangoConnectSession } from '../api/client';
 
 /**
- * In-portal Nango Connect: address bar stays on OminiConnect while the user signs in
- * (Nango Connect is loaded in an iframe or a new tab if providers block framing).
+ * Managed Nango Connect: the hub UI calls `window.open` for OAuth. That is routinely blocked
+ * or broken when the hub runs inside our cross-origin iframe, so we default to opening the hub
+ * in a **new tab** (top-level window) and keep Finish on this page.
  */
 export default function ConnectManagedHub() {
   const { platform } = useParams<{ platform: string }>();
@@ -12,6 +13,7 @@ export default function ConnectManagedHub() {
   const [connectUrl, setConnectUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showEmbedded, setShowEmbedded] = useState(false);
 
   useEffect(() => {
     if (!platform) return;
@@ -37,10 +39,6 @@ export default function ConnectManagedHub() {
       cancelled = true;
     };
   }, [platform]);
-
-  const openInNewTab = () => {
-    if (connectUrl) window.open(connectUrl, '_blank', 'noopener,noreferrer');
-  };
 
   const saveConnection = () => {
     if (!platform) return;
@@ -71,7 +69,7 @@ export default function ConnectManagedHub() {
 
       <div style={{ flex: 1, padding: '1rem 1.25rem 2rem', maxWidth: '960px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
         <p style={{ margin: '0 0 1rem', fontSize: '0.9rem', color: '#475569', lineHeight: 1.5 }}>
-          You are still in the <strong>OminiConnect</strong> portal. Sign in with the provider in the area below (or in a new tab if the page does not load). When authorization succeeds, click <strong>Save connection</strong> to store it in OminiConnect.
+          You are still in the <strong>OminiConnect</strong> portal. The integration hub signs in with a <strong>pop-up</strong> window; browsers usually <strong>block that pop-up when the hub is embedded in a frame</strong> on this page, which looks like endless &quot;Connecting…&quot; inside the hub. Use <strong>Open sign-in in new tab</strong> below so the hub runs in its own tab, complete OAuth there, then return here and click <strong>Finish</strong>.
         </p>
 
         {loading && <p style={{ color: '#64748b' }}>Starting secure connection…</p>}
@@ -89,32 +87,31 @@ export default function ConnectManagedHub() {
 
         {connectUrl && !loading && (
           <>
-            <div
-              style={{
-                borderRadius: '10px',
-                overflow: 'hidden',
-                border: '1px solid #cbd5e1',
-                background: 'white',
-                minHeight: 'min(70vh, 640px)',
-                marginBottom: '1rem',
-              }}
-            >
-              <iframe
-                title="Provider sign-in"
-                src={connectUrl}
-                style={{ width: '100%', height: 'min(70vh, 640px)', border: 'none', display: 'block' }}
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-            <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '0.75rem' }}>
-              If the frame is empty, the provider may block embedding. Use a new tab instead — you remain in OminiConnect after you return and click Save connection.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center', marginBottom: '1rem' }}>
+              <a
+                href={connectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-block',
+                  padding: '0.65rem 1.25rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: '#4f46e5',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                }}
+              >
+                Open sign-in in new tab
+              </a>
               <button
                 type="button"
-                onClick={openInNewTab}
+                onClick={saveConnection}
                 style={{
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 1.1rem',
                   borderRadius: '8px',
                   border: '1px solid #cbd5e1',
                   background: 'white',
@@ -123,25 +120,36 @@ export default function ConnectManagedHub() {
                   color: '#334155',
                 }}
               >
-                Open sign-in in new tab
-              </button>
-              <button
-                type="button"
-                onClick={saveConnection}
-                style={{
-                  padding: '0.5rem 1.1rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: '#4f46e5',
-                  color: 'white',
-                  cursor: 'pointer',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                }}
-              >
-                Save connection
+                Finish
               </button>
             </div>
+            <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>
+              Leave this tab open. After the other tab shows that you are connected, come back here and press <strong>Finish</strong> so the portal picks up the new connection.
+            </p>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8125rem', color: '#64748b', cursor: 'pointer', marginBottom: '0.75rem' }}>
+              <input type="checkbox" checked={showEmbedded} onChange={(e) => setShowEmbedded(e.target.checked)} />
+              Try embedded hub here (often blocks provider pop-ups — use new tab if sign-in hangs)
+            </label>
+            {showEmbedded && (
+              <div
+                style={{
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid #cbd5e1',
+                  background: 'white',
+                  minHeight: 'min(70vh, 640px)',
+                  marginBottom: '1rem',
+                }}
+              >
+                <iframe
+                  title="Provider sign-in (embedded)"
+                  src={connectUrl}
+                  style={{ width: '100%', height: 'min(70vh, 640px)', border: 'none', display: 'block' }}
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allow="clipboard-read; clipboard-write"
+                />
+              </div>
+            )}
           </>
         )}
       </div>

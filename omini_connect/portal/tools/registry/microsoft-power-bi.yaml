@@ -1,0 +1,248 @@
+# Microsoft Power BI Tools - Allowlist
+# Curated subset of Microsoft Power BI API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. powerbi_list_workspaces       - List workspaces
+# 2. powerbi_get_workspace         - Get workspace details
+# 3. powerbi_list_reports         - List reports
+# 4. powerbi_get_report            - Get report details
+# 5. powerbi_list_datasets        - List datasets
+# 6. powerbi_get_dataset          - Get dataset details
+# 7. powerbi_list_capacities      - List capacities
+# 8. powerbi_get_capacity         - Get capacity details
+# 9. powerbi_list_groups          - List groups
+# 10. powerbi_get_group           - Get group details
+
+- slug: powerbi_list_workspaces
+  name: List Workspaces
+  description: |
+    List all Power BI workspaces accessible to the user.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: powerbi_get_workspace
+  name: Get Workspace
+  description: |
+    Get details of a specific Power BI workspace.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - workspaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      groupId:
+        type: string
+        description: "Workspace (Group) ID"
+    required:
+      - groupId
+
+- slug: powerbi_list_reports
+  name: List Reports
+  description: |
+    List all Power BI reports in a workspace.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups/{groupId}/reports
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - reports
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      groupId:
+        type: string
+        description: "Workspace ID"
+    required:
+      - groupId
+
+- slug: powerbi_get_report
+  name: Get Report
+  description: |
+    Get details of a specific Power BI report.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/reports/{reportId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "Report ID"
+    required:
+      - reportId
+
+- slug: powerbi_list_datasets
+  name: List Datasets
+  description: |
+    List all Power BI datasets in a workspace.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups/{groupId}/datasets
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - datasets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      groupId:
+        type: string
+        description: "Workspace ID"
+    required:
+      - groupId
+
+- slug: powerbi_get_dataset
+  name: Get Dataset
+  description: |
+    Get details of a specific Power BI dataset.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/datasets/{datasetId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - datasets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      datasetId:
+        type: string
+        description: "Dataset ID"
+    required:
+      - datasetId
+
+- slug: powerbi_list_capacities
+  name: List Capacities
+  description: |
+    List all Power BI capacities (dedicated capacities).
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/capacities
+  method: GET
+  scopes:
+    - Capacity.Read.All
+  tags:
+    - powerbi
+    - capacities
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing capacities
+    properties: {}
+    required: []
+
+- slug: powerbi_get_capacity
+  name: Get Capacity
+  description: |
+    Get details of a specific Power BI capacity.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/capacities/{capacityId}
+  method: GET
+  scopes:
+    - Capacity.Read.All
+  tags:
+    - powerbi
+    - capacities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a capacity
+    properties:
+      capacityId:
+        type: string
+        description: "Capacity ID"
+    required:
+      - capacityId
+
+- slug: powerbi_list_groups
+  name: List Groups
+  description: |
+    List all Power BI app workspaces (groups).
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: powerbi_get_group
+  name: Get Group
+  description: |
+    Get details of a specific Power BI app workspace.
+  provider: microsoft-power-bi
+  endpoint: /v1.0/myorg/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - powerbi
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId

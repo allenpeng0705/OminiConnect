@@ -1,0 +1,252 @@
+# Blackbaud Tools - Allowlist
+# Curated subset of Blackbaud SKY API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. blackbaud_list_constituents    - List constituents
+# 2. blackbaud_get_constituent     - Get constituent details
+# 3. blackbaud_list_gifts         - List gifts
+# 4. blackbaud_get_gift           - Get gift details
+# 5. blackbaud_list_campaigns     - List campaigns
+# 6. blackbaud_get_campaign       - Get campaign details
+# 7. blackbaud_list_funds        - List funds
+# 8. blackbaud_get_fund           - Get fund details
+# 9. blackbaud_list_appeals       - List appeals
+# 10. blackbaud_get_appeal        - Get appeal details
+
+- slug: blackbaud_list_constituents
+  name: List Constituents
+  description: |
+    List all constituents (donors, supporters) in the database.
+  provider: blackbaud
+  endpoint: /constituents/v1/constituents
+  method: GET
+  scopes: []
+  tags:
+    - constituents
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing constituents
+    properties:
+      search_text:
+        type: string
+        description: "Search by name or email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: blackbaud_get_constituent
+  name: Get Constituent
+  description: |
+    Get details for a specific constituent.
+  provider: blackbaud
+  endpoint: /constituents/v1/constituents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - constituents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a constituent
+    properties:
+      id:
+        type: integer
+        description: "Constituent ID"
+    required:
+      - id
+
+- slug: blackbaud_list_gifts
+  name: List Gifts
+  description: |
+    List all gifts (donations) in the database.
+  provider: blackbaud
+  endpoint: /gift/v1/gifts
+  method: GET
+  scopes: []
+  tags:
+    - gifts
+    - donations
+  input_schema:
+    type: object
+    description: Parameters for listing gifts
+    properties:
+      constituent_id:
+        type: integer
+        description: "Filter by constituent ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: blackbaud_get_gift
+  name: Get Gift
+  description: |
+    Get details for a specific gift.
+  provider: blackbaud
+  endpoint: /gift/v1/gifts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - gifts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a gift
+    properties:
+      id:
+        type: integer
+        description: "Gift ID"
+    required:
+      - id
+
+- slug: blackbaud_list_campaigns
+  name: List Campaigns
+  description: |
+    List all fundraising campaigns.
+  provider: blackbaud
+  endpoint: /campaign/v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - fundraising
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: blackbaud_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: blackbaud
+  endpoint: /campaign/v1/campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: blackbaud_list_funds
+  name: List Funds
+  description: |
+    List all funds (designations) for donations.
+  provider: blackbaud
+  endpoint: /fund/v1/funds
+  method: GET
+  scopes: []
+  tags:
+    - funds
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing funds
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: blackbaud_get_fund
+  name: Get Fund
+  description: |
+    Get details for a specific fund.
+  provider: blackbaud
+  endpoint: /fund/v1/funds/{id}
+  method: GET
+  scopes: []
+  tags:
+    - funds
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a fund
+    properties:
+      id:
+        type: integer
+        description: "Fund ID"
+    required:
+      - id
+
+- slug: blackbaud_list_appeals
+  name: List Appeals
+  description: |
+    List all fundraising appeals.
+  provider: blackbaud
+  endpoint: /appeal/v1/appeals
+  method: GET
+  scopes: []
+  tags:
+    - appeals
+    - fundraising
+  input_schema:
+    type: object
+    description: Parameters for listing appeals
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: blackbaud_get_appeal
+  name: Get Appeal
+  description: |
+    Get details for a specific appeal.
+  provider: blackbaud
+  endpoint: /appeal/v1/appeals/{id}
+  method: GET
+  scopes: []
+  tags:
+    - appeals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appeal
+    properties:
+      id:
+        type: integer
+        description: "Appeal ID"
+    required:
+      - id

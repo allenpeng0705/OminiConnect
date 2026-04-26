@@ -1,0 +1,324 @@
+# Contentful Tools - Allowlist
+# Curated subset of the Contentful Management API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. contentful_list_spaces    - List all spaces accessible to the user
+# 2. contentful_get_space      - Get details of a specific space
+# 3. contentful_list_entries  - List entries in a space with optional content type filter
+# 4. contentful_get_entry     - Get a specific entry by ID
+# 5. contentful_create_entry   - Create a new entry in a content type
+# 6. contentful_list_assets   - List assets in a space
+# 7. contentful_get_asset     - Get a specific asset by ID
+# 8. contentful_upload_asset  - Upload a media asset to a space
+# 9. contentful_list_locales  - List locales in a space
+# 10. contentful_get_locale   - Get a specific locale
+
+- slug: contentful_list_spaces
+  name: List Spaces
+  description: |
+    List all spaces accessible to the authenticated user.
+    Returns a paginated list of spaces the user has access to.
+  provider: contentful
+  endpoint: /spaces
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - spaces
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties:
+      limit:
+        type: integer
+        description: "Number of results per page (default 100, max 1000)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip for pagination"
+        default: 0
+    required: []
+
+- slug: contentful_get_space
+  name: Get Space
+  description: |
+    Get details of a specific space including name, locales, and settings.
+  provider: contentful
+  endpoint: /spaces/{space_id}
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: contentful_list_entries
+  name: List Entries
+  description: |
+    List entries in a space. Optionally filter by content type, tags, or status.
+    Returns paginated results with metadata.
+  provider: contentful
+  endpoint: /spaces/{space_id}/entries
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - entries
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing entries
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      content_type:
+        type: string
+        description: "Filter by content type ID"
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      order:
+        type: string
+        description: "Field to order by (e.g., -sys.createdAt)"
+      select:
+        type: array
+        items:
+          type: string
+        description: "Fields to include in response"
+    required:
+      - space_id
+
+- slug: contentful_get_entry
+  name: Get Entry
+  description: |
+    Get a specific entry by ID including fields, metadata, and version info.
+  provider: contentful
+  endpoint: /spaces/{space_id}/entries/{entry_id}
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an entry
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      entry_id:
+        type: string
+        description: "Entry ID"
+      version:
+        type: integer
+        description: "Expected version for optimistic locking"
+    required:
+      - space_id
+      - entry_id
+
+- slug: contentful_create_entry
+  name: Create Entry
+  description: |
+    Create a new entry in a specified content type.
+    Provide field values in the locale of your choice.
+  provider: contentful
+  endpoint: /spaces/{space_id}/entries
+  method: POST
+  scopes:
+    - content_management
+  tags:
+    - entries
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an entry
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      content_type_id:
+        type: string
+        description: "Content type ID"
+      fields:
+        type: object
+        description: "Entry fields as key-value pairs"
+      locale:
+        type: string
+        description: "Locale code (e.g., en-US)"
+        default: en-US
+    required:
+      - space_id
+      - content_type_id
+      - fields
+
+- slug: contentful_list_assets
+  name: List Assets
+  description: |
+    List assets (images, videos, files) in a space.
+    Includes metadata like file size, content type, and processing status.
+  provider: contentful
+  endpoint: /spaces/{space_id}/assets
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - assets
+    - media
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      order:
+        type: string
+        description: "Field to order by"
+    required:
+      - space_id
+
+- slug: contentful_get_asset
+  name: Get Asset
+  description: |
+    Get a specific asset including file metadata, URL, and processing status.
+  provider: contentful
+  endpoint: /spaces/{space_id}/assets/{asset_id}
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      asset_id:
+        type: string
+        description: "Asset ID"
+    required:
+      - space_id
+      - asset_id
+
+- slug: contentful_upload_asset
+  name: Upload Asset
+  description: |
+    Upload a media asset to a space. After upload, asset must be processed and published.
+  provider: contentful
+  endpoint: /spaces/{space_id}/assets
+  method: POST
+  scopes:
+    - content_management
+  tags:
+    - assets
+    - upload
+    - media
+  input_schema:
+    type: object
+    description: Parameters for uploading an asset
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      file:
+        type: string
+        description: "Base64 encoded file content"
+      filename:
+        type: string
+        description: "Original filename"
+      content_type:
+        type: string
+        description: "MIME type (e.g., image/png, video/mp4)"
+      title:
+        type: string
+        description: "Asset title"
+      description:
+        type: string
+        description: "Asset description"
+    required:
+      - space_id
+      - file
+      - filename
+      - content_type
+
+- slug: contentful_list_locales
+  name: List Locales
+  description: |
+    List all locales configured in a space.
+    Each locale has a code, name, and fallback configuration.
+  provider: contentful
+  endpoint: /spaces/{space_id}/locales
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - locales
+    - i18n
+  input_schema:
+    type: object
+    description: Parameters for listing locales
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 100
+    required:
+      - space_id
+
+- slug: contentful_get_locale
+  name: Get Locale
+  description: |
+    Get details of a specific locale including code, name, and fallback settings.
+  provider: contentful
+  endpoint: /spaces/{space_id}/locales/{locale_id}
+  method: GET
+  scopes:
+    - content_management.read
+  tags:
+    - locales
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a locale
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      locale_id:
+        type: string
+        description: "Locale ID"
+    required:
+      - space_id
+      - locale_id

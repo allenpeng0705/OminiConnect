@@ -1,0 +1,187 @@
+# TickTick Tools - Allowlist
+# Curated subset of TickTick API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. ticktick_list_tasks           - List all tasks
+# # 2. ticktick_get_task           - Get task details
+# # 3. ticktick_create_task           - Create a new task
+# # 4. ticktick_update_task           - Update an existing task
+# # 5. ticktick_delete_task           - Delete a task
+# # 6. ticktick_list_projects           - List all projects
+# # 7. ticktick_get_project           - Get project details
+# # 8. ticktick_create_project           - Create a new project
+# # 9. ticktick_list_sections           - List sections in a project
+# # 10. ticktick_list_tags           - List all tags
+
+- slug: ticktick_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks
+  provider: ticktick
+  endpoint: /open/v1/task
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for list tasks
+    properties: {}
+    required: []
+
+- slug: ticktick_get_task
+  name: Get Task
+  description: |
+    Get task details
+  provider: ticktick
+  endpoint: /open/v1/task/{task_id}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for get task
+    properties: {}
+    required: []
+
+- slug: ticktick_create_task
+  name: Create Task
+  description: |
+    Create a new task
+  provider: ticktick
+  endpoint: /open/v1/task
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for create task
+    properties: {}
+    required: []
+
+- slug: ticktick_update_task
+  name: Update Task
+  description: |
+    Update an existing task
+  provider: ticktick
+  endpoint: /open/v1/task/{task_id}
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for update task
+    properties: {}
+    required: []
+
+- slug: ticktick_delete_task
+  name: Delete Task
+  description: |
+    Delete a task
+  provider: ticktick
+  endpoint: /open/v1/task/{task_id}
+  method: DELETE
+  scopes:
+    - tasks:write
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for delete task
+    properties: {}
+    required: []
+
+- slug: ticktick_list_projects
+  name: List Projects
+  description: |
+    List all projects
+  provider: ticktick
+  endpoint: /open/v1/project
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for list projects
+    properties: {}
+    required: []
+
+- slug: ticktick_get_project
+  name: Get Project
+  description: |
+    Get project details
+  provider: ticktick
+  endpoint: /open/v1/project/{project_id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for get project
+    properties: {}
+    required: []
+
+- slug: ticktick_create_project
+  name: Create Project
+  description: |
+    Create a new project
+  provider: ticktick
+  endpoint: /open/v1/project
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for create project
+    properties: {}
+    required: []
+
+- slug: ticktick_list_sections
+  name: List Sections
+  description: |
+    List sections in a project
+  provider: ticktick
+  endpoint: /open/v1/project/{project_id}/section
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for list sections
+    properties: {}
+    required: []
+
+- slug: ticktick_list_tags
+  name: List Tags
+  description: |
+    List all tags
+  provider: ticktick
+  endpoint: /open/v1/tag
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - ticktick
+  input_schema:
+    type: object
+    description: Parameters for list tags
+    properties: {}
+    required: []
+

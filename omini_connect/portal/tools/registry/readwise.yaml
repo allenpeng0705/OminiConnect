@@ -1,0 +1,266 @@
+# Readwise Tools - Allowlist
+# Curated subset of Readwise API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. readwise_list_highlights      - List all highlights
+# 2. readwise_get_highlight        - Get highlight details
+# 3. readwise_list_books           - List all books
+# 4. readwise_get_book             - Get book details
+# 5. readwise_create_highlight     - Create a highlight
+# 6. readwise_list_tags            - List all tags
+# 7. readwise_create_tag           - Create a tag
+# 8. readwise_associate_highlight   - Associate tag with highlight
+# 9. readwise_get_stats            - Get reading statistics
+# 10. readwise_export_highlights   - Export highlights
+
+- slug: readwise_list_highlights
+  name: List Highlights
+  description: |
+    Retrieve a paginated list of all highlights from your Readwise library.
+  provider: readwise
+  endpoint: /v2/highlights
+  method: GET
+  scopes:
+    - highlights:read
+  tags:
+    - highlights
+    - reading
+    - knowledge
+  input_schema:
+    type: object
+    description: Parameters for listing highlights
+    properties:
+      bookId:
+        type: string
+        description: "Filter by book ID"
+      tagId:
+        type: string
+        description: "Filter by tag ID"
+      limit:
+        type: integer
+        description: "Number of highlights (default 100)"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: readwise_get_highlight
+  name: Get Highlight
+  description: |
+    Get details of a specific highlight by ID.
+  provider: readwise
+  endpoint: /v2/highlights/{highlightId}
+  method: GET
+  scopes:
+    - highlights:read
+  tags:
+    - highlights
+    - reading
+    - knowledge
+  input_schema:
+    type: object
+    description: Parameters for getting a highlight
+    properties:
+      highlightId:
+        type: string
+        description: "The highlight ID"
+    required:
+      - highlightId
+
+- slug: readwise_list_books
+  name: List Books
+  description: |
+    Retrieve a list of all books in your Readwise library.
+  provider: readwise
+  endpoint: /v2/books
+  method: GET
+  scopes:
+    - books:read
+  tags:
+    - books
+    - reading
+    - library
+  input_schema:
+    type: object
+    description: Parameters for listing books
+    properties:
+      limit:
+        type: integer
+        description: "Number of books to return"
+        default: 100
+      source:
+        type: string
+        description: "Filter by source: kindle, pocket, etc."
+    required: []
+
+- slug: readwise_get_book
+  name: Get Book
+  description: |
+    Get details of a specific book by ID.
+  provider: readwise
+  endpoint: /v2/books/{bookId}
+  method: GET
+  scopes:
+    - books:read
+  tags:
+    - books
+    - reading
+    - library
+  input_schema:
+    type: object
+    description: Parameters for getting a book
+    properties:
+      bookId:
+        type: string
+        description: "The book ID"
+    required:
+      - bookId
+
+- slug: readwise_create_highlight
+  name: Create Highlight
+  description: |
+    Create a new highlight for a book.
+  provider: readwise
+  endpoint: /v2/highlights
+  method: POST
+  scopes:
+    - highlights:write
+  tags:
+    - highlights
+    - reading
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a highlight
+    properties:
+      bookId:
+        type: string
+        description: "The book ID"
+      text:
+        type: string
+        description: "Highlight text"
+      location:
+        type: integer
+        description: "Location in the book"
+      note:
+        type: string
+        description: "Optional note"
+    required:
+      - bookId
+      - text
+
+- slug: readwise_list_tags
+  name: List Tags
+  description: |
+    Retrieve a list of all tags in your Readwise account.
+  provider: readwise
+  endpoint: /v2/tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: readwise_create_tag
+  name: Create Tag
+  description: |
+    Create a new tag for organizing highlights.
+  provider: readwise
+  endpoint: /v2/tags
+  method: POST
+  scopes:
+    - tags:write
+  tags:
+    - tags
+    - organization
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tag
+    properties:
+      name:
+        type: string
+        description: "Tag name"
+    required:
+      - name
+
+- slug: readwise_associate_highlight
+  name: Associate Tag with Highlight
+  description: |
+    Associate a tag with an existing highlight.
+  provider: readwise
+  endpoint: /v2/highlights/{highlightId}/tags
+  method: POST
+  scopes:
+    - highlights:write
+  tags:
+    - tags
+    - highlights
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for associating a tag
+    properties:
+      highlightId:
+        type: string
+        description: "The highlight ID"
+      tagId:
+        type: string
+        description: "The tag ID"
+    required:
+      - highlightId
+      - tagId
+
+- slug: readwise_get_stats
+  name: Get Stats
+  description: |
+    Get reading statistics and insights.
+  provider: readwise
+  endpoint: /v2/stats
+  method: GET
+  scopes:
+    - stats:read
+  tags:
+    - stats
+    - analytics
+    - reading
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties: {}
+    required: []
+
+- slug: readwise_export_highlights
+  name: Export Highlights
+  description: |
+    Export highlights to a specified format.
+  provider: readwise
+  endpoint: /v2/export
+  method: GET
+  scopes:
+    - highlights:read
+  tags:
+    - highlights
+    - export
+    - download
+  input_schema:
+    type: object
+    description: Parameters for exporting highlights
+    properties:
+      format:
+        type: string
+        description: "Export format: json, csv, html"
+        default: json
+      bookId:
+        type: string
+        description: "Optional book ID to export specific book"
+    required: []

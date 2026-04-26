@@ -1,0 +1,299 @@
+- slug: vercel_list_deployments
+  name: List Deployments
+  description: |
+    Retrieve a list of all deployments for the authenticated user or team.
+  provider: vercel
+  endpoint: /v6/deployments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deployments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing deployments
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of deployments to return (default: 20, max: 100)"
+      until:
+        type: integer
+        description: "Unix timestamp to list deployments until"
+      from:
+        type: integer
+        description: "Unix timestamp to list deployments from"
+      projectId:
+        type: string
+        description: "Filter deployments by project ID"
+      state:
+        type: string
+        description: "Filter by state: BUILDING, ERROR, READY, QUEUED, CANCELED"
+    required: []
+
+- slug: vercel_get_deployment
+  name: Get Deployment
+  description: |
+    Retrieve details of a specific deployment including build logs and status.
+  provider: vercel
+  endpoint: /v13/deployments/{deploymentId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deployments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deployment
+    properties:
+      deploymentId:
+        type: string
+        description: "The unique identifier of the deployment (URL-safe ID or URL)"
+    required:
+      - deploymentId
+
+- slug: vercel_create_deployment
+  name: Create Deployment
+  description: |
+    Create a new deployment from a Git repository or local files.
+  provider: vercel
+  endpoint: /v13/deployments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - deployments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a deployment
+    properties:
+      name:
+        type: string
+        description: "Project name for the deployment"
+      gitSource:
+        type: object
+        description: "Git repository source"
+        properties:
+          type:
+            type: string
+            description: "Source type: github, gitlab, or bitbucket"
+          repo:
+            type: string
+            description: "Repository identifier (org/repo)"
+          ref:
+            type: string
+            description: "Branch or commit SHA"
+      project:
+        type: string
+        description: "Project ID to deploy to"
+      environmentVariables:
+        type: array
+        description: "Environment variables to set"
+        items:
+          type: object
+          properties:
+            key:
+              type: string
+            value:
+              type: string
+            target:
+              type: array
+              items:
+                type: string
+    required:
+      - name
+
+- slug: vercel_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects for the authenticated user or team.
+  provider: vercel
+  endpoint: /v9/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return (default: 20, max: 100)"
+      since:
+        type: integer
+        description: "Unix timestamp to filter projects from"
+      teamId:
+        type: string
+        description: "Team ID to list projects for"
+    required: []
+
+- slug: vercel_get_project
+  name: Get Project
+  description: |
+    Retrieve details and configuration of a specific project.
+  provider: vercel
+  endpoint: /v9/projects/{projectId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The unique identifier of the project"
+      teamId:
+        type: string
+        description: "Team ID the project belongs to"
+    required:
+      - projectId
+
+- slug: vercel_list_domains
+  name: List Domains
+  description: |
+    Retrieve all domains configured for a project or account.
+  provider: vercel
+  endpoint: /v6/domains
+  method: GET
+  scopes:
+    - read
+  tags:
+    - domains
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      projectId:
+        type: string
+        description: "Filter domains by project ID"
+      teamId:
+        type: string
+        description: "Team ID to list domains for"
+      limit:
+        type: integer
+        description: "Maximum number of domains to return"
+    required: []
+
+- slug: vercel_get_domain
+  name: Get Domain
+  description: |
+    Retrieve details of a specific domain including DNS records and verification status.
+  provider: vercel
+  endpoint: /v6/domains/{domain}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a domain
+    properties:
+      domain:
+        type: string
+        description: "The domain name to retrieve"
+      teamId:
+        type: string
+        description: "Team ID the domain belongs to"
+    required:
+      - domain
+
+- slug: vercel_add_domain
+  name: Add Domain
+  description: |
+    Add a new domain to a project or account.
+  provider: vercel
+  endpoint: /v6/domains
+  method: POST
+  scopes:
+    - write
+  tags:
+    - domains
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a domain
+    properties:
+      name:
+        type: string
+        description: "Domain name to add"
+      projectId:
+        type: string
+        description: "Project ID to attach the domain to"
+      teamId:
+        type: string
+        description: "Team ID to add domain to"
+      gitFork:
+        type: boolean
+        description: "Auto-configure DNS for git fork repos"
+      redirect:
+        type: string
+        description: "Redirect domain to another domain"
+      redirectStatusCode:
+        type: integer
+        description: "HTTP status code for redirect (307, 308)"
+    required:
+      - name
+
+- slug: vercel_list_secrets
+  name: List Secrets
+  description: |
+    Retrieve all environment secrets for a team or user.
+  provider: vercel
+  endpoint: /v9/secrets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - secrets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing secrets
+    properties:
+      teamId:
+        type: string
+        description: "Team ID to list secrets for"
+      limit:
+        type: integer
+        description: "Maximum number of secrets to return"
+      since:
+        type: integer
+        description: "Unix timestamp to filter from"
+    required: []
+
+- slug: vercel_get_secret
+  name: Get Secret
+  description: |
+    Retrieve details of a specific environment secret.
+  provider: vercel
+  endpoint: /v9/secrets/{secretName}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - secrets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a secret
+    properties:
+      secretName:
+        type: string
+        description: "Name of the secret to retrieve"
+      teamId:
+        type: string
+        description: "Team ID the secret belongs to"
+    required:
+      - secretName

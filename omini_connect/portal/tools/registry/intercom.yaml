@@ -1,0 +1,278 @@
+# Intercom Tools - Customer Messaging
+# Tools for managing conversations, users, admins, tags, and teams.
+
+# === TOOL LIST ===
+# 1. intercom_list_conversations      - List conversations
+# 2. intercom_get_conversation        - Get a specific conversation
+# 3. intercom_reply_to_conversation   - Reply to a conversation
+# 4. intercom_list_users             - List users
+# 5. intercom_get_user               - Get a specific user
+# 6. intercom_list_admins            - List admins
+# 7. intercom_get_admin              - Get a specific admin
+# 8. intercom_list_tags              - List tags
+# 9. intercom_get_tag                - Get a specific tag
+# 10. intercom_list_teams            - List teams
+
+- slug: intercom_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from your Intercom workspace.
+    Returns a paginated list of conversations with their status, participants, and latest message.
+  provider: intercom
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - support
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      state:
+        type: string
+        description: "Filter by state: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      per_page:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: intercom_get_conversation
+  name: Get Conversation
+  description: |
+    Get a specific conversation by ID. Returns full conversation details including messages, parts, and metadata.
+  provider: intercom
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_reply_to_conversation
+  name: Reply to Conversation
+  description: |
+    Reply to a conversation. Use this to send a message to a contact or team member in an existing conversation.
+    Supports text and emoji responses.
+  provider: intercom
+  endpoint: /conversations/{id}/reply
+  method: POST
+  scopes:
+    - conversation_write
+  tags:
+    - conversations
+    - support
+    - reply
+  input_schema:
+    type: object
+    description: Parameters for replying to a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+      message:
+        type: string
+        description: "Reply message content (required)"
+      type:
+        type: string
+        description: "Reply type: admin (default)"
+        enum: [admin]
+        default: admin
+    required:
+      - id
+      - message
+
+- slug: intercom_list_users
+  name: List Users
+  description: |
+    List all users in your Intercom workspace. Returns user profiles including email, name, custom attributes, and last seen.
+  provider: intercom
+  endpoint: /users
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - users
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      email:
+        type: string
+        description: "Filter by email address"
+    required: []
+
+- slug: intercom_get_user
+  name: Get User
+  description: |
+    Get a specific user by ID. Returns full user profile including custom attributes, conversation history, and activity.
+  provider: intercom
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - users
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_list_admins
+  name: List Admins
+  description: |
+    List all admins in your Intercom workspace. Returns their names, emails, avatar, and role information.
+  provider: intercom
+  endpoint: /admins
+  method: GET
+  scopes:
+    - team_read
+  tags:
+    - admins
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing admins
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: intercom_get_admin
+  name: Get Admin
+  description: |
+    Get a specific admin by ID. Returns their profile including name, email, avatar, and role.
+  provider: intercom
+  endpoint: /admins/{id}
+  method: GET
+  scopes:
+    - team_read
+  tags:
+    - admins
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an admin
+    properties:
+      id:
+        type: string
+        description: "Admin ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_list_tags
+  name: List Tags
+  description: |
+    List all tags in your Intercom workspace. Returns tag names, colors, and usage counts.
+  provider: intercom
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags_read
+  tags:
+    - tags
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: intercom_get_tag
+  name: Get Tag
+  description: |
+    Get a specific tag by ID. Returns tag details including name, color, and applied user IDs.
+  provider: intercom
+  endpoint: /tags/{id}
+  method: GET
+  scopes:
+    - tags_read
+  tags:
+    - tags
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      id:
+        type: string
+        description: "Tag ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_list_teams
+  name: List Teams
+  description: |
+    List all teams in your Intercom workspace. Returns team names, sizes, and admin assignments.
+  provider: intercom
+  endpoint: /teams
+  method: GET
+  scopes:
+    - team_read
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []

@@ -1,0 +1,240 @@
+# Linear MCP Tools - Allowlist
+# Curated subset of Linear MCP API for AI agent use.
+# MCP_OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. linear_mcp_list_issues          - List issues
+# 2. linear_mcp_get_issue           - Get issue details
+# 3. linear_mcp_create_issue       - Create an issue
+# 4. linear_mcp_update_issue       - Update an issue
+# 5. linear_mcp_list_teams         - List teams
+# 6. linear_mcp_get_team           - Get team details
+# 7. linear_mcp_list_projects      - List projects
+# 8. linear_mcp_get_project       - Get project details
+# 9. linear_mcp_list_users        - List users
+# 10. linear_mcp_get_user         - Get user details
+
+- slug: linear_mcp_list_issues
+  name: List Issues
+  description: |
+    List all issues.
+  provider: linear-mcp
+  endpoint: /issues
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: linear_mcp_get_issue
+  name: Get Issue
+  description: |
+    Get details for a specific issue.
+  provider: linear-mcp
+  endpoint: /issues/{issue_id}
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issue_id:
+        type: string
+        description: "Issue ID"
+    required:
+      - issue_id
+
+- slug: linear_mcp_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue.
+  provider: linear-mcp
+  endpoint: /issues
+  method: POST
+  scopes: []
+  tags:
+    - issues
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an issue
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      title:
+        type: string
+        description: "Issue title"
+      description:
+        type: string
+        description: "Issue description"
+    required:
+      - team_id
+      - title
+
+- slug: linear_mcp_update_issue
+  name: Update Issue
+  description: |
+    Update an existing issue.
+  provider: linear-mcp
+  endpoint: /issues/{issue_id}
+  method: PUT
+  scopes: []
+  tags:
+    - issues
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating an issue
+    properties:
+      issue_id:
+        type: string
+        description: "Issue ID"
+      title:
+        type: string
+        description: "Issue title"
+      description:
+        type: string
+        description: "Issue description"
+    required:
+      - issue_id
+
+- slug: linear_mcp_list_teams
+  name: List Teams
+  description: |
+    List all teams.
+  provider: linear-mcp
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: linear_mcp_get_team
+  name: Get Team
+  description: |
+    Get details for a specific team.
+  provider: linear-mcp
+  endpoint: /teams/{team_id}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id
+
+- slug: linear_mcp_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: linear-mcp
+  endpoint: /projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: linear_mcp_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project.
+  provider: linear-mcp
+  endpoint: /projects/{project_id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: linear_mcp_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: linear-mcp
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: linear_mcp_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: linear-mcp
+  endpoint: /users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id

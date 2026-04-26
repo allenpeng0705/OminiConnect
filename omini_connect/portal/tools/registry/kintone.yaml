@@ -1,0 +1,278 @@
+# Kintone Tools - Allowlist
+# Curated subset of Kintone API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. kintone_list_records        - List records
+# 2. kintone_get_record         - Get record details
+# 3. kintone_create_record      - Create a record
+# 4. kintone_update_record      - Update a record
+# 5. kintone_delete_record      - Delete a record
+# 6. kintone_list_apps         - List apps
+# 7. kintone_get_app           - Get app details
+# 8. kintone_list_comments     - List comments
+# 9. kintone_add_comment       - Add a comment
+# 10. kintone_get_form_fields  - Get form fields
+
+- slug: kintone_list_records
+  name: List Records
+  description: |
+    List records in an app.
+  provider: kintone
+  endpoint: /k/v1/records.json
+  method: GET
+  scopes: []
+  tags:
+    - records
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing records
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      query:
+        type: string
+        description: "Kintone query string"
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to return"
+      limit:
+        type: integer
+        description: "Max results (default 100, max 500)"
+        default: 100
+    required:
+      - app
+
+- slug: kintone_get_record
+  name: Get Record
+  description: |
+    Get details for a specific record.
+  provider: kintone
+  endpoint: /k/v1/record.json
+  method: GET
+  scopes: []
+  tags:
+    - records
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a record
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      id:
+        type: integer
+        description: "Record ID"
+    required:
+      - app
+      - id
+
+- slug: kintone_create_record
+  name: Create Record
+  description: |
+    Create a new record.
+  provider: kintone
+  endpoint: /k/v1/record.json
+  method: POST
+  scopes: []
+  tags:
+    - records
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a record
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      record:
+        type: object
+        description: "Record data"
+    required:
+      - app
+      - record
+
+- slug: kintone_update_record
+  name: Update Record
+  description: |
+    Update an existing record.
+  provider: kintone
+  endpoint: /k/v1/record.json
+  method: PUT
+  scopes: []
+  tags:
+    - records
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a record
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      id:
+        type: integer
+        description: "Record ID"
+      record:
+        type: object
+        description: "Record data"
+    required:
+      - app
+      - id
+      - record
+
+- slug: kintone_delete_record
+  name: Delete Record
+  description: |
+    Delete a record.
+  provider: kintone
+  endpoint: /k/v1/records.json
+  method: DELETE
+  scopes: []
+  tags:
+    - records
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a record
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      ids:
+        type: array
+        items:
+          type: integer
+        description: "Record IDs to delete"
+    required:
+      - app
+      - ids
+
+- slug: kintone_list_apps
+  name: List Apps
+  description: |
+    List all apps.
+  provider: kintone
+  endpoint: /k/v1/apps.json
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      space_id:
+        type: integer
+        description: "Filter by space ID"
+    required: []
+
+- slug: kintone_get_app
+  name: Get App
+  description: |
+    Get details for a specific app.
+  provider: kintone
+  endpoint: /k/v1/app.json
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+    required:
+      - app
+
+- slug: kintone_list_comments
+  name: List Comments
+  description: |
+    List comments on a record.
+  provider: kintone
+  endpoint: /k/v1/comments.json
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      record_id:
+        type: integer
+        description: "Record ID"
+    required:
+      - app
+      - record_id
+
+- slug: kintone_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to a record.
+  provider: kintone
+  endpoint: /k/v1/comment.json
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a comment
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+      record_id:
+        type: integer
+        description: "Record ID"
+      comment:
+        type: object
+        description: "Comment object with text"
+    required:
+      - app
+      - record_id
+      - comment
+
+- slug: kintone_get_form_fields
+  name: Get Form Fields
+  description: |
+    Get form fields for an app.
+  provider: kintone
+  endpoint: /k/v1/form.json
+  method: GET
+  scopes: []
+  tags:
+    - forms
+    - fields
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting form fields
+    properties:
+      app:
+        type: integer
+        description: "App ID"
+    required:
+      - app

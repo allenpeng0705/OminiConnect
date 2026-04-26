@@ -1,0 +1,248 @@
+# BoldSign Tools - Allowlist
+# Curated subset of BoldSign API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. boldsign_list_documents       - List documents
+# 2. boldsign_get_document       - Get document details
+# 3. boldsign_create_document    - Create a document for signing
+# 4. boldsign_send_document      - Send document for signature
+# 5. boldsign_list_templates     - List templates
+# 6. boldsign_get_template       - Get template details
+# 7. boldsign_list_signers       - List signers
+# 8. boldsign_get_signer         - Get signer details
+# 9. boldsign_list_teams         - List teams
+# 10. boldsign_get_settings       - Get team settings
+
+- slug: boldsign_list_documents
+  name: List Documents
+  description: |
+    List all documents in BoldSign.
+  provider: boldsign
+  endpoint: /v1/documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - esignatures
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, sent, signed, etc."
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Documents per page"
+        default: 20
+    required: []
+
+- slug: boldsign_get_document
+  name: Get Document
+  description: |
+    Get details for a specific document.
+  provider: boldsign
+  endpoint: /v1/documents/{documentId}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: boldsign_create_document
+  name: Create Document
+  description: |
+    Create a new document for signing.
+  provider: boldsign
+  endpoint: /v1/documents
+  method: POST
+  scopes: []
+  tags:
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      title:
+        type: string
+        description: "Document title"
+      subject:
+        type: string
+        description: "Email subject"
+      signers:
+        type: array
+        description: "Array of signer objects"
+      files:
+        type: array
+        description: "Array of file URLs or base64 content"
+    required:
+      - title
+      - signers
+      - files
+
+- slug: boldsign_send_document
+  name: Send Document
+  description: |
+    Send an existing document for signature.
+  provider: boldsign
+  endpoint: /v1/documents/{documentId}/send
+  method: POST
+  scopes: []
+  tags:
+    - documents
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a document
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+      signers:
+        type: array
+        description: "Array of signer objects"
+    required:
+      - documentId
+      - signers
+
+- slug: boldsign_list_templates
+  name: List Templates
+  description: |
+    List all templates in BoldSign.
+  provider: boldsign
+  endpoint: /v1/templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - esignatures
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Templates per page"
+        default: 20
+    required: []
+
+- slug: boldsign_get_template
+  name: Get Template
+  description: |
+    Get details for a specific template.
+  provider: boldsign
+  endpoint: /v1/templates/{templateId}
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      templateId:
+        type: string
+        description: "Template ID"
+    required:
+      - templateId
+
+- slug: boldsign_list_signers
+  name: List Signers
+  description: |
+    List all signers in BoldSign.
+  provider: boldsign
+  endpoint: /v1/signers
+  method: GET
+  scopes: []
+  tags:
+    - signers
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing signers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Signers per page"
+        default: 20
+    required: []
+
+- slug: boldsign_get_signer
+  name: Get Signer
+  description: |
+    Get details for a specific signer.
+  provider: boldsign
+  endpoint: /v1/signers/{signerId}
+  method: GET
+  scopes: []
+  tags:
+    - signers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a signer
+    properties:
+      signerId:
+        type: string
+        description: "Signer ID"
+    required:
+      - signerId
+
+- slug: boldsign_list_teams
+  name: List Teams
+  description: |
+    List all teams in BoldSign.
+  provider: boldsign
+  endpoint: /v1/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: boldsign_get_settings
+  name: Get Settings
+  description: |
+    Get team settings for BoldSign.
+  provider: boldsign
+  endpoint: /v1/settings
+  method: GET
+  scopes: []
+  tags:
+    - settings
+    - config
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties: {}
+    required: []

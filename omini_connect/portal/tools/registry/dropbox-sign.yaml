@@ -1,0 +1,254 @@
+# Dropbox Sign Tools - Allowlist
+# Curated subset of the Dropbox Sign (HelloSign) API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. dropbox_sign_list_signature_requests - List signature requests
+# 2. dropbox_sign_get_signature_request    - Get request details
+# 3. dropbox_sign_create_signature_request - Create a signature request
+# 4. dropbox_sign_list_templates           - List templates
+# 5. dropbox_sign_get_template             - Get template details
+# 6. dropbox_sign_list_users               - List team users
+# 7. dropbox_sign_get_user                 - Get user details
+# 8. dropbox_sign_list_bulk_send_jobs      - List bulk send jobs
+# 9. dropbox_sign_get_bulk_send_job        - Get bulk send details
+# 10. dropbox_sign_list_documents         - List documents
+
+- slug: dropbox_sign_list_signature_requests
+  name: List Signature Requests
+  description: |
+    List all signature requests in Dropbox Sign.
+  provider: dropbox-sign
+  endpoint: /signature_requests
+  method: GET
+  scopes: []
+  tags:
+    - signatures
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing signature requests
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, signed, declined, expired"
+    required: []
+
+- slug: dropbox_sign_get_signature_request
+  name: Get Signature Request
+  description: |
+    Get details of a specific signature request.
+  provider: dropbox-sign
+  endpoint: /signature_requests/{signature_request_id}
+  method: GET
+  scopes: []
+  tags:
+    - signatures
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a signature request
+    properties:
+      signature_request_id:
+        type: string
+        description: "Signature Request ID"
+    required:
+      - signature_request_id
+
+- slug: dropbox_sign_create_signature_request
+  name: Create Signature Request
+  description: |
+    Create and send a new signature request.
+  provider: dropbox-sign
+  endpoint: /signature_requests/send
+  method: POST
+  scopes: []
+  tags:
+    - signatures
+    - esignature
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a signature request
+    properties:
+      title:
+        type: string
+        description: "Request title"
+      subject:
+        type: string
+        description: "Email subject"
+      message:
+        type: string
+        description: "Email message"
+      signers:
+        type: array
+        items:
+          type: object
+        description: "Array of signer objects with email and name"
+      file_url:
+        type: string
+        description: "URL of file to sign"
+    required:
+      - title
+      - signers
+
+- slug: dropbox_sign_list_templates
+  name: List Templates
+  description: |
+    List all templates in Dropbox Sign.
+  provider: dropbox-sign
+  endpoint: /templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: dropbox_sign_get_template
+  name: Get Template
+  description: |
+    Get details of a specific template.
+  provider: dropbox-sign
+  endpoint: /templates/{template_id}
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "Template ID"
+    required:
+      - template_id
+
+- slug: dropbox_sign_list_users
+  name: List Users
+  description: |
+    List all users on the team.
+  provider: dropbox-sign
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: dropbox_sign_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: dropbox-sign
+  endpoint: /teams/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: dropbox_sign_list_bulk_send_jobs
+  name: List Bulk Send Jobs
+  description: |
+    List all bulk send jobs.
+  provider: dropbox-sign
+  endpoint: /bulk_send_jobs
+  method: GET
+  scopes: []
+  tags:
+    - bulk-send
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing bulk send jobs
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: dropbox_sign_get_bulk_send_job
+  name: Get Bulk Send Job
+  description: |
+    Get details of a specific bulk send job.
+  provider: dropbox-sign
+  endpoint: /bulk_send_jobs/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - bulk-send
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a bulk send job
+    properties:
+      job_id:
+        type: string
+        description: "Bulk Send Job ID"
+    required:
+      - job_id
+
+- slug: dropbox_sign_list_documents
+  name: List Documents
+  description: |
+    List all documents (completed signatures).
+  provider: dropbox-sign
+  endpoint: /documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []

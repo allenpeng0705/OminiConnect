@@ -1,0 +1,239 @@
+# ECU360 Tools - Allowlist
+# Curated subset of the ECU360 API for AI agent use.
+# Two-Step auth via Nango (Test environment).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ecu360_list_products               - List products
+# 2. ecu360_get_product                - Get product details
+# 3. ecu360_list_orders                 - List orders
+# 4. ecu360_get_order                   - Get order details
+# 5. ecu360_list_customers              - List customers
+# 6. ecu360_get_customer                - Get customer details
+# 7. ecu360_list_inventories            - List inventory
+# 8. ecu360_get_inventory               - Get inventory details
+# 9. ecu360_list_shipments              - List shipments
+# 10. ecu360_get_shipment              - Get shipment details
+
+- slug: ecu360_list_products
+  name: List Products
+  description: |
+    List all products in ECU360.
+  provider: ecu360
+  endpoint: /products
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - ecommerce
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ecu360_get_product
+  name: Get Product
+  description: |
+    Get details of a specific product.
+  provider: ecu360
+  endpoint: /products/{product_id}
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - ecommerce
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: string
+        description: "Product ID"
+    required:
+      - product_id
+
+- slug: ecu360_list_orders
+  name: List Orders
+  description: |
+    List all orders in ECU360.
+  provider: ecu360
+  endpoint: /orders
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - ecommerce
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, shipped, delivered"
+    required: []
+
+- slug: ecu360_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order.
+  provider: ecu360
+  endpoint: /orders/{order_id}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - ecommerce
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "Order ID"
+    required:
+      - order_id
+
+- slug: ecu360_list_customers
+  name: List Customers
+  description: |
+    List all customers in ECU360.
+  provider: ecu360
+  endpoint: /customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ecu360_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer.
+  provider: ecu360
+  endpoint: /customers/{customer_id}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: ecu360_list_inventories
+  name: List Inventory
+  description: |
+    List all inventory records.
+  provider: ecu360
+  endpoint: /inventory
+  method: GET
+  scopes: []
+  tags:
+    - inventory
+    - warehouse
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing inventory
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ecu360_get_inventory
+  name: Get Inventory
+  description: |
+    Get details of specific inventory.
+  provider: ecu360
+  endpoint: /inventory/{inventory_id}
+  method: GET
+  scopes: []
+  tags:
+    - inventory
+    - warehouse
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting inventory
+    properties:
+      inventory_id:
+        type: string
+        description: "Inventory ID"
+    required:
+      - inventory_id
+
+- slug: ecu360_list_shipments
+  name: List Shipments
+  description: |
+    List all shipments.
+  provider: ecu360
+  endpoint: /shipments
+  method: GET
+  scopes: []
+  tags:
+    - shipments
+    - logistics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing shipments
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ecu360_get_shipment
+  name: Get Shipment
+  description: |
+    Get details of a specific shipment.
+  provider: ecu360
+  endpoint: /shipments/{shipment_id}
+  method: GET
+  scopes: []
+  tags:
+    - shipments
+    - logistics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a shipment
+    properties:
+      shipment_id:
+        type: string
+        description: "Shipment ID"
+    required:
+      - shipment_id

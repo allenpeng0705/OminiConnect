@@ -1,0 +1,261 @@
+# Nyne AI Tools - Allowlist
+# Curated subset of Nyne AI API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nyne_list_events                 - List events
+# 2. nyne_get_event                  - Get event details
+# 3. nyne_create_event               - Create event
+# 4. nyne_update_event               - Update event
+# 5. nyne_list_persons              - List persons
+# 6. nyne_get_person                - Get person details
+# 7. nyne_list_organizations        - List organizations
+# 8. nyne_get_organization         - Get organization details
+# 9. nyne_create_tag                 - Create tag
+# 10. nyne_list_tags                - List tags
+
+- slug: nyne_list_events
+  name: List Events
+  description: |
+    List all events in Nyne AI.
+  provider: nyne-ai
+  endpoint: /person/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - analytics
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: nyne_get_event
+  name: Get Event
+  description: |
+    Get detailed information for a specific event.
+  provider: nyne-ai
+  endpoint: /person/events/{id}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - analytics
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      id:
+        type: string
+        description: "Event ID"
+    required:
+      - id
+
+- slug: nyne_create_event
+  name: Create Event
+  description: |
+    Create a new event in Nyne AI.
+  provider: nyne-ai
+  endpoint: /person/events
+  method: POST
+  scopes:
+    - events:write
+  tags:
+    - analytics
+    - events
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      event:
+        type: string
+        description: "Event type"
+      person_id:
+        type: string
+        description: "Person ID"
+      properties:
+        type: object
+        description: "Event properties"
+    required:
+      - event
+
+- slug: nyne_update_event
+  name: Update Event
+  description: |
+    Update an existing event.
+  provider: nyne-ai
+  endpoint: /person/events/{id}
+  method: PUT
+  scopes:
+    - events:write
+  tags:
+    - analytics
+    - events
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an event
+    properties:
+      id:
+        type: string
+        description: "Event ID"
+      event:
+        type: string
+        description: "Event type"
+      properties:
+        type: object
+        description: "Event properties"
+    required:
+      - id
+
+- slug: nyne_list_persons
+  name: List Persons
+  description: |
+    List all persons in Nyne AI.
+  provider: nyne-ai
+  endpoint: /person
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - analytics
+    - persons
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing persons
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: nyne_get_person
+  name: Get Person
+  description: |
+    Get detailed information for a specific person.
+  provider: nyne-ai
+  endpoint: /person/{id}
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - analytics
+    - persons
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      id:
+        type: string
+        description: "Person ID"
+    required:
+      - id
+
+- slug: nyne_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations in Nyne AI.
+  provider: nyne-ai
+  endpoint: /organization
+  method: GET
+  scopes:
+    - organizations:read
+  tags:
+    - analytics
+    - organizations
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: nyne_get_organization
+  name: Get Organization
+  description: |
+    Get detailed information for a specific organization.
+  provider: nyne-ai
+  endpoint: /organization/{id}
+  method: GET
+  scopes:
+    - organizations:read
+  tags:
+    - analytics
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      id:
+        type: string
+        description: "Organization ID"
+    required:
+      - id
+
+- slug: nyne_create_tag
+  name: Create Tag
+  description: |
+    Create a new tag in Nyne AI.
+  provider: nyne-ai
+  endpoint: /tag
+  method: POST
+  scopes:
+    - tags:write
+  tags:
+    - analytics
+    - tags
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tag
+    properties:
+      name:
+        type: string
+        description: "Tag name"
+      type:
+        type: string
+        description: "Tag type"
+    required:
+      - name
+
+- slug: nyne_list_tags
+  name: List Tags
+  description: |
+    List all tags in Nyne AI.
+  provider: nyne-ai
+  endpoint: /tag
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - analytics
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []

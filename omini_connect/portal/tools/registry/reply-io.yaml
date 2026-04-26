@@ -1,0 +1,279 @@
+# Reply-io Tools - Allowlist
+# Curated subset of Reply.io API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. reply-io_list_email_accounts       - List email accounts
+# 2. reply-io_get_email_account          - Get email account details
+# 3. reply-io_list_sequences            - List email sequences
+# 4. reply-io_get_sequence              - Get sequence details
+# 5. reply-io_create_sequence           - Create a sequence
+# 6. reply-io_list_contacts            - List contacts
+# 7. reply-io_add_contact               - Add a contact
+# 8. reply-io_list_tasks               - List tasks
+# 9. reply-io_create_task              - Create a task
+# 10. reply-io_get_stats               - Get sequence stats
+
+- slug: reply-io_list_email_accounts
+  name: List Email Accounts
+  description: |
+    Retrieve a list of all email accounts connected to Reply.io.
+  provider: reply-io
+  endpoint: /email-accounts
+  method: GET
+  scopes:
+    - email-accounts:read
+  tags:
+    - email
+    - accounts
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing email accounts
+    properties:
+      limit:
+        type: integer
+        description: "Number of accounts"
+        default: 50
+    required: []
+
+- slug: reply-io_get_email_account
+  name: Get Email Account
+  description: |
+    Get details of a specific email account.
+  provider: reply-io
+  endpoint: /email-accounts/{accountId}
+  method: GET
+  scopes:
+    - email-accounts:read
+  tags:
+    - email
+    - accounts
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for getting an email account
+    properties:
+      accountId:
+        type: string
+        description: "The email account ID"
+    required:
+      - accountId
+
+- slug: reply-io_list_sequences
+  name: List Sequences
+  description: |
+    Retrieve a list of all email sequences.
+  provider: reply-io
+  endpoint: /sequences
+  method: GET
+  scopes:
+    - sequences:read
+  tags:
+    - sequences
+    - email
+    - sales
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties:
+      limit:
+        type: integer
+        description: "Number of sequences"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: active, paused, completed"
+    required: []
+
+- slug: reply-io_get_sequence
+  name: Get Sequence
+  description: |
+    Get details of a specific sequence.
+  provider: reply-io
+  endpoint: /sequences/{sequenceId}
+  method: GET
+  scopes:
+    - sequences:read
+  tags:
+    - sequences
+    - email
+    - sales
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      sequenceId:
+        type: string
+        description: "The sequence ID"
+    required:
+      - sequenceId
+
+- slug: reply-io_create_sequence
+  name: Create Sequence
+  description: |
+    Create a new email sequence for outreach.
+  provider: reply-io
+  endpoint: /sequences
+  method: POST
+  scopes:
+    - sequences:write
+  tags:
+    - sequences
+    - email
+    - sales
+    - automation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a sequence
+    properties:
+      name:
+        type: string
+        description: "Sequence name"
+      subject:
+        type: string
+        description: "Email subject line"
+      body:
+        type: string
+        description: "Email body template"
+    required:
+      - name
+
+- slug: reply-io_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in your Reply.io account.
+  provider: reply-io
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 50
+    required: []
+
+- slug: reply-io_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact to your Reply.io account.
+  provider: reply-io
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - sales
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - email
+
+- slug: reply-io_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of all tasks.
+  provider: reply-io
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - crm
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Number of tasks"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: reply-io_create_task
+  name: Create Task
+  description: |
+    Create a new task for follow-up.
+  provider: reply-io
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+    - crm
+    - sales
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      contactId:
+        type: string
+        description: "Related contact ID"
+      dueDate:
+        type: string
+        description: "Due date (ISO 8601)"
+    required:
+      - title
+
+- slug: reply-io_get_stats
+  name: Get Stats
+  description: |
+    Get statistics for your sequences.
+  provider: reply-io
+  endpoint: /stats
+  method: GET
+  scopes:
+    - stats:read
+  tags:
+    - stats
+    - analytics
+    - sequences
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties:
+      sequenceId:
+        type: string
+        description: "Filter by sequence ID"
+    required: []

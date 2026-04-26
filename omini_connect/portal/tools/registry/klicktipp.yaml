@@ -1,0 +1,250 @@
+# KlickTipp Tools - Allowlist
+# Curated subset of KlickTipp API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. klicktipp_list_contacts       - List contacts
+# 2. klicktipp_get_contact        - Get contact details
+# 3. klicktipp_create_contact     - Create a contact
+# 4. klicktipp_update_contact     - Update a contact
+# 5. klicktipp_delete_contact     - Delete a contact
+# 6. klicktipp_list_tags          - List tags
+# 7. klicktipp_add_tag           - Add tag to contact
+# 8. klicktipp_remove_tag        - Remove tag from contact
+# 9. klicktipp_list_fields       - List custom fields
+# 10. klicktipp_list_campaigns   - List campaigns
+
+- slug: klicktipp_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in KlickTipp.
+  provider: klicktipp
+  endpoint: /contact
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: klicktipp_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: klicktipp
+  endpoint: /contact/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: klicktipp_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: klicktipp
+  endpoint: /contact
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to apply"
+    required:
+      - email
+
+- slug: klicktipp_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: klicktipp
+  endpoint: /contact/{contact_id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - contact_id
+
+- slug: klicktipp_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact.
+  provider: klicktipp
+  endpoint: /contact/{contact_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - contacts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: klicktipp_list_tags
+  name: List Tags
+  description: |
+    List all tags.
+  provider: klicktipp
+  endpoint: /tag
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: klicktipp_add_tag
+  name: Add Tag
+  description: |
+    Add a tag to a contact.
+  provider: klicktipp
+  endpoint: /contact/{contact_id}/tag
+  method: POST
+  scopes: []
+  tags:
+    - tags
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a tag
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+      tag:
+        type: string
+        description: "Tag name"
+    required:
+      - contact_id
+      - tag
+
+- slug: klicktipp_remove_tag
+  name: Remove Tag
+  description: |
+    Remove a tag from a contact.
+  provider: klicktipp
+  endpoint: /contact/{contact_id}/tag/{tag_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - tags
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for removing a tag
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+      tag_id:
+        type: integer
+        description: "Tag ID"
+    required:
+      - contact_id
+      - tag_id
+
+- slug: klicktipp_list_fields
+  name: List Custom Fields
+  description: |
+    List all custom fields.
+  provider: klicktipp
+  endpoint: /field
+  method: GET
+  scopes: []
+  tags:
+    - fields
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing custom fields
+    properties: {}
+    required: []
+
+- slug: klicktipp_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: klicktipp
+  endpoint: /campaign
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []

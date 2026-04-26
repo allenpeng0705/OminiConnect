@@ -1,0 +1,293 @@
+- slug: chatfuel_list_flows
+  name: List Flows
+  description: |
+    Retrieve a list of chatbot flows in your ChatFuel account.
+    Flows define the conversation paths and triggers for your chatbot.
+  provider: chatfuel
+  endpoint: /flows
+  method: GET
+  scopes:
+    - flows_read
+  tags:
+    - flows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing flows
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required: []
+
+- slug: chatfuel_get_flow
+  name: Get Flow
+  description: |
+    Get details of a specific flow including its blocks, elements, and configuration.
+  provider: chatfuel
+  endpoint: /flows/{flow_id}
+  method: GET
+  scopes:
+    - flows_read
+  tags:
+    - flows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a flow
+    properties:
+      flow_id:
+        type: string
+        description: "Flow ID (path parameter)"
+    required:
+      - flow_id
+
+- slug: chatfuel_create_flow
+  name: Create Flow
+  description: |
+    Create a new chatbot flow with specified blocks and elements.
+    Flows define how the chatbot responds to user inputs.
+  provider: chatfuel
+  endpoint: /flows
+  method: POST
+  scopes:
+    - flows_write
+  tags:
+    - flows
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a flow
+    properties:
+      name:
+        type: string
+        description: "Flow name (required)"
+      description:
+        type: string
+        description: "Flow description"
+      trigger:
+        type: string
+        description: "Trigger type: keyword, exact, contains, regex"
+        enum: [keyword, exact, contains, regex]
+      trigger_value:
+        type: string
+        description: "Trigger value/keyword"
+    required:
+      - name
+
+- slug: chatfuel_list_subscribers
+  name: List Subscribers
+  description: |
+    Retrieve a list of subscribers (users who have interacted with your chatbot).
+    Shows subscription status, attributes, and last activity.
+  provider: chatfuel
+  endpoint: /subscribers
+  method: GET
+  scopes:
+    - subscribers_read
+  tags:
+    - subscribers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, unsubscribed, all"
+        enum: [active, unsubscribed, all]
+        default: all
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: chatfuel_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get detailed information about a specific subscriber including their attributes, tags, and conversation history.
+  provider: chatfuel
+  endpoint: /subscribers/{subscriber_id}
+  method: GET
+  scopes:
+    - subscribers_read
+  tags:
+    - subscribers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      subscriber_id:
+        type: string
+        description: "Subscriber ID (path parameter)"
+    required:
+      - subscriber_id
+
+- slug: chatfuel_update_subscriber_attribute
+  name: Update Subscriber Attribute
+  description: |
+    Update a subscriber's custom attributes or tags.
+    Used to store user preferences, segment, or track custom data.
+  provider: chatfuel
+  endpoint: /subscribers/{subscriber_id}/attributes
+  method: PUT
+  scopes:
+    - subscribers_write
+  tags:
+    - subscribers
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating subscriber attributes
+    properties:
+      subscriber_id:
+        type: string
+        description: "Subscriber ID (path parameter)"
+      attributes:
+        type: object
+        description: "Key-value pairs of attributes to update"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to add or update"
+    required:
+      - subscriber_id
+
+- slug: chatfuel_create_broadcast
+  name: Create Broadcast
+  description: |
+    Create a broadcast message to send to multiple subscribers or segments.
+    Broadcasts are used for marketing campaigns or announcements.
+  provider: chatfuel
+  endpoint: /broadcasts
+  method: POST
+  scopes:
+    - broadcasts_write
+  tags:
+    - broadcasts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a broadcast
+    properties:
+      name:
+        type: string
+        description: "Broadcast name (required)"
+      message:
+        type: object
+        description: "Message content with type and content fields"
+        properties:
+          type:
+            type: string
+            description: "Message type: text, image, card"
+          content:
+            type: string
+            description: "Message content"
+      segment:
+        type: object
+        description: "Target segment definition"
+        properties:
+          type:
+            type: string
+            description: "Segment type: all, tag, attribute"
+          value:
+            type: string
+            description: "Segment value"
+      schedule:
+        type: object
+        description: "Scheduling options"
+        properties:
+          type:
+            type: string
+            description: "Send type: immediate, scheduled"
+          send_at:
+            type: string
+            description: "ISO 8601 datetime for scheduled sends"
+    required:
+      - name
+      - message
+
+- slug: chatfuel_get_broadcast_stats
+  name: Get Broadcast Stats
+  description: |
+    Get statistics for a broadcast including delivery, open, and click rates.
+    Used to measure campaign effectiveness.
+  provider: chatfuel
+  endpoint: /broadcasts/{broadcast_id}/stats
+  method: GET
+  scopes:
+    - broadcasts_read
+  tags:
+    - broadcasts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting broadcast stats
+    properties:
+      broadcast_id:
+        type: string
+        description: "Broadcast ID (path parameter)"
+    required:
+      - broadcast_id
+
+- slug: chatfuel_list_attributes
+  name: List Attributes
+  description: |
+    Retrieve a list of custom attributes configured for subscribers.
+    Attributes store user data like preferences, location, or custom fields.
+  provider: chatfuel
+  endpoint: /attributes
+  method: GET
+  scopes:
+    - attributes_read
+  tags:
+    - attributes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing attributes
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: chatfuel_get_plugin_settings
+  name: Get Plugin Settings
+  description: |
+    Get configuration settings for ChatFuel plugins like the live chat plugin or customer chat.
+    Includes widget settings, appearance, and behavior configuration.
+  provider: chatfuel
+  endpoint: /plugins/{plugin_id}/settings
+  method: GET
+  scopes:
+    - plugins_read
+  tags:
+    - plugins
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting plugin settings
+    properties:
+      plugin_id:
+        type: string
+        description: "Plugin ID (path parameter)"
+    required:
+      - plugin_id

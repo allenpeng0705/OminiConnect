@@ -1,0 +1,247 @@
+- slug: redbubble_list_works
+  name: List Works
+  description: |
+    Retrieve all artwork works uploaded to your Redbubble account.
+  provider: redbubble
+  endpoint: /v2/works
+  method: GET
+  scopes:
+    - works
+  tags:
+    - works
+  input_schema:
+    type: object
+    description: Parameters for listing works
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      per_page:
+        type: integer
+        description: "Number of works per page (default 25, max 100)"
+      tags:
+        type: string
+        description: "Filter works by tags (comma-separated)"
+    required: []
+
+- slug: redbubble_get_work
+  name: Get Work
+  description: |
+    Retrieve detailed information about a specific artwork work.
+  provider: redbubble
+  endpoint: /v2/works/{id}
+  method: GET
+  scopes:
+    - works
+  tags:
+    - works
+  input_schema:
+    type: object
+    description: Parameters for getting a work
+    properties:
+      id:
+        type: string
+        description: "Work ID"
+    required:
+      - id
+
+- slug: redbubble_upload_work
+  name: Upload Work
+  description: |
+    Upload a new artwork file to your Redbubble account.
+  provider: redbubble
+  endpoint: /v2/works
+  method: POST
+  scopes:
+    - works
+  tags:
+    - works
+  input_schema:
+    type: object
+    description: Parameters for uploading a work
+    properties:
+      title:
+        type: string
+        description: "Title for the artwork"
+      file:
+        type: string
+        description: "Base64-encoded image file or URL to file"
+      tags:
+        type: array
+        description: "Array of tags for discoverability"
+      description:
+        type: string
+        description: "Description of the artwork"
+    required:
+      - title
+      - file
+
+- slug: redbubble_list_products
+  name: List Products
+  description: |
+    Retrieve all product types available in the Redbubble catalog.
+  provider: redbubble
+  endpoint: /v2/products
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      per_page:
+        type: integer
+        description: "Number of products per page (default 50)"
+    required: []
+
+- slug: redbubble_get_product
+  name: Get Product
+  description: |
+    Retrieve detailed information about a specific product type.
+  provider: redbubble
+  endpoint: /v2/products/{id}
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: redbubble_list_orders
+  name: List Orders
+  description: |
+    Retrieve orders with filtering by status and date range.
+  provider: redbubble
+  endpoint: /v2/orders
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      per_page:
+        type: integer
+        description: "Number of orders per page (default 50)"
+      status:
+        type: string
+        description: "Filter by status: pending, production, shipped, delivered, returned"
+      from_date:
+        type: string
+        description: "Start date filter (ISO 8601 format)"
+      to_date:
+        type: string
+        description: "End date filter (ISO 8601 format)"
+    required: []
+
+- slug: redbubble_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order.
+  provider: redbubble
+  endpoint: /v2/orders/{id}
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: redbubble_get_sales_stats
+  name: Get Sales Stats
+  description: |
+    Retrieve sales statistics and revenue data for your account or specific works.
+  provider: redbubble
+  endpoint: /v2/stats/sales
+  method: GET
+  scopes:
+    - stats
+  tags:
+    - stats
+  input_schema:
+    type: object
+    description: Parameters for getting sales stats
+    properties:
+      from_date:
+        type: string
+        description: "Start date for stats period (ISO 8601 format)"
+      to_date:
+        type: string
+        description: "End date for stats period (ISO 8601 format)"
+      work_id:
+        type: string
+        description: "Filter stats for specific work ID"
+      group_by:
+        type: string
+        description: "Group results by: day, month, work, product"
+    required: []
+
+- slug: redbubble_list_collections
+  name: List Collections
+  description: |
+    Retrieve all collections of works organized on your account.
+  provider: redbubble
+  endpoint: /v2/collections
+  method: GET
+  scopes:
+    - collections
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      per_page:
+        type: integer
+        description: "Number of collections per page (default 25)"
+    required: []
+
+- slug: redbubble_get_collection
+  name: Get Collection
+  description: |
+    Retrieve detailed information about a specific collection.
+  provider: redbubble
+  endpoint: /v2/collections/{id}
+  method: GET
+  scopes:
+    - collections
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Parameters for getting a collection
+    properties:
+      id:
+        type: string
+        description: "Collection ID"
+    required:
+      - id

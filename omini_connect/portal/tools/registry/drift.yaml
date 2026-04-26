@@ -1,0 +1,289 @@
+# Drift Tools - Sales Chat
+# Tools for managing conversations, contacts, bots, campaigns, and reports.
+
+# === TOOL LIST ===
+# 1. drift_list_conversations      - List conversations
+# 2. drift_get_conversation        - Get a specific conversation
+# 3. drift_send_message           - Send a message
+# 4. drift_list_contacts          - List contacts
+# 5. drift_get_contact            - Get a specific contact
+# 6. drift_list_bots              - List bots
+# 7. drift_get_bot                - Get a specific bot
+# 8. drift_list_campaigns         - List campaigns
+# 9. drift_get_campaign           - Get a specific campaign
+# 10. drift_get_report            - Get a report
+
+- slug: drift_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from your Drift workspace.
+    Returns a paginated list of conversations with their status, participants, and latest message.
+  provider: drift
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - chat
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      limit:
+        type: integer
+        description: "Results limit (default 25)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: drift_get_conversation
+  name: Get Conversation
+  description: |
+    Get a specific conversation by ID. Returns full conversation details including messages, participants, and history.
+  provider: drift
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - chat
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - id
+
+- slug: drift_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation or start a new conversation with a contact.
+    Use this to proactively reach out to leads or respond to incoming messages.
+  provider: drift
+  endpoint: /messages
+  method: POST
+  scopes:
+    - conversation_write
+  tags:
+    - messages
+    - chat
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID to send message to"
+      contact_id:
+        type: string
+        description: "Contact ID to start new conversation with"
+      message:
+        type: string
+        description: "Message content (required)"
+      type:
+        type: string
+        description: "Message type: chat, email (default chat)"
+        enum: [chat, email]
+        default: chat
+    required:
+      - message
+
+- slug: drift_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in your Drift workspace. Returns contact profiles including name, email, company, and activity.
+  provider: drift
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Results limit"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      email:
+        type: string
+        description: "Filter by email address"
+    required: []
+
+- slug: drift_get_contact
+  name: Get Contact
+  description: |
+    Get a specific contact by ID. Returns full contact profile including custom attributes, conversation history, and activity.
+  provider: drift
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID (path parameter)"
+    required:
+      - id
+
+- slug: drift_list_bots
+  name: List Bots
+  description: |
+    List all bots in your Drift workspace. Returns bot names, statuses, and configuration details.
+  provider: drift
+  endpoint: /bots
+  method: GET
+  scopes:
+    - bot_read
+  tags:
+    - bots
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing bots
+    properties:
+      limit:
+        type: integer
+        description: "Results limit"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: drift_get_bot
+  name: Get Bot
+  description: |
+    Get a specific bot by ID. Returns full bot configuration including settings, triggers, and conversation flows.
+  provider: drift
+  endpoint: /bots/{id}
+  method: GET
+  scopes:
+    - bot_read
+  tags:
+    - bots
+    - automation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a bot
+    properties:
+      id:
+        type: string
+        description: "Bot ID (path parameter)"
+    required:
+      - id
+
+- slug: drift_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in your Drift workspace. Returns campaign names, statuses, and targeting rules.
+  provider: drift
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaign_read
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, paused, all"
+        enum: [active, paused, all]
+        default: all
+      limit:
+        type: integer
+        description: "Results limit"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: drift_get_campaign
+  name: Get Campaign
+  description: |
+    Get a specific campaign by ID. Returns full campaign details including targeting, messaging, and scheduling.
+  provider: drift
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - campaign_read
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID (path parameter)"
+    required:
+      - id
+
+- slug: drift_get_report
+  name: Get Report
+  description: |
+    Get analytics report for Drift conversations and campaigns.
+    Returns metrics including conversation volume, response times, and conversion rates.
+  provider: drift
+  endpoint: /reports/{type}
+  method: GET
+  scopes:
+    - analytics_read
+  tags:
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      type:
+        type: string
+        description: "Report type: conversations, campaigns, overview"
+        enum: [conversations, campaigns, overview]
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - type

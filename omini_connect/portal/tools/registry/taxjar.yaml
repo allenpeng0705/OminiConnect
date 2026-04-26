@@ -1,0 +1,313 @@
+# Taxjar Tools - Allowlist
+# Curated subset of Taxjar sales tax API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. taxjar_list_transactions       - List all transactions
+# 2. taxjar_get_transaction        - Get transaction details
+# 3. taxjar_create_transaction      - Create a new transaction
+# 4. taxjar_list_nexus             - List all nexus locations
+# 5. taxjar_get_nexus              - Get nexus location details
+# 6. taxjar_validate_address       - Validate and normalize address
+# 7. taxjar_get_tax_rates          - Get tax rates for location
+# 8. taxjar_list_reports           - List tax reports
+# 9. taxjar_get_report             - Get report details
+# 10. taxjar_list_categories       - List tax categories
+
+- slug: taxjar_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions in Taxjar. Filter by from date, to date, or entity.
+  provider: taxjar
+  endpoint: /transactions
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      entity:
+        type: string
+        description: "Filter by entity type (order, refund)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required: []
+
+- slug: taxjar_get_transaction
+  name: Get Transaction
+  description: |
+    Get detailed information about a specific Taxjar transaction.
+  provider: taxjar
+  endpoint: /transactions/{transactionId}
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID"
+      entity:
+        type: string
+        description: "Entity type (order or refund)"
+    required:
+      - transactionId
+
+- slug: taxjar_create_transaction
+  name: Create Transaction
+  description: |
+    Create a new transaction (order or refund) in Taxjar for sales tax reporting.
+  provider: taxjar
+  endpoint: /transactions
+  method: POST
+  scopes:
+    - transactions:write
+  tags:
+    - transactions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a transaction
+    properties:
+      transaction_id:
+        type: string
+        description: "Unique transaction ID"
+      entity:
+        type: string
+        description: "Entity type (order or refund)"
+      amount:
+        type: number
+        description: "Transaction amount"
+      shipping:
+        type: number
+        description: "Shipping amount"
+      tax_date:
+        type: string
+        description: "Tax date (YYYY-MM-DD)"
+      from_state:
+        type: string
+        description: "Origin state"
+      from_city:
+        type: string
+        description: "Origin city"
+      from_zip:
+        type: string
+        description: "Origin zip code"
+      to_state:
+        type: string
+        description: "Destination state"
+      to_city:
+        type: string
+        description: "Destination city"
+      to_zip:
+        type: string
+        description: "Destination zip code"
+      line_items:
+        type: array
+        description: "Line items array"
+    required:
+      - transaction_id
+      - entity
+      - amount
+
+- slug: taxjar_list_nexus
+  name: List Nexus
+  description: |
+    List all nexus (taxable presence) locations in Taxjar.
+  provider: taxjar
+  endpoint: /nexus
+  method: GET
+  scopes:
+    - nexus:read
+  tags:
+    - nexus
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing nexus locations
+    properties: {}
+
+- slug: taxjar_get_nexus
+  name: Get Nexus
+  description: |
+    Get detailed information about a specific nexus location.
+  provider: taxjar
+  endpoint: /nexus/{regionCode}
+  method: GET
+  scopes:
+    - nexus:read
+  tags:
+    - nexus
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a nexus location
+    properties:
+      regionCode:
+        type: string
+        description: "Region code (state abbreviation)"
+    required:
+      - regionCode
+
+- slug: taxjar_validate_address
+  name: Validate Address
+  description: |
+    Validate and normalize a street address using Taxjar's address validation.
+  provider: taxjar
+  endpoint: /addresses/validate
+  method: POST
+  scopes:
+    - addresses:read
+  tags:
+    - addresses
+    - validation
+  input_schema:
+    type: object
+    description: Parameters for validating an address
+    properties:
+      street:
+        type: string
+        description: "Street address"
+      city:
+        type: string
+        description: "City"
+      state:
+        type: string
+        description: "State"
+      zip:
+        type: string
+        description: "Zip code"
+      country:
+        type: string
+        description: "Country code"
+        default: US
+    required:
+      - street
+      - city
+      - state
+      - zip
+
+- slug: taxjar_get_tax_rates
+  name: Get Tax Rates
+  description: |
+    Get sales tax rates for a specific location including combined rate breakdown.
+  provider: taxjar
+  endpoint: /rates
+  method: GET
+  scopes:
+    - rates:read
+  tags:
+    - tax_rates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting tax rates
+    properties:
+      street:
+        type: string
+        description: "Street address"
+      city:
+        type: string
+        description: "City"
+      state:
+        type: string
+        description: "State"
+      zip:
+        type: string
+        description: "Zip code"
+      country:
+        type: string
+        description: "Country code"
+        default: US
+    required:
+      - zip
+
+- slug: taxjar_list_reports
+  name: List Reports
+  description: |
+    List available tax reports in Taxjar. Filter by type or date range.
+  provider: taxjar
+  endpoint: /reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      state:
+        type: string
+        description: "Filter by state"
+      type:
+        type: string
+        description: "Report type (sales, reconciliation)"
+    required: []
+
+- slug: taxjar_get_report
+  name: Get Report
+  description: |
+    Get detailed information about a specific Taxjar report.
+  provider: taxjar
+  endpoint: /reports/{reportId}
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "Report ID"
+    required:
+      - reportId
+
+- slug: taxjar_list_categories
+  name: List Categories
+  description: |
+    List all tax categories in Taxjar with their descriptions and applicable tax codes.
+  provider: taxjar
+  endpoint: /categories
+  method: GET
+  scopes:
+    - categories:read
+  tags:
+    - categories
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties: {}

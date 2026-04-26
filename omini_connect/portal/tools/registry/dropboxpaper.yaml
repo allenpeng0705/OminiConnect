@@ -1,0 +1,260 @@
+# Dropbox Paper Tools - Allowlist
+# Curated subset of Dropbox Paper API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. dropboxpaper_list_docs      - List all docs
+# 2. dropboxpaper_get_doc       - Get doc details
+# 3. dropboxpaper_create_doc    - Create a new doc
+# 4. dropboxpaper_list_folders  - List folders
+# 5. dropboxpaper_get_folder    - Get folder details
+# 6. dropboxpaper_list_members  - List doc members
+# 7. dropboxpaper_get_member    - Get member details
+# 8. dropboxpaper_add_comment   - Add a comment to a doc
+# 9. dropboxpaper_list_invites  - List pending invites
+# 10. dropboxpaper_create_invite - Create an invite
+
+- slug: dropboxpaper_list_docs
+  name: List Docs
+  description: |
+    List all Paper docs in the workspace. Returns doc metadata including title, owner, and dates.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs
+  method: GET
+  scopes:
+    - files.metadata.read
+  tags:
+    - docs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing docs
+    properties:
+      limit:
+        type: integer
+        description: "Max docs to return"
+        default: 100
+    required: []
+
+- slug: dropboxpaper_get_doc
+  name: Get Doc
+  description: |
+    Get detailed information about a specific Paper doc including title, content, and sharing settings.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}
+  method: GET
+  scopes:
+    - files.content.read
+  tags:
+    - docs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a doc
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+    required:
+      - docId
+
+- slug: dropboxpaper_create_doc
+  name: Create Doc
+  description: |
+    Create a new Paper doc with title and optional initial content in Markdown format.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs
+  method: POST
+  scopes:
+    - files.content.write
+  tags:
+    - docs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a doc
+    properties:
+      title:
+        type: string
+        description: "Doc title"
+      content:
+        type: string
+        description: "Initial content in Markdown"
+      folderId:
+        type: string
+        description: "Folder ID to create doc in"
+    required:
+      - title
+
+- slug: dropboxpaper_list_folders
+  name: List Folders
+  description: |
+    List all folders in the workspace. Returns folder metadata and hierarchy.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/folders
+  method: GET
+  scopes:
+    - files.metadata.read
+  tags:
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties:
+      limit:
+        type: integer
+        description: "Max folders to return"
+        default: 100
+    required: []
+
+- slug: dropboxpaper_get_folder
+  name: Get Folder
+  description: |
+    Get detailed information about a specific folder including name and contained docs.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/folders/{folderId}
+  method: GET
+  scopes:
+    - files.metadata.read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      folderId:
+        type: string
+        description: "Folder ID"
+    required:
+      - folderId
+
+- slug: dropboxpaper_list_members
+  name: List Members
+  description: |
+    List all members of a Paper doc. Returns member info including email and permission level.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}/members
+  method: GET
+  scopes:
+    - files.sharing.read
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+    required:
+      - docId
+
+- slug: dropboxpaper_get_member
+  name: Get Member
+  description: |
+    Get detailed information about a specific member including name, email, and permission level.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}/members/{memberId}
+  method: GET
+  scopes:
+    - files.sharing.read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+      memberId:
+        type: string
+        description: "Member ID or email"
+    required:
+      - docId
+      - memberId
+
+- slug: dropboxpaper_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to a Paper doc at a specific position or as a general comment.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}/comments
+  method: POST
+  scopes:
+    - files.sharing.write
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a comment
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+      content:
+        type: string
+        description: "Comment content in Markdown"
+      position:
+        type: object
+        description: "Optional position in document for anchored comment"
+    required:
+      - docId
+      - content
+
+- slug: dropboxpaper_list_invites
+  name: List Invites
+  description: |
+    List all pending invites for a Paper doc. Returns invite details and status.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}/invites
+  method: GET
+  scopes:
+    - files.sharing.read
+  tags:
+    - invites
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invites
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+    required:
+      - docId
+
+- slug: dropboxpaper_create_invite
+  name: Create Invite
+  description: |
+    Create an invite to a Paper doc for a specific email address with permission level.
+  provider: dropboxpaper
+  endpoint: /api/1.0/paper/docs/{docId}/invites
+  method: POST
+  scopes:
+    - files.sharing.write
+  tags:
+    - invites
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invite
+    properties:
+      docId:
+        type: string
+        description: "Doc ID"
+      inviteeEmail:
+        type: string
+        description: "Email address to invite"
+      permissionLevel:
+        type: string
+        description: "Permission level (view, edit, comment)"
+        default: view
+    required:
+      - docId
+      - inviteeEmail

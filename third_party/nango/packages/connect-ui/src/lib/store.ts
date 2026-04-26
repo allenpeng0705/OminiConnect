@@ -12,12 +12,14 @@ interface State {
     session: ConnectSessionOutput | null;
     nango: Nango | null;
     apiURL: string;
+    websocketsPath: string | null;
     detectClosedAuthWindow: boolean;
     isEmbedded: boolean;
     isAuthLink: boolean;
     isPreview: boolean;
     showWatermark: boolean;
     setApiURL: (value: string) => void;
+    setWebsocketsPath: (value: string) => void;
     setAuthLink: (value: boolean) => void;
     setDetectClosedAuthWindow: (value: boolean) => void;
     setIsEmbedded: (value: boolean) => void;
@@ -41,12 +43,14 @@ export const useGlobal = create<State>((set) => ({
     session: null,
     nango: null,
     apiURL: 'https://api.nango.dev',
+    websocketsPath: null,
     isEmbedded: false,
     isAuthLink: false,
     detectClosedAuthWindow: false,
     isPreview: false,
     showWatermark: false,
     setApiURL: (value) => set({ apiURL: value }),
+    setWebsocketsPath: (value) => set({ websocketsPath: value }),
     setAuthLink: (value) => set({ isAuthLink: value }),
     setIsEmbedded: (value) => set({ isEmbedded: value }),
     setDetectClosedAuthWindow: (value) => set({ detectClosedAuthWindow: value }),

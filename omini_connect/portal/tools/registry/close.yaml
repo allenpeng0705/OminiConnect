@@ -1,0 +1,316 @@
+# Close Tools - Allowlist
+# Curated subset of Close CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. close_list_leads            - List leads
+# 2. close_get_lead              - Get lead details
+# 3. close_create_lead           - Create a new lead
+# 4. close_list_opportunities     - List opportunities
+# 5. close_get_opportunity        - Get opportunity details
+# 6. close_create_opportunity     - Create a new opportunity
+# 7. close_list_activities        - List activities
+# 8. close_get_activity           - Get activity details
+# 9. close_list_tasks             - List tasks
+# 10. close_get_task              - Get task details
+
+- slug: close_list_leads
+  name: List Leads
+  description: |
+    List all leads in Close. Filter by status, owner, source, or date range.
+  provider: close
+  endpoint: /api/v1/lead
+  method: GET
+  scopes:
+    - lead:read
+  tags:
+    - leads
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, lost, junk)"
+      owner_id:
+        type: string
+        description: "Filter by owner user ID"
+      query:
+        type: string
+        description: "Search query"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+    required: []
+
+- slug: close_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead including name, status, contacts, and opportunities.
+  provider: close
+  endpoint: /api/v1/lead/{id}
+  method: GET
+  scopes:
+    - lead:read
+  tags:
+    - leads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: string
+        description: "Lead ID"
+    required:
+      - id
+
+- slug: close_create_lead
+  name: Create Lead
+  description: |
+    Create a new lead in Close. Set name, status, owner, source, and contact info.
+  provider: close
+  endpoint: /api/v1/lead
+  method: POST
+  scopes:
+    - lead:write
+  tags:
+    - leads
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a lead
+    properties:
+      name:
+        type: string
+        description: "Lead name"
+      status:
+        type: string
+        description: "Status (active, lost, junk)"
+      owner_id:
+        type: string
+        description: "Owner user ID"
+      source:
+        type: string
+        description: "Lead source"
+      contacts:
+        type: array
+        description: "Initial contacts for this lead"
+        items:
+          type: object
+    required:
+      - name
+
+- slug: close_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities (deals) in Close. Filter by lead, stage, status, or value range.
+  provider: close
+  endpoint: /api/v1/opportunity
+  method: GET
+  scopes:
+    - opportunity:read
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      lead_id:
+        type: string
+        description: "Filter by lead ID"
+      stage_id:
+        type: string
+        description: "Filter by stage ID"
+      status:
+        type: string
+        description: "Filter by status (open, won, lost)"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+    required: []
+
+- slug: close_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity including value, stage, contacts, and tasks.
+  provider: close
+  endpoint: /api/v1/opportunity/{id}
+  method: GET
+  scopes:
+    - opportunity:read
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: close_create_opportunity
+  name: Create Opportunity
+  description: |
+    Create a new opportunity in Close. Set name, value, lead, and stage.
+  provider: close
+  endpoint: /api/v1/opportunity
+  method: POST
+  scopes:
+    - opportunity:write
+  tags:
+    - opportunities
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an opportunity
+    properties:
+      name:
+        type: string
+        description: "Opportunity name"
+      lead_id:
+        type: string
+        description: "Associated lead ID"
+      value:
+        type: number
+        description: "Opportunity value/amount"
+      stage_id:
+        type: string
+        description: "Pipeline stage ID"
+      status:
+        type: string
+        description: "Status (open, won, lost)"
+      probability:
+        type: integer
+        description: "Win probability percentage"
+    required:
+      - name
+
+- slug: close_list_activities
+  name: List Activities
+  description: |
+    List all activities in Close. Filter by lead, contact, user, type, or date range.
+  provider: close
+  endpoint: /api/v1/activity
+  method: GET
+  scopes:
+    - activity:read
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      lead_id:
+        type: string
+        description: "Filter by lead ID"
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      type:
+        type: string
+        description: "Activity type (call, email, note, meeting)"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+    required: []
+
+- slug: close_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information about a specific activity including type, date, and participants.
+  provider: close
+  endpoint: /api/v1/activity/{id}
+  method: GET
+  scopes:
+    - activity:read
+  tags:
+    - activities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: string
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: close_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Close. Filter by lead, contact, user, status, or date range.
+  provider: close
+  endpoint: /api/v1/task
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      lead_id:
+        type: string
+        description: "Filter by lead ID"
+      user_id:
+        type: string
+        description: "Filter by assigned user ID"
+      status:
+        type: string
+        description: "Filter by status (open, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+    required: []
+
+- slug: close_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task including title, due date, and assignments.
+  provider: close
+  endpoint: /api/v1/task/{id}
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id

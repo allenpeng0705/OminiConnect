@@ -1,0 +1,291 @@
+# Rocketlane Tools - Allowlist
+# Curated subset of Rocketlane API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rocketlane_list_projects        - List all projects
+# 2. rocketlane_get_project          - Get project details
+# 3. rocketlane_create_project       - Create a project
+# 4. rocketlane_list_tasks           - List tasks in a project
+# 5. rocketlane_create_task          - Create a task
+# 6. rocketlane_list_clients         - List all clients
+# 7. rocketlane_get_client           - Get client details
+# 8. rocketlane_create_client        - Create a client
+# 9. rocketlane_list_time_entries    - List time entries
+# 10. rocketlane_create_time_entry   - Log time entry
+
+- slug: rocketlane_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects in Rocketlane.
+  provider: rocketlane
+  endpoint: /v1/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - project-management
+    - client-work
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Number of projects"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: active, completed, on-hold"
+    required: []
+
+- slug: rocketlane_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project.
+  provider: rocketlane
+  endpoint: /v1/projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - project-management
+    - client-work
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The project ID"
+    required:
+      - projectId
+
+- slug: rocketlane_create_project
+  name: Create Project
+  description: |
+    Create a new project in Rocketlane.
+  provider: rocketlane
+  endpoint: /v1/projects
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - projects
+    - project-management
+    - client-work
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      clientId:
+        type: string
+        description: "Client ID"
+      status:
+        type: string
+        description: "Project status"
+        default: active
+      startDate:
+        type: string
+        description: "Start date"
+    required:
+      - name
+      - clientId
+
+- slug: rocketlane_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of tasks in a project.
+  provider: rocketlane
+  endpoint: /v1/projects/{projectId}/tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - projects
+    - project-management
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Number of tasks"
+        default: 50
+    required:
+      - projectId
+
+- slug: rocketlane_create_task
+  name: Create Task
+  description: |
+    Create a new task in a project.
+  provider: rocketlane
+  endpoint: /v1/tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+    - projects
+    - project-management
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      title:
+        type: string
+        description: "Task title"
+      assigneeId:
+        type: string
+        description: "Assignee user ID"
+      dueDate:
+        type: string
+        description: "Due date (ISO 8601)"
+    required:
+      - projectId
+      - title
+
+- slug: rocketlane_list_clients
+  name: List Clients
+  description: |
+    Retrieve a list of all clients.
+  provider: rocketlane
+  endpoint: /v1/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      limit:
+        type: integer
+        description: "Number of clients"
+        default: 50
+    required: []
+
+- slug: rocketlane_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client.
+  provider: rocketlane
+  endpoint: /v1/clients/{clientId}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      clientId:
+        type: string
+        description: "The client ID"
+    required:
+      - clientId
+
+- slug: rocketlane_create_client
+  name: Create Client
+  description: |
+    Create a new client in Rocketlane.
+  provider: rocketlane
+  endpoint: /v1/clients
+  method: POST
+  scopes:
+    - clients:write
+  tags:
+    - clients
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a client
+    properties:
+      name:
+        type: string
+        description: "Client name"
+      email:
+        type: string
+        description: "Client email"
+    required:
+      - name
+
+- slug: rocketlane_list_time_entries
+  name: List Time Entries
+  description: |
+    Retrieve a list of time entries.
+  provider: rocketlane
+  endpoint: /v1/time-entries
+  method: GET
+  scopes:
+    - time-entries:read
+  tags:
+    - time-entries
+    - projects
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      limit:
+        type: integer
+        description: "Number of entries"
+        default: 50
+    required: []
+
+- slug: rocketlane_create_time_entry
+  name: Create Time Entry
+  description: |
+    Log a time entry for a task.
+  provider: rocketlane
+  endpoint: /v1/time-entries
+  method: POST
+  scopes:
+    - time-entries:write
+  tags:
+    - time-entries
+    - projects
+    - tracking
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a time entry
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+      projectId:
+        type: string
+        description: "Project ID"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      description:
+        type: string
+        description: "Entry description"
+    required:
+      - taskId
+      - duration

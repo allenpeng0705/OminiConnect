@@ -1,0 +1,187 @@
+# Zorus Tools - Allowlist
+# Curated subset of Zorus API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zorus_list_tenants           - List all managed tenants
+# # 2. zorus_get_tenant           - Get tenant details
+# # 3. zorus_list_devices           - List all devices
+# # 4. zorus_get_device           - Get device details
+# # 5. zorus_list_software           - List installed software
+# # 6. zorus_list_tickets           - List all tickets
+# # 7. zorus_create_ticket           - Create a new ticket
+# # 8. zorus_list_alerts           - List all alerts
+# # 9. zorus_acknowledge_alert           - Acknowledge an alert
+# # 10. zorus_list_users           - List all users
+
+- slug: zorus_list_tenants
+  name: List Tenants
+  description: |
+    List all managed tenants
+  provider: zorus
+  endpoint: /api/v1/tenants
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list tenants
+    properties: {}
+    required: []
+
+- slug: zorus_get_tenant
+  name: Get Tenant
+  description: |
+    Get tenant details
+  provider: zorus
+  endpoint: /api/v1/tenants/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for get tenant
+    properties: {}
+    required: []
+
+- slug: zorus_list_devices
+  name: List Devices
+  description: |
+    List all devices
+  provider: zorus
+  endpoint: /api/v1/devices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list devices
+    properties: {}
+    required: []
+
+- slug: zorus_get_device
+  name: Get Device
+  description: |
+    Get device details
+  provider: zorus
+  endpoint: /api/v1/devices/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for get device
+    properties: {}
+    required: []
+
+- slug: zorus_list_software
+  name: List Software
+  description: |
+    List installed software
+  provider: zorus
+  endpoint: /api/v1/software
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list software
+    properties: {}
+    required: []
+
+- slug: zorus_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets
+  provider: zorus
+  endpoint: /api/v1/tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list tickets
+    properties: {}
+    required: []
+
+- slug: zorus_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new ticket
+  provider: zorus
+  endpoint: /api/v1/tickets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for create ticket
+    properties: {}
+    required: []
+
+- slug: zorus_list_alerts
+  name: List Alerts
+  description: |
+    List all alerts
+  provider: zorus
+  endpoint: /api/v1/alerts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list alerts
+    properties: {}
+    required: []
+
+- slug: zorus_acknowledge_alert
+  name: Acknowledge Alert
+  description: |
+    Acknowledge an alert
+  provider: zorus
+  endpoint: /api/v1/alerts/{id}/acknowledge
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for acknowledge alert
+    properties: {}
+    required: []
+
+- slug: zorus_list_users
+  name: List Users
+  description: |
+    List all users
+  provider: zorus
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zorus
+  input_schema:
+    type: object
+    description: Parameters for list users
+    properties: {}
+    required: []
+

@@ -1,0 +1,217 @@
+- slug: clay_list_tables
+  name: List Tables
+  description: |
+    Retrieve a list of all tables in the Clay workspace.
+  provider: clay
+  endpoint: /tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of tables to return"
+    required: []
+- slug: clay_get_table
+  name: Get Table
+  description: |
+    Retrieve details of a specific table by ID.
+  provider: clay
+  endpoint: /tables/{table_id}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      table_id:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - table_id
+- slug: clay_add_row
+  name: Add Row
+  description: |
+    Add a new row to a specific table.
+  provider: clay
+  endpoint: /tables/{table_id}/rows
+  method: POST
+  scopes:
+    - tables:write
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for adding a row
+    properties:
+      table_id:
+        type: string
+        description: "The unique identifier of the table"
+      data:
+        type: object
+        description: "The row data to add"
+    required:
+      - table_id
+      - data
+- slug: clay_update_row
+  name: Update Row
+  description: |
+    Update an existing row in a specific table.
+  provider: clay
+  endpoint: /tables/{table_id}/rows/{row_id}
+  method: PUT
+  scopes:
+    - tables:write
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for updating a row
+    properties:
+      table_id:
+        type: string
+        description: "The unique identifier of the table"
+      row_id:
+        type: string
+        description: "The unique identifier of the row"
+      data:
+        type: object
+        description: "The row data to update"
+    required:
+      - table_id
+      - row_id
+      - data
+- slug: clay_list_enrichments
+  name: List Enrichments
+  description: |
+    Retrieve a list of all available enrichments in the workspace.
+  provider: clay
+  endpoint: /enrichments
+  method: GET
+  scopes:
+    - enrichments:read
+  tags:
+    - enrichments
+  input_schema:
+    type: object
+    description: Parameters for listing enrichments
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of enrichments to return"
+    required: []
+- slug: clay_get_enrichment
+  name: Get Enrichment
+  description: |
+    Retrieve details of a specific enrichment by ID.
+  provider: clay
+  endpoint: /enrichments/{enrichment_id}
+  method: GET
+  scopes:
+    - enrichments:read
+  tags:
+    - enrichments
+  input_schema:
+    type: object
+    description: Parameters for getting an enrichment
+    properties:
+      enrichment_id:
+        type: string
+        description: "The unique identifier of the enrichment"
+    required:
+      - enrichment_id
+- slug: clay_list_integrations
+  name: List Integrations
+  description: |
+    Retrieve a list of all integrations connected to the workspace.
+  provider: clay
+  endpoint: /integrations
+  method: GET
+  scopes:
+    - integrations:read
+  tags:
+    - integrations
+  input_schema:
+    type: object
+    description: Parameters for listing integrations
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of integrations to return"
+    required: []
+- slug: clay_get_integration
+  name: Get Integration
+  description: |
+    Retrieve details of a specific integration by ID.
+  provider: clay
+  endpoint: /integrations/{integration_id}
+  method: GET
+  scopes:
+    - integrations:read
+  tags:
+    - integrations
+  input_schema:
+    type: object
+    description: Parameters for getting an integration
+    properties:
+      integration_id:
+        type: string
+        description: "The unique identifier of the integration"
+    required:
+      - integration_id
+- slug: clay_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook to receive real-time notifications.
+  provider: clay
+  endpoint: /webhooks
+  method: POST
+  scopes:
+    - webhooks:write
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      url:
+        type: string
+        description: "The URL to receive webhook notifications"
+      events:
+        type: array
+        items:
+          type: string
+        description: "List of events to subscribe to"
+    required:
+      - url
+      - events
+- slug: clay_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in the Clay workspace.
+  provider: clay
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of contacts to return"
+      offset:
+        type: integer
+        description: "Number of contacts to skip for pagination"
+    required: []

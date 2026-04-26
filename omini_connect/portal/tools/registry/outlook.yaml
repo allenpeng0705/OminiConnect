@@ -1,0 +1,260 @@
+# Outlook Tools - Allowlist
+# Curated subset of Outlook API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. outlook_list_messages           - List messages
+# 2. outlook_get_message            - Get message details
+# 3. outlook_send_message          - Send email
+# 4. outlook_delete_message        - Delete message
+# 5. outlook_list_calendars        - List calendars
+# 6. outlook_list_events           - List events
+# 7. outlook_get_event             - Get event details
+# 8. outlook_create_event         - Create event
+# 9. outlook_list_contacts         - List contacts
+# 10. outlook_get_contact          - Get contact details
+
+- slug: outlook_list_messages
+  name: List Messages
+  description: |
+    List messages in the user's mailbox.
+  provider: outlook
+  endpoint: /v1.0/me/mailFolders/inbox/messages
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - communication
+    - email
+    - mail
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      limit:
+        type: integer
+        description: "Number of messages"
+        default: 20
+    required: []
+
+- slug: outlook_get_message
+  name: Get Message
+  description: |
+    Get detailed information for a specific message.
+  provider: outlook
+  endpoint: /v1.0/me/messages/{messageId}
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - communication
+    - email
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: outlook_send_message
+  name: Send Message
+  description: |
+    Send an email message.
+  provider: outlook
+  endpoint: /v1.0/me/sendMail
+  method: POST
+  scopes:
+    - Mail.Send
+  tags:
+    - communication
+    - email
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      toRecipients:
+        type: array
+        description: "Recipient email addresses"
+      subject:
+        type: string
+        description: "Email subject"
+      body:
+        type: string
+        description: "Email body"
+    required:
+      - toRecipients
+      - subject
+      - body
+
+- slug: outlook_delete_message
+  name: Delete Message
+  description: |
+    Delete a message from the mailbox.
+  provider: outlook
+  endpoint: /v1.0/me/messages/{messageId}
+  method: DELETE
+  scopes:
+    - Mail.ReadWrite
+  tags:
+    - communication
+    - email
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: outlook_list_calendars
+  name: List Calendars
+  description: |
+    List all calendars for the user.
+  provider: outlook
+  endpoint: /v1.0/me/calendars
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - productivity
+    - calendar
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calendars
+    properties: {}
+    required: []
+
+- slug: outlook_list_events
+  name: List Events
+  description: |
+    List events from the user's calendar.
+  provider: outlook
+  endpoint: /v1.0/me/calendarView
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - productivity
+    - calendar
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      start_date:
+        type: string
+        description: "Start date/time (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date/time (ISO 8601)"
+    required: []
+
+- slug: outlook_get_event
+  name: Get Event
+  description: |
+    Get detailed information for a specific event.
+  provider: outlook
+  endpoint: /v1.0/me/events/{eventId}
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - productivity
+    - calendar
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: outlook_create_event
+  name: Create Event
+  description: |
+    Create a new calendar event.
+  provider: outlook
+  endpoint: /v1.0/me/events
+  method: POST
+  scopes:
+    - Calendars.ReadWrite
+  tags:
+    - productivity
+    - calendar
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      subject:
+        type: string
+        description: "Event subject"
+      start:
+        type: string
+        description: "Start date/time"
+      end:
+        type: string
+        description: "End date/time"
+    required:
+      - subject
+      - start
+      - end
+
+- slug: outlook_list_contacts
+  name: List Contacts
+  description: |
+    List contacts from the user's address book.
+  provider: outlook
+  endpoint: /v1.0/me/contacts
+  method: GET
+  scopes:
+    - Contacts.Read
+  tags:
+    - productivity
+    - contacts
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 20
+    required: []
+
+- slug: outlook_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information for a specific contact.
+  provider: outlook
+  endpoint: /v1.0/me/contacts/{contactId}
+  method: GET
+  scopes:
+    - Contacts.Read
+  tags:
+    - productivity
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId

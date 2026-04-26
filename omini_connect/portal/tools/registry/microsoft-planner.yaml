@@ -1,0 +1,278 @@
+# Microsoft Planner Tools - Allowlist
+# Curated subset of Microsoft Planner API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. planner_list_plans           - List all plans
+# 2. planner_get_plan             - Get plan details
+# 3. planner_list_tasks            - List tasks in a plan
+# 4. planner_get_task             - Get task details
+# 5. planner_create_task          - Create a task
+# 6. planner_update_task          - Update a task
+# 7. planner_delete_task          - Delete a task
+# 8. planner_list_buckets         - List buckets in a plan
+# 9. planner_get_bucket           - Get bucket details
+# 10. planner_list_my_tasks      - List my tasks
+
+- slug: planner_list_plans
+  name: List Plans
+  description: |
+    List all Planner plans accessible to the user.
+    Filter by group or owner.
+  provider: microsoft-planner
+  endpoint: /v1.0/me/planner/plans
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - plans
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing plans
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+    required: []
+
+- slug: planner_get_plan
+  name: Get Plan
+  description: |
+    Get details of a specific Planner plan.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/plans/{planId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - plans
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a plan
+    properties:
+      planId:
+        type: string
+        description: "Plan ID"
+    required:
+      - planId
+
+- slug: planner_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in a Planner plan.
+    Filter by bucket, assignee, or status.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/plans/{planId}/tasks
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      planId:
+        type: string
+        description: "Plan ID"
+      $filter:
+        type: string
+        description: "OData filter expression"
+    required:
+      - planId
+
+- slug: planner_get_task
+  name: Get Task
+  description: |
+    Get details of a specific Planner task.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/tasks/{taskId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - taskId
+
+- slug: planner_create_task
+  name: Create Task
+  description: |
+    Create a new task in a Planner plan.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/tasks
+  method: POST
+  scopes:
+    - Group.ReadWrite.All
+  tags:
+    - planner
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      planId:
+        type: string
+        description: "Plan ID"
+      bucketId:
+        type: string
+        description: "Bucket ID"
+      title:
+        type: string
+        description: "Task title"
+      assignments:
+        type: object
+        description: "Assignee assignments"
+      dueDateTime:
+        type: string
+        description: "Due date (ISO 8601)"
+      startDateTime:
+        type: string
+        description: "Start date (ISO 8601)"
+    required:
+      - planId
+      - title
+
+- slug: planner_update_task
+  name: Update Task
+  description: |
+    Update an existing Planner task.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/tasks/{taskId}
+  method: PATCH
+  scopes:
+    - Group.ReadWrite.All
+  tags:
+    - planner
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+      title:
+        type: string
+        description: "Task title"
+      percentComplete:
+        type: integer
+        description: "Completion percentage (0-100)"
+      dueDateTime:
+        type: string
+        description: "Due date (ISO 8601)"
+      bucketId:
+        type: string
+        description: "Bucket ID"
+    required:
+      - taskId
+
+- slug: planner_delete_task
+  name: Delete Task
+  description: |
+    Delete a Planner task.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/tasks/{taskId}
+  method: DELETE
+  scopes:
+    - Group.ReadWrite.All
+  tags:
+    - planner
+    - tasks
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - taskId
+
+- slug: planner_list_buckets
+  name: List Buckets
+  description: |
+    List all buckets in a Planner plan.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/plans/{planId}/buckets
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - buckets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing buckets
+    properties:
+      planId:
+        type: string
+        description: "Plan ID"
+    required:
+      - planId
+
+- slug: planner_get_bucket
+  name: Get Bucket
+  description: |
+    Get details of a specific bucket.
+  provider: microsoft-planner
+  endpoint: /v1.0/planner/buckets/{bucketId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - buckets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a bucket
+    properties:
+      bucketId:
+        type: string
+        description: "Bucket ID"
+    required:
+      - bucketId
+
+- slug: planner_list_my_tasks
+  name: List My Tasks
+  description: |
+    List all tasks assigned to the current user.
+    Filter by plan or status.
+  provider: microsoft-planner
+  endpoint: /v1.0/me/planner/tasks
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - planner
+    - tasks
+    - mytasks
+  input_schema:
+    type: object
+    description: Parameters for listing my tasks
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+    required: []

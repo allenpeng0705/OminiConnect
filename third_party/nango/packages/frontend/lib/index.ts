@@ -95,8 +95,11 @@ export default class Nango {
             const baseUrl = new URL(this.hostBaseUrl);
             // Build the websockets url based on the host url.
             // The websockets path is considered relative to the baseUrl, and with the protocol updated
+            console.log('[DEBUG] websocketsPath config:', config.websocketsPath);
             const websocketUrl = new URL(config.websocketsPath, baseUrl);
+            console.log('[DEBUG] websocketUrl after URL():', websocketUrl.toString());
             this.websocketsBaseUrl = websocketUrl.toString().replace('https://', 'wss://').replace('http://', 'ws://');
+            console.log('[DEBUG] websocketsBaseUrl:', this.websocketsBaseUrl);
         } catch {
             throw new AuthError('Invalid URL provided for the Nango host.', 'invalid_host_url');
         }

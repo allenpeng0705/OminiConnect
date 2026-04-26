@@ -3,11 +3,22 @@ name = "omini-connect-portal"
 version = "0.1.0"
 edition = "2021"
 description = "Operator portal for OminiConnect - manage connector OAuth credentials"
+default-run = "omini-connect-portal"
+
+[[bin]]
+name = "omini-connect-portal"
+path = "src/main.rs"
+
+[[bin]]
+name = "generate-tools"
+path = "tools/generator/src/main.rs"
 
 [dependencies]
 # Web server
-axum = { version = "0.7", features = ["macros"] }
+axum = { version = "0.7", features = ["macros", "ws"] }
 tokio = { version = "1.0", features = ["full"] }
+tokio-tungstenite = "0.25"
+futures-util = "0.3"
 tower-http = { version = "0.6", features = ["cors", "fs", "trace"] }
 hyper = { version = "1.0", features = ["full"] }
 http = "1.0"
@@ -41,6 +52,8 @@ dotenvy = "0.15"
 reqwest = { version = "0.12", features = ["json"] }
 bytes = "1"
 urlencoding = "2"
+serde_yaml = "0.9"
+regex = "1"
 
 # Database
 sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "postgres", "mysql", "any", "chrono", "uuid"] }

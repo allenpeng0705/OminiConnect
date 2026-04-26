@@ -1,0 +1,232 @@
+# PracticeFusion Tools - Allowlist
+# Curated subset of PracticeFusion API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. practicefusion_list_patients          - List patients
+# 2. practicefusion_get_patient           - Get patient details
+# 3. practicefusion_list_appointments     - List appointments
+# 4. practicefusion_get_appointment      - Get appointment details
+# 5. practicefusion_list_medications     - List medications
+# 6. practicefusion_get_medication       - Get medication details
+# 7. practicefusion_list_allergies       - List allergies
+# 8. practicefusion_list_conditions      - List conditions
+# 9. practicefusion_list_lab_results     - List lab results
+# 10. practicefusion_get_practice        - Get practice info
+
+- slug: practicefusion_list_patients
+  name: List Patients
+  description: |
+    List all patients in the practice.
+  provider: practicefusion
+  endpoint: /v1/patients
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing patients
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: practicefusion_get_patient
+  name: Get Patient
+  description: |
+    Get detailed information about a specific patient.
+  provider: practicefusion
+  endpoint: /v1/patients/{patientId}
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a patient
+    properties:
+      patientId:
+        type: string
+        description: "Patient ID"
+    required:
+      - patientId
+
+- slug: practicefusion_list_appointments
+  name: List Appointments
+  description: |
+    List all appointments.
+  provider: practicefusion
+  endpoint: /v1/appointments
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+      patientId:
+        type: string
+        description: "Filter by patient ID"
+    required: []
+
+- slug: practicefusion_get_appointment
+  name: Get Appointment
+  description: |
+    Get detailed information about a specific appointment.
+  provider: practicefusion
+  endpoint: /v1/appointments/{appointmentId}
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      appointmentId:
+        type: string
+        description: "Appointment ID"
+    required:
+      - appointmentId
+
+- slug: practicefusion_list_medications
+  name: List Medications
+  description: |
+    List all medications.
+  provider: practicefusion
+  endpoint: /v1/medications
+  method: GET
+  scopes: []
+  tags:
+    - medications
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing medications
+    properties:
+      patientId:
+        type: string
+        description: "Filter by patient ID"
+    required: []
+
+- slug: practicefusion_get_medication
+  name: Get Medication
+  description: |
+    Get detailed information about a specific medication.
+  provider: practicefusion
+  endpoint: /v1/medications/{medicationId}
+  method: GET
+  scopes: []
+  tags:
+    - medications
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a medication
+    properties:
+      medicationId:
+        type: string
+        description: "Medication ID"
+    required:
+      - medicationId
+
+- slug: practicefusion_list_allergies
+  name: List Allergies
+  description: |
+    List all allergies.
+  provider: practicefusion
+  endpoint: /v1/allergies
+  method: GET
+  scopes: []
+  tags:
+    - allergies
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing allergies
+    properties:
+      patientId:
+        type: string
+        description: "Filter by patient ID"
+    required: []
+
+- slug: practicefusion_list_conditions
+  name: List Conditions
+  description: |
+    List all conditions/diagnoses.
+  provider: practicefusion
+  endpoint: /v1/conditions
+  method: GET
+  scopes: []
+  tags:
+    - conditions
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conditions
+    properties:
+      patientId:
+        type: string
+        description: "Filter by patient ID"
+    required: []
+
+- slug: practicefusion_list_lab_results
+  name: List Lab Results
+  description: |
+    List all lab results.
+  provider: practicefusion
+  endpoint: /v1/lab-results
+  method: GET
+  scopes: []
+  tags:
+    - lab-results
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing lab results
+    properties:
+      patientId:
+        type: string
+        description: "Filter by patient ID"
+    required: []
+
+- slug: practicefusion_get_practice
+  name: Get Practice
+  description: |
+    Get practice information.
+  provider: practicefusion
+  endpoint: /v1/practice
+  method: GET
+  scopes: []
+  tags:
+    - practice
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting practice info
+    properties: {}
+    required: []

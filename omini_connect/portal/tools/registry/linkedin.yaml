@@ -1,0 +1,309 @@
+# LinkedIn Tools - Allowlist
+# Curated subset of LinkedIn API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. linkedin_get_profile          - Get authenticated user's profile
+# 2. linkedin_list_connections     - List first-degree connections
+# 3. linkedin_get_company          - Get company page details
+# 4. linkedin_list_posts           - List posts from a profile
+# 5. linkedin_create_post          - Create a text post
+# 6. linkedin_get_job             - Get job details
+# 7. linkedin_list_jobs           - Search for jobs
+# 8. linkedin_search_people       - Search for LinkedIn users
+# 9. linkedin_get_user_updates    - Get user profile updates
+# 10. linkedin_share_post         - Share an article or link
+
+- slug: linkedin_get_profile
+  name: Get Profile
+  description: |
+    Get the authenticated user's LinkedIn profile including name, headline, summary, and public profile URL.
+    Useful for personalization and context about the user.
+  provider: linkedin
+  endpoint: /me
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - profile
+    - user
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: linkedin_list_connections
+  name: List Connections
+  description: |
+    List the authenticated user's first-degree connections. Returns name, headline, and profile URL.
+  provider: linkedin
+  endpoint: /connections
+  method: GET
+  scopes:
+    - network
+  tags:
+    - connections
+    - network
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties:
+      count:
+        type: integer
+        description: "Number of connections to return (default 10, max 500)"
+        default: 10
+      start:
+        type: integer
+        description: "Start offset for pagination"
+        default: 0
+    required: []
+
+- slug: linkedin_get_company
+  name: Get Company
+  description: |
+    Get details about a LinkedIn company page including name, description, logo, and employee count.
+  provider: linkedin
+  endpoint: /companies/{id}
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company details
+    properties:
+      id:
+        type: string
+        description: "Company ID or universal name"
+    required:
+      - id
+
+- slug: linkedin_list_posts
+  name: List Posts
+  description: |
+    List posts from the authenticated user's profile or an organization.
+    Use this to see recent activity, shares, or content posted by the user.
+  provider: linkedin
+  endpoint: /ugcPosts
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - posts
+    - content
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      author:
+        type: string
+        description: "URN of the author (person or organization)"
+      count:
+        type: integer
+        description: "Number of posts to return (default 10, max 50)"
+        default: 10
+      start:
+        type: integer
+        description: "Start offset for pagination"
+        default: 0
+    required: []
+
+- slug: linkedin_create_post
+  name: Create Post
+  description: |
+    Create a new text post on LinkedIn from the authenticated user's profile.
+    Use this to share thoughts, updates, or announcements.
+  provider: linkedin
+  endpoint: /ugcPosts
+  method: POST
+  scopes:
+    - profile
+  tags:
+    - posts
+    - create
+    - social
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      author:
+        type: string
+        description: "URN of the author (person or organization)"
+      text:
+        type: string
+        description: "Post text content (required)"
+      visibility:
+        type: string
+        description: "Visibility: PUBLIC or CONNECTIONS"
+        default: PUBLIC
+    required:
+      - author
+      - text
+
+- slug: linkedin_get_job
+  name: Get Job
+  description: |
+    Get details about a specific LinkedIn job posting including title, company, description, and requirements.
+  provider: linkedin
+  endpoint: /jobs/{id}
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting job details
+    properties:
+      id:
+        type: string
+        description: "Job posting ID"
+    required:
+      - id
+
+- slug: linkedin_list_jobs
+  name: List Jobs
+  description: |
+    Search for jobs on LinkedIn. Filter by keywords, location, company, or job function.
+  provider: linkedin
+  endpoint: /jobSearch
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - jobs
+    - search
+  input_schema:
+    type: object
+    description: Parameters for job search
+    properties:
+      keywords:
+        type: string
+        description: "Search keywords"
+      location:
+        type: string
+        description: "Location filter"
+      company:
+        type: string
+        description: "Company name filter"
+      count:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+        default: 10
+      start:
+        type: integer
+        description: "Start offset"
+        default: 0
+    required: []
+
+- slug: linkedin_search_people
+  name: Search People
+  description: |
+    Search for LinkedIn users by keywords, location, industry, or company.
+    Returns profiles matching the search criteria.
+  provider: linkedin
+  endpoint: /people
+  method: GET
+  scopes:
+    - network
+  tags:
+    - search
+    - people
+    - network
+  input_schema:
+    type: object
+    description: Parameters for searching people
+    properties:
+      keywords:
+        type: string
+        description: "Search keywords (name, title, company)"
+      location:
+        type: string
+        description: "Location filter"
+      industry:
+        type: string
+        description: "Industry code"
+      company:
+        type: string
+        description: "Company name"
+      count:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: linkedin_get_user_updates
+  name: Get User Updates
+  description: |
+    Get profile updates and activities for the authenticated user or their connections.
+  provider: linkedin
+  endpoint: /networkUpdates
+  method: GET
+  scopes:
+    - network
+  tags:
+    - updates
+    - activity
+    - social
+  input_schema:
+    type: object
+    description: Parameters for getting user updates
+    properties:
+      type:
+        type: string
+        description: "Update type: STATUS, CONNECTION, etc."
+      count:
+        type: integer
+        description: "Number of updates (default 10, max 50)"
+        default: 10
+      start:
+        type: integer
+        description: "Start offset"
+        default: 0
+    required: []
+
+- slug: linkedin_share_post
+  name: Share Post
+  description: |
+    Share an article or link on LinkedIn with a commentary text.
+    Use this to share external content with your network.
+  provider: linkedin
+  endpoint: /ugcPosts
+  method: POST
+  scopes:
+    - profile
+  tags:
+    - posts
+    - share
+    - social
+  input_schema:
+    type: object
+    description: Parameters for sharing a post
+    properties:
+      author:
+        type: string
+        description: "URN of the author"
+      text:
+        type: string
+        description: "Commentary text"
+      article_url:
+        type: string
+        description: "URL of the article or link to share"
+      title:
+        type: string
+        description: "Title of the shared content"
+      visibility:
+        type: string
+        description: "Visibility: PUBLIC or CONNECTIONS"
+        default: PUBLIC
+    required:
+      - author
+      - article_url

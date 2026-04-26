@@ -1,0 +1,228 @@
+# Fiber AI Tools - Allowlist
+# Curated subset of Fiber AI API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fiber_ai_get_credits         - Get organization credits
+# 2. fiber_ai_list_campaigns     - List campaigns
+# 3. fiber_ai_get_campaign       - Get campaign details
+# 4. fiber_ai_list_audiences    - List audiences
+# 5. fiber_ai_get_audience      - Get audience details
+# 6. fiber_ai_list_reports      - List reports
+# 7. fiber_ai_get_report        - Get report details
+# 8. fiber_ai_list_segments     - List segments
+# 9. fiber_ai_get_analytics    - Get analytics data
+# 10. fiber_ai_search          - Search data
+
+- slug: fiber_ai_get_credits
+  name: Get Credits
+  description: |
+    Get organization credit balance.
+  provider: fiber-ai
+  endpoint: /v1/get-org-credits
+  method: GET
+  scopes: []
+  tags:
+    - credits
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: fiber_ai_list_campaigns
+  name: List Campaigns
+  description: |
+    List all marketing campaigns.
+  provider: fiber-ai
+  endpoint: /v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fiber_ai_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: fiber-ai
+  endpoint: /v1/campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: fiber_ai_list_audiences
+  name: List Audiences
+  description: |
+    List all audiences.
+  provider: fiber-ai
+  endpoint: /v1/audiences
+  method: GET
+  scopes: []
+  tags:
+    - audiences
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties: {}
+    required: []
+
+- slug: fiber_ai_get_audience
+  name: Get Audience
+  description: |
+    Get details of a specific audience.
+  provider: fiber-ai
+  endpoint: /v1/audiences/{id}
+  method: GET
+  scopes: []
+  tags:
+    - audiences
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting audience
+    properties:
+      id:
+        type: string
+        description: "Audience ID"
+    required:
+      - id
+
+- slug: fiber_ai_list_reports
+  name: List Reports
+  description: |
+    List all reports.
+  provider: fiber-ai
+  endpoint: /v1/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: fiber_ai_get_report
+  name: Get Report
+  description: |
+    Get details of a specific report.
+  provider: fiber-ai
+  endpoint: /v1/reports/{id}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting report
+    properties:
+      id:
+        type: string
+        description: "Report ID"
+    required:
+      - id
+
+- slug: fiber_ai_list_segments
+  name: List Segments
+  description: |
+    List all audience segments.
+  provider: fiber-ai
+  endpoint: /v1/segments
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties: {}
+    required: []
+
+- slug: fiber_ai_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics data for a campaign or audience.
+  provider: fiber-ai
+  endpoint: /v1/analytics
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: fiber_ai_search
+  name: Search
+  description: |
+    Search across data.
+  provider: fiber-ai
+  endpoint: /v1/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - data
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      q:
+        type: string
+        description: "Search query"
+    required:
+      - q

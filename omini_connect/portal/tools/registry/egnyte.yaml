@@ -1,0 +1,244 @@
+# Egnyte Tools - Allowlist
+# Curated subset of the Egnyte API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. egnyte_list_files                - List files and folders
+# 2. egnyte_get_file                  - Get file details
+# 3. egnyte_download_file              - Download file content
+# 4. egnyte_upload_file                - Upload file content
+# 5. egnyte_create_folder             - Create a folder
+# 6. egnyte_delete_file               - Delete file or folder
+# 7. egnyte_list_permissions          - List permissions
+# 8. egnyte_get_permissions           - Get permissions for path
+# 9. egnyte_list_users                - List users
+# 10. egnyte_get_user                - Get user details
+
+- slug: egnyte_list_files
+  name: List Files
+  description: |
+    List files and folders in Egnyte.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      path:
+        type: string
+        description: "Folder path (default: /)"
+        default: /
+      limit:
+        type: integer
+        description: "Max results (default 100, max 1000)"
+        default: 100
+    required: []
+
+- slug: egnyte_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file or folder.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs/{path}
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting file metadata
+    properties:
+      path:
+        type: string
+        description: "File or folder path"
+    required:
+      - path
+
+- slug: egnyte_download_file
+  name: Download File
+  description: |
+    Download file content.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs-content/{path}
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+    - download
+  input_schema:
+    type: object
+    description: Parameters for downloading a file
+    properties:
+      path:
+        type: string
+        description: "File path"
+    required:
+      - path
+
+- slug: egnyte_upload_file
+  name: Upload File
+  description: |
+    Upload or create a file.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs-content/{path}
+  method: POST
+  scopes: []
+  tags:
+    - files
+    - storage
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      path:
+        type: string
+        description: "Destination path"
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - path
+      - content
+
+- slug: egnyte_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs/{path}
+  method: POST
+  scopes: []
+  tags:
+    - files
+    - storage
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      path:
+        type: string
+        description: "Folder path to create"
+    required:
+      - path
+
+- slug: egnyte_delete_file
+  name: Delete File
+  description: |
+    Delete a file or folder.
+  provider: egnyte
+  endpoint: /pubapi/v1/fs/{path}
+  method: DELETE
+  scopes: []
+  tags:
+    - files
+    - storage
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      path:
+        type: string
+        description: "File or folder path to delete"
+    required:
+      - path
+
+- slug: egnyte_list_permissions
+  name: List Permissions
+  description: |
+    List all permission policies.
+  provider: egnyte
+  endpoint: /pubapi/v1/permissions
+  method: GET
+  scopes: []
+  tags:
+    - permissions
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing permissions
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: egnyte_get_permissions
+  name: Get Permissions
+  description: |
+    Get permissions for a specific path.
+  provider: egnyte
+  endpoint: /pubapi/v1/permissions
+  method: GET
+  scopes: []
+  tags:
+    - permissions
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting permissions
+    properties:
+      path:
+        type: string
+        description: "Path to get permissions for"
+    required:
+      - path
+
+- slug: egnyte_list_users
+  name: List Users
+  description: |
+    List all users in Egnyte.
+  provider: egnyte
+  endpoint: /pubapi/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - administration
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: egnyte_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: egnyte
+  endpoint: /pubapi/v1/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - administration
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id

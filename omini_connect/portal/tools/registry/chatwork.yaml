@@ -1,0 +1,260 @@
+# Chatwork Tools - Allowlist
+# Curated subset of the Chatwork API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. chatwork_list_rooms      - List all chat rooms
+# 2. chatwork_get_room       - Get details of a specific room
+# 3. chatwork_list_messages  - List messages in a room
+# 4. chatwork_get_message    - Get a specific message
+# 5. chatwork_send_message   - Send a message to a room
+# 6. chatwork_list_members   - List members in a room
+# 7. chatwork_get_member     - Get details of a room member
+# 8. chatwork_list_tasks     - List tasks in a room
+# 9. chatwork_get_task       - Get details of a specific task
+# 10. chatwork_get_myprofile - Get the authenticated user's profile
+
+- slug: chatwork_list_rooms
+  name: List Rooms
+  description: |
+    Returns a list of all chat rooms the authenticated user belongs to. Includes direct messages and group chats.
+  provider: chatwork
+  endpoint: /rooms
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing rooms
+    properties: {}
+    required: []
+
+- slug: chatwork_get_room
+  name: Get Room
+  description: |
+    Get details of a specific chat room including name, description, icon, and member count.
+  provider: chatwork
+  endpoint: /rooms/{room_id}
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a room
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+    required:
+      - room_id
+
+- slug: chatwork_list_messages
+  name: List Messages
+  description: |
+    Returns a paginated list of messages in a specific chat room. Order from oldest to newest by default.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/messages
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - messages
+    - chat
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+      force:
+        type: boolean
+        description: "Force fetch from server (bypass cache)"
+        default: false
+      last_message_id:
+        type: string
+        description: "Return messages sent after this ID"
+    required:
+      - room_id
+
+- slug: chatwork_get_message
+  name: Get Message
+  description: |
+    Get a specific message by ID including content, sender, and timestamp.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/messages/{message_id}
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - room_id
+      - message_id
+
+- slug: chatwork_send_message
+  name: Send Message
+  description: |
+    Send a new message to a specific chat room. Supports text and optional to-user mentions.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/messages
+  method: POST
+  scopes:
+    - rooms:write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      room_id:
+        type: string
+        description: "Room ID to send message to"
+      body:
+        type: string
+        description: "Message content (supports Chatwork formatting)"
+      self_unread:
+        type: integer
+        description: "Mark message as unread for sender (0 or 1)"
+        default: 0
+    required:
+      - room_id
+      - body
+
+- slug: chatwork_list_members
+  name: List Members
+  description: |
+    Returns a list of all members in a specific chat room including their role.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/members
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - members
+    - rooms
+  input_schema:
+    type: object
+    description: Parameters for listing room members
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+    required:
+      - room_id
+
+- slug: chatwork_get_member
+  name: Get Member
+  description: |
+    Get details of a specific member in a room including their role and chatwork ID.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/members/{account_id}
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a room member
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+      account_id:
+        type: integer
+        description: "Chatwork account ID of the member"
+    required:
+      - room_id
+      - account_id
+
+- slug: chatwork_list_tasks
+  name: List Tasks
+  description: |
+    Returns a list of tasks in a specific chat room. Filter by assignee or completion status.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - todo
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+      account_id:
+        type: integer
+        description: "Filter by assignee account ID"
+      status:
+        type: string
+        description: "Filter by status: open, done"
+    required:
+      - room_id
+
+- slug: chatwork_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task including description, assignee, due date, and status.
+  provider: chatwork
+  endpoint: /rooms/{room_id}/tasks/{task_id}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+      task_id:
+        type: integer
+        description: "Task ID"
+    required:
+      - room_id
+      - task_id
+
+- slug: chatwork_get_myprofile
+  name: Get My Profile
+  description: |
+    Get the authenticated user's Chatwork profile including name, email, avatar, and account ID.
+  provider: chatwork
+  endpoint: /my/profile
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - profile
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting profile
+    properties: {}
+    required: []

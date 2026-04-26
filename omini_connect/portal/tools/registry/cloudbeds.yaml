@@ -1,0 +1,246 @@
+- slug: cloudbeds_list_reservations
+  name: List Reservations
+  description: |
+    Retrieve a list of all reservations in the property.
+  provider: cloudbeds
+  endpoint: /reservations
+  method: GET
+  scopes:
+    - reservations:read
+  tags:
+    - reservations
+  input_schema:
+    type: object
+    description: Parameters for listing reservations
+    properties:
+      property_id:
+        type: string
+        description: "The unique identifier of the property"
+      start_date:
+        type: string
+        description: "Filter reservations from this date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "Filter reservations until this date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Maximum number of reservations to return"
+    required:
+      - property_id
+- slug: cloudbeds_get_reservation
+  name: Get Reservation
+  description: |
+    Retrieve details of a specific reservation by ID.
+  provider: cloudbeds
+  endpoint: /reservations/{reservation_id}
+  method: GET
+  scopes:
+    - reservations:read
+  tags:
+    - reservations
+  input_schema:
+    type: object
+    description: Parameters for getting a reservation
+    properties:
+      reservation_id:
+        type: string
+        description: "The unique identifier of the reservation"
+    required:
+      - reservation_id
+- slug: cloudbeds_create_reservation
+  name: Create Reservation
+  description: |
+    Create a new reservation in the property.
+  provider: cloudbeds
+  endpoint: /reservations
+  method: POST
+  scopes:
+    - reservations:write
+  tags:
+    - reservations
+  input_schema:
+    type: object
+    description: Parameters for creating a reservation
+    properties:
+      property_id:
+        type: string
+        description: "The unique identifier of the property"
+      guest_id:
+        type: string
+        description: "The unique identifier of the guest"
+      room_id:
+        type: string
+        description: "The unique identifier of the room"
+      check_in:
+        type: string
+        description: "Check-in date (YYYY-MM-DD)"
+      check_out:
+        type: string
+        description: "Check-out date (YYYY-MM-DD)"
+    required:
+      - property_id
+      - guest_id
+      - room_id
+      - check_in
+      - check_out
+- slug: cloudbeds_list_guests
+  name: List Guests
+  description: |
+    Retrieve a list of all guests in the property.
+  provider: cloudbeds
+  endpoint: /guests
+  method: GET
+  scopes:
+    - guests:read
+  tags:
+    - guests
+  input_schema:
+    type: object
+    description: Parameters for listing guests
+    properties:
+      property_id:
+        type: string
+        description: "The unique identifier of the property"
+      limit:
+        type: integer
+        description: "Maximum number of guests to return"
+      offset:
+        type: integer
+        description: "Number of guests to skip for pagination"
+    required:
+      - property_id
+- slug: cloudbeds_get_guest
+  name: Get Guest
+  description: |
+    Retrieve details of a specific guest by ID.
+  provider: cloudbeds
+  endpoint: /guests/{guest_id}
+  method: GET
+  scopes:
+    - guests:read
+  tags:
+    - guests
+  input_schema:
+    type: object
+    description: Parameters for getting a guest
+    properties:
+      guest_id:
+        type: string
+        description: "The unique identifier of the guest"
+    required:
+      - guest_id
+- slug: cloudbeds_list_rooms
+  name: List Rooms
+  description: |
+    Retrieve a list of all rooms in the property.
+  provider: cloudbeds
+  endpoint: /rooms
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+  input_schema:
+    type: object
+    description: Parameters for listing rooms
+    properties:
+      property_id:
+        type: string
+        description: "The unique identifier of the property"
+      room_type:
+        type: string
+        description: "Filter by room type"
+      status:
+        type: string
+        description: "Filter by room status (available, occupied, maintenance)"
+    required:
+      - property_id
+- slug: cloudbeds_get_room
+  name: Get Room
+  description: |
+    Retrieve details of a specific room by ID.
+  provider: cloudbeds
+  endpoint: /rooms/{room_id}
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+  input_schema:
+    type: object
+    description: Parameters for getting a room
+    properties:
+      room_id:
+        type: string
+        description: "The unique identifier of the room"
+    required:
+      - room_id
+- slug: cloudbeds_list_services
+  name: List Services
+  description: |
+    Retrieve a list of all services offered by the property.
+  provider: cloudbeds
+  endpoint: /services
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      property_id:
+        type: string
+        description: "The unique identifier of the property"
+      category:
+        type: string
+        description: "Filter by service category"
+    required:
+      - property_id
+- slug: cloudbeds_get_service
+  name: Get Service
+  description: |
+    Retrieve details of a specific service by ID.
+  provider: cloudbeds
+  endpoint: /services/{service_id}
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      service_id:
+        type: string
+        description: "The unique identifier of the service"
+    required:
+      - service_id
+- slug: cloudbeds_get_report
+  name: Get Report
+  description: |
+    Retrieve a specific report from the property.
+  provider: cloudbeds
+  endpoint: /reports/{report_id}
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      report_id:
+        type: string
+        description: "The unique identifier of the report"
+      start_date:
+        type: string
+        description: "Report start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "Report end date (YYYY-MM-DD)"
+    required:
+      - report_id

@@ -1,0 +1,323 @@
+# Stripe Additional Tools - Allowlist
+# Curated subset of Stripe API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. stripe_more_list_invoices          - List all invoices
+# 2. stripe_more_get_invoice            - Get invoice details
+# 3. stripe_more_create_invoice         - Create a new invoice
+# 4. stripe_more_list_subscriptions     - List all subscriptions
+# 5. stripe_more_get_subscription       - Get subscription details
+# 6. stripe_more_create_subscription    - Create a new subscription
+# 7. stripe_more_list_customers        - List all customers
+# 8. stripe_more_get_customer          - Get customer details
+# 9. stripe_more_create_customer       - Create a new customer
+# 10. stripe_more_list_payment_methods - List payment methods
+
+- slug: stripe_more_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Stripe. Filter by customer, status, or date range.
+  provider: stripe_more
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      customer:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status (draft, open, paid, void)"
+      due_date_from:
+        type: integer
+        description: "Due date from (Unix timestamp)"
+      due_date_to:
+        type: integer
+        description: "Due date to (Unix timestamp)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_more_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific Stripe invoice.
+  provider: stripe_more
+  endpoint: /v1/invoices/{id}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: stripe_more_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in Stripe. Set customer, items, and billing details.
+  provider: stripe_more
+  endpoint: /v1/invoices
+  method: POST
+  scopes:
+    - invoices:write
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      customer:
+        type: string
+        description: "Customer ID"
+      collection_method:
+        type: string
+        description: "Collection method (charge_automatically, send_invoice)"
+      days_until_due:
+        type: integer
+        description: "Days until due for send_invoice"
+      description:
+        type: string
+        description: "Invoice description"
+      metadata:
+        type: object
+        description: "Metadata key-value pairs"
+    required:
+      - customer
+
+- slug: stripe_more_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in Stripe. Filter by customer, status, or plan.
+  provider: stripe_more
+  endpoint: /v1/subscriptions
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      customer:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status (active, trialing, past_due, canceled)"
+      price:
+        type: string
+        description: "Filter by price ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_more_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific Stripe subscription.
+  provider: stripe_more
+  endpoint: /v1/subscriptions/{id}
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - id
+
+- slug: stripe_more_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new subscription for a customer in Stripe.
+  provider: stripe_more
+  endpoint: /v1/subscriptions
+  method: POST
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      customer:
+        type: string
+        description: "Customer ID"
+      items:
+        type: array
+        description: "Array of subscription items with price data"
+      collection_method:
+        type: string
+        description: "Collection method (charge_automatically, send_invoice)"
+      trial_period_days:
+        type: integer
+        description: "Number of trial days"
+      cancel_at:
+        type: integer
+        description: "Cancel at Unix timestamp"
+      metadata:
+        type: object
+        description: "Metadata key-value pairs"
+    required:
+      - customer
+      - items
+
+- slug: stripe_more_list_customers
+  name: List Customers
+  description: |
+    List all customers in Stripe. Filter by email, name, or created date.
+  provider: stripe_more
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      email:
+        type: string
+        description: "Filter by email"
+      created_from:
+        type: integer
+        description: "Created from (Unix timestamp)"
+      created_to:
+        type: integer
+        description: "Created to (Unix timestamp)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_more_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific Stripe customer.
+  provider: stripe_more
+  endpoint: /v1/customers/{id}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: stripe_more_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in Stripe. Set name, email, and payment details.
+  provider: stripe_more
+  endpoint: /v1/customers
+  method: POST
+  scopes:
+    - customers:write
+  tags:
+    - customers
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      name:
+        type: string
+        description: "Customer name"
+      phone:
+        type: string
+        description: "Phone number"
+      description:
+        type: string
+        description: "Customer description"
+      metadata:
+        type: object
+        description: "Metadata key-value pairs"
+    required: []
+
+- slug: stripe_more_list_payment_methods
+  name: List Payment Methods
+  description: |
+    List all payment methods for a customer in Stripe.
+  provider: stripe_more
+  endpoint: /v1/payment_methods
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - payments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing payment methods
+    properties:
+      customer:
+        type: string
+        description: "Customer ID to filter by"
+      type:
+        type: string
+        description: "Filter by type (card, us_bank_account, etc)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+    required: []

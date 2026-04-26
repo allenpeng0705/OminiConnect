@@ -1,0 +1,272 @@
+- slug: rows_list_spreadsheets
+  name: List Spreadsheets
+  description: |
+    Retrieve a list of all accessible spreadsheets.
+  provider: rows
+  endpoint: /spreadsheets
+  method: GET
+  scopes:
+    - spreadsheets:read
+  tags:
+    - spreadsheet
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spreadsheets
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of spreadsheets to return (default: 50)"
+      offset:
+        type: integer
+        description: "Number of spreadsheets to skip for pagination"
+    required: []
+
+- slug: rows_get_spreadsheet
+  name: Get Spreadsheet
+  description: |
+    Get details and metadata for a specific spreadsheet by ID.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}
+  method: GET
+  scopes:
+    - spreadsheets:read
+  tags:
+    - spreadsheet
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting spreadsheet details
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+    required:
+      - spreadsheetId
+
+- slug: rows_create_spreadsheet
+  name: Create Spreadsheet
+  description: |
+    Create a new spreadsheet with specified name.
+  provider: rows
+  endpoint: /spreadsheets
+  method: POST
+  scopes:
+    - spreadsheets:write
+  tags:
+    - spreadsheet
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a spreadsheet
+    properties:
+      name:
+        type: string
+        description: "Name of the new spreadsheet"
+      folderId:
+        type: string
+        description: "Folder ID to create spreadsheet in"
+    required:
+      - name
+
+- slug: rows_list_tables
+  name: List Tables
+  description: |
+    List all tables within a specific spreadsheet.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+    required:
+      - spreadsheetId
+
+- slug: rows_get_table
+  name: Get Table
+  description: |
+    Get details, schema, and structure of a specific table.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting table details
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - spreadsheetId
+      - tableId
+
+- slug: rows_list_rows
+  name: List Rows
+  description: |
+    Retrieve all rows from a specific table with optional filtering and pagination.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - row
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rows
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      limit:
+        type: integer
+        description: "Maximum number of rows to return (default: 100)"
+      offset:
+        type: integer
+        description: "Number of rows to skip for pagination"
+      filter:
+        type: object
+        description: "Filter criteria for rows"
+    required:
+      - spreadsheetId
+      - tableId
+
+- slug: rows_get_row
+  name: Get Row
+  description: |
+    Get a single row by its unique identifier.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows/{rowId}
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - row
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a row
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+    required:
+      - spreadsheetId
+      - tableId
+      - rowId
+
+- slug: rows_insert_row
+  name: Insert Row
+  description: |
+    Insert a new row into a specified table.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows
+  method: POST
+  scopes:
+    - rows:write
+  tags:
+    - row
+    - create
+  input_schema:
+    type: object
+    description: Parameters for inserting a row
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      data:
+        type: object
+        description: "Row data as key-value pairs"
+      position:
+        type: integer
+        description: "Position to insert the row at"
+    required:
+      - spreadsheetId
+      - tableId
+      - data
+
+- slug: rows_update_row
+  name: Update Row
+  description: |
+    Update an existing row with new data in a specified table.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/tables/{tableId}/rows/{rowId}
+  method: PUT
+  scopes:
+    - rows:write
+  tags:
+    - row
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a row
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+      data:
+        type: object
+        description: "Updated row data as key-value pairs"
+    required:
+      - spreadsheetId
+      - tableId
+      - rowId
+      - data
+
+- slug: rows_list_collaborators
+  name: List Collaborators
+  description: |
+    List all collaborators on a specific spreadsheet.
+  provider: rows
+  endpoint: /spreadsheets/{spreadsheetId}/collaborators
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - collaboration
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing collaborators
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The unique identifier of the spreadsheet"
+    required:
+      - spreadsheetId

@@ -1,0 +1,288 @@
+# OneDrive for Business Tools - Allowlist
+# Curated subset of OneDrive for Business API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. one_drive_list_drives             - List drives
+# 2. one_drive_list_files             - List files in folder
+# 3. one_drive_get_file               - Get file metadata
+# 4. one_drive_download_file          - Download file content
+# 5. one_drive_upload_file            - Upload file
+# 6. one_drive_create_folder          - Create folder
+# 7. one_drive_delete                 - Delete item
+# 8. one_drive_move                   - Move item
+# 9. one_drive_share                  - Share item
+# 10. one_drive_search                - Search files
+
+- slug: one_drive_list_drives
+  name: List Drives
+  description: |
+    List all drives (OneDrive for Business) available to the user.
+  provider: one-drive
+  endpoint: /v1.0/drives
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - drives
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing drives
+    properties: {}
+    required: []
+
+- slug: one_drive_list_files
+  name: List Files
+  description: |
+    List files and folders in a drive or folder.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - browse
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID (optional, uses default if not specified)"
+      path:
+        type: string
+        description: "Folder path (default: root)"
+        default: /
+    required: []
+
+- slug: one_drive_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file or folder.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: one_drive_download_file
+  name: Download File
+  description: |
+    Download file content.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{itemId}/content
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - download
+  input_schema:
+    type: object
+    description: Parameters for downloading a file
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: one_drive_upload_file
+  name: Upload File
+  description: |
+    Upload or create a file with content.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{parentId}:/{name}:/content
+  method: PUT
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      parentId:
+        type: string
+        description: "Parent folder ID or path"
+      name:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - name
+      - content
+
+- slug: one_drive_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in a drive.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{parentId}/children
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      parentId:
+        type: string
+        description: "Parent folder ID"
+      name:
+        type: string
+        description: "Folder name"
+    required:
+      - parentId
+      - name
+
+- slug: one_drive_delete
+  name: Delete
+  description: |
+    Delete a file or folder.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{itemId}
+  method: DELETE
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an item
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: one_drive_move
+  name: Move
+  description: |
+    Move a file or folder to a new location.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{itemId}
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - move
+  input_schema:
+    type: object
+    description: Parameters for moving an item
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "Item ID to move"
+      parentId:
+        type: string
+        description: "Destination parent folder ID"
+    required:
+      - itemId
+      - parentId
+
+- slug: one_drive_share
+  name: Share
+  description: |
+    Share a file or folder with others.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/items/{itemId}/createLink
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - sharing
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for sharing
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "Item ID"
+      type:
+        type: string
+        description: "Link type (view, edit)"
+        default: view
+    required:
+      - itemId
+
+- slug: one_drive_search
+  name: Search
+  description: |
+    Search for files in OneDrive.
+  provider: one-drive
+  endpoint: /v1.0/drives/{driveId}/root/search(q='{query}')
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - search
+    - files
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      driveId:
+        type: string
+        description: "Drive ID"
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query

@@ -1,0 +1,187 @@
+# Twitch Tools - Allowlist
+# Curated subset of Twitch API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. twitch_get_users           - Get user information
+# # 2. twitch_get_follows           - Get list of users following a broadcaster
+# # 3. twitch_list_videos           - List videos for a user
+# # 4. twitch_get_video           - Get video details
+# # 5. twitch_get_streams           - Get stream information
+# # 6. twitch_get_channel_info           - Get channel information
+# # 7. twitch_update_channel           - Update channel settings
+# # 8. twitch_get_subscriptions           - Get channel subscribers
+# # 9. twitch_get_moderators           - Get channel moderators
+# # 10. twitch_create_clip           - Create a clip from a broadcast
+
+- slug: twitch_get_users
+  name: Get Users
+  description: |
+    Get user information
+  provider: twitch
+  endpoint: /helix/users
+  method: GET
+  scopes:
+    - user:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get users
+    properties: {}
+    required: []
+
+- slug: twitch_get_follows
+  name: Get Follows
+  description: |
+    Get list of users following a broadcaster
+  provider: twitch
+  endpoint: /helix/follows
+  method: GET
+  scopes:
+    - user:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get follows
+    properties: {}
+    required: []
+
+- slug: twitch_list_videos
+  name: List Videos
+  description: |
+    List videos for a user
+  provider: twitch
+  endpoint: /helix/videos
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for list videos
+    properties: {}
+    required: []
+
+- slug: twitch_get_video
+  name: Get Video
+  description: |
+    Get video details
+  provider: twitch
+  endpoint: /helix/videos
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get video
+    properties: {}
+    required: []
+
+- slug: twitch_get_streams
+  name: Get Streams
+  description: |
+    Get stream information
+  provider: twitch
+  endpoint: /helix/streams
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get streams
+    properties: {}
+    required: []
+
+- slug: twitch_get_channel_info
+  name: Get Channel Info
+  description: |
+    Get channel information
+  provider: twitch
+  endpoint: /helix/channels
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get channel info
+    properties: {}
+    required: []
+
+- slug: twitch_update_channel
+  name: Update Channel
+  description: |
+    Update channel settings
+  provider: twitch
+  endpoint: /helix/channels
+  method: PATCH
+  scopes:
+    - channel:write
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for update channel
+    properties: {}
+    required: []
+
+- slug: twitch_get_subscriptions
+  name: Get Subscriptions
+  description: |
+    Get channel subscribers
+  provider: twitch
+  endpoint: /helix/subscriptions
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get subscriptions
+    properties: {}
+    required: []
+
+- slug: twitch_get_moderators
+  name: Get Moderators
+  description: |
+    Get channel moderators
+  provider: twitch
+  endpoint: /helix/moderation/moderators
+  method: GET
+  scopes:
+    - channel:read
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for get moderators
+    properties: {}
+    required: []
+
+- slug: twitch_create_clip
+  name: Create Clip
+  description: |
+    Create a clip from a broadcast
+  provider: twitch
+  endpoint: /helix/clips
+  method: POST
+  scopes:
+    - channel:write
+  tags:
+    - twitch
+  input_schema:
+    type: object
+    description: Parameters for create clip
+    properties: {}
+    required: []
+

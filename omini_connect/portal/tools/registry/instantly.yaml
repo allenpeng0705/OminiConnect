@@ -1,0 +1,228 @@
+# Instantly Tools - Allowlist
+# Curated subset of Instantly API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. instantly_list_campaigns      - List campaigns
+# 2. instantly_get_campaign        - Get campaign details
+# 3. instantly_list_leads          - List leads
+# 4. instantly_get_lead            - Get lead details
+# 5. instantly_list_sequences      - List sequences
+# 6. instantly_get_sequence        - Get sequence details
+# 7. instantly_list_workspaces      - List workspaces
+# 8. instantly_get_workspace       - Get workspace details
+# 9. instantly_list_stats          - List statistics
+# 10. instantly_list_analytics      - List analytics
+
+- slug: instantly_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Instantly.
+    Returns campaign details including name, status, and stats.
+  provider: instantly
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: instantly_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+    Includes campaign settings and performance metrics.
+  provider: instantly
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: instantly_list_leads
+  name: List Leads
+  description: |
+    List all leads in Instantly.
+    Returns lead details including email and status.
+  provider: instantly
+  endpoint: /leads
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: instantly_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead.
+    Includes lead details and activity history.
+  provider: instantly
+  endpoint: /leads/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: string
+        description: "Lead ID"
+    required:
+      - id
+
+- slug: instantly_list_sequences
+  name: List Sequences
+  description: |
+    List all sequences in Instantly.
+    Returns sequence details including steps and timing.
+  provider: instantly
+  endpoint: /sequences
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sequences
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties: {}
+    required: []
+
+- slug: instantly_get_sequence
+  name: Get Sequence
+  description: |
+    Get detailed information about a specific sequence.
+    Includes sequence steps and settings.
+  provider: instantly
+  endpoint: /sequences/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sequences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      id:
+        type: string
+        description: "Sequence ID"
+    required:
+      - id
+
+- slug: instantly_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces in Instantly.
+    Returns workspace details including name and members.
+  provider: instantly
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties: {}
+    required: []
+
+- slug: instantly_get_workspace
+  name: Get Workspace
+  description: |
+    Get detailed information about a specific workspace.
+    Includes workspace settings and users.
+  provider: instantly
+  endpoint: /workspaces/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workspaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      id:
+        type: string
+        description: "Workspace ID"
+    required:
+      - id
+
+- slug: instantly_list_stats
+  name: List Statistics
+  description: |
+    List campaign statistics in Instantly.
+    Returns stats including sent, opened, and replied.
+  provider: instantly
+  endpoint: /stats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stats
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing statistics
+    properties:
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: instantly_list_analytics
+  name: List Analytics
+  description: |
+    List analytics data in Instantly.
+    Returns analytics including engagement metrics.
+  provider: instantly
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - analytics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties: {}
+    required: []

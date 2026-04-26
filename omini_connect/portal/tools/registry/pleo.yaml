@@ -1,0 +1,233 @@
+# Pleo Tools - Allowlist
+# Curated subset of Pleo API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pleo_list_users                  - List users
+# 2. pleo_get_user                    - Get user details
+# 3. pleo_list_cards                  - List cards
+# 4. pleo_get_card                    - Get card details
+# 5. pleo_list_transactions           - List transactions
+# 6. pleo_get_transaction             - Get transaction details
+# 7. pleo_list_expenses               - List expenses
+# 8. pleo_get_expense                 - Get expense details
+# 9. pleo_list_receipts              - List receipts
+# 10. pleo_get_company               - Get company info
+
+- slug: pleo_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: pleo
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: pleo_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: pleo
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: pleo_list_cards
+  name: List Cards
+  description: |
+    List all cards in the organization.
+  provider: pleo
+  endpoint: /v1/cards
+  method: GET
+  scopes: []
+  tags:
+    - cards
+    - payments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      userId:
+        type: string
+        description: "Filter by user ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pleo_get_card
+  name: Get Card
+  description: |
+    Get detailed information about a specific card.
+  provider: pleo
+  endpoint: /v1/cards/{cardId}
+  method: GET
+  scopes: []
+  tags:
+    - cards
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      cardId:
+        type: string
+        description: "Card ID"
+    required:
+      - cardId
+
+- slug: pleo_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: pleo
+  endpoint: /v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      cardId:
+        type: string
+        description: "Filter by card ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: pleo_get_transaction
+  name: Get Transaction
+  description: |
+    Get detailed information about a specific transaction.
+  provider: pleo
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transactionId
+
+- slug: pleo_list_expenses
+  name: List Expenses
+  description: |
+    List all expenses.
+  provider: pleo
+  endpoint: /v1/expenses
+  method: GET
+  scopes: []
+  tags:
+    - expenses
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pleo_get_expense
+  name: Get Expense
+  description: |
+    Get detailed information about a specific expense.
+  provider: pleo
+  endpoint: /v1/expenses/{expenseId}
+  method: GET
+  scopes: []
+  tags:
+    - expenses
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      expenseId:
+        type: string
+        description: "Expense ID"
+    required:
+      - expenseId
+
+- slug: pleo_list_receipts
+  name: List Receipts
+  description: |
+    List all receipts.
+  provider: pleo
+  endpoint: /v1/receipts
+  method: GET
+  scopes: []
+  tags:
+    - receipts
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing receipts
+    properties:
+      expenseId:
+        type: string
+        description: "Filter by expense ID"
+    required: []
+
+- slug: pleo_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: pleo
+  endpoint: /v1/company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

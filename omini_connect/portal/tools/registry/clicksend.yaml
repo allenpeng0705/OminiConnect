@@ -1,0 +1,236 @@
+# ClickSend Tools - Allowlist
+# Curated subset of the ClickSend API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. clicksend_list_contacts               - List contacts
+# 2. clicksend_get_contact                 - Get contact details
+# 3. clicksend_create_contact               - Create a contact
+# 4. clicksend_list_sms_messages           - List SMS messages
+# 5. clicksend_send_sms                    - Send an SMS
+# 6. clicksend_list_sms_campaigns           - List SMS campaigns
+# 7. clicksend_get_sms_campaign            - Get SMS campaign details
+# 8. clicksend_list_email_campaigns         - List email campaigns
+# 9. clicksend_get_email_campaign          - Get email campaign details
+# 10. clicksend_get_account              - Get account info
+
+- slug: clicksend_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in your account.
+  provider: clicksend
+  endpoint: /v3/contact
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: clicksend_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: clicksend
+  endpoint: /v3/contact/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: clicksend_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: clicksend
+  endpoint: /v3/contact
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - first_name
+      - last_name
+
+- slug: clicksend_list_sms_messages
+  name: List SMS Messages
+  description: |
+    List all SMS messages.
+  provider: clicksend
+  endpoint: /v3/sms
+  method: GET
+  scopes: []
+  tags:
+    - sms
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing SMS messages
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: clicksend_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message.
+  provider: clicksend
+  endpoint: /v3/sms/send
+  method: POST
+  scopes: []
+  tags:
+    - sms
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending SMS
+    properties:
+      to:
+        type: string
+        description: "Recipient phone number"
+      body:
+        type: string
+        description: "SMS message body"
+    required:
+      - to
+      - body
+
+- slug: clicksend_list_sms_campaigns
+  name: List SMS Campaigns
+  description: |
+    List all SMS campaigns.
+  provider: clicksend
+  endpoint: /v3/sms-campaign
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - sms
+  input_schema:
+    type: object
+    description: Parameters for listing SMS campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: clicksend_get_sms_campaign
+  name: Get SMS Campaign
+  description: |
+    Get details of a specific SMS campaign.
+  provider: clicksend
+  endpoint: /v3/sms-campaign/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an SMS campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: clicksend_list_email_campaigns
+  name: List Email Campaigns
+  description: |
+    List all email campaigns.
+  provider: clicksend
+  endpoint: /v3/email-campaign
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing email campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: clicksend_get_email_campaign
+  name: Get Email Campaign
+  description: |
+    Get details of a specific email campaign.
+  provider: clicksend
+  endpoint: /v3/email-campaign/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an email campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: clicksend_get_account
+  name: Get Account
+  description: |
+    Get account information.
+  provider: clicksend
+  endpoint: /v3/account
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []

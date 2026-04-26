@@ -1,0 +1,187 @@
+# Skio Tools - Allowlist
+# Curated subset of Skio API for AI agent use.
+# Auth mode: API_KEY.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. get_products                             - List all subscription products
+# 2. get_product                              - Get product details
+# 3. list_subscriptions                       - List all subscriptions
+# 4. get_subscription                         - Get subscription details
+# 5. list_customers                           - List all customers
+# 6. get_customer                             - Get customer details
+# 7. list_orders                              - List all orders
+# 8. get_order                                - Get order details
+# 9. list_charges                             - List all charges
+# 10. get_checkout                             - Get checkout session
+
+- slug: get_products
+  name: Get Products
+  description: |
+    List all subscription products
+  provider: skio
+  endpoint: /products
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - subscriptions
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_product
+  name: Get Product
+  description: |
+    Get product details
+  provider: skio
+  endpoint: /products/{id}
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - subscriptions
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions
+  provider: skio
+  endpoint: /subscriptions
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_subscription
+  name: Get Subscription
+  description: |
+    Get subscription details
+  provider: skio
+  endpoint: /subscriptions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_customers
+  name: List Customers
+  description: |
+    List all customers
+  provider: skio
+  endpoint: /customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_customer
+  name: Get Customer
+  description: |
+    Get customer details
+  provider: skio
+  endpoint: /customers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_orders
+  name: List Orders
+  description: |
+    List all orders
+  provider: skio
+  endpoint: /orders
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_order
+  name: Get Order
+  description: |
+    Get order details
+  provider: skio
+  endpoint: /orders/{id}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_charges
+  name: List Charges
+  description: |
+    List all charges
+  provider: skio
+  endpoint: /charges
+  method: GET
+  scopes: []
+  tags:
+    - charges
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_checkout
+  name: Get Checkout
+  description: |
+    Get checkout session
+  provider: skio
+  endpoint: /checkouts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - checkout
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

@@ -1,0 +1,274 @@
+# Optimizely Tools - Allowlist
+# Curated subset of Optimizely REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. optimizely_list_experiments     - List experiments
+# 2. optimizely_get_experiment       - Get experiment details
+# 3. optimizely_create_experiment    - Create an experiment
+# 4. optimizely_update_experiment    - Update an experiment
+# 5. optimizely_list_features       - List features
+# 6. optimizely_get_feature          - Get feature details
+# 7. optimizely_list_audiences       - List audiences
+# 8. optimizely_get_audience         - Get audience details
+# 9. optimizely_list_variations      - List variations
+# 10. optimizely_get_variation       - Get variation details
+
+- slug: optimizely_list_experiments
+  name: List Experiments
+  description: |
+    List all experiments in an Optimizely project.
+    Experiments are A/B tests that compare variations against a control.
+  provider: optimizely
+  endpoint: /v2/experiments
+  method: GET
+  scopes:
+    - experiments:read
+  tags:
+    - experiments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing experiments
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of experiments to return"
+      page_token:
+        type: string
+        description: "Token for pagination"
+    required:
+      - project_id
+
+- slug: optimizely_get_experiment
+  name: Get Experiment
+  description: |
+    Get detailed information about a specific experiment including variations, targeting, and status.
+  provider: optimizely
+  endpoint: /v2/experiments/{experiment_id}
+  method: GET
+  scopes:
+    - experiments:read
+  tags:
+    - experiments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an experiment
+    properties:
+      experiment_id:
+        type: integer
+        description: "The experiment ID"
+    required:
+      - experiment_id
+
+- slug: optimizely_create_experiment
+  name: Create Experiment
+  description: |
+    Create a new experiment in Optimizely.
+    Set variations, traffic allocation, targeting rules, and metrics.
+  provider: optimizely
+  endpoint: /v2/experiments
+  method: POST
+  scopes:
+    - experiments:write
+  tags:
+    - experiments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an experiment
+    properties:
+      name:
+        type: string
+        description: "The experiment name"
+      description:
+        type: string
+        description: "Description of the experiment"
+      project_id:
+        type: integer
+        description: "The project ID"
+      hypothesis:
+        type: string
+        description: "The hypothesis being tested"
+      variants:
+        type: array
+        description: "List of experiment variants"
+    required:
+      - name
+      - project_id
+
+- slug: optimizely_update_experiment
+  name: Update Experiment
+  description: |
+    Update an existing experiment. Modify name, description, status, or targeting.
+  provider: optimizely
+  endpoint: /v2/experiments/{experiment_id}
+  method: PATCH
+  scopes:
+    - experiments:write
+  tags:
+    - experiments
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an experiment
+    properties:
+      experiment_id:
+        type: integer
+        description: "The experiment ID"
+      name:
+        type: string
+        description: "Updated experiment name"
+      description:
+        type: string
+        description: "Updated description"
+      status:
+        type: string
+        description: "Experiment status (active, paused, archived)"
+    required:
+      - experiment_id
+
+- slug: optimizely_list_features
+  name: List Features
+  description: |
+    List all features in an Optimizely project.
+    Features are feature flags that can be enabled/disabled for rollouts.
+  provider: optimizely
+  endpoint: /v2/features
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing features
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of features to return"
+    required:
+      - project_id
+
+- slug: optimizely_get_feature
+  name: Get Feature
+  description: |
+    Get detailed information about a specific feature including rollout rules and settings.
+  provider: optimizely
+  endpoint: /v2/features/{feature_key}
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature
+    properties:
+      feature_key:
+        type: string
+        description: "The feature key"
+      project_id:
+        type: integer
+        description: "The project ID"
+    required:
+      - feature_key
+
+- slug: optimizely_list_audiences
+  name: List Audiences
+  description: |
+    List all audiences in an Optimizely project.
+    Audiences are groups of users defined by attributes for targeting.
+  provider: optimizely
+  endpoint: /v2/audiences
+  method: GET
+  scopes:
+    - audiences:read
+  tags:
+    - audiences
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: optimizely_get_audience
+  name: Get Audience
+  description: |
+    Get details about a specific audience including conditions and targeting rules.
+  provider: optimizely
+  endpoint: /v2/audiences/{audience_id}
+  method: GET
+  scopes:
+    - audiences:read
+  tags:
+    - audiences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an audience
+    properties:
+      audience_id:
+        type: string
+        description: "The audience ID"
+    required:
+      - audience_id
+
+- slug: optimizely_list_variations
+  name: List Variations
+  description: |
+    List all variations for an experiment.
+    Variations are the different versions users might see.
+  provider: optimizely
+  endpoint: /v2/experiments/{experiment_id}/variations
+  method: GET
+  scopes:
+    - variations:read
+  tags:
+    - variations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing variations
+    properties:
+      experiment_id:
+        type: integer
+        description: "The experiment ID"
+    required:
+      - experiment_id
+
+- slug: optimizely_get_variation
+  name: Get Variation
+  description: |
+    Get detailed information about a specific variation including its configuration and key.
+  provider: optimizely
+  endpoint: /v2/variations/{variation_id}
+  method: GET
+  scopes:
+    - variations:read
+  tags:
+    - variations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a variation
+    properties:
+      variation_id:
+        type: string
+        description: "The variation ID"
+    required:
+      - variation_id

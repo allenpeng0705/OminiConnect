@@ -1,0 +1,261 @@
+# Google Ads Tools - Allowlist
+# Curated subset of Google Ads API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_ads_list_campaigns        - List campaigns
+# 2. google_ads_get_campaign        - Get campaign details
+# 3. google_ads_list_ad_groups      - List ad groups
+# 4. google_ads_list_ads            - List ads
+# 5. google_ads_list_keywords       - List keywords
+# 6. google_ads_get_keyword         - Get keyword details
+# 7. google_ads_list_reports       - List performance reports
+# 8. google_ads_list_accounts      - List managed accounts
+# 9. google_ads_get_account        - Get account details
+# 10. google_ads_list_conversions  - List conversion actions
+
+- slug: google_ads_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Google Ads.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/campaigns
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - campaigns
+    - list
+    - advertising
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+    required:
+      - customer_id
+
+- slug: google_ads_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a campaign.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - customer_id
+      - campaign_id
+
+- slug: google_ads_list_ad_groups
+  name: List Ad Groups
+  description: |
+    List ad groups in a campaign.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/campaigns/{campaign_id}/adGroups
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - ad-groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing ad groups
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - customer_id
+      - campaign_id
+
+- slug: google_ads_list_ads
+  name: List Ads
+  description: |
+    List ads in an ad group.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/adGroups/{ad_group_id}/ads
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - ads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      ad_group_id:
+        type: string
+        description: "Ad group ID"
+    required:
+      - customer_id
+      - ad_group_id
+
+- slug: google_ads_list_keywords
+  name: List Keywords
+  description: |
+    List keywords in an ad group.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/adGroups/{ad_group_id}/keywords
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - keywords
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing keywords
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      ad_group_id:
+        type: string
+        description: "Ad group ID"
+    required:
+      - customer_id
+      - ad_group_id
+
+- slug: google_ads_get_keyword
+  name: Get Keyword
+  description: |
+    Get detailed information about a keyword.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/keywords/{keyword_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - keywords
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a keyword
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      keyword_id:
+        type: string
+        description: "Keyword ID"
+    required:
+      - customer_id
+      - keyword_id
+
+- slug: google_ads_list_reports
+  name: List Reports
+  description: |
+    Get performance reports for campaigns.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/campaignStats
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - reports
+    - analytics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+      date_range:
+        type: string
+        description: "Date range (e.g., LAST_30_DAYS)"
+    required:
+      - customer_id
+
+- slug: google_ads_list_accounts
+  name: List Accounts
+  description: |
+    List managed Google Ads accounts.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/managedCustomers
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - accounts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+    required:
+      - customer_id
+
+- slug: google_ads_get_account
+  name: Get Account
+  description: |
+    Get detailed information about an account.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+    required:
+      - customer_id
+
+- slug: google_ads_list_conversions
+  name: List Conversions
+  description: |
+    List conversion actions.
+  provider: google-ads
+  endpoint: /v17/customers/{customer_id}/conversionActions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/adwords
+  tags:
+    - conversions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversions
+    properties:
+      customer_id:
+        type: string
+        description: "Google Ads customer ID"
+    required:
+      - customer_id

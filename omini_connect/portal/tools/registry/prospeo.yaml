@@ -1,0 +1,237 @@
+# Prospeo Tools - Allowlist
+# Curated subset of Prospeo API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. prospeo_get_account_info        - Get account info
+# 2. prospeo_search_companies       - Search companies
+# 3. prospeo_get_company           - Get company details
+# 4. prospeo_search_contacts       - Search contacts
+# 5. prospeo_get_contact           - Get contact details
+# 6. prospeo_enrich_company        - Enrich company data
+# 7. prospeo_enrich_contact        - Enrich contact data
+# 8. prospeo_get_domain_info       - Get domain information
+# 9. prospeo_list_campaigns        - List campaigns
+# 10. prospeo_get_campaign         - Get campaign details
+
+- slug: prospeo_get_account_info
+  name: Get Account Info
+  description: |
+    Get account information and usage stats.
+  provider: prospeo
+  endpoint: /account-information
+  method: POST
+  scopes: []
+  tags:
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account info
+    properties: {}
+    required: []
+
+- slug: prospeo_search_companies
+  name: Search Companies
+  description: |
+    Search for companies by name, domain, or other criteria.
+  provider: prospeo
+  endpoint: /company/search
+  method: POST
+  scopes: []
+  tags:
+    - companies
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching companies
+    properties:
+      name:
+        type: string
+        description: "Company name"
+      domain:
+        type: string
+        description: "Company domain"
+      location:
+        type: string
+        description: "Location filter"
+    required: []
+
+- slug: prospeo_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+  provider: prospeo
+  endpoint: /company
+  method: POST
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID or domain"
+    required:
+      - companyId
+
+- slug: prospeo_search_contacts
+  name: Search Contacts
+  description: |
+    Search for contacts by name, email, company, etc.
+  provider: prospeo
+  endpoint: /contact/search
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - people
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching contacts
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      company:
+        type: string
+        description: "Company name"
+      email:
+        type: string
+        description: "Email address"
+    required: []
+
+- slug: prospeo_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: prospeo
+  endpoint: /contact
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - people
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID or email"
+    required:
+      - contactId
+
+- slug: prospeo_enrich_company
+  name: Enrich Company
+  description: |
+    Enrich company data with additional information.
+  provider: prospeo
+  endpoint: /company/enrich
+  method: POST
+  scopes: []
+  tags:
+    - companies
+    - enrich
+  input_schema:
+    type: object
+    description: Parameters for enriching company
+    properties:
+      domain:
+        type: string
+        description: "Company domain"
+      name:
+        type: string
+        description: "Company name"
+    required: []
+
+- slug: prospeo_enrich_contact
+  name: Enrich Contact
+  description: |
+    Enrich contact data with additional information.
+  provider: prospeo
+  endpoint: /contact/enrich
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - enrich
+  input_schema:
+    type: object
+    description: Parameters for enriching contact
+    properties:
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - email
+
+- slug: prospeo_get_domain_info
+  name: Get Domain Info
+  description: |
+    Get information about a domain.
+  provider: prospeo
+  endpoint: /domain
+  method: POST
+  scopes: []
+  tags:
+    - domain
+    - lookup
+  input_schema:
+    type: object
+    description: Parameters for getting domain info
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+    required:
+      - domain
+
+- slug: prospeo_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: prospeo
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: prospeo_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+  provider: prospeo
+  endpoint: /campaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId

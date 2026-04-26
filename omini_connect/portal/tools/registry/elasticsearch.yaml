@@ -1,0 +1,325 @@
+# Elasticsearch Tools - Allowlist
+# Curated subset of the Elasticsearch REST API v8 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. elasticsearch_list_indices         - List all indices
+# 2. elasticsearch_get_index            - Get index details and stats
+# 3. elasticsearch_create_index         - Create a new index
+# 4. elasticsearch_delete_index         - Delete an index
+# 5. elasticsearch_index_document       - Index a single document
+# 6. elasticsearch_search               - Search documents
+# 7. elasticsearch_delete_document      - Delete a document by ID
+# 8. elasticsearch_list_clusters        - List connected clusters
+# 9. elasticsearch_get_cluster_health   - Get cluster health status
+# 10. elasticsearch_get_node_stats      - Get node statistics
+
+- slug: elasticsearch_list_indices
+  name: List Indices
+  description: |
+    List all indices in the Elasticsearch cluster.
+    Returns index names, document counts, and storage size.
+  provider: elasticsearch
+  endpoint: /_cat/indices
+  method: GET
+  scopes:
+    - cluster:read
+  tags:
+    - indices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing indices
+    properties:
+      index:
+        type: string
+        description: "Filter indices by name pattern (e.g., 'logs-*')"
+      bytes:
+        type: string
+        description: "Size format (b, kb, mb, gb, tb)"
+        default: mb
+      detailed:
+        type: boolean
+        description: "Return detailed information"
+        default: false
+    required: []
+
+- slug: elasticsearch_get_index
+  name: Get Index
+  description: |
+    Get detailed information about a specific index including
+    mappings, settings, and statistics.
+  provider: elasticsearch
+  endpoint: /{index_name}
+  method: GET
+  scopes:
+    - cluster:read
+  tags:
+    - indices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an index
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+    required:
+      - index_name
+
+- slug: elasticsearch_create_index
+  name: Create Index
+  description: |
+    Create a new index with optional mappings and settings.
+    Supports custom analyzers, aliases, and number of shards.
+  provider: elasticsearch
+  endpoint: /{index_name}
+  method: PUT
+  scopes:
+    - cluster:write
+  tags:
+    - indices
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an index
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      mappings:
+        type: object
+        description: "Index field mappings"
+      settings:
+        type: object
+        description: "Index settings (number_of_shards, analyzers, etc.)"
+      aliases:
+        type: object
+        description: "Index aliases"
+    required:
+      - index_name
+
+- slug: elasticsearch_delete_index
+  name: Delete Index
+  description: |
+    Delete an index and all its documents permanently.
+    Use with caution as this cannot be undone.
+  provider: elasticsearch
+  endpoint: /{index_name}
+  method: DELETE
+  scopes:
+    - cluster:write
+  tags:
+    - indices
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an index
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+    required:
+      - index_name
+
+- slug: elasticsearch_index_document
+  name: Index Document
+  description: |
+    Index a single document into an existing index.
+    If document ID is not provided, one will be generated.
+  provider: elasticsearch
+  endpoint: /{index_name}/_doc/{document_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - documents
+    - write
+  input_schema:
+    type: object
+    description: Parameters for indexing a document
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      document_id:
+        type: string
+        description: "Document ID (optional, auto-generated if not provided)"
+      body:
+        type: object
+        description: "Document body as JSON object (required)"
+      refresh:
+        type: boolean
+        description: "Refresh index immediately"
+        default: false
+    required:
+      - index_name
+      - body
+
+- slug: elasticsearch_search
+  name: Search
+  description: |
+    Search for documents in an index using query DSL.
+    Supports full-text search, filters, aggregations, and sorting.
+  provider: elasticsearch
+  endpoint: /{index_name}/_search
+  method: POST
+  scopes:
+    - read
+  tags:
+    - search
+    - query
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      query:
+        type: object
+        description: "Query DSL (match, term, range, bool, etc.)"
+      from:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      size:
+        type: integer
+        description: "Number of results (default 10, max 10000)"
+        default: 10
+      sort:
+        type: array
+        items:
+          type: string
+        description: "Sort fields (e.g., ['date:desc', 'name:asc'])"
+      _source:
+        type: array
+        items:
+          type: string
+        description: "Fields to return in results"
+      highlight:
+        type: object
+        description: "Highlighting configuration"
+      aggs:
+        type: object
+        description: "Aggregations"
+    required:
+      - index_name
+
+- slug: elasticsearch_delete_document
+  name: Delete Document
+  description: |
+    Delete a single document by its ID from an index.
+    Use the bulk API to delete multiple documents.
+  provider: elasticsearch
+  endpoint: /{index_name}/_doc/{document_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - documents
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a document
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      document_id:
+        type: string
+        description: "Document ID (required)"
+      refresh:
+        type: boolean
+        description: "Refresh index immediately"
+        default: false
+    required:
+      - index_name
+      - document_id
+
+- slug: elasticsearch_list_clusters
+  name: List Clusters
+  description: |
+    List connected clusters in a cross-cluster setup.
+    Returns cluster names, statuses, and connectivity info.
+  provider: elasticsearch
+  endpoint: /_cluster/state
+  method: GET
+  scopes:
+    - cluster:read
+  tags:
+    - clusters
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clusters
+    properties:
+      flat_settings:
+        type: boolean
+        description: "Return settings in flat format"
+        default: false
+    required: []
+
+- slug: elasticsearch_get_cluster_health
+  name: Get Cluster Health
+  description: |
+    Get the health status of the cluster (green, yellow, red).
+    Returns cluster state, number of nodes, and shard allocation.
+  provider: elasticsearch
+  endpoint: /_cluster/health
+  method: GET
+  scopes:
+    - cluster:read
+  tags:
+    - clusters
+    - health
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting cluster health
+    properties:
+      index:
+        type: string
+        description: "Filter health by index name"
+      level:
+        type: string
+        description: "Detail level (cluster, indices, shards)"
+        default: cluster
+      timeout:
+        type: string
+        description: "Timeout for operation"
+        default: 30s
+    required: []
+
+- slug: elasticsearch_get_node_stats
+  name: Get Node Stats
+  description: |
+    Get detailed statistics for nodes in the cluster including
+    CPU, memory, disk usage, and thread pool information.
+  provider: elasticsearch
+  endpoint: /_nodes/stats
+  method: GET
+  scopes:
+    - cluster:read
+  tags:
+    - nodes
+    - monitoring
+    - stats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting node stats
+    properties:
+      node_id:
+        type: string
+        description: "Specific node ID (returns all if not specified)"
+      metrics:
+        type: array
+        items:
+          type: string
+        description: "Specific metrics to return (indices, os, process, jvm, etc.)"
+      index:
+        type: string
+        description: "Filter stats by index"
+    required: []

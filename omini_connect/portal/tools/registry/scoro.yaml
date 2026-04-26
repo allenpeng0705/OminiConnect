@@ -1,0 +1,252 @@
+# Scoro Tools - Allowlist
+# Curated subset of Scoro REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. scoro_list_projects       - List projects
+# 2. scoro_get_project         - Get project details
+# 3. scoro_create_project      - Create a project
+# 4. scoro_list_tasks          - List tasks
+# 5. scoro_get_task            - Get task details
+# 6. scoro_list_contacts       - List contacts
+# 7. scoro_get_contact        - Get contact details
+# 8. scoro_list_invoices       - List invoices
+# 9. scoro_get_invoice         - Get invoice details
+# 10. scoro_list_quotes        - List quotes
+
+- slug: scoro_list_projects
+  name: List Projects
+  description: |
+    List all projects in Scoro.
+  provider: scoro
+  endpoint: /api/v1/projects
+  method: GET
+  scopes:
+    - projects_read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Active, Archived, Draft)"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: scoro_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: scoro
+  endpoint: /api/v1/projects/{id}
+  method: GET
+  scopes:
+    - projects_read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: scoro_create_project
+  name: Create Project
+  description: |
+    Create a new project in Scoro.
+  provider: scoro
+  endpoint: /api/v1/projects
+  method: POST
+  scopes:
+    - projects_write
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      description:
+        type: string
+        description: "Project description"
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      deadline:
+        type: string
+        description: "Deadline date (YYYY-MM-DD)"
+    required:
+      - name
+
+- slug: scoro_list_tasks
+  name: List Tasks
+  description: |
+    List tasks in a project or across all tasks.
+  provider: scoro
+  endpoint: /api/v1/tasks
+  method: GET
+  scopes:
+    - tasks_read
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      assignee_id:
+        type: string
+        description: "Filter by assignee ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: scoro_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a task.
+  provider: scoro
+  endpoint: /api/v1/tasks/{id}
+  method: GET
+  scopes:
+    - tasks_read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: scoro_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Scoro.
+  provider: scoro
+  endpoint: /api/v1/contacts
+  method: GET
+  scopes:
+    - contacts_read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      type:
+        type: string
+        description: "Filter by type (Person, Company)"
+      search:
+        type: string
+        description: "Search by name or email"
+    required: []
+
+- slug: scoro_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a contact.
+  provider: scoro
+  endpoint: /api/v1/contacts/{id}
+  method: GET
+  scopes:
+    - contacts_read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: scoro_list_invoices
+  name: List Invoices
+  description: |
+    List invoices in Scoro.
+  provider: scoro
+  endpoint: /api/v1/invoices
+  method: GET
+  scopes:
+    - invoices_read
+  tags:
+    - invoices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Draft, Sent, Paid, Overdue)"
+    required: []
+
+- slug: scoro_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about an invoice.
+  provider: scoro
+  endpoint: /api/v1/invoices/{id}
+  method: GET
+  scopes:
+    - invoices_read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: scoro_list_quotes
+  name: List Quotes
+  description: |
+    List quotes in Scoro.
+  provider: scoro
+  endpoint: /api/v1/quotes
+  method: GET
+  scopes:
+    - quotes_read
+  tags:
+    - quotes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing quotes
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Draft, Sent, Accepted, Declined)"
+    required: []

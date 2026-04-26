@@ -1,0 +1,309 @@
+# Recharge Tools - Allowlist
+# Curated subset of Recharge API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recharge_list_subscriptions    - List subscriptions
+# 2. recharge_get_subscription      - Get subscription details
+# 3. recharge_create_subscription   - Create a subscription
+# 4. recharge_update_subscription   - Update a subscription
+# 5. recharge_cancel_subscription   - Cancel a subscription
+# 6. recharge_list_customers        - List customers
+# 7. recharge_get_customer          - Get customer details
+# 8. recharge_list_orders           - List orders
+# 9. recharge_get_order             - Get order details
+# 10. recharge_list_products        - List products
+
+- slug: recharge_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in the Recharge account.
+    Filter by customer, status, or product.
+  provider: recharge
+  endpoint: /subscriptions
+  method: GET
+  scopes:
+    - read_subscriptions
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      limit:
+        type: integer
+        description: "Max subscriptions to return"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: active, paused, canceled"
+    required: []
+
+- slug: recharge_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific subscription.
+  provider: recharge
+  endpoint: /subscriptions/{subscription_id}
+  method: GET
+  scopes:
+    - read_subscriptions
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      subscription_id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - subscription_id
+
+- slug: recharge_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new subscription for a customer.
+  provider: recharge
+  endpoint: /subscriptions
+  method: POST
+  scopes:
+    - write_subscriptions
+  tags:
+    - subscriptions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+      address_id:
+        type: string
+        description: "Shipping address ID"
+      product_id:
+        type: string
+        description: "Product ID"
+      variant_id:
+        type: string
+        description: "Variant ID"
+      quantity:
+        type: integer
+        description: "Number of units"
+      charge_interval_frequency:
+        type: integer
+        description: "Days between charges"
+      order_interval_frequency:
+        type: integer
+        description: "Days between orders"
+      next_charge_date:
+        type: string
+        description: "Next charge date (YYYY-MM-DD)"
+    required:
+      - customer_id
+      - address_id
+      - product_id
+
+- slug: recharge_update_subscription
+  name: Update Subscription
+  description: |
+    Update an existing subscription's details.
+  provider: recharge
+  endpoint: /subscriptions/{subscription_id}
+  method: PUT
+  scopes:
+    - write_subscriptions
+  tags:
+    - subscriptions
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a subscription
+    properties:
+      subscription_id:
+        type: string
+        description: "Subscription ID"
+      quantity:
+        type: integer
+        description: "New quantity"
+      status:
+        type: string
+        description: "New status: active, paused, canceled"
+      next_charge_date:
+        type: string
+        description: "New next charge date"
+      charge_interval_frequency:
+        type: integer
+        description: "New charge interval"
+    required:
+      - subscription_id
+
+- slug: recharge_cancel_subscription
+  name: Cancel Subscription
+  description: |
+    Cancel an existing subscription.
+  provider: recharge
+  endpoint: /subscriptions/{subscription_id}/cancel
+  method: POST
+  scopes:
+    - write_subscriptions
+  tags:
+    - subscriptions
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for canceling a subscription
+    properties:
+      subscription_id:
+        type: string
+        description: "Subscription ID"
+      cancellation_email:
+        type: boolean
+        description: "Send cancellation email"
+      reason:
+        type: string
+        description: "Cancellation reason"
+    required:
+      - subscription_id
+
+- slug: recharge_list_customers
+  name: List Customers
+  description: |
+    List all customers in the Recharge account.
+  provider: recharge
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Max customers to return"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      email:
+        type: string
+        description: "Filter by email"
+    required: []
+
+- slug: recharge_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+  provider: recharge
+  endpoint: /customers/{customer_id}
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: recharge_list_orders
+  name: List Orders
+  description: |
+    List all orders in the Recharge account.
+    Filter by customer, status, or date range.
+  provider: recharge
+  endpoint: /orders
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Max orders to return"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: pending, paid, etc."
+    required: []
+
+- slug: recharge_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order.
+  provider: recharge
+  endpoint: /orders/{order_id}
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "Order ID"
+    required:
+      - order_id
+
+- slug: recharge_list_products
+  name: List Products
+  description: |
+    List all products in the Recharge catalog.
+  provider: recharge
+  endpoint: /products
+  method: GET
+  scopes:
+    - read_products
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Max products to return"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []

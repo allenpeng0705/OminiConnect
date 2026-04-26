@@ -1,0 +1,238 @@
+# Grafana Tools - Allowlist
+# Curated subset of Grafana API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. grafana_list_dashboards        - List dashboards
+# 2. grafana_get_dashboard          - Get dashboard details
+# 3. grafana_list_folders           - List folders
+# 4. grafana_get_folder            - Get folder details
+# 5. grafana_list_users            - List org users
+# 6. grafana_list_teams           - List teams
+# 7. grafana_get_team             - Get team details
+# 8. grafana_list_alerts           - List alerts
+# 9. grafana_get_alert            - Get alert details
+# 10. grafana_list_data_sources    - List data sources
+
+- slug: grafana_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards in the organization.
+    Returns dashboard details including title, uid, and folder.
+  provider: grafana
+  endpoint: /api/search
+  method: GET
+  scopes:
+    - read
+  tags:
+    - dashboards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      type:
+        type: string
+        description: "Type: dash-db (dashboards), dash-folder (folders)"
+        default: dash-db
+      folderIds:
+        type: integer
+        description: "Filter by folder ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: grafana_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get detailed information about a specific dashboard.
+    Returns dashboard JSON model with panels and settings.
+  provider: grafana
+  endpoint: /api/dashboards/uid/{uid}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - dashboards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      uid:
+        type: string
+        description: "Dashboard UID"
+    required:
+      - uid
+
+- slug: grafana_list_folders
+  name: List Folders
+  description: |
+    List all folders in the organization.
+    Folders organize dashboards.
+  provider: grafana
+  endpoint: /api/folders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties: {}
+    required: []
+
+- slug: grafana_get_folder
+  name: Get Folder
+  description: |
+    Get detailed information about a specific folder.
+    Includes folder metadata and permissions.
+  provider: grafana
+  endpoint: /api/folders/{uid}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      uid:
+        type: string
+        description: "Folder UID"
+    required:
+      - uid
+
+- slug: grafana_list_users
+  name: List Org Users
+  description: |
+    List all users in the organization.
+    Returns user details including login, email, and role.
+  provider: grafana
+  endpoint: /api/org/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing org users
+    properties: {}
+    required: []
+
+- slug: grafana_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization.
+    Returns team details including name, member count.
+  provider: grafana
+  endpoint: /api/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: grafana_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team.
+    Includes team members and settings.
+  provider: grafana
+  endpoint: /api/teams/{teamId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: grafana_list_alerts
+  name: List Alerts
+  description: |
+    List all alerts in the organization.
+    Returns alert details including name, state, and folder.
+  provider: grafana
+  endpoint: /api/alerts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - alerts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: grafana_get_alert
+  name: Get Alert
+  description: |
+    Get detailed information about a specific alert.
+    Includes alert rule, conditions, and current state.
+  provider: grafana
+  endpoint: /api/alerts/{alertId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - alerts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an alert
+    properties:
+      alertId:
+        type: integer
+        description: "Alert ID"
+    required:
+      - alertId
+
+- slug: grafana_list_data_sources
+  name: List Data Sources
+  description: |
+    List all configured data sources.
+    Returns data source details including name, type, and url.
+  provider: grafana
+  endpoint: /api/datasources
+  method: GET
+  scopes:
+    - read
+  tags:
+    - datasources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing data sources
+    properties: {}
+    required: []

@@ -1,0 +1,187 @@
+# Stack Exchange Tools - Allowlist
+# Curated subset of Stack Exchange API for AI agent use.
+# Auth mode: OAUTH2.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_questions                           - List questions
+# 2. get_question                             - Get question details
+# 3. list_answers                             - List answers for question
+# 4. get_answer                               - Get answer details
+# 5. list_users                               - List users
+# 6. get_user                                 - Get user details
+# 7. search_questions                         - Search questions
+# 8. list_tags                                - List all tags
+# 9. get_site_info                            - Get site information
+# 10. list_comments                            - List comments
+
+- slug: list_questions
+  name: List Questions
+  description: |
+    List questions
+  provider: stackexchange
+  endpoint: /questions
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - q&a
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_question
+  name: Get Question
+  description: |
+    Get question details
+  provider: stackexchange
+  endpoint: /questions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - q&a
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_answers
+  name: List Answers
+  description: |
+    List answers for question
+  provider: stackexchange
+  endpoint: /questions/{id}/answers
+  method: GET
+  scopes: []
+  tags:
+    - answers
+    - q&a
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_answer
+  name: Get Answer
+  description: |
+    Get answer details
+  provider: stackexchange
+  endpoint: /answers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - answers
+    - q&a
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_users
+  name: List Users
+  description: |
+    List users
+  provider: stackexchange
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - community
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_user
+  name: Get User
+  description: |
+    Get user details
+  provider: stackexchange
+  endpoint: /users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - community
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: search_questions
+  name: Search Questions
+  description: |
+    Search questions
+  provider: stackexchange
+  endpoint: /search/advanced
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - questions
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_tags
+  name: List Tags
+  description: |
+    List all tags
+  provider: stackexchange
+  endpoint: /tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - taxonomy
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_site_info
+  name: Get Site Info
+  description: |
+    Get site information
+  provider: stackexchange
+  endpoint: /info
+  method: GET
+  scopes: []
+  tags:
+    - site
+    - config
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_comments
+  name: List Comments
+  description: |
+    List comments
+  provider: stackexchange
+  endpoint: /comments
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

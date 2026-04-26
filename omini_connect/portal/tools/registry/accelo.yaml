@@ -1,0 +1,274 @@
+# Accelo Tools - Allowlist
+# Curated subset of Accelo REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. accelo_list_contacts       - List contacts
+# 2. accelo_get_contact         - Get contact details
+# 3. accelo_create_contact      - Create a new contact
+# 4. accelo_list_companies      - List companies
+# 5. accelo_get_company         - Get company details
+# 6. accelo_list_matters        - List matters (cases/projects)
+# 7. accelo_get_matter          - Get matter details
+# 8. accelo_list_tasks          - List tasks
+# 9. accelo_get_task            - Get task details
+# 10. accelo_list_activities    - List activities
+
+- slug: accelo_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in the Accelo account.
+  provider: accelo
+  endpoint: /api/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      company_id:
+        type: integer
+        description: "Filter by company ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: accelo_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: accelo
+  endpoint: /api/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: accelo_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Accelo.
+  provider: accelo
+  endpoint: /api/contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: integer
+        description: "Associated company ID"
+    required:
+      - first_name
+      - last_name
+
+- slug: accelo_list_companies
+  name: List Companies
+  description: |
+    List all companies in the Accelo account.
+  provider: accelo
+  endpoint: /api/companies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: accelo_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+  provider: accelo
+  endpoint: /api/companies/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: integer
+        description: "Company ID"
+    required:
+      - id
+
+- slug: accelo_list_matters
+  name: List Matters
+  description: |
+    List all matters (cases, projects, or files) in Accelo.
+  provider: accelo
+  endpoint: /api/matters
+  method: GET
+  scopes:
+    - read
+  tags:
+    - matters
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing matters
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, pending)"
+      company_id:
+        type: integer
+        description: "Filter by company ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: accelo_get_matter
+  name: Get Matter
+  description: |
+    Get detailed information about a specific matter.
+  provider: accelo
+  endpoint: /api/matters/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - matters
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a matter
+    properties:
+      id:
+        type: integer
+        description: "Matter ID"
+    required:
+      - id
+
+- slug: accelo_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Accelo.
+  provider: accelo
+  endpoint: /api/tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed)"
+      matter_id:
+        type: integer
+        description: "Filter by matter ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: accelo_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: accelo
+  endpoint: /api/tasks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id
+
+- slug: accelo_list_activities
+  name: List Activities
+  description: |
+    List all activities in Accelo.
+  provider: accelo
+  endpoint: /api/activities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      object:
+        type: string
+        description: "Filter by object type (contact, company, matter)"
+      object_id:
+        type: integer
+        description: "Filter by object ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []

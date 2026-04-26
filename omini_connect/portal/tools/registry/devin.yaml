@@ -1,0 +1,235 @@
+# Devin Tools - Allowlist
+# Curated subset of the Devin AI API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. devin_list_sessions             - List sessions
+# 2. devin_get_session              - Get session details
+# 3. devin_create_session           - Create a new session
+# 4. devin_list_tasks               - List tasks
+# 5. devin_get_task                 - Get task details
+# 6. devin_create_task              - Create a task
+# 7. devin_list_files               - List files
+# 8. devin_get_file                 - Get file content
+# 9. devin_list_models              - List available models
+# 10. devin_get_usage              - Get usage statistics
+
+- slug: devin_list_sessions
+  name: List Sessions
+  description: |
+    List all Devin AI sessions.
+  provider: devin
+  endpoint: /v1/sessions
+  method: GET
+  scopes: []
+  tags:
+    - sessions
+    - ai
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sessions
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: active, completed, cancelled"
+    required: []
+
+- slug: devin_get_session
+  name: Get Session
+  description: |
+    Get details of a specific Devin session.
+  provider: devin
+  endpoint: /v1/sessions/{session_id}
+  method: GET
+  scopes: []
+  tags:
+    - sessions
+    - ai
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a session
+    properties:
+      session_id:
+        type: string
+        description: "Session ID"
+    required:
+      - session_id
+
+- slug: devin_create_session
+  name: Create Session
+  description: |
+    Create a new Devin AI session.
+  provider: devin
+  endpoint: /v1/sessions
+  method: POST
+  scopes: []
+  tags:
+    - sessions
+    - ai
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a session
+    properties:
+      model:
+        type: string
+        description: "Model to use"
+      prompt:
+        type: string
+        description: "Initial prompt/task description"
+    required:
+      - prompt
+
+- slug: devin_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Devin.
+  provider: devin
+  endpoint: /v1/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: devin_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task.
+  provider: devin
+  endpoint: /v1/tasks/{task_id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: devin_create_task
+  name: Create Task
+  description: |
+    Create a new task in Devin.
+  provider: devin
+  endpoint: /v1/tasks
+  method: POST
+  scopes: []
+  tags:
+    - tasks
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      name:
+        type: string
+        description: "Task name"
+      description:
+        type: string
+        description: "Task description"
+    required:
+      - name
+
+- slug: devin_list_files
+  name: List Files
+  description: |
+    List all files in Devin workspace.
+  provider: devin
+  endpoint: /v1/files
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: devin_get_file
+  name: Get File
+  description: |
+    Get content of a specific file.
+  provider: devin
+  endpoint: /v1/files/{file_id}
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: devin_list_models
+  name: List Models
+  description: |
+    List all available AI models in Devin.
+  provider: devin
+  endpoint: /v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - ai
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+
+- slug: devin_get_usage
+  name: Get Usage
+  description: |
+    Get usage statistics and quotas.
+  provider: devin
+  endpoint: /v1/usage
+  method: GET
+  scopes: []
+  tags:
+    - usage
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties: {}

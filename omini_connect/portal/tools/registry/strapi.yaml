@@ -1,0 +1,275 @@
+# Strapi Tools - Allowlist
+# Curated subset of the Strapi REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. strapi_list_collections   - List all collection types
+# 2. strapi_get_collection    - Get collection type definition
+# 3. strapi_create_item      - Create a new item in a collection
+# 4. strapi_update_item      - Update an existing item
+# 5. strapi_delete_item      - Delete an item
+# 6. strapi_list_media       - List uploaded media files
+# 7. strapi_upload_media     - Upload a media file
+# 8. strapi_list_users       - List users
+# 9. strapi_get_user         - Get user details
+# 10. strapi_list_roles      - List user roles
+
+- slug: strapi_list_collections
+  name: List Collections
+  description: |
+    List all collection types in the Strapi instance.
+    Returns collection names, schemas, and metadata.
+  provider: strapi
+  endpoint: /content-types
+  method: GET
+  scopes:
+    - api
+  tags:
+    - collections
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties: {}
+    required: []
+
+- slug: strapi_get_collection
+  name: Get Collection
+  description: |
+    Get the schema definition for a specific collection type.
+    Includes field names, types, and validation rules.
+  provider: strapi
+  endpoint: /content-types/{collection_type}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - collections
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for getting collection schema
+    properties:
+      collection_type:
+        type: string
+        description: "Collection type name (e.g., articles, products)"
+    required:
+      - collection_type
+
+- slug: strapi_create_item
+  name: Create Item
+  description: |
+    Create a new item in a specified collection.
+    Provide field values as key-value pairs.
+  provider: strapi
+  endpoint: /{collection_type}
+  method: POST
+  scopes:
+    - api
+  tags:
+    - collections
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      collection_type:
+        type: string
+        description: "Collection type name"
+      data:
+        type: object
+        description: "Item field values as key-value pairs"
+    required:
+      - collection_type
+      - data
+
+- slug: strapi_update_item
+  name: Update Item
+  description: |
+    Update an existing item in a collection.
+    Provide partial data to update specific fields.
+  provider: strapi
+  endpoint: /{collection_type}/{id}
+  method: PUT
+  scopes:
+    - api
+  tags:
+    - collections
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an item
+    properties:
+      collection_type:
+        type: string
+        description: "Collection type name"
+      id:
+        type: integer
+        description: "Item ID"
+      data:
+        type: object
+        description: "Updated field values"
+    required:
+      - collection_type
+      - id
+      - data
+
+- slug: strapi_delete_item
+  name: Delete Item
+  description: |
+    Delete an item from a collection by ID.
+    This action is irreversible.
+  provider: strapi
+  endpoint: /{collection_type}/{id}
+  method: DELETE
+  scopes:
+    - api
+  tags:
+    - collections
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an item
+    properties:
+      collection_type:
+        type: string
+        description: "Collection type name"
+      id:
+        type: integer
+        description: "Item ID"
+    required:
+      - collection_type
+      - id
+
+- slug: strapi_list_media
+  name: List Media
+  description: |
+    List all uploaded media files (images, videos, documents).
+    Returns file metadata including name, size, and URL.
+  provider: strapi
+  endpoint: /upload/files
+  method: GET
+  scopes:
+    - api
+  tags:
+    - media
+    - files
+  input_schema:
+    type: object
+    description: Parameters for listing media
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Number of results per page"
+        default: 25
+    required: []
+
+- slug: strapi_upload_media
+  name: Upload Media
+  description: |
+    Upload a media file to the Strapi media library.
+    Supports images, videos, and documents.
+  provider: strapi
+  endpoint: /upload
+  method: POST
+  scopes:
+    - api
+  tags:
+    - media
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading media
+    properties:
+      file:
+        type: string
+        description: "Base64 encoded file content"
+      filename:
+        type: string
+        description: "Original filename"
+      mime:
+        type: string
+        description: "MIME type (e.g., image/jpeg)"
+      folder:
+        type: string
+        description: "Optional folder path in media library"
+    required:
+      - file
+      - filename
+      - mime
+
+- slug: strapi_list_users
+  name: List Users
+  description: |
+    List all users in the Strapi instance.
+    Returns user details including email, username, and roles.
+  provider: strapi
+  endpoint: /users
+  method: GET
+  scopes:
+    - api
+  tags:
+    - users
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 25
+      sort:
+        type: string
+        description: "Sort field (e.g., username:asc)"
+    required: []
+
+- slug: strapi_get_user
+  name: Get User
+  description: |
+    Get details of a specific user by ID.
+    Includes email, username, roles, and blocked status.
+  provider: strapi
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id
+
+- slug: strapi_list_roles
+  name: List Roles
+  description: |
+    List all user roles and their permissions.
+    Each role has a name, description, and set of permissions.
+  provider: strapi
+  endpoint: /users-permissions/roles
+  method: GET
+  scopes:
+    - api
+  tags:
+    - roles
+    - permissions
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties: {}
+    required: []

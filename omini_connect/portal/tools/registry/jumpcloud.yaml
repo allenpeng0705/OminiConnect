@@ -1,0 +1,222 @@
+# JumpCloud Tools - Allowlist
+# Curated subset of JumpCloud API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jumpcloud_list_users        - List users
+# 2. jumpcloud_get_user         - Get user details
+# 3. jumpcloud_list_groups      - List user groups
+# 4. jumpcloud_get_group       - Get group details
+# 5. jumpcloud_list_devices     - List devices
+# 6. jumpcloud_get_device      - Get device details
+# 7. jumpcloud_list_applications - List applications
+# 8. jumpcloud_list_policies    - List policies
+# 9. jumpcloud_list_directories - List directories
+# 10. jumpcloud_list_sso_applications - List SSO applications
+
+- slug: jumpcloud_list_users
+  name: List Users
+  description: |
+    List all users in JumpCloud.
+  provider: jumpcloud
+  endpoint: /api/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      skip:
+        type: integer
+        description: "Skip for pagination"
+        default: 0
+    required: []
+
+- slug: jumpcloud_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: jumpcloud
+  endpoint: /api/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: jumpcloud_list_groups
+  name: List User Groups
+  description: |
+    List all user groups.
+  provider: jumpcloud
+  endpoint: /api/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: jumpcloud_get_group
+  name: Get User Group
+  description: |
+    Get details for a specific user group.
+  provider: jumpcloud
+  endpoint: /api/groups/{group_id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: jumpcloud_list_devices
+  name: List Devices
+  description: |
+    List all devices.
+  provider: jumpcloud
+  endpoint: /api/systems
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      skip:
+        type: integer
+        description: "Skip for pagination"
+        default: 0
+    required: []
+
+- slug: jumpcloud_get_device
+  name: Get Device
+  description: |
+    Get details for a specific device.
+  provider: jumpcloud
+  endpoint: /api/systems/{device_id}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id
+
+- slug: jumpcloud_list_applications
+  name: List Applications
+  description: |
+    List all applications.
+  provider: jumpcloud
+  endpoint: /api/applications
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties: {}
+    required: []
+
+- slug: jumpcloud_list_policies
+  name: List Policies
+  description: |
+    List all policies.
+  provider: jumpcloud
+  endpoint: /api/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []
+
+- slug: jumpcloud_list_directories
+  name: List Directories
+  description: |
+    List all directories.
+  provider: jumpcloud
+  endpoint: /api/directories
+  method: GET
+  scopes: []
+  tags:
+    - directories
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing directories
+    properties: {}
+    required: []
+
+- slug: jumpcloud_list_sso_applications
+  name: List SSO Applications
+  description: |
+    List all SSO applications.
+  provider: jumpcloud
+  endpoint: /api/ssoapplications
+  method: GET
+  scopes: []
+  tags:
+    - sso
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing SSO applications
+    properties: {}
+    required: []

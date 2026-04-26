@@ -1,0 +1,243 @@
+# IT Glue Tools - Allowlist
+# Curated subset of IT Glue API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. itglue_list_organizations    - List organizations
+# 2. itglue_get_organization     - Get organization details
+# 3. itglue_list_configs         - List configurations
+# 4. itglue_get_config           - Get configuration details
+# 5. itglue_list_passwords       - List passwords
+# 6. itglue_get_password         - Get password details
+# 7. itglue_list_exports         - List exports
+# 8. itglue_get_export          - Get export details
+# 9. itglue_list_flexible_assets - List flexible assets
+# 10. itglue_list_users          - List users
+
+- slug: itglue_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations in IT Glue.
+    Returns organization details including name and domain.
+  provider: itglue
+  endpoint: /organizations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - organizations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: itglue_get_organization
+  name: Get Organization
+  description: |
+    Get detailed information about a specific organization.
+    Includes organization details and configurations.
+  provider: itglue
+  endpoint: /organizations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      id:
+        type: integer
+        description: "Organization ID"
+    required:
+      - id
+
+- slug: itglue_list_configs
+  name: List Configurations
+  description: |
+    List all configurations in IT Glue.
+    Returns configuration details including type and status.
+  provider: itglue
+  endpoint: /configurations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - configurations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing configurations
+    properties:
+      organization_id:
+        type: integer
+        description: "Filter by organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: itglue_get_config
+  name: Get Configuration
+  description: |
+    Get detailed information about a specific configuration.
+    Includes configuration details and passwords.
+  provider: itglue
+  endpoint: /configurations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - configurations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a configuration
+    properties:
+      id:
+        type: integer
+        description: "Configuration ID"
+    required:
+      - id
+
+- slug: itglue_list_passwords
+  name: List Passwords
+  description: |
+    List all passwords in IT Glue.
+    Returns password details including name and username.
+  provider: itglue
+  endpoint: /passwords
+  method: GET
+  scopes:
+    - read
+  tags:
+    - passwords
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing passwords
+    properties:
+      organization_id:
+        type: integer
+        description: "Filter by organization ID"
+    required: []
+
+- slug: itglue_get_password
+  name: Get Password
+  description: |
+    Get detailed information about a specific password.
+    Includes password details and related configurations.
+  provider: itglue
+  endpoint: /passwords/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - passwords
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a password
+    properties:
+      id:
+        type: integer
+        description: "Password ID"
+    required:
+      - id
+
+- slug: itglue_list_exports
+  name: List Exports
+  description: |
+    List all exports in IT Glue.
+    Returns export details including format and status.
+  provider: itglue
+  endpoint: /exports
+  method: GET
+  scopes:
+    - read
+  tags:
+    - exports
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing exports
+    properties: {}
+    required: []
+
+- slug: itglue_get_export
+  name: Get Export
+  description: |
+    Get detailed information about a specific export.
+    Includes export details and download URL.
+  provider: itglue
+  endpoint: /exports/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - exports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an export
+    properties:
+      id:
+        type: integer
+        description: "Export ID"
+    required:
+      - id
+
+- slug: itglue_list_flexible_assets
+  name: List Flexible Assets
+  description: |
+    List all flexible assets in IT Glue.
+    Returns flexible asset details including type and name.
+  provider: itglue
+  endpoint: /flexible_assets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - flexible_assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing flexible assets
+    properties:
+      organization_id:
+        type: integer
+        description: "Filter by organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: itglue_list_users
+  name: List Users
+  description: |
+    List all users in IT Glue.
+    Returns user details including name and email.
+  provider: itglue
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []

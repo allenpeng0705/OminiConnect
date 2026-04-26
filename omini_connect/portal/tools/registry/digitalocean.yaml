@@ -1,0 +1,294 @@
+# DigitalOcean Tools - Allowlist
+# Curated subset of the DigitalOcean API v2 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. digitalocean_list_droplets    - List all droplets
+# 2. digitalocean_get_droplet     - Get a specific droplet
+# 3. digitalocean_create_droplet  - Create a new droplet
+# 4. digitalocean_delete_droplet  - Delete a droplet
+# 5. digitalocean_list_volumes    - List all volumes
+# 6. digitalocean_get_volume      - Get a specific volume
+# 7. digitalocean_list_domains     - List all domains
+# 8. digitalocean_get_domain      - Get a specific domain
+# 9. digitalocean_list_firewalls  - List all firewalls
+# 10. digitalocean_get_firewall   - Get a specific firewall
+
+- slug: digitalocean_list_droplets
+  name: List Droplets
+  description: |
+    List all droplets for the authenticated user.
+    Returns droplet details including name, IP addresses, region, size, and status.
+  provider: digitalocean
+  endpoint: /v2/droplets
+  method: GET
+  scopes:
+    - droplets:read
+  tags:
+    - droplets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing droplets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 20, max 200)"
+        default: 20
+      tag_name:
+        type: string
+        description: "Filter by tag name"
+    required: []
+
+- slug: digitalocean_get_droplet
+  name: Get Droplet
+  description: |
+    Get details of a specific droplet including specs, networking, and backups.
+  provider: digitalocean
+  endpoint: /v2/droplets/{droplet_id}
+  method: GET
+  scopes:
+    - droplets:read
+  tags:
+    - droplets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a droplet
+    properties:
+      droplet_id:
+        type: integer
+        description: "Droplet ID (required)"
+    required:
+      - droplet_id
+
+- slug: digitalocean_create_droplet
+  name: Create Droplet
+  description: |
+    Create a new droplet. Specify size, region, image, and optional SSH keys or backups.
+  provider: digitalocean
+  endpoint: /v2/droplets
+  method: POST
+  scopes:
+    - droplets:create
+  tags:
+    - droplets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a droplet
+    properties:
+      name:
+        type: string
+        description: "Droplet name (required)"
+      region:
+        type: string
+        description: "Region slug: nyc1, sfo2, etc. (required)"
+      size:
+        type: string
+        description: "Size slug: s-1vcpu-1gb, s-2vcpu-4gb, etc. (required)"
+      image:
+        type: string
+        description: "Image slug or ID: ubuntu-22-04-x64, docker, etc. (required)"
+      ssh_keys:
+        type: array
+        items:
+          type: string
+        description: "Array of SSH key IDs or fingerprints"
+      backups:
+        type: boolean
+        description: "Enable automatic backups"
+        default: false
+      ipv6:
+        type: boolean
+        description: "Enable IPv6"
+        default: false
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tag names"
+      user_data:
+        type: string
+        description: "Cloud-init user data script"
+    required:
+      - name
+      - region
+      - size
+      - image
+
+- slug: digitalocean_delete_droplet
+  name: Delete Droplet
+  description: |
+    Delete a specific droplet. This action is irreversible and destroys all associated data.
+  provider: digitalocean
+  endpoint: /v2/droplets/{droplet_id}
+  method: DELETE
+  scopes:
+    - droplets:delete
+  tags:
+    - droplets
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a droplet
+    properties:
+      droplet_id:
+        type: integer
+        description: "Droplet ID (required)"
+    required:
+      - droplet_id
+
+- slug: digitalocean_list_volumes
+  name: List Volumes
+  description: |
+    List all block storage volumes for the authenticated user.
+    Returns volume details including size, region, and filesystem type.
+  provider: digitalocean
+  endpoint: /v2/volumes
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing volumes
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      region:
+        type: string
+        description: "Filter by region slug"
+    required: []
+
+- slug: digitalocean_get_volume
+  name: Get Volume
+  description: |
+    Get details of a specific volume including size, region, and attached droplet IDs.
+  provider: digitalocean
+  endpoint: /v2/volumes/{volume_id}
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a volume
+    properties:
+      volume_id:
+        type: string
+        description: "Volume ID (required)"
+    required:
+      - volume_id
+
+- slug: digitalocean_list_domains
+  name: List Domains
+  description: |
+    List all domains registered or managed for the authenticated user.
+    Returns domain names and DNS zone information.
+  provider: digitalocean
+  endpoint: /v2/domains
+  method: GET
+  scopes:
+    - domains:read
+  tags:
+    - domains
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: digitalocean_get_domain
+  name: Get Domain
+  description: |
+    Get details of a specific domain including zone file and record count.
+  provider: digitalocean
+  endpoint: /v2/domains/{domain_name}
+  method: GET
+  scopes:
+    - domains:read
+  tags:
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a domain
+    properties:
+      domain_name:
+        type: string
+        description: "Domain name (required)"
+    required:
+      - domain_name
+
+- slug: digitalocean_list_firewalls
+  name: List Firewalls
+  description: |
+    List all cloud firewalls for the authenticated user.
+    Returns firewall details including name, status, and rule summaries.
+  provider: digitalocean
+  endpoint: /v2/firewalls
+  method: GET
+  scopes:
+    - firewalls:read
+  tags:
+    - firewalls
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing firewalls
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: digitalocean_get_firewall
+  name: Get Firewall
+  description: |
+    Get details of a specific firewall including all inbound and outbound rules.
+  provider: digitalocean
+  endpoint: /v2/firewalls/{firewall_id}
+  method: GET
+  scopes:
+    - firewalls:read
+  tags:
+    - firewalls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a firewall
+    properties:
+      firewall_id:
+        type: string
+        description: "Firewall ID (required)"
+    required:
+      - firewall_id

@@ -1,0 +1,259 @@
+- slug: oracle_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers in the Oracle ERP system.
+  provider: oracle
+  endpoint: /crm/v4/customers
+  method: GET
+  scopes:
+    - crm.customer.read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of customers to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      search:
+        type: string
+        description: "Search term to filter customers by name or email"
+    required: []
+
+- slug: oracle_get_customer
+  name: Get Customer
+  description: |
+    Retrieve detailed information for a specific customer by ID.
+  provider: oracle
+  endpoint: /crm/v4/customers/{customer_id}
+  method: GET
+  scopes:
+    - crm.customer.read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Unique identifier of the customer"
+    required:
+      - customer_id
+
+- slug: oracle_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of all orders in the Oracle ERP system.
+  provider: oracle
+  endpoint: /om/v4/orders
+  method: GET
+  scopes:
+    - om.order.read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of orders to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      status:
+        type: string
+        description: "Filter orders by status (e.g., OPEN, PROCESSING, SHIPPED, DELIVERED)"
+      customer_id:
+        type: string
+        description: "Filter orders by customer ID"
+    required: []
+
+- slug: oracle_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information for a specific order by ID.
+  provider: oracle
+  endpoint: /om/v4/orders/{order_id}
+  method: GET
+  scopes:
+    - om.order.read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "Unique identifier of the order"
+    required:
+      - order_id
+
+- slug: oracle_create_order
+  name: Create Order
+  description: |
+    Create a new order in the Oracle ERP system.
+  provider: oracle
+  endpoint: /om/v4/orders
+  method: POST
+  scopes:
+    - om.order.write
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      customer_id:
+        type: string
+        description: "ID of the customer placing the order"
+      line_items:
+        type: array
+        description: "Array of order line items"
+        items:
+          type: object
+          properties:
+            product_id:
+              type: string
+            quantity:
+              type: integer
+            unit_price:
+              type: number
+      notes:
+        type: string
+        description: "Optional notes for the order"
+    required:
+      - customer_id
+      - line_items
+
+- slug: oracle_list_products
+  name: List Products
+  description: |
+    Retrieve a list of all products in the Oracle ERP catalog.
+  provider: oracle
+  endpoint: /pim/v4/products
+  method: GET
+  scopes:
+    - pim.product.read
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of products to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      category:
+        type: string
+        description: "Filter products by category"
+    required: []
+
+- slug: oracle_get_product
+  name: Get Product
+  description: |
+    Retrieve detailed information for a specific product by ID.
+  provider: oracle
+  endpoint: /pim/v4/products/{product_id}
+  method: GET
+  scopes:
+    - pim.product.read
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: string
+        description: "Unique identifier of the product"
+    required:
+      - product_id
+
+- slug: oracle_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices in the Oracle ERP system.
+  provider: oracle
+  endpoint: /ar/v4/invoices
+  method: GET
+  scopes:
+    - ar.invoice.read
+  tags:
+    - invoices
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of invoices to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      status:
+        type: string
+        description: "Filter by invoice status (e.g., DRAFT, OPEN, PAID, CANCELLED)"
+      customer_id:
+        type: string
+        description: "Filter invoices by customer ID"
+    required: []
+
+- slug: oracle_get_invoice
+  name: Get Invoice
+  description: |
+    Retrieve detailed information for a specific invoice by ID.
+  provider: oracle
+  endpoint: /ar/v4/invoices/{invoice_id}
+  method: GET
+  scopes:
+    - ar.invoice.read
+  tags:
+    - invoices
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Unique identifier of the invoice"
+    required:
+      - invoice_id
+
+- slug: oracle_list_shipments
+  name: List Shipments
+  description: |
+    Retrieve a list of all shipments in the Oracle ERP system.
+  provider: oracle
+  endpoint: /wms/v4/shipments
+  method: GET
+  scopes:
+    - wms.shipment.read
+  tags:
+    - shipments
+  input_schema:
+    type: object
+    description: Parameters for listing shipments
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of shipments to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      status:
+        type: string
+        description: "Filter by shipment status (e.g., PENDING, SHIPPED, DELIVERED)"
+      order_id:
+        type: string
+        description: "Filter shipments by order ID"
+    required: []

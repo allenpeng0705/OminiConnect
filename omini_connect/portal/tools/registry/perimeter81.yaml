@@ -1,0 +1,236 @@
+# Perimeter81 Tools - Allowlist
+# Curated subset of Perimeter81 API for AI agent use.
+# Two-Step API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. perimeter81_list_users             - List users
+# 2. perimeter81_get_user               - Get user details
+# 3. perimeter81_list_networks           - List networks
+# 4. perimeter81_get_network            - Get network details
+# 5. perimeter81_list_devices           - List devices
+# 6. perimeter81_get_device            - Get device details
+# 7. perimeter81_list_policies         - List policies
+# 8. perimeter81_get_policy            - Get policy details
+# 9. perimeter81_list_activity_logs    - List activity logs
+# 10. perimeter81_get_organization      - Get organization info
+
+- slug: perimeter81_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: perimeter81
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: perimeter81_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: perimeter81
+  endpoint: /users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: perimeter81_list_networks
+  name: List Networks
+  description: |
+    List all networks in the organization.
+  provider: perimeter81
+  endpoint: /networks
+  method: GET
+  scopes: []
+  tags:
+    - networks
+    - infrastructure
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing networks
+    properties:
+      type:
+        type: string
+        description: "Filter by network type"
+    required: []
+
+- slug: perimeter81_get_network
+  name: Get Network
+  description: |
+    Get detailed information about a specific network.
+  provider: perimeter81
+  endpoint: /networks/{networkId}
+  method: GET
+  scopes: []
+  tags:
+    - networks
+    - infrastructure
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a network
+    properties:
+      networkId:
+        type: string
+        description: "Network ID"
+    required:
+      - networkId
+
+- slug: perimeter81_list_devices
+  name: List Devices
+  description: |
+    List all devices in the organization.
+  provider: perimeter81
+  endpoint: /devices
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      status:
+        type: string
+        description: "Filter by status (online, offline)"
+      networkId:
+        type: string
+        description: "Filter by network ID"
+    required: []
+
+- slug: perimeter81_get_device
+  name: Get Device
+  description: |
+    Get detailed information about a specific device.
+  provider: perimeter81
+  endpoint: /devices/{deviceId}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      deviceId:
+        type: string
+        description: "Device ID"
+    required:
+      - deviceId
+
+- slug: perimeter81_list_policies
+  name: List Policies
+  description: |
+    List all policies in the organization.
+  provider: perimeter81
+  endpoint: /policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      type:
+        type: string
+        description: "Filter by policy type"
+    required: []
+
+- slug: perimeter81_get_policy
+  name: Get Policy
+  description: |
+    Get detailed information about a specific policy.
+  provider: perimeter81
+  endpoint: /policies/{policyId}
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policyId:
+        type: string
+        description: "Policy ID"
+    required:
+      - policyId
+
+- slug: perimeter81_list_activity_logs
+  name: List Activity Logs
+  description: |
+    List activity logs for the organization.
+  provider: perimeter81
+  endpoint: /activity-logs
+  method: GET
+  scopes: []
+  tags:
+    - activity-logs
+    - audit
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing activity logs
+    properties:
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+      userId:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: perimeter81_get_organization
+  name: Get Organization
+  description: |
+    Get organization information.
+  provider: perimeter81
+  endpoint: /organization
+  method: GET
+  scopes: []
+  tags:
+    - organization
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting organization info
+    properties: {}
+    required: []

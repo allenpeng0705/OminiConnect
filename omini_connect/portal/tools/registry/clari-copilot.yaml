@@ -1,0 +1,224 @@
+# Clari Copilot Tools - Allowlist
+# Curated subset of the Clari Copilot API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. clari_copilot_list_calls              - List calls
+# 2. clari_copilot_get_call               - Get call details
+# 3. clari_copilot_list_meetings          - List meetings
+# 4. clari_copilot_get_meeting           - Get meeting details
+# 5. clari_copilot_list_contacts          - List contacts
+# 6. clari_copilot_get_contact           - Get contact details
+# 7. clari_copilot_list_accounts          - List accounts
+# 8. clari_copilot_get_account           - Get account details
+# 9. clari_copilot_list_activities       - List activities
+# 10. clari_copilot_get_call_recording  - Get call recording
+
+- slug: clari_copilot_list_calls
+  name: List Calls
+  description: |
+    List all recorded calls.
+  provider: clari-copilot
+  endpoint: /calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      from_date:
+        type: string
+        description: "Start date"
+      to_date:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: clari_copilot_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: clari-copilot
+  endpoint: /calls/{id}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      id:
+        type: string
+        description: "Call ID"
+    required:
+      - id
+
+- slug: clari_copilot_list_meetings
+  name: List Meetings
+  description: |
+    List all recorded meetings.
+  provider: clari-copilot
+  endpoint: /meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+    required: []
+
+- slug: clari_copilot_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: clari-copilot
+  endpoint: /meetings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: clari_copilot_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: clari-copilot
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+    required: []
+
+- slug: clari_copilot_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: clari-copilot
+  endpoint: /contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: clari_copilot_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts.
+  provider: clari-copilot
+  endpoint: /accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: clari_copilot_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: clari-copilot
+  endpoint: /accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: clari_copilot_list_activities
+  name: List Activities
+  description: |
+    List all sales activities.
+  provider: clari-copilot
+  endpoint: /activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+    required: []
+
+- slug: clari_copilot_get_call_recording
+  name: Get Call Recording
+  description: |
+    Get the recording for a specific call.
+  provider: clari-copilot
+  endpoint: /calls/{id}/recording
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - recording
+  input_schema:
+    type: object
+    description: Parameters for getting call recording
+    properties:
+      id:
+        type: string
+        description: "Call ID"
+    required:
+      - id

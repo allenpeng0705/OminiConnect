@@ -1,0 +1,274 @@
+# Booking.com Tools - Allowlist
+# Curated subset of Booking.com Connectivity API for AI agent use.
+# BASIC auth via Nango (Machine Account).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. booking_list_reservations    - List reservations
+# 2. booking_get_reservation    - Get reservation details
+# 3. booking_list_guests        - List guests
+# 4. booking_get_guest           - Get guest details
+# 5. booking_list_properties    - List properties
+# 6. booking_get_property       - Get property details
+# 7. booking_list_availability  - Get availability
+# 8. booking_update_pricing     - Update pricing
+# 9. booking_list_reviews      - List reviews
+# 10. booking_get_statistics    - Get property statistics
+
+- slug: booking_list_reservations
+  name: List Reservations
+  description: |
+    List reservations for the property.
+  provider: booking-com
+  endpoint: /reservation
+  method: GET
+  scopes: []
+  tags:
+    - reservations
+    - bookings
+  input_schema:
+    type: object
+    description: Parameters for listing reservations
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: booking_get_reservation
+  name: Get Reservation
+  description: |
+    Get details for a specific reservation.
+  provider: booking-com
+  endpoint: /reservation/{reservation_id}
+  method: GET
+  scopes: []
+  tags:
+    - reservations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a reservation
+    properties:
+      reservation_id:
+        type: string
+        description: "Reservation ID"
+    required:
+      - reservation_id
+
+- slug: booking_list_guests
+  name: List Guests
+  description: |
+    List guests who have stayed or have upcoming reservations.
+  provider: booking-com
+  endpoint: /guest
+  method: GET
+  scopes: []
+  tags:
+    - guests
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing guests
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: booking_get_guest
+  name: Get Guest
+  description: |
+    Get details for a specific guest.
+  provider: booking-com
+  endpoint: /guest/{guest_id}
+  method: GET
+  scopes: []
+  tags:
+    - guests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a guest
+    properties:
+      guest_id:
+        type: string
+        description: "Guest ID"
+    required:
+      - guest_id
+
+- slug: booking_list_properties
+  name: List Properties
+  description: |
+    List all properties in the account.
+  provider: booking-com
+  endpoint: /hotel
+  method: GET
+  scopes: []
+  tags:
+    - properties
+    - hotels
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: booking_get_property
+  name: Get Property
+  description: |
+    Get details for a specific property.
+  provider: booking-com
+  endpoint: /hotel/{hotel_id}
+  method: GET
+  scopes: []
+  tags:
+    - properties
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+    required:
+      - hotel_id
+
+- slug: booking_list_availability
+  name: Get Availability
+  description: |
+    Get room availability for dates.
+  provider: booking-com
+  endpoint: /availability
+  method: GET
+  scopes: []
+  tags:
+    - availability
+    - bookings
+  input_schema:
+    type: object
+    description: Parameters for getting availability
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - hotel_id
+      - date_from
+      - date_to
+
+- slug: booking_update_pricing
+  name: Update Pricing
+  description: |
+    Update room pricing for dates.
+  provider: booking-com
+  endpoint: /price
+  method: POST
+  scopes: []
+  tags:
+    - pricing
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating pricing
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      room_id:
+        type: string
+        description: "Room ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      price:
+        type: number
+        description: "New price"
+    required:
+      - hotel_id
+      - room_id
+      - date_from
+      - date_to
+      - price
+
+- slug: booking_list_reviews
+  name: List Reviews
+  description: |
+    List guest reviews for a property.
+  provider: booking-com
+  endpoint: /review
+  method: GET
+  scopes: []
+  tags:
+    - reviews
+    - feedback
+  input_schema:
+    type: object
+    description: Parameters for listing reviews
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: booking_get_statistics
+  name: Get Statistics
+  description: |
+    Get performance statistics for a property.
+  provider: booking-com
+  endpoint: /statistics
+  method: GET
+  scopes: []
+  tags:
+    - statistics
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting statistics
+    properties:
+      hotel_id:
+        type: string
+        description: "Property ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - hotel_id

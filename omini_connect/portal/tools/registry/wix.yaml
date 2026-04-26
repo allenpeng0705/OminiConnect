@@ -1,0 +1,271 @@
+# Wix Tools - Allowlist
+# Curated subset of Wix API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. wix_list_sites        - List all sites
+# 2. wix_get_site          - Get site details
+# 3. wix_list_pages        - List pages in a site
+# 4. wix_get_page          - Get page details
+# 5. wix_list_members      - List site members
+# 6. wix_get_member        - Get member details
+# 7. wix_list_blog_posts   - List blog posts
+# 8. wix_get_blog_post     - Get blog post details
+# 9. wix_get_site_settings - Get site settings
+# 10. wix_update_site_settings - Update site settings
+
+- slug: wix_list_sites
+  name: List Sites
+  description: |
+    List all sites associated with your Wix account.
+  provider: wix
+  endpoint: /sites
+  method: GET
+  scopes:
+    - site:read
+  tags:
+    - sites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of sites to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of sites to skip for pagination"
+    required: []
+
+- slug: wix_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a specific Wix site by site ID.
+  provider: wix
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes:
+    - site:read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_id
+
+- slug: wix_list_pages
+  name: List Pages
+  description: |
+    List all pages within a specific Wix site.
+  provider: wix
+  endpoint: /sites/{site_id}/pages
+  method: GET
+  scopes:
+    - page:read
+  tags:
+    - pages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_id
+
+- slug: wix_get_page
+  name: Get Page
+  description: |
+    Get detailed information about a specific page including its hierarchy and settings.
+  provider: wix
+  endpoint: /sites/{site_id}/pages/{page_id}
+  method: GET
+  scopes:
+    - page:read
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      page_id:
+        type: string
+        description: "Unique identifier of the page"
+    required:
+      - site_id
+      - page_id
+
+- slug: wix_list_members
+  name: List Members
+  description: |
+    List all members (registered users) of a Wix site.
+  provider: wix
+  endpoint: /sites/{site_id}/members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      limit:
+        type: integer
+        description: "Maximum number of members to return (default 20)"
+      offset:
+        type: integer
+        description: "Number of members to skip for pagination"
+    required:
+      - site_id
+
+- slug: wix_get_member
+  name: Get Member
+  description: |
+    Get detailed information about a specific site member including profile and contact info.
+  provider: wix
+  endpoint: /sites/{site_id}/members/{member_id}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      member_id:
+        type: string
+        description: "Unique identifier of the member"
+    required:
+      - site_id
+      - member_id
+
+- slug: wix_list_blog_posts
+  name: List Blog Posts
+  description: |
+    List all blog posts published on a Wix site.
+  provider: wix
+  endpoint: /sites/{site_id}/blog/posts
+  method: GET
+  scopes:
+    - blog:read
+  tags:
+    - blog
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing blog posts
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      limit:
+        type: integer
+        description: "Maximum number of posts to return (default 20)"
+      offset:
+        type: integer
+        description: "Number of posts to skip for pagination"
+    required:
+      - site_id
+
+- slug: wix_get_blog_post
+  name: Get Blog Post
+  description: |
+    Get detailed content and metadata of a specific blog post.
+  provider: wix
+  endpoint: /sites/{site_id}/blog/posts/{post_id}
+  method: GET
+  scopes:
+    - blog:read
+  tags:
+    - blog
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a blog post
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      post_id:
+        type: string
+        description: "Unique identifier of the blog post"
+    required:
+      - site_id
+      - post_id
+
+- slug: wix_get_site_settings
+  name: Get Site Settings
+  description: |
+    Get global settings and configuration for a Wix site.
+  provider: wix
+  endpoint: /sites/{site_id}/settings
+  method: GET
+  scopes:
+    - site:read
+  tags:
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting site settings
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_id
+
+- slug: wix_update_site_settings
+  name: Update Site Settings
+  description: |
+    Update global settings and configuration for a Wix site.
+  provider: wix
+  endpoint: /sites/{site_id}/settings
+  method: PATCH
+  scopes:
+    - site:write
+  tags:
+    - settings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating site settings
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      site_name:
+        type: string
+        description: "Updated name for the site"
+      language:
+        type: string
+        description: "Primary language code (e.g., en, es, fr)"
+    required:
+      - site_id

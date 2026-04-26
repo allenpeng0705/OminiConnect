@@ -1,0 +1,254 @@
+# Greenhouse Harvest OAuth2 CC Tools - Allowlist
+# Curated subset of Greenhouse Harvest API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_list_candidates     - List candidates
+# 2. greenhouse_get_candidate      - Get candidate details
+# 3. greenhouse_list_jobs         - List jobs
+# 4. greenhouse_get_job            - Get job details
+# 5. greenhouse_list_applications  - List applications
+# 6. greenhouse_get_application    - Get application details
+# 7. greenhouse_list_offers        - List offers
+# 8. greenhouse_create_offer       - Create an offer
+# 9. greenhouse_list_rejection_reasons - List rejection reasons
+# 10. greenhouse_list_departments   - List departments
+
+- slug: greenhouse_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Greenhouse Harvest.
+    Returns candidate details including name, email, and phone.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/candidates
+  method: GET
+  scopes:
+    - harvest:candidates:list
+  tags:
+    - candidates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+    Includes profile, applications, and tags.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/candidates/{id}
+  method: GET
+  scopes:
+    - harvest:candidates:read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - id
+
+- slug: greenhouse_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in Greenhouse Harvest.
+    Returns job details including title, status, and department.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/jobs
+  method: GET
+  scopes:
+    - harvest:jobs:read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job.
+    Includes job description, hiring team, and pipeline.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/jobs/{id}
+  method: GET
+  scopes:
+    - harvest:jobs:read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      id:
+        type: integer
+        description: "Job ID"
+    required:
+      - id
+
+- slug: greenhouse_list_applications
+  name: List Applications
+  description: |
+    List all applications in Greenhouse Harvest.
+    Returns application details including candidate and job.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/applications
+  method: GET
+  scopes:
+    - harvest:applications:list
+  tags:
+    - applications
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      candidate_id:
+        type: integer
+        description: "Filter by candidate ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application.
+    Includes candidate, job, stage, and scorecards.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/applications/{id}
+  method: GET
+  scopes:
+    - harvest:applications:read
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      id:
+        type: integer
+        description: "Application ID"
+    required:
+      - id
+
+- slug: greenhouse_list_offers
+  name: List Offers
+  description: |
+    List all offers in Greenhouse Harvest.
+    Returns offer details including candidate, job, and status.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/offers
+  method: GET
+  scopes:
+    - harvest:offers:read
+  tags:
+    - offers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties: {}
+    required: []
+
+- slug: greenhouse_create_offer
+  name: Create Offer
+  description: |
+    Create a new offer for an application.
+    Set offer details including salary and start date.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/offers
+  method: POST
+  scopes:
+    - harvest:offers:write
+  tags:
+    - offers
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an offer
+    properties:
+      application_id:
+        type: integer
+        description: "Application ID"
+      job_id:
+        type: integer
+        description: "Job ID"
+      candidate_id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - application_id
+
+- slug: greenhouse_list_rejection_reasons
+  name: List Rejection Reasons
+  description: |
+    List all rejection reasons configured in Greenhouse.
+    Returns reason details including category.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/rejection_reasons
+  method: GET
+  scopes:
+    - harvest:rejection_reasons:list
+  tags:
+    - rejection_reasons
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rejection reasons
+    properties: {}
+    required: []
+
+- slug: greenhouse_list_departments
+  name: List Departments
+  description: |
+    List all departments in Greenhouse Harvest.
+    Returns department details including name and parent.
+  provider: greenhouse-harvest-oauth2-cc
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - harvest:departments:read
+  tags:
+    - departments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []

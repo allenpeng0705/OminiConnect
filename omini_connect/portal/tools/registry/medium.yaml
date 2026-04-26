@@ -1,0 +1,277 @@
+- slug: medium_list_posts
+  name: List Posts
+  description: |
+    Retrieve a list of posts for the authenticated user.
+  provider: medium
+  endpoint: /users/{user_id}/posts
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - user_id
+
+- slug: medium_get_post
+  name: Get Post
+  description: |
+    Get details about a specific post by its ID.
+  provider: medium
+  endpoint: /posts/{post_id}
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID"
+    required:
+      - post_id
+
+- slug: medium_create_post
+  name: Create Post
+  description: |
+    Create a new post on Medium.
+  provider: medium
+  endpoint: /users/{user_id}/posts
+  method: POST
+  scopes:
+    - publish
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+      title:
+        type: string
+        description: "The post title"
+      content_format:
+        type: string
+        enum: ["html", "markdown"]
+        description: "Format of the content"
+      content:
+        type: string
+        description: "The post content"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags for the post"
+      publish_status:
+        type: string
+        enum: ["public", "draft", "unlisted"]
+        description: "Publication status"
+    required:
+      - user_id
+      - title
+      - content
+
+- slug: medium_update_post
+  name: Update Post
+  description: |
+    Update an existing post on Medium.
+  provider: medium
+  endpoint: /posts/{post_id}
+  method: PUT
+  scopes:
+    - publish
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for updating a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID"
+      title:
+        type: string
+        description: "The updated post title"
+      content:
+        type: string
+        description: "The updated post content"
+      content_format:
+        type: string
+        enum: ["html", "markdown"]
+        description: "Format of the content"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Updated tags for the post"
+      publish_status:
+        type: string
+        enum: ["public", "draft", "unlisted"]
+        description: "Updated publication status"
+    required:
+      - post_id
+
+- slug: medium_delete_post
+  name: Delete Post
+  description: |
+    Delete a post from Medium.
+  provider: medium
+  endpoint: /posts/{post_id}
+  method: DELETE
+  scopes:
+    - delete
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for deleting a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID to delete"
+    required:
+      - post_id
+
+- slug: medium_list_publication_posts
+  name: List Publication Posts
+  description: |
+    Retrieve posts from a specific publication.
+  provider: medium
+  endpoint: /publications/{publication_id}/posts
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - publications
+  input_schema:
+    type: object
+    description: Parameters for listing publication posts
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - publication_id
+
+- slug: medium_get_user_info
+  name: Get User Info
+  description: |
+    Get profile information for the authenticated user.
+  provider: medium
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+    required:
+      - user_id
+
+- slug: medium_list_followers
+  name: List Followers
+  description: |
+    Retrieve the list of followers for a user.
+  provider: medium
+  endpoint: /users/{user_id}/followers
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing followers
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - user_id
+
+- slug: medium_get_follower
+  name: Get Follower
+  description: |
+    Get details about a specific follower.
+  provider: medium
+  endpoint: /users/{user_id}/followers/{follower_id}
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a follower
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+      follower_id:
+        type: string
+        description: "The follower ID"
+    required:
+      - user_id
+      - follower_id
+
+- slug: medium_search_posts
+  name: Search Posts
+  description: |
+    Search for posts matching a query.
+  provider: medium
+  endpoint: /search/posts
+  method: GET
+  scopes:
+    - basic
+  tags:
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching posts
+    properties:
+      q:
+        type: string
+        description: "Search query string"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - q

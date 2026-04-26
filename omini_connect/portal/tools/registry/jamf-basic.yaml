@@ -1,0 +1,226 @@
+# Jamf Pro Basic Auth Tools - Allowlist
+# Curated subset of Jamf Pro API for AI agent use.
+# Two-step Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jamf_list_computers          - List computers
+# 2. jamf_get_computer            - Get computer details
+# 3. jamf_list_mobile_devices      - List mobile devices
+# 4. jamf_get_mobile_device        - Get mobile device details
+# 5. jamf_list_users               - List users
+# 6. jamf_get_user                - Get user details
+# 7. jamf_list_departments        - List departments
+# 8. jamf_list_categories          - List categories
+# 9. jamf_list_buildings           - List buildings
+# 10. jamf_list_policies           - List policies
+
+- slug: jamf_list_computers
+  name: List Computers
+  description: |
+    List all computers in Jamf Pro.
+    Returns computer details including name, serial, and status.
+  provider: jamf-basic
+  endpoint: /JSSResource/computers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - computers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing computers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jamf_get_computer
+  name: Get Computer
+  description: |
+    Get detailed information about a specific computer.
+    Includes hardware, software, and management status.
+  provider: jamf-basic
+  endpoint: /JSSResource/computers/id/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - computers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a computer
+    properties:
+      id:
+        type: integer
+        description: "Computer ID"
+    required:
+      - id
+
+- slug: jamf_list_mobile_devices
+  name: List Mobile Devices
+  description: |
+    List all mobile devices in Jamf Pro.
+    Returns mobile device details including name and type.
+  provider: jamf-basic
+  endpoint: /JSSResource/mobiledevices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mobile_devices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing mobile devices
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jamf_get_mobile_device
+  name: Get Mobile Device
+  description: |
+    Get detailed information about a specific mobile device.
+    Includes device info and management status.
+  provider: jamf-basic
+  endpoint: /JSSResource/mobiledevices/id/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mobile_devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a mobile device
+    properties:
+      id:
+        type: integer
+        description: "Mobile device ID"
+    required:
+      - id
+
+- slug: jamf_list_users
+  name: List Users
+  description: |
+    List all users in Jamf Pro.
+    Returns user details including name and email.
+  provider: jamf-basic
+  endpoint: /JSSResource/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: jamf_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+    Includes user details and associated devices.
+  provider: jamf-basic
+  endpoint: /JSSResource/users/id/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id
+
+- slug: jamf_list_departments
+  name: List Departments
+  description: |
+    List all departments in Jamf Pro.
+    Returns department details including name.
+  provider: jamf-basic
+  endpoint: /JSSResource/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: jamf_list_categories
+  name: List Categories
+  description: |
+    List all categories in Jamf Pro.
+    Returns category details including name.
+  provider: jamf-basic
+  endpoint: /JSSResource/categories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties: {}
+    required: []
+
+- slug: jamf_list_buildings
+  name: List Buildings
+  description: |
+    List all buildings in Jamf Pro.
+    Returns building details including name and address.
+  provider: jamf-basic
+  endpoint: /JSSResource/buildings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - buildings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing buildings
+    properties: {}
+    required: []
+
+- slug: jamf_list_policies
+  name: List Policies
+  description: |
+    List all policies in Jamf Pro.
+    Returns policy details including name and trigger.
+  provider: jamf-basic
+  endpoint: /JSSResource/policies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - policies
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []

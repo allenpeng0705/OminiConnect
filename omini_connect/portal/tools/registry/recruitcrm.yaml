@@ -1,0 +1,293 @@
+# Recruitcrm Tools - Allowlist
+# Curated subset of RecruitCRM API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recruitcrm_list_candidates      - List all candidates
+# 2. recruitcrm_get_candidate       - Get candidate details
+# 3. recruitcrm_create_candidate     - Create a candidate
+# 4. recruitcrm_list_jobs           - List all job openings
+# 5. recruitcrm_get_job            - Get job details
+# 6. recruitcrm_create_job          - Create a job opening
+# 7. recruitcrm_list_clients       - List all clients
+# 8. recruitcrm_get_client         - Get client details
+# 9. recruitcrm_list_interviews    - List interviews
+# 10. recruitcrm_create_interview   - Schedule an interview
+
+- slug: recruitcrm_list_candidates
+  name: List Candidates
+  description: |
+    Retrieve a list of all candidates in your recruitment pipeline.
+  provider: recruitcrm
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Number of candidates to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: recruitcrm_get_candidate
+  name: Get Candidate
+  description: |
+    Get details of a specific candidate.
+  provider: recruitcrm
+  endpoint: /candidates/{candidateId}
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "The candidate ID"
+    required:
+      - candidateId
+
+- slug: recruitcrm_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate in your recruitment system.
+  provider: recruitcrm
+  endpoint: /candidates
+  method: POST
+  scopes:
+    - candidates:write
+  tags:
+    - candidates
+    - recruitment
+    - hr
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      name:
+        type: string
+        description: "Candidate name"
+      email:
+        type: string
+        description: "Candidate email"
+      phone:
+        type: string
+        description: "Candidate phone"
+      currentPosition:
+        type: string
+        description: "Current job title"
+      skills:
+        type: array
+        description: "List of skills"
+    required:
+      - name
+      - email
+
+- slug: recruitcrm_list_jobs
+  name: List Jobs
+  description: |
+    Retrieve a list of all job openings.
+  provider: recruitcrm
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Number of jobs to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: open, closed, on-hold"
+        default: open
+    required: []
+
+- slug: recruitcrm_get_job
+  name: Get Job
+  description: |
+    Get details of a specific job opening.
+  provider: recruitcrm
+  endpoint: /jobs/{jobId}
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      jobId:
+        type: string
+        description: "The job ID"
+    required:
+      - jobId
+
+- slug: recruitcrm_create_job
+  name: Create Job
+  description: |
+    Create a new job opening.
+  provider: recruitcrm
+  endpoint: /jobs
+  method: POST
+  scopes:
+    - jobs:write
+  tags:
+    - jobs
+    - recruitment
+    - hr
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a job
+    properties:
+      title:
+        type: string
+        description: "Job title"
+      description:
+        type: string
+        description: "Job description"
+      location:
+        type: string
+        description: "Job location"
+      requirements:
+        type: array
+        description: "List of requirements"
+    required:
+      - title
+      - description
+
+- slug: recruitcrm_list_clients
+  name: List Clients
+  description: |
+    Retrieve a list of all clients.
+  provider: recruitcrm
+  endpoint: /clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+    - crm
+    - recruitment
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      limit:
+        type: integer
+        description: "Number of clients to return"
+        default: 50
+    required: []
+
+- slug: recruitcrm_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client.
+  provider: recruitcrm
+  endpoint: /clients/{clientId}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+    - crm
+    - recruitment
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      clientId:
+        type: string
+        description: "The client ID"
+    required:
+      - clientId
+
+- slug: recruitcrm_list_interviews
+  name: List Interviews
+  description: |
+    Retrieve a list of all scheduled interviews.
+  provider: recruitcrm
+  endpoint: /interviews
+  method: GET
+  scopes:
+    - interviews:read
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      limit:
+        type: integer
+        description: "Number of interviews to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: recruitcrm_create_interview
+  name: Create Interview
+  description: |
+    Schedule a new interview.
+  provider: recruitcrm
+  endpoint: /interviews
+  method: POST
+  scopes:
+    - interviews:write
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an interview
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+      jobId:
+        type: string
+        description: "Job ID"
+      scheduledTime:
+        type: string
+        description: "Interview time (ISO 8601)"
+      interviewType:
+        type: string
+        description: "Type: phone, video, onsite"
+    required:
+      - candidateId
+      - jobId
+      - scheduledTime

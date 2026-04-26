@@ -1,0 +1,249 @@
+# Jobvite Tools - Allowlist
+# Curated subset of Jobvite API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jobvite_list_candidates    - List candidates
+# 2. jobvite_get_candidate      - Get candidate details
+# 3. jobvite_list_jobs         - List job postings
+# 4. jobvite_get_job           - Get job details
+# 5. jobvite_list_offers       - List offers
+# 6. jobvite_get_offer         - Get offer details
+# 7. jobvite_list_departments  - List departments
+# 8. jobvite_list_locations    - List locations
+# 9. jobvite_create_candidate  - Create a candidate
+# 10. jobvite_create_job       - Create a job
+
+- slug: jobvite_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Jobvite.
+  provider: jobvite
+  endpoint: /v2/candidate
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      status:
+        type: string
+        description: "Candidate status filter"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: jobvite_get_candidate
+  name: Get Candidate
+  description: |
+    Get details for a specific candidate.
+  provider: jobvite
+  endpoint: /v2/candidate/{candidate_id}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidate_id
+
+- slug: jobvite_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: jobvite
+  endpoint: /v2/job
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status (open, closed, all)"
+        default: open
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: jobvite_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job posting.
+  provider: jobvite
+  endpoint: /v2/job/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: jobvite_list_offers
+  name: List Offers
+  description: |
+    List all offers.
+  provider: jobvite
+  endpoint: /v2/offer
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: jobvite_get_offer
+  name: Get Offer
+  description: |
+    Get details for a specific offer.
+  provider: jobvite
+  endpoint: /v2/offer/{offer_id}
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offer_id:
+        type: string
+        description: "Offer ID"
+    required:
+      - offer_id
+
+- slug: jobvite_list_departments
+  name: List Departments
+  description: |
+    List all departments.
+  provider: jobvite
+  endpoint: /v2/department
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: jobvite_list_locations
+  name: List Locations
+  description: |
+    List all locations.
+  provider: jobvite
+  endpoint: /v2/location
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []
+
+- slug: jobvite_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate.
+  provider: jobvite
+  endpoint: /v2/candidate
+  method: POST
+  scopes: []
+  tags:
+    - candidates
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: jobvite_create_job
+  name: Create Job
+  description: |
+    Create a new job posting.
+  provider: jobvite
+  endpoint: /v2/job
+  method: POST
+  scopes: []
+  tags:
+    - jobs
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a job
+    properties:
+      title:
+        type: string
+        description: "Job title"
+      department_id:
+        type: string
+        description: "Department ID"
+      location_id:
+        type: string
+        description: "Location ID"
+      description:
+        type: string
+        description: "Job description"
+    required:
+      - title

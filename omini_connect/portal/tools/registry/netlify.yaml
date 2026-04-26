@@ -1,0 +1,270 @@
+- slug: netlify_list_sites
+  name: List Sites
+  description: |
+    Retrieve all sites associated with the authenticated user or team.
+  provider: netlify
+  endpoint: /api/v1/sites
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sites
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page (default: 20, max: 100)"
+      filter:
+        type: string
+        description: "Filter by state: all, buildable, static"
+      team_id:
+        type: string
+        description: "Filter by team ID"
+    required: []
+
+- slug: netlify_get_site
+  name: Get Site
+  description: |
+    Retrieve details of a specific site including build settings and deploys.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site (UUID or site name slug)"
+    required:
+      - siteId
+
+- slug: netlify_create_site
+  name: Create Site
+  description: |
+    Create a new site in Netlify.
+  provider: netlify
+  endpoint: /api/v1/sites
+  method: POST
+  scopes:
+    - write
+  tags:
+    - sites
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a site
+    properties:
+      name:
+        type: string
+        description: "Custom site name (slug format: lowercase, alphanumeric, hyphens)"
+      body:
+        type: object
+        description: "Site configuration object"
+        properties:
+          name:
+            type: string
+            description: "Site name"
+          custom_domain:
+            type: string
+            description: "Custom domain for the site"
+          build_settings:
+            type: object
+            description: "Build configuration"
+      team_id:
+        type: string
+        description: "Team ID to create site under"
+    required: []
+
+- slug: netlify_delete_site
+  name: Delete Site
+  description: |
+    Permanently delete a site and all its deploys.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - sites
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a site
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+      archive:
+        type: boolean
+        description: "Archive the site instead of deleting (default: false)"
+    required:
+      - siteId
+
+- slug: netlify_list_deploys
+  name: List Deploys
+  description: |
+    Retrieve all deploys for a specific site.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}/deploys
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deploys
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing deploys
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+    required:
+      - siteId
+
+- slug: netlify_get_deploy
+  name: Get Deploy
+  description: |
+    Retrieve details of a specific deploy including build logs and files.
+  provider: netlify
+  endpoint: /api/v1/deploys/{deployId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deploys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deploy
+    properties:
+      deployId:
+        type: string
+        description: "The unique identifier of the deploy"
+    required:
+      - deployId
+
+- slug: netlify_create_deploy
+  name: Create Deploy
+  description: |
+    Create a new deploy for a site.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}/deploys
+  method: POST
+  scopes:
+    - write
+  tags:
+    - deploys
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a deploy
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+      files:
+        type: object
+        description: "File manifest (path to SHA1 hash) for the deploy"
+      title:
+        type: string
+        description: "Deploy title or version identifier"
+      context:
+        type: string
+        description: "Deploy context: production, deploy-preview, branch-deploy"
+      branch:
+        type: string
+        description: "Git branch for the deploy"
+    required:
+      - siteId
+
+- slug: netlify_list_functions
+  name: List Functions
+  description: |
+    Retrieve all serverless functions for a site or account.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}/functions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - functions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing functions
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+      account_id:
+        type: string
+        description: "Account ID to list functions for"
+    required:
+      - siteId
+
+- slug: netlify_get_function
+  name: Get Function
+  description: |
+    Retrieve details and code of a specific serverless function.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}/functions/{functionName}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - functions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a function
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+      functionName:
+        type: string
+        description: "Name of the function to retrieve"
+    required:
+      - siteId
+      - functionName
+
+- slug: netlify_list_domains
+  name: List Domains
+  description: |
+    Retrieve all domains configured for a site.
+  provider: netlify
+  endpoint: /api/v1/sites/{siteId}/domains
+  method: GET
+  scopes:
+    - read
+  tags:
+    - domains
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      siteId:
+        type: string
+        description: "The unique identifier of the site"
+    required:
+      - siteId

@@ -1,0 +1,259 @@
+# DemoDesk Tools - Allowlist
+# Curated subset of the DemoDesk API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. demodesk_list_meetings          - List meetings
+# 2. demodesk_get_meeting           - Get meeting details
+# 3. demodesk_create_meeting       - Create a meeting
+# 4. demodesk_cancel_meeting        - Cancel a meeting
+# 5. demodesk_list_rooms            - List meeting rooms
+# 6. demodesk_get_room              - Get room details
+# 7. demodesk_list_participants     - List participants
+# 8. demodesk_get_participant       - Get participant details
+# 9. demodesk_list_recordings       - List recordings
+# 10. demodesk_get_recording        - Get recording details
+
+- slug: demodesk_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings in DemoDesk.
+  provider: demodesk
+  endpoint: /meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: scheduled, started, ended, cancelled"
+    required: []
+
+- slug: demodesk_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: demodesk
+  endpoint: /meetings/{meeting_id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meeting_id
+
+- slug: demodesk_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new meeting in DemoDesk.
+  provider: demodesk
+  endpoint: /meetings
+  method: POST
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      title:
+        type: string
+        description: "Meeting title"
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      room_id:
+        type: string
+        description: "Room ID to use"
+    required:
+      - title
+
+- slug: demodesk_cancel_meeting
+  name: Cancel Meeting
+  description: |
+    Cancel a scheduled meeting.
+  provider: demodesk
+  endpoint: /meetings/{meeting_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - cancel
+  input_schema:
+    type: object
+    description: Parameters for cancelling a meeting
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meeting_id
+
+- slug: demodesk_list_rooms
+  name: List Rooms
+  description: |
+    List all meeting rooms.
+  provider: demodesk
+  endpoint: /rooms
+  method: GET
+  scopes: []
+  tags:
+    - rooms
+    - video
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rooms
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: demodesk_get_room
+  name: Get Room
+  description: |
+    Get details of a specific meeting room.
+  provider: demodesk
+  endpoint: /rooms/{room_id}
+  method: GET
+  scopes: []
+  tags:
+    - rooms
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a room
+    properties:
+      room_id:
+        type: string
+        description: "Room ID"
+    required:
+      - room_id
+
+- slug: demodesk_list_participants
+  name: List Participants
+  description: |
+    List all participants in a meeting.
+  provider: demodesk
+  endpoint: /meetings/{meeting_id}/participants
+  method: GET
+  scopes: []
+  tags:
+    - participants
+    - meetings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - meeting_id
+
+- slug: demodesk_get_participant
+  name: Get Participant
+  description: |
+    Get details of a specific participant.
+  provider: demodesk
+  endpoint: /meetings/{meeting_id}/participants/{participant_id}
+  method: GET
+  scopes: []
+  tags:
+    - participants
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a participant
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+      participant_id:
+        type: string
+        description: "Participant ID"
+    required:
+      - meeting_id
+      - participant_id
+
+- slug: demodesk_list_recordings
+  name: List Recordings
+  description: |
+    List all meeting recordings.
+  provider: demodesk
+  endpoint: /recordings
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - video
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: demodesk_get_recording
+  name: Get Recording
+  description: |
+    Get details of a specific recording.
+  provider: demodesk
+  endpoint: /recordings/{recording_id}
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recording_id:
+        type: string
+        description: "Recording ID"
+    required:
+      - recording_id

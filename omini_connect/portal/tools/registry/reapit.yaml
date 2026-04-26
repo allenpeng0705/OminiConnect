@@ -1,0 +1,276 @@
+# Reapit Tools - Allowlist
+# Curated subset of Reapit Property Management API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. reapit_list_properties        - List all properties
+# 2. reapit_get_property           - Get property details
+# 3. reapit_list_applicants        - List all applicants
+# 4. reapit_get_applicant          - Get applicant details
+# 5. reapit_create_applicant       - Create an applicant
+# 6. reapit_list_offers            - List all offers
+# 7. reapit_create_offer           - Create an offer
+# 8. repay_list_negotiations       - List negotiations
+# 9. reapit_list_tasks             - List tasks
+# 10. reapit_create_task          - Create a task
+
+- slug: reapit_list_properties
+  name: List Properties
+  description: |
+    Retrieve a list of all properties in your Reapit account.
+  provider: reapit
+  endpoint: /properties
+  method: GET
+  scopes:
+    - properties:read
+  tags:
+    - properties
+    - real-estate
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties:
+      limit:
+        type: integer
+        description: "Number of properties to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: available, under-offer, sold"
+    required: []
+
+- slug: reapit_get_property
+  name: Get Property
+  description: |
+    Get details of a specific property by ID.
+  provider: reapit
+  endpoint: /properties/{propertyId}
+  method: GET
+  scopes:
+    - properties:read
+  tags:
+    - properties
+    - real-estate
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      propertyId:
+        type: string
+        description: "The property ID"
+    required:
+      - propertyId
+
+- slug: reapit_list_applicants
+  name: List Applicants
+  description: |
+    Retrieve a list of all applicants in your pipeline.
+  provider: reapit
+  endpoint: /applicants
+  method: GET
+  scopes:
+    - applicants:read
+  tags:
+    - applicants
+    - crm
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing applicants
+    properties:
+      limit:
+        type: integer
+        description: "Number of applicants to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: reapit_get_applicant
+  name: Get Applicant
+  description: |
+    Get details of a specific applicant.
+  provider: reapit
+  endpoint: /applicants/{applicantId}
+  method: GET
+  scopes:
+    - applicants:read
+  tags:
+    - applicants
+    - crm
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for getting an applicant
+    properties:
+      applicantId:
+        type: string
+        description: "The applicant ID"
+    required:
+      - applicantId
+
+- slug: reapit_create_applicant
+  name: Create Applicant
+  description: |
+    Create a new applicant in your system.
+  provider: reapit
+  endpoint: /applicants
+  method: POST
+  scopes:
+    - applicants:write
+  tags:
+    - applicants
+    - crm
+    - sales
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an applicant
+    properties:
+      name:
+        type: string
+        description: "Applicant name"
+      email:
+        type: string
+        description: "Applicant email"
+      phone:
+        type: string
+        description: "Applicant phone"
+      propertyInterest:
+        type: string
+        description: "Property ID they're interested in"
+    required:
+      - name
+      - email
+
+- slug: reapit_list_offers
+  name: List Offers
+  description: |
+    Retrieve a list of all offers made.
+  provider: reapit
+  endpoint: /offers
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - sales
+    - real-estate
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      limit:
+        type: integer
+        description: "Number of offers to return"
+        default: 50
+    required: []
+
+- slug: reapit_create_offer
+  name: Create Offer
+  description: |
+    Create a new offer on a property.
+  provider: reapit
+  endpoint: /offers
+  method: POST
+  scopes:
+    - offers:write
+  tags:
+    - offers
+    - sales
+    - real-estate
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an offer
+    properties:
+      propertyId:
+        type: string
+        description: "Property ID"
+      applicantId:
+        type: string
+        description: "Applicant ID"
+      amount:
+        type: number
+        description: "Offer amount"
+    required:
+      - propertyId
+      - applicantId
+      - amount
+
+- slug: reapit_list_negotiations
+  name: List Negotiations
+  description: |
+    Retrieve a list of negotiations.
+  provider: reapit
+  endpoint: /negotiations
+  method: GET
+  scopes:
+    - negotiations:read
+  tags:
+    - negotiations
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing negotiations
+    properties:
+      propertyId:
+        type: string
+        description: "Filter by property ID"
+    required: []
+
+- slug: reapit_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of all tasks.
+  provider: reapit
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Number of tasks to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: reapit_create_task
+  name: Create Task
+  description: |
+    Create a new task.
+  provider: reapit
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      description:
+        type: string
+        description: "Task description"
+      dueDate:
+        type: string
+        description: "Due date (ISO 8601)"
+    required:
+      - title

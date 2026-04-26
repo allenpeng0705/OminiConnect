@@ -1,0 +1,261 @@
+# Fluidtopics Tools - Allowlist
+# Curated subset of Fluidtopics Knowledge Management API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fluidtopics_list_topics         - List topics in knowledge base
+# 2. fluidtopics_get_topic          - Get topic details
+# 3. fluidtopics_create_topic       - Create a new topic
+# 4. fluidtopics_list_categories    - List categories
+# 5. fluidtopics_get_category      - Get category details
+# 6. fluidtopics_list_tags         - List tags
+# 7. fluidtopics_get_tag           - Get tag details
+# 8. fluidtopics_search_topics     - Search topics
+# 9. fluidtopics_get_topic_content - Get topic content
+# 10. fluidtopics_list_feeds        - List feeds
+
+- slug: fluidtopics_list_topics
+  name: List Topics
+  description: |
+    List all topics in the Fluidtopics knowledge base.
+  provider: fluidtopics
+  endpoint: /api/topics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - topics
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing topics
+    properties:
+      category_id:
+        type: string
+        description: "Filter by category ID"
+      tag_id:
+        type: string
+        description: "Filter by tag ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: fluidtopics_get_topic
+  name: Get Topic
+  description: |
+    Get detailed information about a specific topic.
+  provider: fluidtopics
+  endpoint: /api/topics/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - topics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a topic
+    properties:
+      id:
+        type: string
+        description: "Topic ID"
+    required:
+      - id
+
+- slug: fluidtopics_create_topic
+  name: Create Topic
+  description: |
+    Create a new topic in the Fluidtopics knowledge base.
+  provider: fluidtopics
+  endpoint: /api/topics
+  method: POST
+  scopes:
+    - write
+  tags:
+    - topics
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a topic
+    properties:
+      title:
+        type: string
+        description: "Topic title"
+      content:
+        type: string
+        description: "Topic content (HTML or Markdown)"
+      category_id:
+        type: string
+        description: "Category ID"
+      tag_ids:
+        type: array
+        items:
+          type: string
+        description: "Tag IDs to associate"
+    required:
+      - title
+
+- slug: fluidtopics_list_categories
+  name: List Categories
+  description: |
+    List all categories in the Fluidtopics knowledge base.
+  provider: fluidtopics
+  endpoint: /api/categories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: fluidtopics_get_category
+  name: Get Category
+  description: |
+    Get detailed information about a specific category.
+  provider: fluidtopics
+  endpoint: /api/categories/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      id:
+        type: string
+        description: "Category ID"
+    required:
+      - id
+
+- slug: fluidtopics_list_tags
+  name: List Tags
+  description: |
+    List all tags in the Fluidtopics knowledge base.
+  provider: fluidtopics
+  endpoint: /api/tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: fluidtopics_get_tag
+  name: Get Tag
+  description: |
+    Get detailed information about a specific tag.
+  provider: fluidtopics
+  endpoint: /api/tags/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      id:
+        type: string
+        description: "Tag ID"
+    required:
+      - id
+
+- slug: fluidtopics_search_topics
+  name: Search Topics
+  description: |
+    Search topics in the Fluidtopics knowledge base by query.
+  provider: fluidtopics
+  endpoint: /api/searches
+  method: POST
+  scopes:
+    - read
+  tags:
+    - search
+    - topics
+  input_schema:
+    type: object
+    description: Parameters for searching topics
+    properties:
+      query:
+        type: string
+        description: "Search query string"
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required:
+      - query
+
+- slug: fluidtopics_get_topic_content
+  name: Get Topic Content
+  description: |
+    Get the full content of a specific topic.
+  provider: fluidtopics
+  endpoint: /api/topics/{id}/content
+  method: GET
+  scopes:
+    - read
+  tags:
+    - topics
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting topic content
+    properties:
+      id:
+        type: string
+        description: "Topic ID"
+    required:
+      - id
+
+- slug: fluidtopics_list_feeds
+  name: List Feeds
+  description: |
+    List all feeds in the Fluidtopics knowledge base.
+  provider: fluidtopics
+  endpoint: /api/feeds
+  method: GET
+  scopes:
+    - read
+  tags:
+    - feeds
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing feeds
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []

@@ -1,0 +1,344 @@
+# commercetools Tools - Allowlist
+# Curated subset of the commercetools Composable Commerce API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. commercetools_list_products      - List products in a project
+# 2. commercetools_get_product        - Get a specific product by ID
+# 3. commercetools_create_product     - Create a new product
+# 4. commercetools_list_orders        - List orders in a project
+# 5. commercetools_get_order          - Get a specific order by ID
+# 6. commercetools_list_customers     - List customers in a project
+# 7. commercetools_get_customer       - Get a specific customer by ID
+# 8. commercetools_list_carts         - List carts in a project
+# 9. commercetools_get_cart           - Get a specific cart by ID
+# 10. commercetools_list_channels     - List distribution channels
+
+- slug: commercetools_list_products
+  name: List Products
+  description: |
+    List all products in a commercetools project with optional filtering and pagination.
+    Returns product details including name, description, variants, prices, and categories.
+  provider: commercetools
+  endpoint: /{projectKey}/products
+  method: GET
+  scopes:
+    - view_products
+  tags:
+    - products
+    - catalog
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      limit:
+        type: integer
+        description: "Number of results to return (max 500)"
+        default: 20
+      offset:
+        type: integer
+        description: "Number of results to skip for pagination"
+        default: 0
+      where:
+        type: string
+        description: "Filter expression (e.g., categories(id=\"cat-id\"))"
+      sort:
+        type: string
+        description: "Sort expression (e.g., name.en asc)"
+    required:
+      - projectKey
+
+- slug: commercetools_get_product
+  name: Get Product
+  description: |
+    Get details of a specific product by its ID including name, description, variants, prices, and images.
+  provider: commercetools
+  endpoint: /{projectKey}/products/{id}
+  method: GET
+  scopes:
+    - view_products
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - projectKey
+      - id
+
+- slug: commercetools_create_product
+  name: Create Product
+  description: |
+    Create a new product in a commercetools project with name, description, and initial variants.
+    Products are the central entity in the commercetools platform representing items for sale.
+  provider: commercetools
+  endpoint: /{projectKey}/products
+  method: POST
+  scopes:
+    - manage_products
+  tags:
+    - products
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a product
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      name:
+        type: object
+        description: "Product name localized by language (e.g., {\"en\": \"Product Name\"})"
+      description:
+        type: object
+        description: "Product description localized by language"
+      slug:
+        type: object
+        description: "Product slug localized by language (must be unique)"
+      productType:
+        type: object
+        description: "Product type reference (e.g., {\"id\": \"product-type-id\"})"
+      variants:
+        type: array
+        items:
+          type: object
+        description: "Array of product variants"
+    required:
+      - projectKey
+      - name
+      - slug
+      - productType
+
+- slug: commercetools_list_orders
+  name: List Orders
+  description: |
+    List all orders in a commercetools project with optional filtering by customer, state, or date range.
+    Returns order details including order number, customer reference, line items, and total price.
+  provider: commercetools
+  endpoint: /{projectKey}/orders
+  method: GET
+  scopes:
+    - view_orders
+  tags:
+    - orders
+    - commerce
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      limit:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      where:
+        type: string
+        description: "Filter expression (e.g., orderState=\"Confirmed\")"
+      sort:
+        type: string
+        description: "Sort expression (e.g., createdAt desc)"
+    required:
+      - projectKey
+
+- slug: commercetools_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order by its ID including line items, shipping address, billing address, and totals.
+  provider: commercetools
+  endpoint: /{projectKey}/orders/{id}
+  method: GET
+  scopes:
+    - view_orders
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - projectKey
+      - id
+
+- slug: commercetools_list_customers
+  name: List Customers
+  description: |
+    List all customers in a commercetools project with optional filtering by email, name, or custom fields.
+    Returns customer details including email, name, addresses, and custom attributes.
+  provider: commercetools
+  endpoint: /{projectKey}/customers
+  method: GET
+  scopes:
+    - view_customers
+  tags:
+    - customers
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      limit:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      where:
+        type: string
+        description: "Filter expression"
+      sort:
+        type: string
+        description: "Sort expression"
+    required:
+      - projectKey
+
+- slug: commercetools_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer by their ID including personal info, addresses, and account details.
+  provider: commercetools
+  endpoint: /{projectKey}/customers/{id}
+  method: GET
+  scopes:
+    - view_customers
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - projectKey
+      - id
+
+- slug: commercetools_list_carts
+  name: List Carts
+  description: |
+    List all carts (shopping carts) in a commercetools project with optional filtering by customer or state.
+    Returns cart details including line items, totals, and discount codes applied.
+  provider: commercetools
+  endpoint: /{projectKey}/carts
+  method: GET
+  scopes:
+    - view_carts
+  tags:
+    - carts
+    - commerce
+  input_schema:
+    type: object
+    description: Parameters for listing carts
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      limit:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      where:
+        type: string
+        description: "Filter expression"
+      sort:
+        type: string
+        description: "Sort expression"
+    required:
+      - projectKey
+
+- slug: commercetools_get_cart
+  name: Get Cart
+  description: |
+    Get details of a specific cart by its ID including line items, shipping method, pricing, and discounts.
+  provider: commercetools
+  endpoint: /{projectKey}/carts/{id}
+  method: GET
+  scopes:
+    - view_carts
+  tags:
+    - carts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cart
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      id:
+        type: string
+        description: "Cart ID"
+    required:
+      - projectKey
+      - id
+
+- slug: commercetools_list_channels
+  name: List Channels
+  description: |
+    List all distribution channels in a commercetools project.
+    Channels represent distribution locations or fulfillment centers for inventory management.
+  provider: commercetools
+  endpoint: /{projectKey}/channels
+  method: GET
+  scopes:
+    - view_channels
+  tags:
+    - channels
+    - distribution
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      projectKey:
+        type: string
+        description: "Project key (required, from config)"
+      limit:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+      where:
+        type: string
+        description: "Filter expression"
+    required:
+      - projectKey

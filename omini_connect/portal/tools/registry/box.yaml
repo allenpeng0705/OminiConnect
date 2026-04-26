@@ -1,0 +1,270 @@
+# Box Tools - Allowlist
+# Curated subset of Box API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. box_list_files          - List files in folder
+# 2. box_get_file            - Get file metadata
+# 3. box_upload_file         - Upload a file
+# 4. box_create_folder       - Create a folder
+# 5. box_delete_file         - Delete a file
+# 6. box_list_users          - List users in enterprise
+# 7. box_get_user            - Get user info
+# 8. box_list_groups         - List groups
+# 9. box_get_group           - Get group info
+# 10. box_list_tasks         - List tasks on file
+
+- slug: box_list_files
+  name: List Files
+  description: |
+    List files and folders in a Box folder.
+  provider: box
+  endpoint: /2.0/folders/{folder_id}/items
+  method: GET
+  scopes:
+    - base_item.read
+  tags:
+    - files
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      folder_id:
+        type: string
+        description: "Folder ID (use 0 for root)"
+        default: "0"
+      limit:
+        type: integer
+        description: "Max results (default 100, max 1000)"
+        default: 100
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: box_get_file
+  name: Get File
+  description: |
+    Get metadata for a Box file.
+  provider: box
+  endpoint: /2.0/files/{file_id}
+  method: GET
+  scopes:
+    - base_item.read
+  tags:
+    - files
+    - read
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: box_upload_file
+  name: Upload File
+  description: |
+    Upload a file to a Box folder.
+  provider: box
+  endpoint: /2.0/files/content
+  method: POST
+  scopes:
+    - base_item.write
+  tags:
+    - files
+    - upload
+    - create
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      name:
+        type: string
+        description: "File name"
+      parent_id:
+        type: string
+        description: "Parent folder ID"
+        default: "0"
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - name
+      - content
+
+- slug: box_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in Box.
+  provider: box
+  endpoint: /2.0/folders
+  method: POST
+  scopes:
+    - base_item.write
+  tags:
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parent_id:
+        type: string
+        description: "Parent folder ID (use 0 for root)"
+        default: "0"
+    required:
+      - name
+      - parent_id
+
+- slug: box_delete_file
+  name: Delete File
+  description: |
+    Permanently delete a Box file (moves to trash).
+  provider: box
+  endpoint: /2.0/files/{file_id}
+  method: DELETE
+  scopes:
+    - base_item.write
+  tags:
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: box_list_users
+  name: List Users
+  description: |
+    List users in the enterprise.
+  provider: box
+  endpoint: /2.0/users
+  method: GET
+  scopes:
+    - manage_enterprise
+  tags:
+    - users
+    - list
+    - enterprise
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: box_get_user
+  name: Get User
+  description: |
+    Get information about a Box user by ID or email.
+  provider: box
+  endpoint: /2.0/users/{user_id}
+  method: GET
+  scopes:
+    - manage_enterprise
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (use 'me' for current user)"
+        default: me
+    required: []
+
+- slug: box_list_groups
+  name: List Groups
+  description: |
+    List groups in the enterprise.
+  provider: box
+  endpoint: /2.0/groups
+  method: GET
+  scopes:
+    - group_read
+  tags:
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: box_get_group
+  name: Get Group
+  description: |
+    Get information about a group.
+  provider: box
+  endpoint: /2.0/groups/{group_id}
+  method: GET
+  scopes:
+    - group_read
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: box_list_tasks
+  name: List Tasks
+  description: |
+    List tasks on a file.
+  provider: box
+  endpoint: /2.0/files/{file_id}/tasks
+  method: GET
+  scopes:
+    - task_read
+  tags:
+    - tasks
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id

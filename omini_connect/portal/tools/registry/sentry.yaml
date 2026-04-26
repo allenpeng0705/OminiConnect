@@ -1,0 +1,280 @@
+# Sentry Tools - Allowlist
+# Curated subset of Sentry REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sentry_list_projects        - List all projects
+# 2. sentry_get_project         - Get project details
+# 3. sentry_create_project      - Create a new project
+# 4. sentry_list_issues         - List issues
+# 5. sentry_get_issue           - Get issue details
+# 6. sentry_list_events         - List events
+# 7. sentry_get_event           - Get event details
+# 8. sentry_list_releases       - List releases
+# 9. sentry_get_release         - Get release details
+# 10. sentry_list_teams         - List teams
+
+- slug: sentry_list_projects
+  name: List Projects
+  description: |
+    List all Sentry projects in the organization.
+  provider: sentry
+  endpoint: /api/0/projects/
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+    required: []
+
+- slug: sentry_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific Sentry project.
+  provider: sentry
+  endpoint: /api/0/projects/{organizationSlug}/{projectSlug}/
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+      projectSlug:
+        type: string
+        description: "Project slug"
+    required:
+      - organizationSlug
+      - projectSlug
+
+- slug: sentry_create_project
+  name: Create Project
+  description: |
+    Create a new project in a Sentry organization.
+  provider: sentry
+  endpoint: /api/0/organizations/{organizationSlug}/projects/
+  method: POST
+  scopes:
+    - project:write
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+      name:
+        type: string
+        description: "Project name"
+      slug:
+        type: string
+        description: "Project slug (URL-friendly name)"
+      team:
+        type: string
+        description: "Team slug to assign the project to"
+      platform:
+        type: string
+        description: "Platform (e.g., python, javascript, ruby)"
+    required:
+      - organizationSlug
+      - name
+
+- slug: sentry_list_issues
+  name: List Issues
+  description: |
+    List Sentry issues with optional filtering by project, status, or assigned user.
+  provider: sentry
+  endpoint: /api/0/issues/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - issues
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      project:
+        type: array
+        items:
+          type: string
+        description: "Project slugs to filter"
+      status:
+        type: string
+        description: "Filter by status (unresolved, resolved, ignored)"
+      assigned:
+        type: string
+        description: "Filter by assigned user (me, none, or user ID)"
+      query:
+        type: string
+        description: "Search query"
+    required: []
+
+- slug: sentry_get_issue
+  name: Get Issue
+  description: |
+    Get detailed information about a specific Sentry issue including tags, user reports, and activity.
+  provider: sentry
+  endpoint: /api/0/issues/{issueId}/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issueId:
+        type: string
+        description: "Issue ID"
+    required:
+      - issueId
+
+- slug: sentry_list_events
+  name: List Events
+  description: |
+    List events (error occurrences) for a Sentry project or issue.
+  provider: sentry
+  endpoint: /api/0/projects/{organizationSlug}/{projectSlug}/events/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+      projectSlug:
+        type: string
+        description: "Project slug"
+      query:
+        type: string
+        description: "Search query"
+      maxEvents:
+        type: integer
+        description: "Maximum number of events (default 100)"
+    required:
+      - organizationSlug
+      - projectSlug
+
+- slug: sentry_get_event
+  name: Get Event
+  description: |
+    Get detailed information about a specific Sentry event including stack trace, context, and breadcrumbs.
+  provider: sentry
+  endpoint: /api/0/events/{eventId}/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: sentry_list_releases
+  name: List Releases
+  description: |
+    List all releases in an organization or project.
+  provider: sentry
+  endpoint: /api/0/releases/
+  method: GET
+  scopes:
+    - release:read
+  tags:
+    - releases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing releases
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+      projectSlug:
+        type: string
+        description: "Project slug (optional, to filter by project)"
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - organizationSlug
+
+- slug: sentry_get_release
+  name: Get Release
+  description: |
+    Get detailed information about a specific release including commit data and deploys.
+  provider: sentry
+  endpoint: /api/0/releases/{organizationSlug}/{version}/
+  method: GET
+  scopes:
+    - release:read
+  tags:
+    - releases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a release
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+      version:
+        type: string
+        description: "Release version (e.g., 1.0.0 or projected SHA)"
+    required:
+      - organizationSlug
+      - version
+
+- slug: sentry_list_teams
+  name: List Teams
+  description: |
+    List all Sentry teams in the organization.
+  provider: sentry
+  endpoint: /api/0/teams/
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      organizationSlug:
+        type: string
+        description: "Organization slug"
+    required: []

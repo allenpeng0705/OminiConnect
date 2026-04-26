@@ -1,0 +1,293 @@
+# Instagram Tools - Allowlist
+# Curated subset of Instagram Graph API for AI agent use.
+# Requires a business or creator Instagram account connected via Facebook Page.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. instagram_list_media         - List media items on the account
+# 2. instagram_get_media          - Get a specific media item
+# 3. instagram_list_comments      - List comments on media
+# 4. instagram_get_comment        - Get a specific comment
+# 5. instagram_post_comment       - Post a comment on media
+# 6. instagram_get_media_insights - Get media insights/metrics
+# 7. instagram_list_users         - List followers or following
+# 8. instagram_get_user          - Get user profile info
+# 9. instagram_list_relationships - List relationships (followers/following)
+# 10. instagram_follow_user       - Follow or unfollow a user
+
+- slug: instagram_list_media
+  name: List Media
+  description: |
+    List media items (photos, videos, reels) on the authenticated Instagram business account.
+    Returns media IDs, captions, timestamps, and media URLs.
+  provider: instagram
+  endpoint: /{instagram-account-id}/media
+  method: GET
+  scopes:
+    - instagram_basic
+    - instagram_content_publish
+  tags:
+    - media
+    - list
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing media
+    properties:
+      instagram_account_id:
+        type: string
+        description: "Instagram Business Account ID"
+      limit:
+        type: integer
+        description: "Max media items (default 10, max 100)"
+        default: 10
+      fields:
+        type: string
+        description: "Fields to include (default: id,caption,media_type,timestamp)"
+    required:
+      - instagram_account_id
+
+- slug: instagram_get_media
+  name: Get Media
+  description: |
+    Get details of a specific Instagram media item including caption, media URL, and metadata.
+  provider: instagram
+  endpoint: /{media-id}
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - media
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting media
+    properties:
+      media_id:
+        type: string
+        description: "Media ID"
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - media_id
+
+- slug: instagram_list_comments
+  name: List Comments
+  description: |
+    List comments on an Instagram media item. Returns comment text, author, and timestamp.
+  provider: instagram
+  endpoint: /{media-id}/comments
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - comments
+    - media
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      media_id:
+        type: string
+        description: "Media ID"
+      limit:
+        type: integer
+        description: "Max comments (default 10, max 100)"
+        default: 10
+    required:
+      - media_id
+
+- slug: instagram_get_comment
+  name: Get Comment
+  description: |
+    Get a specific Instagram comment by ID including text and author info.
+  provider: instagram
+  endpoint: /{comment-id}
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID"
+    required:
+      - comment_id
+
+- slug: instagram_post_comment
+  name: Post Comment
+  description: |
+    Post a comment on an Instagram media item.
+  provider: instagram
+  endpoint: /{media-id}/comments
+  method: POST
+  scopes:
+    - instagram_basic
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for posting a comment
+    properties:
+      media_id:
+        type: string
+        description: "Media ID"
+      text:
+        type: string
+        description: "Comment text content"
+    required:
+      - media_id
+      - text
+
+- slug: instagram_get_media_insights
+  name: Get Media Insights
+  description: |
+    Get insights and metrics for an Instagram media item including reach, impressions, and engagement.
+  provider: instagram
+  endpoint: /{media-id}/insights
+  method: GET
+  scopes:
+    - instagram_insights
+  tags:
+    - insights
+    - analytics
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting media insights
+    properties:
+      media_id:
+        type: string
+        description: "Media ID"
+    required:
+      - media_id
+
+- slug: instagram_list_users
+  name: List Users
+  description: |
+    List users who are followers or following the Instagram account.
+  provider: instagram
+  endpoint: /{instagram-account-id}/{relationship}
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - users
+    - followers
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      instagram_account_id:
+        type: string
+        description: "Instagram Business Account ID"
+      relationship:
+        type: string
+        description: "Relationship type: followers or follows"
+        enum: [followers, follows]
+      limit:
+        type: integer
+        description: "Max users (default 10, max 100)"
+        default: 10
+    required:
+      - instagram_account_id
+      - relationship
+
+- slug: instagram_get_user
+  name: Get User
+  description: |
+    Get Instagram user profile information including username, name, bio, and follower count.
+  provider: instagram
+  endpoint: /{user-id}
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - users
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user
+    properties:
+      user_id:
+        type: string
+        description: "Instagram User ID (use 'me' for authenticated account)"
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - user_id
+
+- slug: instagram_list_relationships
+  name: List Relationships
+  description: |
+    List the Instagram account's relationships (who follows you or who you follow).
+  provider: instagram
+  endpoint: /{instagram-account-id}/relationships
+  method: GET
+  scopes:
+    - instagram_basic
+  tags:
+    - relationships
+    - social
+    - network
+  input_schema:
+    type: object
+    description: Parameters for listing relationships
+    properties:
+      instagram_account_id:
+        type: string
+        description: "Instagram Business Account ID"
+      direction:
+        type: string
+        description: "Relationship direction: followers or follows"
+        enum: [followers, follows]
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required:
+      - instagram_account_id
+      - direction
+
+- slug: instagram_follow_user
+  name: Follow User
+  description: |
+    Follow or unfollow an Instagram user.
+  provider: instagram
+  endpoint: /{instagram-account-id}/relationships
+  method: POST
+  scopes:
+    - instagram_basic
+  tags:
+    - relationships
+    - social
+    - follow
+  input_schema:
+    type: object
+    description: Parameters for following a user
+    properties:
+      instagram_account_id:
+        type: string
+        description: "Instagram Business Account ID"
+      user_id:
+        type: string
+        description: "Target user ID to follow"
+      action:
+        type: string
+        description: "Action: follow or unfollow"
+        enum: [follow, unfollow]
+    required:
+      - instagram_account_id
+      - user_id
+      - action

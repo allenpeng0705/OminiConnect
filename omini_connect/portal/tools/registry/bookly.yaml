@@ -1,0 +1,284 @@
+# Bookly Tools - Allowlist
+# Curated subset of Bookly API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bookly_list_appointments      - List appointments
+# 2. bookly_get_appointment        - Get appointment details
+# 3. bookly_create_appointment    - Create an appointment
+# 4. bookly_cancel_appointment    - Cancel an appointment
+# 5. bookly_list_customers        - List customers
+# 6. bookly_get_customer          - Get customer details
+# 7. bookly_list_services         - List services
+# 8. bookly_get_service           - Get service details
+# 9. bookly_list_staff            - List staff members
+# 10. bookly_get_staff            - Get staff details
+
+- slug: bookly_list_appointments
+  name: List Appointments
+  description: |
+    List all appointments, optionally filtered by date, customer, staff, or status.
+  provider: bookly
+  endpoint: /appointments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      customer_id:
+        type: integer
+        description: "Filter by customer ID"
+      staff_id:
+        type: integer
+        description: "Filter by staff ID"
+      status:
+        type: string
+        description: "Filter by status: approved, pending, cancelled"
+      count:
+        type: integer
+        description: "Max appointments to return"
+        default: 100
+    required: []
+
+- slug: bookly_get_appointment
+  name: Get Appointment
+  description: |
+    Get detailed information about a specific appointment.
+  provider: bookly
+  endpoint: /appointments/{appointment_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      appointment_id:
+        type: integer
+        description: "Appointment ID"
+    required:
+      - appointment_id
+
+- slug: bookly_create_appointment
+  name: Create Appointment
+  description: |
+    Create a new appointment for a customer with a staff member.
+  provider: bookly
+  endpoint: /appointments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - appointments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an appointment
+    properties:
+      customer_id:
+        type: integer
+        description: "Customer ID"
+      service_id:
+        type: integer
+        description: "Service ID"
+      staff_id:
+        type: integer
+        description: "Staff ID"
+      start_date:
+        type: string
+        description: "Appointment date and time (YYYY-MM-DD HH:MM:SS)"
+      end_date:
+        type: string
+        description: "End date and time (YYYY-MM-DD HH:MM:SS)"
+      notes:
+        type: string
+        description: "Appointment notes"
+    required:
+      - customer_id
+      - service_id
+      - staff_id
+      - start_date
+
+- slug: bookly_cancel_appointment
+  name: Cancel Appointment
+  description: |
+    Cancel an existing appointment.
+  provider: bookly
+  endpoint: /appointments/{appointment_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - appointments
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for canceling an appointment
+    properties:
+      appointment_id:
+        type: integer
+        description: "Appointment ID"
+      reason:
+        type: string
+        description: "Cancellation reason"
+    required:
+      - appointment_id
+
+- slug: bookly_list_customers
+  name: List Customers
+  description: |
+    List all customers in the system.
+  provider: bookly
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      search:
+        type: string
+        description: "Search by name, email, or phone"
+      count:
+        type: integer
+        description: "Max customers to return"
+        default: 100
+    required: []
+
+- slug: bookly_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+  provider: bookly
+  endpoint: /customers/{customer_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: integer
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: bookly_list_services
+  name: List Services
+  description: |
+    List all services (treatments) available for booking.
+  provider: bookly
+  endpoint: /services
+  method: GET
+  scopes:
+    - read
+  tags:
+    - services
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      category_id:
+        type: integer
+        description: "Filter by category ID"
+      count:
+        type: integer
+        description: "Max services to return"
+        default: 100
+    required: []
+
+- slug: bookly_get_service
+  name: Get Service
+  description: |
+    Get detailed information about a specific service.
+  provider: bookly
+  endpoint: /services/{service_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      service_id:
+        type: integer
+        description: "Service ID"
+    required:
+      - service_id
+
+- slug: bookly_list_staff
+  name: List Staff
+  description: |
+    List all staff members who provide services.
+  provider: bookly
+  endpoint: /staff
+  method: GET
+  scopes:
+    - read
+  tags:
+    - staff
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing staff
+    properties:
+      service_id:
+        type: integer
+        description: "Filter by service ID"
+      count:
+        type: integer
+        description: "Max staff to return"
+        default: 100
+    required: []
+
+- slug: bookly_get_staff
+  name: Get Staff
+  description: |
+    Get detailed information about a specific staff member.
+  provider: bookly
+  endpoint: /staff/{staff_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - staff
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a staff member
+    properties:
+      staff_id:
+        type: integer
+        description: "Staff ID"
+    required:
+      - staff_id

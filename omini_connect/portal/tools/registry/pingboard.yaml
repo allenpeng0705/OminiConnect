@@ -1,0 +1,211 @@
+# Pingboard Tools - Allowlist
+# Curated subset of Pingboard API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pingboard_list_users             - List users
+# 2. pingboard_get_user               - Get user details
+# 3. pingboard_list_accounts           - List accounts
+# 4. pingboard_get_account            - Get account details
+# 5. pingboard_list_statuses          - List user statuses
+# 6. pingboard_list_skills            - List skills
+# 7. pingboard_list_departments       - List departments
+# 8. pingboard_get_directory          - Get company directory
+# 9. pingboard_list_badges            - List badges
+# 10. pingboard_get_user_status       - Get user status
+
+- slug: pingboard_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: pingboard
+  endpoint: /v2/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: pingboard_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: pingboard
+  endpoint: /v2/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: pingboard_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the organization.
+  provider: pingboard
+  endpoint: /v2/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: pingboard_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific account.
+  provider: pingboard
+  endpoint: /v2/accounts/{accountId}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: pingboard_list_statuses
+  name: List Statuses
+  description: |
+    List all user statuses.
+  provider: pingboard
+  endpoint: /v2/statuses
+  method: GET
+  scopes: []
+  tags:
+    - statuses
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing statuses
+    properties: {}
+    required: []
+
+- slug: pingboard_list_skills
+  name: List Skills
+  description: |
+    List all skills in the organization.
+  provider: pingboard
+  endpoint: /v2/skills
+  method: GET
+  scopes: []
+  tags:
+    - skills
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing skills
+    properties: {}
+    required: []
+
+- slug: pingboard_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: pingboard
+  endpoint: /v2/departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: pingboard_get_directory
+  name: Get Directory
+  description: |
+    Get the company directory.
+  provider: pingboard
+  endpoint: /v2/directory
+  method: GET
+  scopes: []
+  tags:
+    - directory
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting directory
+    properties: {}
+    required: []
+
+- slug: pingboard_list_badges
+  name: List Badges
+  description: |
+    List all badges in the organization.
+  provider: pingboard
+  endpoint: /v2/badges
+  method: GET
+  scopes: []
+  tags:
+    - badges
+    - achievements
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing badges
+    properties: {}
+    required: []
+
+- slug: pingboard_get_user_status
+  name: Get User Status
+  description: |
+    Get the current status of a user.
+  provider: pingboard
+  endpoint: /v2/users/{userId}/status
+  method: GET
+  scopes: []
+  tags:
+    - statuses
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user status
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId

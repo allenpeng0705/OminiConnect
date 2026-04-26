@@ -1,0 +1,187 @@
+# Wildix PBX Tools - Allowlist
+# Curated subset of Wildix PBX API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. wildix_list_extensions           - List all extensions
+# # 2. wildix_get_extension           - Get extension details
+# # 3. wildix_list_calls           - List all calls
+# # 4. wildix_make_call           - Initiate a call
+# # 5. wildix_transfer_call           - Transfer a call
+# # 6. wildix_hangup_call           - Hangup a call
+# # 7. wildix_list_voicemails           - List all voicemails
+# # 8. wildix_get_voicemail           - Get voicemail details
+# # 9. wildix_list_conferences           - List all conferences
+# # 10. wildix_get_presence           - Get user presence status
+
+- slug: wildix_list_extensions
+  name: List Extensions
+  description: |
+    List all extensions
+  provider: wildix-pbx
+  endpoint: /api/v1/extensions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for list extensions
+    properties: {}
+    required: []
+
+- slug: wildix_get_extension
+  name: Get Extension
+  description: |
+    Get extension details
+  provider: wildix-pbx
+  endpoint: /api/v1/extensions/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for get extension
+    properties: {}
+    required: []
+
+- slug: wildix_list_calls
+  name: List Calls
+  description: |
+    List all calls
+  provider: wildix-pbx
+  endpoint: /api/v1/calls
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for list calls
+    properties: {}
+    required: []
+
+- slug: wildix_make_call
+  name: Make Call
+  description: |
+    Initiate a call
+  provider: wildix-pbx
+  endpoint: /api/v1/calls
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for make call
+    properties: {}
+    required: []
+
+- slug: wildix_transfer_call
+  name: Transfer Call
+  description: |
+    Transfer a call
+  provider: wildix-pbx
+  endpoint: /api/v1/calls/{id}/transfer
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for transfer call
+    properties: {}
+    required: []
+
+- slug: wildix_hangup_call
+  name: Hangup Call
+  description: |
+    Hangup a call
+  provider: wildix-pbx
+  endpoint: /api/v1/calls/{id}/hangup
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for hangup call
+    properties: {}
+    required: []
+
+- slug: wildix_list_voicemails
+  name: List Voicemails
+  description: |
+    List all voicemails
+  provider: wildix-pbx
+  endpoint: /api/v1/voicemails
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for list voicemails
+    properties: {}
+    required: []
+
+- slug: wildix_get_voicemail
+  name: Get Voicemail
+  description: |
+    Get voicemail details
+  provider: wildix-pbx
+  endpoint: /api/v1/voicemails/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for get voicemail
+    properties: {}
+    required: []
+
+- slug: wildix_list_conferences
+  name: List Conferences
+  description: |
+    List all conferences
+  provider: wildix-pbx
+  endpoint: /api/v1/conferences
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for list conferences
+    properties: {}
+    required: []
+
+- slug: wildix_get_presence
+  name: Get Presence
+  description: |
+    Get user presence status
+  provider: wildix-pbx
+  endpoint: /api/v1/presence
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wildix-pbx
+  input_schema:
+    type: object
+    description: Parameters for get presence
+    properties: {}
+    required: []
+

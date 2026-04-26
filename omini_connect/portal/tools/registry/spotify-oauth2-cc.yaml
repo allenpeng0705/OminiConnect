@@ -1,0 +1,187 @@
+# Spotify (Client Credentials) Tools - Allowlist
+# Curated subset of Spotify (Client Credentials) API for AI agent use.
+# Auth mode: OAUTH2_CC.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. get_user_profile                         - Get current user profile
+# 2. list_playlists                           - List user's playlists
+# 3. get_playlist                             - Get playlist details
+# 4. list_tracks                              - List tracks in playlist
+# 5. get_artist                               - Get artist details
+# 6. get_album                                - Get album details
+# 7. search                                   - Search for tracks/artists/playlists
+# 8. get_recommendations                      - Get track recommendations
+# 9. get_audio_features                       - Get audio features for track
+# 10. list_followed                            - List followed artists
+
+- slug: get_user_profile
+  name: Get User Profile
+  description: |
+    Get current user profile
+  provider: spotify-oauth2-cc
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_playlists
+  name: List Playlists
+  description: |
+    List user's playlists
+  provider: spotify-oauth2-cc
+  endpoint: /me/playlists
+  method: GET
+  scopes: []
+  tags:
+    - playlists
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_playlist
+  name: Get Playlist
+  description: |
+    Get playlist details
+  provider: spotify-oauth2-cc
+  endpoint: /playlists/{id}
+  method: GET
+  scopes: []
+  tags:
+    - playlists
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_tracks
+  name: List Tracks
+  description: |
+    List tracks in playlist
+  provider: spotify-oauth2-cc
+  endpoint: /playlists/{id}/tracks
+  method: GET
+  scopes: []
+  tags:
+    - tracks
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_artist
+  name: Get Artist
+  description: |
+    Get artist details
+  provider: spotify-oauth2-cc
+  endpoint: /artists/{id}
+  method: GET
+  scopes: []
+  tags:
+    - artists
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_album
+  name: Get Album
+  description: |
+    Get album details
+  provider: spotify-oauth2-cc
+  endpoint: /albums/{id}
+  method: GET
+  scopes: []
+  tags:
+    - albums
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: search
+  name: Search
+  description: |
+    Search for tracks/artists/playlists
+  provider: spotify-oauth2-cc
+  endpoint: /search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_recommendations
+  name: Get Recommendations
+  description: |
+    Get track recommendations
+  provider: spotify-oauth2-cc
+  endpoint: /recommendations
+  method: GET
+  scopes: []
+  tags:
+    - recommendations
+    - music
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_audio_features
+  name: Get Audio Features
+  description: |
+    Get audio features for track
+  provider: spotify-oauth2-cc
+  endpoint: /audio-features/{id}
+  method: GET
+  scopes: []
+  tags:
+    - audio
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_followed
+  name: List Followed Artists
+  description: |
+    List followed artists
+  provider: spotify-oauth2-cc
+  endpoint: /me/following
+  method: GET
+  scopes: []
+  tags:
+    - following
+    - social
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

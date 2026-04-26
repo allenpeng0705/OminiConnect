@@ -1,0 +1,300 @@
+# WooCommerce Tools - Allowlist
+# Curated subset of WooCommerce REST API for AI agent use.
+
+# === TOOL LIST ===
+# 1. woocommerce_list_orders        - List orders
+# 2. woocommerce_get_order          - Get order details
+# 3. woocommerce_create_order       - Create a new order
+# 4. woocommerce_list_products      - List products
+# 5. woocommerce_get_product        - Get product details
+# 6. woocommerce_create_product     - Create a new product
+# 7. woocommerce_list_customers     - List customers
+# 8. woocommerce_get_customer       - Get customer details
+# 9. woocommerce_list_coupons      - List coupons
+# 10. woocommerce_get_coupon       - Get coupon details
+
+- slug: woocommerce_list_orders
+  name: List Orders
+  description: |
+    List all orders in the WooCommerce store. Filter by status, customer, and date range.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/orders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status: pending, processing, completed, on-hold, cancelled, refunded, failed"
+      customer:
+        type: integer
+        description: "Filter by customer ID"
+      after:
+        type: string
+        description: "Created after this date (ISO 8601)"
+      before:
+        type: string
+        description: "Created before this date (ISO 8601)"
+      per_page:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: woocommerce_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order including line items, shipping, and payment details.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/orders/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: integer
+        description: "The order ID"
+    required:
+      - id
+
+- slug: woocommerce_create_order
+  name: Create Order
+  description: |
+    Create a new order in WooCommerce. Include line items, shipping address, and payment details.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/orders
+  method: POST
+  scopes:
+    - write
+  tags:
+    - orders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      payment_method:
+        type: string
+        description: "Payment method ID"
+      billing:
+        type: object
+        description: "Billing address object"
+      shipping:
+        type: object
+        description: "Shipping address object"
+      line_items:
+        type: array
+        description: "Line items array with product_id and quantity"
+      status:
+        type: string
+        description: "Order status (default: pending)"
+        default: pending
+    required:
+      - line_items
+
+- slug: woocommerce_list_products
+  name: List Products
+  description: |
+    List all products in the WooCommerce store. Filter by category, tag, and status.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/products
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      category:
+        type: integer
+        description: "Filter by category ID"
+      tag:
+        type: integer
+        description: "Filter by tag ID"
+      status:
+        type: string
+        description: "Product status: publish, draft, pending, private"
+      per_page:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: woocommerce_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product including variations, images, and attributes.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/products/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: integer
+        description: "The product ID"
+    required:
+      - id
+
+- slug: woocommerce_create_product
+  name: Create Product
+  description: |
+    Create a new product in WooCommerce. Include name, description, prices, and images.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/products
+  method: POST
+  scopes:
+    - write
+  tags:
+    - products
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a product
+    properties:
+      name:
+        type: string
+        description: "Product name"
+      type:
+        type: string
+        description: "Product type: simple, grouped, external, variable"
+        default: simple
+      regular_price:
+        type: string
+        description: "Regular price"
+      description:
+        type: string
+        description: "Product description"
+      short_description:
+        type: string
+        description: "Short description"
+      categories:
+        type: array
+        description: "Categories array with id"
+    required:
+      - name
+
+- slug: woocommerce_list_customers
+  name: List Customers
+  description: |
+    List all customers in WooCommerce. Filter by role, and date registered.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      role:
+        type: string
+        description: "Filter by role: customer, subscriber"
+      after:
+        type: string
+        description: "Created after this date (ISO 8601)"
+      before:
+        type: string
+        description: "Created before this date (ISO 8601)"
+      per_page:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: woocommerce_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer including orders, addresses, and billing info.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "The customer ID"
+    required:
+      - id
+
+- slug: woocommerce_list_coupons
+  name: List Coupons
+  description: |
+    List all coupons in the WooCommerce store. Filter by discount type and usage limit.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/coupons
+  method: GET
+  scopes:
+    - read
+  tags:
+    - coupons
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing coupons
+    properties:
+      discount_type:
+        type: string
+        description: "Filter by type: percent, fixed_cart, fixed_product"
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: woocommerce_get_coupon
+  name: Get Coupon
+  description: |
+    Get detailed information about a specific coupon including usage restrictions and limits.
+  provider: woocommerce
+  endpoint: /wp-json/wc/v3/coupons/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - coupons
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a coupon
+    properties:
+      id:
+        type: integer
+        description: "The coupon ID"
+    required:
+      - id

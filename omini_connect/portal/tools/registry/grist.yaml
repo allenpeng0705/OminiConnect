@@ -1,0 +1,269 @@
+- slug: grist_list_documents
+  name: List Documents
+  description: |
+    Retrieve a list of all accessible Grist documents.
+  provider: grist
+  endpoint: /documents
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - document
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of documents to return (default: 50)"
+      offset:
+        type: integer
+        description: "Number of documents to skip for pagination"
+    required: []
+
+- slug: grist_get_document
+  name: Get Document
+  description: |
+    Get details and metadata for a specific document by ID.
+  provider: grist
+  endpoint: /documents/{documentId}
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - document
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting document details
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - documentId
+
+- slug: grist_create_document
+  name: Create Document
+  description: |
+    Create a new Grist document with specified name.
+  provider: grist
+  endpoint: /documents
+  method: POST
+  scopes:
+    - documents:write
+  tags:
+    - document
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      name:
+        type: string
+        description: "Name of the new document"
+      workspaceId:
+        type: string
+        description: "Workspace ID to create document in"
+    required:
+      - name
+
+- slug: grist_list_tables
+  name: List Tables
+  description: |
+    List all tables within a specific document.
+  provider: grist
+  endpoint: /documents/{documentId}/tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - documentId
+
+- slug: grist_get_table
+  name: Get Table
+  description: |
+    Get details, schema, and structure of a specific table.
+  provider: grist
+  endpoint: /documents/{documentId}/tables/{tableId}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting table details
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - documentId
+      - tableId
+
+- slug: grist_list_records
+  name: List Records
+  description: |
+    Retrieve all records from a specific table with optional filtering and pagination.
+  provider: grist
+  endpoint: /documents/{documentId}/tables/{tableId}/records
+  method: GET
+  scopes:
+    - records:read
+  tags:
+    - record
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing records
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      limit:
+        type: integer
+        description: "Maximum number of records to return (default: 100)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      filter:
+        type: object
+        description: "Filter criteria for records"
+    required:
+      - documentId
+      - tableId
+
+- slug: grist_get_record
+  name: Get Record
+  description: |
+    Get a single record by its unique identifier.
+  provider: grist
+  endpoint: /documents/{documentId}/tables/{tableId}/records/{recordId}
+  method: GET
+  scopes:
+    - records:read
+  tags:
+    - record
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a record
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      recordId:
+        type: string
+        description: "The unique identifier of the record"
+    required:
+      - documentId
+      - tableId
+      - recordId
+
+- slug: grist_create_record
+  name: Create Record
+  description: |
+    Insert a new record into a specified table.
+  provider: grist
+  endpoint: /documents/{documentId}/tables/{tableId}/records
+  method: POST
+  scopes:
+    - records:write
+  tags:
+    - record
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a record
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      data:
+        type: object
+        description: "Record data as key-value pairs"
+    required:
+      - documentId
+      - tableId
+      - data
+
+- slug: grist_update_record
+  name: Update Record
+  description: |
+    Update an existing record with new data in a specified table.
+  provider: grist
+  endpoint: /documents/{documentId}/tables/{tableId}/records/{recordId}
+  method: PUT
+  scopes:
+    - records:write
+  tags:
+    - record
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a record
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      recordId:
+        type: string
+        description: "The unique identifier of the record"
+      data:
+        type: object
+        description: "Updated record data as key-value pairs"
+    required:
+      - documentId
+      - tableId
+      - recordId
+      - data
+
+- slug: grist_list_views
+  name: List Views
+  description: |
+    List all views available for a specific document.
+  provider: grist
+  endpoint: /documents/{documentId}/views
+  method: GET
+  scopes:
+    - views:read
+  tags:
+    - view
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing views
+    properties:
+      documentId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - documentId

@@ -1,0 +1,237 @@
+# Personio Recruiting Tools - Allowlist
+# Curated subset of Personio Recruiting API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+# NOTE: personio-recruiting uses the same API endpoints as personio - only auth is different.
+
+# === TOOL LIST ===
+# 1. personio_recruiting_list_candidates         - List candidates
+# 2. personio_recruiting_get_candidate          - Get candidate details
+# 3. personio_recruiting_list_jobs             - List job postings
+# 4. personio_recruiting_get_job               - Get job details
+# 5. personio_recruiting_list_applications      - List applications
+# 6. personio_recruiting_get_application       - Get application details
+# 7. personio_recruiting_list_interviews        - List interviews
+# 8. personio_recruiting_get_interview         - Get interview details
+# 9. personio_recruiting_list_offer_docs       - List offer documents
+# 10. personio_recruiting_get_company          - Get company information
+
+- slug: personio_recruiting_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in the recruiting system.
+  provider: personio-recruiting
+  endpoint: /xml
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - recruiting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      status:
+        type: string
+        description: "Filter by candidate status"
+    required: []
+
+- slug: personio_recruiting_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+  provider: personio-recruiting
+  endpoint: /xml/{candidateId}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - recruiting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidateId
+
+- slug: personio_recruiting_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: personio-recruiting
+  endpoint: /xml/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - recruiting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+    required: []
+
+- slug: personio_recruiting_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job posting.
+  provider: personio-recruiting
+  endpoint: /xml/jobs/{jobId}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - recruiting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      jobId:
+        type: string
+        description: "Job ID"
+    required:
+      - jobId
+
+- slug: personio_recruiting_list_applications
+  name: List Applications
+  description: |
+    List all job applications.
+  provider: personio-recruiting
+  endpoint: /xml/applications
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - recruiting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      jobId:
+        type: string
+        description: "Filter by job ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: personio_recruiting_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application.
+  provider: personio-recruiting
+  endpoint: /xml/applications/{applicationId}
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - recruiting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      applicationId:
+        type: string
+        description: "Application ID"
+    required:
+      - applicationId
+
+- slug: personio_recruiting_list_interviews
+  name: List Interviews
+  description: |
+    List all scheduled interviews.
+  provider: personio-recruiting
+  endpoint: /xml/interviews
+  method: GET
+  scopes: []
+  tags:
+    - interviews
+    - recruiting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      applicationId:
+        type: string
+        description: "Filter by application ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: personio_recruiting_get_interview
+  name: Get Interview
+  description: |
+    Get detailed information about a specific interview.
+  provider: personio-recruiting
+  endpoint: /xml/interviews/{interviewId}
+  method: GET
+  scopes: []
+  tags:
+    - interviews
+    - recruiting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an interview
+    properties:
+      interviewId:
+        type: string
+        description: "Interview ID"
+    required:
+      - interviewId
+
+- slug: personio_recruiting_list_offer_docs
+  name: List Offer Documents
+  description: |
+    List all offer documents.
+  provider: personio-recruiting
+  endpoint: /xml/offer-documents
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - recruiting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offer documents
+    properties:
+      applicationId:
+        type: string
+        description: "Filter by application ID"
+    required: []
+
+- slug: personio_recruiting_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: personio-recruiting
+  endpoint: /xml?language=en
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

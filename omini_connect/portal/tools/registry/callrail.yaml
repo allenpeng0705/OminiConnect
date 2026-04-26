@@ -1,0 +1,243 @@
+# Callrail Tools - Allowlist
+# Curated subset of the Callrail API v3 for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. callrail_list_accounts              - List accounts
+# 2. callrail_get_account               - Get account details
+# 3. callrail_list_companies            - List companies
+# 4. callrail_get_company               - Get company details
+# 5. callrail_list_calls                - List calls
+# 6. callrail_get_call                  - Get call details
+# 7. callrail_list_call_tags            - List call tags
+# 8. callrail_create_call_tag           - Create a call tag
+# 9. callrail_list_agents               - List agents
+# 10. callrail_get_call_score           - Get call score
+
+- slug: callrail_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts associated with the API key.
+  provider: callrail
+  endpoint: /v3/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - management
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []
+
+- slug: callrail_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: callrail
+  endpoint: /v3/accounts/{accountId}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: integer
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: callrail_list_companies
+  name: List Companies
+  description: |
+    List all companies in an account.
+  provider: callrail
+  endpoint: /v3/accounts/{accountId}/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      accountId:
+        type: integer
+        description: "Account ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - accountId
+
+- slug: callrail_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: callrail
+  endpoint: /v3/companies/{companyId}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: callrail_list_calls
+  name: List Calls
+  description: |
+    List all calls for a company.
+  provider: callrail
+  endpoint: /v3/companies/{companyId}/calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 100
+    required:
+      - companyId
+
+- slug: callrail_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: callrail
+  endpoint: /v3/calls/{callId}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      callId:
+        type: integer
+        description: "Call ID"
+    required:
+      - callId
+
+- slug: callrail_list_call_tags
+  name: List Call Tags
+  description: |
+    List all tags for calls in a company.
+  provider: callrail
+  endpoint: /v3/companies/{companyId}/tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - calls
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: callrail_create_call_tag
+  name: Create Call Tag
+  description: |
+    Create a new tag for calls.
+  provider: callrail
+  endpoint: /v3/companies/{companyId}/tags
+  method: POST
+  scopes: []
+  tags:
+    - tags
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tag
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+      name:
+        type: string
+        description: "Tag name"
+      color:
+        type: string
+        description: "Tag color hex code"
+    required:
+      - companyId
+      - name
+
+- slug: callrail_list_agents
+  name: List Agents
+  description: |
+    List all agents in a company.
+  provider: callrail
+  endpoint: /v3/companies/{companyId}/agents
+  method: GET
+  scopes: []
+  tags:
+    - agents
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: callrail_get_call_score
+  name: Get Call Score
+  description: |
+    Get the conversation analysis score for a call.
+  provider: callrail
+  endpoint: /v3/calls/{callId}/score
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting call score
+    properties:
+      callId:
+        type: integer
+        description: "Call ID"
+    required:
+      - callId

@@ -1,0 +1,250 @@
+# Grain Tools - Allowlist
+# Curated subset of Grain API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. grain_list_recordings         - List recordings
+# 2. grain_get_recording           - Get recording details
+# 3. grain_list_transcripts       - List transcripts
+# 4. grain_get_transcript         - Get transcript details
+# 5. grain_list_highlights        - List highlights
+# 6. grain_create_highlight       - Create a highlight
+# 7. grain_list_participants      - List participants
+# 8. grain_list_workspaces        - List workspaces
+# 9. grain_list_speakers          - List speakers
+# 10. grain_list_meetings          - List meetings
+
+- slug: grain_list_recordings
+  name: List Recordings
+  description: |
+    List all recordings from Grain.
+    Returns recording details including title, duration, and date.
+  provider: grain
+  endpoint: /api/v1/recordings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: grain_get_recording
+  name: Get Recording
+  description: |
+    Get detailed information about a specific recording.
+    Includes video URL, thumbnail, and metadata.
+  provider: grain
+  endpoint: /api/v1/recordings/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      id:
+        type: string
+        description: "Recording ID"
+    required:
+      - id
+
+- slug: grain_list_transcripts
+  name: List Transcripts
+  description: |
+    List all transcripts from Grain recordings.
+    Returns transcript details including language and duration.
+  provider: grain
+  endpoint: /api/v1/transcripts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - transcripts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing transcripts
+    properties:
+      recording_id:
+        type: string
+        description: "Filter by recording ID"
+    required: []
+
+- slug: grain_get_transcript
+  name: Get Transcript
+  description: |
+    Get detailed transcript for a specific recording.
+    Includes speaker segments and timestamps.
+  provider: grain
+  endpoint: /api/v1/transcripts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - transcripts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transcript
+    properties:
+      id:
+        type: string
+        description: "Transcript ID"
+    required:
+      - id
+
+- slug: grain_list_highlights
+  name: List Highlights
+  description: |
+    List all highlights from Grain recordings.
+    Highlights are key moments marked by users.
+  provider: grain
+  endpoint: /api/v1/highlights
+  method: GET
+  scopes:
+    - read
+  tags:
+    - highlights
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing highlights
+    properties:
+      recording_id:
+        type: string
+        description: "Filter by recording ID"
+    required: []
+
+- slug: grain_create_highlight
+  name: Create Highlight
+  description: |
+    Create a new highlight in a recording.
+    Mark a key moment for easy reference.
+  provider: grain
+  endpoint: /api/v1/highlights
+  method: POST
+  scopes:
+    - write
+  tags:
+    - highlights
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a highlight
+    properties:
+      recording_id:
+        type: string
+        description: "Recording ID"
+      start_time:
+        type: number
+        description: "Start time in seconds"
+      end_time:
+        type: number
+        description: "End time in seconds"
+      label:
+        type: string
+        description: "Highlight label"
+    required:
+      - recording_id
+      - start_time
+      - end_time
+
+- slug: grain_list_participants
+  name: List Participants
+  description: |
+    List all participants from recordings.
+    Returns participant details including name and email.
+  provider: grain
+  endpoint: /api/v1/participants
+  method: GET
+  scopes:
+    - read
+  tags:
+    - participants
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      recording_id:
+        type: string
+        description: "Filter by recording ID"
+    required: []
+
+- slug: grain_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces in your Grain account.
+    Returns workspace details including name and settings.
+  provider: grain
+  endpoint: /api/v1/workspaces
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties: {}
+    required: []
+
+- slug: grain_list_speakers
+  name: List Speakers
+  description: |
+    List all speakers identified in recordings.
+    Returns speaker details including name and profile.
+  provider: grain
+  endpoint: /api/v1/speakers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - speakers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing speakers
+    properties: {}
+    required: []
+
+- slug: grain_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings from Grain.
+    Returns meeting details including title, date, and attendees.
+  provider: grain
+  endpoint: /api/v1/meetings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - meetings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []

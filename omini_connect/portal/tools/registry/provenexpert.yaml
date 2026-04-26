@@ -1,0 +1,213 @@
+# ProvenExpert Tools - Allowlist
+# Curated subset of ProvenExpert API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. provenexpert_get_rating_summary    - Get rating summary
+# 2. provenexpert_list_ratings         - List ratings
+# 3. provenexpert_get_rating           - Get rating details
+# 4. provenexpert_list_reviews        - List reviews
+# 5. provenexpert_get_review           - Get review details
+# 6. provenexpert_get_profile         - Get profile info
+# 7. provenexpert_list_competitors    - List competitors
+# 8. provenexpert_get_statistics      - Get statistics
+# 9. provenexpert_list_badges         - List badges
+# 10. provenexpert_get_seals          - Get seals info
+
+- slug: provenexpert_get_rating_summary
+  name: Get Rating Summary
+  description: |
+    Get overall rating summary.
+  provider: provenexpert
+  endpoint: /v1/rating/summary/get
+  method: POST
+  scopes: []
+  tags:
+    - ratings
+    - reputation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting rating summary
+    properties: {}
+    required: []
+
+- slug: provenexpert_list_ratings
+  name: List Ratings
+  description: |
+    List all ratings.
+  provider: provenexpert
+  endpoint: /v1/rating/get
+  method: POST
+  scopes: []
+  tags:
+    - ratings
+    - reputation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing ratings
+    properties:
+      startDate:
+        type: string
+        description: "Start date filter"
+      endDate:
+        type: string
+        description: "End date filter"
+    required: []
+
+- slug: provenexpert_get_rating
+  name: Get Rating
+  description: |
+    Get detailed information about a specific rating.
+  provider: provenexpert
+  endpoint: /v1/rating/get
+  method: POST
+  scopes: []
+  tags:
+    - ratings
+    - reputation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a rating
+    properties:
+      ratingId:
+        type: string
+        description: "Rating ID"
+    required:
+      - ratingId
+
+- slug: provenexpert_list_reviews
+  name: List Reviews
+  description: |
+    List all reviews.
+  provider: provenexpert
+  endpoint: /v1/reviews/get
+  method: POST
+  scopes: []
+  tags:
+    - reviews
+    - reputation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reviews
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: provenexpert_get_review
+  name: Get Review
+  description: |
+    Get detailed information about a specific review.
+  provider: provenexpert
+  endpoint: /v1/reviews/get
+  method: POST
+  scopes: []
+  tags:
+    - reviews
+    - reputation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a review
+    properties:
+      reviewId:
+        type: string
+        description: "Review ID"
+    required:
+      - reviewId
+
+- slug: provenexpert_get_profile
+  name: Get Profile
+  description: |
+    Get profile information.
+  provider: provenexpert
+  endpoint: /v1/profile/get
+  method: POST
+  scopes: []
+  tags:
+    - profile
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting profile
+    properties: {}
+    required: []
+
+- slug: provenexpert_list_competitors
+  name: List Competitors
+  description: |
+    List competitor information.
+  provider: provenexpert
+  endpoint: /v1/competitor/get
+  method: POST
+  scopes: []
+  tags:
+    - competitors
+    - market
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing competitors
+    properties: {}
+    required: []
+
+- slug: provenexpert_get_statistics
+  name: Get Statistics
+  description: |
+    Get statistics information.
+  provider: provenexpert
+  endpoint: /v1/statistics/get
+  method: POST
+  scopes: []
+  tags:
+    - statistics
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting statistics
+    properties: {}
+    required: []
+
+- slug: provenexpert_list_badges
+  name: List Badges
+  description: |
+    List all badges.
+  provider: provenexpert
+  endpoint: /v1/badges/get
+  method: POST
+  scopes: []
+  tags:
+    - badges
+    - achievements
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing badges
+    properties: {}
+    required: []
+
+- slug: provenexpert_get_seals
+  name: Get Seals
+  description: |
+    Get seal information for embedding.
+  provider: provenexpert
+  endpoint: /v1/seals/get
+  method: POST
+  scopes: []
+  tags:
+    - seals
+    - reputation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting seals
+    properties: {}
+    required: []

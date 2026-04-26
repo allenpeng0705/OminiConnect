@@ -1,0 +1,261 @@
+# Exa Tools - Allowlist
+# Curated subset of Exa API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. exa_search              - Search the web
+# 2. exa_search_contents     - Search and get contents
+# 3. exa_find_similar        - Find similar documents
+# 4. exa_get_document        - Get document by ID
+# 5. exa_list_collections    - List collections
+# 6. exa_create_collection   - Create a collection
+# 7. exa_delete_document     - Delete a document
+# 8. exa_get_stats           - Get usage statistics
+# 9. exa_list_webpages       - List discovered webpages
+# 10. exa_highlight          - Get highlights from search results
+
+- slug: exa_search
+  name: Search
+  description: |
+    Search the web using natural language queries.
+  provider: exa
+  endpoint: /search
+  method: POST
+  scopes: []
+  tags:
+    - search
+    - web
+    - read
+  input_schema:
+    type: object
+    description: Parameters for web search
+    properties:
+      query:
+        type: string
+        description: "Natural language search query"
+      num_results:
+        type: integer
+        description: "Number of results (default 10)"
+        default: 10
+      start_date:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required:
+      - query
+
+- slug: exa_search_contents
+  name: Search and Get Contents
+  description: |
+    Search the web and get the contents of matching pages.
+  provider: exa
+  endpoint: /search
+  method: POST
+  scopes: []
+  tags:
+    - search
+    - web
+    - read
+  input_schema:
+    type: object
+    description: Parameters for search with contents
+    properties:
+      query:
+        type: string
+        description: "Natural language search query"
+      num_results:
+        type: integer
+        description: "Number of results"
+        default: 10
+      contents:
+        type: boolean
+        description: "Include page contents"
+        default: true
+      start_date:
+        type: string
+        description: "Start date filter"
+      end_date:
+        type: string
+        description: "End date filter"
+    required:
+      - query
+
+- slug: exa_find_similar
+  name: Find Similar
+  description: |
+    Find documents similar to a given URL or text.
+  provider: exa
+  endpoint: /find-similar
+  method: POST
+  scopes: []
+  tags:
+    - search
+    - similarity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for finding similar documents
+    properties:
+      query:
+        type: string
+        description: "URL or text to find similar content"
+      num_results:
+        type: integer
+        description: "Number of results"
+        default: 10
+    required:
+      - query
+
+- slug: exa_get_document
+  name: Get Document
+  description: |
+    Get a document by its ID.
+  provider: exa
+  endpoint: /documents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id
+
+- slug: exa_list_collections
+  name: List Collections
+  description: |
+    List all collections.
+  provider: exa
+  endpoint: /collections
+  method: GET
+  scopes: []
+  tags:
+    - collections
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: exa_create_collection
+  name: Create Collection
+  description: |
+    Create a new collection for storing documents.
+  provider: exa
+  endpoint: /collections
+  method: POST
+  scopes: []
+  tags:
+    - collections
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating collection
+    properties:
+      name:
+        type: string
+        description: "Collection name"
+      description:
+        type: string
+        description: "Collection description"
+    required:
+      - name
+
+- slug: exa_delete_document
+  name: Delete Document
+  description: |
+    Delete a document from a collection.
+  provider: exa
+  endpoint: /documents/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - documents
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id
+
+- slug: exa_get_stats
+  name: Get Stats
+  description: |
+    Get API usage statistics.
+  provider: exa
+  endpoint: /stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - usage
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: exa_list_webpages
+  name: List Webpages
+  description: |
+    List discovered webpages from previous searches.
+  provider: exa
+  endpoint: /webpages
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - web
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing webpages
+    properties:
+      num_results:
+        type: integer
+        description: "Number of results"
+        default: 10
+    required: []
+
+- slug: exa_highlight
+  name: Highlight
+  description: |
+    Get highlights from search results.
+  provider: exa
+  endpoint: /highlight
+  method: POST
+  scopes: []
+  tags:
+    - search
+    - highlights
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting highlights
+    properties:
+      query:
+        type: string
+        description: "Query to highlight"
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Array of result IDs"
+    required:
+      - query
+      - ids

@@ -1,0 +1,317 @@
+# Mailgun Tools - Email Service API
+# Domain management, sending messages, bounces, complaints, and webhooks.
+
+# === TOOL LIST ===
+# 1. mailgun_list_domains        - List all verified domains
+# 2. mailgun_get_domain         - Get domain details and credentials
+# 3. mailgun_add_domain          - Add and verify a new domain
+# 4. mailgun_send_message        - Send an email message
+# 5. mailgun_list_messages       - List stored messages
+# 6. mailgun_get_message         - Get a specific stored message
+# 7. mailgun_list_bounces        - List bounced email addresses
+# 8. mailgun_get_bounce          - Get bounce details for an address
+# 9. mailgun_list_complaints     - List spam complaint addresses
+# 10. mailgun_get_complaint       - Get complaint details for an address
+
+- slug: mailgun_list_domains
+  name: List Domains
+  description: |
+    List all domains associated with your Mailgun account.
+    Returns domain names, verification status, and settings.
+  provider: mailgun
+  endpoint: /v3/domains
+  method: GET
+  scopes:
+    - domains
+  tags:
+    - domains
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of domains to return (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of domains to skip for pagination"
+        default: 0
+    required: []
+
+- slug: mailgun_get_domain
+  name: Get Domain
+  description: |
+    Get detailed information about a specific domain.
+    Returns DNS records, verification status, and credentials.
+  provider: mailgun
+  endpoint: /v3/domains/{domain}
+  method: GET
+  scopes:
+    - domains
+  tags:
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting domain details
+    properties:
+      domain:
+        type: string
+        description: "Domain name (e.g., example.com)"
+    required:
+      - domain
+
+- slug: mailgun_add_domain
+  name: Add Domain
+  description: |
+    Add a new domain to your Mailgun account.
+    Returns DNS records that must be configured for verification.
+  provider: mailgun
+  endpoint: /v3/domains
+  method: POST
+  scopes:
+    - domains
+  tags:
+    - domains
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a domain
+    properties:
+      name:
+        type: string
+        description: "Domain name to add (required)"
+      smtp_password:
+        type: string
+        description: "Password for SMTP authentication"
+      web_scheme:
+        type: string
+        description: "Scheme for click tracking: http or https"
+        default: https
+    required:
+      - name
+
+- slug: mailgun_send_message
+  name: Send Message
+  description: |
+    Send an email message to one or more recipients.
+    Supports HTML, text, attachments, and custom headers.
+  provider: mailgun
+  endpoint: /v3/{domain}/messages
+  method: POST
+  scopes:
+    - messages
+  tags:
+    - messages
+    - email
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      domain:
+        type: string
+        description: "Domain to send from"
+      to:
+        type: array
+        items:
+          type: string
+        description: "Recipient email addresses"
+      from:
+        type: string
+        description: "Sender address (format: 'Name <email@example.com>')"
+      subject:
+        type: string
+        description: "Email subject"
+      text:
+        type: string
+        description: "Plain text body"
+      html:
+        type: string
+        description: "HTML body"
+      attachment:
+        type: array
+        description: "File attachments"
+      header:
+        type: object
+        description: "Custom headers as key-value pairs"
+    required:
+      - domain
+      - to
+      - from
+      - subject
+
+- slug: mailgun_list_messages
+  name: List Stored Messages
+  description: |
+    List messages stored via Mailgun's store-and-forward service.
+    Requires message storage to be enabled on your domain.
+  provider: mailgun
+  endpoint: /v3/domains/{domain}/messages
+  method: GET
+  scopes:
+    - messages
+  tags:
+    - messages
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for listing stored messages
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+      limit:
+        type: integer
+        description: "Maximum messages to return (default 100, max 10000)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of messages to skip"
+        default: 0
+    required:
+      - domain
+
+- slug: mailgun_get_message
+  name: Get Stored Message
+  description: |
+    Retrieve a specific stored message by its URL.
+    Message URLs are returned when listing stored messages.
+  provider: mailgun
+  endpoint: /v3/messages/{url}
+  method: GET
+  scopes:
+    - messages
+  tags:
+    - messages
+    - storage
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a stored message
+    properties:
+      url:
+        type: string
+        description: "Full URL of the stored message"
+    required:
+      - url
+
+- slug: mailgun_list_bounces
+  name: List Bounces
+  description: |
+    List all email addresses that have bounced.
+    Bounces are failed deliveries due to invalid addresses or servers.
+  provider: mailgun
+  endpoint: /v3/{domain}/bounces
+  method: GET
+  scopes:
+    - bounces
+  tags:
+    - bounces
+    - deliverability
+  input_schema:
+    type: object
+    description: Parameters for listing bounces
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+      limit:
+        type: integer
+        description: "Maximum results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required:
+      - domain
+
+- slug: mailgun_get_bounce
+  name: Get Bounce
+  description: |
+    Get bounce details for a specific email address.
+    Returns bounce type, code, and timestamp.
+  provider: mailgun
+  endpoint: /v3/{domain}/bounces/{address}
+  method: GET
+  scopes:
+    - bounces
+  tags:
+    - bounces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting bounce details
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+      address:
+        type: string
+        description: "Email address to check"
+    required:
+      - domain
+      - address
+
+- slug: mailgun_list_complaints
+  name: List Complaints
+  description: |
+    List all email addresses that marked your messages as spam.
+    Complaints are reported via Feedback Loops from mailbox providers.
+  provider: mailgun
+  endpoint: /v3/{domain}/complaints
+  method: GET
+  scopes:
+    - complaints
+  tags:
+    - complaints
+    - spam
+    - deliverability
+  input_schema:
+    type: object
+    description: Parameters for listing complaints
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+      limit:
+        type: integer
+        description: "Maximum results (default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required:
+      - domain
+
+- slug: mailgun_get_complaint
+  name: Get Complaint
+  description: |
+    Get complaint details for a specific email address.
+    Returns when the complaint was filed and the mailing list.
+  provider: mailgun
+  endpoint: /v3/{domain}/complaints/{address}
+  method: GET
+  scopes:
+    - complaints
+  tags:
+    - complaints
+    - spam
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting complaint details
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+      address:
+        type: string
+        description: "Email address to check"
+    required:
+      - domain
+      - address

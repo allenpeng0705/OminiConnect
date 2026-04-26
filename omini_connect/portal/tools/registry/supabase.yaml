@@ -1,0 +1,303 @@
+# Supabase Tools - Allowlist
+# Curated subset of Supabase API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. supabase_list_projects        - List Supabase projects
+# 2. supabase_get_project         - Get project details
+# 3. supabase_list_databases      - List project databases
+# 4. supabase_query_table          - Query data from a table
+# 5. supabase_list_tables          - List tables in a schema
+# 6. supabase_get_table           - Get table schema
+# 7. supabase_list_auth_users      - List authentication users
+# 8. supabase_create_auth_user     - Create a new user
+# 9. supabase_list_storage_buckets - List storage buckets
+# 10. supabase_upload_file        - Upload file to storage
+
+- slug: supabase_list_projects
+  name: List Projects
+  description: |
+    List all Supabase projects the authenticated user has access to.
+  provider: supabase
+  endpoint: /projects
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: supabase_get_project
+  name: Get Project
+  description: |
+    Get details about a specific Supabase project including region, status, and configuration.
+  provider: supabase
+  endpoint: /projects/{ref}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+    required:
+      - ref
+
+- slug: supabase_list_databases
+  name: List Databases
+  description: |
+    List all databases in a Supabase project.
+    Each project typically has a default PostgreSQL database.
+  provider: supabase
+  endpoint: /projects/{ref}/databases
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+    required:
+      - ref
+
+- slug: supabase_query_table
+  name: Query Table
+  description: |
+    Execute a query against a PostgreSQL table in the Supabase database.
+    Supports filtering, ordering, and pagination.
+  provider: supabase
+  endpoint: /projects/{ref}/databases/query
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - query
+  input_schema:
+    type: object
+    description: Parameters for querying a table
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+      query:
+        type: object
+        description: "Query configuration"
+        properties:
+          table:
+            type: string
+            description: "Table name to query"
+          columns:
+            type: array
+            items:
+              type: string
+            description: "Columns to select (default: all)"
+          filters:
+            type: array
+            description: "Filter conditions"
+          order:
+            type: object
+            description: "Ordering configuration"
+          limit:
+            type: integer
+            description: "Maximum rows to return"
+          offset:
+            type: integer
+            description: "Number of rows to skip"
+    required:
+      - ref
+      - query
+
+- slug: supabase_list_tables
+  name: List Tables
+  description: |
+    List all tables in a specific schema of the Supabase database.
+    Common schemas include 'public', 'storage', 'auth'.
+  provider: supabase
+  endpoint: /projects/{ref}/tables
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+      schema:
+        type: string
+        description: "Schema name (default: public)"
+        default: public
+    required:
+      - ref
+
+- slug: supabase_get_table
+  name: Get Table
+  description: |
+    Get the schema and column definitions of a specific table.
+  provider: supabase
+  endpoint: /projects/{ref}/tables/{tableId}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table schema
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+      tableId:
+        type: string
+        description: "Table name"
+    required:
+      - ref
+      - tableId
+
+- slug: supabase_list_auth_users
+  name: List Auth Users
+  description: |
+    List all users authenticated through Supabase Auth.
+    Returns user metadata, creation time, and last sign-in.
+  provider: supabase
+  endpoint: /projects/{ref}/auth/users
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - auth
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing auth users
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Users per page"
+        default: 20
+    required:
+      - ref
+
+- slug: supabase_create_auth_user
+  name: Create Auth User
+  description: |
+    Create a new user in Supabase Auth.
+    Sends a confirmation email to the user.
+  provider: supabase
+  endpoint: /projects/{ref}/auth/users
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - auth
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      ref:
+        type: string
+        description: "Supabase project reference ID"
+      email:
+        type: string
+        description: "User email address"
+      password:
+        type: string
+        description: "User password (min 6 characters)"
+      user_metadata:
+        type: object
+        description: "Additional user metadata"
+    required:
+      - ref
+      - email
+      - password
+
+- slug: supabase_list_storage_buckets
+  name: List Storage Buckets
+  description: |
+    List all storage buckets in a Supabase project.
+    Buckets contain files organized in folders.
+  provider: supabase
+  endpoint: /storage/v1/buckets
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - storage
+    - buckets
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: supabase_upload_file
+  name: Upload File
+  description: |
+    Upload a file to a Supabase Storage bucket.
+    Creates parent folders if they do not exist.
+  provider: supabase
+  endpoint: /storage/v1/bucket/{bucketId}/file
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - storage
+    - files
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      bucketId:
+        type: string
+        description: "Storage bucket ID"
+      path:
+        type: string
+        description: "File path within the bucket"
+      file:
+        type: string
+        description: "File content (base64 encoded)"
+      contentType:
+        type: string
+        description: "MIME type of the file"
+    required:
+      - bucketId
+      - path
+      - file

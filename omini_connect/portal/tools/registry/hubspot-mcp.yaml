@@ -1,0 +1,250 @@
+# HubSpot MCP Tools - Allowlist
+# Curated subset of HubSpot MCP API for AI agent use.
+# MCP OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. hubspot_list_contacts        - List contacts
+# 2. hubspot_get_contact           - Get contact details
+# 3. hubspot_list_companies        - List companies
+# 4. hubspot_get_company           - Get company details
+# 5. hubspot_list_deals           - List deals
+# 6. hubspot_get_deal             - Get deal details
+# 7. hubspot_list_tickets         - List tickets
+# 8. hubspot_get_ticket           - Get ticket details
+# 9. hubspot_list_owners          - List owners
+# 10. hubspot_list_pipelines       - List pipelines
+
+- slug: hubspot_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in HubSpot.
+    Returns contact details including name, email, and properties.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/contacts
+  method: GET
+  scopes:
+    - crm.objects.contacts.read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: hubspot_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+    Includes contact properties and associated company.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/contacts/{contactId}
+  method: GET
+  scopes:
+    - crm.objects.contacts.read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: hubspot_list_companies
+  name: List Companies
+  description: |
+    List all companies in HubSpot.
+    Returns company details including name and domain.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/companies
+  method: GET
+  scopes:
+    - crm.objects.companies.read
+  tags:
+    - companies
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: hubspot_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+    Includes company properties and associated contacts.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/companies/{companyId}
+  method: GET
+  scopes:
+    - crm.objects.companies.read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: hubspot_list_deals
+  name: List Deals
+  description: |
+    List all deals in HubSpot.
+    Returns deal details including amount and stage.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/deals
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: hubspot_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a specific deal.
+    Includes deal properties and associated contacts.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/deals/{dealId}
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      dealId:
+        type: string
+        description: "Deal ID"
+    required:
+      - dealId
+
+- slug: hubspot_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets in HubSpot.
+    Returns ticket details including subject and status.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/tickets
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: hubspot_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a specific ticket.
+    Includes ticket properties and associated contacts.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/objects/tickets/{ticketId}
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      ticketId:
+        type: string
+        description: "Ticket ID"
+    required:
+      - ticketId
+
+- slug: hubspot_list_owners
+  name: List Owners
+  description: |
+    List all owners in HubSpot.
+    Returns owner details including name and email.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/owners
+  method: GET
+  scopes:
+    - crm.objects.owners.read
+  tags:
+    - owners
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing owners
+    properties: {}
+    required: []
+
+- slug: hubspot_list_pipelines
+  name: List Pipelines
+  description: |
+    List all pipelines in HubSpot.
+    Returns pipeline details including stages and status.
+  provider: hubspot-mcp
+  endpoint: /crm/v3/pipelines
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - pipelines
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pipelines
+    properties: {}
+    required: []

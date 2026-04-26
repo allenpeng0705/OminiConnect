@@ -1,0 +1,320 @@
+# Apaleo Tools - Allowlist
+# Curated subset of Apaleo API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. apaleo_list_reservations  - List all reservations
+# 2. apaleo_get_reservation    - Get reservation details
+# 3. apaleo_create_reservation - Create a new reservation
+# 4. apaleo_list_guests        - List all guests
+# 5. apaleo_get_guest          - Get guest details
+# 6. apaleo_create_guest       - Create a new guest
+# 7. apaleo_list_properties     - List all properties
+# 8. apaleo_get_property       - Get property details
+# 9. apaleo_list_invoices      - List all invoices
+# 10. apaleo_get_invoice       - Get invoice details
+
+- slug: apaleo_list_reservations
+  name: List Reservations
+  description: |
+    List all reservations in Apaleo. Filter by property, status, or arrival date.
+  provider: apaleo
+  endpoint: /reservation-api/reservations
+  method: GET
+  scopes:
+    - reservations:read
+  tags:
+    - reservations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reservations
+    properties:
+      property_id:
+        type: string
+        description: "Filter by property ID"
+      status:
+        type: string
+        description: "Filter by status (confirmed, cancelled, checked-in, checked-out)"
+      arrival_date:
+        type: string
+        description: "Filter by arrival date (YYYY-MM-DD)"
+      departure_date:
+        type: string
+        description: "Filter by departure date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: apaleo_get_reservation
+  name: Get Reservation
+  description: |
+    Get detailed information about a specific reservation including guests, room assignment, and services.
+  provider: apaleo
+  endpoint: /reservation-api/reservations/{id}
+  method: GET
+  scopes:
+    - reservations:read
+  tags:
+    - reservations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a reservation
+    properties:
+      id:
+        type: string
+        description: "Reservation ID"
+    required:
+      - id
+
+- slug: apaleo_create_reservation
+  name: Create Reservation
+  description: |
+    Create a new reservation. Set property, room type, arrival/departure dates, and guest information.
+  provider: apaleo
+  endpoint: /reservation-api/reservations
+  method: POST
+  scopes:
+    - reservations:write
+  tags:
+    - reservations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a reservation
+    properties:
+      property_id:
+        type: string
+        description: "Property ID"
+      room_type_id:
+        type: string
+        description: "Room type ID"
+      arrival_date:
+        type: string
+        description: "Arrival date (YYYY-MM-DD)"
+      departure_date:
+        type: string
+        description: "Departure date (YYYY-MM-DD)"
+      guest_email:
+        type: string
+        description: "Guest email address"
+      guest_first_name:
+        type: string
+        description: "Guest first name"
+      guest_last_name:
+        type: string
+        description: "Guest last name"
+      adults:
+        type: integer
+        description: "Number of adults"
+        default: 1
+    required:
+      - property_id
+      - room_type_id
+      - arrival_date
+      - departure_date
+
+- slug: apaleo_list_guests
+  name: List Guests
+  description: |
+    List all guests in Apaleo. Filter by property or search by name/email.
+  provider: apaleo
+  endpoint: /guest-directory-api/guests
+  method: GET
+  scopes:
+    - guests:read
+  tags:
+    - guests
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing guests
+    properties:
+      property_id:
+        type: string
+        description: "Filter by property ID"
+      search:
+        type: string
+        description: "Search by name or email"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: apaleo_get_guest
+  name: Get Guest
+  description: |
+    Get detailed information about a specific guest including contact details, preferences, and stay history.
+  provider: apaleo
+  endpoint: /guest-directory-api/guests/{id}
+  method: GET
+  scopes:
+    - guests:read
+  tags:
+    - guests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a guest
+    properties:
+      id:
+        type: string
+        description: "Guest ID"
+    required:
+      - id
+
+- slug: apaleo_create_guest
+  name: Create Guest
+  description: |
+    Create a new guest profile. Set name, email, phone, and preferences.
+  provider: apaleo
+  endpoint: /guest-directory-api/guests
+  method: POST
+  scopes:
+    - guests:write
+  tags:
+    - guests
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a guest
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      language:
+        type: string
+        description: "Preferred language code"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: apaleo_list_properties
+  name: List Properties
+  description: |
+    List all properties (hotels) in Apaleo. Returns property IDs, names, and addresses.
+  provider: apaleo
+  endpoint: /property-discovery-api/properties
+  method: GET
+  scopes:
+    - properties:read
+  tags:
+    - properties
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: apaleo_get_property
+  name: Get Property
+  description: |
+    Get detailed information about a specific property including room types, amenities, and contact info.
+  provider: apaleo
+  endpoint: /property-discovery-api/properties/{id}
+  method: GET
+  scopes:
+    - properties:read
+  tags:
+    - properties
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      id:
+        type: string
+        description: "Property ID"
+    required:
+      - id
+
+- slug: apaleo_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Apaleo. Filter by property, status, or date range.
+  provider: apaleo
+  endpoint: /invoice-api/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      property_id:
+        type: string
+        description: "Filter by property ID"
+      status:
+        type: string
+        description: "Filter by status (open, paid, cancelled)"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: apaleo_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice including line items, totals, and payment status.
+  provider: apaleo
+  endpoint: /invoice-api/invoices/{id}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id

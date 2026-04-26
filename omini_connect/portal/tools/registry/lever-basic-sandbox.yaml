@@ -1,0 +1,226 @@
+# Lever Basic Auth Sandbox Tools - Allowlist
+# Curated subset of Lever Sandbox API for AI agent use.
+# BASIC Auth via Nango (Sandbox environment).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lever_basic_sandbox_list_opportunities - List opportunities
+# 2. lever_basic_sandbox_get_opportunity  - Get opportunity details
+# 3. lever_basic_sandbox_list_offers      - List offers
+# 4. lever_basic_sandbox_get_offer       - Get offer details
+# 5. lever_basic_sandbox_list_users      - List users
+# 6. lever_basic_sandbox_get_user       - Get user details
+# 7. lever_basic_sandbox_list_jobs       - List jobs
+# 8. lever_basic_sandbox_get_job        - Get job details
+# 9. lever_basic_sandbox_list_stages    - List stages
+# 10. lever_basic_sandbox_list_notes    - List notes
+
+- slug: lever_basic_sandbox_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities (candidates) in Lever Sandbox.
+  provider: lever-basic-sandbox
+  endpoint: /v1/opportunities
+  method: GET
+  scopes: []
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage:
+        type: string
+        description: "Filter by stage"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lever_basic_sandbox_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get details for a specific opportunity.
+  provider: lever-basic-sandbox
+  endpoint: /v1/opportunities/{opportunity_id}
+  method: GET
+  scopes: []
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - opportunity_id
+
+- slug: lever_basic_sandbox_list_offers
+  name: List Offers
+  description: |
+    List all offers.
+  provider: lever-basic-sandbox
+  endpoint: /v1/offers
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lever_basic_sandbox_get_offer
+  name: Get Offer
+  description: |
+    Get details for a specific offer.
+  provider: lever-basic-sandbox
+  endpoint: /v1/offers/{offer_id}
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offer_id:
+        type: string
+        description: "Offer ID"
+    required:
+      - offer_id
+
+- slug: lever_basic_sandbox_list_users
+  name: List Users
+  description: |
+    List all users (team members).
+  provider: lever-basic-sandbox
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: lever_basic_sandbox_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: lever-basic-sandbox
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: lever_basic_sandbox_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs.
+  provider: lever-basic-sandbox
+  endpoint: /v1/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status (open, closed)"
+    required: []
+
+- slug: lever_basic_sandbox_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job.
+  provider: lever-basic-sandbox
+  endpoint: /v1/jobs/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: lever_basic_sandbox_list_stages
+  name: List Stages
+  description: |
+    List all stages.
+  provider: lever-basic-sandbox
+  endpoint: /v1/stages
+  method: GET
+  scopes: []
+  tags:
+    - stages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing stages
+    properties: {}
+    required: []
+
+- slug: lever_basic_sandbox_list_notes
+  name: List Notes
+  description: |
+    List all notes.
+  provider: lever-basic-sandbox
+  endpoint: /v1/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []

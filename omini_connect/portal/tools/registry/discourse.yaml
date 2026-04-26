@@ -1,0 +1,222 @@
+- slug: discourse_list_categories
+  name: List Categories
+  description: |
+    Retrieve all categories in the forum with their descriptions and settings.
+  provider: discourse
+  endpoint: /categories.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties: {}
+
+- slug: discourse_get_category
+  name: Get Category
+  description: |
+    Get details of a specific category by its ID.
+  provider: discourse
+  endpoint: /c/{id}/show.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      id:
+        type: integer
+        description: "The category ID"
+    required:
+      - id
+
+- slug: discourse_list_posts
+  name: List Posts
+  description: |
+    Retrieve a list of posts, optionally filtered by topic or category.
+  provider: discourse
+  endpoint: /posts.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      topic_id:
+        type: integer
+        description: "Filter by topic ID"
+      category:
+        type: string
+        description: "Filter by category slug"
+      page:
+        type: integer
+        description: "Page number for pagination"
+
+- slug: discourse_get_post
+  name: Get Post
+  description: |
+    Get details of a specific post by its ID.
+  provider: discourse
+  endpoint: /posts/{id}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      id:
+        type: integer
+        description: "The post ID"
+    required:
+      - id
+
+- slug: discourse_create_post
+  name: Create Post
+  description: |
+    Create a new post in a topic or as a new topic.
+  provider: discourse
+  endpoint: /posts.json
+  method: POST
+  scopes:
+    - write
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      topic_id:
+        type: integer
+        description: "The topic ID to post in"
+      title:
+        type: string
+        description: "Title for new topic"
+      raw:
+        type: string
+        description: "The post content"
+      category:
+        type: string
+        description: "Category slug for new topic"
+    required:
+      - raw
+
+- slug: discourse_list_users
+  name: List Users
+  description: |
+    Retrieve a list of users in the forum with optional search filter.
+  provider: discourse
+  endpoint: /admin/users/list/{flag}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      flag:
+        type: string
+        description: "User type: active, new, staff, suspended"
+        default: active
+      filter:
+        type: string
+        description: "Search filter for username or email"
+      page:
+        type: integer
+        description: "Page number"
+
+- slug: discourse_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: discourse
+  endpoint: /u/{username}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      username:
+        type: string
+        description: "The username"
+    required:
+      - username
+
+- slug: discourse_list_groups
+  name: List Groups
+  description: |
+    Retrieve all groups in the forum.
+  provider: discourse
+  endpoint: /groups.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      type:
+        type: string
+        description: "Filter by type: public, private, automatic"
+
+- slug: discourse_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including members.
+  provider: discourse
+  endpoint: /groups/{id}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: integer
+        description: "The group ID"
+    required:
+      - id
+
+- slug: discourse_list_notifications
+  name: List Notifications
+  description: |
+    Retrieve notifications for the authenticated user.
+  provider: discourse
+  endpoint: /notifications.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - notifications
+  input_schema:
+    type: object
+    description: Parameters for listing notifications
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of notifications to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"

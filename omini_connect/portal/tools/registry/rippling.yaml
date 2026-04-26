@@ -1,0 +1,257 @@
+# Rippling Tools - Allowlist
+# Curated subset of Rippling API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rippling_list_employees           - List all employees
+# 2. rippling_get_employee             - Get employee details
+# 3. rippling_create_employee           - Create an employee
+# 4. rippling_list_departments         - List departments
+# 5. rippling_list_jobs                - List jobs
+# 6. rippling_list_time_off            - List time off requests
+# 7. rippling_approve_time_off         - Approve time off request
+# 8. rippling_list_devices             - List devices
+# 9. rippling_list_apps                - List apps
+# 10. rippling_get_company_info        - Get company info
+
+- slug: rippling_list_employees
+  name: List Employees
+  description: |
+    Retrieve a list of all employees in your Rippling account.
+  provider: rippling
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - people
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Number of employees"
+        default: 50
+      departmentId:
+        type: string
+        description: "Filter by department"
+    required: []
+
+- slug: rippling_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: rippling
+  endpoint: /v1/employees/{employeeId}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - people
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "The employee ID"
+    required:
+      - employeeId
+
+- slug: rippling_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee in Rippling.
+  provider: rippling
+  endpoint: /v1/employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - hr
+    - people
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      workEmail:
+        type: string
+        description: "Work email"
+      departmentId:
+        type: string
+        description: "Department ID"
+    required:
+      - firstName
+      - lastName
+      - workEmail
+
+- slug: rippling_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of all departments.
+  provider: rippling
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - departments
+    - organization
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: rippling_list_jobs
+  name: List Jobs
+  description: |
+    Retrieve a list of all jobs.
+  provider: rippling
+  endpoint: /v1/jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - hr
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Number of jobs"
+        default: 50
+    required: []
+
+- slug: rippling_list_time_off
+  name: List Time Off
+  description: |
+    Retrieve a list of time off requests.
+  provider: rippling
+  endpoint: /v1/time-off
+  method: GET
+  scopes:
+    - time-off:read
+  tags:
+    - time-off
+    - hr
+    - leave
+  input_schema:
+    type: object
+    description: Parameters for listing time off
+    properties:
+      limit:
+        type: integer
+        description: "Number of requests"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, approved, denied"
+    required: []
+
+- slug: rippling_approve_time_off
+  name: Approve Time Off
+  description: |
+    Approve a time off request.
+  provider: rippling
+  endpoint: /v1/time-off/{requestId}/approve
+  method: POST
+  scopes:
+    - time-off:write
+  tags:
+    - time-off
+    - hr
+    - leave
+    - approve
+  input_schema:
+    type: object
+    description: Parameters for approving time off
+    properties:
+      requestId:
+        type: string
+        description: "The request ID"
+    required:
+      - requestId
+
+- slug: rippling_list_devices
+  name: List Devices
+  description: |
+    Retrieve a list of all managed devices.
+  provider: rippling
+  endpoint: /v1/devices
+  method: GET
+  scopes:
+    - devices:read
+  tags:
+    - devices
+    - it
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      limit:
+        type: integer
+        description: "Number of devices"
+        default: 50
+    required: []
+
+- slug: rippling_list_apps
+  name: List Apps
+  description: |
+    Retrieve a list of all integrated apps.
+  provider: rippling
+  endpoint: /v1/apps
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - apps
+    - integrations
+    - software
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      limit:
+        type: integer
+        description: "Number of apps"
+        default: 50
+    required: []
+
+- slug: rippling_get_company_info
+  name: Get Company Info
+  description: |
+    Get company information for your account.
+  provider: rippling
+  endpoint: /v1/company
+  method: GET
+  scopes:
+    - company:read
+  tags:
+    - company
+    - organization
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

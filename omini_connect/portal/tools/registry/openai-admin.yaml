@@ -1,0 +1,238 @@
+# OpenAI (Admin) Tools - Allowlist
+# Curated subset of OpenAI Admin API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. openai_list_users                - List organization users
+# 2. openai_get_user                  - Get user details
+# 3. openai_invite_user               - Invite user
+# 4. openai_list_models               - List available models
+# 5. openai_list_tokens              - List API tokens
+# 6. openai_create_token             - Create API token
+# 7. openai_revoke_token             - Revoke API token
+# 8. openai_get_usage                - Get usage statistics
+# 9. openai_get_billing            - Get billing information
+# 10. openai_get_settings           - Get organization settings
+
+- slug: openai_list_users
+  name: List Users
+  description: |
+    List all users in the OpenAI organization.
+  provider: openai-admin
+  endpoint: /v1/organization/users
+  method: GET
+  scopes:
+    - org:read
+  tags:
+    - openai
+    - users
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users"
+        default: 100
+    required: []
+
+- slug: openai_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: openai-admin
+  endpoint: /v1/organization/users/{user_id}
+  method: GET
+  scopes:
+    - org:read
+  tags:
+    - openai
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: openai_invite_user
+  name: Invite User
+  description: |
+    Invite a new user to the OpenAI organization.
+  provider: openai-admin
+  endpoint: /v1/organization/invites
+  method: POST
+  scopes:
+    - org:write
+  tags:
+    - openai
+    - users
+    - invite
+  input_schema:
+    type: object
+    description: Parameters for inviting a user
+    properties:
+      email:
+        type: string
+        description: "User email"
+      role:
+        type: string
+        description: "User role (member, admin)"
+    required:
+      - email
+
+- slug: openai_list_models
+  name: List Models
+  description: |
+    List all available models in the organization.
+  provider: openai-admin
+  endpoint: /v1/models
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - openai
+    - models
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: openai_list_tokens
+  name: List Tokens
+  description: |
+    List all API tokens in the organization.
+  provider: openai-admin
+  endpoint: /v1/organization/api_tokens
+  method: GET
+  scopes:
+    - tokens:read
+  tags:
+    - openai
+    - tokens
+    - api-keys
+  input_schema:
+    type: object
+    description: Parameters for listing tokens
+    properties: {}
+    required: []
+
+- slug: openai_create_token
+  name: Create Token
+  description: |
+    Create a new API token.
+  provider: openai-admin
+  endpoint: /v1/organization/api_tokens
+  method: POST
+  scopes:
+    - tokens:write
+  tags:
+    - openai
+    - tokens
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a token
+    properties:
+      name:
+        type: string
+        description: "Token name"
+      scopes:
+        type: array
+        description: "Token scopes"
+    required:
+      - name
+
+- slug: openai_revoke_token
+  name: Revoke Token
+  description: |
+    Revoke an existing API token.
+  provider: openai-admin
+  endpoint: /v1/organization/api_tokens/{token_id}
+  method: DELETE
+  scopes:
+    - tokens:write
+  tags:
+    - openai
+    - tokens
+    - revoke
+  input_schema:
+    type: object
+    description: Parameters for revoking a token
+    properties:
+      token_id:
+        type: string
+        description: "Token ID"
+    required:
+      - token_id
+
+- slug: openai_get_usage
+  name: Get Usage
+  description: |
+    Get usage statistics for the organization.
+  provider: openai-admin
+  endpoint: /v1/usage
+  method: GET
+  scopes:
+    - usage:read
+  tags:
+    - openai
+    - usage
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: openai_get_billing
+  name: Get Billing
+  description: |
+    Get billing information for the organization.
+  provider: openai-admin
+  endpoint: /v1/billing
+  method: GET
+  scopes:
+    - billing:read
+  tags:
+    - openai
+    - billing
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for getting billing
+    properties: {}
+    required: []
+
+- slug: openai_get_settings
+  name: Get Settings
+  description: |
+    Get organization settings.
+  provider: openai-admin
+  endpoint: /v1/organization
+  method: GET
+  scopes:
+    - org:read
+  tags:
+    - openai
+    - settings
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties: {}
+    required: []

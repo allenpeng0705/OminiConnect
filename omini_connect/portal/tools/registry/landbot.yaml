@@ -1,0 +1,289 @@
+# landbot Tools - Allowlist
+# Curated subset of the Landbot API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. landbot_list_conversations - List all conversations
+# 2. landbot_get_conversation   - Get a specific conversation
+# 3. landbot_create_conversation - Create a new conversation
+# 4. landbot_list_leads         - List all leads
+# 5. landbot_get_lead           - Get a specific lead
+# 6. landbot_export_leads       - Export leads data
+# 7. landbot_list_settings      - List all settings
+# 8. landbot_get_setting        - Get a specific setting
+# 9. landbot_update_setting    - Update a setting
+# 10. landbot_get_analytics     - Get analytics data
+
+- slug: landbot_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve all conversations in your Landbot account.
+    Conversations are interactions between users and your chatbots.
+  provider: landbot
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversations:read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, archived)"
+      bot_id:
+        type: string
+        description: "Filter by bot ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: landbot_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation including messages.
+    Use this to review the full conversation history.
+  provider: landbot
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversations:read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the conversation"
+    required:
+      - id
+
+- slug: landbot_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation manually.
+    Useful for initiating conversations programmatically.
+  provider: landbot
+  endpoint: /conversations
+  method: POST
+  scopes:
+    - conversations:write
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot to associate with"
+      customer_id:
+        type: string
+        description: "ID of the customer"
+      channel:
+        type: string
+        description: "Channel type (web, whatsapp, etc.)"
+    required:
+      - bot_id
+      - customer_id
+
+- slug: landbot_list_leads
+  name: List Leads
+  description: |
+    Retrieve all leads collected by your Landbot bots.
+    Leads are user information captured through chatbot interactions.
+  provider: landbot
+  endpoint: /leads
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      bot_id:
+        type: string
+        description: "Filter by bot ID"
+      start_date:
+        type: string
+        description: "Filter by start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "Filter by end date (ISO 8601)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: landbot_get_lead
+  name: Get Lead
+  description: |
+    Get details of a specific lead.
+    Includes contact information and interaction data.
+  provider: landbot
+  endpoint: /leads/{id}
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the lead"
+    required:
+      - id
+
+- slug: landbot_export_leads
+  name: Export Leads
+  description: |
+    Export leads data in CSV or JSON format.
+    Use this to download lead data for external analysis.
+  provider: landbot
+  endpoint: /leads/export
+  method: POST
+  scopes:
+    - leads:read
+  tags:
+    - leads
+    - exports
+  input_schema:
+    type: object
+    description: Parameters for exporting leads
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot to export leads from"
+      format:
+        type: string
+        description: "Export format (csv, json)"
+      date_from:
+        type: string
+        description: "Start date for export filter"
+      date_to:
+        type: string
+        description: "End date for export filter"
+    required:
+      - bot_id
+      - format
+
+- slug: landbot_list_settings
+  name: List Settings
+  description: |
+    Retrieve all settings for your Landbot bots.
+    Settings control bot behavior and configuration.
+  provider: landbot
+  endpoint: /settings
+  method: GET
+  scopes:
+    - settings:read
+  tags:
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for listing settings
+    properties:
+      bot_id:
+        type: string
+        description: "Filter by bot ID"
+    required: []
+
+- slug: landbot_get_setting
+  name: Get Setting
+  description: |
+    Get a specific setting value.
+    Use this to retrieve individual configuration values.
+  provider: landbot
+  endpoint: /settings/{key}
+  method: GET
+  scopes:
+    - settings:read
+  tags:
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for getting a setting
+    properties:
+      key:
+        type: string
+        description: "Setting key name"
+      bot_id:
+        type: string
+        description: "Bot ID to get setting for"
+    required:
+      - key
+
+- slug: landbot_update_setting
+  name: Update Setting
+  description: |
+    Update a specific setting value.
+    Use this to modify bot configuration programmatically.
+  provider: landbot
+  endpoint: /settings/{key}
+  method: PUT
+  scopes:
+    - settings:write
+  tags:
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for updating a setting
+    properties:
+      key:
+        type: string
+        description: "Setting key name"
+      value:
+        type: string
+        description: "New value for the setting"
+      bot_id:
+        type: string
+        description: "Bot ID to update setting for"
+    required:
+      - key
+      - value
+
+- slug: landbot_get_analytics
+  name: Get Analytics
+  description: |
+    Retrieve analytics data for your Landbot bots.
+    Analytics include engagement metrics, conversion rates, and user behavior.
+  provider: landbot
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      bot_id:
+        type: string
+        description: "Bot ID to get analytics for"
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      metrics:
+        type: array
+        description: "Specific metrics to retrieve"
+    required:
+      - bot_id
+      - start_date
+      - end_date

@@ -1,0 +1,285 @@
+# Streak Tools - Allowlist
+# Curated subset of Streak CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. streak_list_boxes          - List boxes (deals/companies)
+# 2. streak_get_box            - Get box details
+# 3. streak_create_box         - Create a box
+# 4. streak_update_box         - Update a box
+# 5. streak_list_pipelines     - List pipelines
+# 6. streak_get_pipeline      - Get pipeline details
+# 7. streak_list_users        - List team users
+# 8. streak_get_user          - Get user details
+# 9. streak_list_files        - List files
+# 10. streak_get_file          - Get file details
+
+- slug: streak_list_boxes
+  name: List Boxes
+  description: |
+    List all boxes (deals) in Streak. Filter by pipeline, stage, assignee, or search term.
+  provider: streak
+  endpoint: /boxes
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boxes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing boxes
+    properties:
+      pipeline_id:
+        type: string
+        description: "Filter by pipeline ID"
+      stage_id:
+        type: string
+        description: "Filter by stage ID"
+      assigned_to:
+        type: string
+        description: "Filter by user ID"
+      search:
+        type: string
+        description: "Search in box name or notes"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: streak_get_box
+  name: Get Box
+  description: |
+    Get detailed information about a specific box.
+  provider: streak
+  endpoint: /boxes/{box_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boxes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a box
+    properties:
+      box_id:
+        type: string
+        description: "Box ID"
+    required:
+      - box_id
+
+- slug: streak_create_box
+  name: Create Box
+  description: |
+    Create a new box (deal) in Streak. Set name, pipeline, stage, assignee, contacts.
+  provider: streak
+  endpoint: /boxes
+  method: POST
+  scopes:
+    - write
+  tags:
+    - boxes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a box
+    properties:
+      name:
+        type: string
+        description: "Box/deal name"
+      pipeline_id:
+        type: string
+        description: "Pipeline ID"
+      stage_id:
+        type: string
+        description: "Stage ID within pipeline"
+      assigned_to:
+        type: array
+        description: "Array of user IDs assigned to box"
+      contact_ids:
+        type: array
+        description: "Array of contact IDs linked to box"
+      notes:
+        type: string
+        description: "Initial notes"
+    required:
+      - name
+      - pipeline_id
+
+- slug: streak_update_box
+  name: Update Box
+  description: |
+    Update an existing box. Modify name, stage, assignee, notes, contacts.
+  provider: streak
+  endpoint: /boxes/{box_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - boxes
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a box
+    properties:
+      box_id:
+        type: string
+        description: "Box ID"
+      name:
+        type: string
+        description: "New name"
+      stage_id:
+        type: string
+        description: "New stage ID"
+      assigned_to:
+        type: array
+        description: "New array of user IDs"
+      contact_ids:
+        type: array
+        description: "New array of contact IDs"
+      notes:
+        type: string
+        description: "New notes"
+    required:
+      - box_id
+
+- slug: streak_list_pipelines
+  name: List Pipelines
+  description: |
+    List all pipelines in Streak.
+  provider: streak
+  endpoint: /pipelines
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pipelines
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pipelines
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: streak_get_pipeline
+  name: Get Pipeline
+  description: |
+    Get detailed information about a specific pipeline including stages.
+  provider: streak
+  endpoint: /pipelines/{pipeline_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pipelines
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pipeline
+    properties:
+      pipeline_id:
+        type: string
+        description: "Pipeline ID"
+    required:
+      - pipeline_id
+
+- slug: streak_list_users
+  name: List Users
+  description: |
+    List all team members in Streak.
+  provider: streak
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: streak_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: streak
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: streak_list_files
+  name: List Files
+  description: |
+    List files attached to boxes in Streak.
+  provider: streak
+  endpoint: /files
+  method: GET
+  scopes:
+    - read
+  tags:
+    - files
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      box_id:
+        type: string
+        description: "Filter by box ID"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: streak_get_file
+  name: Get File
+  description: |
+    Get detailed information about a specific file.
+  provider: streak
+  endpoint: /files/{file_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id

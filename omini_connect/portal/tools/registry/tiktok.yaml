@@ -1,0 +1,271 @@
+# TikTok Tools - Allowlist
+# Curated subset of the TikTok API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+# Note: TikTok API access requires ByteDance approval for most endpoints.
+
+# === TOOL LIST ===
+# 1. tiktok_list_videos            - List videos for authenticated user
+# 2. tiktok_get_video              - Get video details by ID
+# 3. tiktok_upload_video           - Upload a video (if permitted)
+# 4. tiktok_get_user_info          - Get user profile information
+# 5. tiktok_search_users           - Search for users by keyword
+# 6. tiktok_list_user_videos      - List videos for a specific user
+# 7. tiktok_get_video_comments     - Get comments on a video
+# 8. tiktok_post_comment           - Post a comment on a video
+# 9. tiktok_get_video_analytics    - Get analytics for a video
+# 10. tiktok_get_user_analytics   - Get analytics for a user
+
+- slug: tiktok_list_videos
+  name: List Videos
+  description: |
+    List videos for the authenticated user. Returns video list with IDs, titles, and metadata.
+    Use this to browse your video content or find specific posts.
+  provider: tiktok
+  endpoint: /v2/user/book/list/
+  method: GET
+  scopes:
+    - user.info.basic
+  tags:
+    - videos
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      username:
+        type: string
+        description: "Username to list videos for (omit for authenticated user)"
+      max_count:
+        type: integer
+        description: "Maximum number of results (max 20, default 10)"
+        default: 10
+    required: []
+
+- slug: tiktok_get_video
+  name: Get Video
+  description: |
+    Get details of a specific video by its ID. Returns video description, statistics, and creation info.
+    Use this to retrieve information about a specific video post.
+  provider: tiktok
+  endpoint: /v2/video/get/
+  method: GET
+  scopes:
+    - video.read
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      video_id:
+        type: string
+        description: "Video ID (required)"
+    required:
+      - video_id
+
+- slug: tiktok_upload_video
+  name: Upload Video
+  description: |
+    Upload a video to TikTok (if your app has permission). Requires Chunked Upload API.
+    Note: TikTok restricts video upload to approved partners only.
+  provider: tiktok
+  endpoint: /v2/video/upload/
+  method: POST
+  scopes:
+    - video.upload
+  tags:
+    - videos
+    - create
+  input_schema:
+    type: object
+    description: Video upload parameters
+    properties:
+      video_url:
+        type: string
+        description: "URL of the video to upload"
+      title:
+        type: string
+        description: "Video title"
+      description:
+        type: string
+        description: "Video description"
+    required:
+      - video_url
+      - title
+
+- slug: tiktok_get_user_info
+  name: Get User Info
+  description: |
+    Get user profile information including username, bio, follower count, and video count.
+    Use this to retrieve account details or view another user's profile.
+  provider: tiktok
+  endpoint: /v2/user/info/
+  method: GET
+  scopes:
+    - user.info.basic
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties:
+      username:
+        type: string
+        description: "Username (omit for authenticated user)"
+    required: []
+
+- slug: tiktok_search_users
+  name: Search Users
+  description: |
+    Search for TikTok users by keyword. Returns user profiles matching the search query.
+    Use this to find creators, brands, or specific accounts.
+  provider: tiktok
+  endpoint: /v2/user/search/
+  method: GET
+  scopes:
+    - user.info.basic
+  tags:
+    - search
+    - users
+    - discovery
+  input_schema:
+    type: object
+    description: Search parameters
+    properties:
+      keyword:
+        type: string
+        description: "Search keyword (required)"
+      max_count:
+        type: integer
+        description: "Maximum results (max 20, default 10)"
+        default: 10
+    required:
+      - keyword
+
+- slug: tiktok_list_user_videos
+  name: List User Videos
+  description: |
+    List videos for a specific TikTok user by their username or Open ID.
+    Use this to browse content from a specific creator.
+  provider: tiktok
+  endpoint: /v2/user/book/list/
+  method: GET
+  scopes:
+    - user.info.basic
+  tags:
+    - videos
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing user videos
+    properties:
+      username:
+        type: string
+        description: "Username to list videos for"
+      open_id:
+        type: string
+        description: "User's Open ID"
+      max_count:
+        type: integer
+        description: "Maximum results (max 20, default 10)"
+        default: 10
+    required:
+      - username
+
+- slug: tiktok_get_video_comments
+  name: Get Video Comments
+  description: |
+    Get comments on a specific video. Returns comment text, author info, and reply counts.
+    Use this to read discussions and feedback on videos.
+  provider: tiktok
+  endpoint: /v2/video/comment/list/
+  method: GET
+  scopes:
+    - video.comment.read
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for getting video comments
+    properties:
+      video_id:
+        type: string
+        description: "Video ID (required)"
+      max_count:
+        type: integer
+        description: "Maximum results (max 20, default 10)"
+        default: 10
+    required:
+      - video_id
+
+- slug: tiktok_post_comment
+  name: Post Comment
+  description: |
+    Post a comment on a video. Include the video ID and comment text.
+    Use this to engage with content or respond to comments.
+  provider: tiktok
+  endpoint: /v2/video/comment/
+  method: POST
+  scopes:
+    - video.comment.write
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Comment creation parameters
+    properties:
+      video_id:
+        type: string
+        description: "Video ID to comment on (required)"
+      comment_text:
+        type: string
+        description: "Comment text (required)"
+    required:
+      - video_id
+      - comment_text
+
+- slug: tiktok_get_video_analytics
+  name: Get Video Analytics
+  description: |
+    Get analytics for a specific video including views, likes, shares, and engagement metrics.
+    Use this to track performance of your video content.
+  provider: tiktok
+  endpoint: /v2/video/stats/
+  method: GET
+  scopes:
+    - video.analytics
+  tags:
+    - analytics
+    - videos
+  input_schema:
+    type: object
+    description: Parameters for getting video analytics
+    properties:
+      video_id:
+        type: string
+        description: "Video ID (required)"
+    required:
+      - video_id
+
+- slug: tiktok_get_user_analytics
+  name: Get User Analytics
+  description: |
+    Get analytics for the authenticated user's account including follower growth and profile views.
+    Use this to track overall account performance and audience insights.
+  provider: tiktok
+  endpoint: /v2/user/stats/
+  method: GET
+  scopes:
+    - user.analytics
+  tags:
+    - analytics
+    - user
+  input_schema:
+    type: object
+    description: Parameters for getting user analytics
+    properties: {}
+    required: []

@@ -1,0 +1,272 @@
+# Gmail Tools - Allowlist
+# Curated subset of Gmail API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_mail_list_messages       - List messages
+# 2. google_mail_get_message        - Get message details
+# 3. google_mail_send_message       - Send message
+# 4. google_mail_list_labels        - List labels
+# 5. google_mail_create_label       - Create label
+# 6. google_mail_modify_message     - Modify message labels
+# 7. google_mail_trash_message      - Trash message
+# 8. google_mail_untrash_message    - Untrash message
+# 9. google_mail_list_threads       - List threads
+# 10. google_mail_get_thread       - Get thread details
+
+- slug: google_mail_list_messages
+  name: List Messages
+  description: |
+    List messages in Gmail.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages
+  method: GET
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      maxResults:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: google_mail_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a message.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages/{id}
+  method: GET
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      id:
+        type: string
+        description: "Message ID"
+    required:
+      - id
+
+- slug: google_mail_send_message
+  name: Send Message
+  description: |
+    Send an email message.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages/send
+  method: POST
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.send
+  tags:
+    - email
+    - gmail
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      to:
+        type: string
+        description: "Recipient email"
+      subject:
+        type: string
+        description: "Subject"
+      body:
+        type: string
+        description: "Body content"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: google_mail_list_labels
+  name: List Labels
+  description: |
+    List all labels in Gmail.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/labels
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/gmail.labels
+  tags:
+    - labels
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing labels
+    properties: {}
+
+- slug: google_mail_create_label
+  name: Create Label
+  description: |
+    Create a new label.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/labels
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/gmail.labels
+  tags:
+    - labels
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a label
+    properties:
+      name:
+        type: string
+        description: "Label name"
+      labelListVisibility:
+        type: string
+        description: "Label visibility"
+        default: labelShow
+      messageListVisibility:
+        type: string
+        description: "Message list visibility"
+        default: show
+    required:
+      - name
+
+- slug: google_mail_modify_message
+  name: Modify Message
+  description: |
+    Add or remove labels from a message.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages/{id}/modify
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/gmail.modify
+  tags:
+    - email
+    - gmail
+    - modify
+  input_schema:
+    type: object
+    description: Parameters for modifying a message
+    properties:
+      id:
+        type: string
+        description: "Message ID"
+      addLabels:
+        type: array
+        description: "Labels to add"
+      removeLabels:
+        type: array
+        description: "Labels to remove"
+    required:
+      - id
+
+- slug: google_mail_trash_message
+  name: Trash Message
+  description: |
+    Move a message to trash.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages/{id}/trash
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/gmail.modify
+  tags:
+    - email
+    - gmail
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for trashing a message
+    properties:
+      id:
+        type: string
+        description: "Message ID"
+    required:
+      - id
+
+- slug: google_mail_untrash_message
+  name: Untrash Message
+  description: |
+    Restore a message from trash.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/messages/{id}/untrash
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/gmail.modify
+  tags:
+    - email
+    - gmail
+    - restore
+  input_schema:
+    type: object
+    description: Parameters for untrashing a message
+    properties:
+      id:
+        type: string
+        description: "Message ID"
+    required:
+      - id
+
+- slug: google_mail_list_threads
+  name: List Threads
+  description: |
+    List email threads.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/threads
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - threads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing threads
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      maxResults:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: google_mail_get_thread
+  name: Get Thread
+  description: |
+    Get a thread with all messages.
+  provider: google-mail
+  endpoint: /gmail/v1/users/me/threads/{id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - threads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a thread
+    properties:
+      id:
+        type: string
+        description: "Thread ID"
+    required:
+      - id

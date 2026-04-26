@@ -1,0 +1,267 @@
+# Affinity Tools - Relationship Intelligence Platform
+# Curated subset of Affinity API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. affinity_list_persons             - List persons
+# 2. affinity_get_person              - Get person details
+# 3. affinity_create_person           - Create a person
+# 4. affinity_list_organizations      - List organizations
+# 5. affinity_get_organization        - Get organization details
+# 6. affinity_list_opportunities      - List opportunities
+# 7. affinity_get_opportunity         - Get opportunity details
+# 8. affinity_create_opportunity      - Create an opportunity
+# 9. affinity_list_lists              - List lists
+# 10. affinity_get_list               - Get list details
+
+- slug: affinity_list_persons
+  name: List Persons
+  description: |
+    Retrieve a list of all persons in the relationship intelligence system.
+  provider: affinity
+  endpoint: /persons
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - persons
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing persons
+    properties:
+      organization_id:
+        type: string
+        description: "Filter persons by organization ID"
+      name:
+        type: string
+        description: "Search persons by name"
+    required: []
+
+- slug: affinity_get_person
+  name: Get Person
+  description: |
+    Retrieve details of a specific person by ID.
+  provider: affinity
+  endpoint: /persons/{person_id}
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - persons
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      person_id:
+        type: string
+        description: "The unique identifier of the person"
+    required:
+      - person_id
+
+- slug: affinity_create_person
+  name: Create Person
+  description: |
+    Create a new person in the relationship intelligence system.
+  provider: affinity
+  endpoint: /persons
+  method: POST
+  scopes:
+    - persons:write
+  tags:
+    - persons
+    - relationship intelligence
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      name:
+        type: string
+        description: "The name of the person"
+      email:
+        type: string
+        description: "The email address of the person"
+      organization_id:
+        type: string
+        description: "The organization ID to associate with the person"
+    required:
+      - name
+      - email
+
+- slug: affinity_list_organizations
+  name: List Organizations
+  description: |
+    Retrieve a list of all organizations.
+  provider: affinity
+  endpoint: /organizations
+  method: GET
+  scopes:
+    - organizations:read
+  tags:
+    - organizations
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      name:
+        type: string
+        description: "Search organizations by name"
+      industry:
+        type: string
+        description: "Filter organizations by industry"
+    required: []
+
+- slug: affinity_get_organization
+  name: Get Organization
+  description: |
+    Retrieve details of a specific organization by ID.
+  provider: affinity
+  endpoint: /organizations/{organization_id}
+  method: GET
+  scopes:
+    - organizations:read
+  tags:
+    - organizations
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      organization_id:
+        type: string
+        description: "The unique identifier of the organization"
+    required:
+      - organization_id
+
+- slug: affinity_list_opportunities
+  name: List Opportunities
+  description: |
+    Retrieve a list of all opportunities (deals).
+  provider: affinity
+  endpoint: /opportunities
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      status:
+        type: string
+        description: "Filter opportunities by status"
+      organization_id:
+        type: string
+        description: "Filter opportunities by organization ID"
+    required: []
+
+- slug: affinity_get_opportunity
+  name: Get Opportunity
+  description: |
+    Retrieve details of a specific opportunity by ID.
+  provider: affinity
+  endpoint: /opportunities/{opportunity_id}
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunity_id:
+        type: string
+        description: "The unique identifier of the opportunity"
+    required:
+      - opportunity_id
+
+- slug: affinity_create_opportunity
+  name: Create Opportunity
+  description: |
+    Create a new opportunity (deal) in the pipeline.
+  provider: affinity
+  endpoint: /opportunities
+  method: POST
+  scopes:
+    - opportunities:write
+  tags:
+    - opportunities
+    - relationship intelligence
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an opportunity
+    properties:
+      name:
+        type: string
+        description: "The name of the opportunity"
+      value:
+        type: number
+        description: "The monetary value of the opportunity"
+      organization_id:
+        type: string
+        description: "The organization ID associated with the opportunity"
+      stage:
+        type: string
+        description: "The pipeline stage of the opportunity"
+    required:
+      - name
+      - organization_id
+
+- slug: affinity_list_lists
+  name: List Lists
+  description: |
+    Retrieve a list of all lists in the organization.
+  provider: affinity
+  endpoint: /lists
+  method: GET
+  scopes:
+    - lists:read
+  tags:
+    - lists
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      name:
+        type: string
+        description: "Search lists by name"
+    required: []
+
+- slug: affinity_get_list
+  name: Get List
+  description: |
+    Retrieve details of a specific list including persons and fields.
+  provider: affinity
+  endpoint: /lists/{list_id}
+  method: GET
+  scopes:
+    - lists:read
+  tags:
+    - lists
+    - relationship intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      list_id:
+        type: string
+        description: "The unique identifier of the list"
+    required:
+      - list_id

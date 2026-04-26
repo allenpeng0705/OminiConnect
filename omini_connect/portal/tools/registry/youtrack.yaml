@@ -1,0 +1,265 @@
+# YouTrack Tools - Allowlist
+# Curated subset of YouTrack REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. youtrack_list_issues        - List issues
+# 2. youtrack_get_issue          - Get issue details
+# 3. youtrack_create_issue       - Create an issue
+# 4. youtrack_update_issue       - Update an issue
+# 5. youtrack_list_projects      - List projects
+# 6. youtrack_get_project        - Get project details
+# 7. youtrack_list_boards       - List boards
+# 8. youtrack_get_board          - Get board details
+# 9. youtrack_list_time_entries - List time entries
+# 10. youtrack_get_time_entry    - Get time entry details
+
+- slug: youtrack_list_issues
+  name: List Issues
+  description: |
+    Retrieve a list of issues, optionally filtered by project or assignee.
+  provider: youtrack
+  endpoint: /api/issues
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      project:
+        type: string
+        description: "Filter by project ID"
+      state:
+        type: string
+        description: "Filter by issue state"
+      assignee:
+        type: string
+        description: "Filter by assignee username"
+      limit:
+        type: integer
+        description: "Maximum number of issues to return (default: 20)"
+    required: []
+
+- slug: youtrack_get_issue
+  name: Get Issue
+  description: |
+    Retrieve details for a specific issue by its ID.
+  provider: youtrack
+  endpoint: /api/issues/{issue_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issue_id:
+        type: string
+        description: "The issue ID (e.g., PROJ-123)"
+    required:
+      - issue_id
+
+- slug: youtrack_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue in a project.
+  provider: youtrack
+  endpoint: /api/issues
+  method: POST
+  scopes:
+    - write
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for creating an issue
+    properties:
+      project:
+        type: string
+        description: "Project ID to create the issue in"
+      summary:
+        type: string
+        description: "Issue summary/title"
+      description:
+        type: string
+        description: "Issue description"
+      priority:
+        type: string
+        description: "Priority name"
+      type:
+        type: string
+        description: "Issue type (Bug, Feature, etc.)"
+    required:
+      - project
+      - summary
+
+- slug: youtrack_update_issue
+  name: Update Issue
+  description: |
+    Update an existing issue.
+  provider: youtrack
+  endpoint: /api/issues/{issue_id}
+  method: PATCH
+  scopes:
+    - write
+  tags:
+    - issues
+  input_schema:
+    type: object
+    description: Parameters for updating an issue
+    properties:
+      issue_id:
+        type: string
+        description: "The issue ID"
+      summary:
+        type: string
+        description: "Updated issue summary"
+      description:
+        type: string
+        description: "Updated issue description"
+      state:
+        type: string
+        description: "Updated state"
+      priority:
+        type: string
+        description: "Updated priority"
+      assignee:
+        type: string
+        description: "Updated assignee username"
+    required:
+      - issue_id
+
+- slug: youtrack_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects.
+  provider: youtrack
+  endpoint: /api/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return (default: 20)"
+    required: []
+
+- slug: youtrack_get_project
+  name: Get Project
+  description: |
+    Retrieve details for a specific project by its ID.
+  provider: youtrack
+  endpoint: /api/projects/{project_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: youtrack_list_boards
+  name: List Boards
+  description: |
+    Retrieve a list of Agile boards.
+  provider: youtrack
+  endpoint: /api/agiles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      project:
+        type: string
+        description: "Filter by project ID"
+      limit:
+        type: integer
+        description: "Maximum number of boards to return (default: 20)"
+    required: []
+
+- slug: youtrack_get_board
+  name: Get Board
+  description: |
+    Retrieve details for a specific Agile board.
+  provider: youtrack
+  endpoint: /api/agiles/{board_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      board_id:
+        type: string
+        description: "The board ID"
+    required:
+      - board_id
+
+- slug: youtrack_list_time_entries
+  name: List Time Entries
+  description: |
+    Retrieve a list of time entries for an issue.
+  provider: youtrack
+  endpoint: /api/issues/{issue_id}/timetracking/workitems
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_tracking
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      issue_id:
+        type: string
+        description: "The issue ID"
+      limit:
+        type: integer
+        description: "Maximum number of time entries to return (default: 20)"
+    required:
+      - issue_id
+
+- slug: youtrack_get_time_entry
+  name: Get Time Entry
+  description: |
+    Retrieve details for a specific time entry.
+  provider: youtrack
+  endpoint: /api/timetracking/workitems/{workitem_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_tracking
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      workitem_id:
+        type: string
+        description: "The work item ID"
+    required:
+      - workitem_id

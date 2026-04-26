@@ -1,0 +1,276 @@
+# Datadog Tools - Allowlist
+# Curated subset of the Datadog REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. datadog_list_monitors       - List all monitors
+# 2. datadog_get_monitor        - Get monitor details
+# 3. datadog_create_monitor     - Create a new monitor
+# 4. datadog_update_monitor     - Update a monitor
+# 5. datadog_delete_monitor     - Delete a monitor
+# 6. datadog_list_dashboards     - List all dashboards
+# 7. datadog_get_dashboard      - Get dashboard details
+# 8. datadog_list_hosts          - List all hosts
+# 9. datadog_get_host           - Get host details
+# 10. datadog_list_metrics      - List available metrics
+
+- slug: datadog_list_monitors
+  name: List Monitors
+  description: |
+    List all Datadog monitors with optional filtering by status, tags, or monitor type.
+  provider: datadog
+  endpoint: /api/v1/monitor
+  method: GET
+  scopes:
+    - monitors_read
+  tags:
+    - monitors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing monitors
+    properties:
+      monitor_tags:
+        type: string
+        description: "Filter by tags (e.g., env:production)"
+      status:
+        type: string
+        description: "Filter by status (alert, warn, no data, ok)"
+      type:
+        type: string
+        description: "Monitor type (metric alert, service check, event alert, etc.)"
+    required: []
+
+- slug: datadog_get_monitor
+  name: Get Monitor
+  description: |
+    Get detailed information about a specific Datadog monitor.
+  provider: datadog
+  endpoint: /api/v1/monitor/{monitorId}
+  method: GET
+  scopes:
+    - monitors_read
+  tags:
+    - monitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a monitor
+    properties:
+      monitorId:
+        type: integer
+        description: "Monitor ID"
+    required:
+      - monitorId
+
+- slug: datadog_create_monitor
+  name: Create Monitor
+  description: |
+    Create a new Datadog monitor. Define the metric query, alert conditions, notifications, and tags.
+  provider: datadog
+  endpoint: /api/v1/monitor
+  method: POST
+  scopes:
+    - monitors_write
+  tags:
+    - monitors
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a monitor
+    properties:
+      name:
+        type: string
+        description: "Monitor name"
+      type:
+        type: string
+        description: "Monitor type (metric alert, service check, event alert)"
+      query:
+        type: string
+        description: "Monitor query (e.g., 'avg(last_5m):sum:system.cpu.user{*} > 90')"
+      message:
+        type: string
+        description: "Alert message (supports @{username} for notify)"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags for the monitor"
+      options:
+        type: object
+        description: "Monitor options (thresholds, notification, etc.)"
+    required:
+      - name
+      - query
+
+- slug: datadog_update_monitor
+  name: Update Monitor
+  description: |
+    Update an existing Datadog monitor. Modify the query, alert conditions, message, or tags.
+  provider: datadog
+  endpoint: /api/v1/monitor/{monitorId}
+  method: PUT
+  scopes:
+    - monitors_write
+  tags:
+    - monitors
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a monitor
+    properties:
+      monitorId:
+        type: integer
+        description: "Monitor ID"
+      name:
+        type: string
+        description: "New monitor name"
+      query:
+        type: string
+        description: "New monitor query"
+      message:
+        type: string
+        description: "New alert message"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "New tags"
+      options:
+        type: object
+        description: "New monitor options"
+    required:
+      - monitorId
+
+- slug: datadog_delete_monitor
+  name: Delete Monitor
+  description: |
+    Delete a Datadog monitor. This is permanent.
+  provider: datadog
+  endpoint: /api/v1/monitor/{monitorId}
+  method: DELETE
+  scopes:
+    - monitors_write
+  tags:
+    - monitors
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a monitor
+    properties:
+      monitorId:
+        type: integer
+        description: "Monitor ID"
+    required:
+      - monitorId
+
+- slug: datadog_list_dashboards
+  name: List Dashboards
+  description: |
+    List all Datadog dashboards including timeboards and screenboards.
+  provider: datadog
+  endpoint: /api/v1/dashboard
+  method: GET
+  scopes:
+    - dashboards_read
+  tags:
+    - dashboards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      filter:
+        type: string
+        description: "Filter dashboards by name or tag"
+    required: []
+
+- slug: datadog_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get detailed information about a specific Datadog dashboard including all widgets and layout.
+  provider: datadog
+  endpoint: /api/v1/dashboard/{dashboard_id}
+  method: GET
+  scopes:
+    - dashboards_read
+  tags:
+    - dashboards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboard_id:
+        type: string
+        description: "Dashboard ID"
+    required:
+      - dashboard_id
+
+- slug: datadog_list_hosts
+  name: List Hosts
+  description: |
+    List all hosts reporting to Datadog with optional filtering by tags.
+  provider: datadog
+  endpoint: /api/v1/hosts
+  method: GET
+  scopes:
+    - hosts_read
+  tags:
+    - hosts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing hosts
+    properties:
+      filter:
+        type: string
+        description: "Filter by host name or tag"
+      count:
+        type: integer
+        description: "Maximum number of hosts to return"
+        default: 100
+    required: []
+
+- slug: datadog_get_host
+  name: Get Host
+  description: |
+    Get detailed information about a specific host including metrics, tags, and agent version.
+  provider: datadog
+  endpoint: /api/v1/hosts/{host_id}
+  method: GET
+  scopes:
+    - hosts_read
+  tags:
+    - hosts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a host
+    properties:
+      host_id:
+        type: string
+        description: "Host ID or name"
+    required:
+      - host_id
+
+- slug: datadog_list_metrics
+  name: List Metrics
+  description: |
+    List all metrics available in your Datadog account with optional filtering by tag.
+  provider: datadog
+  endpoint: /api/v1/metrics
+  method: GET
+  scopes:
+    - metrics_read
+  tags:
+    - metrics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing metrics
+    properties:
+      filter:
+        type: string
+        description: "Filter metrics by tag (e.g., 'env:production')"
+    required: []

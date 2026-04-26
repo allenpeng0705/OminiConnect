@@ -1,0 +1,303 @@
+# Quickbooks-Sandbox Tools - Allowlist
+# Curated subset of QuickBooks Online REST API for AI agent use.
+# Sandbox environment for testing.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. quickbooks-sandbox_list_customers    - List customers
+# 2. quickbooks-sandbox_get_customer      - Get customer details
+# 3. quickbooks-sandbox_create_customer   - Create a customer
+# 4. quickbooks-sandbox_list_invoices     - List invoices
+# 5. quickbooks-sandbox_get_invoice       - Get invoice details
+# 6. quickbooks-sandbox_create_invoice    - Create an invoice
+# 7. quickbooks-sandbox_list_items       - List items/products
+# 8. quickbooks-sandbox_get_item         - Get item details
+# 9. quickbooks-sandbox_list_payments    - List payments
+# 10. quickbooks-sandbox_get_company_info - Get company information
+
+- slug: quickbooks-sandbox_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers in your QuickBooks sandbox company.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      query:
+        type: string
+        description: "Query string (default: SELECT * FROM Customer)"
+        default: SELECT * FROM Customer
+      limit:
+        type: integer
+        description: "Number of results (default 100)"
+        default: 100
+    required:
+      - companyId
+
+- slug: quickbooks-sandbox_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer by ID.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/customer/{customerId}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      customerId:
+        type: string
+        description: "The customer ID"
+    required:
+      - companyId
+      - customerId
+
+- slug: quickbooks-sandbox_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/customer
+  method: POST
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - accounting
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      DisplayName:
+        type: string
+        description: "Customer display name"
+      GivenName:
+        type: string
+        description: "First name"
+      FamilyName:
+        type: string
+        description: "Last name"
+      PrimaryEmailAddr:
+        type: object
+        description: "Email address object"
+    required:
+      - companyId
+      - DisplayName
+
+- slug: quickbooks-sandbox_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices in your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      query:
+        type: string
+        description: "Query string"
+        default: SELECT * FROM Invoice
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+    required:
+      - companyId
+
+- slug: quickbooks-sandbox_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice by ID.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/invoice/{invoiceId}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      invoiceId:
+        type: string
+        description: "The invoice ID"
+    required:
+      - companyId
+      - invoiceId
+
+- slug: quickbooks-sandbox_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/invoice
+  method: POST
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - accounting
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      Line:
+        type: array
+        description: "Invoice line items"
+      CustomerRef:
+        type: object
+        description: "Customer reference"
+    required:
+      - companyId
+      - Line
+      - CustomerRef
+
+- slug: quickbooks-sandbox_list_items
+  name: List Items
+  description: |
+    Retrieve a list of all items (products/services) in your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - items
+    - products
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      query:
+        type: string
+        description: "Query string"
+        default: SELECT * FROM Item
+    required:
+      - companyId
+
+- slug: quickbooks-sandbox_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item by ID.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/item/{itemId}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - items
+    - products
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      itemId:
+        type: string
+        description: "The item ID"
+    required:
+      - companyId
+      - itemId
+
+- slug: quickbooks-sandbox_list_payments
+  name: List Payments
+  description: |
+    Retrieve a list of all payments in your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - payments
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+      query:
+        type: string
+        description: "Query string"
+        default: SELECT * FROM Payment
+    required:
+      - companyId
+
+- slug: quickbooks-sandbox_get_company_info
+  name: Get Company Info
+  description: |
+    Get company information for your QuickBooks sandbox.
+  provider: quickbooks-sandbox
+  endpoint: /v3/company/{companyId}/companyinfo/{companyId}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - company
+    - settings
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties:
+      companyId:
+        type: string
+        description: "QuickBooks company ID"
+    required:
+      - companyId

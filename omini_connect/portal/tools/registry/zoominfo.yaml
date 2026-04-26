@@ -1,0 +1,187 @@
+# ZoomInfo Tools - Allowlist
+# Curated subset of ZoomInfo API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zoominfo_search_contacts           - Search for contacts
+# # 2. zoominfo_get_contact           - Get contact details
+# # 3. zoominfo_search_companies           - Search for companies
+# # 4. zoominfo_get_company           - Get company details
+# # 5. zoominfo_enrich_contact           - Enrich contact data
+# # 6. zoominfo_enrich_company           - Enrich company data
+# # 7. zoominfo_get_company_by_domain           - Get company by website domain
+# # 8. zoominfo_list_technologies           - List technologies used by company
+# # 9. zoominfo_get_job_change           - Get job change information
+# # 10. zoominfo_list_workflows           - List available workflows
+
+- slug: zoominfo_search_contacts
+  name: Search Contacts
+  description: |
+    Search for contacts
+  provider: zoominfo
+  endpoint: /contact/search
+  method: POST
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for search contacts
+    properties: {}
+    required: []
+
+- slug: zoominfo_get_contact
+  name: Get Contact
+  description: |
+    Get contact details
+  provider: zoominfo
+  endpoint: /contact/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for get contact
+    properties: {}
+    required: []
+
+- slug: zoominfo_search_companies
+  name: Search Companies
+  description: |
+    Search for companies
+  provider: zoominfo
+  endpoint: /company/search
+  method: POST
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for search companies
+    properties: {}
+    required: []
+
+- slug: zoominfo_get_company
+  name: Get Company
+  description: |
+    Get company details
+  provider: zoominfo
+  endpoint: /company/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for get company
+    properties: {}
+    required: []
+
+- slug: zoominfo_enrich_contact
+  name: Enrich Contact
+  description: |
+    Enrich contact data
+  provider: zoominfo
+  endpoint: /enrich/contact
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for enrich contact
+    properties: {}
+    required: []
+
+- slug: zoominfo_enrich_company
+  name: Enrich Company
+  description: |
+    Enrich company data
+  provider: zoominfo
+  endpoint: /enrich/company
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for enrich company
+    properties: {}
+    required: []
+
+- slug: zoominfo_get_company_by_domain
+  name: Get Company by Domain
+  description: |
+    Get company by website domain
+  provider: zoominfo
+  endpoint: /company/domain/{domain}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for get company by domain
+    properties: {}
+    required: []
+
+- slug: zoominfo_list_technologies
+  name: List Technologies
+  description: |
+    List technologies used by company
+  provider: zoominfo
+  endpoint: /company/{id}/technologies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for list technologies
+    properties: {}
+    required: []
+
+- slug: zoominfo_get_job_change
+  name: Get Job Change
+  description: |
+    Get job change information
+  provider: zoominfo
+  endpoint: /jobchange/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for get job change
+    properties: {}
+    required: []
+
+- slug: zoominfo_list_workflows
+  name: List Workflows
+  description: |
+    List available workflows
+  provider: zoominfo
+  endpoint: /workflows
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoominfo
+  input_schema:
+    type: object
+    description: Parameters for list workflows
+    properties: {}
+    required: []
+

@@ -1,0 +1,235 @@
+# Fathom OAuth Tools - Allowlist
+# Curated subset of Fathom API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fathom_oauth_list_teams           - List teams
+# 2. fathom_oauth_get_team            - Get team details
+# 3. fathom_oauth_list_meetings       - List meetings
+# 4. fathom_oauth_get_meeting        - Get meeting details
+# 5. fathom_oauth_list_clips         - List video clips
+# 6. fathom_oauth_get_clip           - Get clip details
+# 7. fathom_oauth_list_highlights     - List highlights
+# 8. fathom_oauth_get_summary        - Get meeting summary
+# 9. fathom_oauth_list_messages     - List messages
+# 10. fathom_oauth_search_transcript - Search transcript
+
+- slug: fathom_oauth_list_teams
+  name: List Teams
+  description: |
+    List all teams in the account.
+  provider: fathom-oauth
+  endpoint: /external/v1/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: fathom_oauth_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team.
+  provider: fathom-oauth
+  endpoint: /external/v1/teams/{id}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting team
+    properties:
+      id:
+        type: string
+        description: "Team ID"
+    required:
+      - id
+
+- slug: fathom_oauth_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings.
+  provider: fathom-oauth
+  endpoint: /external/v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: fathom_oauth_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: fathom-oauth
+  endpoint: /external/v1/meetings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting meeting
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: fathom_oauth_list_clips
+  name: List Clips
+  description: |
+    List all video clips.
+  provider: fathom-oauth
+  endpoint: /external/v1/clips
+  method: GET
+  scopes: []
+  tags:
+    - clips
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clips
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: fathom_oauth_get_clip
+  name: Get Clip
+  description: |
+    Get details of a specific clip.
+  provider: fathom-oauth
+  endpoint: /external/v1/clips/{id}
+  method: GET
+  scopes: []
+  tags:
+    - clips
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting clip
+    properties:
+      id:
+        type: string
+        description: "Clip ID"
+    required:
+      - id
+
+- slug: fathom_oauth_list_highlights
+  name: List Highlights
+  description: |
+    List all highlights.
+  provider: fathom-oauth
+  endpoint: /external/v1/highlights
+  method: GET
+  scopes: []
+  tags:
+    - highlights
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing highlights
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: fathom_oauth_get_summary
+  name: Get Summary
+  description: |
+    Get AI-generated meeting summary.
+  provider: fathom-oauth
+  endpoint: /external/v1/meetings/{id}/summary
+  method: GET
+  scopes: []
+  tags:
+    - summary
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting summary
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: fathom_oauth_list_messages
+  name: List Messages
+  description: |
+    List all messages.
+  provider: fathom-oauth
+  endpoint: /external/v1/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: fathom_oauth_search_transcript
+  name: Search Transcript
+  description: |
+    Search meeting transcripts.
+  provider: fathom-oauth
+  endpoint: /external/v1/transcripts/search
+  method: GET
+  scopes: []
+  tags:
+    - transcripts
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching transcripts
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required:
+      - q

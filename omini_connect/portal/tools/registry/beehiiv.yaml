@@ -1,0 +1,298 @@
+# Beehiiv Tools - Allowlist
+# Curated subset of the Beehiiv API v2 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. beehiiv_list_publications    - List publications in the account
+# 2. beehiiv_get_publication      - Get details of a specific publication
+# 3. beehiiv_list_posts           - List posts in a publication
+# 4. beehiiv_get_post             - Get details of a specific post
+# 5. beehiiv_create_post          - Create a new post
+# 6. beehiiv_list_subscribers    - List subscribers
+# 7. beehiiv_get_subscriber       - Get details of a specific subscriber
+# 8. beehiiv_create_campaign      - Create a new email campaign
+# 9. beehiiv_get_analytics        - Get analytics for a publication
+# 10. beehiiv_get_report          - Get detailed report data
+
+- slug: beehiiv_list_publications
+  name: List Publications
+  description: |
+    List all publications in the Beehiiv account. Returns publication details including name, URL, and subscriber count.
+  provider: beehiiv
+  endpoint: /publications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - publications
+    - account
+  input_schema:
+    type: object
+    description: Parameters for listing publications
+    properties: {}
+    required: []
+
+- slug: beehiiv_get_publication
+  name: Get Publication
+  description: |
+    Get details of a specific publication including name, description, settings, and growth statistics.
+  provider: beehiiv
+  endpoint: /publications/{publication_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - publications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a publication
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+    required:
+      - publication_id
+
+- slug: beehiiv_list_posts
+  name: List Posts
+  description: |
+    List all posts in a publication. Returns post details including title, status, and publish date.
+  provider: beehiiv
+  endpoint: /posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      status:
+        type: string
+        description: "Filter by status: draft, scheduled, published"
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 25)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - publication_id
+
+- slug: beehiiv_get_post
+  name: Get Post
+  description: |
+    Get details of a specific post including content, status, and engagement metrics.
+  provider: beehiiv
+  endpoint: /posts/{post_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "Post ID"
+    required:
+      - post_id
+
+- slug: beehiiv_create_post
+  name: Create Post
+  description: |
+    Create a new post in a publication. Set as draft or schedule for future publishing.
+  provider: beehiiv
+  endpoint: /posts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      title:
+        type: string
+        description: "Post title"
+      body:
+        type: string
+        description: "Post content (HTML or plain text)"
+      status:
+        type: string
+        description: "Post status: draft or scheduled"
+        enum: [draft, scheduled]
+        default: draft
+      scheduled_at:
+        type: string
+        description: "Publish date/time (ISO 8601) if scheduling"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tag names"
+    required:
+      - publication_id
+      - title
+
+- slug: beehiiv_list_subscribers
+  name: List Subscribers
+  description: |
+    List all subscribers in a publication. Returns subscriber details including email, status, and subscription date.
+  provider: beehiiv
+  endpoint: /subscribers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+    - audience
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      status:
+        type: string
+        description: "Filter by status: active, unsubscribed, bounced"
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 25)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - publication_id
+
+- slug: beehiiv_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details of a specific subscriber including email, subscription status, and engagement metrics.
+  provider: beehiiv
+  endpoint: /subscribers/{subscriber_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      subscriber_id:
+        type: string
+        description: "Subscriber ID"
+    required:
+      - subscriber_id
+
+- slug: beehiiv_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new email campaign for a publication. Set recipients, content, and schedule.
+  provider: beehiiv
+  endpoint: /campaigns
+  method: POST
+  scopes:
+    - write
+  tags:
+    - campaigns
+    - email
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      subject:
+        type: string
+        description: "Email subject line"
+      body:
+        type: string
+        description: "Email content (HTML)"
+      send_at:
+        type: string
+        description: "Send date/time (ISO 8601)"
+      segment_id:
+        type: string
+        description: "Target segment ID"
+    required:
+      - publication_id
+      - subject
+
+- slug: beehiiv_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics for a publication including subscriber growth, open rates, and click rates.
+  provider: beehiiv
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - analytics
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - publication_id
+
+- slug: beehiiv_get_report
+  name: Get Report
+  description: |
+    Get detailed report data for a publication including subscriber demographics and engagement breakdown.
+  provider: beehiiv
+  endpoint: /reports
+  method: GET
+  scopes:
+    - read
+  tags:
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties:
+      publication_id:
+        type: string
+        description: "Publication ID"
+      report_type:
+        type: string
+        description: "Report type: subscribers, engagement, revenue"
+        enum: [subscribers, engagement, revenue]
+        default: subscribers
+    required:
+      - publication_id

@@ -1,0 +1,381 @@
+# Azure DevOps Tools - Allowlist
+# Curated subset of the Azure DevOps REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. azure_devops_list_projects     - List projects for an organization
+# 2. azure_devops_get_project       - Get details of a specific project
+# 3. azure_devops_list_work_items  - List work items in a project
+# 4. azure_devops_get_work_item    - Get a specific work item
+# 5. azure_devops_create_work_item - Create a new work item
+# 6. azure_devops_list_repos       - List repositories in a project
+# 7. azure_devops_get_repo         - Get a specific repository
+# 8. azure_devops_list_builds      - List build definitions or runs
+# 9. azure_devops_get_build       - Get a specific build
+# 10. azure_devops_list_releases   - List release definitions or runs
+
+- slug: azure_devops_list_projects
+  name: List Projects
+  description: |
+    List all projects in an Azure DevOps organization. Returns project details including name, description, visibility, and state.
+  provider: azure_devops
+  endpoint: /api/v4/projects
+  method: GET
+  scopes:
+    - vso.project
+  tags:
+    - projects
+    - azure_devops
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      $top:
+        type: integer
+        description: "Number of projects to return (max 1000)"
+        default: 100
+      $skip:
+        type: integer
+        description: "Number of projects to skip for pagination"
+        default: 0
+      state:
+        type: string
+        description: "Filter by state: wellFormed, createPending, deleting, changed, healthy, unhealthy"
+        enum: [wellFormed, createPending, deleting, changed, healthy, unhealthy]
+    required:
+      - organization
+
+- slug: azure_devops_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including name, description, visibility, source control type, and process template.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}
+  method: GET
+  scopes:
+    - vso.project
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+    required:
+      - organization
+      - project_id
+
+- slug: azure_devops_list_work_items
+  name: List Work Items
+  description: |
+    List work items in a project. Filter by type, state, assigned to, or area path.
+    Use WIQL (Work Item Query Language) for complex queries.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/workitems
+  method: GET
+  scopes:
+    - vso.work
+  tags:
+    - work_items
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for listing work items
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      work_item_type:
+        type: string
+        description: "Filter by work item type (e.g., Task, Bug, User Story)"
+      state:
+        type: string
+        description: "Filter by state"
+      assigned_to:
+        type: string
+        description: "Filter by assignee"
+      area_path:
+        type: string
+        description: "Filter by area path"
+      $top:
+        type: integer
+        description: "Number of work items to return (max 200)"
+        default: 100
+      $skip:
+        type: integer
+        description: "Number of work items to skip"
+        default: 0
+    required:
+      - organization
+      - project_id
+
+- slug: azure_devops_get_work_item
+  name: Get Work Item
+  description: |
+    Get details of a specific work item including title, description, state, assignees, and history.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/workitems/{work_item_id}
+  method: GET
+  scopes:
+    - vso.work
+  tags:
+    - work_items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a work item
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      work_item_id:
+        type: integer
+        description: "Work item ID"
+    required:
+      - organization
+      - project_id
+      - work_item_id
+
+- slug: azure_devops_create_work_item
+  name: Create Work Item
+  description: |
+    Create a new work item in a project. Include title, work item type, and optional description, assignees, and tags.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/workitems
+  method: POST
+  scopes:
+    - vso.work
+  tags:
+    - work_items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a work item
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      work_item_type:
+        type: string
+        description: "Work item type (e.g., Task, Bug, User Story)"
+      title:
+        type: string
+        description: "Work item title"
+      description:
+        type: string
+        description: "Work item description"
+      assigned_to:
+        type: string
+        description: "User email or display name to assign"
+      tags:
+        type: string
+        description: "Comma-separated list of tags"
+    required:
+      - organization
+      - project_id
+      - work_item_type
+      - title
+
+- slug: azure_devops_list_repos
+  name: List Repositories
+  description: |
+    List all repositories in a project including Git and TFVC repositories.
+    Returns repository name, URL, default branch, and size.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/repos
+  method: GET
+  scopes:
+    - vso.code
+  tags:
+    - repositories
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      $top:
+        type: integer
+        description: "Number of repos to return"
+        default: 100
+      $skip:
+        type: integer
+        description: "Number of repos to skip"
+        default: 0
+    required:
+      - organization
+      - project_id
+
+- slug: azure_devops_get_repo
+  name: Get Repository
+  description: |
+    Get details of a specific repository including name, URL, default branch, isDisabled, and remote URL.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/repos/{repo_id}
+  method: GET
+  scopes:
+    - vso.code
+  tags:
+    - repositories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      repo_id:
+        type: string
+        description: "Repository ID or name"
+    required:
+      - organization
+      - project_id
+      - repo_id
+
+- slug: azure_devops_list_builds
+  name: List Builds
+  description: |
+    List build definitions or recent build runs in a project.
+    Filter by branch, status, result, or definition.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/builds
+  method: GET
+  scopes:
+    - vso.build
+  tags:
+    - builds
+    - ci_cd
+  input_schema:
+    type: object
+    description: Parameters for listing builds
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      definition_id:
+        type: integer
+        description: "Filter by build definition ID"
+      branch:
+        type: string
+        description: "Filter by source branch"
+      status:
+        type: string
+        description: "Filter by status: inProgress, completed, cancelling, paused, notStarted"
+        enum: [inProgress, completed, cancelling, paused, notStarted]
+      result:
+        type: string
+        description: "Filter by result: succeeded, partiallySucceeded, failed, canceled, none"
+        enum: [succeeded, partiallySucceeded, failed, canceled, none]
+      $top:
+        type: integer
+        description: "Number of builds to return"
+        default: 100
+      $skip:
+        type: integer
+        description: "Number of builds to skip"
+        default: 0
+    required:
+      - organization
+      - project_id
+
+- slug: azure_devops_get_build
+  name: Get Build
+  description: |
+    Get details of a specific build including build number, status, result, start/end times, and source branch.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/builds/{build_id}
+  method: GET
+  scopes:
+    - vso.build
+  tags:
+    - builds
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a build
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      build_id:
+        type: integer
+        description: "Build ID"
+    required:
+      - organization
+      - project_id
+      - build_id
+
+- slug: azure_devops_list_releases
+  name: List Releases
+  description: |
+    List release definitions or recent release deployments in a project.
+    Filter by release environment, status, or result.
+  provider: azure_devops
+  endpoint: /api/v4/projects/{project_id}/releases
+  method: GET
+  scopes:
+    - vso.release
+  tags:
+    - releases
+    - ci_cd
+  input_schema:
+    type: object
+    description: Parameters for listing releases
+    properties:
+      organization:
+        type: string
+        description: "Azure DevOps organization name"
+      project_id:
+        type: string
+        description: "Project ID or name"
+      definition_id:
+        type: integer
+        description: "Filter by release definition ID"
+      status:
+        type: string
+        description: "Filter by status: drafts, active, completed, abandoned"
+        enum: [drafts, active, completed, abandoned]
+      $top:
+        type: integer
+        description: "Number of releases to return"
+        default: 100
+      $skip:
+        type: integer
+        description: "Number of releases to skip"
+        default: 0
+    required:
+      - organization
+      - project_id

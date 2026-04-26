@@ -1,0 +1,232 @@
+# Fanvue Tools - Allowlist
+# Curated subset of Fanvue API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fanvue_get_user            - Get current user
+# 2. fanvue_list_posts         - List posts
+# 3. fanvue_get_post          - Get post details
+# 4. fanvue_list_messages     - List messages
+# 5. fanvue_send_message      - Send a message
+# 6. fanvue_list_subscribers  - List subscribers
+# 7. fanvue_get_subscriber    - Get subscriber details
+# 8. fanvue_list_chats        - List chat conversations
+# 9. fanvue_get_chat          - Get chat details
+# 10. fanvue_get_stats       - Get account stats
+
+- slug: fanvue_get_user
+  name: Get User
+  description: |
+    Get current authenticated user profile.
+  provider: fanvue
+  endpoint: /api/v1/me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: fanvue_list_posts
+  name: List Posts
+  description: |
+    List posts from the creator.
+  provider: fanvue
+  endpoint: /api/v1/posts
+  method: GET
+  scopes: []
+  tags:
+    - posts
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fanvue_get_post
+  name: Get Post
+  description: |
+    Get details of a specific post.
+  provider: fanvue
+  endpoint: /api/v1/posts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - posts
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting post
+    properties:
+      id:
+        type: string
+        description: "Post ID"
+    required:
+      - id
+
+- slug: fanvue_list_messages
+  name: List Messages
+  description: |
+    List messages from inbox.
+  provider: fanvue
+  endpoint: /api/v1/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fanvue_send_message
+  name: Send Message
+  description: |
+    Send a message to a user.
+  provider: fanvue
+  endpoint: /api/v1/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - communication
+    - create
+  input_schema:
+    type: object
+    description: Parameters for sending message
+    properties:
+      recipient_id:
+        type: string
+        description: "Recipient user ID"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - recipient_id
+      - content
+
+- slug: fanvue_list_subscribers
+  name: List Subscribers
+  description: |
+    List all subscribers.
+  provider: fanvue
+  endpoint: /api/v1/subscribers
+  method: GET
+  scopes: []
+  tags:
+    - subscribers
+    - fans
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fanvue_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details of a specific subscriber.
+  provider: fanvue
+  endpoint: /api/v1/subscribers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - subscribers
+    - fans
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting subscriber
+    properties:
+      id:
+        type: string
+        description: "Subscriber ID"
+    required:
+      - id
+
+- slug: fanvue_list_chats
+  name: List Chats
+  description: |
+    List all chat conversations.
+  provider: fanvue
+  endpoint: /api/v1/chats
+  method: GET
+  scopes: []
+  tags:
+    - chats
+    - messaging
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fanvue_get_chat
+  name: Get Chat
+  description: |
+    Get details of a specific chat.
+  provider: fanvue
+  endpoint: /api/v1/chats/{id}
+  method: GET
+  scopes: []
+  tags:
+    - chats
+    - messaging
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting chat
+    properties:
+      id:
+        type: string
+        description: "Chat ID"
+    required:
+      - id
+
+- slug: fanvue_get_stats
+  name: Get Stats
+  description: |
+    Get account statistics.
+  provider: fanvue
+  endpoint: /api/v1/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

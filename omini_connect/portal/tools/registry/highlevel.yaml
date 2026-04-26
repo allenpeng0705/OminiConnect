@@ -1,0 +1,250 @@
+# HighLevel Tools - Allowlist
+# Curated subset of HighLevel API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. highlevel_list_contacts      - List contacts
+# 2. highlevel_get_contact         - Get contact details
+# 3. highlevel_list_opportunities - List opportunities
+# 4. highlevel_get_opportunity     - Get opportunity details
+# 5. highlevel_list_tasks         - List tasks
+# 6. highlevel_get_task            - Get task details
+# 7. highlevel_list_appointments  - List appointments
+# 8. highlevel_get_appointment     - Get appointment details
+# 9. highlevel_list_campaigns     - List campaigns
+# 10. highlevel_list_forms         - List forms
+
+- slug: highlevel_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in HighLevel.
+    Returns contact details including name, email, and status.
+  provider: highlevel
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: highlevel_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+    Includes contact profile, tags, and pipeline.
+  provider: highlevel
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: highlevel_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities in HighLevel.
+    Returns opportunity details including name, value, and stage.
+  provider: highlevel
+  endpoint: /opportunities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      pipeline_id:
+        type: string
+        description: "Filter by pipeline ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: highlevel_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity.
+    Includes opportunity details and associated contact.
+  provider: highlevel
+  endpoint: /opportunities/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: highlevel_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in HighLevel.
+    Returns task details including title, status, and assignee.
+  provider: highlevel
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: highlevel_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+    Includes task details and due date.
+  provider: highlevel
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: highlevel_list_appointments
+  name: List Appointments
+  description: |
+    List all appointments in HighLevel.
+    Returns appointment details including time, status, and service.
+  provider: highlevel
+  endpoint: /appointments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: highlevel_get_appointment
+  name: Get Appointment
+  description: |
+    Get detailed information about a specific appointment.
+    Includes appointment details and attendees.
+  provider: highlevel
+  endpoint: /appointments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      id:
+        type: string
+        description: "Appointment ID"
+    required:
+      - id
+
+- slug: highlevel_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in HighLevel.
+    Returns campaign details including name and status.
+  provider: highlevel
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: highlevel_list_forms
+  name: List Forms
+  description: |
+    List all forms in HighLevel.
+    Returns form details including name and submissions.
+  provider: highlevel
+  endpoint: /forms
+  method: GET
+  scopes:
+    - read
+  tags:
+    - forms
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties: {}
+    required: []

@@ -1,0 +1,253 @@
+# Gem Tools - Allowlist
+# Curated subset of Gem API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gem_list_candidates        - List candidates
+# 2. gem_get_candidate         - Get candidate details
+# 3. gem_create_candidate      - Create a candidate
+# 4. gem_update_candidate      - Update a candidate
+# 5. gem_list_jobs             - List jobs
+# 6. gem_get_job               - Get job details
+# 7. gem_list_interviews      - List interviews
+# 8. gem_list_offers           - List offers
+# 9. gem_list_sources          - List candidate sources
+# 10. gem_list_analytics      - List analytics data
+
+- slug: gem_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in the ATS.
+  provider: gem
+  endpoint: /v0/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - list
+    - ats
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      job_id:
+        type: string
+        description: "Filter by job ID"
+      stage:
+        type: string
+        description: "Filter by stage"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gem_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+  provider: gem
+  endpoint: /v0/users/{user_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      user_id:
+        type: string
+        description: "Candidate user ID"
+    required:
+      - user_id
+
+- slug: gem_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate in the ATS.
+  provider: gem
+  endpoint: /v0/users
+  method: POST
+  scopes:
+    - write
+  tags:
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      name:
+        type: string
+        description: "Candidate name"
+      email:
+        type: string
+        description: "Candidate email"
+      job_id:
+        type: string
+        description: "Associated job ID"
+    required:
+      - name
+      - email
+
+- slug: gem_update_candidate
+  name: Update Candidate
+  description: |
+    Update a candidate's information.
+  provider: gem
+  endpoint: /v0/users/{user_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - candidates
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a candidate
+    properties:
+      user_id:
+        type: string
+        description: "Candidate user ID"
+      name:
+        type: string
+        description: "New name"
+      stage:
+        type: string
+        description: "New stage"
+    required:
+      - user_id
+
+- slug: gem_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in the ATS.
+  provider: gem
+  endpoint: /v0/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+    required: []
+
+- slug: gem_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job.
+  provider: gem
+  endpoint: /v0/jobs/{job_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: gem_list_interviews
+  name: List Interviews
+  description: |
+    List all scheduled interviews.
+  provider: gem
+  endpoint: /v0/interviews
+  method: GET
+  scopes:
+    - read
+  tags:
+    - interviews
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      job_id:
+        type: string
+        description: "Filter by job ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: gem_list_offers
+  name: List Offers
+  description: |
+    List all offers in the system.
+  provider: gem
+  endpoint: /v0/offers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: gem_list_sources
+  name: List Sources
+  description: |
+    List all candidate sources (referrals, job boards, etc).
+  provider: gem
+  endpoint: /v0/sources
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sources
+    properties: {}
+
+- slug: gem_list_analytics
+  name: List Analytics
+  description: |
+    List analytics and metrics data.
+  provider: gem
+  endpoint: /v0/analytics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - analytics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

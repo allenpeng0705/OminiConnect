@@ -1,0 +1,271 @@
+# Google Tasks Tools - Allowlist
+# Curated subset of Google Tasks API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_tasks_list_tasklists       - List task lists
+# 2. google_tasks_get_tasklist        - Get task list details
+# 3. google_tasks_create_tasklist     - Create task list
+# 4. google_tasks_update_tasklist     - Update task list
+# 5. google_tasks_delete_tasklist     - Delete task list
+# 6. google_tasks_list_tasks          - List tasks
+# 7. google_tasks_get_task            - Get task details
+# 8. google_tasks_create_task         - Create task
+# 9. google_tasks_update_task         - Update task
+# 10. google_tasks_delete_task        - Delete task
+
+- slug: google_tasks_list_tasklists
+  name: List Task Lists
+  description: |
+    List all task lists.
+  provider: google-tasks
+  endpoint: /tasks/v1/users/@me/lists
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - lists
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing task lists
+    properties: {}
+
+- slug: google_tasks_get_tasklist
+  name: Get Task List
+  description: |
+    Get task list details.
+  provider: google-tasks
+  endpoint: /tasks/v1/users/@me/lists/{tasklist}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task list
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+    required:
+      - tasklist
+
+- slug: google_tasks_create_tasklist
+  name: Create Task List
+  description: |
+    Create a new task list.
+  provider: google-tasks
+  endpoint: /tasks/v1/users/@me/lists
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - lists
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task list
+    properties:
+      title:
+        type: string
+        description: "Task list title"
+    required:
+      - title
+
+- slug: google_tasks_update_tasklist
+  name: Update Task List
+  description: |
+    Update a task list.
+  provider: google-tasks
+  endpoint: /tasks/v1/users/@me/lists/{tasklist}
+  method: PUT
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - lists
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task list
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+      title:
+        type: string
+        description: "New title"
+    required:
+      - tasklist
+
+- slug: google_tasks_delete_tasklist
+  name: Delete Task List
+  description: |
+    Delete a task list.
+  provider: google-tasks
+  endpoint: /tasks/v1/users/@me/lists/{tasklist}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - lists
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a task list
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+    required:
+      - tasklist
+
+- slug: google_tasks_list_tasks
+  name: List Tasks
+  description: |
+    List tasks in a task list.
+  provider: google-tasks
+  endpoint: /tasks/v1/lists/{tasklist}/tasks
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+        default: "@default"
+      show_completed:
+        type: boolean
+        description: "Show completed tasks"
+        default: true
+    required: []
+
+- slug: google_tasks_get_task
+  name: Get Task
+  description: |
+    Get task details.
+  provider: google-tasks
+  endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+        default: "@default"
+      task:
+        type: string
+        description: "Task ID"
+    required:
+      - task
+
+- slug: google_tasks_create_task
+  name: Create Task
+  description: |
+    Create a new task.
+  provider: google-tasks
+  endpoint: /tasks/v1/lists/{tasklist}/tasks
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+        default: "@default"
+      title:
+        type: string
+        description: "Task title"
+      notes:
+        type: string
+        description: "Task notes"
+      due:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+    required:
+      - title
+
+- slug: google_tasks_update_task
+  name: Update Task
+  description: |
+    Update a task.
+  provider: google-tasks
+  endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
+  method: PUT
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+        default: "@default"
+      task:
+        type: string
+        description: "Task ID"
+      title:
+        type: string
+        description: "New title"
+      status:
+        type: string
+        description: "Status (needsAction, completed)"
+    required:
+      - task
+
+- slug: google_tasks_delete_task
+  name: Delete Task
+  description: |
+    Delete a task.
+  provider: google-tasks
+  endpoint: /tasks/v1/lists/{tasklist}/tasks/{task}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/tasks
+  tags:
+    - tasks
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a task
+    properties:
+      tasklist:
+        type: string
+        description: "Task list ID"
+        default: "@default"
+      task:
+        type: string
+        description: "Task ID"
+    required:
+      - task

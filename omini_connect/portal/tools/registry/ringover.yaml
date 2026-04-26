@@ -1,0 +1,265 @@
+# Ringover Tools - Allowlist
+# Curated subset of RingOver API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ringover_list_calls              - List all calls
+# 2. ringover_get_call                - Get call details
+# 3. ringover_make_call               - Initiate a call
+# 4. ringover_end_call                - End an active call
+# 5. ringover_list_contacts           - List all contacts
+# 6. ringover_create_contact          - Create a contact
+# 7. ringover_list_users              - List team users
+# 8. ringover_get_user                - Get user details
+# 9. ringover_update_call_note        - Update call note
+# 10. ringover_get_call_recordings    - Get call recordings
+
+- slug: ringover_list_calls
+  name: List Calls
+  description: |
+    Retrieve a list of all calls in your RingOver account.
+  provider: ringover
+  endpoint: /v1/calls
+  method: GET
+  scopes:
+    - calls:read
+  tags:
+    - calls
+    - telephony
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Number of calls to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: in-progress, completed, missed"
+    required: []
+
+- slug: ringover_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: ringover
+  endpoint: /v1/calls/{callId}
+  method: GET
+  scopes:
+    - calls:read
+  tags:
+    - calls
+    - telephony
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      callId:
+        type: string
+        description: "The call ID"
+    required:
+      - callId
+
+- slug: ringover_make_call
+  name: Make Call
+  description: |
+    Initiate an outbound call.
+  provider: ringover
+  endpoint: /v1/calls
+  method: POST
+  scopes:
+    - calls:write
+  tags:
+    - calls
+    - telephony
+    - communications
+    - create
+  input_schema:
+    type: object
+    description: Parameters for making a call
+    properties:
+      to:
+        type: string
+        description: "Phone number to call"
+      from:
+        type: string
+        description: "Caller ID number"
+      userId:
+        type: string
+        description: "User ID to initiate from"
+    required:
+      - to
+
+- slug: ringover_end_call
+  name: End Call
+  description: |
+    End an active call.
+  provider: ringover
+  endpoint: /v1/calls/{callId}
+  method: DELETE
+  scopes:
+    - calls:write
+  tags:
+    - calls
+    - telephony
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for ending a call
+    properties:
+      callId:
+        type: string
+        description: "The call ID to end"
+    required:
+      - callId
+
+- slug: ringover_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts.
+  provider: ringover
+  endpoint: /v1/contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 50
+    required: []
+
+- slug: ringover_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: ringover
+  endpoint: /v1/contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      name:
+        type: string
+        description: "Contact name"
+      phone:
+        type: string
+        description: "Phone number"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - name
+
+- slug: ringover_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all team users.
+  provider: ringover
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users"
+        default: 50
+    required: []
+
+- slug: ringover_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: ringover
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "The user ID"
+    required:
+      - userId
+
+- slug: ringover_update_call_note
+  name: Update Call Note
+  description: |
+    Add or update a note on a call.
+  provider: ringover
+  endpoint: /v1/calls/{callId}/note
+  method: PUT
+  scopes:
+    - calls:write
+  tags:
+    - calls
+    - notes
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for updating call note
+    properties:
+      callId:
+        type: string
+        description: "The call ID"
+      note:
+        type: string
+        description: "Note content"
+    required:
+      - callId
+      - note
+
+- slug: ringover_get_call_recordings
+  name: Get Call Recordings
+  description: |
+    Get recordings for a specific call.
+  provider: ringover
+  endpoint: /v1/calls/{callId}/recordings
+  method: GET
+  scopes:
+    - recordings:read
+  tags:
+    - calls
+    - recordings
+    - telephony
+  input_schema:
+    type: object
+    description: Parameters for getting recordings
+    properties:
+      callId:
+        type: string
+        description: "The call ID"
+    required:
+      - callId

@@ -1,0 +1,232 @@
+# BuiltWith Tools - Allowlist
+# Curated subset of BuiltWith API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. builtwith_lookup_domain     - Lookup domain
+# 2. builtwith_get_trends        - Get technology trends
+# 3. builtwith_list_domains     - List domains using technology
+# 4. builtwith_get_domain_info  - Get detailed domain info
+# 5. builtwith_list_technologies - List technologies used by domain
+# 6. builtwith_get_technology_info - Get technology details
+# 7. builtwith_list_categories   - List technology categories
+# 8. builtwith_get_category_info - Get category details
+# 9. builtwith_search_domains   - Search domains by technology
+# 10. builtwith_get_usage_stats - Get usage statistics
+
+- slug: builtwith_lookup_domain
+  name: Lookup Domain
+  description: |
+    Lookup a domain to get technology usage information.
+  provider: builtwith
+  endpoint: /v2/lookup.json
+  method: GET
+  scopes: []
+  tags:
+    - domain
+    - lookup
+  input_schema:
+    type: object
+    description: Parameters for domain lookup
+    properties:
+      domain:
+        type: string
+        description: "Domain to lookup (e.g., example.com)"
+    required:
+      - domain
+
+- slug: builtwith_get_trends
+  name: Get Trends
+  description: |
+    Get technology trends data.
+  provider: builtwith
+  endpoint: /v2/trends.json
+  method: GET
+  scopes: []
+  tags:
+    - trends
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting trends
+    properties:
+      category:
+        type: string
+        description: "Technology category"
+      date:
+        type: string
+        description: "Date for trends (YYYY-MM)"
+    required: []
+
+- slug: builtwith_list_domains
+  name: List Domains
+  description: |
+    List domains using a specific technology.
+  provider: builtwith
+  endpoint: /v2/domain-list.json
+  method: GET
+  scopes: []
+  tags:
+    - domains
+    - technology
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      technology:
+        type: string
+        description: "Technology name"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - technology
+
+- slug: builtwith_get_domain_info
+  name: Get Domain Info
+  description: |
+    Get detailed information about a domain.
+  provider: builtwith
+  endpoint: /v2/domain-info.json
+  method: GET
+  scopes: []
+  tags:
+    - domain
+    - info
+  input_schema:
+    type: object
+    description: Parameters for getting domain info
+    properties:
+      domain:
+        type: string
+        description: "Domain name"
+    required:
+      - domain
+
+- slug: builtwith_list_technologies
+  name: List Technologies
+  description: |
+    List all technologies used by a domain.
+  provider: builtwith
+  endpoint: /v2/technologies.json
+  method: GET
+  scopes: []
+  tags:
+    - technologies
+    - website
+  input_schema:
+    type: object
+    description: Parameters for listing technologies
+    properties:
+      domain:
+        type: string
+        description: "Domain to check"
+    required:
+      - domain
+
+- slug: builtwith_get_technology_info
+  name: Get Technology Info
+  description: |
+    Get details about a specific technology.
+  provider: builtwith
+  endpoint: /v2/technology.json"
+  method: GET
+  scopes: []
+  tags:
+    - technology
+    - info
+  input_schema:
+    type: object
+    description: Parameters for getting technology info
+    properties:
+      technology:
+        type: string
+        description: "Technology name or ID"
+    required:
+      - technology
+
+- slug: builtwith_list_categories
+  name: List Categories
+  description: |
+    List all technology categories.
+  provider: builtwith
+  endpoint: /v2/categories.json"
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - technology
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties: {}
+    required: []
+
+- slug: builtwith_get_category_info
+  name: Get Category Info
+  description: |
+    Get information about a technology category.
+  provider: builtwith
+  endpoint: /v2/category.json"
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting category info
+    properties:
+      category:
+        type: string
+        description: "Category name or ID"
+    required:
+      - category
+
+- slug: builtwith_search_domains
+  name: Search Domains
+  description: |
+    Search domains by technology criteria.
+  provider: builtwith
+  endpoint: /v2/search.json"
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - domains
+  input_schema:
+    type: object
+    description: Parameters for searching domains
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - query
+
+- slug: builtwith_get_usage_stats
+  name: Get Usage Stats
+  description: |
+    Get usage statistics for technologies.
+  provider: builtwith
+  endpoint: /v2/usage-stats.json"
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - usage
+  input_schema:
+    type: object
+    description: Parameters for getting usage stats
+    properties:
+      technology:
+        type: string
+        description: "Technology name"
+    required:
+      - technology

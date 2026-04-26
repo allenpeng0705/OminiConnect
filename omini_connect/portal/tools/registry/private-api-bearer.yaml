@@ -1,0 +1,225 @@
+# Private API Bearer Auth Tools - Allowlist
+# Curated subset of Private API for AI agent use.
+# API Key (Bearer) via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+# NOTE: Generic template - adapt endpoints to your specific API.
+
+# === TOOL LIST ===
+# 1. private_bearer_list_resources    - List resources
+# 2. private_bearer_get_resource     - Get resource details
+# 3. private_bearer_create_resource  - Create a resource
+# 4. private_bearer_update_resource  - Update a resource
+# 5. private_bearer_delete_resource  - Delete a resource
+# 6. private_bearer_list_items       - List items
+# 7. private_bearer_get_item         - Get item details
+# 8. private_bearer_search           - Search resources
+# 9. private_bearer_get_status       - Get API status
+# 10. private_bearer_get_health      - Get health check
+
+- slug: private_bearer_list_resources
+  name: List Resources
+  description: |
+    List all resources from the private API.
+  provider: private-api-bearer
+  endpoint: /resources
+  method: GET
+  scopes: []
+  tags:
+    - resources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing resources
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: private_bearer_get_resource
+  name: Get Resource
+  description: |
+    Get detailed information about a specific resource.
+  provider: private-api-bearer
+  endpoint: /resources/{resourceId}
+  method: GET
+  scopes: []
+  tags:
+    - resources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a resource
+    properties:
+      resourceId:
+        type: string
+        description: "Resource ID"
+    required:
+      - resourceId
+
+- slug: private_bearer_create_resource
+  name: Create Resource
+  description: |
+    Create a new resource.
+  provider: private-api-bearer
+  endpoint: /resources
+  method: POST
+  scopes: []
+  tags:
+    - resources
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a resource
+    properties:
+      name:
+        type: string
+        description: "Resource name"
+      data:
+        type: object
+        description: "Resource data"
+    required:
+      - name
+
+- slug: private_bearer_update_resource
+  name: Update Resource
+  description: |
+    Update an existing resource.
+  provider: private-api-bearer
+  endpoint: /resources/{resourceId}
+  method: PUT
+  scopes: []
+  tags:
+    - resources
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a resource
+    properties:
+      resourceId:
+        type: string
+        description: "Resource ID"
+      name:
+        type: string
+        description: "Resource name"
+      data:
+        type: object
+        description: "Resource data"
+    required:
+      - resourceId
+
+- slug: private_bearer_delete_resource
+  name: Delete Resource
+  description: |
+    Delete a resource.
+  provider: private-api-bearer
+  endpoint: /resources/{resourceId}
+  method: DELETE
+  scopes: []
+  tags:
+    - resources
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a resource
+    properties:
+      resourceId:
+        type: string
+        description: "Resource ID"
+    required:
+      - resourceId
+
+- slug: private_bearer_list_items
+  name: List Items
+  description: |
+    List all items from the private API.
+  provider: private-api-bearer
+  endpoint: /items
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: private_bearer_get_item
+  name: Get Item
+  description: |
+    Get detailed information about a specific item.
+  provider: private-api-bearer
+  endpoint: /items/{itemId}
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: private_bearer_search
+  name: Search
+  description: |
+    Search resources by query.
+  provider: private-api-bearer
+  endpoint: /search
+  method: GET
+  scopes: []
+  tags:
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      q:
+        type: string
+        description: "Search query"
+    required:
+      - q
+
+- slug: private_bearer_get_status
+  name: Get Status
+  description: |
+    Get API status information.
+  provider: private-api-bearer
+  endpoint: /status
+  method: GET
+  scopes: []
+  tags:
+    - status
+  input_schema:
+    type: object
+    description: Parameters for getting status
+    properties: {}
+    required: []
+
+- slug: private_bearer_get_health
+  name: Get Health
+  description: |
+    Get health check information.
+  provider: private-api-bearer
+  endpoint: /health
+  method: GET
+  scopes: []
+  tags:
+    - health
+  input_schema:
+    type: object
+    description: Parameters for getting health
+    properties: {}
+    required: []

@@ -1,0 +1,325 @@
+# DocuSign Tools - Allowlist
+# Curated subset of DocuSign eSignature API v2.1 for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. docusign_list_envelopes     - List envelopes
+# 2. docusign_get_envelope       - Get envelope details
+# 3. docusign_create_envelope    - Create an envelope
+# 4. docusign_send_envelope      - Send an envelope for signature
+# 5. docusign_list_documents     - List documents in envelope
+# 6. docusign_get_document       - Get document details
+# 7. docusign_list_recipients    - List envelope recipients
+# 8. docusign_get_recipient      - Get recipient details
+# 9. docusign_list_templates     - List templates
+# 10. docusign_get_template      - Get template details
+
+- slug: docusign_list_envelopes
+  name: List Envelopes
+  description: |
+    List envelopes with optional filtering by status, date range, or folder.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - envelopes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing envelopes
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      status:
+        type: string
+        description: "Filter by status (created, sent, delivered, completed, declined, voided)"
+      from_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      to_date:
+        type: string
+        description: "End date (ISO 8601)"
+      folder:
+        type: string
+        description: "Filter by folder (inbox, sent, drafts)"
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required:
+      - account_id
+
+- slug: docusign_get_envelope
+  name: Get Envelope
+  description: |
+    Get detailed information about a specific envelope including status and recipients.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - envelopes
+    - read
+    - details
+  input_schema:
+    type: object
+    description: Parameters for getting an envelope
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - account_id
+      - envelope_id
+
+- slug: docusign_create_envelope
+  name: Create Envelope
+  description: |
+    Create a new envelope definition with documents and recipients.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes
+  method: POST
+  scopes:
+    - signature
+  tags:
+    - envelopes
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an envelope
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      template_id:
+        type: string
+        description: "Optional template ID to use"
+      email_subject:
+        type: string
+        description: "Email subject"
+      documents:
+        type: array
+        description: "Array of document objects"
+      recipients:
+        type: object
+        description: "Recipients with signers"
+    required:
+      - account_id
+      - email_subject
+
+- slug: docusign_send_envelope
+  name: Send Envelope
+  description: |
+    Send an existing envelope draft for signature.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}
+  method: PUT
+  scopes:
+    - signature
+  tags:
+    - envelopes
+    - send
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for sending an envelope
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID to send"
+    required:
+      - account_id
+      - envelope_id
+
+- slug: docusign_list_documents
+  name: List Documents
+  description: |
+    List all documents in an envelope with their IDs and names.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/documents
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - documents
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - account_id
+      - envelope_id
+
+- slug: docusign_get_document
+  name: Get Document
+  description: |
+    Download or retrieve a specific document from an envelope.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/documents/{documentId}
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - documents
+    - read
+    - download
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - account_id
+      - envelope_id
+      - document_id
+
+- slug: docusign_list_recipients
+  name: List Recipients
+  description: |
+    List all recipients for an envelope including signers, cc, and witness.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/recipients
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - recipients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recipients
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - account_id
+      - envelope_id
+
+- slug: docusign_get_recipient
+  name: Get Recipient
+  description: |
+    Get detailed information about a specific recipient including signature status.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/envelopes/{envelopeId}/recipients/{recipientId}
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - recipients
+    - read
+    - details
+  input_schema:
+    type: object
+    description: Parameters for getting a recipient
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+      recipient_id:
+        type: string
+        description: "Recipient ID"
+    required:
+      - account_id
+      - envelope_id
+      - recipient_id
+
+- slug: docusign_list_templates
+  name: List Templates
+  description: |
+    List all templates available in the account for creating envelopes.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/templates
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - templates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      search_text:
+        type: string
+        description: "Search templates by name"
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+    required:
+      - account_id
+
+- slug: docusign_get_template
+  name: Get Template
+  description: |
+    Get detailed information about a template including structure and recipients.
+  provider: docusign
+  endpoint: /v2.1/accounts/{accountId}/templates/{templateId}
+  method: GET
+  scopes:
+    - signature
+  tags:
+    - templates
+    - read
+    - details
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      account_id:
+        type: string
+        description: "DocuSign account ID"
+      template_id:
+        type: string
+        description: "Template ID"
+    required:
+      - account_id
+      - template_id

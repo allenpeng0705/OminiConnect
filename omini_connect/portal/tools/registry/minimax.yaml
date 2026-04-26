@@ -1,0 +1,237 @@
+# MiniMax Tools - Allowlist
+# Curated subset of MiniMax API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. minimax_list_chats             - List all chats
+# 2. minimax_get_chat              - Get chat details
+# 3. minimax_create_chat          - Create a new chat
+# 4. minimax_send_message         - Send a chat message
+# 5. minimax_list_models          - List available models
+# 6. minimax_get_model            - Get model details
+# 7. minimax_list_roles           - List roles
+# 8. minimax_create_role          - Create a role
+# 9. minimax_list_permissions     - List permissions
+# 10. minimax_assign_permission  - Assign permission to role
+
+- slug: minimax_list_chats
+  name: List Chats
+  description: |
+    List all conversations in MiniMax.
+  provider: minimax
+  endpoint: /v1/chat/conversations
+  method: GET
+  scopes: []
+  tags:
+    - chats
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: minimax_get_chat
+  name: Get Chat
+  description: |
+    Get details of a specific chat conversation.
+  provider: minimax
+  endpoint: /v1/chat/conversations/{conversationId}
+  method: GET
+  scopes: []
+  tags:
+    - chats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a chat
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversationId
+
+- slug: minimax_create_chat
+  name: Create Chat
+  description: |
+    Create a new chat conversation.
+  provider: minimax
+  endpoint: /v1/chat/conversations
+  method: POST
+  scopes: []
+  tags:
+    - chats
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a chat
+    properties:
+      title:
+        type: string
+        description: "Chat title"
+    required:
+      - title
+
+- slug: minimax_send_message
+  name: Send Message
+  description: |
+    Send a message in a chat conversation.
+  provider: minimax
+  endpoint: /v1/chat/conversations/{conversationId}/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Message content"
+      role:
+        type: string
+        description: "Role (user/assistant)"
+        default: user
+    required:
+      - conversationId
+      - content
+
+- slug: minimax_list_models
+  name: List Models
+  description: |
+    List all available AI models in MiniMax.
+  provider: minimax
+  endpoint: /v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: minimax_get_model
+  name: Get Model
+  description: |
+    Get details of a specific AI model.
+  provider: minimax
+  endpoint: /v1/models/{modelId}
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+    required:
+      - modelId
+
+- slug: minimax_list_roles
+  name: List Roles
+  description: |
+    List all roles in the organization.
+  provider: minimax
+  endpoint: /v1/roles
+  method: GET
+  scopes: []
+  tags:
+    - roles
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties: {}
+    required: []
+
+- slug: minimax_create_role
+  name: Create Role
+  description: |
+    Create a new role in the organization.
+  provider: minimax
+  endpoint: /v1/roles
+  method: POST
+  scopes: []
+  tags:
+    - roles
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a role
+    properties:
+      name:
+        type: string
+        description: "Role name"
+      description:
+        type: string
+        description: "Role description"
+    required:
+      - name
+
+- slug: minimax_list_permissions
+  name: List Permissions
+  description: |
+    List all available permissions.
+  provider: minimax
+  endpoint: /v1/permissions
+  method: GET
+  scopes: []
+  tags:
+    - permissions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing permissions
+    properties: {}
+    required: []
+
+- slug: minimax_assign_permission
+  name: Assign Permission
+  description: |
+    Assign a permission to a role.
+  provider: minimax
+  endpoint: /v1/roles/{roleId}/permissions
+  method: POST
+  scopes: []
+  tags:
+    - permissions
+    - assign
+  input_schema:
+    type: object
+    description: Parameters for assigning a permission
+    properties:
+      roleId:
+        type: string
+        description: "Role ID"
+      permission:
+        type: string
+        description: "Permission identifier"
+    required:
+      - roleId
+      - permission

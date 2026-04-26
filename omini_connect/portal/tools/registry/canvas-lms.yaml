@@ -1,0 +1,264 @@
+# Canvas LMS Tools - Allowlist
+# Curated subset of the Canvas LMS API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. canvas_list_courses                - List courses
+# 2. canvas_get_course                  - Get course details
+# 3. canvas_list_users                  - List users
+# 4. canvas_get_user                   - Get user details
+# 5. canvas_list_assignments            - List assignments
+# 6. canvas_get_assignment             - Get assignment details
+# 7. canvas_list_submissions           - List submissions
+# 8. canvas_create_assignment          - Create an assignment
+# 9. canvas_list_modules               - List modules
+# 10. canvas_list_announcements       - List announcements
+
+- slug: canvas_list_courses
+  name: List Courses
+  description: |
+    List all courses the user is enrolled in.
+  provider: canvas-lms
+  endpoint: /api/v1/courses
+  method: GET
+  scopes: []
+  tags:
+    - courses
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing courses
+    properties:
+      enrollment_type:
+        type: string
+        description: "Filter by enrollment type"
+      state:
+        type: string
+        description: "Course state: available, completed, etc"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: canvas_get_course
+  name: Get Course
+  description: |
+    Get details of a specific course.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{id}
+  method: GET
+  scopes: []
+  tags:
+    - courses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a course
+    properties:
+      id:
+        type: integer
+        description: "Course ID"
+    required:
+      - id
+
+- slug: canvas_list_users
+  name: List Users
+  description: |
+    List all users in an account or course.
+  provider: canvas-lms
+  endpoint: /api/v1/accounts/{accountId}/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      accountId:
+        type: integer
+        description: "Account ID"
+      search_term:
+        type: string
+        description: "Search by name or email"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - accountId
+
+- slug: canvas_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: canvas-lms
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id
+
+- slug: canvas_list_assignments
+  name: List Assignments
+  description: |
+    List all assignments in a course.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/assignments
+  method: GET
+  scopes: []
+  tags:
+    - assignments
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing assignments
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - courseId
+
+- slug: canvas_get_assignment
+  name: Get Assignment
+  description: |
+    Get details of a specific assignment.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/assignments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - assignments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an assignment
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+      id:
+        type: integer
+        description: "Assignment ID"
+    required:
+      - courseId
+      - id
+
+- slug: canvas_list_submissions
+  name: List Submissions
+  description: |
+    List all submissions for an assignment.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/assignments/{assignmentId}/submissions
+  method: GET
+  scopes: []
+  tags:
+    - submissions
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing submissions
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+      assignmentId:
+        type: integer
+        description: "Assignment ID"
+    required:
+      - courseId
+      - assignmentId
+
+- slug: canvas_create_assignment
+  name: Create Assignment
+  description: |
+    Create a new assignment in a course.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/assignments
+  method: POST
+  scopes: []
+  tags:
+    - assignments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an assignment
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+      name:
+        type: string
+        description: "Assignment title"
+      description:
+        type: string
+        description: "Assignment description"
+      due_at:
+        type: string
+        description: "Due date ISO 8601"
+      points_possible:
+        type: number
+        description: "Max points"
+    required:
+      - courseId
+      - name
+
+- slug: canvas_list_modules
+  name: List Modules
+  description: |
+    List all modules in a course.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/modules
+  method: GET
+  scopes: []
+  tags:
+    - modules
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing modules
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+    required:
+      - courseId
+
+- slug: canvas_list_announcements
+  name: List Announcements
+  description: |
+    List all announcements in a course.
+  provider: canvas-lms
+  endpoint: /api/v1/courses/{courseId}/announcements
+  method: GET
+  scopes: []
+  tags:
+    - announcements
+    - education
+  input_schema:
+    type: object
+    description: Parameters for listing announcements
+    properties:
+      courseId:
+        type: integer
+        description: "Course ID"
+    required:
+      - courseId

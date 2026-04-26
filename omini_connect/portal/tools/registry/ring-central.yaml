@@ -1,0 +1,264 @@
+# Ring-central Tools - Allowlist
+# Curated subset of RingCentral API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ring-central_list_messages         - List all messages
+# 2. ring-central_get_message           - Get message details
+# 3. ring-central_send_sms              - Send SMS message
+# 4. ring-central_list_extensions       - List extensions
+# 5. ring-central_get_extension         - Get extension details
+# 6. ring-central_list_presence         - List presence status
+# 7. ring-central_update_presence       - Update presence
+# 8. ring-central_list_call_logs        - List call logs
+# 9. ring-central_get_call_log          - Get call log entry
+# 10. ring-central_list_phone_numbers  - List phone numbers
+
+- slug: ring-central_list_messages
+  name: List Messages
+  description: |
+    Retrieve a list of all messages (SMS, MMS, fax).
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/message-store
+  method: GET
+  scopes:
+    - messages:read
+  tags:
+    - messages
+    - sms
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      limit:
+        type: integer
+        description: "Number of messages"
+        default: 50
+      type:
+        type: string
+        description: "Message type: sms, fax, pager"
+        default: sms
+    required: []
+
+- slug: ring-central_get_message
+  name: Get Message
+  description: |
+    Get details of a specific message.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/message-store/{messageId}
+  method: GET
+  scopes:
+    - messages:read
+  tags:
+    - messages
+    - sms
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "The message ID"
+    required:
+      - messageId
+
+- slug: ring-central_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/sms
+  method: POST
+  scopes:
+    - sms:write
+  tags:
+    - sms
+    - messages
+    - communications
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending SMS
+    properties:
+      to:
+        type: array
+        description: "Recipient phone numbers"
+      from:
+        type: string
+        description: "Sender phone number"
+      text:
+        type: string
+        description: "Message text"
+    required:
+      - to
+      - text
+
+- slug: ring-central_list_extensions
+  name: List Extensions
+  description: |
+    Retrieve a list of all extensions in the account.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension
+  method: GET
+  scopes:
+    - extensions:read
+  tags:
+    - extensions
+    - users
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing extensions
+    properties:
+      limit:
+        type: integer
+        description: "Number of extensions"
+        default: 100
+    required: []
+
+- slug: ring-central_get_extension
+  name: Get Extension
+  description: |
+    Get details of a specific extension.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/{extensionId}
+  method: GET
+  scopes:
+    - extensions:read
+  tags:
+    - extensions
+    - users
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for getting an extension
+    properties:
+      extensionId:
+        type: string
+        description: "The extension ID"
+    required:
+      - extensionId
+
+- slug: ring-central_list_presence
+  name: List Presence
+  description: |
+    Retrieve presence status of extensions.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/presence
+  method: GET
+  scopes:
+    - presence:read
+  tags:
+    - presence
+    - status
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing presence
+    properties:
+      extensionId:
+        type: string
+        description: "Filter by extension ID"
+    required: []
+
+- slug: ring-central_update_presence
+  name: Update Presence
+  description: |
+    Update your presence status.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/presence
+  method: PUT
+  scopes:
+    - presence:write
+  tags:
+    - presence
+    - status
+    - users
+  input_schema:
+    type: object
+    description: Parameters for updating presence
+    properties:
+      availability:
+        type: string
+        description: "Status: Available, Busy, Away, Offline"
+        default: Available
+      userStatus:
+        type: string
+        description: "User status: Available, Busy"
+        default: Available
+    required: []
+
+- slug: ring-central_list_call_logs
+  name: List Call Logs
+  description: |
+    Retrieve a list of call logs.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/call-log
+  method: GET
+  scopes:
+    - call-log:read
+  tags:
+    - call-log
+    - calls
+    - telephony
+  input_schema:
+    type: object
+    description: Parameters for listing call logs
+    properties:
+      limit:
+        type: integer
+        description: "Number of entries"
+        default: 50
+      type:
+        type: string
+        description: "Call type: all, inbound, outbound"
+        default: all
+    required: []
+
+- slug: ring-central_get_call_log
+  name: Get Call Log
+  description: |
+    Get details of a specific call log entry.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/extension/~/call-log/{callLogId}
+  method: GET
+  scopes:
+    - call-log:read
+  tags:
+    - call-log
+    - calls
+    - telephony
+  input_schema:
+    type: object
+    description: Parameters for getting a call log
+    properties:
+      callLogId:
+        type: string
+        description: "The call log ID"
+    required:
+      - callLogId
+
+- slug: ring-central_list_phone_numbers
+  name: List Phone Numbers
+  description: |
+    Retrieve a list of all phone numbers.
+  provider: ring-central
+  endpoint: /restapi/v1.0/account/~/phone-number
+  method: GET
+  scopes:
+    - phone-number:read
+  tags:
+    - phone-numbers
+    - telephony
+  input_schema:
+    type: object
+    description: Parameters for listing phone numbers
+    properties:
+      limit:
+        type: integer
+        description: "Number of phone numbers"
+        default: 100
+    required: []

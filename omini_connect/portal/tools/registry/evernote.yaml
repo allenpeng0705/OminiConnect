@@ -1,0 +1,278 @@
+# Evernote Tools - Allowlist
+# Curated subset of Evernote API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. evernote_list_notes      - List notes
+# 2. evernote_get_note        - Get note details
+# 3. evernote_create_note     - Create a note
+# 4. evernote_update_note     - Update a note
+# 5. evernote_list_notebooks   - List notebooks
+# 6. evernote_get_notebook    - Get notebook details
+# 7. evernote_list_tags       - List tags
+# 8. evernote_get_tag         - Get tag details
+# 9. evernote_search_notes    - Search notes
+# 10. evernote_list_resources - List resources
+
+- slug: evernote_list_notes
+  name: List Notes
+  description: |
+    List notes in a specific notebook or all notes if no notebook specified.
+  provider: evernote
+  endpoint: /notes
+  method: GET
+  scopes:
+    - read notes
+  tags:
+    - notes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      notebookGuid:
+        type: string
+        description: "Filter by notebook GUID"
+      tagGuid:
+        type: string
+        description: "Filter by tag GUID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: evernote_get_note
+  name: Get Note
+  description: |
+    Get full content and metadata of a specific Evernote note.
+  provider: evernote
+  endpoint: /notes/{guid}
+  method: GET
+  scopes:
+    - read notes
+  tags:
+    - notes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a note
+    properties:
+      guid:
+        type: string
+        description: "Note GUID"
+      withContent:
+        type: boolean
+        description: "Include full note content"
+        default: true
+      withResourcesData:
+        type: boolean
+        description: "Include resource data"
+        default: false
+    required:
+      - guid
+
+- slug: evernote_create_note
+  name: Create Note
+  description: |
+    Create a new note in a specific notebook with title, content, and tags.
+  provider: evernote
+  endpoint: /notes
+  method: POST
+  scopes:
+    - write notes
+  tags:
+    - notes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      title:
+        type: string
+        description: "Note title"
+      content:
+        type: string
+        description: "Note content in ENML format"
+      notebookGuid:
+        type: string
+        description: "Notebook GUID to create note in"
+      tagNames:
+        type: array
+        items:
+          type: string
+        description: "Array of tag names to apply"
+    required:
+      - title
+      - content
+
+- slug: evernote_update_note
+  name: Update Note
+  description: |
+    Update an existing Evernote note's title, content, or attributes.
+  provider: evernote
+  endpoint: /notes/{guid}
+  method: PUT
+  scopes:
+    - write notes
+  tags:
+    - notes
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a note
+    properties:
+      guid:
+        type: string
+        description: "Note GUID"
+      title:
+        type: string
+        description: "New note title"
+      content:
+        type: string
+        description: "New note content in ENML format"
+      tagNames:
+        type: array
+        items:
+          type: string
+        description: "Array of tag names to apply"
+    required:
+      - guid
+
+- slug: evernote_list_notebooks
+  name: List Notebooks
+  description: |
+    List all Evernote notebooks in the user's account.
+  provider: evernote
+  endpoint: /notebooks
+  method: GET
+  scopes:
+    - read notebooks
+  tags:
+    - notebooks
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: evernote_get_notebook
+  name: Get Notebook
+  description: |
+    Get detailed information about a specific Evernote notebook.
+  provider: evernote
+  endpoint: /notebooks/{guid}
+  method: GET
+  scopes:
+    - read notebooks
+  tags:
+    - notebooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a notebook
+    properties:
+      guid:
+        type: string
+        description: "Notebook GUID"
+    required:
+      - guid
+
+- slug: evernote_list_tags
+  name: List Tags
+  description: |
+    List all tags in the user's Evernote account.
+  provider: evernote
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read tags
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: evernote_get_tag
+  name: Get Tag
+  description: |
+    Get details about a specific Evernote tag.
+  provider: evernote
+  endpoint: /tags/{guid}
+  method: GET
+  scopes:
+    - read tags
+  tags:
+    - tags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      guid:
+        type: string
+        description: "Tag GUID"
+    required:
+      - guid
+
+- slug: evernote_search_notes
+  name: Search Notes
+  description: |
+    Search notes using Evernote's search query syntax.
+  provider: evernote
+  endpoint: /notes/search
+  method: GET
+  scopes:
+    - read notes
+  tags:
+    - notes
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching notes
+    properties:
+      query:
+        type: string
+        description: "Search query (Evernote syntax)"
+      notebookGuid:
+        type: string
+        description: "Limit search to notebook"
+      tagGuid:
+        type: string
+        description: "Filter by tag"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - query
+
+- slug: evernote_list_resources
+  name: List Resources
+  description: |
+    List all resources (attachments) in a note.
+  provider: evernote
+  endpoint: /notes/{guid}/resources
+  method: GET
+  scopes:
+    - read notes
+  tags:
+    - resources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing resources
+    properties:
+      guid:
+        type: string
+        description: "Note GUID"
+    required:
+      - guid

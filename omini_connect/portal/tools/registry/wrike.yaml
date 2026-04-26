@@ -1,0 +1,258 @@
+- slug: wrike_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of tasks, optionally filtered by project or folder.
+  provider: wrike
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Query parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "Filter tasks by project ID"
+      folderId:
+        type: string
+        description: "Filter tasks by folder ID"
+      status:
+        type: string
+        description: "Filter by task status"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of tasks per page"
+    required: []
+
+- slug: wrike_get_task
+  name: Get Task
+  description: |
+    Retrieve details of a specific task by ID.
+  provider: wrike
+  endpoint: /tasks/{taskId}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Path parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "The unique ID of the task"
+    required:
+      - taskId
+
+- slug: wrike_create_task
+  name: Create Task
+  description: |
+    Create a new task in a project or folder.
+  provider: wrike
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Body parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      description:
+        type: string
+        description: "Task description"
+      parentId:
+        type: string
+        description: "Parent folder or project ID"
+      assignees:
+        type: array
+        items:
+          type: string
+        description: "List of user IDs to assign"
+      dueDate:
+        type: string
+        description: "Task due date (ISO 8601)"
+    required:
+      - title
+
+- slug: wrike_update_task
+  name: Update Task
+  description: |
+    Update an existing task with new values.
+  provider: wrike
+  endpoint: /tasks/{taskId}
+  method: PUT
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      taskId:
+        type: string
+        description: "The unique ID of the task"
+      title:
+        type: string
+        description: "New task title"
+      description:
+        type: string
+        description: "New task description"
+      status:
+        type: string
+        description: "New task status"
+      dueDate:
+        type: string
+        description: "New due date (ISO 8601)"
+    required:
+      - taskId
+
+- slug: wrike_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects.
+  provider: wrike
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Query parameters for listing projects
+    properties:
+      spaceId:
+        type: string
+        description: "Filter by space ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of projects per page"
+    required: []
+
+- slug: wrike_get_project
+  name: Get Project
+  description: |
+    Retrieve details of a specific project by ID.
+  provider: wrike
+  endpoint: /projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Path parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The unique ID of the project"
+    required:
+      - projectId
+
+- slug: wrike_list_folders
+  name: List Folders
+  description: |
+    Retrieve a list of folders, optionally within a workspace.
+  provider: wrike
+  endpoint: /folders
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+  input_schema:
+    type: object
+    description: Query parameters for listing folders
+    properties:
+      workspaceId:
+        type: string
+        description: "Filter by workspace ID"
+      parentId:
+        type: string
+        description: "Filter by parent folder ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: wrike_get_folder
+  name: Get Folder
+  description: |
+    Retrieve details of a specific folder by ID.
+  provider: wrike
+  endpoint: /folders/{folderId}
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+  input_schema:
+    type: object
+    description: Path parameters for getting a folder
+    properties:
+      folderId:
+        type: string
+        description: "The unique ID of the folder"
+    required:
+      - folderId
+
+- slug: wrike_list_workspaces
+  name: List Workspaces
+  description: |
+    Retrieve a list of all workspaces.
+  provider: wrike
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+  input_schema:
+    type: object
+    description: Query parameters for listing workspaces
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of workspaces per page"
+    required: []
+
+- slug: wrike_get_workspace
+  name: Get Workspace
+  description: |
+    Retrieve details of a specific workspace by ID.
+  provider: wrike
+  endpoint: /workspaces/{workspaceId}
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+  input_schema:
+    type: object
+    description: Path parameters for getting a workspace
+    properties:
+      workspaceId:
+        type: string
+        description: "The unique ID of the workspace"
+    required:
+      - workspaceId

@@ -1,0 +1,254 @@
+# Clerk Tools - Allowlist
+# Curated subset of the Clerk API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. clerk_list_users                    - List users
+# 2. clerk_get_user                     - Get user details
+# 3. clerk_create_user                  - Create a user
+# 4. clerk_update_user                  - Update a user
+# 5. clerk_delete_user                  - Delete a user
+# 6. clerk_list_organizations          - List organizations
+# 7. clerk_get_organization           - Get organization details
+# 8. clerk_list_sessions              - List sessions
+# 9. clerk_get_session                - Get session details
+# 10. clerk_create_organization      - Create an organization
+
+- slug: clerk_list_users
+  name: List Users
+  description: |
+    List all users in the Clerk instance.
+  provider: clerk
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: clerk_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: clerk
+  endpoint: /v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: clerk_create_user
+  name: Create User
+  description: |
+    Create a new user.
+  provider: clerk
+  endpoint: /v1/users
+  method: POST
+  scopes: []
+  tags:
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      email_addresses:
+        type: array
+        items:
+          type: string
+        description: "Array of email addresses"
+      phone_numbers:
+        type: array
+        items:
+          type: string
+        description: "Array of phone numbers"
+      password:
+        type: string
+        description: "Password"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email_addresses
+
+- slug: clerk_update_user
+  name: Update User
+  description: |
+    Update an existing user.
+  provider: clerk
+  endpoint: /v1/users/{id}
+  method: PATCH
+  scopes: []
+  tags:
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - id
+
+- slug: clerk_delete_user
+  name: Delete User
+  description: |
+    Delete a user.
+  provider: clerk
+  endpoint: /v1/users/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: clerk_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations.
+  provider: clerk
+  endpoint: /v1/organizations
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: clerk_get_organization
+  name: Get Organization
+  description: |
+    Get details of a specific organization.
+  provider: clerk
+  endpoint: /v1/organizations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      id:
+        type: string
+        description: "Organization ID"
+    required:
+      - id
+
+- slug: clerk_list_sessions
+  name: List Sessions
+  description: |
+    List all sessions.
+  provider: clerk
+  endpoint: /v1/sessions
+  method: GET
+  scopes: []
+  tags:
+    - sessions
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing sessions
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: clerk_get_session
+  name: Get Session
+  description: |
+    Get details of a specific session.
+  provider: clerk
+  endpoint: /v1/sessions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - sessions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a session
+    properties:
+      id:
+        type: string
+        description: "Session ID"
+    required:
+      - id
+
+- slug: clerk_create_organization
+  name: Create Organization
+  description: |
+    Create a new organization.
+  provider: clerk
+  endpoint: /v1/organizations
+  method: POST
+  scopes: []
+  tags:
+    - organizations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an organization
+    properties:
+      name:
+        type: string
+        description: "Organization name"
+      created_by:
+        type: string
+        description: "User ID of creator"
+    required:
+      - name

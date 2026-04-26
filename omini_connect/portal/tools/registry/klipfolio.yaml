@@ -1,0 +1,224 @@
+# Klipfolio Tools - Allowlist
+# Curated subset of Klipfolio API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. klipfolio_get_profile        - Get profile
+# 2. klipfolio_list_datasources   - List data sources
+# 3. klipfolio_get_datasource    - Get data source details
+# 4. klipfolio_list_klips        - List klips
+# 5. klipfolio_get_klip          - Get klip details
+# 6. klipfolio_list_dashboards   - List dashboards
+# 7. klipfolio_get_dashboard    - Get dashboard details
+# 8. klipfolio_list_connections  - List connections
+# 9. klipfolio_get_connection    - Get connection details
+# 10. klipfolio_list_assets      - List assets
+
+- slug: klipfolio_get_profile
+  name: Get Profile
+  description: |
+    Get the current user profile.
+  provider: klipfolio
+  endpoint: /api/1.0/profile
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for getting profile
+    properties: {}
+    required: []
+
+- slug: klipfolio_list_datasources
+  name: List Data Sources
+  description: |
+    List all data sources.
+  provider: klipfolio
+  endpoint: /api/1.0/datasources
+  method: GET
+  scopes: []
+  tags:
+    - datasources
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing data sources
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: klipfolio_get_datasource
+  name: Get Data Source
+  description: |
+    Get details for a specific data source.
+  provider: klipfolio
+  endpoint: /api/1.0/datasources/{datasource_id}
+  method: GET
+  scopes: []
+  tags:
+    - datasources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a data source
+    properties:
+      datasource_id:
+        type: string
+        description: "Data source ID"
+    required:
+      - datasource_id
+
+- slug: klipfolio_list_klips
+  name: List Klips
+  description: |
+    List all klips.
+  provider: klipfolio
+  endpoint: /api/1.0/klips
+  method: GET
+  scopes: []
+  tags:
+    - klips
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing klips
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: klipfolio_get_klip
+  name: Get Klip
+  description: |
+    Get details for a specific klip.
+  provider: klipfolio
+  endpoint: /api/1.0/klips/{klip_id}
+  method: GET
+  scopes: []
+  tags:
+    - klips
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a klip
+    properties:
+      klip_id:
+        type: string
+        description: "Klip ID"
+    required:
+      - klip_id
+
+- slug: klipfolio_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards.
+  provider: klipfolio
+  endpoint: /api/1.0/dashboards
+  method: GET
+  scopes: []
+  tags:
+    - dashboards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: klipfolio_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get details for a specific dashboard.
+  provider: klipfolio
+  endpoint: /api/1.0/dashboards/{dashboard_id}
+  method: GET
+  scopes: []
+  tags:
+    - dashboards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboard_id:
+        type: string
+        description: "Dashboard ID"
+    required:
+      - dashboard_id
+
+- slug: klipfolio_list_connections
+  name: List Connections
+  description: |
+    List all connections.
+  provider: klipfolio
+  endpoint: /api/1.0/connections
+  method: GET
+  scopes: []
+  tags:
+    - connections
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties: {}
+    required: []
+
+- slug: klipfolio_get_connection
+  name: Get Connection
+  description: |
+    Get details for a specific connection.
+  provider: klipfolio
+  endpoint: /api/1.0/connections/{connection_id}
+  method: GET
+  scopes: []
+  tags:
+    - connections
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a connection
+    properties:
+      connection_id:
+        type: string
+        description: "Connection ID"
+    required:
+      - connection_id
+
+- slug: klipfolio_list_assets
+  name: List Assets
+  description: |
+    List all assets.
+  provider: klipfolio
+  endpoint: /api/1.0/assets
+  method: GET
+  scopes: []
+  tags:
+    - assets
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties: {}
+    required: []

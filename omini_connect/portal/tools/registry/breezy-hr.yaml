@@ -1,0 +1,241 @@
+# Breezy HR Tools - Allowlist
+# Curated subset of Breezy HR API for AI agent use.
+# TWO_STEP auth via Nango (email + password login).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. breezy_list_positions        - List positions
+# 2. breezy_get_position        - Get position details
+# 3. breezy_list_candidates     - List candidates
+# 4. breezy_get_candidate       - Get candidate details
+# 5. breezy_list_interviews     - List interviews
+# 6. breezy_get_interview      - Get interview details
+# 7. breezy_list_members        - List team members
+# 8. breezy_get_member          - Get member details
+# 9. breezy_list_offer_docs    - List offer documents
+# 10. breezy_get_offer         - Get offer details
+
+- slug: breezy_list_positions
+  name: List Positions
+  description: |
+    List all job positions in Breezy HR.
+  provider: breezy-hr
+  endpoint: /v3/positions
+  method: GET
+  scopes: []
+  tags:
+    - positions
+    - jobs
+  input_schema:
+    type: object
+    description: Parameters for listing positions
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, draft"
+        default: open
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: breezy_get_position
+  name: Get Position
+  description: |
+    Get details for a specific position.
+  provider: breezy-hr
+  endpoint: /v3/positions/{positionId}
+  method: GET
+  scopes: []
+  tags:
+    - positions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a position
+    properties:
+      positionId:
+        type: string
+        description: "Position ID"
+    required:
+      - positionId
+
+- slug: breezy_list_candidates
+  name: List Candidates
+  description: |
+    List candidates for a position or all candidates.
+  provider: breezy-hr
+  endpoint: /v3/candidates
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      positionId:
+        type: string
+        description: "Filter by position ID"
+      stage:
+        type: string
+        description: "Filter by hiring stage"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: breezy_get_candidate
+  name: Get Candidate
+  description: |
+    Get details for a specific candidate.
+  provider: breezy-hr
+  endpoint: /v3/candidates/{candidateId}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidateId
+
+- slug: breezy_list_interviews
+  name: List Interviews
+  description: |
+    List scheduled interviews.
+  provider: breezy-hr
+  endpoint: /v3/interviews
+  method: GET
+  scopes: []
+  tags:
+    - interviews
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      positionId:
+        type: string
+        description: "Filter by position"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: breezy_get_interview
+  name: Get Interview
+  description: |
+    Get details for a specific interview.
+  provider: breezy-hr
+  endpoint: /v3/interviews/{interviewId}
+  method: GET
+  scopes: []
+  tags:
+    - interviews
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an interview
+    properties:
+      interviewId:
+        type: string
+        description: "Interview ID"
+    required:
+      - interviewId
+
+- slug: breezy_list_members
+  name: List Members
+  description: |
+    List team members in Breezy HR.
+  provider: breezy-hr
+  endpoint: /v3/members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties: {}
+    required: []
+
+- slug: breezy_get_member
+  name: Get Member
+  description: |
+    Get details for a specific team member.
+  provider: breezy-hr
+  endpoint: /v3/members/{memberId}
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      memberId:
+        type: string
+        description: "Member ID"
+    required:
+      - memberId
+
+- slug: breezy_list_offer_docs
+  name: List Offer Documents
+  description: |
+    List offer documents for candidates.
+  provider: breezy-hr
+  endpoint: /v3/offers
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - documents
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      candidateId:
+        type: string
+        description: "Filter by candidate"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: breezy_get_offer
+  name: Get Offer
+  description: |
+    Get details for a specific offer.
+  provider: breezy-hr
+  endpoint: /v3/offers/{offerId}
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offerId:
+        type: string
+        description: "Offer ID"
+    required:
+      - offerId

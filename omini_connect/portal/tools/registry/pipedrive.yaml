@@ -1,0 +1,369 @@
+# Pipedrive Tools - Allowlist
+# Curated subset of Pipedrive CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pipedrive_list_persons     - List persons (contacts)
+# 2. pipedrive_get_person       - Get person details
+# 3. pipedrive_create_person    - Create a person
+# 4. pipedrive_list_deals       - List deals
+# 5. pipedrive_get_deal         - Get deal details
+# 6. pipedrive_create_deal      - Create a deal
+# 7. pipedrive_list_activities  - List activities
+# 8. pipedrive_get_activity     - Get activity details
+# 9. pipedrive_list_pipelines   - List pipelines
+# 10. pipedrive_get_pipeline    - Get pipeline details
+
+- slug: pipedrive_list_persons
+  name: List Persons
+  description: |
+    Retrieve a list of persons (contacts) from Pipedrive CRM.
+    Filter by name, email, organization, or custom fields.
+  provider: pipedrive
+  endpoint: /v1/persons
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - persons
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing persons
+    properties:
+      start:
+        type: integer
+        description: "Pagination start value"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of results per page (max 100)"
+        default: 50
+      filter_id:
+        type: integer
+        description: "Filter ID to apply"
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., name, create_time)"
+      sort_order:
+        type: string
+        description: "asc or desc"
+        enum: [asc, desc]
+      search:
+        type: string
+        description: "Search term for name/email"
+    required: []
+
+- slug: pipedrive_get_person
+  name: Get Person
+  description: |
+    Retrieve detailed information for a specific person by ID including name, email, phone, and organization.
+  provider: pipedrive
+  endpoint: /v1/persons/{id}
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - persons
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      id:
+        type: integer
+        description: "Person ID"
+    required:
+      - id
+
+- slug: pipedrive_create_person
+  name: Create Person
+  description: |
+    Create a new person (contact) in Pipedrive CRM. Set name, email, phone, and organization.
+  provider: pipedrive
+  endpoint: /v1/persons
+  method: POST
+  scopes:
+    - persons:write
+  tags:
+    - persons
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      name:
+        type: string
+        description: "Person name (required)"
+      email:
+        type: array
+        description: "Email addresses array with label and value"
+        items:
+          type: object
+          properties:
+            label:
+              type: string
+            value:
+              type: string
+      phone:
+        type: array
+        description: "Phone numbers array with label and value"
+        items:
+          type: object
+          properties:
+            label:
+              type: string
+            value:
+              type: string
+      org_id:
+        type: integer
+        description: "Organization ID to associate"
+      owner_id:
+        type: integer
+        description: "Owner user ID"
+    required:
+      - name
+
+- slug: pipedrive_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of deals from Pipedrive CRM.
+    Filter by stage, status, pipeline, or organization.
+  provider: pipedrive
+  endpoint: /v1/deals
+  method: GET
+  scopes:
+    - deals:read
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      start:
+        type: integer
+        description: "Pagination start value"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of results per page (max 100)"
+        default: 50
+      filter_id:
+        type: integer
+        description: "Filter ID to apply"
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., title, value, status)"
+      sort_order:
+        type: string
+        description: "asc or desc"
+        enum: [asc, desc]
+      status:
+        type: string
+        description: "open, won, lost, or all"
+        enum: [open, won, lost, all]
+      pipeline_id:
+        type: integer
+        description: "Filter by pipeline ID"
+    required: []
+
+- slug: pipedrive_get_deal
+  name: Get Deal
+  description: |
+    Retrieve detailed information for a specific deal by ID including title, value, stage, and activities.
+  provider: pipedrive
+  endpoint: /v1/deals/{id}
+  method: GET
+  scopes:
+    - deals:read
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: integer
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: pipedrive_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in Pipedrive CRM. Set title, value, currency, stage, and associations.
+  provider: pipedrive
+  endpoint: /v1/deals
+  method: POST
+  scopes:
+    - deals:write
+  tags:
+    - deals
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      title:
+        type: string
+        description: "Deal title (required)"
+      value:
+        type: number
+        description: "Deal value/amount"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD, EUR)"
+        default: "USD"
+      person_id:
+        type: integer
+        description: "Associated person ID"
+      org_id:
+        type: integer
+        description: "Organization ID"
+      stage_id:
+        type: integer
+        description: "Pipeline stage ID"
+      pipeline_id:
+        type: integer
+        description: "Pipeline ID"
+      close_date:
+        type: string
+        description: "Expected close date (YYYY-MM-DD)"
+      visible_to:
+        type: string
+        description: "Visibility: assigned_owner, entire_company"
+    required:
+      - title
+
+- slug: pipedrive_list_activities
+  name: List Activities
+  description: |
+    Retrieve a list of activities (calls, meetings, tasks, notes) from Pipedrive.
+    Filter by type, assignee, or date range.
+  provider: pipedrive
+  endpoint: /v1/activities
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      start:
+        type: integer
+        description: "Pagination start value"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of results per page (max 100)"
+        default: 50
+      filter_id:
+        type: integer
+        description: "Filter ID to apply"
+      type:
+        type: string
+        description: "Activity type: call, meeting, task, note, deadline, lunch"
+      user_id:
+        type: integer
+        description: "Filter by assignee user ID"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+        enum: [asc, desc]
+      done:
+        type: integer
+        description: "0 for undone, 1 for done, -1 for all"
+    required: []
+
+- slug: pipedrive_get_activity
+  name: Get Activity
+  description: |
+    Retrieve detailed information for a specific activity by ID including type, subject, and participants.
+  provider: pipedrive
+  endpoint: /v1/activities/{id}
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: integer
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: pipedrive_list_pipelines
+  name: List Pipelines
+  description: |
+    Retrieve all sales pipelines and their stages from Pipedrive.
+    Use to see available pipelines and stage definitions.
+  provider: pipedrive
+  endpoint: /v1/pipelines
+  method: GET
+  scopes:
+    - pipelines:read
+  tags:
+    - pipelines
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pipelines
+    properties:
+      start:
+        type: integer
+        description: "Pagination start value"
+        default: 0
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 50
+      include_inactive:
+        type: string
+        description: "Include inactive pipelines (yes/no)"
+        default: "no"
+    required: []
+
+- slug: pipedrive_get_pipeline
+  name: Get Pipeline
+  description: |
+    Retrieve detailed information for a specific pipeline by ID including stages, deal counts, and totals.
+  provider: pipedrive
+  endpoint: /v1/pipelines/{id}
+  method: GET
+  scopes:
+    - pipelines:read
+  tags:
+    - pipelines
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pipeline
+    properties:
+      id:
+        type: integer
+        description: "Pipeline ID"
+    required:
+      - id

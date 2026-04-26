@@ -1,0 +1,226 @@
+# Front API Key Tools - Allowlist
+# Curated subset of Front API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. front_list_conversations     - List conversations
+# 2. front_get_conversation       - Get conversation details
+# 3. front_list_comments          - List comments on conversation
+# 4. front_list_teammates         - List teammates
+# 5. front_get_teammate           - Get teammate details
+# 6. front_list_inboxes           - List inboxes
+# 7. front_get_inbox              - Get inbox details
+# 8. front_list_tags              - List tags
+# 9. front_list_rules             - List automation rules
+# 10. front_list_contacts         - List contacts
+
+- slug: front_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from Front with optional filters.
+  provider: front-api-key
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+    - inbox
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      inbox_id:
+        type: string
+        description: "Filter by inbox ID"
+      status:
+        type: string
+        description: "Filter by status (open, archived, deleted)"
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []
+
+- slug: front_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a specific conversation.
+  provider: front-api-key
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: front_list_comments
+  name: List Comments
+  description: |
+    List all comments on a specific conversation.
+  provider: front-api-key
+  endpoint: /conversations/{conversation_id}/comments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - comments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: front_list_teammates
+  name: List Teammates
+  description: |
+    List all team members in Front.
+  provider: front-api-key
+  endpoint: /team
+  method: GET
+  scopes:
+    - read
+  tags:
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teammates
+    properties: {}
+
+- slug: front_get_teammate
+  name: Get Teammate
+  description: |
+    Get detailed information about a specific teammate.
+  provider: front-api-key
+  endpoint: /team/{teammate_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a teammate
+    properties:
+      teammate_id:
+        type: string
+        description: "Teammate ID"
+    required:
+      - teammate_id
+
+- slug: front_list_inboxes
+  name: List Inboxes
+  description: |
+    List all inboxes in Front.
+  provider: front-api-key
+  endpoint: /inboxes
+  method: GET
+  scopes:
+    - read
+  tags:
+    - inboxes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing inboxes
+    properties: {}
+
+- slug: front_get_inbox
+  name: Get Inbox
+  description: |
+    Get detailed information about a specific inbox.
+  provider: front-api-key
+  endpoint: /inboxes/{inbox_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - inboxes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an inbox
+    properties:
+      inbox_id:
+        type: string
+        description: "Inbox ID"
+    required:
+      - inbox_id
+
+- slug: front_list_tags
+  name: List Tags
+  description: |
+    List all tags used in Front.
+  provider: front-api-key
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+
+- slug: front_list_rules
+  name: List Rules
+  description: |
+    List all automation rules in Front.
+  provider: front-api-key
+  endpoint: /rules
+  method: GET
+  scopes:
+    - read
+  tags:
+    - rules
+    - automation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rules
+    properties: {}
+
+- slug: front_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Front with optional search.
+  provider: front-api-key
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      query:
+        type: string
+        description: "Search query for contacts"
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []

@@ -1,0 +1,250 @@
+# Databricks Tools - Allowlist
+# Curated subset of the Databricks API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. databricks_list_workspaces    - List workspaces
+# 2. databricks_get_workspace     - Get workspace details
+# 3. databricks_list_clusters      - List clusters
+# 4. databricks_get_cluster       - Get cluster details
+# 5. databricks_list_notebooks    - List notebooks in workspace
+# 6. databricks_get_notebook      - Get notebook content
+# 7. databricks_list_jobs         - List jobs
+# 8. databricks_get_job           - Get job details
+# 9. databricks_list_experiments  - List ML experiments
+# 10. databricks_get_experiment   - Get experiment details
+
+- slug: databricks_list_workspaces
+  name: List Workspaces
+  description: |
+    List all Databricks workspaces in the account. Returns workspace names, IDs, and deployment names.
+    Use this to discover available workspaces.
+  provider: databricks
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - workspace_read
+  tags:
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties: {}
+    required: []
+
+- slug: databricks_get_workspace
+  name: Get Workspace
+  description: |
+    Get details about a specific Databricks workspace including name, region, and storage configuration.
+  provider: databricks
+  endpoint: /workspaces/{workspace_id}
+  method: GET
+  scopes:
+    - workspace_read
+  tags:
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+    required:
+      - workspace_id
+
+- slug: databricks_list_clusters
+  name: List Clusters
+  description: |
+    List all clusters in a Databricks workspace. Returns cluster names, IDs, states, and configurations.
+    Use this to discover available compute resources.
+  provider: databricks
+  endpoint: /clusters
+  method: GET
+  scopes:
+    - cluster_read
+  tags:
+    - compute
+    - cluster
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clusters
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+    required:
+      - workspace_id
+
+- slug: databricks_get_cluster
+  name: Get Cluster
+  description: |
+    Get detailed information about a Databricks cluster including state, size, spark version, and configuration.
+  provider: databricks
+  endpoint: /clusters/{cluster_id}
+  method: GET
+  scopes:
+    - cluster_read
+  tags:
+    - compute
+    - cluster
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cluster
+    properties:
+      cluster_id:
+        type: string
+        description: "Databricks cluster ID (required)"
+    required:
+      - cluster_id
+
+- slug: databricks_list_notebooks
+  name: List Notebooks
+  description: |
+    List all notebooks in a Databricks workspace or folder. Returns notebook paths, names, and language.
+    Use this to discover available notebooks.
+  provider: databricks
+  endpoint: /workspaces/{workspace_id}/notebooks
+  method: GET
+  scopes:
+    - workspace_read
+  tags:
+    - notebook
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notebooks
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+      path:
+        type: string
+        description: "Folder path to list"
+        default: /
+    required:
+      - workspace_id
+
+- slug: databricks_get_notebook
+  name: Get Notebook
+  description: |
+    Get the content of a Databricks notebook including code cells and outputs.
+    Use this to read notebook code or understand existing analyses.
+  provider: databricks
+  endpoint: /workspaces/{workspace_id}/notebooks/{path}
+  method: GET
+  scopes:
+    - workspace_read
+  tags:
+    - notebook
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a notebook
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+      path:
+        type: string
+        description: "Notebook path (required)"
+    required:
+      - workspace_id
+      - path
+
+- slug: databricks_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in a Databricks workspace. Returns job names, IDs, schedules, and last run status.
+    Use this to discover available jobs and pipelines.
+  provider: databricks
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - job_read
+  tags:
+    - job
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+    required:
+      - workspace_id
+
+- slug: databricks_get_job
+  name: Get Job
+  description: |
+    Get details about a specific Databricks job including settings, schedule, and run history.
+  provider: databricks
+  endpoint: /jobs/{job_id}
+  method: GET
+  scopes:
+    - job_read
+  tags:
+    - job
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: integer
+        description: "Databricks job ID (required)"
+    required:
+      - job_id
+
+- slug: databricks_list_experiments
+  name: List Experiments
+  description: |
+    List all MLflow experiments in a Databricks workspace. Returns experiment names, IDs, and artifact locations.
+    Use this to discover available machine learning experiments.
+  provider: databricks
+  endpoint: /mlflow/experiments/list
+  method: GET
+  scopes:
+    - experiment_read
+  tags:
+    - ml
+    - experiment
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing experiments
+    properties:
+      workspace_id:
+        type: string
+        description: "Databricks workspace ID (required)"
+    required:
+      - workspace_id
+
+- slug: databricks_get_experiment
+  name: Get Experiment
+  description: |
+    Get details about a specific MLflow experiment including metadata, runs, and artifact storage.
+    Use this to understand experiment configuration and track ML runs.
+  provider: databricks
+  endpoint: /mlflow/experiments/{experiment_id}
+  method: GET
+  scopes:
+    - experiment_read
+  tags:
+    - ml
+    - experiment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an experiment
+    properties:
+      experiment_id:
+        type: integer
+        description: "MLflow experiment ID (required)"
+    required:
+      - experiment_id

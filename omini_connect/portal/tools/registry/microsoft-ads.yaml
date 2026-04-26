@@ -1,0 +1,268 @@
+# Microsoft Ads Tools - Allowlist
+# Curated subset of Microsoft Ads API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. microsoft_ads_list_campaigns       - List campaigns
+# 2. microsoft_ads_get_campaign          - Get campaign details
+# 3. microsoft_ads_list_ad_groups        - List ad groups
+# 4. microsoft_ads_get_ad_group          - Get ad group details
+# 5. microsoft_ads_list_ads             - List ads
+# 6. microsoft_ads_get_ad                - Get ad details
+# 7. microsoft_ads_list_keywords        - List keywords
+# 8. microsoft_ads_get_keyword           - Get keyword details
+# 9. microsoft_ads_get_performance       - Get campaign performance
+# 10. microsoft_ads_list_reports        - Generate reports
+
+- slug: microsoft_ads_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Microsoft Ads.
+    Filter by status, type, or date.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - accountId
+
+- slug: microsoft_ads_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/campaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - campaignId
+
+- slug: microsoft_ads_list_ad_groups
+  name: List Ad Groups
+  description: |
+    List all ad groups for a campaign.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/adgroups
+  method: GET
+  scopes: []
+  tags:
+    - adgroups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ad groups
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+      accountId:
+        type: string
+        description: "Account ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - campaignId
+
+- slug: microsoft_ads_get_ad_group
+  name: Get Ad Group
+  description: |
+    Get details of a specific ad group.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/adgroups/{adGroupId}
+  method: GET
+  scopes: []
+  tags:
+    - adgroups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad group
+    properties:
+      adGroupId:
+        type: integer
+        description: "Ad Group ID"
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - adGroupId
+
+- slug: microsoft_ads_list_ads
+  name: List Ads
+  description: |
+    List all ads for an ad group.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/ads
+  method: GET
+  scopes: []
+  tags:
+    - ads
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      adGroupId:
+        type: integer
+        description: "Ad Group ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - adGroupId
+
+- slug: microsoft_ads_get_ad
+  name: Get Ad
+  description: |
+    Get details of a specific ad.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/ads/{adId}
+  method: GET
+  scopes: []
+  tags:
+    - ads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad
+    properties:
+      adId:
+        type: integer
+        description: "Ad ID"
+      adGroupId:
+        type: integer
+        description: "Ad Group ID"
+    required:
+      - adId
+
+- slug: microsoft_ads_list_keywords
+  name: List Keywords
+  description: |
+    List all keywords for an ad group.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/keywords
+  method: GET
+  scopes: []
+  tags:
+    - keywords
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing keywords
+    properties:
+      adGroupId:
+        type: integer
+        description: "Ad Group ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - adGroupId
+
+- slug: microsoft_ads_get_keyword
+  name: Get Keyword
+  description: |
+    Get details of a specific keyword.
+  provider: microsoft-ads
+  endpoint: /campaignManagement/v13/keywords/{keywordId}
+  method: GET
+  scopes: []
+  tags:
+    - keywords
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a keyword
+    properties:
+      keywordId:
+        type: integer
+        description: "Keyword ID"
+    required:
+      - keywordId
+
+- slug: microsoft_ads_get_performance
+  name: Get Campaign Performance
+  description: |
+    Get performance metrics for a campaign.
+  provider: microsoft-ads
+  endpoint: /reporting/v13/reports
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - performance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign performance
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - campaignId
+
+- slug: microsoft_ads_list_reports
+  name: List Reports
+  description: |
+    Generate or list available reports.
+  provider: microsoft-ads
+  endpoint: /reporting/v13/reports
+  method: POST
+  scopes: []
+  tags:
+    - reports
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      reportType:
+        type: string
+        description: "Report type (CampaignPerformance, AdGroupPerformance, etc.)"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required:
+      - reportType

@@ -1,0 +1,261 @@
+# Google Slides Tools - Allowlist
+# Curated subset of Google Slides API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_slides_list_presentations  - List presentations
+# 2. google_slides_get_presentation   - Get presentation details
+# 3. google_slides_create_presentation - Create presentation
+# 4. google_slides_get_page          - Get page details
+# 5. google_slides_list_pages        - List pages
+# 6. google_slides_batch_update      - Batch update
+# 7. google_slides_get_shape         - Get shape
+# 8. google_slides_list_templates    - List page templates
+# 9. google_slides_copy_slide        - Copy slide
+# 10. google_slides_delete_page     - Delete page
+
+- slug: google_slides_list_presentations
+  name: List Presentations
+  description: |
+    List presentations in Google Drive.
+  provider: google-slides
+  endpoint: /v1/presentations
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - presentations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing presentations
+    properties: {}
+
+- slug: google_slides_get_presentation
+  name: Get Presentation
+  description: |
+    Get presentation details.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - presentations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a presentation
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+    required:
+      - presentation_id
+
+- slug: google_slides_create_presentation
+  name: Create Presentation
+  description: |
+    Create a new presentation.
+  provider: google-slides
+  endpoint: /v1/presentations
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - presentations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a presentation
+    properties:
+      title:
+        type: string
+        description: "Presentation title"
+    required:
+      - title
+
+- slug: google_slides_get_page
+  name: Get Page
+  description: |
+    Get page details.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}/pages/{page_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+      page_id:
+        type: string
+        description: "Page ID"
+    required:
+      - presentation_id
+      - page_id
+
+- slug: google_slides_list_pages
+  name: List Pages
+  description: |
+    List all pages in a presentation.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+    required:
+      - presentation_id
+
+- slug: google_slides_batch_update
+  name: Batch Update
+  description: |
+    Perform batch updates on a presentation.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - update
+  input_schema:
+    type: object
+    description: Parameters for batch update
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+      requests:
+        type: array
+        description: "Array of update requests"
+    required:
+      - presentation_id
+      - requests
+
+- slug: google_slides_get_shape
+  name: Get Shape
+  description: |
+    Get shape details on a page.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}/pages/{page_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - shapes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a shape
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+      page_id:
+        type: string
+        description: "Page ID"
+    required:
+      - presentation_id
+      - page_id
+
+- slug: google_slides_list_templates
+  name: List Templates
+  description: |
+    List page templates in a presentation.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+    required:
+      - presentation_id
+
+- slug: google_slides_copy_slide
+  name: Copy Slide
+  description: |
+    Copy a slide within a presentation.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - copy
+  input_schema:
+    type: object
+    description: Parameters for copying a slide
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+      slide_id:
+        type: string
+        description: "Slide ID to copy"
+      insertion_index:
+        type: integer
+        description: "Insertion index"
+    required:
+      - presentation_id
+      - slide_id
+
+- slug: google_slides_delete_page
+  name: Delete Page
+  description: |
+    Delete a page from a presentation.
+  provider: google-slides
+  endpoint: /v1/presentations/{presentation_id}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/presentations
+  tags:
+    - slides
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a page
+    properties:
+      presentation_id:
+        type: string
+        description: "Presentation ID"
+      page_id:
+        type: string
+        description: "Page ID to delete"
+    required:
+      - presentation_id
+      - page_id

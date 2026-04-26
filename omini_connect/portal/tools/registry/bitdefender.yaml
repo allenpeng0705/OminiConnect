@@ -1,0 +1,243 @@
+# Bitdefender Tools - Allowlist
+# Curated subset of Bitdefender API for AI agent use.
+# BASIC auth via Nango (API Key).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bitdefender_list_endpoints    - List endpoints
+# 2. bitdefender_get_endpoint    - Get endpoint details
+# 3. bitdefender_list_policies   - List security policies
+# 4. bitdefender_get_policy      - Get policy details
+# 5. bitdefender_list_tasks     - List tasks
+# 6. bitdefender_get_task      - Get task details
+# 7. bitdefender_list_alerts   - List security alerts
+# 8. bitdefender_get_alert     - Get alert details
+# 9. bitdefender_list_groups   - List endpoint groups
+# 10. bitdefender_get_quarantine - Get quarantine items
+
+- slug: bitdefender_list_endpoints
+  name: List Endpoints
+  description: |
+    List all endpoints (devices) managed by Bitdefender.
+  provider: bitdefender
+  endpoint: /endpoints
+  method: GET
+  scopes: []
+  tags:
+    - endpoints
+    - devices
+  input_schema:
+    type: object
+    description: Parameters for listing endpoints
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Endpoints per page"
+        default: 20
+    required: []
+
+- slug: bitdefender_get_endpoint
+  name: Get Endpoint
+  description: |
+    Get details for a specific endpoint.
+  provider: bitdefender
+  endpoint: /endpoints/{id}
+  method: GET
+  scopes: []
+  tags:
+    - endpoints
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an endpoint
+    properties:
+      id:
+        type: string
+        description: "Endpoint ID"
+    required:
+      - id
+
+- slug: bitdefender_list_policies
+  name: List Policies
+  description: |
+    List all security policies.
+  provider: bitdefender
+  endpoint: /policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Policies per page"
+        default: 20
+    required: []
+
+- slug: bitdefender_get_policy
+  name: Get Policy
+  description: |
+    Get details for a specific security policy.
+  provider: bitdefender
+  endpoint: /policies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      id:
+        type: string
+        description: "Policy ID"
+    required:
+      - id
+
+- slug: bitdefender_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks (scans, updates, etc.).
+  provider: bitdefender
+  endpoint: /tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - operations
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Tasks per page"
+        default: 20
+    required: []
+
+- slug: bitdefender_get_task
+  name: Get Task
+  description: |
+    Get details for a specific task.
+  provider: bitdefender
+  endpoint: /tasks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: bitdefender_list_alerts
+  name: List Alerts
+  description: |
+    List all security alerts.
+  provider: bitdefender
+  endpoint: /alerts
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      severity:
+        type: string
+        description: "Filter by severity: high, medium, low"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Alerts per page"
+        default: 20
+    required: []
+
+- slug: bitdefender_get_alert
+  name: Get Alert
+  description: |
+    Get details for a specific alert.
+  provider: bitdefender
+  endpoint: /alerts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an alert
+    properties:
+      id:
+        type: string
+        description: "Alert ID"
+    required:
+      - id
+
+- slug: bitdefender_list_groups
+  name: List Groups
+  description: |
+    List all endpoint groups.
+  provider: bitdefender
+  endpoint: /groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - endpoints
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: bitdefender_get_quarantine
+  name: Get Quarantine
+  description: |
+    Get quarantine items from endpoints.
+  provider: bitdefender
+  endpoint: /quarantine
+  method: GET
+  scopes: []
+  tags:
+    - quarantine
+    - security
+  input_schema:
+    type: object
+    description: Parameters for getting quarantine items
+    properties:
+      endpointId:
+        type: string
+        description: "Filter by endpoint ID"
+    required: []

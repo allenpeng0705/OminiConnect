@@ -1,0 +1,231 @@
+- slug: attio_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in your Attio workspace.
+  provider: attio
+  endpoint: /objects/contacts/records
+  method: GET
+  scopes:
+    - contact:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of contacts to return"
+      offset:
+        type: integer
+        description: "Number of contacts to skip"
+      sort:
+        type: string
+        description: "Sort field and direction (e.g., created_at:desc)"
+    required: []
+
+- slug: attio_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by ID.
+  provider: attio
+  endpoint: /objects/contacts/records/{id}
+  method: GET
+  scopes:
+    - contact:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "The contact ID"
+    required:
+      - id
+
+- slug: attio_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in your Attio workspace.
+  provider: attio
+  endpoint: /objects/contacts/records
+  method: POST
+  scopes:
+    - contact:write
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      name:
+        type: string
+        description: "Display name of the contact"
+      email:
+        type: string
+        description: "Email address of the contact"
+      phone:
+        type: string
+        description: "Phone number of the contact"
+    required:
+      - name
+
+- slug: attio_list_companies
+  name: List Companies
+  description: |
+    Retrieve a list of all companies in your Attio workspace.
+  provider: attio
+  endpoint: /objects/companies/records
+  method: GET
+  scopes:
+    - company:read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of companies to return"
+      offset:
+        type: integer
+        description: "Number of companies to skip"
+    required: []
+
+- slug: attio_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company by ID.
+  provider: attio
+  endpoint: /objects/companies/records/{id}
+  method: GET
+  scopes:
+    - company:read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "The company ID"
+    required:
+      - id
+
+- slug: attio_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of all deals in your Attio workspace.
+  provider: attio
+  endpoint: /objects/deals/records
+  method: GET
+  scopes:
+    - deal:read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of deals to return"
+      offset:
+        type: integer
+        description: "Number of deals to skip"
+    required: []
+
+- slug: attio_get_deal
+  name: Get Deal
+  description: |
+    Get details of a specific deal by ID.
+  provider: attio
+  endpoint: /objects/deals/records/{id}
+  method: GET
+  scopes:
+    - deal:read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: string
+        description: "The deal ID"
+    required:
+      - id
+
+- slug: attio_list_activities
+  name: List Activities
+  description: |
+    Retrieve a list of all activities in your Attio workspace.
+  provider: attio
+  endpoint: /objects/activities/records
+  method: GET
+  scopes:
+    - activity:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of activities to return"
+      offset:
+        type: integer
+        description: "Number of activities to skip"
+    required: []
+
+- slug: attio_get_activity
+  name: Get Activity
+  description: |
+    Get details of a specific activity by ID.
+  provider: attio
+  endpoint: /objects/activities/records/{id}
+  method: GET
+  scopes:
+    - activity:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: string
+        description: "The activity ID"
+    required:
+      - id
+
+- slug: attio_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of all tasks in your Attio workspace.
+  provider: attio
+  endpoint: /objects/tasks/records
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of tasks to return"
+      offset:
+        type: integer
+        description: "Number of tasks to skip"
+      status:
+        type: string
+        description: "Filter by task status (open, completed)"
+    required: []

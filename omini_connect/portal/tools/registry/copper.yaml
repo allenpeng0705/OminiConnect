@@ -1,0 +1,318 @@
+# Copper Tools - Allowlist
+# Curated subset of Copper CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. copper_list_companies      - List companies
+# 2. copper_get_company        - Get company details
+# 3. copper_create_company     - Create a new company
+# 4. copper_list_contacts      - List contacts
+# 5. copper_get_contact        - Get contact details
+# 6. copper_create_contact     - Create a new contact
+# 7. copper_list_opportunities - List opportunities
+# 8. copper_get_opportunity    - Get opportunity details
+# 9. copper_list_tasks         - List tasks
+# 10. copper_get_task          - Get task details
+
+- slug: copper_list_companies
+  name: List Companies
+  description: |
+    List all companies in Copper CRM. Filter by city, state, country, or industry.
+  provider: copper
+  endpoint: /companies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      city:
+        type: string
+        description: "Filter by city"
+      state:
+        type: string
+        description: "Filter by state"
+      country:
+        type: string
+        description: "Filter by country"
+      industry:
+        type: string
+        description: "Filter by industry"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: copper_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+  provider: copper
+  endpoint: /companies/{company_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      company_id:
+        type: string
+        description: "Company ID"
+    required:
+      - company_id
+
+- slug: copper_create_company
+  name: Create Company
+  description: |
+    Create a new company in Copper CRM.
+  provider: copper
+  endpoint: /companies
+  method: POST
+  scopes:
+    - write
+  tags:
+    - companies
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a company
+    properties:
+      name:
+        type: string
+        description: "Company name"
+      city:
+        type: string
+        description: "City"
+      state:
+        type: string
+        description: "State"
+      country:
+        type: string
+        description: "Country"
+      industry:
+        type: string
+        description: "Industry"
+      website:
+        type: string
+        description: "Website URL"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - name
+
+- slug: copper_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Copper CRM. Filter by company, email, or name.
+  provider: copper
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+      email:
+        type: string
+        description: "Filter by email address"
+      name:
+        type: string
+        description: "Filter by name"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: copper_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: copper
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: copper_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Copper CRM.
+  provider: copper
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: string
+        description: "Associated company ID"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - first_name
+      - last_name
+
+- slug: copper_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities (deals) in Copper CRM. Filter by status, owner, or pipeline.
+  provider: copper
+  endpoint: /opportunities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, won, lost"
+      owner_id:
+        type: string
+        description: "Filter by owner user ID"
+      pipeline_id:
+        type: string
+        description: "Filter by pipeline ID"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: copper_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity.
+  provider: copper
+  endpoint: /opportunities/{opportunity_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - opportunity_id
+
+- slug: copper_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Copper CRM. Filter by status, assignee, due date, or related entity.
+  provider: copper
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, completed"
+      assignee_id:
+        type: string
+        description: "Filter by assignee user ID"
+      related_id:
+        type: string
+        description: "Filter by related entity ID"
+      due_before:
+        type: string
+        description: "Due before date (ISO 8601)"
+      due_after:
+        type: string
+        description: "Due after date (ISO 8601)"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: copper_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: copper
+  endpoint: /tasks/{task_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id

@@ -1,0 +1,247 @@
+# Exist Tools - Allowlist
+# Curated subset of Exist.io API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. exist_get_user             - Get current user
+# 2. exist_list_attributes     - List all attributes
+# 3. exist_get_attribute       - Get attribute data
+# 4. exist_list_habits         - List all habits
+# 5. exist_get_habit           - Get habit data
+# 6. exist_list_tracks         - List tracked data
+# 7. exist_get_track           - Get track data
+# 8. exist_list_tags           - List all tags
+# 9. exist_get_insights        - Get insights
+# 10. exist_search             - Search for attributes
+
+- slug: exist_get_user
+  name: Get User
+  description: |
+    Get current authenticated user info.
+  provider: exist
+  endpoint: /api/v1/user/
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: exist_list_attributes
+  name: List Attributes
+  description: |
+    List all available tracking attributes.
+  provider: exist
+  endpoint: /api/v1/attributes/
+  method: GET
+  scopes: []
+  tags:
+    - attributes
+    - tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing attributes
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: exist_get_attribute
+  name: Get Attribute
+  description: |
+    Get data for a specific attribute.
+  provider: exist
+  endpoint: /api/v1/attributes/{name}/
+  method: GET
+  scopes: []
+  tags:
+    - attributes
+    - tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting attribute
+    properties:
+      name:
+        type: string
+        description: "Attribute name"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - name
+
+- slug: exist_list_habits
+  name: List Habits
+  description: |
+    List all habits being tracked.
+  provider: exist
+  endpoint: /api/v1/habits/
+  method: GET
+  scopes: []
+  tags:
+    - habits
+    - tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing habits
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: exist_get_habit
+  name: Get Habit
+  description: |
+    Get data for a specific habit.
+  provider: exist
+  endpoint: /api/v1/habits/{id}/
+  method: GET
+  scopes: []
+  tags:
+    - habits
+    - tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting habit
+    properties:
+      id:
+        type: integer
+        description: "Habit ID"
+      date_from:
+        type: string
+        description: "Start date"
+      date_to:
+        type: string
+        description: "End date"
+    required:
+      - id
+
+- slug: exist_list_tracks
+  name: List Tracks
+  description: |
+    List all tracked data entries.
+  provider: exist
+  endpoint: /api/v1/tracks/
+  method: GET
+  scopes: []
+  tags:
+    - tracks
+    - data
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tracks
+    properties:
+      attribute:
+        type: string
+        description: "Filter by attribute name"
+      date_from:
+        type: string
+        description: "Start date"
+      date_to:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: exist_get_track
+  name: Get Track
+  description: |
+    Get a specific track entry.
+  provider: exist
+  endpoint: /api/v1/tracks/{id}/
+  method: GET
+  scopes: []
+  tags:
+    - tracks
+    - data
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting track
+    properties:
+      id:
+        type: integer
+        description: "Track ID"
+    required:
+      - id
+
+- slug: exist_list_tags
+  name: List Tags
+  description: |
+    List all tags used for categorization.
+  provider: exist
+  endpoint: /api/v1/tags/
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: exist_get_insights
+  name: Get Insights
+  description: |
+    Get insights and analysis.
+  provider: exist
+  endpoint: /api/v1/insights/
+  method: GET
+  scopes: []
+  tags:
+    - insights
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting insights
+    properties:
+      date_from:
+        type: string
+        description: "Start date"
+      date_to:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: exist_search
+  name: Search
+  description: |
+    Search for attributes by name.
+  provider: exist
+  endpoint: /api/v1/search/
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - attributes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      q:
+        type: string
+        description: "Search query"
+    required:
+      - q

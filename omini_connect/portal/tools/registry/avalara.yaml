@@ -1,0 +1,342 @@
+# Avalara Tools - Allowlist
+# Curated subset of the Avalara AvaTax API v2 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. avalara_list_transactions    - List transactions in the account
+# 2. avalara_get_transaction      - Get details of a specific transaction
+# 3. avalara_create_transaction   - Create a new transaction
+# 4. avalara_list_customers       - List customers
+# 5. avalara_get_customer         - Get details of a specific customer
+# 6. avalara_list_items           - List items in the item catalog
+# 7. avalara_get_item             - Get details of a specific item
+# 8. avalara_validate_address     - Validate and normalize an address
+# 9. avalara_get_tax_rates         - Get tax rates for a location
+# 10. avalara_list_exemptions     - List tax exemptions
+
+- slug: avalara_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions (invoices, refunds, etc.) in the Avalara account. Returns a paginated list with transaction details.
+  provider: avalara
+  endpoint: /transactions
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - transactions
+    - invoices
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+      date:
+        type: string
+        description: "Filter by date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status: posted, saved, voided"
+      top:
+        type: integer
+        description: "Number of results (max 200, default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required: []
+
+- slug: avalara_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction including line items, tax amounts, and status.
+  provider: avalara
+  endpoint: /transactions/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      id:
+        type: string
+        description: "Transaction ID"
+      company_id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: avalara_create_transaction
+  name: Create Transaction
+  description: |
+    Create a new transaction (invoice, order, refund) for tax calculation. Returns calculated tax amounts.
+  provider: avalara
+  endpoint: /transactions/create
+  method: POST
+  scopes:
+    - write
+  tags:
+    - transactions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a transaction
+    properties:
+      type:
+        type: string
+        description: "Transaction type: SalesOrder, SalesInvoice, ReturnOrder, ReturnInvoice"
+        enum: [SalesOrder, SalesInvoice, ReturnOrder, ReturnInvoice]
+      company_id:
+        type: string
+        description: "Company ID"
+      date:
+        type: string
+        description: "Transaction date (YYYY-MM-DD)"
+      currency_code:
+        type: string
+        description: "Currency code (e.g., USD)"
+        default: USD
+      lines:
+        type: array
+        description: "Array of line items"
+      customer_code:
+        type: string
+        description: "Customer identifier"
+      addresses:
+        type: object
+        description: "Address information"
+    required:
+      - type
+      - company_id
+
+- slug: avalara_list_customers
+  name: List Customers
+  description: |
+    List all customers in the Avalara account. Returns customer details including code, name, and exemption status.
+  provider: avalara
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      company_id:
+        type: string
+        description: "Company ID"
+      top:
+        type: integer
+        description: "Number of results (max 200, default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required:
+      - company_id
+
+- slug: avalara_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer including contact info, exemption status, and linked transactions.
+  provider: avalara
+  endpoint: /customers/{customer_code}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_code:
+        type: string
+        description: "Customer code"
+      company_id:
+        type: string
+        description: "Company ID"
+    required:
+      - customer_code
+      - company_id
+
+- slug: avalara_list_items
+  name: List Items
+  description: |
+    List all items in the item catalog. Returns item details including SKU, description, and tax code.
+  provider: avalara
+  endpoint: /items
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - items
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      company_id:
+        type: string
+        description: "Company ID"
+      top:
+        type: integer
+        description: "Number of results (max 200, default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required:
+      - company_id
+
+- slug: avalara_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item including SKU, description, unit price, and tax code.
+  provider: avalara
+  endpoint: /items/{item_code}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      item_code:
+        type: string
+        description: "Item code/SKU"
+      company_id:
+        type: string
+        description: "Company ID"
+    required:
+      - item_code
+      - company_id
+
+- slug: avalara_validate_address
+  name: Validate Address
+  description: |
+    Validate and normalize an address. Returns validated address with geocoding coordinates and resolution status.
+  provider: avalara
+  endpoint: /addresses/resolve
+  method: POST
+  scopes:
+    - read_only
+  tags:
+    - addresses
+    - validation
+  input_schema:
+    type: object
+    description: Parameters for validating an address
+    properties:
+      line1:
+        type: string
+        description: "Street address line 1"
+      line2:
+        type: string
+        description: "Street address line 2"
+      city:
+        type: string
+        description: "City"
+      region:
+        type: string
+        description: "State/Province code"
+      postal_code:
+        type: string
+        description: "ZIP/Postal code"
+      country:
+        type: string
+        description: "Country code (e.g., USA)"
+        default: USA
+    required:
+      - line1
+      - city
+      - region
+      - postal_code
+
+- slug: avalara_get_tax_rates
+  name: Get Tax Rates
+  description: |
+    Get tax rates for a specific address or postal code. Returns combined tax rate and breakdown by jurisdiction.
+  provider: avalara
+  endpoint: /taxrates/byaddress
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - tax
+    - rates
+  input_schema:
+    type: object
+    description: Parameters for getting tax rates
+    properties:
+      line1:
+        type: string
+        description: "Street address"
+      city:
+        type: string
+        description: "City"
+      region:
+        type: string
+        description: "State/Province code"
+      postal_code:
+        type: string
+        description: "ZIP/Postal code"
+      country:
+        type: string
+        description: "Country code"
+        default: USA
+    required:
+      - line1
+      - city
+      - region
+      - postal_code
+
+- slug: avalara_list_exemptions
+  name: List Exemptions
+  description: |
+    List all tax exemptions in the account. Returns exemption details including customer, reason, and validity dates.
+  provider: avalara
+  endpoint: /exemptions
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - exemptions
+    - tax
+  input_schema:
+    type: object
+    description: Parameters for listing exemptions
+    properties:
+      company_id:
+        type: string
+        description: "Company ID"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      top:
+        type: integer
+        description: "Number of results (max 200, default 100)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of results to skip"
+        default: 0
+    required:
+      - company_id

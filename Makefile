@@ -1,11 +1,11 @@
 # OminiConnect + Nango — prefer native (no Docker). Docker helpers are optional.
 .PHONY: dev dev-omini-connect-nango dev-nango-docker dev-nango-docker-up
 
-# Default: Nango from source + Postgres on localhost + omini-connect-portal (see scripts/dev_omini_connect_nango_native.sh).
+# Default: Nango from source + Postgres on localhost + omini-connect-portal (single entrypoint).
 dev: dev-omini-connect-nango
 
 dev-omini-connect-nango:
-	@./scripts/dev_omini_connect_nango_native.sh
+	@./scripts/dev.sh
 
 # Optional: Nango via official Docker Compose (requires Docker Desktop).
 dev-nango-docker:

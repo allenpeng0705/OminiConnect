@@ -1,0 +1,309 @@
+# ServiceNow Tools - Allowlist
+# Curated subset of ServiceNow API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. servicenow_list_incidents    - List IT incidents
+# 2. servicenow_get_incident       - Get incident details
+# 3. servicenow_create_incident    - Create a new incident
+# 4. servicenow_update_incident   - Update an incident
+# 5. servicenow_list_problems      - List IT problems
+# 6. servicenow_get_problem        - Get problem details
+# 7. servicenow_list_changes       - List change requests
+# 8. servicenow_get_change         - Get change request details
+# 9. servicenow_list_users        - List ServiceNow users
+# 10. servicenow_get_user         - Get user details
+
+- slug: servicenow_list_incidents
+  name: List Incidents
+  description: |
+    List IT incidents in ServiceNow.
+    Filter by state, priority, assignment, and more.
+  provider: servicenow
+  endpoint: /api/now/table/incident
+  method: GET
+  scopes:
+    - incident.read
+  tags:
+    - incidents
+    - itsm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing incidents
+    properties:
+      state:
+        type: integer
+        description: "Incident state (1=new, 2=in progress, 3=awaiting, 6=resolved, 7=closed)"
+      priority:
+        type: integer
+        description: "Priority (1=critical, 2=high, 3=standard, 4=low, 5=planning)"
+      assignedTo:
+        type: string
+        description: "Assignee user ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: servicenow_get_incident
+  name: Get Incident
+  description: |
+    Get detailed information about a specific ServiceNow incident including work notes and activities.
+  provider: servicenow
+  endpoint: /api/now/table/incident/{sysId}
+  method: GET
+  scopes:
+    - incident.read
+  tags:
+    - incidents
+    - itsm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an incident
+    properties:
+      sysId:
+        type: string
+        description: "Incident sys_id"
+    required:
+      - sysId
+
+- slug: servicenow_create_incident
+  name: Create Incident
+  description: |
+    Create a new IT incident in ServiceNow.
+    Set description, impact, urgency, and assignment.
+  provider: servicenow
+  endpoint: /api/now/table/incident
+  method: POST
+  scopes:
+    - incident.write
+  tags:
+    - incidents
+    - itsm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an incident
+    properties:
+      shortDescription:
+        type: string
+        description: "Short description of the incident"
+      description:
+        type: string
+        description: "Detailed description"
+      impact:
+        type: integer
+        description: "Impact (1=high, 2=medium, 3=low)"
+      urgency:
+        type: integer
+        description: "Urgency (1=high, 2=medium, 3=low)"
+      assignedTo:
+        type: string
+        description: "Assignee user ID"
+      callerId:
+        type: string
+        description: "Caller user ID"
+    required:
+      - shortDescription
+
+- slug: servicenow_update_incident
+  name: Update Incident
+  description: |
+    Update an existing ServiceNow incident.
+    Modify state, priority, assignment, work notes, and more.
+  provider: servicenow
+  endpoint: /api/now/table/incident/{sysId}
+  method: PUT
+  scopes:
+    - incident.write
+  tags:
+    - incidents
+    - itsm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an incident
+    properties:
+      sysId:
+        type: string
+        description: "Incident sys_id"
+      state:
+        type: integer
+        description: "Incident state"
+      priority:
+        type: integer
+        description: "Priority"
+      workNotes:
+        type: string
+        description: "Work notes"
+      assignedTo:
+        type: string
+        description: "Assignee user ID"
+    required:
+      - sysId
+
+- slug: servicenow_list_problems
+  name: List Problems
+  description: |
+    List IT problems in ServiceNow.
+    Filter by state, priority, and assignment.
+  provider: servicenow
+  endpoint: /api/now/table/problem
+  method: GET
+  scopes:
+    - problem.read
+  tags:
+    - problems
+    - itsm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing problems
+    properties:
+      state:
+        type: integer
+        description: "Problem state"
+      priority:
+        type: integer
+        description: "Priority"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: servicenow_get_problem
+  name: Get Problem
+  description: |
+    Get detailed information about a specific ServiceNow problem including related incidents.
+  provider: servicenow
+  endpoint: /api/now/table/problem/{sysId}
+  method: GET
+  scopes:
+    - problem.read
+  tags:
+    - problems
+    - itsm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a problem
+    properties:
+      sysId:
+        type: string
+        description: "Problem sys_id"
+    required:
+      - sysId
+
+- slug: servicenow_list_changes
+  name: List Changes
+  description: |
+    List IT change requests in ServiceNow.
+    Filter by state, risk, type, and assignment.
+  provider: servicenow
+  endpoint: /api/now/table/change_request
+  method: GET
+  scopes:
+    - change.read
+  tags:
+    - changes
+    - itsm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing change requests
+    properties:
+      state:
+        type: integer
+        description: "Change state (1=new, 2=accepted, 3=in progress, 4=review, 5=closed)"
+      risk:
+        type: string
+        description: "Risk level (low, medium, high, critical)"
+      type:
+        type: string
+        description: "Change type (normal, standard, emergency)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: servicenow_get_change
+  name: Get Change
+  description: |
+    Get detailed information about a specific ServiceNow change request including tasks and approvals.
+  provider: servicenow
+  endpoint: /api/now/table/change_request/{sysId}
+  method: GET
+  scopes:
+    - change.read
+  tags:
+    - changes
+    - itsm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a change request
+    properties:
+      sysId:
+        type: string
+        description: "Change request sys_id"
+    required:
+      - sysId
+
+- slug: servicenow_list_users
+  name: List Users
+  description: |
+    List users in ServiceNow.
+    Filter by department, role, location, and active status.
+  provider: servicenow
+  endpoint: /api/now/table/sys_user
+  method: GET
+  scopes:
+    - user.read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      department:
+        type: string
+        description: "Department name"
+      role:
+        type: string
+        description: "User role"
+      active:
+        type: boolean
+        description: "Active status (default true)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: servicenow_get_user
+  name: Get User
+  description: |
+    Get detailed information about a ServiceNow user including roles, groups, and manager.
+  provider: servicenow
+  endpoint: /api/now/table/sys_user/{sysId}
+  method: GET
+  scopes:
+    - user.read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      sysId:
+        type: string
+        description: "User sys_id"
+    required:
+      - sysId

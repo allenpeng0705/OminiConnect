@@ -1,0 +1,261 @@
+# Confluence (Basic Auth) Tools - Allowlist
+# Curated subset of the Confluence API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. confluence_list_spaces              - List spaces
+# 2. confluence_get_space                 - Get space details
+# 3. confluence_list_pages               - List pages
+# 4. confluence_get_page                  - Get page details
+# 5. confluence_create_page               - Create a page
+# 6. confluence_update_page               - Update a page
+# 7. confluence_delete_page             - Delete a page
+# 8. confluence_list_comments           - List comments
+# 9. confluence_create_comment          - Create a comment
+# 10. confluence_search_content         - Search content
+
+- slug: confluence_list_spaces
+  name: List Spaces
+  description: |
+    List all spaces in Confluence.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/spaces
+  method: GET
+  scopes: []
+  tags:
+    - spaces
+    - knowledge-base
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      expand:
+        type: string
+        description: "Fields to expand"
+    required: []
+
+- slug: confluence_get_space
+  name: Get Space
+  description: |
+    Get details of a specific space.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/spaces/{spaceKey}
+  method: GET
+  scopes: []
+  tags:
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      spaceKey:
+        type: string
+        description: "Space key"
+    required:
+      - spaceKey
+
+- slug: confluence_list_pages
+  name: List Pages
+  description: |
+    List all pages in a space.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/spaces/{spaceKey}/pages
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - knowledge-base
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      spaceKey:
+        type: string
+        description: "Space key"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - spaceKey
+
+- slug: confluence_get_page
+  name: Get Page
+  description: |
+    Get details of a specific page.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages/{pageId}
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+    required:
+      - pageId
+
+- slug: confluence_create_page
+  name: Create Page
+  description: |
+    Create a new page in a space.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages
+  method: POST
+  scopes: []
+  tags:
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      spaceId:
+        type: string
+        description: "Space ID"
+      title:
+        type: string
+        description: "Page title"
+      body:
+        type: string
+        description: "Page content (storage format)"
+      parentId:
+        type: string
+        description: "Parent page ID"
+    required:
+      - spaceId
+      - title
+      - body
+
+- slug: confluence_update_page
+  name: Update Page
+  description: |
+    Update an existing page.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages/{pageId}
+  method: PUT
+  scopes: []
+  tags:
+    - pages
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+      title:
+        type: string
+        description: "Page title"
+      body:
+        type: string
+        description: "Page content"
+      version:
+        type: object
+        description: "Version info for optimistic locking"
+    required:
+      - pageId
+
+- slug: confluence_delete_page
+  name: Delete Page
+  description: |
+    Delete a page.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages/{pageId}
+  method: DELETE
+  scopes: []
+  tags:
+    - pages
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+    required:
+      - pageId
+
+- slug: confluence_list_comments
+  name: List Comments
+  description: |
+    List all comments on a page.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages/{pageId}/comments
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+    required:
+      - pageId
+
+- slug: confluence_create_comment
+  name: Create Comment
+  description: |
+    Create a new comment on a page.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/pages/{pageId}/comments
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+      content:
+        type: string
+        description: "Comment content (HTML)"
+    required:
+      - pageId
+      - content
+
+- slug: confluence_search_content
+  name: Search Content
+  description: |
+    Search for content in Confluence.
+  provider: confluence-basic
+  endpoint: /wiki/api/v2/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      cql:
+        type: string
+        description: "Confluence Query Language query"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - cql

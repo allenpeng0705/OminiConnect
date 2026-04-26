@@ -1,0 +1,244 @@
+- slug: attach_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of all deals in the sales pipeline.
+  provider: attach
+  endpoint: /deals
+  method: GET
+  scopes:
+    - deals:read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      status:
+        type: string
+        description: "Filter deals by status (e.g., open, won, lost)"
+      owner_id:
+        type: string
+        description: "Filter deals by owner ID"
+    required: []
+
+- slug: attach_get_deal
+  name: Get Deal
+  description: |
+    Retrieve details of a specific deal by ID.
+  provider: attach
+  endpoint: /deals/{deal_id}
+  method: GET
+  scopes:
+    - deals:read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      deal_id:
+        type: string
+        description: "The unique identifier of the deal"
+    required:
+      - deal_id
+
+- slug: attach_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in the sales pipeline.
+  provider: attach
+  endpoint: /deals
+  method: POST
+  scopes:
+    - deals:write
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      name:
+        type: string
+        description: "The name of the deal"
+      value:
+        type: number
+        description: "The monetary value of the deal"
+      stage:
+        type: string
+        description: "The sales stage of the deal"
+      owner_id:
+        type: string
+        description: "The ID of the deal owner"
+    required:
+      - name
+
+- slug: attach_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts.
+  provider: attach
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      company_id:
+        type: string
+        description: "Filter contacts by company ID"
+      tags:
+        type: string
+        description: "Filter contacts by tags"
+    required: []
+
+- slug: attach_get_contact
+  name: Get Contact
+  description: |
+    Retrieve details of a specific contact by ID.
+  provider: attach
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "The unique identifier of the contact"
+    required:
+      - contact_id
+
+- slug: attach_add_contact_to_deal
+  name: Add Contact to Deal
+  description: |
+    Associate a contact with a deal.
+  provider: attach
+  endpoint: /deals/{deal_id}/contacts
+  method: POST
+  scopes:
+    - deals:write
+  tags:
+    - deals
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for adding a contact to a deal
+    properties:
+      deal_id:
+        type: string
+        description: "The unique identifier of the deal"
+      contact_id:
+        type: string
+        description: "The unique identifier of the contact"
+    required:
+      - deal_id
+      - contact_id
+
+- slug: attach_list_activities
+  name: List Activities
+  description: |
+    Retrieve a list of all sales activities.
+  provider: attach
+  endpoint: /activities
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      type:
+        type: string
+        description: "Filter by activity type (e.g., call, email, meeting)"
+      deal_id:
+        type: string
+        description: "Filter activities by deal ID"
+    required: []
+
+- slug: attach_get_activity
+  name: Get Activity
+  description: |
+    Retrieve details of a specific activity by ID.
+  provider: attach
+  endpoint: /activities/{activity_id}
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      activity_id:
+        type: string
+        description: "The unique identifier of the activity"
+    required:
+      - activity_id
+
+- slug: attach_send_email
+  name: Send Email
+  description: |
+    Send an email through the sales engagement platform.
+  provider: attach
+  endpoint: /emails
+  method: POST
+  scopes:
+    - emails:write
+  tags:
+    - email
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      to:
+        type: string
+        description: "The recipient email address"
+      subject:
+        type: string
+        description: "The email subject"
+      body:
+        type: string
+        description: "The email body content"
+      deal_id:
+        type: string
+        description: "Associate email with a deal ID"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: attach_track_email_opened
+  name: Track Email Opened
+  description: |
+    Track when an email was opened by the recipient.
+  provider: attach
+  endpoint: /emails/{email_id}/opened
+  method: POST
+  scopes:
+    - emails:read
+  tags:
+    - email
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for tracking email opens
+    properties:
+      email_id:
+        type: string
+        description: "The unique identifier of the sent email"
+      opened_at:
+        type: string
+        description: "Timestamp when the email was opened"
+    required:
+      - email_id

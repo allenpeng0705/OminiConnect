@@ -1,0 +1,319 @@
+# Trello Tools - Allowlist
+# Curated subset of Trello REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. trello_list_boards          - List all boards for the user
+# 2. trello_get_board            - Get board details
+# 3. trello_create_board         - Create a new board
+# 4. trello_list_lists           - List lists on a board
+# 5. trello_get_list             - Get list details
+# 6. trello_create_list          - Create a new list
+# 7. trello_list_cards           - List cards in a list or board
+# 8. trello_get_card              - Get card details
+# 9. trello_create_card          - Create a new card
+# 10. trello_add_member_to_card  - Add a member to a card
+
+- slug: trello_list_boards
+  name: List Boards
+  description: |
+    List all Trello boards for the authenticated user.
+    Includes boards the user is a member of.
+  provider: trello
+  endpoint: /1/members/me/boards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      filter:
+        type: string
+        description: "Filter boards (open, closed, pinned, unpinned)"
+        default: open
+    required: []
+
+- slug: trello_get_board
+  name: Get Board
+  description: |
+    Get detailed information about a specific Trello board.
+    Includes name, description, visibility, and settings.
+  provider: trello
+  endpoint: /1/boards/{boardId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      boardId:
+        type: string
+        description: "Board ID"
+      lists:
+        type: string
+        description: "One of open, closed, or all"
+        default: open
+      members:
+        type: string
+        description: "One of none, normal, or all"
+        default: none
+    required:
+      - boardId
+
+- slug: trello_create_board
+  name: Create Board
+  description: |
+    Create a new Trello board. Set name, description, visibility, and add initial list columns.
+  provider: trello
+  endpoint: /1/boards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      name:
+        type: string
+        description: "Board name"
+      desc:
+        type: string
+        description: "Board description"
+      idOrganization:
+        type: string
+        description: "Organization ID to create board in"
+      visibility:
+        type: string
+        description: "Visibility: private, team, public"
+        default: private
+      defaultLists:
+        type: boolean
+        description: "Add default lists (To Do, Doing, Done)"
+        default: true
+    required:
+      - name
+
+- slug: trello_list_lists
+  name: List Lists
+  description: |
+    List all lists on a Trello board.
+    Lists are the columns in a board (e.g., To Do, In Progress, Done).
+  provider: trello
+  endpoint: /1/boards/{boardId}/lists
+  method: GET
+  scopes:
+    - read
+  tags:
+    - lists
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      boardId:
+        type: string
+        description: "Board ID"
+      filter:
+        type: string
+        description: "Filter lists (open, closed, all)"
+        default: open
+    required:
+      - boardId
+
+- slug: trello_get_list
+  name: Get List
+  description: |
+    Get details about a specific Trello list.
+    Includes name, position, and card count.
+  provider: trello
+  endpoint: /1/lists/{listId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      listId:
+        type: string
+        description: "List ID"
+      cards:
+        type: string
+        description: "Include cards (one of open, closed, or all)"
+        default: none
+      card_fields:
+        type: string
+        description: "Card fields to include"
+        default: name
+    required:
+      - listId
+
+- slug: trello_create_list
+  name: Create List
+  description: |
+    Create a new list on a Trello board.
+    Lists are the columns that contain cards.
+  provider: trello
+  endpoint: /1/lists
+  method: POST
+  scopes:
+    - write
+  tags:
+    - lists
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a list
+    properties:
+      name:
+        type: string
+        description: "List name"
+      idBoard:
+        type: string
+        description: "Board ID to add list to"
+      pos:
+        type: string
+        description: "Position (top, bottom, or a number)"
+        default: bottom
+    required:
+      - name
+      - idBoard
+
+- slug: trello_list_cards
+  name: List Cards
+  description: |
+    List cards in a list or all cards on a board.
+    Can filter by open/closed status.
+  provider: trello
+  endpoint: /1/boards/{boardId}/cards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      boardId:
+        type: string
+        description: "Board ID (use listId instead to filter by list)"
+      listId:
+        type: string
+        description: "List ID to filter cards"
+      filter:
+        type: string
+        description: "Filter cards (open, closed, or all)"
+        default: open
+    required: []
+
+- slug: trello_get_card
+  name: Get Card
+  description: |
+    Get detailed information about a Trello card.
+    Includes description, due date, labels, members, and activity.
+  provider: trello
+  endpoint: /1/cards/{cardId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      cardId:
+        type: string
+        description: "Card ID"
+      fields:
+        type: string
+        description: "Fields to include (default: all)"
+        default: all
+    required:
+      - cardId
+
+- slug: trello_create_card
+  name: Create Card
+  description: |
+    Create a new card on a Trello list.
+    Set name, description, due date, labels, and assign members.
+  provider: trello
+  endpoint: /1/cards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a card
+    properties:
+      name:
+        type: string
+        description: "Card name"
+      desc:
+        type: string
+        description: "Card description"
+      idList:
+        type: string
+        description: "List ID to add card to"
+      due:
+        type: string
+        description: "Due date (ISO 8601 format)"
+      labels:
+        type: string
+        description: "Comma-separated label names or IDs"
+      idMembers:
+        type: string
+        description: "Comma-separated member IDs to assign"
+    required:
+      - name
+      - idList
+
+- slug: trello_add_member_to_card
+  name: Add Member to Card
+  description: |
+    Add a member to a Trello card to assign them.
+  provider: trello
+  endpoint: /1/cards/{cardId}/members
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cards
+    - members
+    - update
+  input_schema:
+    type: object
+    description: Parameters for adding a member to a card
+    properties:
+      cardId:
+        type: string
+        description: "Card ID"
+      value:
+        type: string
+        description: "Member ID to add"
+    required:
+      - cardId
+      - value

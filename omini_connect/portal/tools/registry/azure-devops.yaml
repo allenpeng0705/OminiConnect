@@ -1,0 +1,276 @@
+# Azure DevOps Tools - Allowlist
+# Curated subset of Azure DevOps REST API for AI agent use.
+# BASIC auth via Nango (Personal Access Token).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. azure_devops_list_projects       - List projects
+# 2. azure_devops_get_project         - Get project details
+# 3. azure_devops_list_pipelines     - List pipelines
+# 4. azure_devops_get_pipeline       - Get pipeline details
+# 5. azure_devops_list_runs           - List pipeline runs
+# 6. azure_devops_get_run             - Get run details
+# 7. azure_devops_list_work_items    - List work items
+# 8. azure_devops_get_work_item      - Get work item details
+# 9. azure_devops_list_repos         - List repositories
+# 10. azure_devops_list_builds        - List build definitions
+
+- slug: azure_devops_list_projects
+  name: List Projects
+  description: |
+    List all projects in the Azure DevOps organization.
+  provider: azure-devops
+  endpoint: /_apis/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      top:
+        type: integer
+        description: "Max projects to return"
+        default: 20
+      skip:
+        type: integer
+        description: "Projects to skip"
+        default: 0
+    required: []
+
+- slug: azure_devops_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project.
+  provider: azure-devops
+  endpoint: /_apis/projects/{projectId}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID or name"
+    required:
+      - projectId
+
+- slug: azure_devops_list_pipelines
+  name: List Pipelines
+  description: |
+    List all pipelines in a project.
+  provider: azure-devops
+  endpoint: /{project}/_apis/pipelines
+  method: GET
+  scopes: []
+  tags:
+    - pipelines
+    - ci-cd
+  input_schema:
+    type: object
+    description: Parameters for listing pipelines
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      top:
+        type: integer
+        description: "Max pipelines to return"
+        default: 20
+    required:
+      - project
+
+- slug: azure_devops_get_pipeline
+  name: Get Pipeline
+  description: |
+    Get details for a specific pipeline.
+  provider: azure-devops
+  endpoint: /{project}/_apis/pipelines/{pipelineId}
+  method: GET
+  scopes: []
+  tags:
+    - pipelines
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pipeline
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      pipelineId:
+        type: integer
+        description: "Pipeline ID"
+    required:
+      - project
+      - pipelineId
+
+- slug: azure_devops_list_runs
+  name: List Runs
+  description: |
+    List all runs (executions) for a pipeline.
+  provider: azure-devops
+  endpoint: /{project}/_apis/pipelines/{pipelineId}/runs
+  method: GET
+  scopes: []
+  tags:
+    - pipelines
+    - runs
+  input_schema:
+    type: object
+    description: Parameters for listing runs
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      pipelineId:
+        type: integer
+        description: "Pipeline ID"
+      top:
+        type: integer
+        description: "Max runs to return"
+        default: 20
+    required:
+      - project
+      - pipelineId
+
+- slug: azure_devops_get_run
+  name: Get Run
+  description: |
+    Get details for a specific pipeline run.
+  provider: azure-devops
+  endpoint: /{project}/_apis/pipelines/{pipelineId}/runs/{runId}
+  method: GET
+  scopes: []
+  tags:
+    - pipelines
+    - runs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a run
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      pipelineId:
+        type: integer
+        description: "Pipeline ID"
+      runId:
+        type: integer
+        description: "Run ID"
+    required:
+      - project
+      - pipelineId
+      - runId
+
+- slug: azure_devops_list_work_items
+  name: List Work Items
+  description: |
+    List work items (bugs, tasks, features, etc.) in a project.
+  provider: azure-devops
+  endpoint: /{project}/_apis/wit/workitems
+  method: GET
+  scopes: []
+  tags:
+    - work-items
+    - project-management
+  input_schema:
+    type: object
+    description: Parameters for listing work items
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      type:
+        type: string
+        description: "Work item type: Bug, Task, Feature, etc."
+      state:
+        type: string
+        description: "Filter by state"
+      top:
+        type: integer
+        description: "Max items to return"
+        default: 20
+    required:
+      - project
+
+- slug: azure_devops_get_work_item
+  name: Get Work Item
+  description: |
+    Get details for a specific work item.
+  provider: azure-devops
+  endpoint: /{project}/_apis/wit/workitems/{id}
+  method: GET
+  scopes: []
+  tags:
+    - work-items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a work item
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      id:
+        type: integer
+        description: "Work item ID"
+    required:
+      - project
+      - id
+
+- slug: azure_devops_list_repos
+  name: List Repositories
+  description: |
+    List all Git repositories in a project.
+  provider: azure-devops
+  endpoint: /{project}/_apis/git/repositories
+  method: GET
+  scopes: []
+  tags:
+    - repos
+    - git
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+    required:
+      - project
+
+- slug: azure_devops_list_builds
+  name: List Builds
+  description: |
+    List build definitions and recent builds.
+  provider: azure-devops
+  endpoint: /{project}/_apis/build/builds
+  method: GET
+  scopes: []
+  tags:
+    - builds
+    - ci-cd
+  input_schema:
+    type: object
+    description: Parameters for listing builds
+    properties:
+      project:
+        type: string
+        description: "Project name or ID"
+      definitionId:
+        type: integer
+        description: "Filter by build definition"
+      top:
+        type: integer
+        description: "Max builds to return"
+        default: 20
+    required:
+      - project

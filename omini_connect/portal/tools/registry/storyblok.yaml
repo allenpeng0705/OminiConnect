@@ -1,0 +1,343 @@
+# Storyblok Tools - Allowlist
+# Curated subset of the Storyblok API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. storyblok_list_stories  - List all stories (content entries)
+# 2. storyblok_get_story    - Get a specific story by ID or slug
+# 3. storyblok_create_story - Create a new story
+# 4. storyblok_update_story - Update an existing story
+# 5. storyblok_delete_story - Delete a story
+# 6. storyblok_list_spaces  - List all spaces
+# 7. storyblok_get_space    - Get a specific space
+# 8. storyblok_list_assets  - List assets in a space
+# 9. storyblok_get_asset   - Get a specific asset
+# 10. storyblok_list_users  - List users in a space
+
+- slug: storyblok_list_stories
+  name: List Stories
+  description: |
+    List all stories (content entries) in a Storyblok space. Filter by folder, content type, or search term.
+    Returns stories with metadata including slugs, timestamps, and publication status.
+  provider: storyblok
+  endpoint: /v2/stories
+  method: GET
+  scopes:
+    - stories:read
+  tags:
+    - stories
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing stories
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      folder_id:
+        type: string
+        description: "Filter by folder UUID"
+      content_type:
+        type: string
+        description: "Filter by content type"
+      search:
+        type: string
+        description: "Full-text search query"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+      sort_by:
+        type: string
+        description: "Sort field (e.g., created_at:desc)"
+    required:
+      - space_id
+
+- slug: storyblok_get_story
+  name: Get Story
+  description: |
+    Get a specific story by its ID or slug. Returns full story content, metadata, and versions.
+  provider: storyblok
+  endpoint: /v2/stories/{story_id}
+  method: GET
+  scopes:
+    - stories:read
+  tags:
+    - stories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a story
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      story_id:
+        type: string
+        description: "Story UUID or slug"
+      version:
+        type: string
+        description: "Version: draft or published (default draft)"
+        enum: [draft, published]
+        default: draft
+    required:
+      - space_id
+      - story_id
+
+- slug: storyblok_create_story
+  name: Create Story
+  description: |
+    Create a new story in a Storyblok space. Specify the name, slug, content type, and initial content.
+  provider: storyblok
+  endpoint: /v2/stories
+  method: POST
+  scopes:
+    - stories:write
+  tags:
+    - stories
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a story
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      name:
+        type: string
+        description: "Story name (required)"
+      slug:
+        type: string
+        description: "URL slug (auto-generated from name if not provided)"
+      content:
+        type: object
+        description: "Story content as JSON object"
+      parent_id:
+        type: integer
+        description: "Parent folder ID"
+      is_startpage:
+        type: boolean
+        description: "Set as folder startpage"
+        default: false
+    required:
+      - space_id
+      - name
+
+- slug: storyblok_update_story
+  name: Update Story
+  description: |
+    Update an existing story. Can modify content, rename, move to folder, or publish/unpublish.
+  provider: storyblok
+  endpoint: /v2/stories/{story_id}
+  method: PUT
+  scopes:
+    - stories:write
+  tags:
+    - stories
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a story
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      story_id:
+        type: string
+        description: "Story UUID or slug"
+      name:
+        type: string
+        description: "New story name"
+      slug:
+        type: string
+        description: "New slug"
+      content:
+        type: object
+        description: "Updated story content"
+      parent_id:
+        type: integer
+        description: "New parent folder ID"
+      is_startpage:
+        type: boolean
+        description: "Set as folder startpage"
+      publish:
+        type: boolean
+        description: "Publish the story immediately"
+        default: false
+    required:
+      - space_id
+      - story_id
+
+- slug: storyblok_delete_story
+  name: Delete Story
+  description: |
+    Delete a story permanently from a Storyblok space.
+  provider: storyblok
+  endpoint: /v2/stories/{story_id}
+  method: DELETE
+  scopes:
+    - stories:write
+  tags:
+    - stories
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a story
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      story_id:
+        type: string
+        description: "Story UUID or slug"
+    required:
+      - space_id
+      - story_id
+
+- slug: storyblok_list_spaces
+  name: List Spaces
+  description: |
+    List all Storyblok spaces the authenticated user has access to.
+    Returns space names, domains, and role information.
+  provider: storyblok
+  endpoint: /v2/spaces
+  method: GET
+  scopes:
+    - spaces:read
+  tags:
+    - spaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+    required: []
+
+- slug: storyblok_get_space
+  name: Get Space
+  description: |
+    Get details of a specific Storyblok space including settings, limits, and role.
+  provider: storyblok
+  endpoint: /v2/spaces/{space_id}
+  method: GET
+  scopes:
+    - spaces:read
+  tags:
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: storyblok_list_assets
+  name: List Assets
+  description: |
+    List all assets (images, files) in a Storyblok space. Filter by folder or asset type.
+  provider: storyblok
+  endpoint: /v2/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      folder_id:
+        type: string
+        description: "Filter by folder UUID"
+      filename:
+        type: string
+        description: "Filter by filename pattern"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+    required:
+      - space_id
+
+- slug: storyblok_get_asset
+  name: Get Asset
+  description: |
+    Get details of a specific asset including filename, size, dimensions, and asset URL.
+  provider: storyblok
+  endpoint: /v2/assets/{asset_id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      asset_id:
+        type: string
+        description: "Asset UUID"
+    required:
+      - space_id
+      - asset_id
+
+- slug: storyblok_list_users
+  name: List Users
+  description: |
+    List all users in a Storyblok space. Returns user names, emails, roles, and permissions.
+  provider: storyblok
+  endpoint: /v2/spaces/{space_id}/users
+  method: GET
+  scopes:
+    - spaces:read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      space_id:
+        type: integer
+        description: "Space ID (required)"
+      role:
+        type: string
+        description: "Filter by role: owner, editor, contributor, developer"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+    required:
+      - space_id

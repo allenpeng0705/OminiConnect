@@ -1,0 +1,232 @@
+# Cisco Duo Admin API Tools - Allowlist
+# Curated subset of the Cisco Duo Admin API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cisco_duo_list_users                - List users
+# 2. cisco_duo_get_user                 - Get user details
+# 3. cisco_duo_create_user              - Create a user
+# 4. cisco_duo_delete_user              - Delete a user
+# 5. cisco_duo_list_phones              - List phones
+# 6. cisco_duo_get_phone               - Get phone details
+# 7. cisco_duo_list_auth_logs           - List authentication logs
+# 8. cisco_duo_list_administrators      - List administrators
+# 9. cisco_duo_get_auth_log_entry      - Get authentication log entry
+# 10. cisco_duo_list_directory_users   - List directory users
+
+- slug: cisco_duo_list_users
+  name: List Users
+  description: |
+    List all users in the Duo directory.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cisco_duo_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: cisco_duo_create_user
+  name: Create User
+  description: |
+    Create a new user in Duo.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/users
+  method: POST
+  scopes: []
+  tags:
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      username:
+        type: string
+        description: "Username"
+      realname:
+        type: string
+        description: "Real name"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - username
+
+- slug: cisco_duo_delete_user
+  name: Delete User
+  description: |
+    Delete a user from Duo.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/users/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: cisco_duo_list_phones
+  name: List Phones
+  description: |
+    List all phones registered in Duo.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/phones
+  method: GET
+  scopes: []
+  tags:
+    - phones
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing phones
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cisco_duo_get_phone
+  name: Get Phone
+  description: |
+    Get details of a specific phone.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/phones/{id}
+  method: GET
+  scopes: []
+  tags:
+    - phones
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a phone
+    properties:
+      id:
+        type: string
+        description: "Phone ID"
+    required:
+      - id
+
+- slug: cisco_duo_list_auth_logs
+  name: List Auth Logs
+  description: |
+    List all authentication logs.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/logs/authentication
+  method: GET
+  scopes: []
+  tags:
+    - logs
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing auth logs
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cisco_duo_list_administrators
+  name: List Administrators
+  description: |
+    List all Duo administrators.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/administrators
+  method: GET
+  scopes: []
+  tags:
+    - administrators
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing administrators
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cisco_duo_get_auth_log_entry
+  name: Get Auth Log Entry
+  description: |
+    Get details of a specific authentication log entry.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/logs/authentication/{id}
+  method: GET
+  scopes: []
+  tags:
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an auth log entry
+    properties:
+      id:
+        type: string
+        description: "Log entry ID"
+    required:
+      - id
+
+- slug: cisco_duo_list_directory_users
+  name: List Directory Users
+  description: |
+    List all users synced from directory.
+  provider: cisco-duo-admin
+  endpoint: /admin/v1/directory/users
+  method: GET
+  scopes: []
+  tags:
+    - directory
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing directory users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

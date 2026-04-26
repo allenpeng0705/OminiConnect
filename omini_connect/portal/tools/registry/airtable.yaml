@@ -1,0 +1,294 @@
+# Airtable Tools - Allowlist
+# Curated subset of Airtable REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. airtable_list_bases       - List all bases
+# 2. airtable_get_base         - Get base details
+# 3. airtable_list_tables      - List tables in a base
+# 4. airtable_get_table        - Get table schema
+# 5. airtable_list_records     - List records in a table
+# 6. airtable_get_record       - Get a single record
+# 7. airtable_create_record    - Create a new record
+# 8. airtable_update_record    - Update a record
+# 9. airtable_list_fields      - List fields in a table
+# 10. airtable_get_field       - Get field details
+
+- slug: airtable_list_bases
+  name: List Bases
+  description: |
+    Retrieve all Airtable bases accessible to the authenticated user.
+  provider: airtable
+  endpoint: /v0/meta/bases
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - bases
+    - list
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: airtable_get_base
+  name: Get Base
+  description: |
+    Retrieve metadata for a specific Airtable base.
+  provider: airtable
+  endpoint: /v0/meta/bases/{baseId}
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - bases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a base
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+    required:
+      - baseId
+
+- slug: airtable_list_tables
+  name: List Tables
+  description: |
+    Retrieve all tables in a specific Airtable base.
+  provider: airtable
+  endpoint: /v0/meta/bases/{baseId}/tables
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+    required:
+      - baseId
+
+- slug: airtable_get_table
+  name: Get Table
+  description: |
+    Retrieve metadata for a specific table in an Airtable base.
+  provider: airtable
+  endpoint: /v0/meta/bases/{baseId}/tables/{tableId}
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - baseId
+      - tableId
+
+- slug: airtable_list_records
+  name: List Records
+  description: |
+    Retrieve records from a specific table with optional filtering and sorting.
+  provider: airtable
+  endpoint: /v0/{baseId}/{tableId}
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - records
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing records
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID or name"
+      pageSize:
+        type: integer
+        description: "Number of records per page (max 100)"
+      offset:
+        type: string
+        description: "Pagination offset token"
+      filterByFormula:
+        type: string
+        description: "Filter formula"
+      fields:
+        type: array
+        description: "Fields to include"
+    required:
+      - baseId
+      - tableId
+
+- slug: airtable_get_record
+  name: Get Record
+  description: |
+    Retrieve a single record by ID from a specific table.
+  provider: airtable
+  endpoint: /v0/{baseId}/{tableId}/{recordId}
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - records
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a record
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID or name"
+      recordId:
+        type: string
+        description: "The record ID"
+    required:
+      - baseId
+      - tableId
+      - recordId
+
+- slug: airtable_create_record
+  name: Create Record
+  description: |
+    Create a new record in a specific table with field values.
+  provider: airtable
+  endpoint: /v0/{baseId}/{tableId}
+  method: POST
+  scopes:
+    - data.records:write
+  tags:
+    - records
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a record
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID or name"
+      fields:
+        type: object
+        description: "Record field values (key-value pairs)"
+    required:
+      - baseId
+      - tableId
+      - fields
+
+- slug: airtable_update_record
+  name: Update Record
+  description: |
+    Update specific fields of an existing record.
+  provider: airtable
+  endpoint: /v0/{baseId}/{tableId}/{recordId}
+  method: PATCH
+  scopes:
+    - data.records:write
+  tags:
+    - records
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a record
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID or name"
+      recordId:
+        type: string
+        description: "The record ID"
+      fields:
+        type: object
+        description: "Fields to update (key-value pairs)"
+    required:
+      - baseId
+      - tableId
+      - recordId
+      - fields
+
+- slug: airtable_list_fields
+  name: List Fields
+  description: |
+    Retrieve all field definitions for a specific table.
+  provider: airtable
+  endpoint: /v0/meta/bases/{baseId}/tables/{tableId}/fields
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - fields
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing fields
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - baseId
+      - tableId
+
+- slug: airtable_get_field
+  name: Get Field
+  description: |
+    Retrieve metadata for a specific field in a table.
+  provider: airtable
+  endpoint: /v0/meta/bases/{baseId}/tables/{tableId}/fields/{fieldId}
+  method: GET
+  scopes:
+    - data.records:read
+  tags:
+    - fields
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a field
+    properties:
+      baseId:
+        type: string
+        description: "The Airtable base ID"
+      tableId:
+        type: string
+        description: "The table ID"
+      fieldId:
+        type: string
+        description: "The field ID"
+    required:
+      - baseId
+      - tableId
+      - fieldId

@@ -1,0 +1,242 @@
+# Osu Tools - Allowlist
+# Curated subset of Osu API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. osu_get_me                      - Get current user
+# 2. osu_get_user                    - Get user details
+# 3. osu_list_beatmapsets           - List beatmapsets
+# 4. osu_get_beatmapset             - Get beatmapset details
+# 5. osu_list_scores                - List scores
+# 6. osu_get_score                  - Get score details
+# 7. osu_list_matches              - List matches
+# 8. osu_get_match                  - Get match details
+# 9. osu_list_user_scores         - List user scores
+# 10. osu_get_recent_activity     - Get recent activity
+
+- slug: osu_get_me
+  name: Get Me
+  description: |
+    Get current authenticated user's profile.
+  provider: osu
+  endpoint: /me
+  method: GET
+  scopes:
+    - identify
+  tags:
+    - gaming
+    - users
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting current user
+    properties: {}
+    required: []
+
+- slug: osu_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: osu
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: osu_list_beatmapsets
+  name: List Beatmapsets
+  description: |
+    List beatmapsets (song packages).
+  provider: osu
+  endpoint: /beatmapsets
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - beatmaps
+    - browse
+  input_schema:
+    type: object
+    description: Parameters for listing beatmapsets
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: osu_get_beatmapset
+  name: Get Beatmapset
+  description: |
+    Get detailed information for a specific beatmapset.
+  provider: osu
+  endpoint: /beatmapsets/{beatmapset_id}
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - beatmaps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a beatmapset
+    properties:
+      beatmapset_id:
+        type: integer
+        description: "Beatmapset ID"
+    required:
+      - beatmapset_id
+
+- slug: osu_list_scores
+  name: List Scores
+  description: |
+    List scores on a beatmap.
+  provider: osu
+  endpoint: /beatmaps/{beatmap_id}/scores
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - scores
+    - leaderboard
+  input_schema:
+    type: object
+    description: Parameters for listing scores
+    properties:
+      beatmap_id:
+        type: integer
+        description: "Beatmap ID"
+    required:
+      - beatmap_id
+
+- slug: osu_get_score
+  name: Get Score
+  description: |
+    Get detailed information for a specific score.
+  provider: osu
+  endpoint: /scores/{score_id}
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - scores
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a score
+    properties:
+      score_id:
+        type: string
+        description: "Score ID"
+    required:
+      - score_id
+
+- slug: osu_list_matches
+  name: List Matches
+  description: |
+    List recent multiplayer matches.
+  provider: osu
+  endpoint: /matches
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - matches
+    - multiplayer
+  input_schema:
+    type: object
+    description: Parameters for listing matches
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: osu_get_match
+  name: Get Match
+  description: |
+    Get detailed information for a specific match.
+  provider: osu
+  endpoint: /matches/{match_id}
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - matches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a match
+    properties:
+      match_id:
+        type: integer
+        description: "Match ID"
+    required:
+      - match_id
+
+- slug: osu_list_user_scores
+  name: List User Scores
+  description: |
+    List scores for a specific user.
+  provider: osu
+  endpoint: /users/{user_id}/scores
+  method: GET
+  scopes:
+    - public
+  tags:
+    - gaming
+    - scores
+    - user
+  input_schema:
+    type: object
+    description: Parameters for listing user scores
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: osu_get_recent_activity
+  name: Get Recent Activity
+  description: |
+    Get recent activity for the authenticated user.
+  provider: osu
+  endpoint: /users/{user_id}/recent_activity
+  method: GET
+  scopes:
+    - identify
+  tags:
+    - gaming
+    - activity
+    - feed
+  input_schema:
+    type: object
+    description: Parameters for getting recent activity
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id

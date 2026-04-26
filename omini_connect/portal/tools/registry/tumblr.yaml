@@ -1,0 +1,187 @@
+# Tumblr Tools - Allowlist
+# Curated subset of Tumblr API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. tumblr_get_user_info           - Get authenticated user information
+# # 2. tumblr_list_blogs           - List all blogs for the user
+# # 3. tumblr_get_blog_info           - Get blog details
+# # 4. tumblr_list_posts           - List posts on a blog
+# # 5. tumblr_create_post           - Create a new blog post
+# # 6. tumblr_edit_post           - Edit an existing post
+# # 7. tumblr_delete_post           - Delete a post
+# # 8. tumblr_like_post           - Like a post
+# # 9. tumblr_unlike_post           - Unlike a post
+# # 10. tumblr_follow_blog           - Follow a blog
+
+- slug: tumblr_get_user_info
+  name: Get User Info
+  description: |
+    Get authenticated user information
+  provider: tumblr
+  endpoint: /v2/user/info
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for get user info
+    properties: {}
+    required: []
+
+- slug: tumblr_list_blogs
+  name: List Blogs
+  description: |
+    List all blogs for the user
+  provider: tumblr
+  endpoint: /v2/user/following
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for list blogs
+    properties: {}
+    required: []
+
+- slug: tumblr_get_blog_info
+  name: Get Blog Info
+  description: |
+    Get blog details
+  provider: tumblr
+  endpoint: /v2/blog/{blog_name}/info
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for get blog info
+    properties: {}
+    required: []
+
+- slug: tumblr_list_posts
+  name: List Posts
+  description: |
+    List posts on a blog
+  provider: tumblr
+  endpoint: /v2/blog/{blog_name}/posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for list posts
+    properties: {}
+    required: []
+
+- slug: tumblr_create_post
+  name: Create Post
+  description: |
+    Create a new blog post
+  provider: tumblr
+  endpoint: /v2/blog/{blog_name}/post
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for create post
+    properties: {}
+    required: []
+
+- slug: tumblr_edit_post
+  name: Edit Post
+  description: |
+    Edit an existing post
+  provider: tumblr
+  endpoint: /v2/blog/{blog_name}/post/{post_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for edit post
+    properties: {}
+    required: []
+
+- slug: tumblr_delete_post
+  name: Delete Post
+  description: |
+    Delete a post
+  provider: tumblr
+  endpoint: /v2/blog/{blog_name}/post/{post_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for delete post
+    properties: {}
+    required: []
+
+- slug: tumblr_like_post
+  name: Like Post
+  description: |
+    Like a post
+  provider: tumblr
+  endpoint: /v2/user/like
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for like post
+    properties: {}
+    required: []
+
+- slug: tumblr_unlike_post
+  name: Unlike Post
+  description: |
+    Unlike a post
+  provider: tumblr
+  endpoint: /v2/user/unlike
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for unlike post
+    properties: {}
+    required: []
+
+- slug: tumblr_follow_blog
+  name: Follow Blog
+  description: |
+    Follow a blog
+  provider: tumblr
+  endpoint: /v2/user/follow
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tumblr
+  input_schema:
+    type: object
+    description: Parameters for follow blog
+    properties: {}
+    required: []
+

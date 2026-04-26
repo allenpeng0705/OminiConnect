@@ -1,0 +1,237 @@
+- slug: railway_list_projects
+  name: List Projects
+  description: |
+    List all projects in your Railway account.
+  provider: railway
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return (default: 20)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: railway_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project by ID.
+  provider: railway
+  endpoint: /projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The ID of the project"
+    required:
+      - projectId
+
+- slug: railway_create_project
+  name: Create Project
+  description: |
+    Create a new project on Railway.
+  provider: railway
+  endpoint: /projects
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      description:
+        type: string
+        description: "Project description"
+      teamId:
+        type: string
+        description: "Team ID to associate with project"
+    required:
+      - name
+
+- slug: railway_list_deployments
+  name: List Deployments
+  description: |
+    List all deployments for a project or environment.
+  provider: railway
+  endpoint: /deployments
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+  input_schema:
+    type: object
+    description: Parameters for listing deployments
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      environmentId:
+        type: string
+        description: "Environment ID"
+      limit:
+        type: integer
+        description: "Maximum number of deployments to return"
+    required:
+      - projectId
+
+- slug: railway_get_deployment
+  name: Get Deployment
+  description: |
+    Get details for a specific deployment.
+  provider: railway
+  endpoint: /deployments/{deploymentId}
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+  input_schema:
+    type: object
+    description: Parameters for getting a deployment
+    properties:
+      deploymentId:
+        type: string
+        description: "The ID of the deployment"
+    required:
+      - deploymentId
+
+- slug: railway_get_deployment_logs
+  name: Get Deployment Logs
+  description: |
+    Get logs for a specific deployment.
+  provider: railway
+  endpoint: /deployments/{deploymentId}/logs
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for getting deployment logs
+    properties:
+      deploymentId:
+        type: string
+        description: "The ID of the deployment"
+      stream:
+        type: boolean
+        description: "Whether to stream logs (default: false)"
+    required:
+      - deploymentId
+
+- slug: railway_list_volumes
+  name: List Volumes
+  description: |
+    List all persistent volumes in a project.
+  provider: railway
+  endpoint: /volumes
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+  input_schema:
+    type: object
+    description: Parameters for listing volumes
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: railway_get_volume
+  name: Get Volume
+  description: |
+    Get details for a specific persistent volume.
+  provider: railway
+  endpoint: /volumes/{volumeId}
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+  input_schema:
+    type: object
+    description: Parameters for getting a volume
+    properties:
+      volumeId:
+        type: string
+        description: "The ID of the volume"
+    required:
+      - volumeId
+
+- slug: railway_create_volume
+  name: Create Volume
+  description: |
+    Create a new persistent volume in a project.
+  provider: railway
+  endpoint: /volumes
+  method: POST
+  scopes:
+    - volumes:write
+  tags:
+    - volumes
+  input_schema:
+    type: object
+    description: Parameters for creating a volume
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      name:
+        type: string
+        description: "Volume name"
+      sizeGb:
+        type: integer
+        description: "Size in GB"
+      filesystem:
+        type: string
+        description: "Filesystem type (ext4, xfs)"
+    required:
+      - projectId
+      - name
+
+- slug: railway_list_environments
+  name: List Environments
+  description: |
+    List all environments in a project.
+  provider: railway
+  endpoint: /projects/{projectId}/environments
+  method: GET
+  scopes:
+    - environments:read
+  tags:
+    - environments
+  input_schema:
+    type: object
+    description: Parameters for listing environments
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId

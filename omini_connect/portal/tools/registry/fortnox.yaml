@@ -1,0 +1,317 @@
+# Fortnox Tools - Allowlist
+# Curated subset of the Fortnox API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fortnox_list_invoices     - List all invoices
+# 2. fortnox_get_invoice        - Get details of a specific invoice
+# 3. fortnox_create_invoice    - Create a new invoice
+# 4. fortnox_list_customers     - List all customers
+# 5. fortnox_get_customer      - Get details of a specific customer
+# 6. fortnox_list_suppliers     - List all suppliers
+# 7. fortnox_get_supplier       - Get details of a specific supplier
+# 8. fortnox_list_products      - List all products
+# 9. fortnox_get_product        - Get details of a specific product
+# 10. fortnox_list_employees   - List all employees
+
+- slug: fortnox_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the accounting system.
+    Returns invoice details including number, customer, amount, and status.
+  provider: fortnox
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, printed, sent, paid, overdue"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      date_from:
+        type: string
+        description: "Filter by invoice date from (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "Filter by invoice date to (YYYY-MM-DD)"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: fortnox_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice including lines, totals, tax, and payment status.
+  provider: fortnox
+  endpoint: /invoices/{id}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: fortnox_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice for a customer with line items, pricing, and tax calculations.
+  provider: fortnox
+  endpoint: /invoices
+  method: POST
+  scopes:
+    - invoices:write
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+      invoice_date:
+        type: string
+        description: "Invoice date (YYYY-MM-DD)"
+      due_date:
+        type: string
+        description: "Payment due date (YYYY-MM-DD)"
+      lines:
+        type: array
+        description: "Invoice line items"
+        items:
+          type: object
+          properties:
+            article_id:
+              type: string
+              description: "Product/Article ID"
+            quantity:
+              type: number
+              description: "Quantity"
+            price:
+              type: number
+              description: "Unit price"
+      remarks:
+        type: string
+        description: "Invoice remarks/notes"
+    required:
+      - customer_id
+
+- slug: fortnox_list_customers
+  name: List Customers
+  description: |
+    List all customers in the accounting system.
+    Returns customer details including name, email, address, and balance.
+  provider: fortnox
+  endpoint: /customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      search:
+        type: string
+        description: "Search by name, email, or customer number"
+      price_list:
+        type: string
+        description: "Filter by price list"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: fortnox_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer including contact info, address, payment terms, and balance.
+  provider: fortnox
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: fortnox_list_suppliers
+  name: List Suppliers
+  description: |
+    List all suppliers in the accounting system.
+    Returns supplier details including name, email, address, and balance.
+  provider: fortnox
+  endpoint: /suppliers
+  method: GET
+  scopes:
+    - suppliers:read
+  tags:
+    - suppliers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing suppliers
+    properties:
+      search:
+        type: string
+        description: "Search by name or supplier number"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: fortnox_get_supplier
+  name: Get Supplier
+  description: |
+    Get details of a specific supplier including contact info, address, and payment terms.
+  provider: fortnox
+  endpoint: /suppliers/{id}
+  method: GET
+  scopes:
+    - suppliers:read
+  tags:
+    - suppliers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a supplier
+    properties:
+      id:
+        type: string
+        description: "Supplier ID"
+    required:
+      - id
+
+- slug: fortnox_list_products
+  name: List Products
+  description: |
+    List all products and articles in the inventory.
+    Returns product details including name, price, stock level, and unit.
+  provider: fortnox
+  endpoint: /products
+  method: GET
+  scopes:
+    - products:read
+  tags:
+    - products
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      search:
+        type: string
+        description: "Search by name, article number, or description"
+      warehouse_id:
+        type: string
+        description: "Filter by warehouse ID"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: fortnox_get_product
+  name: Get Product
+  description: |
+    Get details of a specific product including pricing, stock levels, and unit of measure.
+  provider: fortnox
+  endpoint: /products/{id}
+  method: GET
+  scopes:
+    - products:read
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: fortnox_list_employees
+  name: List Employees
+  description: |
+    List all employees in the system.
+    Returns employee details including name, email, department, and employment type.
+  provider: fortnox
+  endpoint: /employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      search:
+        type: string
+        description: "Search by name or employee ID"
+      department:
+        type: string
+        description: "Filter by department"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []

@@ -1,0 +1,291 @@
+# Slite Tools - Allowlist
+# Curated subset of Slite API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. slite_list_notes              - List notes
+# 2. slite_get_note                - Get note details
+# 3. slite_create_note             - Create a new note
+# 4. slite_list_channels           - List channels
+# 5. slite_get_channel             - Get channel details
+# 6. slite_list_members            - List members
+# 7. slite_get_member              - Get member details
+# 8. slite_search_notes            - Search notes
+# 9. slite_share_note              - Share a note
+# 10. slite_update_permissions      - Update note permissions
+
+- slug: slite_list_notes
+  name: List Notes
+  description: |
+    List all notes in Slite. Filter by channel, status, or keyword.
+  provider: slite
+  endpoint: /api/v1/notes
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      channel_id:
+        type: string
+        description: "Filter by channel ID"
+      status:
+        type: string
+        description: "Filter by status (active, archived)"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: slite_get_note
+  name: Get Note
+  description: |
+    Get detailed information about a specific note including title, content, author, and timestamps.
+  provider: slite
+  endpoint: /api/v1/notes/{id}
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+    required:
+      - id
+
+- slug: slite_create_note
+  name: Create Note
+  description: |
+    Create a new note in Slite. Set title, content, and channel.
+  provider: slite
+  endpoint: /api/v1/notes
+  method: POST
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      title:
+        type: string
+        description: "Note title"
+      content:
+        type: string
+        description: "Note content (Markdown)"
+      channel_id:
+        type: string
+        description: "Channel ID"
+    required:
+      - title
+
+- slug: slite_list_channels
+  name: List Channels
+  description: |
+    List all channels in Slite. Filter by name or type.
+  provider: slite
+  endpoint: /api/v1/channels
+  method: GET
+  scopes:
+    - channels:read
+  tags:
+    - channels
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      type:
+        type: string
+        description: "Filter by channel type"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: slite_get_channel
+  name: Get Channel
+  description: |
+    Get detailed information about a specific channel including name, description, and member count.
+  provider: slite
+  endpoint: /api/v1/channels/{id}
+  method: GET
+  scopes:
+    - channels:read
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      id:
+        type: string
+        description: "Channel ID"
+    required:
+      - id
+
+- slug: slite_list_members
+  name: List Members
+  description: |
+    List all members in Slite. Filter by role or status.
+  provider: slite
+  endpoint: /api/v1/members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      role:
+        type: string
+        description: "Filter by role"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: slite_get_member
+  name: Get Member
+  description: |
+    Get detailed information about a specific member including name, email, and role.
+  provider: slite
+  endpoint: /api/v1/members/{id}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      id:
+        type: string
+        description: "Member ID"
+    required:
+      - id
+
+- slug: slite_search_notes
+  name: Search Notes
+  description: |
+    Search notes by keyword. Returns matching notes with relevance scores.
+  provider: slite
+  endpoint: /api/v1/notes/search
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching notes
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      channel_id:
+        type: string
+        description: "Limit search to channel ID"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required:
+      - q
+
+- slug: slite_share_note
+  name: Share Note
+  description: |
+    Share a note with specific members or make it publicly accessible.
+  provider: slite
+  endpoint: /api/v1/notes/{id}/share
+  method: POST
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - share
+  input_schema:
+    type: object
+    description: Parameters for sharing a note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+      member_ids:
+        type: array
+        items:
+          type: string
+        description: "Member IDs to share with"
+      public:
+        type: boolean
+        description: "Make note publicly accessible"
+    required:
+      - id
+
+- slug: slite_update_permissions
+  name: Update Permissions
+  description: |
+    Update permissions for a note. Change access level for specific members.
+  provider: slite
+  endpoint: /api/v1/notes/{id}/permissions
+  method: PUT
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - permissions
+  input_schema:
+    type: object
+    description: Parameters for updating permissions
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+      member_id:
+        type: string
+        description: "Member ID"
+      permission:
+        type: string
+        description: "Permission level (view, edit, admin)"
+    required:
+      - id
+      - member_id
+      - permission

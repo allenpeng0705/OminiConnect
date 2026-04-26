@@ -1,0 +1,395 @@
+# ByteDance (TikTok Business) Tools - Allowlist
+# Curated subset of the TikTok Business API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bytedance_list_ad_campaigns    - List advertising campaigns
+# 2. bytedance_get_ad_campaign      - Get campaign details
+# 3. bytedance_create_ad_campaign  - Create a new advertising campaign
+# 4. bytedance_list_ad_groups      - List ad groups within a campaign
+# 5. bytedance_get_ad_group        - Get ad group details
+# 6. bytedance_create_ad           - Create a new ad
+# 7. bytedance_list_ads            - List ads within an ad group
+# 8. bytedance_get_ad              - Get ad details
+# 9. bytedance_get_campaign_report - Get performance report for a campaign
+# 10. bytedance_list_audiences     - List custom audiences
+
+- slug: bytedance_list_ad_campaigns
+  name: List Ad Campaigns
+  description: |
+    List all advertising campaigns in the user's TikTok Ads account.
+    Returns campaign details including status, budget, and performance metrics.
+  provider: bytedance
+  endpoint: /campaign/list
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - campaigns
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      status:
+        type: string
+        description: "Filter by campaign status"
+        enum: [CAMPAIGN_STATUS_ENABLE, CAMPAIGN_STATUS_DISABLE]
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required:
+      - advertiser_id
+
+- slug: bytedance_get_ad_campaign
+  name: Get Ad Campaign
+  description: |
+    Get detailed information about a specific advertising campaign.
+    Includes budget, schedule, targeting, and current status.
+  provider: bytedance
+  endpoint: /campaign/get
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - campaigns
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      campaign_id:
+        type: string
+        description: "Campaign ID to retrieve"
+    required:
+      - advertiser_id
+      - campaign_id
+
+- slug: bytedance_create_ad_campaign
+  name: Create Ad Campaign
+  description: |
+    Create a new advertising campaign in TikTok Ads.
+    Set budget, scheduling, and campaign objectives.
+  provider: bytedance
+  endpoint: /campaign/create
+  method: POST
+  scopes:
+    - advertiser:write
+  tags:
+    - advertising
+    - campaigns
+    - create
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      campaign_name:
+        type: string
+        description: "Campaign name (required)"
+      objective:
+        type: string
+        description: "Campaign objective"
+        enum: [REACH, VIDEO_VIEWS, TRAFFIC, APP_INSTALL, CONVERSION, LEAD_GENERATION]
+      budget_mode:
+        type: string
+        description: "Budget mode: BUDGET_MODE_DAY or BUDGET_MODE_TOTAL"
+        enum: [BUDGET_MODE_DAY, BUDGET_MODE_TOTAL]
+      budget:
+        type: number
+        description: "Campaign budget (minimum 50)"
+      status:
+        type: string
+        description: "Campaign status"
+        enum: [CAMPAIGN_STATUS_ENABLE, CAMPAIGN_STATUS_DISABLE]
+        default: CAMPAIGN_STATUS_ENABLE
+    required:
+      - advertiser_id
+      - campaign_name
+      - objective
+
+- slug: bytedance_list_ad_groups
+  name: List Ad Groups
+  description: |
+    List all ad groups within a specific campaign.
+    Ad groups contain ads and define targeting, placement, and scheduling.
+  provider: bytedance
+  endpoint: /adgroup/list
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - ad groups
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for listing ad groups
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+      status:
+        type: string
+        description: "Filter by ad group status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - advertiser_id
+
+- slug: bytedance_get_ad_group
+  name: Get Ad Group
+  description: |
+    Get detailed information about a specific ad group.
+    Includes targeting, bidding, placement, and performance data.
+  provider: bytedance
+  endpoint: /adgroup/get
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - ad groups
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for getting an ad group
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      adgroup_id:
+        type: string
+        description: "Ad group ID to retrieve"
+    required:
+      - advertiser_id
+      - adgroup_id
+
+- slug: bytedance_create_ad
+  name: Create Ad
+  description: |
+    Create a new ad within an ad group.
+    Define creative assets, ad copy, and targeting for the specific ad.
+  provider: bytedance
+  endpoint: /ad/create
+  method: POST
+  scopes:
+    - advertiser:write
+  tags:
+    - advertising
+    - ads
+    - create
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for creating an ad
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      adgroup_id:
+        type: string
+        description: "Ad group ID to add the ad to"
+      ad_name:
+        type: string
+        description: "Ad name (required)"
+      creative_type:
+        type: string
+        description: "Creative type"
+        enum: [VIDEO, IMAGE]
+      video_id:
+        type: string
+        description: "Video ID for video ads"
+      image_ids:
+        type: array
+        items:
+          type: string
+        description: "Image IDs for image ads"
+      ad_text:
+        type: string
+        description: "Ad copy text"
+      call_to_action:
+        type: string
+        description: "Call to action button"
+        enum: [DOWNLOAD, SHOP_NOW, LEARN_MORE, SIGN_UP, CONTACT_US]
+    required:
+      - advertiser_id
+      - adgroup_id
+      - ad_name
+
+- slug: bytedance_list_ads
+  name: List Ads
+  description: |
+    List all ads within a specific ad group.
+    Use this to view ad performance and status within a campaign structure.
+  provider: bytedance
+  endpoint: /ad/list
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - ads
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      adgroup_id:
+        type: string
+        description: "Filter by ad group ID"
+      status:
+        type: string
+        description: "Filter by ad status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - advertiser_id
+
+- slug: bytedance_get_ad
+  name: Get Ad
+  description: |
+    Get detailed information about a specific ad.
+    Includes creative assets, targeting, and real-time performance metrics.
+  provider: bytedance
+  endpoint: /ad/get
+  method: GET
+  scopes:
+    - advertiser:read
+  tags:
+    - advertising
+    - ads
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for getting an ad
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      ad_id:
+        type: string
+        description: "Ad ID to retrieve"
+    required:
+      - advertiser_id
+      - ad_id
+
+- slug: bytedance_get_campaign_report
+  name: Get Campaign Report
+  description: |
+    Get performance report for a specific campaign including impressions, clicks, spend, and conversions.
+    Use this to analyze campaign effectiveness and ROI.
+  provider: bytedance
+  endpoint: /reports/get
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reporting
+    - analytics
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for getting campaign report
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      campaign_id:
+        type: string
+        description: "Campaign ID to get report for"
+      level:
+        type: string
+        description: "Report granularity level"
+        enum: [CAMPAIGN, ADGROUP, AD]
+        default: CAMPAIGN
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD format)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD format)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - advertiser_id
+      - campaign_id
+      - start_date
+      - end_date
+
+- slug: bytedance_list_audiences
+  name: List Audiences
+  description: |
+    List custom audiences created for targeted advertising.
+    Audiences can be based on user interactions, customer lists, or lookalike profiles.
+  provider: bytedance
+  endpoint: /audience/list
+  method: GET
+  scopes:
+    - audience:read
+  tags:
+    - advertising
+    - audiences
+    - targeting
+    - tiktok
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties:
+      advertiser_id:
+        type: string
+        description: "Advertiser account ID"
+      audience_type:
+        type: string
+        description: "Filter by audience type"
+        enum: [CUSTOM, LOOKALIKE, ENGAGEMENT, VIDEO_VIEW, WEB_VISITOR]
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - advertiser_id

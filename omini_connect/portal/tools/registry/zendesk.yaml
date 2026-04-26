@@ -1,0 +1,254 @@
+- slug: zendesk_list_tickets
+  name: List Tickets
+  description: |
+    Retrieves a paginated list of tickets from Zendesk.
+  provider: zendesk
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page (default 100)"
+      status:
+        type: string
+        description: "Filter by status (new, open, pending, hold, solved, closed)"
+      sort_by:
+        type: string
+        description: "Sort field (created_at, updated_at, priority, status)"
+      sort_order:
+        type: string
+        description: "Sort order (asc, desc)"
+    required: []
+
+- slug: zendesk_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieves a single ticket by its ID.
+  provider: zendesk
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+    required:
+      - id
+
+- slug: zendesk_create_ticket
+  name: Create Ticket
+  description: |
+    Creates a new ticket in Zendesk.
+  provider: zendesk
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "The ticket subject"
+      comment:
+        type: object
+        description: "Ticket comment/body"
+      requester_id:
+        type: integer
+        description: "The requester user ID"
+      priority:
+        type: string
+        description: "Priority (low, normal, high, urgent)"
+      tags:
+        type: array
+        description: "List of tags"
+    required:
+      - subject
+      - comment
+
+- slug: zendesk_update_ticket
+  name: Update Ticket
+  description: |
+    Updates an existing ticket.
+  provider: zendesk
+  endpoint: /tickets/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for updating a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+      subject:
+        type: string
+        description: "Updated subject"
+      comment:
+        type: object
+        description: "Additional comment"
+      status:
+        type: string
+        description: "Updated status"
+      priority:
+        type: string
+        description: "Updated priority"
+    required:
+      - id
+
+- slug: zendesk_list_users
+  name: List Users
+  description: |
+    Retrieves a list of users from Zendesk.
+  provider: zendesk
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      role:
+        type: string
+        description: "Filter by role (end-user, agent, admin)"
+    required: []
+
+- slug: zendesk_get_user
+  name: Get User
+  description: |
+    Retrieves a single user by their ID.
+  provider: zendesk
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "The unique user ID"
+    required:
+      - id
+
+- slug: zendesk_list_views
+  name: List Views
+  description: |
+    Retrieves a list of views from Zendesk.
+  provider: zendesk
+  endpoint: /views
+  method: GET
+  scopes:
+    - read
+  tags:
+    - views
+  input_schema:
+    type: object
+    description: Parameters for listing views
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: zendesk_get_view
+  name: Get View
+  description: |
+    Retrieves a single view by its ID.
+  provider: zendesk
+  endpoint: /views/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - views
+  input_schema:
+    type: object
+    description: Parameters for getting a view
+    properties:
+      id:
+        type: integer
+        description: "The unique view ID"
+    required:
+      - id
+
+- slug: zendesk_list_macros
+  name: List Macros
+  description: |
+    Retrieves a list of macros from Zendesk.
+  provider: zendesk
+  endpoint: /macros
+  method: GET
+  scopes:
+    - read
+  tags:
+    - macros
+  input_schema:
+    type: object
+    description: Parameters for listing macros
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: zendesk_get_macro
+  name: Get Macro
+  description: |
+    Retrieves a single macro by its ID.
+  provider: zendesk
+  endpoint: /macros/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - macros
+  input_schema:
+    type: object
+    description: Parameters for getting a macro
+    properties:
+      id:
+        type: integer
+        description: "The unique macro ID"
+    required:
+      - id

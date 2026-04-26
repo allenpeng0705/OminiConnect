@@ -1,0 +1,249 @@
+# Next Cloud OCS Tools - Allowlist
+# Curated subset of Next Cloud OCS API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. next_cloud_list_files             - List files in folder
+# 2. next_cloud_get_file              - Get file metadata
+# 3. next_cloud_create_folder         - Create folder
+# 4. next_cloud_delete                - Delete file or folder
+# 5. next_cloud_move                  - Move file or folder
+# 6. next_cloud_share                 - Share file or folder
+# 7. next_cloud_list_shares           - List shares
+# 8. next_cloud_list_users            - List users
+# 9. next_cloud_get_user              - Get user details
+# 10. next_cloud_list_groups          - List groups
+
+- slug: next_cloud_list_files
+  name: List Files
+  description: |
+    List files and folders in a Next Cloud directory.
+  provider: next-cloud-ocs
+  endpoint: /files/{user}/home
+  method: GET
+  scopes:
+    - files
+  tags:
+    - storage
+    - files
+    - browse
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      path:
+        type: string
+        description: "Folder path (default: /)"
+        default: /
+    required: []
+
+- slug: next_cloud_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file or folder.
+  provider: next-cloud-ocs
+  endpoint: /files/{user}/home/{path}
+  method: GET
+  scopes:
+    - files
+  tags:
+    - storage
+    - files
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting file metadata
+    properties:
+      path:
+        type: string
+        description: "File or folder path"
+    required:
+      - path
+
+- slug: next_cloud_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in Next Cloud.
+  provider: next-cloud-ocs
+  endpoint: /files/{user}/home/{path}
+  method: MKCOL
+  scopes:
+    - files
+  tags:
+    - storage
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      path:
+        type: string
+        description: "Folder path to create"
+    required:
+      - path
+
+- slug: next_cloud_delete
+  name: Delete
+  description: |
+    Delete a file or folder in Next Cloud.
+  provider: next-cloud-ocs
+  endpoint: /files/{user}/home/{path}
+  method: DELETE
+  scopes:
+    - files
+  tags:
+    - storage
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      path:
+        type: string
+        description: "File or folder path to delete"
+    required:
+      - path
+
+- slug: next_cloud_move
+  name: Move
+  description: |
+    Move a file or folder to a new location.
+  provider: next-cloud-ocs
+  endpoint: /files/{user}/home/{path}
+  method: MOVE
+  scopes:
+    - files
+  tags:
+    - storage
+    - files
+    - move
+  input_schema:
+    type: object
+    description: Parameters for moving a file
+    properties:
+      path:
+        type: string
+        description: "Source path"
+      destination:
+        type: string
+        description: "Destination path"
+    required:
+      - path
+      - destination
+
+- slug: next_cloud_share
+  name: Share
+  description: |
+    Share a file or folder with other users.
+  provider: next-cloud-ocs
+  endpoint: /shares
+  method: POST
+  scopes:
+    - shares
+  tags:
+    - storage
+    - sharing
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for sharing
+    properties:
+      path:
+        type: string
+        description: "File or folder path to share"
+      share_type:
+        type: integer
+        description: "Share type (0=user, 1=group, 3=public)"
+      permissions:
+        type: integer
+        description: "Permissions (1=read, 2=write, 31=all)"
+    required:
+      - path
+      - share_type
+
+- slug: next_cloud_list_shares
+  name: List Shares
+  description: |
+    List all shared files and folders.
+  provider: next-cloud-ocs
+  endpoint: /shares
+  method: GET
+  scopes:
+    - shares
+  tags:
+    - storage
+    - sharing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing shares
+    properties:
+      shared_with_me:
+        type: boolean
+        description: "List shares with me (default true)"
+        default: true
+    required: []
+
+- slug: next_cloud_list_users
+  name: List Users
+  description: |
+    List all users in Next Cloud.
+  provider: next-cloud-ocs
+  endpoint: /cloud/users
+  method: GET
+  scopes:
+    - users
+  tags:
+    - admin
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: next_cloud_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: next-cloud-ocs
+  endpoint: /cloud/users/{userId}
+  method: GET
+  scopes:
+    - users
+  tags:
+    - admin
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: next_cloud_list_groups
+  name: List Groups
+  description: |
+    List all groups in Next Cloud.
+  provider: next-cloud-ocs
+  endpoint: /cloud/groups
+  method: GET
+  scopes:
+    - groups
+  tags:
+    - admin
+    - groups
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []

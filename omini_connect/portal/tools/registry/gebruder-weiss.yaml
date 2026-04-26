@@ -1,0 +1,242 @@
+# Gebruder Weiss Tools - Allowlist
+# Curated subset of Gebruder Weiss API for AI agent use.
+# OAUTH2_CC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gebruder_weiss_list_shipments      - List shipments
+# 2. gebruder_weiss_get_shipment       - Get shipment details
+# 3. gebruder_weiss_list_orders        - List orders
+# 4. gebruder_weiss_get_order          - Get order details
+# 5. gebruder_weiss_list_tracking      - List tracking events
+# 6. gebruder_weiss_track_shipment     - Track shipment
+# 7. gebruder_weiss_list_pickups       - List pickups
+# 8. gebruder_weiss_create_pickup      - Create pickup request
+# 9. gebruder_weiss_list_addresses     - List addresses
+# 10. gebruder_weiss_estimate_rate     - Get shipping estimate
+
+- slug: gebruder_weiss_list_shipments
+  name: List Shipments
+  description: |
+    List all shipments in the system.
+  provider: gebruder-weiss
+  endpoint: /shipments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - shipments
+    - list
+    - logistics
+  input_schema:
+    type: object
+    description: Parameters for listing shipments
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gebruder_weiss_get_shipment
+  name: Get Shipment
+  description: |
+    Get detailed information about a specific shipment.
+  provider: gebruder-weiss
+  endpoint: /shipments/{shipmentId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - shipments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a shipment
+    properties:
+      shipmentId:
+        type: string
+        description: "Shipment ID"
+    required:
+      - shipmentId
+
+- slug: gebruder_weiss_list_orders
+  name: List Orders
+  description: |
+    List all orders in the system.
+  provider: gebruder-weiss
+  endpoint: /orders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: gebruder_weiss_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order.
+  provider: gebruder-weiss
+  endpoint: /orders/{orderId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      orderId:
+        type: string
+        description: "Order ID"
+    required:
+      - orderId
+
+- slug: gebruder_weiss_list_tracking
+  name: List Tracking
+  description: |
+    List tracking events for shipments.
+  provider: gebruder-weiss
+  endpoint: /tracking
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tracking
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tracking events
+    properties:
+      shipmentId:
+        type: string
+        description: "Shipment ID"
+    required: []
+
+- slug: gebruder_weiss_track_shipment
+  name: Track Shipment
+  description: |
+    Track a shipment by tracking number.
+  provider: gebruder-weiss
+  endpoint: /tracking/{trackingNumber}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tracking
+    - shipments
+  input_schema:
+    type: object
+    description: Parameters for tracking a shipment
+    properties:
+      trackingNumber:
+        type: string
+        description: "Tracking number"
+    required:
+      - trackingNumber
+
+- slug: gebruder_weiss_list_pickups
+  name: List Pickups
+  description: |
+    List scheduled pickup requests.
+  provider: gebruder-weiss
+  endpoint: /pickups
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pickups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pickups
+    properties: {}
+
+- slug: gebruder_weiss_create_pickup
+  name: Create Pickup
+  description: |
+    Create a new pickup request.
+  provider: gebruder-weiss
+  endpoint: /pickups
+  method: POST
+  scopes:
+    - write
+  tags:
+    - pickups
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a pickup
+    properties:
+      address:
+        type: string
+        description: "Pickup address"
+      date:
+        type: string
+        description: "Pickup date (YYYY-MM-DD)"
+      shipmentId:
+        type: string
+        description: "Associated shipment ID"
+    required:
+      - address
+      - date
+
+- slug: gebruder_weiss_list_addresses
+  name: List Addresses
+  description: |
+    List saved addresses in the address book.
+  provider: gebruder-weiss
+  endpoint: /addresses
+  method: GET
+  scopes:
+    - read
+  tags:
+    - addresses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing addresses
+    properties: {}
+
+- slug: gebruder_weiss_estimate_rate
+  name: Estimate Rate
+  description: |
+    Get shipping rate estimate for a route.
+  provider: gebruder-weiss
+  endpoint: /rates
+  method: POST
+  scopes:
+    - read
+  tags:
+    - rates
+    - shipping
+  input_schema:
+    type: object
+    description: Parameters for estimating a rate
+    properties:
+      origin:
+        type: string
+        description: "Origin postal code"
+      destination:
+        type: string
+        description: "Destination postal code"
+      weight:
+        type: number
+        description: "Shipment weight"
+    required:
+      - origin
+      - destination

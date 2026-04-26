@@ -1,0 +1,266 @@
+# Orange Logic Tools - Allowlist
+# Curated subset of Orange Logic Digital Asset Management API for AI agent use.
+# Two-Step (Client Credentials) via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. orange_list_assets               - List digital assets
+# 2. orange_get_asset                - Get asset details
+# 3. orange_upload_asset             - Upload asset
+# 4. orange_update_asset             - Update asset metadata
+# 5. orange_delete_asset             - Delete asset
+# 6. orange_list_collections         - List collections
+# 7. orange_create_collection        - Create collection
+# 8. orange_add_to_collection       - Add asset to collection
+# 9. orange_search_assets           - Search assets
+# 10. orange_get_download_url       - Get download URL
+
+- slug: orange_list_assets
+  name: List Assets
+  description: |
+    List all digital assets in Orange Logic DAM.
+  provider: orange-logic
+  endpoint: /webapi/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - dam
+    - assets
+    - digital-assets
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      limit:
+        type: integer
+        description: "Number of assets"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: orange_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information for a specific asset.
+  provider: orange-logic
+  endpoint: /webapi/assets/{id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - dam
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - id
+
+- slug: orange_upload_asset
+  name: Upload Asset
+  description: |
+    Upload a new digital asset.
+  provider: orange-logic
+  endpoint: /webapi/assets
+  method: POST
+  scopes:
+    - assets:write
+  tags:
+    - dam
+    - assets
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading an asset
+    properties:
+      name:
+        type: string
+        description: "Asset name"
+      file:
+        type: string
+        description: "File content (base64-encoded)"
+      collection_id:
+        type: integer
+        description: "Collection ID"
+    required:
+      - name
+      - file
+
+- slug: orange_update_asset
+  name: Update Asset
+  description: |
+    Update asset metadata.
+  provider: orange-logic
+  endpoint: /webapi/assets/{id}
+  method: PUT
+  scopes:
+    - assets:write
+  tags:
+    - dam
+    - assets
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an asset
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+      name:
+        type: string
+        description: "Asset name"
+      metadata:
+        type: object
+        description: "Asset metadata"
+    required:
+      - id
+
+- slug: orange_delete_asset
+  name: Delete Asset
+  description: |
+    Delete a digital asset.
+  provider: orange-logic
+  endpoint: /webapi/assets/{id}
+  method: DELETE
+  scopes:
+    - assets:write
+  tags:
+    - dam
+    - assets
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an asset
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - id
+
+- slug: orange_list_collections
+  name: List Collections
+  description: |
+    List all collections in Orange Logic DAM.
+  provider: orange-logic
+  endpoint: /webapi/collections
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - dam
+    - collections
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties: {}
+    required: []
+
+- slug: orange_create_collection
+  name: Create Collection
+  description: |
+    Create a new collection.
+  provider: orange-logic
+  endpoint: /webapi/collections
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - dam
+    - collections
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a collection
+    properties:
+      name:
+        type: string
+        description: "Collection name"
+      description:
+        type: string
+        description: "Collection description"
+    required:
+      - name
+
+- slug: orange_add_to_collection
+  name: Add to Collection
+  description: |
+    Add an asset to a collection.
+  provider: orange-logic
+  endpoint: /webapi/collections/{collectionId}/assets
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - dam
+    - collections
+    - assets
+  input_schema:
+    type: object
+    description: Parameters for adding asset to collection
+    properties:
+      collectionId:
+        type: integer
+        description: "Collection ID"
+      assetId:
+        type: integer
+        description: "Asset ID"
+    required:
+      - collectionId
+      - assetId
+
+- slug: orange_search_assets
+  name: Search Assets
+  description: |
+    Search for digital assets.
+  provider: orange-logic
+  endpoint: /webapi/assets/search
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - dam
+    - search
+    - assets
+  input_schema:
+    type: object
+    description: Parameters for searching assets
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query
+
+- slug: orange_get_download_url
+  name: Get Download URL
+  description: |
+    Get a download URL for an asset.
+  provider: orange-logic
+  endpoint: /webapi/assets/{id}/download
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - dam
+    - assets
+    - download
+  input_schema:
+    type: object
+    description: Parameters for getting download URL
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - id

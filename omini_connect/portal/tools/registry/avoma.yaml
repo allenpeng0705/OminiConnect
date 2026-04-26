@@ -1,0 +1,262 @@
+# Avoma Tools - Allowlist
+# Curated subset of Avoma API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. avoma_list_users             - List users
+# 2. avoma_get_user               - Get user details
+# 3. avoma_list_meetings           - List meetings
+# 4. avoma_get_meeting            - Get meeting details
+# 5. avoma_list_recordings         - List recordings
+# 6. avoma_get_recording          - Get recording details
+# 7. avoma_list_accounts          - List accounts
+# 8. avoma_get_account            - Get account details
+# 9. avoma_list_collaborators     - List collaborators
+# 10. avoma_search_content         - Search across meetings and recordings
+
+- slug: avoma_list_users
+  name: List Users
+  description: |
+    List all users in the Avoma organization.
+  provider: avoma
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Users per page"
+        default: 20
+    required: []
+
+- slug: avoma_get_user
+  name: Get User
+  description: |
+    Get details for a specific user including role and settings.
+  provider: avoma
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: avoma_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings in the organization.
+  provider: avoma
+  endpoint: /v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      userId:
+        type: string
+        description: "Filter by user ID"
+      startDate:
+        type: string
+        description: "Filter by start date (ISO 8601)"
+      endDate:
+        type: string
+        description: "Filter by end date (ISO 8601)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Meetings per page"
+        default: 20
+    required: []
+
+- slug: avoma_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting including participants and notes.
+  provider: avoma
+  endpoint: /v1/meetings/{meetingId}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: avoma_list_recordings
+  name: List Recordings
+  description: |
+    List all meeting recordings.
+  provider: avoma
+  endpoint: /v1/recordings
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - meetings
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      meetingId:
+        type: string
+        description: "Filter by meeting ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: avoma_get_recording
+  name: Get Recording
+  description: |
+    Get details of a specific recording including transcript and highlights.
+  provider: avoma
+  endpoint: /v1/recordings/{recordingId}
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recordingId:
+        type: string
+        description: "Recording ID"
+    required:
+      - recordingId
+
+- slug: avoma_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the organization.
+  provider: avoma
+  endpoint: /v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: avoma_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: avoma
+  endpoint: /v1/accounts/{accountId}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: avoma_list_collaborators
+  name: List Collaborators
+  description: |
+    List all collaborators in the organization.
+  provider: avoma
+  endpoint: /v1/collaborators
+  method: GET
+  scopes: []
+  tags:
+    - collaborators
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing collaborators
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: avoma_search_content
+  name: Search Content
+  description: |
+    Search across meetings, recordings, transcripts, and notes.
+  provider: avoma
+  endpoint: /v1/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - content
+  input_schema:
+    type: object
+    description: Parameters for searching content
+    properties:
+      query:
+        type: string
+        description: "Search query string"
+      type:
+        type: string
+        description: "Content type filter: meeting, recording, transcript, all"
+        default: all
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - query

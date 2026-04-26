@@ -1,0 +1,234 @@
+# Cursor Admin Tools - Allowlist
+# Curated subset of the Cursor Admin API for AI agent use.
+# BASIC auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cursor_admin_list_users           - List workspace users
+# 2. cursor_admin_get_user           - Get user details
+# 3. cursor_admin_list_projects      - List workspace projects
+# 4. cursor_admin_get_project        - Get project details
+# 5. cursor_admin_list_teams         - List teams
+# 6. cursor_admin_get_team           - Get team details
+# 7. cursor_admin_list_invitations   - List pending invitations
+# 8. cursor_admin_create_invitation  - Create team invitation
+# 9. cursor_admin_list_settings      - List workspace settings
+# 10. cursor_admin_get_settings      - Get workspace settings
+
+- slug: cursor_admin_list_users
+  name: List Users
+  description: |
+    List all users in the Cursor workspace.
+  provider: cursor-admin
+  endpoint: /teams/members
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: cursor_admin_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including role and status.
+  provider: cursor-admin
+  endpoint: /teams/members/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: cursor_admin_list_projects
+  name: List Projects
+  description: |
+    List all projects in the Cursor workspace.
+  provider: cursor-admin
+  endpoint: /teams/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: cursor_admin_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including owner and settings.
+  provider: cursor-admin
+  endpoint: /teams/projects/{project_id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: cursor_admin_list_teams
+  name: List Teams
+  description: |
+    List all teams in the Cursor workspace.
+  provider: cursor-admin
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: cursor_admin_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team including members and settings.
+  provider: cursor-admin
+  endpoint: /teams/{team_id}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id
+
+- slug: cursor_admin_list_invitations
+  name: List Invitations
+  description: |
+    List all pending team invitations.
+  provider: cursor-admin
+  endpoint: /teams/invitations
+  method: GET
+  scopes: []
+  tags:
+    - invitations
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invitations
+    properties: {}
+
+- slug: cursor_admin_create_invitation
+  name: Create Invitation
+  description: |
+    Create and send a team invitation via email.
+  provider: cursor-admin
+  endpoint: /teams/invitations
+  method: POST
+  scopes: []
+  tags:
+    - invitations
+    - teams
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invitation
+    properties:
+      email:
+        type: string
+        description: "Email address to invite"
+      team_id:
+        type: string
+        description: "Team ID to invite to"
+      role:
+        type: string
+        description: "Role: member, admin"
+        default: member
+    required:
+      - email
+      - team_id
+
+- slug: cursor_admin_list_settings
+  name: List Settings
+  description: |
+    List all workspace settings and configurations.
+  provider: cursor-admin
+  endpoint: /teams/settings
+  method: GET
+  scopes: []
+  tags:
+    - settings
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing settings
+    properties: {}
+
+- slug: cursor_admin_get_settings
+  name: Get Settings
+  description: |
+    Get detailed workspace settings.
+  provider: cursor-admin
+  endpoint: /teams/settings/{setting_key}
+  method: GET
+  scopes: []
+  tags:
+    - settings
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties:
+      setting_key:
+        type: string
+        description: "Setting key to retrieve"
+    required:
+      - setting_key

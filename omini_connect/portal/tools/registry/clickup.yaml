@@ -1,0 +1,272 @@
+- slug: clickup_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of tasks, optionally filtered by list or other criteria.
+  provider: clickup
+  endpoint: /list/{listId}/task
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Path and query parameters for listing tasks
+    properties:
+      listId:
+        type: string
+        description: "Filter tasks by list ID"
+      spaceId:
+        type: string
+        description: "Filter tasks by space ID"
+      projectId:
+        type: string
+        description: "Filter tasks by project ID"
+      status:
+        type: string
+        description: "Filter by task status"
+      include_closed:
+        type: boolean
+        description: "Include closed tasks"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - listId
+
+- slug: clickup_get_task
+  name: Get Task
+  description: |
+    Retrieve details of a specific task by ID.
+  provider: clickup
+  endpoint: /task/{taskId}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Path parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "The unique ID of the task"
+    required:
+      - taskId
+
+- slug: clickup_create_task
+  name: Create Task
+  description: |
+    Create a new task in a list.
+  provider: clickup
+  endpoint: /list/{listId}/task
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Body parameters for creating a task
+    properties:
+      listId:
+        type: string
+        description: "List ID to create the task in"
+      name:
+        type: string
+        description: "Task name"
+      description:
+        type: string
+        description: "Task description"
+      assignees:
+        type: array
+        items:
+          type: string
+        description: "List of user IDs to assign"
+      status:
+        type: string
+        description: "Task status"
+      priority:
+        type: integer
+        description: "Task priority (1-4)"
+      dueDate:
+        type: string
+        description: "Task due date (Unix timestamp in milliseconds)"
+    required:
+      - listId
+      - name
+
+- slug: clickup_update_task
+  name: Update Task
+  description: |
+    Update an existing task with new values.
+  provider: clickup
+  endpoint: /task/{taskId}
+  method: PUT
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      taskId:
+        type: string
+        description: "The unique ID of the task"
+      name:
+        type: string
+        description: "New task name"
+      description:
+        type: string
+        description: "New task description"
+      status:
+        type: string
+        description: "New task status"
+      priority:
+        type: integer
+        description: "New task priority (1-4)"
+      dueDate:
+        type: string
+        description: "New due date (Unix timestamp in milliseconds)"
+    required:
+      - taskId
+
+- slug: clickup_list_lists
+  name: List Lists
+  description: |
+    Retrieve a list of lists, optionally filtered by folder or space.
+  provider: clickup
+  endpoint: /space/{spaceId}/list
+  method: GET
+  scopes:
+    - lists:read
+  tags:
+    - lists
+  input_schema:
+    type: object
+    description: Path and query parameters for listing lists
+    properties:
+      spaceId:
+        type: string
+        description: "Filter by space ID"
+      folderId:
+        type: string
+        description: "Filter by folder ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - spaceId
+
+- slug: clickup_get_list
+  name: Get List
+  description: |
+    Retrieve details of a specific list by ID.
+  provider: clickup
+  endpoint: /list/{listId}
+  method: GET
+  scopes:
+    - lists:read
+  tags:
+    - lists
+  input_schema:
+    type: object
+    description: Path parameters for getting a list
+    properties:
+      listId:
+        type: string
+        description: "The unique ID of the list"
+    required:
+      - listId
+
+- slug: clickup_list_spaces
+  name: List Spaces
+  description: |
+    Retrieve a list of all spaces in the workspace.
+  provider: clickup
+  endpoint: /workspace/{workspaceId}/space
+  method: GET
+  scopes:
+    - spaces:read
+  tags:
+    - spaces
+  input_schema:
+    type: object
+    description: Path and query parameters for listing spaces
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - workspaceId
+
+- slug: clickup_get_space
+  name: Get Space
+  description: |
+    Retrieve details of a specific space by ID.
+  provider: clickup
+  endpoint: /space/{spaceId}
+  method: GET
+  scopes:
+    - spaces:read
+  tags:
+    - spaces
+  input_schema:
+    type: object
+    description: Path parameters for getting a space
+    properties:
+      spaceId:
+        type: string
+        description: "The unique ID of the space"
+    required:
+      - spaceId
+
+- slug: clickup_list_folders
+  name: List Folders
+  description: |
+    Retrieve a list of folders, optionally within a space.
+  provider: clickup
+  endpoint: /space/{spaceId}/folder
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+  input_schema:
+    type: object
+    description: Path and query parameters for listing folders
+    properties:
+      spaceId:
+        type: string
+        description: "Filter by space ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - spaceId
+
+- slug: clickup_get_folder
+  name: Get Folder
+  description: |
+    Retrieve details of a specific folder by ID.
+  provider: clickup
+  endpoint: /folder/{folderId}
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+  input_schema:
+    type: object
+    description: Path parameters for getting a folder
+    properties:
+      folderId:
+        type: string
+        description: "The unique ID of the folder"
+    required:
+      - folderId

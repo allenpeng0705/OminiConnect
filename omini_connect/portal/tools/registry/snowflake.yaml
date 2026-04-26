@@ -1,0 +1,291 @@
+# Snowflake Tools - Allowlist
+# Curated subset of the Snowflake API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. snowflake_list_databases     - List databases in the account
+# 2. snowflake_get_database      - Get database details
+# 3. snowflake_list_schemas      - List schemas in a database
+# 4. snowflake_get_schema        - Get schema details
+# 5. snowflake_list_tables       - List tables in a schema
+# 6. snowflake_get_table         - Get table details and columns
+# 7. snowflake_list_stages       - List stages in a schema
+# 8. snowflake_get_stage         - Get stage details
+# 9. snowflake_list_pipes        - List pipes in a schema
+# 10. snowflake_get_pipe         - Get pipe details
+
+- slug: snowflake_list_databases
+  name: List Databases
+  description: |
+    List all databases in the Snowflake account. Returns database names, created dates, and comments.
+    Use this to discover available data sources.
+  provider: snowflake
+  endpoint: /databases
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - database
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      like:
+        type: string
+        description: "Filter databases by name pattern"
+    required: []
+
+- slug: snowflake_get_database
+  name: Get Database
+  description: |
+    Get details about a specific Snowflake database including name, created date, and comment.
+  provider: snowflake
+  endpoint: /databases/{database}
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+    required:
+      - database
+
+- slug: snowflake_list_schemas
+  name: List Schemas
+  description: |
+    List all schemas in a Snowflake database. Returns schema names and created dates.
+    Schemas organize tables and views within a database.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - schema
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing schemas
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      like:
+        type: string
+        description: "Filter schemas by name pattern"
+    required:
+      - database
+
+- slug: snowflake_get_schema
+  name: Get Schema
+  description: |
+    Get details about a specific Snowflake schema including name and created date.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - schema
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schema
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+    required:
+      - database
+      - schema
+
+- slug: snowflake_list_tables
+  name: List Tables
+  description: |
+    List all tables in a Snowflake schema. Returns table names, types, and column counts.
+    Use this to discover available data tables.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/tables
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      like:
+        type: string
+        description: "Filter tables by name pattern"
+    required:
+      - database
+      - schema
+
+- slug: snowflake_get_table
+  name: Get Table
+  description: |
+    Get detailed information about a Snowflake table including column definitions, primary keys, and row count.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/tables/{table}
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      table:
+        type: string
+        description: "Table name (required)"
+    required:
+      - database
+      - schema
+      - table
+
+- slug: snowflake_list_stages
+  name: List Stages
+  description: |
+    List all stages in a Snowflake schema. Returns stage names, types (internal/external), and storage locations.
+    Use this to discover data loading destinations.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/stages
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - stage
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing stages
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      like:
+        type: string
+        description: "Filter stages by name pattern"
+    required:
+      - database
+      - schema
+
+- slug: snowflake_get_stage
+  name: Get Stage
+  description: |
+    Get detailed information about a Snowflake stage including type, storage location, and file format options.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/stages/{stage}
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - stage
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a stage
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      stage:
+        type: string
+        description: "Stage name (required)"
+    required:
+      - database
+      - schema
+      - stage
+
+- slug: snowflake_list_pipes
+  name: List Pipes
+  description: |
+    List all pipes in a Snowflake schema. Returns pipe names, definitions, and status.
+    Use this to discover data ingestion pipelines.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/pipes
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - pipe
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pipes
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      like:
+        type: string
+        description: "Filter pipes by name pattern"
+    required:
+      - database
+      - schema
+
+- slug: snowflake_get_pipe
+  name: Get Pipe
+  description: |
+    Get detailed information about a Snowflake pipe including the COPY statement definition and status.
+  provider: snowflake
+  endpoint: /databases/{database}/schemas/{schema}/pipes/{pipe}
+  method: GET
+  scopes:
+    - account_readonly
+  tags:
+    - pipe
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pipe
+    properties:
+      database:
+        type: string
+        description: "Database name (required)"
+      schema:
+        type: string
+        description: "Schema name (required)"
+      pipe:
+        type: string
+        description: "Pipe name (required)"
+    required:
+      - database
+      - schema
+      - pipe

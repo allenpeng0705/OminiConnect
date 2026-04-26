@@ -1,0 +1,235 @@
+# Icypeas Tools - Allowlist
+# Curated subset of Icypeas API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. icypeas_email_search          - Email search
+# 2. icypeas_get_profile           - Get profile details
+# 3. icypeas_list_campaigns       - List campaigns
+# 4. icypeas_get_campaign         - Get campaign details
+# 5. icypeas_list_enrichments    - List enrichments
+# 6. icypeas_get_enrichment       - Get enrichment details
+# 7. icypeas_list_leads           - List leads
+# 8. icypeas_get_lead             - Get lead details
+# 9. icypeas_list_stats           - List statistics
+# 10. icypeas_list_credits         - List credits
+
+- slug: icypeas_email_search
+  name: Email Search
+  description: |
+    Search for email addresses using Icypeas.
+    Find professional email addresses.
+  provider: icypeas
+  endpoint: /email-search
+  method: POST
+  scopes:
+    - write
+  tags:
+    - email
+    - search
+  input_schema:
+    type: object
+    description: Parameters for email search
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      domain:
+        type: string
+        description: "Company domain"
+      company_name:
+        type: string
+        description: "Company name"
+    required:
+      - domain
+
+- slug: icypeas_get_profile
+  name: Get Profile
+  description: |
+    Get detailed profile information from Icypeas.
+    Includes professional details and social profiles.
+  provider: icypeas
+  endpoint: /profile
+  method: GET
+  scopes:
+    - read
+  tags:
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a profile
+    properties:
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - email
+
+- slug: icypeas_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Icypeas.
+    Returns campaign details including status and stats.
+  provider: icypeas
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: icypeas_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+    Includes campaign performance metrics.
+  provider: icypeas
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: icypeas_list_enrichments
+  name: List Enrichments
+  description: |
+    List all enrichments in Icypeas.
+    Returns enrichment details including status.
+  provider: icypeas
+  endpoint: /enrichments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - enrichments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing enrichments
+    properties: {}
+    required: []
+
+- slug: icypeas_get_enrichment
+  name: Get Enrichment
+  description: |
+    Get detailed information about a specific enrichment.
+    Includes enrichment data and status.
+  provider: icypeas
+  endpoint: /enrichments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - enrichments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an enrichment
+    properties:
+      id:
+        type: string
+        description: "Enrichment ID"
+    required:
+      - id
+
+- slug: icypeas_list_leads
+  name: List Leads
+  description: |
+    List all leads in Icypeas.
+    Returns lead details including status and source.
+  provider: icypeas
+  endpoint: /leads
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties: {}
+    required: []
+
+- slug: icypeas_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead.
+    Includes lead profile and enrichment data.
+  provider: icypeas
+  endpoint: /leads/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: string
+        description: "Lead ID"
+    required:
+      - id
+
+- slug: icypeas_list_stats
+  name: List Statistics
+  description: |
+    List usage statistics from Icypeas.
+    Returns API usage and quota info.
+  provider: icypeas
+  endpoint: /stats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stats
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing statistics
+    properties: {}
+    required: []
+
+- slug: icypeas_list_credits
+  name: List Credits
+  description: |
+    List credit balance from Icypeas.
+    Returns available credits and usage.
+  provider: icypeas
+  endpoint: /credits
+  method: GET
+  scopes:
+    - read
+  tags:
+    - credits
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing credits
+    properties: {}
+    required: []

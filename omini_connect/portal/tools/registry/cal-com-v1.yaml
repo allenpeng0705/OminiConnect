@@ -1,0 +1,232 @@
+# Cal.com (v1) Tools - Allowlist
+# Curated subset of the Cal.com API v1 for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cal_com_v1_list_event_types       - List event types
+# 2. cal_com_v1_get_event_type         - Get event type details
+# 3. cal_com_v1_list_bookings          - List bookings
+# 4. cal_com_v1_get_booking            - Get booking details
+# 5. cal_com_v1_create_booking         - Create a booking
+# 6. cal_com_v1_cancel_booking          - Cancel a booking
+# 7. cal_com_v1_get_current_user        - Get current user
+# 8. cal_com_v1_list_available_users    - List available users
+# 9. cal_com_v1_get_user               - Get user details
+# 10. cal_com_v1_list_my_event_types   - List event types for current user
+
+- slug: cal_com_v1_list_event_types
+  name: List Event Types
+  description: |
+    List all event types available.
+  provider: cal-com-v1
+  endpoint: /event-types
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing event types
+    properties:
+      user:
+        type: string
+        description: "Username to filter by"
+    required: []
+
+- slug: cal_com_v1_get_event_type
+  name: Get Event Type
+  description: |
+    Get details of a specific event type.
+  provider: cal-com-v1
+  endpoint: /event-types/{id}
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event type
+    properties:
+      id:
+        type: integer
+        description: "Event type ID"
+    required:
+      - id
+
+- slug: cal_com_v1_list_bookings
+  name: List Bookings
+  description: |
+    List all bookings.
+  provider: cal-com-v1
+  endpoint: /bookings
+  method: GET
+  scopes: []
+  tags:
+    - bookings
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing bookings
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+        enum: [upcoming, past, cancelled]
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cal_com_v1_get_booking
+  name: Get Booking
+  description: |
+    Get details of a specific booking.
+  provider: cal-com-v1
+  endpoint: /bookings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - bookings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a booking
+    properties:
+      id:
+        type: integer
+        description: "Booking ID"
+    required:
+      - id
+
+- slug: cal_com_v1_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking.
+  provider: cal-com-v1
+  endpoint: /bookings
+  method: POST
+  scopes: []
+  tags:
+    - bookings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a booking
+    properties:
+      eventTypeId:
+        type: integer
+        description: "Event type ID"
+      start:
+        type: string
+        description: "ISO 8601 start time"
+      end:
+        type: string
+        description: "ISO 8601 end time"
+      name:
+        type: string
+        description: "Attendee name"
+      email:
+        type: string
+        description: "Attendee email"
+    required:
+      - eventTypeId
+      - start
+      - name
+      - email
+
+- slug: cal_com_v1_cancel_booking
+  name: Cancel Booking
+  description: |
+    Cancel a booking.
+  provider: cal-com-v1
+  endpoint: /bookings/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - bookings
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for cancelling a booking
+    properties:
+      id:
+        type: integer
+        description: "Booking ID"
+    required:
+      - id
+
+- slug: cal_com_v1_get_current_user
+  name: Get Current User
+  description: |
+    Get the currently authenticated user.
+  provider: cal-com-v1
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []
+
+- slug: cal_com_v1_list_available_users
+  name: List Available Users
+  description: |
+    List users available for booking.
+  provider: cal-com-v1
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []
+
+- slug: cal_com_v1_get_user
+  name: Get User
+  description: |
+    Get user details by username.
+  provider: cal-com-v1
+  endpoint: /users/{username}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      username:
+        type: string
+        description: "Username"
+    required:
+      - username
+
+- slug: cal_com_v1_list_my_event_types
+  name: List My Event Types
+  description: |
+    List event types for the authenticated user.
+  provider: cal-com-v1
+  endpoint: /event-types
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - scheduling
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []

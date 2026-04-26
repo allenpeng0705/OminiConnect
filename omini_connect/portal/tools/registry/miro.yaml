@@ -1,0 +1,285 @@
+# Miro Tools - Allowlist
+# Curated subset of Miro API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. miro_list_boards       - List all boards
+# 2. miro_get_board        - Get board details
+# 3. miro_create_board     - Create a new board
+# 4. miro_list_items       - List items on a board
+# 5. miro_get_item         - Get item details
+# 6. miro_create_item      - Create an item on a board
+# 7. miro_list_members     - List board members
+# 8. miro_get_member       - Get member details
+# 9. miro_list_teams       - List all teams
+# 10. miro_get_team        - Get team details
+
+- slug: miro_list_boards
+  name: List Boards
+  description: |
+    List all Miro boards the user has access to. Returns board names, IDs, and descriptions.
+  provider: miro
+  endpoint: /boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: miro_get_board
+  name: Get Board
+  description: |
+    Get details about a specific Miro board including its structure and settings.
+  provider: miro
+  endpoint: /boards/{board_id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+    required:
+      - board_id
+
+- slug: miro_create_board
+  name: Create Board
+  description: |
+    Create a new Miro board in a team or workspace.
+  provider: miro
+  endpoint: /boards
+  method: POST
+  scopes:
+    - boards:write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      name:
+        type: string
+        description: "Board name (required)"
+      description:
+        type: string
+        description: "Board description"
+      team_id:
+        type: string
+        description: "Team ID to create board in"
+      is_private:
+        type: boolean
+        description: "Whether the board is private"
+    required:
+      - name
+
+- slug: miro_list_items
+  name: List Items
+  description: |
+    List all items on a Miro board. Items include frames, sticky notes, shapes, and more.
+  provider: miro
+  endpoint: /boards/{board_id}/items
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - items
+    - boards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required:
+      - board_id
+
+- slug: miro_get_item
+  name: Get Item
+  description: |
+    Get details about a specific item on a Miro board.
+  provider: miro
+  endpoint: /boards/{board_id}/items/{item_id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - items
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+      item_id:
+        type: string
+        description: "Item ID (required)"
+    required:
+      - board_id
+      - item_id
+
+- slug: miro_create_item
+  name: Create Item
+  description: |
+    Create a new item on a Miro board. Supports various item types including sticky notes, shapes, and text.
+  provider: miro
+  endpoint: /boards/{board_id}/items
+  method: POST
+  scopes:
+    - boards:write
+  tags:
+    - items
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+      type:
+        type: string
+        description: "Item type (required, e.g., sticky_note, shape, text)"
+      data:
+        type: object
+        description: "Item data based on type"
+      position:
+        type: object
+        description: "Position on the board"
+    required:
+      - board_id
+      - type
+
+- slug: miro_list_members
+  name: List Members
+  description: |
+    List all members of a Miro board.
+  provider: miro
+  endpoint: /boards/{board_id}/members
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - members
+    - boards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing board members
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required:
+      - board_id
+
+- slug: miro_get_member
+  name: Get Member
+  description: |
+    Get details about a specific member of a Miro board.
+  provider: miro
+  endpoint: /boards/{board_id}/members/{user_id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - members
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      board_id:
+        type: string
+        description: "Board ID (required)"
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - board_id
+      - user_id
+
+- slug: miro_list_teams
+  name: List Teams
+  description: |
+    List all Miro teams the user belongs to.
+  provider: miro
+  endpoint: /teams
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: miro_get_team
+  name: Get Team
+  description: |
+    Get details about a specific Miro team.
+  provider: miro
+  endpoint: /teams/{team_id}
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_id:
+        type: string
+        description: "Team ID (required)"
+    required:
+      - team_id

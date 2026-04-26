@@ -1,0 +1,280 @@
+# Google BigQuery Tools - Allowlist
+# Curated subset of BigQuery API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_bigquery_list_datasets     - List datasets
+# 2. google_bigquery_get_dataset      - Get dataset details
+# 3. google_bigquery_list_tables      - List tables in dataset
+# 4. google_bigquery_get_table        - Get table details
+# 5. google_bigquery_query            - Run a SQL query
+# 6. google_bigquery_list_jobs        - List query jobs
+# 7. google_bigquery_get_job          - Get job details
+# 8. google_bigquery_insert_query     - Insert a query job
+# 9. google_bigquery_list_routines    - List routines
+# 10. google_bigquery_list_models    - List ML models
+
+- slug: google_bigquery_list_datasets
+  name: List Datasets
+  description: |
+    List all BigQuery datasets in the project.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - datasets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+    required:
+      - projectId
+
+- slug: google_bigquery_get_dataset
+  name: Get Dataset
+  description: |
+    Get detailed information about a dataset.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - datasets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      datasetId:
+        type: string
+        description: "Dataset ID"
+    required:
+      - projectId
+      - datasetId
+
+- slug: google_bigquery_list_tables
+  name: List Tables
+  description: |
+    List all tables in a dataset.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      datasetId:
+        type: string
+        description: "Dataset ID"
+    required:
+      - projectId
+      - datasetId
+
+- slug: google_bigquery_get_table
+  name: Get Table
+  description: |
+    Get detailed information about a table.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/tables/{tableId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      datasetId:
+        type: string
+        description: "Dataset ID"
+      tableId:
+        type: string
+        description: "Table ID"
+    required:
+      - projectId
+      - datasetId
+      - tableId
+
+- slug: google_bigquery_query
+  name: Run Query
+  description: |
+    Run a SQL query on BigQuery data.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/queries
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - query
+    - sql
+  input_schema:
+    type: object
+    description: Parameters for running a query
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      query:
+        type: string
+        description: "SQL query"
+      useLegacySql:
+        type: boolean
+        description: "Use legacy SQL"
+        default: false
+    required:
+      - projectId
+      - query
+
+- slug: google_bigquery_list_jobs
+  name: List Jobs
+  description: |
+    List recent query jobs.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/jobs
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+    required:
+      - projectId
+
+- slug: google_bigquery_get_job
+  name: Get Job
+  description: |
+    Get details of a query job.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/jobs/{jobId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      jobId:
+        type: string
+        description: "Job ID"
+    required:
+      - projectId
+      - jobId
+
+- slug: google_bigquery_insert_query
+  name: Insert Query Job
+  description: |
+    Insert a query job to run asynchronously.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/jobs
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - jobs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for inserting a query job
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      query:
+        type: string
+        description: "SQL query"
+      destinationTable:
+        type: string
+        description: "Destination table (project:dataset.table)"
+    required:
+      - projectId
+      - query
+
+- slug: google_bigquery_list_routines
+  name: List Routines
+  description: |
+    List routines (stored procedures, functions) in a dataset.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/routines
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - routines
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing routines
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      datasetId:
+        type: string
+        description: "Dataset ID"
+    required:
+      - projectId
+      - datasetId
+
+- slug: google_bigquery_list_models
+  name: List Models
+  description: |
+    List ML models in a dataset.
+  provider: google-bigquery
+  endpoint: /bigquery/v2/projects/{projectId}/datasets/{datasetId}/models
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/bigquery
+  tags:
+    - models
+    - ml
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      projectId:
+        type: string
+        description: "Google Cloud project ID"
+      datasetId:
+        type: string
+        description: "Dataset ID"
+    required:
+      - projectId
+      - datasetId

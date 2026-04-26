@@ -1,0 +1,220 @@
+# MIP Cloud Tools - Allowlist
+# Curated subset of MIP Cloud API for AI agent use.
+# TWO_STEP via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mip_cloud_list_companies       - List companies
+# 2. mip_cloud_get_company         - Get company details
+# 3. mip_cloud_list_users          - List users
+# 4. mip_cloud_get_user            - Get user details
+# 5. mip_cloud_list_accounts       - List accounts
+# 6. mip_cloud_get_account         - Get account details
+# 7. mip_cloud_list_journals       - List journals
+# 8. mip_cloud_get_journal         - Get journal details
+# 9. mip_cloud_list_reports       - List reports
+# 10. mip_cloud_get_report        - Get report details
+
+- slug: mip_cloud_list_companies
+  name: List Companies
+  description: |
+    List all companies in MIP Cloud.
+  provider: mip-cloud
+  endpoint: /api/v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: mip_cloud_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: mip-cloud
+  endpoint: /api/v1/companies/{companyId}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: mip_cloud_list_users
+  name: List Users
+  description: |
+    List all users in MIP Cloud.
+  provider: mip-cloud
+  endpoint: /api/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: mip_cloud_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: mip-cloud
+  endpoint: /api/v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: mip_cloud_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in MIP Cloud.
+  provider: mip-cloud
+  endpoint: /api/v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: mip_cloud_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: mip-cloud
+  endpoint: /api/v1/accounts/{accountId}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: mip_cloud_list_journals
+  name: List Journals
+  description: |
+    List all journals in MIP Cloud.
+  provider: mip-cloud
+  endpoint: /api/v1/journals
+  method: GET
+  scopes: []
+  tags:
+    - journals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing journals
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: mip_cloud_get_journal
+  name: Get Journal
+  description: |
+    Get details of a specific journal.
+  provider: mip-cloud
+  endpoint: /api/v1/journals/{journalId}
+  method: GET
+  scopes: []
+  tags:
+    - journals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a journal
+    properties:
+      journalId:
+        type: string
+        description: "Journal ID"
+    required:
+      - journalId
+
+- slug: mip_cloud_list_reports
+  name: List Reports
+  description: |
+    List all reports in MIP Cloud.
+  provider: mip-cloud
+  endpoint: /api/v1/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: mip_cloud_get_report
+  name: Get Report
+  description: |
+    Get details of a specific report.
+  provider: mip-cloud
+  endpoint: /api/v1/reports/{reportId}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "Report ID"
+    required:
+      - reportId

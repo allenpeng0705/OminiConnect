@@ -1,0 +1,261 @@
+# OneDrive Personal Tools - Allowlist
+# Curated subset of OneDrive Personal API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. onedrive_list_files              - List files in folder
+# 2. onedrive_get_file                - Get file metadata
+# 3. onedrive_download_file           - Download file content
+# 4. onedrive_upload_file             - Upload file
+# 5. onedrive_create_folder           - Create folder
+# 6. onedrive_delete                  - Delete item
+# 7. onedrive_move                    - Move item
+# 8. onedrive_share                   - Share item
+# 9. onedrive_search                  - Search files
+# 10. onedrive_get_user              - Get user info
+
+- slug: onedrive_list_files
+  name: List Files
+  description: |
+    List files and folders in OneDrive.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - browse
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      path:
+        type: string
+        description: "Folder path (default: root)"
+        default: /
+    required: []
+
+- slug: onedrive_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file or folder.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: onedrive_download_file
+  name: Download File
+  description: |
+    Download file content.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/items/{itemId}/content
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - files
+    - download
+  input_schema:
+    type: object
+    description: Parameters for downloading a file
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: onedrive_upload_file
+  name: Upload File
+  description: |
+    Upload or create a file with content.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/root:/{name}:/content
+  method: PUT
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      path:
+        type: string
+        description: "File path"
+      name:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - name
+      - content
+
+- slug: onedrive_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in OneDrive.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/root/children
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      path:
+        type: string
+        description: "Parent folder path"
+      name:
+        type: string
+        description: "Folder name"
+    required:
+      - path
+      - name
+
+- slug: onedrive_delete
+  name: Delete
+  description: |
+    Delete a file or folder.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/items/{itemId}
+  method: DELETE
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an item
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId
+
+- slug: onedrive_move
+  name: Move
+  description: |
+    Move a file or folder to a new location.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/items/{itemId}
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - files
+    - move
+  input_schema:
+    type: object
+    description: Parameters for moving an item
+    properties:
+      itemId:
+        type: string
+        description: "Item ID to move"
+      parentId:
+        type: string
+        description: "Destination parent folder ID"
+    required:
+      - itemId
+      - parentId
+
+- slug: onedrive_share
+  name: Share
+  description: |
+    Share a file or folder with others.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/items/{itemId}/createLink
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - storage
+    - sharing
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for sharing
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+      type:
+        type: string
+        description: "Link type (view, edit)"
+        default: view
+    required:
+      - itemId
+
+- slug: onedrive_search
+  name: Search
+  description: |
+    Search for files in OneDrive.
+  provider: one-drive-personal
+  endpoint: /v1.0/drive/root/search(q='{query}')
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - storage
+    - search
+    - files
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query
+
+- slug: onedrive_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: one-drive-personal
+  endpoint: /v1.0/me
+  method: GET
+  scopes:
+    - User.Read
+  tags:
+    - users
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []

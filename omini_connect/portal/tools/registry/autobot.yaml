@@ -1,0 +1,260 @@
+- slug: autobot_list_bots
+  name: List Bots
+  description: |
+    Retrieve a list of all chatbots in your account.
+  provider: autobot
+  endpoint: /bots
+  method: GET
+  scopes:
+    - bots:read
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Optional filter parameters
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of bots to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: autobot_get_bot
+  name: Get Bot
+  description: |
+    Retrieve details of a specific chatbot by ID.
+  provider: autobot
+  endpoint: /bots/{bot_id}
+  method: GET
+  scopes:
+    - bots:read
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Bot ID parameter
+    properties:
+      bot_id:
+        type: string
+        description: "Unique identifier of the bot"
+    required:
+      - bot_id
+
+- slug: autobot_create_bot
+  name: Create Bot
+  description: |
+    Create a new chatbot with specified configuration.
+  provider: autobot
+  endpoint: /bots
+  method: POST
+  scopes:
+    - bots:write
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Bot creation parameters
+    properties:
+      name:
+        type: string
+        description: "Name of the chatbot"
+      description:
+        type: string
+        description: "Description of the bot's purpose"
+      personality:
+        type: string
+        description: "Bot personality type"
+      language:
+        type: string
+        description: "Primary language code"
+    required:
+      - name
+
+- slug: autobot_list_flows
+  name: List Flows
+  description: |
+    Retrieve all conversation flows for your bots.
+  provider: autobot
+  endpoint: /flows
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Optional flow filters
+    properties:
+      bot_id:
+        type: string
+        description: "Filter flows by bot ID"
+      status:
+        type: string
+        description: "Filter by status (draft, published, archived)"
+    required: []
+
+- slug: autobot_get_flow
+  name: Get Flow
+  description: |
+    Get detailed configuration of a specific flow.
+  provider: autobot
+  endpoint: /flows/{flow_id}
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Flow ID parameter
+    properties:
+      flow_id:
+        type: string
+        description: "Unique identifier of the flow"
+    required:
+      - flow_id
+
+- slug: autobot_create_flow
+  name: Create Flow
+  description: |
+    Create a new conversation flow with nodes and connections.
+  provider: autobot
+  endpoint: /flows
+  method: POST
+  scopes:
+    - flows:write
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Flow creation parameters
+    properties:
+      name:
+        type: string
+        description: "Name of the flow"
+      bot_id:
+        type: string
+        description: "Bot ID to attach this flow to"
+      trigger:
+        type: string
+        description: "Flow trigger type (keyword, event, schedule)"
+    required:
+      - name
+
+- slug: autobot_list_subscribers
+  name: List Subscribers
+  description: |
+    Retrieve all subscribers who have opted into your bots.
+  provider: autobot
+  endpoint: /subscribers
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Subscriber filter options
+    properties:
+      bot_id:
+        type: string
+        description: "Filter by bot ID"
+      segment:
+        type: string
+        description: "Filter by segment name"
+    required: []
+
+- slug: autobot_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details about a specific subscriber.
+  provider: autobot
+  endpoint: /subscribers/{subscriber_id}
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Subscriber ID parameter
+    properties:
+      subscriber_id:
+        type: string
+        description: "Unique identifier of the subscriber"
+    required:
+      - subscriber_id
+
+- slug: autobot_send_message
+  name: Send Message
+  description: |
+    Send a direct message to a subscriber through their bot.
+  provider: autobot
+  endpoint: /messages/send
+  method: POST
+  scopes:
+    - messages:write
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Message sending parameters
+    properties:
+      subscriber_id:
+        type: string
+        description: "Target subscriber ID"
+      bot_id:
+        type: string
+        description: "Bot to send from"
+      content:
+        type: string
+        description: "Message content"
+      quick_replies:
+        type: array
+        items:
+          type: string
+        description: "Quick reply options"
+    required:
+      - subscriber_id
+      - bot_id
+      - content
+
+- slug: autobot_create_broadcast
+  name: Create Broadcast
+  description: |
+    Create and send a broadcast message to multiple subscribers.
+  provider: autobot
+  endpoint: /broadcasts
+  method: POST
+  scopes:
+    - broadcasts:write
+  tags:
+    - broadcasts
+  input_schema:
+    type: object
+    description: Broadcast creation parameters
+    properties:
+      name:
+        type: string
+        description: "Name of the broadcast"
+      bot_id:
+        type: string
+        description: "Bot to broadcast from"
+      segment:
+        type: string
+        description: "Target segment name"
+      message:
+        type: string
+        description: "Broadcast message content"
+      schedule_time:
+        type: string
+        description: "ISO 8601 time to send (optional for immediate)"
+    required:
+      - name
+      - bot_id
+      - message

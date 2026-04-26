@@ -1,0 +1,268 @@
+# Google Maps Tools - Allowlist
+# Curated subset of Google Maps API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_maps_geocode            - Geocode address
+# 2. google_maps_reverse_geocode   - Reverse geocode
+# 3. google_maps_places_search    - Search places
+# 4. google_maps_place_details    - Get place details
+# 5. google_maps_places_photo     - Get place photo
+# 6. google_maps_distance_matrix  - Get distance matrix
+# 7. google_maps_directions       - Get directions
+# 8. google_maps_elevation         - Get elevation
+# 9. google_maps_timezone         - Get timezone
+# 10. google_maps_roads_nearest   - Get nearest roads
+
+- slug: google_maps_geocode
+  name: Geocode
+  description: |
+    Convert address to coordinates.
+  provider: google-maps
+  endpoint: /maps/api/geocode/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - geocoding
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for geocoding
+    properties:
+      address:
+        type: string
+        description: "Address to geocode"
+    required:
+      - address
+
+- slug: google_maps_reverse_geocode
+  name: Reverse Geocode
+  description: |
+    Convert coordinates to address.
+  provider: google-maps
+  endpoint: /maps/api/geocode/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - geocoding
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for reverse geocoding
+    properties:
+      latlng:
+        type: string
+        description: "Latitude,longitude"
+    required:
+      - latlng
+
+- slug: google_maps_places_search
+  name: Search Places
+  description: |
+    Search for places near a location.
+  provider: google-maps
+  endpoint: /maps/api/place/textsearch/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - places
+    - search
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for searching places
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      location:
+        type: string
+        description: "Latitude,longitude for proximity"
+      radius:
+        type: integer
+        description: "Radius in meters"
+    required:
+      - query
+
+- slug: google_maps_place_details
+  name: Place Details
+  description: |
+    Get detailed information about a place.
+  provider: google-maps
+  endpoint: /maps/api/place/details/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - places
+    - details
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for getting place details
+    properties:
+      place_id:
+        type: string
+        description: "Place ID"
+    required:
+      - place_id
+
+- slug: google_maps_places_photo
+  name: Place Photo
+  description: |
+    Get photo reference for a place.
+  provider: google-maps
+  endpoint: /maps/api/place/photo
+  method: GET
+  scopes:
+    - read
+  tags:
+    - places
+    - photos
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for getting place photo
+    properties:
+      photo_reference:
+        type: string
+        description: "Photo reference"
+      max_height:
+        type: integer
+        description: "Max height"
+    required:
+      - photo_reference
+
+- slug: google_maps_distance_matrix
+  name: Distance Matrix
+  description: |
+    Get travel distances and times.
+  provider: google-maps
+  endpoint: /maps/api/distancematrix/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - distance
+    - matrix
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for distance matrix
+    properties:
+      origins:
+        type: string
+        description: "Origin addresses or lat,lng"
+      destinations:
+        type: string
+        description: "Destination addresses or lat,lng"
+      mode:
+        type: string
+        description: "Travel mode (driving, walking, bicycling, transit)"
+        default: driving
+    required:
+      - origins
+      - destinations
+
+- slug: google_maps_directions
+  name: Directions
+  description: |
+    Get directions between locations.
+  provider: google-maps
+  endpoint: /maps/api/directions/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - directions
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for directions
+    properties:
+      origin:
+        type: string
+        description: "Origin address or lat,lng"
+      destination:
+        type: string
+        description: "Destination address or lat,lng"
+      mode:
+        type: string
+        description: "Travel mode"
+        default: driving
+    required:
+      - origin
+      - destination
+
+- slug: google_maps_elevation
+  name: Elevation
+  description: |
+    Get elevation for coordinates.
+  provider: google-maps
+  endpoint: /maps/api/elevation/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - elevation
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for elevation
+    properties:
+      locations:
+        type: string
+        description: "Latitude,longitude pairs"
+    required:
+      - locations
+
+- slug: google_maps_timezone
+  name: Timezone
+  description: |
+    Get timezone for a location.
+  provider: google-maps
+  endpoint: /maps/api/timezone/json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timezone
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for timezone
+    properties:
+      location:
+        type: string
+        description: "Latitude,longitude"
+      timestamp:
+        type: string
+        description: "Timestamp (Unix or ISO 8601)"
+    required:
+      - location
+
+- slug: google_maps_roads_nearest
+  name: Nearest Roads
+  description: |
+    Get nearest road points to coordinates.
+  provider: google-maps
+  endpoint: /maps/api/roads/nearestRoads
+  method: GET
+  scopes:
+    - read
+  tags:
+    - roads
+    - maps
+  input_schema:
+    type: object
+    description: Parameters for nearest roads
+    properties:
+      points:
+        type: string
+        description: "Latitude,longitude pairs"
+    required:
+      - points

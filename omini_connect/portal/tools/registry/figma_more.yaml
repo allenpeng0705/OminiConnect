@@ -1,0 +1,295 @@
+# Figma Additional Tools - Allowlist
+# Curated subset of the Figma REST API for AI agent use.
+
+# === TOOL LIST ===
+# 1. figma_more_list_files        - List files in a project
+# 2. figma_more_get_file         - Get a specific file
+# 3. figma_more_get_file_nodes    - Get specific nodes from a file
+# 4. figma_more_list_comments     - List comments on a file
+# 5. figma_more_get_comment       - Get a specific comment
+# 6. figma_more_post_comment      - Post a comment on a file
+# 7. figma_more_list_components  - List components in a team library
+# 8. figma_more_get_component     - Get a specific component
+# 9. figma_more_list_styles       - List styles in a team library
+# 10. figma_more_get_style        - Get a specific style
+
+- slug: figma_more_list_files
+  name: List Files
+  description: |
+    List all files in a specific project. Files contain designs, prototypes, and specifications.
+    Use this to browse projects and find design files.
+  provider: figma_more
+  endpoint: /v1/projects/{projectId}/files
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - project
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      projectId:
+        type: string
+        description: "Project ID (path parameter)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 30)"
+        default: 30
+    required:
+      - projectId
+
+- slug: figma_more_get_file
+  name: Get File
+  description: |
+    Get a specific Figma file including its document structure, canvas, and metadata.
+    Returns the full file content including all pages and their elements.
+  provider: figma_more
+  endpoint: /v1/files/{fileKey}
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      fileKey:
+        type: string
+        description: "File key (path parameter, found in Figma URL)"
+      version:
+        type: string
+        description: "Specific version to retrieve"
+      ids:
+        type: string
+        description: "Comma-separated list of node IDs to include"
+      depth:
+        type: integer
+        description: "Maximum depth to traverse (1-4)"
+    required:
+      - fileKey
+
+- slug: figma_more_get_file_nodes
+  name: Get File Nodes
+  description: |
+    Get specific nodes from a Figma file by their IDs. Returns the node data for each specified ID.
+    Use this to retrieve specific components, frames, or elements without loading the entire file.
+  provider: figma_more
+  endpoint: /v1/files/{fileKey}/nodes
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - nodes
+  input_schema:
+    type: object
+    description: Parameters for getting file nodes
+    properties:
+      fileKey:
+        type: string
+        description: "File key (path parameter)"
+      ids:
+        type: string
+        description: "Comma-separated list of node IDs to retrieve (required)"
+      version:
+        type: string
+        description: "Specific version to retrieve"
+    required:
+      - fileKey
+      - ids
+
+- slug: figma_more_list_comments
+  name: List Comments
+  description: |
+    List all comments on a specific Figma file. Comments include the author, message, and position.
+    Use this to review feedback and discussion on a design.
+  provider: figma_more
+  endpoint: /v1/files/{fileKey}/comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - files
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      fileKey:
+        type: string
+        description: "File key (path parameter)"
+    required:
+      - fileKey
+
+- slug: figma_more_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment including the message, author, timestamp, and position.
+    Use this to retrieve full comment details for review.
+  provider: figma_more
+  endpoint: /v1/files/{fileKey}/comments/{commentId}
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      fileKey:
+        type: string
+        description: "File key (path parameter)"
+      commentId:
+        type: string
+        description: "Comment ID (path parameter)"
+    required:
+      - fileKey
+      - commentId
+
+- slug: figma_more_post_comment
+  name: Post Comment
+  description: |
+    Post a new comment on a Figma file. Comments can include text and optional position coordinates.
+    Use this to leave feedback, ask questions, or start discussions on designs.
+  provider: figma_more
+  endpoint: /v1/files/{fileKey}/comments
+  method: POST
+  scopes:
+    - comments:write
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for posting a comment
+    properties:
+      fileKey:
+        type: string
+        description: "File key (path parameter)"
+      message:
+        type: string
+        description: "Comment message (required)"
+      client_meta:
+        type: object
+        description: "Position for the comment (x, y coordinates or node_id)"
+    required:
+      - fileKey
+      - message
+
+- slug: figma_more_list_components
+  name: List Components
+  description: |
+    List all components in a team library. Components are reusable design elements like buttons, cards, and icons.
+    Use this to explore available components for consistency in designs.
+  provider: figma_more
+  endpoint: /v1/components/{teamId}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - components
+    - library
+  input_schema:
+    type: object
+    description: Parameters for listing components
+    properties:
+      teamId:
+        type: string
+        description: "Team ID (path parameter)"
+      page_size:
+        type: integer
+        description: "Number of results per page (max 50, default 30)"
+        default: 30
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required:
+      - teamId
+
+- slug: figma_more_get_component
+  name: Get Component
+  description: |
+    Get details of a specific component including its name, description, and the containing component set.
+    Use this to understand a component's structure and how to use it.
+  provider: figma_more
+  endpoint: /v1/components/{key}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - components
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a component
+    properties:
+      key:
+        type: string
+        description: "Component key (path parameter)"
+      depth:
+        type: integer
+        description: "Maximum depth to traverse (1-4)"
+    required:
+      - key
+
+- slug: figma_more_list_styles
+  name: List Styles
+  description: |
+    List all styles in a team library. Styles include colors, typography, effects, and grids.
+    Use this to explore available styles for maintaining design consistency.
+  provider: figma_more
+  endpoint: /v1/styles/{teamId}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - styles
+    - library
+  input_schema:
+    type: object
+    description: Parameters for listing styles
+    properties:
+      teamId:
+        type: string
+        description: "Team ID (path parameter)"
+      page_size:
+        type: integer
+        description: "Number of results per page (max 50, default 30)"
+        default: 30
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required:
+      - teamId
+
+- slug: figma_more_get_style
+  name: Get Style
+  description: |
+    Get details of a specific style including its name, description, and style properties.
+    Use this to understand a style's values and how to apply it.
+  provider: figma_more
+  endpoint: /v1/styles/{key}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - styles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a style
+    properties:
+      key:
+        type: string
+        description: "Style key (path parameter)"
+    required:
+      - key

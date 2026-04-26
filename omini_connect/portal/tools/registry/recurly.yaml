@@ -1,0 +1,303 @@
+# Recurly Tools - Allowlist
+# Curated subset of Recurly subscription management API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recurly_list_subscriptions    - List all subscriptions
+# 2. recurly_get_subscription      - Get subscription details
+# 3. recurly_create_subscription   - Create a new subscription
+# 4. recurly_cancel_subscription   - Cancel a subscription
+# 5. recurly_list_accounts         - List all accounts
+# 6. recurly_get_account           - Get account details
+# 7. recurly_list_invoices         - List all invoices
+# 8. recurly_get_invoice           - Get invoice details
+# 9. recurly_list_plans            - List all plans
+# 10. recurly_get_plan             - Get plan details
+
+- slug: recurly_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in Recurly. Filter by account, state, or plan.
+  provider: recurly
+  endpoint: /subscriptions
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      state:
+        type: string
+        description: "Filter by state (active, cancelled, expired, etc)"
+      plan_id:
+        type: string
+        description: "Filter by plan ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: recurly_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific Recurly subscription.
+  provider: recurly
+  endpoint: /subscriptions/{uuid}
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      uuid:
+        type: string
+        description: "Subscription UUID"
+    required:
+      - uuid
+
+- slug: recurly_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new subscription in Recurly with account and plan details.
+  provider: recurly
+  endpoint: /subscriptions
+  method: POST
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      account_id:
+        type: string
+        description: "Account ID or code"
+      plan_code:
+        type: string
+        description: "Plan code"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD)"
+      unit_amount:
+        type: number
+        description: "Unit amount"
+      quantity:
+        type: integer
+        description: "Quantity"
+        default: 1
+      trial_ends_at:
+        type: string
+        description: "Trial end date (YYYY-MM-DD)"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+    required:
+      - account_id
+      - plan_code
+      - currency
+
+- slug: recurly_cancel_subscription
+  name: Cancel Subscription
+  description: |
+    Cancel an existing Recurly subscription.
+  provider: recurly
+  endpoint: /subscriptions/{uuid}/cancel
+  method: PUT
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - cancel
+  input_schema:
+    type: object
+    description: Parameters for cancelling a subscription
+    properties:
+      uuid:
+        type: string
+        description: "Subscription UUID"
+    required:
+      - uuid
+
+- slug: recurly_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in Recurly. Filter by email, username, or company.
+  provider: recurly
+  endpoint: /accounts
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      email:
+        type: string
+        description: "Filter by email address"
+      username:
+        type: string
+        description: "Filter by username"
+      company:
+        type: string
+        description: "Filter by company name"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: recurly_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific Recurly account.
+  provider: recurly
+  endpoint: /accounts/{account_code}
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      account_code:
+        type: string
+        description: "Account code"
+    required:
+      - account_code
+
+- slug: recurly_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Recurly. Filter by account, status, or date range.
+  provider: recurly
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      state:
+        type: string
+        description: "Filter by state (paid, open, voided, etc)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: recurly_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific Recurly invoice.
+  provider: recurly
+  endpoint: /invoices/{invoice_id}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID or UUID"
+    required:
+      - invoice_id
+
+- slug: recurly_list_plans
+  name: List Plans
+  description: |
+    List all plans in Recurly. Filter by state or pricing model.
+  provider: recurly
+  endpoint: /plans
+  method: GET
+  scopes:
+    - plans:read
+  tags:
+    - plans
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing plans
+    properties:
+      state:
+        type: string
+        description: "Filter by state (active, retired)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: recurly_get_plan
+  name: Get Plan
+  description: |
+    Get detailed information about a specific Recurly plan.
+  provider: recurly
+  endpoint: /plans/{plan_code}
+  method: GET
+  scopes:
+    - plans:read
+  tags:
+    - plans
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a plan
+    properties:
+      plan_code:
+        type: string
+        description: "Plan code"
+    required:
+      - plan_code

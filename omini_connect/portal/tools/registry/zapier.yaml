@@ -1,0 +1,291 @@
+# Zapier Tools - Allowlist
+# Curated subset of Zapier API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zapier_list_integrations    - List integrations/zaps
+# 2. zapier_get_integration     - Get integration details
+# 3. zapier_create_integration  - Create an integration
+# 4. zapier_list_actions       - List available actions
+# 5. zapier_get_action          - Get action details
+# 6. zapier_trigger_action     - Trigger an action
+# 7. zapier_list_searches       - List available searches
+# 8. zapier_get_search          - Get search details
+# 9. zapier_create_zap         - Create a zap
+# 10. zapier_get_zap_status    - Get zap status
+
+- slug: zapier_list_integrations
+  name: List Integrations
+  description: |
+    List all Zapier integrations or Zaps in the connected account.
+  provider: zapier
+  endpoint: /zaps
+  method: GET
+  scopes:
+    - read
+  tags:
+    - integrations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing integrations
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, paused, draft"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: zapier_get_integration
+  name: Get Integration
+  description: |
+    Get detailed information about a specific integration or Zap.
+  provider: zapier
+  endpoint: /zaps/{zap_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - integrations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an integration
+    properties:
+      zap_id:
+        type: string
+        description: "Zap ID"
+    required:
+      - zap_id
+
+- slug: zapier_create_integration
+  name: Create Integration
+  description: |
+    Create a new integration or Zap. Configure trigger, action, and mapping.
+  provider: zapier
+  endpoint: /zaps
+  method: POST
+  scopes:
+    - write
+  tags:
+    - integrations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an integration
+    properties:
+      name:
+        type: string
+        description: "Integration/Zap name"
+      trigger_app:
+        type: string
+        description: "Trigger app name"
+      trigger_action:
+        type: string
+        description: "Trigger action name"
+      action_app:
+        type: string
+        description: "Action app name"
+      action_operation:
+        type: string
+        description: "Action operation name"
+      mapping:
+        type: object
+        description: "Field mapping between trigger and action"
+    required:
+      - name
+      - trigger_app
+      - action_app
+
+- slug: zapier_list_actions
+  name: List Actions
+  description: |
+    List available Zapier actions across all supported apps.
+  provider: zapier
+  endpoint: /actions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - actions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing actions
+    properties:
+      app:
+        type: string
+        description: "Filter by app name"
+      category:
+        type: string
+        description: "Filter by category"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: zapier_get_action
+  name: Get Action
+  description: |
+    Get detailed information about a specific action including input fields.
+  provider: zapier
+  endpoint: /actions/{action_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - actions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an action
+    properties:
+      action_id:
+        type: string
+        description: "Action ID"
+    required:
+      - action_id
+
+- slug: zapier_trigger_action
+  name: Trigger Action
+  description: |
+    Trigger a specific action directly. Provide app, action, and input data.
+  provider: zapier
+  endpoint: /actions/trigger
+  method: POST
+  scopes:
+    - write
+  tags:
+    - actions
+    - trigger
+  input_schema:
+    type: object
+    description: Parameters for triggering an action
+    properties:
+      action_id:
+        type: string
+        description: "Action ID"
+      app:
+        type: string
+        description: "App name"
+      action:
+        type: string
+        description: "Action name"
+      input_data:
+        type: object
+        description: "Input data for the action"
+    required:
+      - app
+      - action
+
+- slug: zapier_list_searches
+  name: List Searches
+  description: |
+    List available Zapier searches across all supported apps.
+  provider: zapier
+  endpoint: /searches
+  method: GET
+  scopes:
+    - read
+  tags:
+    - searches
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing searches
+    properties:
+      app:
+        type: string
+        description: "Filter by app name"
+      category:
+        type: string
+        description: "Filter by category"
+      page_size:
+        type: integer
+        description: "Number of results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: zapier_get_search
+  name: Get Search
+  description: |
+    Get detailed information about a specific search including input fields.
+  provider: zapier
+  endpoint: /searches/{search_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - searches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a search
+    properties:
+      search_id:
+        type: string
+        description: "Search ID"
+    required:
+      - search_id
+
+- slug: zapier_create_zap
+  name: Create Zap
+  description: |
+    Create a new Zap with trigger and action configuration.
+  provider: zapier
+  endpoint: /zaps
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zaps
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a zap
+    properties:
+      name:
+        type: string
+        description: "Zap name"
+      trigger:
+        type: object
+        description: "Trigger configuration (app, event)"
+      actions:
+        type: array
+        description: "Array of action configurations"
+      zap_mode:
+        type: string
+        description: "Zap mode: live, test"
+    required:
+      - name
+      - trigger
+
+- slug: zapier_get_zap_status
+  name: Get Zap Status
+  description: |
+    Get the current status of a Zap including last run details and history.
+  provider: zapier
+  endpoint: /zaps/{zap_id}/status
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zaps
+    - status
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting zap status
+    properties:
+      zap_id:
+        type: string
+        description: "Zap ID"
+    required:
+      - zap_id

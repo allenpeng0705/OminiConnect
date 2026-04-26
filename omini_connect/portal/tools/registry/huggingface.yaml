@@ -1,0 +1,246 @@
+- slug: huggingface_list_models
+  name: List Models
+  description: |
+    Retrieve a list of all available Hugging Face models.
+  provider: huggingface
+  endpoint: /v1/models
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      filter:
+        type: string
+        description: "Filter models by task type or library"
+      sort:
+        type: string
+        description: "Sort field (e.g., downloads, created_at)"
+      direction:
+        type: string
+        description: "Sort direction (asc or desc)"
+      limit:
+        type: integer
+        description: "Maximum number of models to return"
+    required: []
+
+- slug: huggingface_get_model
+  name: Get Model
+  description: |
+    Retrieve details for a specific model by ID.
+  provider: huggingface
+  endpoint: /v1/models/{model_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for retrieving a model
+    properties:
+      model_id:
+        type: string
+        description: "The model ID (e.g., meta-llama/Llama-2-7b)"
+    required:
+      - model_id
+
+- slug: huggingface_list_datasets
+  name: List Datasets
+  description: |
+    Retrieve a list of available datasets on Hugging Face.
+  provider: huggingface
+  endpoint: /v1/datasets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      filter:
+        type: string
+        description: "Filter datasets by task type"
+      sort:
+        type: string
+        description: "Sort field"
+      direction:
+        type: string
+        description: "Sort direction"
+      limit:
+        type: integer
+        description: "Maximum number of datasets to return"
+    required: []
+
+- slug: huggingface_get_dataset
+  name: Get Dataset
+  description: |
+    Retrieve details for a specific dataset by ID.
+  provider: huggingface
+  endpoint: /v1/datasets/{dataset_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for retrieving a dataset
+    properties:
+      dataset_id:
+        type: string
+        description: "The dataset ID"
+    required:
+      - dataset_id
+
+- slug: huggingface_list_spaces
+  name: List Spaces
+  description: |
+    Retrieve a list of Hugging Face Spaces (ML apps).
+  provider: huggingface
+  endpoint: /v1/spaces
+  method: GET
+  scopes:
+    - read
+  tags:
+    - spaces
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties:
+      filter:
+        type: string
+        description: "Filter spaces by SDK or hardware"
+      sort:
+        type: string
+        description: "Sort field"
+      direction:
+        type: string
+        description: "Sort direction"
+      limit:
+        type: integer
+        description: "Maximum number of spaces to return"
+    required: []
+
+- slug: huggingface_get_space
+  name: Get Space
+  description: |
+    Retrieve details for a specific Space.
+  provider: huggingface
+  endpoint: /v1/spaces/{space_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - spaces
+  input_schema:
+    type: object
+    description: Parameters for retrieving a space
+    properties:
+      space_id:
+        type: string
+        description: "The space ID (e.g., meta-llama/Llama-2-7b-chat)"
+    required:
+      - space_id
+
+- slug: huggingface_create_inference_endpoint
+  name: Create Inference Endpoint
+  description: |
+    Create a dedicated inference endpoint for a model.
+  provider: huggingface
+  endpoint: /v1/endpoints
+  method: POST
+  scopes:
+    - write
+  tags:
+    - inference
+  input_schema:
+    type: object
+    description: Parameters for creating an inference endpoint
+    properties:
+      model:
+        type: string
+        description: "The model to deploy"
+      repository:
+        type: string
+        description: "Repository for the endpoint"
+      accelerator:
+        type: string
+        description: "Hardware accelerator (e.g., gpu-t4-medium)"
+      instance_size:
+        type: string
+        description: "Instance size"
+      region:
+        type: string
+        description: "Deployment region"
+    required:
+      - model
+      - repository
+      - accelerator
+
+- slug: huggingface_list_inference_endpoints
+  name: List Inference Endpoints
+  description: |
+    Retrieve a list of inference endpoints.
+  provider: huggingface
+  endpoint: /v1/endpoints
+  method: GET
+  scopes:
+    - read
+  tags:
+    - inference
+  input_schema:
+    type: object
+    description: Parameters for listing inference endpoints
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of endpoints to return"
+    required: []
+
+- slug: huggingface_get_inference_endpoint
+  name: Get Inference Endpoint
+  description: |
+    Retrieve details for a specific inference endpoint.
+  provider: huggingface
+  endpoint: /v1/endpoints/{endpoint_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - inference
+  input_schema:
+    type: object
+    description: Parameters for retrieving an inference endpoint
+    properties:
+      endpoint_id:
+        type: string
+        description: "The endpoint ID"
+    required:
+      - endpoint_id
+
+- slug: huggingface_delete_inference_endpoint
+  name: Delete Inference Endpoint
+  description: |
+    Delete a specific inference endpoint.
+  provider: huggingface
+  endpoint: /v1/endpoints/{endpoint_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - inference
+  input_schema:
+    type: object
+    description: Parameters for deleting an inference endpoint
+    properties:
+      endpoint_id:
+        type: string
+        description: "The endpoint ID to delete"
+    required:
+      - endpoint_id

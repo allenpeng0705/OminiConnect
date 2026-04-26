@@ -1,0 +1,187 @@
+# Xero (OAuth2 CC) Tools - Allowlist
+# Curated subset of Xero (OAuth2 CC) API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. xero_list_tenants           - List all connected tenants
+# # 2. xero_list_invoices           - List all invoices
+# # 3. xero_create_invoice           - Create a new invoice
+# # 4. xero_list_contacts           - List all contacts
+# # 5. xero_get_contact           - Get contact details
+# # 6. xero_list_bank_transactions           - List all bank transactions
+# # 7. xero_list_bank_transfers           - List all bank transfers
+# # 8. xero_list_accounts           - List all accounts
+# # 9. xero_list_tracking_categories           - List tracking categories
+# # 10. xero_get_organisations           - Get organisation details
+
+- slug: xero_list_tenants
+  name: List Tenants
+  description: |
+    List all connected tenants
+  provider: xero-oauth2-cc
+  endpoint: /connections
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list tenants
+    properties: {}
+    required: []
+
+- slug: xero_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Invoices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list invoices
+    properties: {}
+    required: []
+
+- slug: xero_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Invoices
+  method: POST
+  scopes:
+    - write
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for create invoice
+    properties: {}
+    required: []
+
+- slug: xero_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list contacts
+    properties: {}
+    required: []
+
+- slug: xero_get_contact
+  name: Get Contact
+  description: |
+    Get contact details
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for get contact
+    properties: {}
+    required: []
+
+- slug: xero_list_bank_transactions
+  name: List Bank Transactions
+  description: |
+    List all bank transactions
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/BankTransactions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list bank transactions
+    properties: {}
+    required: []
+
+- slug: xero_list_bank_transfers
+  name: List Bank Transfers
+  description: |
+    List all bank transfers
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/BankTransfers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list bank transfers
+    properties: {}
+    required: []
+
+- slug: xero_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Accounts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list accounts
+    properties: {}
+    required: []
+
+- slug: xero_list_tracking_categories
+  name: List Tracking Categories
+  description: |
+    List tracking categories
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/TrackingCategories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list tracking categories
+    properties: {}
+    required: []
+
+- slug: xero_get_organisations
+  name: Get Organisations
+  description: |
+    Get organisation details
+  provider: xero-oauth2-cc
+  endpoint: /api.xro/2.0/Organisations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - xero-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for get organisations
+    properties: {}
+    required: []
+

@@ -1,0 +1,271 @@
+# Sap-odata-basic Tools - Allowlist
+# Curated subset of SAP OData Basic API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sap-odata-basic_list_products             - List all products
+# 2. sap-odata-basic_get_product               - Get product details
+# 3. sap-odata-basic_create_product            - Create a product
+# 4. sap-odata-basic_list_orders               - List all orders
+# 5. sap-odata-basic_get_order                 - Get order details
+# 6. sap-odata-basic_create_order              - Create an order
+# 7. sap-odata-basic_list_customers            - List all customers
+# 8. sap-odata-basic_get_customer              - Get customer details
+# 9. sap-odata-basic_create_customer           - Create a customer
+# 10. sap-odata-basic_get_metadata             - Get service metadata
+
+- slug: sap-odata-basic_list_products
+  name: List Products
+  description: |
+    Retrieve a list of all products.
+  provider: sap-odata-basic
+  endpoint: /v1/products
+  method: GET
+  scopes:
+    - products:read
+  tags:
+    - products
+    - inventory
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Number of products"
+        default: 50
+      category:
+        type: string
+        description: "Filter by category"
+    required: []
+
+- slug: sap-odata-basic_get_product
+  name: Get Product
+  description: |
+    Get details of a specific product.
+  provider: sap-odata-basic
+  endpoint: /v1/products/{productId}
+  method: GET
+  scopes:
+    - products:read
+  tags:
+    - products
+    - inventory
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      productId:
+        type: string
+        description: "The product ID"
+    required:
+      - productId
+
+- slug: sap-odata-basic_create_product
+  name: Create Product
+  description: |
+    Create a new product.
+  provider: sap-odata-basic
+  endpoint: /v1/products
+  method: POST
+  scopes:
+    - products:write
+  tags:
+    - products
+    - inventory
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a product
+    properties:
+      name:
+        type: string
+        description: "Product name"
+      description:
+        type: string
+        description: "Product description"
+      price:
+        type: number
+        description: "Product price"
+      category:
+        type: string
+        description: "Product category"
+    required:
+      - name
+
+- slug: sap-odata-basic_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of all orders.
+  provider: sap-odata-basic
+  endpoint: /v1/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+    - sales
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Number of orders"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: sap-odata-basic_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order.
+  provider: sap-odata-basic
+  endpoint: /v1/orders/{orderId}
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+    - sales
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      orderId:
+        type: string
+        description: "The order ID"
+    required:
+      - orderId
+
+- slug: sap-odata-basic_create_order
+  name: Create Order
+  description: |
+    Create a new order.
+  provider: sap-odata-basic
+  endpoint: /v1/orders
+  method: POST
+  scopes:
+    - orders:write
+  tags:
+    - orders
+    - sales
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+      orderDate:
+        type: string
+        description: "Order date"
+      lines:
+        type: array
+        description: "Order lines"
+    required:
+      - customerId
+
+- slug: sap-odata-basic_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers.
+  provider: sap-odata-basic
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - crm
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Number of customers"
+        default: 50
+    required: []
+
+- slug: sap-odata-basic_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer.
+  provider: sap-odata-basic
+  endpoint: /v1/customers/{customerId}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - crm
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "The customer ID"
+    required:
+      - customerId
+
+- slug: sap-odata-basic_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer.
+  provider: sap-odata-basic
+  endpoint: /v1/customers
+  method: POST
+  scopes:
+    - customers:write
+  tags:
+    - customers
+    - crm
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      name:
+        type: string
+        description: "Customer name"
+      email:
+        type: string
+        description: "Customer email"
+      phone:
+        type: string
+        description: "Customer phone"
+    required:
+      - name
+
+- slug: sap-odata-basic_get_metadata
+  name: Get Metadata
+  description: |
+    Get OData service metadata.
+  provider: sap-odata-basic
+  endpoint: /$metadata
+  method: GET
+  scopes:
+    - metadata:read
+  tags:
+    - metadata
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting metadata
+    properties: {}
+    required: []

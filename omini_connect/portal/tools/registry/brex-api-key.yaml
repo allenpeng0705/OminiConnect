@@ -1,0 +1,234 @@
+# Brex (API Key) Tools - Allowlist
+# Curated subset of Brex API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. brex_get_account_info       - Get account info
+# 2. brex_list_transactions     - List transactions
+# 3. brex_get_transaction       - Get transaction details
+# 4. brex_list_cards            - List cards
+# 5. brex_get_card              - Get card details
+# 6. brex_list_users           - List team members
+# 7. brex_get_user             - Get user details
+# 8. brex_list_accounts        - List accounts
+# 9. brex_get_balance          - Get account balance
+# 10. brex_get_limits          - Get card limits
+
+- slug: brex_get_account_info
+  name: Get Account Info
+  description: |
+    Get Brex account information.
+  provider: brex-api-key
+  endpoint: /v1/account_info
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - info
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: brex_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions in Brex.
+  provider: brex-api-key
+  endpoint: /v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      accountId:
+        type: string
+        description: "Filter by account ID"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brex_get_transaction
+  name: Get Transaction
+  description: |
+    Get details for a specific transaction.
+  provider: brex-api-key
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transactionId
+
+- slug: brex_list_cards
+  name: List Cards
+  description: |
+    List all Brex cards.
+  provider: brex-api-key
+  endpoint: /v1/cards
+  method: GET
+  scopes: []
+  tags:
+    - cards
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      userId:
+        type: string
+        description: "Filter by user ID"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brex_get_card
+  name: Get Card
+  description: |
+    Get details for a specific card.
+  provider: brex-api-key
+  endpoint: /v1/cards/{cardId}
+  method: GET
+  scopes: []
+  tags:
+    - cards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      cardId:
+        type: string
+        description: "Card ID"
+    required:
+      - cardId
+
+- slug: brex_list_users
+  name: List Users
+  description: |
+    List all team members in Brex.
+  provider: brex-api-key
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brex_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: brex-api-key
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: brex_list_accounts
+  name: List Accounts
+  description: |
+    List all Brex accounts.
+  provider: brex-api-key
+  endpoint: /v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - banking
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brex_get_balance
+  name: Get Balance
+  description: |
+    Get balance for a specific account.
+  provider: brex-api-key
+  endpoint: /v1/accounts/{accountId}/balance
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - balance
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: brex_get_limits
+  name: Get Limits
+  description: |
+    Get spending limits for a card.
+  provider: brex-api-key
+  endpoint: /v1/cards/{cardId}/limits
+  method: GET
+  scopes: []
+  tags:
+    - cards
+    - limits
+  input_schema:
+    type: object
+    description: Parameters for getting limits
+    properties:
+      cardId:
+        type: string
+        description: "Card ID"
+    required:
+      - cardId

@@ -1,0 +1,245 @@
+# Passportal Tools - Allowlist
+# Curated subset of Passportal API for AI agent use.
+# Two-Step via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. passportal_list_clients         - List clients
+# 2. passportal_get_client          - Get client details
+# 3. passportal_list_sites          - List sites
+# 4. passportal_get_site           - Get site details
+# 5. passportal_list_passwords     - List passwords
+# 6. passportal_get_password       - Get password details
+# 7. passportal_create_password   - Create password entry
+# 8. passportal_list_notes         - List notes
+# 9. passportal_get_note           - Get note details
+# 10. passportal_list_tags        - List tags
+
+- slug: passportal_list_clients
+  name: List Clients
+  description: |
+    List all clients in Passportal.
+  provider: passportal
+  endpoint: /api/v2/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - passwords
+    - clients
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties: {}
+    required: []
+
+- slug: passportal_get_client
+  name: Get Client
+  description: |
+    Get detailed information for a specific client.
+  provider: passportal
+  endpoint: /api/v2/clients/{id}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - passwords
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: integer
+        description: "Client ID"
+    required:
+      - id
+
+- slug: passportal_list_sites
+  name: List Sites
+  description: |
+    List all sites in Passportal.
+  provider: passportal
+  endpoint: /api/v2/sites
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - passwords
+    - sites
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      client_id:
+        type: integer
+        description: "Filter by client ID"
+    required: []
+
+- slug: passportal_get_site
+  name: Get Site
+  description: |
+    Get detailed information for a specific site.
+  provider: passportal
+  endpoint: /api/v2/sites/{id}
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - passwords
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      id:
+        type: integer
+        description: "Site ID"
+    required:
+      - id
+
+- slug: passportal_list_passwords
+  name: List Passwords
+  description: |
+    List all passwords in Passportal.
+  provider: passportal
+  endpoint: /api/v2/passwords
+  method: GET
+  scopes:
+    - passwords:read
+  tags:
+    - passwords
+    - credentials
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing passwords
+    properties:
+      site_id:
+        type: integer
+        description: "Filter by site ID"
+    required: []
+
+- slug: passportal_get_password
+  name: Get Password
+  description: |
+    Get detailed information for a specific password entry.
+  provider: passportal
+  endpoint: /api/v2/passwords/{id}
+  method: GET
+  scopes:
+    - passwords:read
+  tags:
+    - passwords
+    - credentials
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a password
+    properties:
+      id:
+        type: integer
+        description: "Password ID"
+    required:
+      - id
+
+- slug: passportal_create_password
+  name: Create Password
+  description: |
+    Create a new password entry.
+  provider: passportal
+  endpoint: /api/v2/passwords
+  method: POST
+  scopes:
+    - passwords:write
+  tags:
+    - passwords
+    - credentials
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a password
+    properties:
+      site_id:
+        type: integer
+        description: "Site ID"
+      name:
+        type: string
+        description: "Password name"
+      username:
+        type: string
+        description: "Username"
+      password:
+        type: string
+        description: "Password"
+    required:
+      - site_id
+      - name
+
+- slug: passportal_list_notes
+  name: List Notes
+  description: |
+    List all notes in Passportal.
+  provider: passportal
+  endpoint: /api/v2/notes
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - passwords
+    - notes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      site_id:
+        type: integer
+        description: "Filter by site ID"
+    required: []
+
+- slug: passportal_get_note
+  name: Get Note
+  description: |
+    Get detailed information for a specific note.
+  provider: passportal
+  endpoint: /api/v2/notes/{id}
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - passwords
+    - notes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a note
+    properties:
+      id:
+        type: integer
+        description: "Note ID"
+    required:
+      - id
+
+- slug: passportal_list_tags
+  name: List Tags
+  description: |
+    List all tags in Passportal.
+  provider: passportal
+  endpoint: /api/v2/tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - passwords
+    - tags
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []

@@ -1,0 +1,235 @@
+# Keap Tools - Allowlist
+# Curated subset of Keap API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. keap_list_contacts         - List contacts
+# 2. keap_get_contact          - Get contact details
+# 3. keap_list_companies       - List companies
+# 4. keap_get_company         - Get company details
+# 5. keap_list_invoices        - List invoices
+# 6. keap_get_invoice         - Get invoice details
+# 7. keap_list_products       - List products
+# 8. keap_get_product        - Get product details
+# 9. keap_list_tags           - List tags
+# 10. keap_list_notes         - List notes
+
+- slug: keap_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Keap.
+  provider: keap
+  endpoint: /rest/v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: keap_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: keap
+  endpoint: /rest/v1/contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: keap_list_companies
+  name: List Companies
+  description: |
+    List all companies.
+  provider: keap
+  endpoint: /rest/v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: keap_get_company
+  name: Get Company
+  description: |
+    Get details for a specific company.
+  provider: keap
+  endpoint: /rest/v1/companies/{company_id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      company_id:
+        type: integer
+        description: "Company ID"
+    required:
+      - company_id
+
+- slug: keap_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: keap
+  endpoint: /rest/v1/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: keap_get_invoice
+  name: Get Invoice
+  description: |
+    Get details for a specific invoice.
+  provider: keap
+  endpoint: /rest/v1/invoices/{invoice_id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: integer
+        description: "Invoice ID"
+    required:
+      - invoice_id
+
+- slug: keap_list_products
+  name: List Products
+  description: |
+    List all products.
+  provider: keap
+  endpoint: /rest/v1/products
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: keap_get_product
+  name: Get Product
+  description: |
+    Get details for a specific product.
+  provider: keap
+  endpoint: /rest/v1/products/{product_id}
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: integer
+        description: "Product ID"
+    required:
+      - product_id
+
+- slug: keap_list_tags
+  name: List Tags
+  description: |
+    List all tags.
+  provider: keap
+  endpoint: /rest/v1/tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: keap_list_notes
+  name: List Notes
+  description: |
+    List all notes.
+  provider: keap
+  endpoint: /rest/v1/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      contact_id:
+        type: integer
+        description: "Filter by contact ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []

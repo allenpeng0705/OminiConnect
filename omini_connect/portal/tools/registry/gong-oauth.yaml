@@ -1,0 +1,235 @@
+# Gong OAuth Tools - Allowlist
+# Curated subset of Gong API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gong_oauth_list_calls          - List calls
+# 2. gong_oauth_get_call           - Get call details
+# 3. gong_oauth_list_transcripts   - List call transcripts
+# 4. gong_oauth_list_scorecards   - List scorecards
+# 5. gong_oauth_get_scorecard     - Get scorecard details
+# 6. gong_oauth_list_users        - List users
+# 7. gong_oauth_get_user           - Get user details
+# 8. gong_oauth_list_teams        - List teams
+# 9. gong_oauth_get_team           - Get team details
+# 10. gong_oauth_list_workspace_stats - List workspace stats
+
+- slug: gong_oauth_list_calls
+  name: List Calls
+  description: |
+    List calls recorded in Gong.
+  provider: gong-oauth
+  endpoint: /v2/calls
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      page_size:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: gong_oauth_get_call
+  name: Get Call
+  description: |
+    Get detailed information about a call.
+  provider: gong-oauth
+  endpoint: /v2/calls/{call_id}
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      call_id:
+        type: string
+        description: "Call ID"
+    required:
+      - call_id
+
+- slug: gong_oauth_list_transcripts
+  name: List Transcripts
+  description: |
+    List transcripts for a call.
+  provider: gong-oauth
+  endpoint: /v2/calls/{call_id}/transcript
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - transcripts
+    - calls
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing transcripts
+    properties:
+      call_id:
+        type: string
+        description: "Call ID"
+    required:
+      - call_id
+
+- slug: gong_oauth_list_scorecards
+  name: List Scorecards
+  description: |
+    List scorecards for calls.
+  provider: gong-oauth
+  endpoint: /v2/scorecards
+  method: GET
+  scopes:
+    - scorecards.read
+  tags:
+    - scorecards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing scorecards
+    properties:
+      call_id:
+        type: string
+        description: "Filter by call ID"
+    required: []
+
+- slug: gong_oauth_get_scorecard
+  name: Get Scorecard
+  description: |
+    Get detailed information about a scorecard.
+  provider: gong-oauth
+  endpoint: /v2/scorecards/{scorecard_id}
+  method: GET
+  scopes:
+    - scorecards.read
+  tags:
+    - scorecards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a scorecard
+    properties:
+      scorecard_id:
+        type: string
+        description: "Scorecard ID"
+    required:
+      - scorecard_id
+
+- slug: gong_oauth_list_users
+  name: List Users
+  description: |
+    List users in Gong.
+  provider: gong-oauth
+  endpoint: /v2/users
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+
+- slug: gong_oauth_get_user
+  name: Get User
+  description: |
+    Get detailed information about a user.
+  provider: gong-oauth
+  endpoint: /v2/users/{user_id}
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: gong_oauth_list_teams
+  name: List Teams
+  description: |
+    List teams in Gong.
+  provider: gong-oauth
+  endpoint: /v2/teams
+  method: GET
+  scopes:
+    - teams.read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+
+- slug: gong_oauth_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a team.
+  provider: gong-oauth
+  endpoint: /v2/teams/{team_id}
+  method: GET
+  scopes:
+    - teams.read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id
+
+- slug: gong_oauth_list_workspace_stats
+  name: List Workspace Stats
+  description: |
+    Get workspace statistics and metrics.
+  provider: gong-oauth
+  endpoint: /v2/workspace/stats
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - workspace
+    - stats
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspace stats
+    properties:
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

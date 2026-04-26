@@ -1,0 +1,256 @@
+# Granola MCP Tools - Allowlist
+# Curated subset of Granola MCP API for AI agent use.
+# MCP OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. granola_list_notes           - List notes
+# 2. granola_get_note              - Get note details
+# 3. granola_create_note           - Create a note
+# 4. granola_update_note           - Update a note
+# 5. granola_delete_note           - Delete a note
+# 6. granola_list_collections      - List collections
+# 7. granola_get_collection        - Get collection details
+# 8. granola_list_tags             - List tags
+# 9. granola_search_notes           - Search notes
+# 10. granola_list_collaborators   - List collaborators
+
+- slug: granola_list_notes
+  name: List Notes
+  description: |
+    List all notes in your Granola account.
+    Returns note details including title, content preview, and date.
+  provider: granola-mcp
+  endpoint: /v1/notes
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      collection_id:
+        type: string
+        description: "Filter by collection ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Page size (default 20)"
+        default: 20
+    required: []
+
+- slug: granola_get_note
+  name: Get Note
+  description: |
+    Get detailed information about a specific note.
+    Includes full content and metadata.
+  provider: granola-mcp
+  endpoint: /v1/notes/{id}
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+    required:
+      - id
+
+- slug: granola_create_note
+  name: Create Note
+  description: |
+    Create a new note in Granola.
+    Set title, content, and collection.
+  provider: granola-mcp
+  endpoint: /v1/notes
+  method: POST
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      title:
+        type: string
+        description: "Note title"
+      content:
+        type: string
+        description: "Note content"
+      collection_id:
+        type: string
+        description: "Collection ID"
+    required:
+      - title
+
+- slug: granola_update_note
+  name: Update Note
+  description: |
+    Update an existing note.
+    Modify title, content, or collection.
+  provider: granola-mcp
+  endpoint: /v1/notes/{id}
+  method: PUT
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+      title:
+        type: string
+        description: "New title"
+      content:
+        type: string
+        description: "New content"
+      collection_id:
+        type: string
+        description: "New collection ID"
+    required:
+      - id
+
+- slug: granola_delete_note
+  name: Delete Note
+  description: |
+    Delete a note from Granola.
+    Permanently removes the note.
+  provider: granola-mcp
+  endpoint: /v1/notes/{id}
+  method: DELETE
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+    required:
+      - id
+
+- slug: granola_list_collections
+  name: List Collections
+  description: |
+    List all collections in your Granola account.
+    Returns collection details including name and note count.
+  provider: granola-mcp
+  endpoint: /v1/collections
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - collections
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties: {}
+    required: []
+
+- slug: granola_get_collection
+  name: Get Collection
+  description: |
+    Get detailed information about a specific collection.
+    Includes collection settings and notes.
+  provider: granola-mcp
+  endpoint: /v1/collections/{id}
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - collections
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a collection
+    properties:
+      id:
+        type: string
+        description: "Collection ID"
+    required:
+      - id
+
+- slug: granola_list_tags
+  name: List Tags
+  description: |
+    List all tags in your Granola account.
+    Returns tag details including name and note count.
+  provider: granola-mcp
+  endpoint: /v1/tags
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: granola_search_notes
+  name: Search Notes
+  description: |
+    Search for notes matching a query.
+    Searches titles and content.
+  provider: granola-mcp
+  endpoint: /v1/notes/search
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - notes
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching notes
+    properties:
+      q:
+        type: string
+        description: "Search query"
+    required:
+      - q
+
+- slug: granola_list_collaborators
+  name: List Collaborators
+  description: |
+    List all collaborators in your Granola account.
+    Returns collaborator details including email and permissions.
+  provider: granola-mcp
+  endpoint: /v1/collaborators
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - collaborators
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing collaborators
+    properties: {}
+    required: []

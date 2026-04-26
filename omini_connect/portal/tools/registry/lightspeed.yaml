@@ -1,0 +1,288 @@
+# Lightspeed Tools - Allowlist
+# Curated subset of Lightspeed Retail POS API for AI agent use.
+
+# === TOOL LIST ===
+# 1. lightspeed_list_items          - List items/products
+# 2. lightspeed_get_item            - Get item details
+# 3. lightspeed_create_item         - Create a new item
+# 4. lightspeed_list_customers      - List customers
+# 5. lightspeed_get_customer       - Get customer details
+# 6. lightspeed_list_transactions  - List transactions
+# 7. lightspeed_get_transaction    - Get transaction details
+# 8. lightspeed_list_suppliers     - List suppliers
+# 9. lightspeed_get_supplier       - Get supplier details
+# 10. lightspeed_list_staff        - List staff members
+
+- slug: lightspeed_list_items
+  name: List Items
+  description: |
+    List all items (products) in the Lightspeed Retail POS. Filter by category, supplier, and availability.
+  provider: lightspeed
+  endpoint: /api/v2/Item.json
+  method: GET
+  scopes:
+    - read_inventory
+  tags:
+    - items
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      categoryID:
+        type: integer
+        description: "Filter by category ID"
+      supplierID:
+        type: integer
+        description: "Filter by supplier ID"
+      isArchived:
+        type: boolean
+        description: "Include archived items"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: lightspeed_get_item
+  name: Get Item
+  description: |
+    Get detailed information about a specific item including variants, pricing, and stock levels.
+  provider: lightspeed
+  endpoint: /api/v2/Item/{itemID}.json
+  method: GET
+  scopes:
+    - read_inventory
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      itemID:
+        type: integer
+        description: "The item ID"
+    required:
+      - itemID
+
+- slug: lightspeed_create_item
+  name: Create Item
+  description: |
+    Create a new item in Lightspeed Retail POS. Include name, SKU, price, and inventory settings.
+  provider: lightspeed
+  endpoint: /api/v2/Item.json
+  method: POST
+  scopes:
+    - write_inventory
+  tags:
+    - items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      name:
+        type: string
+        description: "Item name"
+      sku:
+        type: string
+        description: "Stock keeping unit"
+      description:
+        type: string
+        description: "Item description"
+      price:
+        type: number
+        description: "Selling price"
+      cost:
+        type: number
+        description: "Cost price"
+      quantity:
+        type: number
+        description: "Initial inventory quantity"
+      categoryID:
+        type: integer
+        description: "Category ID"
+    required:
+      - name
+      - sku
+
+- slug: lightspeed_list_customers
+  name: List Customers
+  description: |
+    List all customers in Lightspeed Retail POS. Filter by group, and registration date.
+  provider: lightspeed
+  endpoint: /api/v2/Customer.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      customerGroupID:
+        type: integer
+        description: "Filter by customer group ID"
+      isArchived:
+        type: boolean
+        description: "Include archived customers"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: lightspeed_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer including contact info, addresses, and purchase history.
+  provider: lightspeed
+  endpoint: /api/v2/Customer/{customerID}.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerID:
+        type: integer
+        description: "The customer ID"
+    required:
+      - customerID
+
+- slug: lightspeed_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions (sales) in Lightspeed Retail POS. Filter by date, register, and employee.
+  provider: lightspeed
+  endpoint: /api/v2/Sale.json
+  method: GET
+  scopes:
+    - read_sales
+  tags:
+    - transactions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      saleDate:
+        type: string
+        description: "Filter by date (YYYY-MM-DD)"
+      registerID:
+        type: integer
+        description: "Filter by register ID"
+      employeeID:
+        type: integer
+        description: "Filter by employee ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: lightspeed_get_transaction
+  name: Get Transaction
+  description: |
+    Get detailed information about a specific transaction including line items, payments, and totals.
+  provider: lightspeed
+  endpoint: /api/v2/Sale/{saleID}.json
+  method: GET
+  scopes:
+    - read_sales
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      saleID:
+        type: integer
+        description: "The transaction/sale ID"
+    required:
+      - saleID
+
+- slug: lightspeed_list_suppliers
+  name: List Suppliers
+  description: |
+    List all suppliers (vendors) in Lightspeed Retail POS. Filter by status and availability.
+  provider: lightspeed
+  endpoint: /api/v2/Supplier.json
+  method: GET
+  scopes:
+    - read_suppliers
+  tags:
+    - suppliers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing suppliers
+    properties:
+      isArchived:
+        type: boolean
+        description: "Include archived suppliers"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: lightspeed_get_supplier
+  name: Get Supplier
+  description: |
+    Get detailed information about a specific supplier including contact info and terms.
+  provider: lightspeed
+  endpoint: /api/v2/Supplier/{supplierID}.json
+  method: GET
+  scopes:
+    - read_suppliers
+  tags:
+    - suppliers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a supplier
+    properties:
+      supplierID:
+        type: integer
+        description: "The supplier ID"
+    required:
+      - supplierID
+
+- slug: lightspeed_list_staff
+  name: List Staff
+  description: |
+    List all staff members (employees) in Lightspeed Retail POS. Filter by role and status.
+  provider: lightspeed
+  endpoint: /api/v2/Employee.json
+  method: GET
+  scopes:
+    - read_employees
+  tags:
+    - staff
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing staff
+    properties:
+      isInactive:
+        type: boolean
+        description: "Include inactive staff"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []

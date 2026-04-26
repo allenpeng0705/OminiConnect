@@ -1,0 +1,232 @@
+# Codegen Tools - Allowlist
+# Curated subset of the Codegen API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. codegen_list_organizations           - List organizations
+# 2. codegen_get_organization            - Get organization details
+# 3. codegen_list_sources               - List sources
+# 4. codegen_get_source                 - Get source details
+# 5. codegen_list_events               - List events
+# 6. codegen_get_event                 - Get event details
+# 7. codegen_list_segments             - List segments
+# 8. codegen_get_segment               - Get segment details
+# 9. codegen_list_users               - List users
+# 10. codegen_get_user                - Get user details
+
+- slug: codegen_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations.
+  provider: codegen
+  endpoint: /v1/organizations
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codegen_get_organization
+  name: Get Organization
+  description: |
+    Get details of a specific organization.
+  provider: codegen
+  endpoint: /v1/organizations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      id:
+        type: string
+        description: "Organization ID"
+    required:
+      - id
+
+- slug: codegen_list_sources
+  name: List Sources
+  description: |
+    List all data sources.
+  provider: codegen
+  endpoint: /v1/sources
+  method: GET
+  scopes: []
+  tags:
+    - sources
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing sources
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codegen_get_source
+  name: Get Source
+  description: |
+    Get details of a specific source.
+  provider: codegen
+  endpoint: /v1/sources/{id}
+  method: GET
+  scopes: []
+  tags:
+    - sources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a source
+    properties:
+      id:
+        type: string
+        description: "Source ID"
+    required:
+      - id
+
+- slug: codegen_list_events
+  name: List Events
+  description: |
+    List all events.
+  provider: codegen
+  endpoint: /v1/events
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      source_id:
+        type: string
+        description: "Filter by source ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codegen_get_event
+  name: Get Event
+  description: |
+    Get details of a specific event.
+  provider: codegen
+  endpoint: /v1/events/{id}
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      id:
+        type: string
+        description: "Event ID"
+    required:
+      - id
+
+- slug: codegen_list_segments
+  name: List Segments
+  description: |
+    List all segments.
+  provider: codegen
+  endpoint: /v1/segments
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codegen_get_segment
+  name: Get Segment
+  description: |
+    Get details of a specific segment.
+  provider: codegen
+  endpoint: /v1/segments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      id:
+        type: string
+        description: "Segment ID"
+    required:
+      - id
+
+- slug: codegen_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: codegen
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      segment_id:
+        type: string
+        description: "Filter by segment ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codegen_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: codegen
+  endpoint: /v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id

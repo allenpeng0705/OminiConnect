@@ -1,0 +1,267 @@
+# Mailjet Tools - Allowlist
+# Curated subset of Mailjet API for AI agent use.
+# BASIC via Nango (API Key as username).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mailjet_list_contacts      - List all contacts
+# 2. mailjet_get_contact         - Get contact details
+# 3. mailjet_create_contact      - Create a contact
+# 4. mailjet_update_contact      - Update a contact
+# 5. mailjet_list_campaigns      - List all campaigns
+# 6. mailjet_get_campaign        - Get campaign details
+# 7. mailjet_send_campaign       - Send a campaign
+# 8. mailjet_list_lists          - List contact lists
+# 9. mailjet_get_list            - Get list details
+# 10. mailjet_list_stats        - Get statistics
+
+- slug: mailjet_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Mailjet.
+    Filter by lists, segments, or search.
+  provider: mailjet
+  endpoint: /v3/REST/contact
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 1000)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      contact_slugs:
+        type: string
+        description: "Filter by contact slugs"
+    required: []
+
+- slug: mailjet_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: mailjet
+  endpoint: /v3/REST/contact/{email}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+    required:
+      - email
+
+- slug: mailjet_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Mailjet.
+  provider: mailjet
+  endpoint: /v3/REST/contact
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      name:
+        type: string
+        description: "Contact name"
+      properties:
+        type: object
+        description: "Custom properties"
+    required:
+      - email
+
+- slug: mailjet_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: mailjet
+  endpoint: /v3/REST/contact/{email}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      name:
+        type: string
+        description: "Contact name"
+      properties:
+        type: object
+        description: "Custom properties"
+    required:
+      - email
+
+- slug: mailjet_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns in Mailjet.
+    Filter by status, date, or sender.
+  provider: mailjet
+  endpoint: /v3/REST/campaign
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: integer
+        description: "Filter by status (1=draft, 2=scheduled, 3=sent)"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: mailjet_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: mailjet
+  endpoint: /v3/REST/campaign/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: mailjet_send_campaign
+  name: Send Campaign
+  description: |
+    Send a campaign to its recipients.
+  provider: mailjet
+  endpoint: /v3/send
+  method: POST
+  scopes: []
+  tags:
+    - campaigns
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a campaign
+    properties:
+      campaign_id:
+        type: integer
+        description: "Campaign ID to send"
+    required:
+      - campaign_id
+
+- slug: mailjet_list_lists
+  name: List Lists
+  description: |
+    List all contact lists in Mailjet.
+  provider: mailjet
+  endpoint: /v3/REST/contactslist
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: mailjet_get_list
+  name: Get List
+  description: |
+    Get details of a specific contact list.
+  provider: mailjet
+  endpoint: /v3/REST/contactslist/{id}
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      id:
+        type: integer
+        description: "List ID"
+    required:
+      - id
+
+- slug: mailjet_list_stats
+  name: List Statistics
+  description: |
+    Get email statistics from Mailjet.
+  provider: mailjet
+  endpoint: /v3/REST/message
+  method: GET
+  scopes: []
+  tags:
+    - statistics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing statistics
+    properties:
+      from_ts:
+        type: integer
+        description: "From timestamp"
+      to_ts:
+        type: integer
+        description: "To timestamp"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []

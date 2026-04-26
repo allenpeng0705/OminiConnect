@@ -1,0 +1,299 @@
+# Aiven Tools - Allowlist
+# Curated subset of Aiven API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. aiven_list_projects           - List Aiven projects
+# 2. aiven_get_project             - Get project details
+# 3. aiven_list_services           - List services in project
+# 4. aiven_get_service             - Get service details
+# 5. aiven_list_topics             - List Kafka topics
+# 6. aiven_get_topic               - Get Kafka topic details
+# 7. aiven_list_access_list        - List ACL rules for topic
+# 8. aiven_create_access_list      - Create ACL rule
+# 9. aiven_list_connection_pools   - List connection pools
+# 10. aiven_get_connection_pool    - Get connection pool details
+
+- slug: aiven_list_projects
+  name: List Projects
+  description: |
+    List all Aiven projects the authenticated user has access to.
+    Projects organize services, users, and billing.
+  provider: aiven
+  endpoint: /v1/projects
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Optional pagination parameters
+    properties:
+      max_results:
+        type: integer
+        description: "Max number of results (default 25)"
+        default: 25
+    required: []
+
+- slug: aiven_get_project
+  name: Get Project
+  description: |
+    Get details about a specific Aiven project including services, users, and billing info.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+    required:
+      - projectName
+
+- slug: aiven_list_services
+  name: List Services
+  description: |
+    List all managed services in an Aiven project.
+    Services include databases (PostgreSQL, MySQL), Kafka, Redis, Elasticsearch, and more.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - services
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+    required:
+      - projectName
+
+- slug: aiven_get_service
+  name: Get Service
+  description: |
+    Get detailed information about a specific Aiven service including connection info and metrics.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Service name"
+    required:
+      - projectName
+      - serviceName
+
+- slug: aiven_list_topics
+  name: List Topics
+  description: |
+    List all Kafka topics in an Aiven project service.
+    Topics are categories for organizing Kafka messages.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/topics
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - kafka
+    - topics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing Kafka topics
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Kafka service name"
+    required:
+      - projectName
+      - serviceName
+
+- slug: aiven_get_topic
+  name: Get Topic
+  description: |
+    Get details about a specific Kafka topic including partitions, retention, and cleanup policies.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/topics/{topicName}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - kafka
+    - topics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a Kafka topic
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Kafka service name"
+      topicName:
+        type: string
+        description: "Topic name"
+    required:
+      - projectName
+      - serviceName
+      - topicName
+
+- slug: aiven_list_access_list
+  name: List Access List
+  description: |
+    List all ACL (Access Control List) rules for a Kafka topic.
+    ACLs control which users and applications can read or write to topics.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/topics/{topicName}/acl
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - kafka
+    - acl
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing topic ACLs
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Kafka service name"
+      topicName:
+        type: string
+        description: "Topic name"
+    required:
+      - projectName
+      - serviceName
+      - topicName
+
+- slug: aiven_create_access_list
+  name: Create Access List Entry
+  description: |
+    Create a new ACL rule for a Kafka topic to grant read or write access.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/topics/{topicName}/acl
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - kafka
+    - acl
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an ACL rule
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Kafka service name"
+      topicName:
+        type: string
+        description: "Topic name"
+      permission:
+        type: string
+        description: "Permission type: read or write"
+        enum: [read, write]
+      username:
+        type: string
+        description: "Username to grant access"
+    required:
+      - projectName
+      - serviceName
+      - topicName
+      - permission
+      - username
+
+- slug: aiven_list_connection_pools
+  name: List Connection Pools
+  description: |
+    List all connection pools in an Aiven project service.
+    Connection pools allow multiple applications to share database connections efficiently.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/connectionpools
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - connection-pools
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing connection pools
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Database service name"
+    required:
+      - projectName
+      - serviceName
+
+- slug: aiven_get_connection_pool
+  name: Get Connection Pool
+  description: |
+    Get details about a specific connection pool including pool size and target database.
+  provider: aiven
+  endpoint: /v1/projects/{projectName}/services/{serviceName}/connectionpools/{poolName}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - databases
+    - connection-pools
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a connection pool
+    properties:
+      projectName:
+        type: string
+        description: "Aiven project name"
+      serviceName:
+        type: string
+        description: "Database service name"
+      poolName:
+        type: string
+        description: "Connection pool name"
+    required:
+      - projectName
+      - serviceName
+      - poolName

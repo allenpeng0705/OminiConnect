@@ -1,0 +1,241 @@
+# Paycor Tools - Allowlist
+# Curated subset of Paycor API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. paycor_list_employees        - List employees
+# 2. paycor_get_employee          - Get employee details
+# 3. paycor_list_payroll_runs     - List payroll runs
+# 4. paycor_get_payroll_run       - Get payroll run details
+# 5. paycor_list_time_entries    - List time entries
+# 6. paycor_list_departments     - List departments
+# 7. paycor_list_jobs            - List jobs/positions
+# 8. paycor_list_benefits         - List benefit plans
+# 9. paycor_list_pay_groups      - List pay groups
+# 10. paycor_get_company_info    - Get company information
+
+- slug: paycor_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: paycor
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - employees
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      departmentId:
+        type: string
+        description: "Filter by department ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: paycor_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about a specific employee.
+  provider: paycor
+  endpoint: /v1/employees/{employeeId}
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID"
+    required:
+      - employeeId
+
+- slug: paycor_list_payroll_runs
+  name: List Payroll Runs
+  description: |
+    List all payroll runs for the organization.
+  provider: paycor
+  endpoint: /v1/payroll/runs
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - payroll
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing payroll runs
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: paycor_get_payroll_run
+  name: Get Payroll Run
+  description: |
+    Get detailed information about a specific payroll run.
+  provider: paycor
+  endpoint: /v1/payroll/runs/{runId}
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - payroll
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payroll run
+    properties:
+      runId:
+        type: string
+        description: "Payroll run ID"
+    required:
+      - runId
+
+- slug: paycor_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries for employees.
+  provider: paycor
+  endpoint: /v1/time/entries
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - time
+    - tracking
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: paycor_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: paycor
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - departments
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: paycor_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs/positions in the organization.
+  provider: paycor
+  endpoint: /v1/jobs
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - jobs
+    - positions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties: {}
+    required: []
+
+- slug: paycor_list_benefits
+  name: List Benefits
+  description: |
+    List all benefit plans available in the organization.
+  provider: paycor
+  endpoint: /v1/benefits
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - benefits
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing benefit plans
+    properties:
+      benefitType:
+        type: string
+        description: "Filter by benefit type"
+    required: []
+
+- slug: paycor_list_pay_groups
+  name: List Pay Groups
+  description: |
+    List all pay groups configured in the organization.
+  provider: paycor
+  endpoint: /v1/pay-groups
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - pay-groups
+    - payroll
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pay groups
+    properties: {}
+    required: []
+
+- slug: paycor_get_company_info
+  name: Get Company Info
+  description: |
+    Get company/organization information.
+  provider: paycor
+  endpoint: /v1/company
+  method: GET
+  scopes:
+    - offline_access
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

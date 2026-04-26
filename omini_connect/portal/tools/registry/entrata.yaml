@@ -1,0 +1,245 @@
+# Entrata Tools - Allowlist
+# Curated subset of Entrata API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. entrata_list_properties        - List properties
+# 2. entrata_get_property           - Get property details
+# 3. entrata_list_units             - List units
+# 4. entrata_get_unit               - Get unit details
+# 5. entrata_list_tenants           - List tenants
+# 6. entrata_get_tenant             - Get tenant details
+# 7. entrata_list_leases            - List leases
+# 8. entrata_get_lease              - Get lease details
+# 9. entrata_list_work_orders       - List work orders
+# 10. entrata_create_work_order     - Create work order
+
+- slug: entrata_list_properties
+  name: List Properties
+  description: |
+    List all properties in the account.
+  provider: entrata
+  endpoint: /api/v1/properties
+  method: GET
+  scopes: []
+  tags:
+    - properties
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties: {}
+    required: []
+
+- slug: entrata_get_property
+  name: Get Property
+  description: |
+    Get details of a specific property.
+  provider: entrata
+  endpoint: /api/v1/properties/{id}
+  method: GET
+  scopes: []
+  tags:
+    - properties
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting property
+    properties:
+      id:
+        type: integer
+        description: "Property ID"
+    required:
+      - id
+
+- slug: entrata_list_units
+  name: List Units
+  description: |
+    List units for a property.
+  provider: entrata
+  endpoint: /api/v1/properties/{propertyId}/units
+  method: GET
+  scopes: []
+  tags:
+    - units
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing units
+    properties:
+      propertyId:
+        type: integer
+        description: "Property ID"
+    required:
+      - propertyId
+
+- slug: entrata_get_unit
+  name: Get Unit
+  description: |
+    Get details of a specific unit.
+  provider: entrata
+  endpoint: /api/v1/units/{id}
+  method: GET
+  scopes: []
+  tags:
+    - units
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting unit
+    properties:
+      id:
+        type: integer
+        description: "Unit ID"
+    required:
+      - id
+
+- slug: entrata_list_tenants
+  name: List Tenants
+  description: |
+    List tenants in the account.
+  provider: entrata
+  endpoint: /api/v1/tenants
+  method: GET
+  scopes: []
+  tags:
+    - tenants
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tenants
+    properties:
+      property_id:
+        type: integer
+        description: "Filter by property ID"
+    required: []
+
+- slug: entrata_get_tenant
+  name: Get Tenant
+  description: |
+    Get details of a specific tenant.
+  provider: entrata
+  endpoint: /api/v1/tenants/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tenants
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting tenant
+    properties:
+      id:
+        type: integer
+        description: "Tenant ID"
+    required:
+      - id
+
+- slug: entrata_list_leases
+  name: List Leases
+  description: |
+    List leases in the account.
+  provider: entrata
+  endpoint: /api/v1/leases
+  method: GET
+  scopes: []
+  tags:
+    - leases
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leases
+    properties:
+      property_id:
+        type: integer
+        description: "Filter by property ID"
+      status:
+        type: string
+        description: "Filter by status (active, expired)"
+    required: []
+
+- slug: entrata_get_lease
+  name: Get Lease
+  description: |
+    Get details of a specific lease.
+  provider: entrata
+  endpoint: /api/v1/leases/{id}
+  method: GET
+  scopes: []
+  tags:
+    - leases
+    - real estate
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting lease
+    properties:
+      id:
+        type: integer
+        description: "Lease ID"
+    required:
+      - id
+
+- slug: entrata_list_work_orders
+  name: List Work Orders
+  description: |
+    List maintenance work orders.
+  provider: entrata
+  endpoint: /api/v1/workorders
+  method: GET
+  scopes: []
+  tags:
+    - workorders
+    - maintenance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing work orders
+    properties:
+      property_id:
+        type: integer
+        description: "Filter by property ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: entrata_create_work_order
+  name: Create Work Order
+  description: |
+    Create a new maintenance work order.
+  provider: entrata
+  endpoint: /api/v1/workorders
+  method: POST
+  scopes: []
+  tags:
+    - workorders
+    - maintenance
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating work order
+    properties:
+      property_id:
+        type: integer
+        description: "Property ID"
+      unit_id:
+        type: integer
+        description: "Unit ID"
+      description:
+        type: string
+        description: "Work order description"
+      priority:
+        type: string
+        description: "Priority (low, medium, high, emergency)"
+    required:
+      - property_id
+      - description

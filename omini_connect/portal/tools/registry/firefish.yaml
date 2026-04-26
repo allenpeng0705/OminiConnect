@@ -1,0 +1,248 @@
+# Firefish Tools - Allowlist
+# Curated subset of Firefish API for AI agent use.
+# OAUTH2_CC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. firefish_list_contacts         - List contacts
+# 2. firefish_get_contact          - Get contact details
+# 3. firefish_create_contact      - Create a contact
+# 4. firefish_update_contact      - Update contact details
+# 5. firefish_list_deals         - List deals
+# 6. firefish_get_deal           - Get deal details
+# 7. firefish_create_deal        - Create a deal
+# 8. firefish_list_companies     - List companies
+# 9. firefish_get_company       - Get company details
+# 10. firefish_get_stats       - Get CRM stats
+
+- slug: firefish_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in the CRM.
+  provider: firefish
+  endpoint: /api/v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: firefish_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: firefish
+  endpoint: /api/v1/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: firefish_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: firefish
+  endpoint: /api/v1/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating contact
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email
+
+- slug: firefish_update_contact
+  name: Update Contact
+  description: |
+    Update contact details.
+  provider: firefish
+  endpoint: /api/v1/contacts/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - id
+
+- slug: firefish_list_deals
+  name: List Deals
+  description: |
+    List all deals in the pipeline.
+  provider: firefish
+  endpoint: /api/v1/deals
+  method: GET
+  scopes: []
+  tags:
+    - deals
+    - sales
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      stage:
+        type: string
+        description: "Filter by stage"
+    required: []
+
+- slug: firefish_get_deal
+  name: Get Deal
+  description: |
+    Get details of a specific deal.
+  provider: firefish
+  endpoint: /api/v1/deals/{id}
+  method: GET
+  scopes: []
+  tags:
+    - deals
+    - sales
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting deal
+    properties:
+      id:
+        type: string
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: firefish_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal.
+  provider: firefish
+  endpoint: /api/v1/deals
+  method: POST
+  scopes: []
+  tags:
+    - deals
+    - sales
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating deal
+    properties:
+      title:
+        type: string
+        description: "Deal title"
+      value:
+        type: number
+        description: "Deal value"
+      stage:
+        type: string
+        description: "Pipeline stage"
+    required:
+      - title
+
+- slug: firefish_list_companies
+  name: List Companies
+  description: |
+    List all companies.
+  provider: firefish
+  endpoint: /api/v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: firefish_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: firefish
+  endpoint: /api/v1/companies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: firefish_get_stats
+  name: Get Stats
+  description: |
+    Get CRM statistics.
+  provider: firefish
+  endpoint: /api/v1/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties: {}
+    required: []

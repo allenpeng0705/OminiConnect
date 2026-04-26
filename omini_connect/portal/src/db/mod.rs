@@ -16,6 +16,91 @@ fn default_sqlite_url() -> String {
     format!("sqlite://{}", path.display())
 }
 
+/// Rebuild `connectors` with composite primary key `(owner_username, platform)` and attach legacy rows to `admin`.
+async fn migrate_connectors_per_owner(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
+    sqlx::query(
+        r#"CREATE TABLE IF NOT EXISTS portal_meta (
+            k TEXT PRIMARY KEY,
+            v TEXT NOT NULL
+        )"#,
+    )
+    .execute(pool)
+    .await?;
+
+    let cur: Option<String> = sqlx::query_scalar("SELECT v FROM portal_meta WHERE k = 'schema_version'")
+        .fetch_optional(pool)
+        .await?;
+    if cur.as_deref() == Some("2") {
+        return Ok(());
+    }
+
+    let mut tx = pool.begin().await?;
+
+    sqlx::query("DROP TABLE IF EXISTS connectors_owner_pk")
+        .execute(&mut *tx)
+        .await
+        .ok();
+
+    sqlx::query(
+        r#"CREATE TABLE connectors_owner_pk (
+            owner_username TEXT NOT NULL,
+            platform TEXT NOT NULL,
+            client_id TEXT NOT NULL,
+            client_secret TEXT NOT NULL,
+            redirect_uri TEXT NOT NULL DEFAULT '',
+            scopes TEXT NOT NULL DEFAULT '',
+            engine TEXT NOT NULL DEFAULT 'omini_connect_native',
+            provider_key TEXT NOT NULL DEFAULT '',
+            connection_ref TEXT NOT NULL DEFAULT '',
+            agent_id TEXT NOT NULL DEFAULT '',
+            enabled INTEGER NOT NULL DEFAULT 1,
+            PRIMARY KEY (owner_username, platform)
+        )"#,
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    sqlx::query(
+        r#"INSERT INTO connectors_owner_pk (
+            owner_username, platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled
+        ) SELECT
+            'admin',
+            platform,
+            client_id,
+            client_secret,
+            redirect_uri,
+            scopes,
+            CASE WHEN TRIM(engine) = '' THEN 'omini_connect_native' ELSE engine END,
+            COALESCE(provider_key, ''),
+            COALESCE(connection_ref, ''),
+            COALESCE(agent_id, ''),
+            COALESCE(enabled, 1)
+        FROM connectors"#,
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    sqlx::query("DROP TABLE connectors")
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("ALTER TABLE connectors_owner_pk RENAME TO connectors")
+        .execute(&mut *tx)
+        .await?;
+
+    sqlx::query("DELETE FROM portal_meta WHERE k = 'schema_version'")
+        .execute(&mut *tx)
+        .await
+        .ok();
+    sqlx::query("INSERT INTO portal_meta (k, v) VALUES ('schema_version', '2')")
+        .execute(&mut *tx)
+        .await?;
+
+    tx.commit().await?;
+    tracing::info!("Migrated connectors table to per-owner primary key (schema_version=2)");
+    Ok(())
+}
+
 /// Create a DB pool. Reads `DATABASE_URL` env var, or defaults to SQLite `portal.db` beside this crate.
 pub async fn create_pool() -> anyhow::Result<sqlx::AnyPool> {
     let url = std::env::var("DATABASE_URL")
@@ -116,6 +201,8 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
     }
 
     tracing::info!("Database migrations applied");
+    drop(conn);
+    migrate_connectors_per_owner(pool).await?;
     Ok(())
 }
 
@@ -304,10 +391,12 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
 #[async_trait::async_trait]
 pub trait ConnectorRepository: Send + Sync {
-    async fn get(&self, platform: &str) -> anyhow::Result<Option<ConnectorConfig>>;
-    async fn list(&self) -> anyhow::Result<Vec<ConnectorConfig>>;
-    async fn upsert(&self, config: &ConnectorConfig) -> anyhow::Result<()>;
-    async fn delete(&self, platform: &str) -> anyhow::Result<()>;
+    async fn get(&self, owner: &str, platform: &str) -> anyhow::Result<Option<ConnectorConfig>>;
+    async fn list(&self, owner: &str) -> anyhow::Result<Vec<ConnectorConfig>>;
+    /// All connectors (startup registration / migrations).
+    async fn list_all(&self) -> anyhow::Result<Vec<ConnectorConfig>>;
+    async fn upsert(&self, owner: &str, config: &ConnectorConfig) -> anyhow::Result<()>;
+    async fn delete(&self, owner: &str, platform: &str) -> anyhow::Result<()>;
 }
 
 pub struct SqlxConnectorRepo {
@@ -322,10 +411,11 @@ impl SqlxConnectorRepo {
 
 #[async_trait::async_trait]
 impl ConnectorRepository for SqlxConnectorRepo {
-    async fn get(&self, platform: &str) -> anyhow::Result<Option<ConnectorConfig>> {
+    async fn get(&self, owner: &str, platform: &str) -> anyhow::Result<Option<ConnectorConfig>> {
         let row: Option<models::ConnectorRow> = sqlx::query_as(
-            "SELECT platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled FROM connectors WHERE platform = $1",
+            "SELECT owner_username, platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled FROM connectors WHERE owner_username = $1 AND platform = $2",
         )
+        .bind(owner)
         .bind(platform)
         .fetch_optional(&self.pool)
         .await?;
@@ -333,9 +423,20 @@ impl ConnectorRepository for SqlxConnectorRepo {
         Ok(row.map(|r| r.into()))
     }
 
-    async fn list(&self) -> anyhow::Result<Vec<ConnectorConfig>> {
+    async fn list(&self, owner: &str) -> anyhow::Result<Vec<ConnectorConfig>> {
         let rows: Vec<models::ConnectorRow> = sqlx::query_as(
-            "SELECT platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled FROM connectors",
+            "SELECT owner_username, platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled FROM connectors WHERE owner_username = $1 ORDER BY platform",
+        )
+        .bind(owner)
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(rows.into_iter().map(|r| r.into()).collect())
+    }
+
+    async fn list_all(&self) -> anyhow::Result<Vec<ConnectorConfig>> {
+        let rows: Vec<models::ConnectorRow> = sqlx::query_as(
+            "SELECT owner_username, platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled FROM connectors ORDER BY owner_username, platform",
         )
         .fetch_all(&self.pool)
         .await?;
@@ -343,11 +444,11 @@ impl ConnectorRepository for SqlxConnectorRepo {
         Ok(rows.into_iter().map(|r| r.into()).collect())
     }
 
-    async fn upsert(&self, config: &ConnectorConfig) -> anyhow::Result<()> {
+    async fn upsert(&self, owner: &str, config: &ConnectorConfig) -> anyhow::Result<()> {
         sqlx::query(
-            r#"INSERT INTO connectors (platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled)
-               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-               ON CONFLICT(platform) DO UPDATE SET
+            r#"INSERT INTO connectors (owner_username, platform, client_id, client_secret, redirect_uri, scopes, engine, provider_key, connection_ref, agent_id, enabled)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+               ON CONFLICT(owner_username, platform) DO UPDATE SET
                client_id = EXCLUDED.client_id,
                client_secret = EXCLUDED.client_secret,
                redirect_uri = EXCLUDED.redirect_uri,
@@ -358,6 +459,7 @@ impl ConnectorRepository for SqlxConnectorRepo {
                agent_id = EXCLUDED.agent_id,
                enabled = EXCLUDED.enabled"#,
         )
+        .bind(owner)
         .bind(&config.platform)
         .bind(&config.client_id)
         .bind(&config.client_secret)
@@ -373,8 +475,9 @@ impl ConnectorRepository for SqlxConnectorRepo {
         Ok(())
     }
 
-    async fn delete(&self, platform: &str) -> anyhow::Result<()> {
-        sqlx::query("DELETE FROM connectors WHERE platform = $1")
+    async fn delete(&self, owner: &str, platform: &str) -> anyhow::Result<()> {
+        sqlx::query("DELETE FROM connectors WHERE owner_username = $1 AND platform = $2")
+            .bind(owner)
             .bind(platform)
             .execute(&self.pool)
             .await?;
@@ -480,6 +583,7 @@ mod models {
 
     #[derive(FromRow)]
     pub struct ConnectorRow {
+        pub owner_username: String,
         pub platform: String,
         pub client_id: String,
         pub client_secret: String,
@@ -501,6 +605,7 @@ mod models {
                 r.provider_key
             };
             ConnectorConfig {
+                owner_username: r.owner_username,
                 platform,
                 client_id: r.client_id,
                 client_secret: r.client_secret,

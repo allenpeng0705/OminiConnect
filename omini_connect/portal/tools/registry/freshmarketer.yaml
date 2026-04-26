@@ -1,0 +1,267 @@
+# Freshmarketer Tools - Allowlist
+# Curated subset of Freshmarketer REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freshmarketer_list_visitors          - List website visitors
+# 2. freshmarketer_get_visitor            - Get visitor details
+# 3. freshmarketer_list_events            - List tracked events
+# 4. freshmarketer_get_event              - Get event details
+# 5. freshmarketer_list_funnels           - List conversion funnels
+# 6. freshmarketer_get_funnel             - Get funnel details
+# 7. freshmarketer_get_conversion_report  - Get conversion report
+# 8. freshmarketer_list_page_analytics    - List page analytics
+# 9. freshmarketer_get_page_analytics     - Get page analytics details
+# 10. freshmarketer_list_campaigns        - List campaigns
+
+- slug: freshmarketer_list_visitors
+  name: List Visitors
+  description: |
+    List all website visitors in your Freshmarketer account.
+  provider: freshmarketer
+  endpoint: /api/v1/visitors
+  method: GET
+  scopes:
+    - visitors:read
+  tags:
+    - visitors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+      date_from:
+        type: string
+        description: "Filter from date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "Filter to date (YYYY-MM-DD)"
+    required: []
+
+- slug: freshmarketer_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific visitor.
+  provider: freshmarketer
+  endpoint: /api/v1/visitors/{visitorId}
+  method: GET
+  scopes:
+    - visitors:read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      visitorId:
+        type: string
+        description: "Visitor ID"
+    required:
+      - visitorId
+
+- slug: freshmarketer_list_events
+  name: List Events
+  description: |
+    List all tracked events in your Freshmarketer account.
+  provider: freshmarketer
+  endpoint: /api/v1/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+      event_type:
+        type: string
+        description: "Filter by event type"
+    required: []
+
+- slug: freshmarketer_get_event
+  name: Get Event
+  description: |
+    Get detailed information about a specific event.
+  provider: freshmarketer
+  endpoint: /api/v1/events/{eventId}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: freshmarketer_list_funnels
+  name: List Funnels
+  description: |
+    List all conversion funnels in your Freshmarketer account.
+  provider: freshmarketer
+  endpoint: /api/v1/funnels
+  method: GET
+  scopes:
+    - funnels:read
+  tags:
+    - funnels
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing funnels
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: freshmarketer_get_funnel
+  name: Get Funnel
+  description: |
+    Get detailed information about a specific funnel.
+  provider: freshmarketer
+  endpoint: /api/v1/funnels/{funnelId}
+  method: GET
+  scopes:
+    - funnels:read
+  tags:
+    - funnels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a funnel
+    properties:
+      funnelId:
+        type: string
+        description: "Funnel ID"
+    required:
+      - funnelId
+
+- slug: freshmarketer_get_conversion_report
+  name: Get Conversion Report
+  description: |
+    Get conversion report data for your marketing campaigns.
+  provider: freshmarketer
+  endpoint: /api/v1/reports/conversion
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - conversion
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting conversion report
+    properties:
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: freshmarketer_list_page_analytics
+  name: List Page Analytics
+  description: |
+    List page analytics data for your website.
+  provider: freshmarketer
+  endpoint: /api/v1/analytics/pages
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing page analytics
+    properties:
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: freshmarketer_get_page_analytics
+  name: Get Page Analytics
+  description: |
+    Get detailed analytics for a specific page.
+  provider: freshmarketer
+  endpoint: /api/v1/analytics/pages/{pageId}
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting page analytics
+    properties:
+      pageId:
+        type: string
+        description: "Page ID or URL identifier"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - pageId
+
+- slug: freshmarketer_list_campaigns
+  name: List Campaigns
+  description: |
+    List all marketing campaigns in your Freshmarketer account.
+  provider: freshmarketer
+  endpoint: /api/v1/campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, paused, completed)"
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []

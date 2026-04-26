@@ -1,0 +1,279 @@
+# Calendly Tools - Allowlist
+# Curated subset of Calendly API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. calendly_list_event_types            - List event types
+# 2. calendly_get_event_type             - Get event type details
+# 3. calendly_list_scheduled_events       - List scheduled events
+# 4. calendly_get_scheduled_event         - Get scheduled event details
+# 5. calendly_cancel_scheduled_event      - Cancel a scheduled event
+# 6. calendly_list_invitees              - List event invitees
+# 7. calendly_get_invitee                - Get invitee details
+# 8. calendly_get_current_user           - Get current user
+# 9. calendly_list_organization_event_types - List organization event types
+# 10. calendly_get_user_availability      - Get user availability
+
+- slug: calendly_list_event_types
+  name: List Event Types
+  description: |
+    List all event types (appointment types) available for a user or organization.
+  provider: calendly
+  endpoint: /event_types
+  method: GET
+  scopes:
+    - read_event_types
+  tags:
+    - event_types
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing event types
+    properties:
+      user:
+        type: string
+        description: "Filter by user URI"
+      organization:
+        type: string
+        description: "Filter by organization URI"
+      count:
+        type: integer
+        description: "Max event types to return"
+        default: 100
+    required: []
+
+- slug: calendly_get_event_type
+  name: Get Event Type
+  description: |
+    Get detailed information about a specific event type.
+  provider: calendly
+  endpoint: /event_types/{event_type_id}
+  method: GET
+  scopes:
+    - read_event_types
+  tags:
+    - event_types
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event type
+    properties:
+      event_type_id:
+        type: string
+        description: "Event type ID or URI"
+    required:
+      - event_type_id
+
+- slug: calendly_list_scheduled_events
+  name: List Scheduled Events
+  description: |
+    List scheduled events (booked appointments). Filter by user, date range, status.
+  provider: calendly
+  endpoint: /scheduled_events
+  method: GET
+  scopes:
+    - read_scheduled_events
+  tags:
+    - events
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing scheduled events
+    properties:
+      user:
+        type: string
+        description: "Filter by user URI"
+      min_start_time:
+        type: string
+        description: "Events after this time (ISO 8601)"
+      max_start_time:
+        type: string
+        description: "Events before this time (ISO 8601)"
+      status:
+        type: string
+        description: "Filter by status: active, canceled"
+      count:
+        type: integer
+        description: "Max events to return"
+        default: 100
+    required: []
+
+- slug: calendly_get_scheduled_event
+  name: Get Scheduled Event
+  description: |
+    Get detailed information about a specific scheduled event.
+  provider: calendly
+  endpoint: /scheduled_events/{event_id}
+  method: GET
+  scopes:
+    - read_scheduled_events
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a scheduled event
+    properties:
+      event_id:
+        type: string
+        description: "Event ID or URI"
+    required:
+      - event_id
+
+- slug: calendly_cancel_scheduled_event
+  name: Cancel Scheduled Event
+  description: |
+    Cancel a scheduled event and notify invitees.
+  provider: calendly
+  endpoint: /scheduled_events/{event_id}/cancellation
+  method: POST
+  scopes:
+    - write_scheduled_events
+  tags:
+    - events
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for canceling a scheduled event
+    properties:
+      event_id:
+        type: string
+        description: "Event ID or URI"
+      reason:
+        type: string
+        description: "Cancellation reason"
+    required:
+      - event_id
+
+- slug: calendly_list_invitees
+  name: List Invitees
+  description: |
+    List all invitees for a specific scheduled event.
+  provider: calendly
+  endpoint: /scheduled_events/{event_id}/invitees
+  method: GET
+  scopes:
+    - read_scheduled_events
+  tags:
+    - invitees
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invitees
+    properties:
+      event_id:
+        type: string
+        description: "Event ID or URI"
+      count:
+        type: integer
+        description: "Max invitees to return"
+        default: 100
+    required:
+      - event_id
+
+- slug: calendly_get_invitee
+  name: Get Invitee
+  description: |
+    Get detailed information about a specific invitee.
+  provider: calendly
+  endpoint: /scheduled_events/{event_id}/invitees/{invitee_id}
+  method: GET
+  scopes:
+    - read_scheduled_events
+  tags:
+    - invitees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invitee
+    properties:
+      event_id:
+        type: string
+        description: "Event ID or URI"
+      invitee_id:
+        type: string
+        description: "Invitee ID or URI"
+    required:
+      - event_id
+      - invitee_id
+
+- slug: calendly_get_current_user
+  name: Get Current User
+  description: |
+    Get the current authenticated user's profile information.
+  provider: calendly
+  endpoint: /users/me
+  method: GET
+  scopes:
+    - read_users
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting current user
+    properties: {}
+    required: []
+
+- slug: calendly_list_organization_event_types
+  name: List Organization Event Types
+  description: |
+    List all event types for an organization.
+  provider: calendly
+  endpoint: /organizations/{organization_id}/event_types
+  method: GET
+  scopes:
+    - read_event_types
+  tags:
+    - event_types
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing organization event types
+    properties:
+      organization_id:
+        type: string
+        description: "Organization ID or URI"
+      active:
+        type: boolean
+        description: "Filter to only active event types"
+        default: true
+      count:
+        type: integer
+        description: "Max event types to return"
+        default: 100
+    required:
+      - organization_id
+
+- slug: calendly_get_user_availability
+  name: Get User Availability
+  description: |
+    Get availability schedule for a user or event type.
+  provider: calendly
+  endpoint: /users/{user_id}/availability
+  method: GET
+  scopes:
+    - read_users
+  tags:
+    - users
+    - availability
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user availability
+    properties:
+      user_id:
+        type: string
+        description: "User ID or URI"
+      start_date:
+        type: string
+        description: "Start date for availability check (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date for availability check (YYYY-MM-DD)"
+    required:
+      - user_id

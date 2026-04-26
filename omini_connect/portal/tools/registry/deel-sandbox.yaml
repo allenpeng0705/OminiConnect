@@ -1,0 +1,251 @@
+# Deel Sandbox Tools - Allowlist
+# Curated subset of the Deel API for AI agent use.
+# OAuth2 via Nango (Sandbox environment).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. deel_sandbox_list_contracts         - List contracts
+# 2. deel_sandbox_get_contract          - Get contract details
+# 3. deem_sandbox_list_employees        - List employees/contractors
+# 4. deem_sandbox_get_employee         - Get employee details
+# 5. deem_sandbox_list_payments         - List payments
+# 6. deem_sandbox_get_payment          - Get payment details
+# 7. deem_sandbox_list_invoices         - List invoices
+# 8. deem_sandbox_get_invoice          - Get invoice details
+# 9. deem_sandbox_list_time_off        - List time off requests
+# 10. deem_sandbox_get_time_off        - Get time off details
+
+- slug: deel_sandbox_list_contracts
+  name: List Contracts
+  description: |
+    List all contracts in Deel sandbox.
+  provider: deel-sandbox
+  endpoint: /v1/contracts
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: active, ended, draft"
+    required: []
+
+- slug: deel_sandbox_get_contract
+  name: Get Contract
+  description: |
+    Get details of a specific contract.
+  provider: deel-sandbox
+  endpoint: /v1/contracts/{contract_id}
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contract
+    properties:
+      contract_id:
+        type: string
+        description: "Contract ID"
+    required:
+      - contract_id
+
+- slug: deel_sandbox_list_employees
+  name: List Employees
+  description: |
+    List all employees and contractors.
+  provider: deel-sandbox
+  endpoint: /v1/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      type:
+        type: string
+        description: "Filter by type: employee, contractor"
+    required: []
+
+- slug: deel_sandbox_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee or contractor.
+  provider: deel-sandbox
+  endpoint: /v1/employees/{employee_id}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: deel_sandbox_list_payments
+  name: List Payments
+  description: |
+    List all payments processed through Deel.
+  provider: deel-sandbox
+  endpoint: /v1/payments
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - payroll
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: pending, processed, failed"
+    required: []
+
+- slug: deel_sandbox_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment.
+  provider: deel-sandbox
+  endpoint: /v1/payments/{payment_id}
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - payroll
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      payment_id:
+        type: string
+        description: "Payment ID"
+    required:
+      - payment_id
+
+- slug: deel_sandbox_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: deel-sandbox
+  endpoint: /v1/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: draft, sent, paid"
+    required: []
+
+- slug: deel_sandbox_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: deel-sandbox
+  endpoint: /v1/invoices/{invoice_id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - invoice_id
+
+- slug: deel_sandbox_list_time_off
+  name: List Time Off
+  description: |
+    List all time off requests.
+  provider: deel-sandbox
+  endpoint: /v1/time-off
+  method: GET
+  scopes: []
+  tags:
+    - time-off
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time off
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected"
+    required: []
+
+- slug: deel_sandbox_get_time_off
+  name: Get Time Off
+  description: |
+    Get details of a specific time off request.
+  provider: deel-sandbox
+  endpoint: /v1/time-off/{time_off_id}
+  method: GET
+  scopes: []
+  tags:
+    - time-off
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting time off
+    properties:
+      time_off_id:
+        type: string
+        description: "Time Off ID"
+    required:
+      - time_off_id

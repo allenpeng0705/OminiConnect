@@ -1,0 +1,288 @@
+# Slack Tools - Allowlist
+# Curated subset of the Slack API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. slack_list_channels       - List conversations (channels, DMs)
+# 2. slack_get_channel         - Get channel info
+# 3. slack_post_message        - Post a message to a channel
+# 4. slack_list_messages       - Get messages in a channel
+# 5. slack_get_message         - Get a specific message
+# 6. slack_upload_file        - Upload a file to Slack
+# 7. slack_list_users          - List workspace users
+# 8. slack_get_user            - Get user info
+# 9. slack_list_files          - List files
+# 10. slack_get_file           - Get file info
+
+- slug: slack_list_channels
+  name: List Channels
+  description: |
+    List all conversations in the workspace (channels, direct messages, group DMs).
+    Use this to find channels to post to or browse available conversations.
+  provider: slack
+  endpoint: /conversations.list
+  method: GET
+  scopes:
+    - channels:read
+  tags:
+    - channels
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      types:
+        type: string
+        description: "Conversation types: public_channel, private_channel, mpim, im (comma-separated)"
+        default: public_channel,private_channel
+      limit:
+        type: integer
+        description: "Number of results (default 100)"
+        default: 100
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: slack_get_channel
+  name: Get Channel
+  description: |
+    Get information about a specific channel including name, purpose, member count, and settings.
+  provider: slack
+  endpoint: /conversations.info
+  method: GET
+  scopes:
+    - channels:read
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting channel info
+    properties:
+      channel:
+        type: string
+        description: "Channel ID"
+    required:
+      - channel
+
+- slug: slack_post_message
+  name: Post Message
+  description: |
+    Post a message to a Slack channel or DM. Include text content and optionally thread replies.
+  provider: slack
+  endpoint: /chat.postMessage
+  method: POST
+  scopes:
+    - chat:write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for posting a message
+    properties:
+      channel:
+        type: string
+        description: "Channel ID or name (e.g., #general)"
+      text:
+        type: string
+        description: "Message text (required)"
+      thread_ts:
+        type: string
+        description: "Parent message timestamp to reply in thread"
+    required:
+      - channel
+      - text
+
+- slug: slack_list_messages
+  name: List Messages
+  description: |
+    Get the message history of a conversation (channel or DM). Use this to read past messages.
+  provider: slack
+  endpoint: /conversations.history
+  method: GET
+  scopes:
+    - channels:history
+  tags:
+    - messages
+    - history
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      channel:
+        type: string
+        description: "Channel ID"
+      limit:
+        type: integer
+        description: "Number of messages (default 100)"
+        default: 100
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+      oldest:
+        type: string
+        description: "Start of time range (Unix timestamp)"
+    required:
+      - channel
+
+- slug: slack_get_message
+  name: Get Message
+  description: |
+    Get a specific message by its timestamp. Useful for reading full message content and metadata.
+  provider: slack
+  endpoint: /conversations.history
+  method: GET
+  scopes:
+    - channels:history
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      channel:
+        type: string
+        description: "Channel ID"
+      ts:
+        type: string
+        description: "Message timestamp"
+    required:
+      - channel
+      - ts
+
+- slug: slack_upload_file
+  name: Upload File
+  description: |
+    Upload a file to Slack — can share to a channel or as a DM.
+  provider: slack
+  endpoint: /files.upload
+  method: POST
+  scopes:
+    - files:write
+  tags:
+    - files
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      channels:
+        type: string
+        description: "Channel IDs to share to (comma-separated)"
+      filename:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "File content (text or base64 for binary)"
+      title:
+        type: string
+        description: "File title"
+    required:
+      - channels
+      - filename
+
+- slug: slack_list_users
+  name: List Users
+  description: |
+    List all users in the workspace. Use this to find team members or get user IDs.
+  provider: slack
+  endpoint: /users.list
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users (default 100)"
+        default: 100
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: slack_get_user
+  name: Get User
+  description: |
+    Get information about a workspace user by their ID.
+  provider: slack
+  endpoint: /users.info
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties:
+      user:
+        type: string
+        description: "User ID"
+    required:
+      - user
+
+- slug: slack_list_files
+  name: List Files
+  description: |
+    List files in the workspace or a specific channel.
+  provider: slack
+  endpoint: /files.list
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      channel:
+        type: string
+        description: "Channel to filter files from"
+      count:
+        type: integer
+        description: "Number of files (default 100)"
+        default: 100
+      ts_from:
+        type: string
+        description: "Start of time range (Unix timestamp)"
+      ts_to:
+        type: string
+        description: "End of time range (Unix timestamp)"
+    required: []
+
+- slug: slack_get_file
+  name: Get File
+  description: |
+    Get information about a specific file including its metadata, shares, and comments.
+  provider: slack
+  endpoint: /files.info
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting file info
+    properties:
+      file:
+        type: string
+        description: "File ID"
+    required:
+      - file

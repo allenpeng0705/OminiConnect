@@ -1,0 +1,187 @@
+# WhatsApp Business Tools - Allowlist
+# Curated subset of WhatsApp Business API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. whatsapp_list_message_templates           - List all message templates
+# # 2. whatsapp_create_message_template           - Create a new message template
+# # 3. whatsapp_send_message           - Send a WhatsApp message
+# # 4. whatsapp_list_messages           - List sent messages
+# # 5. whatsapp_get_message_status           - Get status of a sent message
+# # 6. whatsapp_create_template_message           - Send a template message
+# # 7. whatsapp_list_phonenumbers           - List registered phone numbers
+# # 8. whatsapp_get_business_profile           - Get business profile info
+# # 9. whatsapp_update_business_profile           - Update business profile
+# # 10. whatsapp_list_media           - List media files
+
+- slug: whatsapp_list_message_templates
+  name: List Message Templates
+  description: |
+    List all message templates
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/message_templates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for list message templates
+    properties: {}
+    required: []
+
+- slug: whatsapp_create_message_template
+  name: Create Message Template
+  description: |
+    Create a new message template
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/message_templates
+  method: POST
+  scopes:
+    - write
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for create message template
+    properties: {}
+    required: []
+
+- slug: whatsapp_send_message
+  name: Send Message
+  description: |
+    Send a WhatsApp message
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for send message
+    properties: {}
+    required: []
+
+- slug: whatsapp_list_messages
+  name: List Messages
+  description: |
+    List sent messages
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for list messages
+    properties: {}
+    required: []
+
+- slug: whatsapp_get_message_status
+  name: Get Message Status
+  description: |
+    Get status of a sent message
+  provider: whatsapp-business
+  endpoint: /v18.0/{message_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for get message status
+    properties: {}
+    required: []
+
+- slug: whatsapp_create_template_message
+  name: Create Template Message
+  description: |
+    Send a template message
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for create template message
+    properties: {}
+    required: []
+
+- slug: whatsapp_list_phonenumbers
+  name: List Phone Numbers
+  description: |
+    List registered phone numbers
+  provider: whatsapp-business
+  endpoint: /v18.0/{business_id}/phone_numbers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for list phone numbers
+    properties: {}
+    required: []
+
+- slug: whatsapp_get_business_profile
+  name: Get Business Profile
+  description: |
+    Get business profile info
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for get business profile
+    properties: {}
+    required: []
+
+- slug: whatsapp_update_business_profile
+  name: Update Business Profile
+  description: |
+    Update business profile
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}
+  method: POST
+  scopes:
+    - write
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for update business profile
+    properties: {}
+    required: []
+
+- slug: whatsapp_list_media
+  name: List Media
+  description: |
+    List media files
+  provider: whatsapp-business
+  endpoint: /v18.0/{phone_number_id}/media
+  method: GET
+  scopes:
+    - read
+  tags:
+    - whatsapp-business
+  input_schema:
+    type: object
+    description: Parameters for list media
+    properties: {}
+    required: []
+

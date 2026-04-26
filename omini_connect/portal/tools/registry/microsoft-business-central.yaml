@@ -1,0 +1,242 @@
+# Microsoft Business Central Tools - Allowlist
+# Curated subset of Microsoft Business Central API for AI agent use.
+# OAUTH2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. business_central_list_companies      - List companies
+# 2. business_central_get_company        - Get company details
+# 3. business_central_list_customers     - List customers
+# 4. business_central_get_customer       - Get customer details
+# 5. business_central_list_vendors       - List vendors
+# 6. business_central_get_vendor         - Get vendor details
+# 7. business_central_list_invoices      - List sales invoices
+# 8. business_central_get_invoice        - Get invoice details
+# 9. business_central_list_items         - List items
+# 10. business_central_get_item          - Get item details
+
+- slug: business_central_list_companies
+  name: List Companies
+  description: |
+    List all companies in Business Central.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: business_central_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/companies/{companyId}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: business_central_list_customers
+  name: List Customers
+  description: |
+    List all customers in Business Central.
+    Filter by country, city, or search.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: business_central_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/customers/{customerId}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: business_central_list_vendors
+  name: List Vendors
+  description: |
+    List all vendors in Business Central.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/vendors
+  method: GET
+  scopes: []
+  tags:
+    - vendors
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing vendors
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: business_central_get_vendor
+  name: Get Vendor
+  description: |
+    Get details of a specific vendor.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/vendors/{vendorId}
+  method: GET
+  scopes: []
+  tags:
+    - vendors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a vendor
+    properties:
+      vendorId:
+        type: string
+        description: "Vendor ID"
+    required:
+      - vendorId
+
+- slug: business_central_list_invoices
+  name: List Sales Invoices
+  description: |
+    List all sales invoices in Business Central.
+    Filter by customer, date, or status.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/salesInvoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: business_central_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific sales invoice.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/salesInvoices/{invoiceId}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "Invoice ID"
+    required:
+      - invoiceId
+
+- slug: business_central_list_items
+  name: List Items
+  description: |
+    List all items (products/services) in Business Central.
+    Filter by type, category, or search.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/items
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: business_central_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item.
+  provider: microsoft-business-central
+  endpoint: /v2.0/{tenantId}/{environmentName}/api/v2.0/items/{itemId}
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId

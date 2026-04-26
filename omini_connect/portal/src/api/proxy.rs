@@ -14,6 +14,7 @@ use reqwest::header::AUTHORIZATION;
 use reqwest::Method as ReqwestMethod;
 
 use crate::app::AppState;
+use crate::connector_scope::oauth_vault_platform_key;
 
 /// Proxy endpoint — forwards requests to connected platforms using stored OAuth tokens.
 pub async fn forward(
@@ -39,21 +40,30 @@ pub async fn forward(
         }
     };
 
-    let mut valid_key = false;
+    let mut key_owner: Option<String> = None;
     for ak in api_keys {
+        // New keys are plain UUIDs; old keys use "username:uuid" format.
+        // Try plain key first, then fall back to old format with colon suffix.
         if bcrypt::verify(api_key, &ak.key_hash).ok() == Some(true) {
-            valid_key = true;
+            key_owner = Some(ak.username.clone());
+            break;
+        }
+        // Try treating api_key as the uuid part of an old "username:uuid" format
+        let old_raw = format!("{}:{}", ak.username, api_key);
+        if bcrypt::verify(&old_raw, &ak.key_hash).ok() == Some(true) {
+            key_owner = Some(ak.username.clone());
             break;
         }
     }
 
-    if !valid_key {
+    let Some(key_owner) = key_owner else {
         return proxy_error_response(StatusCode::UNAUTHORIZED, "invalid API key");
-    }
+    };
 
-    let connector = match state.connectors.get(&platform).await {
+    let connector = match state.connectors.get(&key_owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
+            tracing::warn!("proxy: no connector found for owner={}, platform={}", key_owner, platform);
             return proxy_error_response(StatusCode::NOT_FOUND, "platform not configured");
         }
         Err(_) => {
@@ -61,9 +71,28 @@ pub async fn forward(
         }
     };
 
-    // 2–5. Forward: API-key platforms, Nango-backed OAuth, or native vault token
-    if platform == "maton" || platform == "qqmail" {
-        let access_token = connector.client_secret.clone();
+    if !connector.enabled {
+        return proxy_error_response(StatusCode::FORBIDDEN, "connector is disabled");
+    }
+
+    // 2–5. Forward: API-key / PAT platforms, Nango-backed OAuth, or native vault token
+    let use_static_bearer = platform == "maton"
+        || platform == "qqmail"
+        || (platform == "github" && connector.engine != "nango");
+    if use_static_bearer {
+        // Maton: portal "API Key" is stored in `client_id` (Nango API_KEY style); `client_secret` if set also works.
+        // GitHub (native PAT): same as Maton — classic or fine-grained PAT in `client_secret` and/or `client_id`.
+        // QQ ExMail: corp id in `client_id`, access secret in `client_secret` (Bearer = secret for this passthrough).
+        let access_token = if platform == "maton" || platform == "github" {
+            let t = connector.client_secret.trim();
+            if t.is_empty() {
+                connector.client_id.trim().to_string()
+            } else {
+                connector.client_secret.clone()
+            }
+        } else {
+            connector.client_secret.clone()
+        };
         if access_token.is_empty() {
             return proxy_error_response(StatusCode::UNAUTHORIZED, "api key not configured");
         }
@@ -74,6 +103,7 @@ pub async fn forward(
         };
         let mut req_builder = client.request(method.clone(), &upstream_url);
         req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
         let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
         if let Some(ct) = content_type {
             req_builder = req_builder.header("Content-Type", ct);
@@ -117,7 +147,8 @@ pub async fn forward(
             }
         }
     } else {
-        let access_token = match state.oauth_vault.get_token(&platform, "user").await {
+        let vk = oauth_vault_platform_key(&key_owner, &platform);
+        let access_token = match state.oauth_vault.get_token(&vk, "user").await {
             Ok(token) => token,
             Err(e) => {
                 tracing::warn!("No token for {}: {}", platform, e);
@@ -140,6 +171,7 @@ pub async fn forward(
 
         let mut req_builder = client.request(method.clone(), &upstream_url);
         req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
         let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
         if platform == "linkedin" {
@@ -201,6 +233,7 @@ fn get_platform_base_url(platform: &str) -> &'static str {
         "linkedin" => "https://api.linkedin.com",
         "facebook" => "https://graph.facebook.com/v21.0",
         "x" => "https://api.x.com/2",
+        "github" => "https://api.github.com",
         "maton" => "https://api.maton.ai",
         "qqmail" => "https://api.exmail.qq.com",
         _ => "",

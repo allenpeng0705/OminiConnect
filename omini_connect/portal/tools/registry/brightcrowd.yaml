@@ -1,0 +1,251 @@
+# BrightCrowd Tools - Allowlist
+# Curated subset of BrightCrowd API for AI agent use.
+# OAuth2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. brightcrowd_list_organizations  - List organizations
+# 2. brightcrowd_get_organization   - Get organization details
+# 3. brightcrowd_list_members        - List organization members
+# 4. brightcrowd_get_member         - Get member details
+# 5. brightcrowd_list_badges        - List badges
+# 6. brightcrowd_get_badge         - Get badge details
+# 7. brightcrowd_list_endorsements - List endorsements
+# 8. brightcrowd_get_endorsement   - Get endorsement details
+# 9. brightcrowd_list_activities   - List activities
+# 10. brightcrowd_get_insights     - Get organization insights
+
+- slug: brightcrowd_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations in BrightCrowd.
+  provider: brightcrowd
+  endpoint: /partner/organizations
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Organizations per page"
+        default: 20
+    required: []
+
+- slug: brightcrowd_get_organization
+  name: Get Organization
+  description: |
+    Get details for a specific organization.
+  provider: brightcrowd
+  endpoint: /partner/organizations/{orgId}
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+    required:
+      - orgId
+
+- slug: brightcrowd_list_members
+  name: List Members
+  description: |
+    List members of an organization.
+  provider: brightcrowd
+  endpoint: /partner/organizations/{orgId}/members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Members per page"
+        default: 20
+    required:
+      - orgId
+
+- slug: brightcrowd_get_member
+  name: Get Member
+  description: |
+    Get details for a specific member.
+  provider: brightcrowd
+  endpoint: /partner/members/{memberId}
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      memberId:
+        type: string
+        description: "Member ID"
+    required:
+      - memberId
+
+- slug: brightcrowd_list_badges
+  name: List Badges
+  description: |
+    List all badges in the organization.
+  provider: brightcrowd
+  endpoint: /partner/badges
+  method: GET
+  scopes: []
+  tags:
+    - badges
+    - recognition
+  input_schema:
+    type: object
+    description: Parameters for listing badges
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brightcrowd_get_badge
+  name: Get Badge
+  description: |
+    Get details for a specific badge.
+  provider: brightcrowd
+  endpoint: /partner/badges/{badgeId}
+  method: GET
+  scopes: []
+  tags:
+    - badges
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a badge
+    properties:
+      badgeId:
+        type: string
+        description: "Badge ID"
+    required:
+      - badgeId
+
+- slug: brightcrowd_list_endorsements
+  name: List Endorsements
+  description: |
+    List all endorsements in the organization.
+  provider: brightcrowd
+  endpoint: /partner/endorsements
+  method: GET
+  scopes: []
+  tags:
+    - endorsements
+    - recognition
+  input_schema:
+    type: object
+    description: Parameters for listing endorsements
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brightcrowd_get_endorsement
+  name: Get Endorsement
+  description: |
+    Get details for a specific endorsement.
+  provider: brightcrowd
+  endpoint: /partner/endorsements/{endorsementId}
+  method: GET
+  scopes: []
+  tags:
+    - endorsements
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an endorsement
+    properties:
+      endorsementId:
+        type: string
+        description: "Endorsement ID"
+    required:
+      - endorsementId
+
+- slug: brightcrowd_list_activities
+  name: List Activities
+  description: |
+    List all activities in the organization.
+  provider: brightcrowd
+  endpoint: /partner/activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - feed
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Activities per page"
+        default: 20
+    required: []
+
+- slug: brightcrowd_get_insights
+  name: Get Insights
+  description: |
+    Get insights and analytics for the organization.
+  provider: brightcrowd
+  endpoint: /partner/insights
+  method: GET
+  scopes: []
+  tags:
+    - insights
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting insights
+    properties:
+      orgId:
+        type: string
+        description: "Organization ID"
+    required:
+      - orgId

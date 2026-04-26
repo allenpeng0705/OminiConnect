@@ -1,0 +1,187 @@
+# Wise (API Key) Tools - Allowlist
+# Curated subset of Wise (API Key) API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. wise_list_profiles           - List all user profiles
+# # 2. wise_get_profile           - Get profile details
+# # 3. wise_list_balances           - List all account balances
+# # 4. wise_list_accounts           - List all accounts
+# # 5. wise_create_account           - Create a new account
+# # 6. wise_list_transfers           - List all transfers
+# # 7. wise_create_transfer           - Create a new transfer
+# # 8. wise_get_quote           - Get a transfer quote
+# # 9. wise_list_recipients           - List all recipients
+# # 10. wise_create_recipient           - Create a new recipient
+
+- slug: wise_list_profiles
+  name: List Profiles
+  description: |
+    List all user profiles
+  provider: wise-api-key
+  endpoint: /v1/profiles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for list profiles
+    properties: {}
+    required: []
+
+- slug: wise_get_profile
+  name: Get Profile
+  description: |
+    Get profile details
+  provider: wise-api-key
+  endpoint: /v1/profiles/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for get profile
+    properties: {}
+    required: []
+
+- slug: wise_list_balances
+  name: List Balances
+  description: |
+    List all account balances
+  provider: wise-api-key
+  endpoint: /v1/profiles/{profile_id}/balances
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for list balances
+    properties: {}
+    required: []
+
+- slug: wise_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts
+  provider: wise-api-key
+  endpoint: /v1/accounts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for list accounts
+    properties: {}
+    required: []
+
+- slug: wise_create_account
+  name: Create Account
+  description: |
+    Create a new account
+  provider: wise-api-key
+  endpoint: /v1/accounts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for create account
+    properties: {}
+    required: []
+
+- slug: wise_list_transfers
+  name: List Transfers
+  description: |
+    List all transfers
+  provider: wise-api-key
+  endpoint: /v1/transfers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for list transfers
+    properties: {}
+    required: []
+
+- slug: wise_create_transfer
+  name: Create Transfer
+  description: |
+    Create a new transfer
+  provider: wise-api-key
+  endpoint: /v1/transfers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for create transfer
+    properties: {}
+    required: []
+
+- slug: wise_get_quote
+  name: Get Quote
+  description: |
+    Get a transfer quote
+  provider: wise-api-key
+  endpoint: /v1/quotes
+  method: POST
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for get quote
+    properties: {}
+    required: []
+
+- slug: wise_list_recipients
+  name: List Recipients
+  description: |
+    List all recipients
+  provider: wise-api-key
+  endpoint: /v1/recipients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for list recipients
+    properties: {}
+    required: []
+
+- slug: wise_create_recipient
+  name: Create Recipient
+  description: |
+    Create a new recipient
+  provider: wise-api-key
+  endpoint: /v1/recipients
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wise-api-key
+  input_schema:
+    type: object
+    description: Parameters for create recipient
+    properties: {}
+    required: []
+

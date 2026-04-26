@@ -1,0 +1,282 @@
+# Fastly Tools - Allowlist
+# Curated subset of the Fastly API v1 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fastly_list_services              - List all Fastly services
+# 2. fastly_get_service                - Get service details
+# 3. fastly_list_versions              - List service versions
+# 4. fastly_get_version                - Get version details
+# 5. fastly_list_dictionaries           - List dictionaries for a service
+# 6. fastly_get_dictionary             - Get dictionary contents
+# 7. fastly_list_logging_endpoints      - List logging endpoints
+# 8. fastly_purge_url                  - Purge a single URL
+# 9. fastly_create_invalidation        - Create a cache invalidation
+# 10. fastly_get_invalidation           - Get invalidation status
+
+- slug: fastly_list_services
+  name: List Services
+  description: |
+    List all Fastly services in your account.
+    Returns service IDs, names, and current versions.
+  provider: fastly
+  endpoint: /services
+  method: GET
+  scopes:
+    - global
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+    required: []
+
+- slug: fastly_get_service
+  name: Get Service
+  description: |
+    Get detailed information about a specific service including
+    versions, domains, backends, and configuration.
+  provider: fastly
+  endpoint: /services/{service_id}
+  method: GET
+  scopes:
+    - global
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+    required:
+      - service_id
+
+- slug: fastly_list_versions
+  name: List Versions
+  description: |
+    List all versions for a service. Each version represents a
+    snapshot of your service configuration.
+  provider: fastly
+  endpoint: /services/{service_id}/versions
+  method: GET
+  scopes:
+    - global
+  tags:
+    - versions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing versions
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+    required:
+      - service_id
+
+- slug: fastly_get_version
+  name: Get Version
+  description: |
+    Get detailed configuration for a specific service version
+    including domains, backends, and VCL code.
+  provider: fastly
+  endpoint: /services/{service_id}/versions/{version_number}
+  method: GET
+  scopes:
+    - global
+  tags:
+    - versions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a version
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      version_number:
+        type: integer
+        description: "Version number (required)"
+    required:
+      - service_id
+      - version_number
+
+- slug: fastly_list_dictionaries
+  name: List Dictionaries
+  description: |
+    List all dictionaries for a service version.
+    Dictionaries store key-value pairs for configuration.
+  provider: fastly
+  endpoint: /services/{service_id}/versions/{version_number}/dictionaries
+  method: GET
+  scopes:
+    - global
+  tags:
+    - dictionaries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing dictionaries
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      version_number:
+        type: integer
+        description: "Version number (required)"
+    required:
+      - service_id
+      - version_number
+
+- slug: fastly_get_dictionary
+  name: Get Dictionary
+  description: |
+    Get the contents of a dictionary including all key-value pairs.
+    Use this to read or sync dictionary data.
+  provider: fastly
+  endpoint: /services/{service_id}/dictionaries/{dictionary_id}/items
+  method: GET
+  scopes:
+    - global
+  tags:
+    - dictionaries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting dictionary contents
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      dictionary_id:
+        type: string
+        description: "Dictionary ID (required)"
+    required:
+      - service_id
+      - dictionary_id
+
+- slug: fastly_list_logging_endpoints
+  name: List Logging Endpoints
+  description: |
+    List all logging endpoints for a service version.
+    Returns configured log destinations (s3, bigquery, syslog, etc.).
+  provider: fastly
+  endpoint: /services/{service_id}/versions/{version_number}/logging
+  method: GET
+  scopes:
+    - global
+  tags:
+    - logging
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing logging endpoints
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      version_number:
+        type: integer
+        description: "Version number (required)"
+    required:
+      - service_id
+      - version_number
+
+- slug: fastly_purge_url
+  name: Purge URL
+  description: |
+    Purge a single URL from Fastly cache immediately.
+    Use this to invalidate specific cached resources.
+  provider: fastly
+  endpoint: /purge/{url}
+  method: POST
+  scopes:
+    - global
+  tags:
+    - cache
+    - purge
+    - write
+  input_schema:
+    type: object
+    description: Parameters for purging a URL
+    properties:
+      url:
+        type: string
+        description: "Full URL to purge (required)"
+    required:
+      - url
+
+- slug: fastly_create_invalidation
+  name: Create Invalidation
+  description: |
+    Create a cache invalidation request for multiple URLs or a path pattern.
+    Returns an invalidation ID to track status.
+  provider: fastly
+  endpoint: /services/{service_id}/purge
+  method: POST
+  scopes:
+    - global
+  tags:
+    - cache
+    - invalidation
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an invalidation
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      urls:
+        type: array
+        items:
+          type: string
+        description: "Array of URLs to invalidate (required)"
+      soft:
+        type: boolean
+        description: "Soft purge (Content-Type change only)"
+        default: false
+    required:
+      - service_id
+      - urls
+
+- slug: fastly_get_invalidation
+  name: Get Invalidation
+  description: |
+    Get the status of a cache invalidation request.
+    Returns progress and completion status.
+  provider: fastly
+  endpoint: /services/{service_id}/invocations/{invalidation_id}
+  method: GET
+  scopes:
+    - global
+  tags:
+    - cache
+    - invalidation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting invalidation status
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+      invalidation_id:
+        type: string
+        description: "Invalidation ID (required)"
+    required:
+      - service_id
+      - invalidation_id

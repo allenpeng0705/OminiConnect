@@ -1,0 +1,250 @@
+# WalkMe Tools - Allowlist
+# Curated subset of WalkMe REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. walkme_list_guides       - List all guides
+# 2. walkme_get_guide         - Get guide details
+# 3. walkme_create_guide      - Create a new guide
+# 4. walkme_list_steps        - List steps in a guide
+# 5. walkme_get_step          - Get step details
+# 6. walkme_list_users        - List users
+# 7. walkme_get_user          - Get user details
+# 8. walkme_get_analytics     - Get analytics data
+# 9. walkme_list_campaigns    - List campaigns
+# 10. walkme_get_campaign     - Get campaign details
+
+- slug: walkme_list_guides
+  name: List Guides
+  description: |
+    List all guides in your WalkMe system.
+  provider: walkme
+  endpoint: /api/v1/guides
+  method: GET
+  scopes:
+    - guides:read
+  tags:
+    - guides
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing guides
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, archived, draft)"
+      category_id:
+        type: string
+        description: "Filter by category ID"
+    required: []
+
+- slug: walkme_get_guide
+  name: Get Guide
+  description: |
+    Get detailed information about a specific guide.
+  provider: walkme
+  endpoint: /api/v1/guides/{guideId}
+  method: GET
+  scopes:
+    - guides:read
+  tags:
+    - guides
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a guide
+    properties:
+      guideId:
+        type: string
+        description: "Guide ID"
+    required:
+      - guideId
+
+- slug: walkme_create_guide
+  name: Create Guide
+  description: |
+    Create a new guide in WalkMe.
+  provider: walkme
+  endpoint: /api/v1/guides
+  method: POST
+  scopes:
+    - guides:write
+  tags:
+    - guides
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a guide
+    properties:
+      title:
+        type: string
+        description: "Guide title"
+      description:
+        type: string
+        description: "Guide description"
+      category_id:
+        type: string
+        description: "Category ID"
+      status:
+        type: string
+        description: "Guide status (draft, published)"
+    required:
+      - title
+
+- slug: walkme_list_steps
+  name: List Steps
+  description: |
+    List all steps in a guide.
+  provider: walkme
+  endpoint: /api/v1/guides/{guideId}/steps
+  method: GET
+  scopes:
+    - guides:read
+  tags:
+    - steps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing steps
+    properties:
+      guideId:
+        type: string
+        description: "Guide ID"
+    required:
+      - guideId
+
+- slug: walkme_get_step
+  name: Get Step
+  description: |
+    Get detailed information about a specific step.
+  provider: walkme
+  endpoint: /api/v1/steps/{stepId}
+  method: GET
+  scopes:
+    - guides:read
+  tags:
+    - steps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a step
+    properties:
+      stepId:
+        type: string
+        description: "Step ID"
+    required:
+      - stepId
+
+- slug: walkme_list_users
+  name: List Users
+  description: |
+    List all users in your WalkMe system.
+  provider: walkme
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: walkme_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: walkme
+  endpoint: /api/v1/users/{userId}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: walkme_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics data for guides and user interactions.
+  provider: walkme
+  endpoint: /api/v1/analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      guide_id:
+        type: string
+        description: "Filter by guide ID"
+    required: []
+
+- slug: walkme_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in your WalkMe system.
+  provider: walkme
+  endpoint: /api/v1/campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, archived, draft)"
+    required: []
+
+- slug: walkme_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+  provider: walkme
+  endpoint: /api/v1/campaigns/{campaignId}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId

@@ -1,0 +1,187 @@
+# TikTok Ads Tools - Allowlist
+# Curated subset of TikTok Ads API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. tiktok_list_ad_accounts           - List all ad accounts
+# # 2. tiktok_list_campaigns           - List all campaigns
+# # 3. tiktok_create_campaign           - Create a new campaign
+# # 4. tiktok_update_campaign           - Update a campaign
+# # 5. tiktok_list_ad_groups           - List ad groups in a campaign
+# # 6. tiktok_create_ad_group           - Create a new ad group
+# # 7. tiktok_list_ads           - List all ads
+# # 8. tiktok_create_ad           - Create a new ad
+# # 9. tiktok_get_ad_report           - Get performance report for an ad
+# # 10. tiktok_get_campaign_report           - Get performance report for a campaign
+
+- slug: tiktok_list_ad_accounts
+  name: List Ad Accounts
+  description: |
+    List all ad accounts
+  provider: tiktok-ads
+  endpoint: /advertiser/get
+  method: GET
+  scopes:
+    - advertising.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for list ad accounts
+    properties: {}
+    required: []
+
+- slug: tiktok_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns
+  provider: tiktok-ads
+  endpoint: /campaign/list
+  method: GET
+  scopes:
+    - campaign.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for list campaigns
+    properties: {}
+    required: []
+
+- slug: tiktok_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new campaign
+  provider: tiktok-ads
+  endpoint: /campaign/create
+  method: POST
+  scopes:
+    - campaign.write
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for create campaign
+    properties: {}
+    required: []
+
+- slug: tiktok_update_campaign
+  name: Update Campaign
+  description: |
+    Update a campaign
+  provider: tiktok-ads
+  endpoint: /campaign/update
+  method: POST
+  scopes:
+    - campaign.write
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for update campaign
+    properties: {}
+    required: []
+
+- slug: tiktok_list_ad_groups
+  name: List Ad Groups
+  description: |
+    List ad groups in a campaign
+  provider: tiktok-ads
+  endpoint: /adgroup/list
+  method: GET
+  scopes:
+    - advertising.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for list ad groups
+    properties: {}
+    required: []
+
+- slug: tiktok_create_ad_group
+  name: Create Ad Group
+  description: |
+    Create a new ad group
+  provider: tiktok-ads
+  endpoint: /adgroup/create
+  method: POST
+  scopes:
+    - advertising.write
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for create ad group
+    properties: {}
+    required: []
+
+- slug: tiktok_list_ads
+  name: List Ads
+  description: |
+    List all ads
+  provider: tiktok-ads
+  endpoint: /ad/list
+  method: GET
+  scopes:
+    - advertising.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for list ads
+    properties: {}
+    required: []
+
+- slug: tiktok_create_ad
+  name: Create Ad
+  description: |
+    Create a new ad
+  provider: tiktok-ads
+  endpoint: /ad/create
+  method: POST
+  scopes:
+    - advertising.write
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for create ad
+    properties: {}
+    required: []
+
+- slug: tiktok_get_ad_report
+  name: Get Ad Report
+  description: |
+    Get performance report for an ad
+  provider: tiktok-ads
+  endpoint: /report/get
+  method: GET
+  scopes:
+    - advertising.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for get ad report
+    properties: {}
+    required: []
+
+- slug: tiktok_get_campaign_report
+  name: Get Campaign Report
+  description: |
+    Get performance report for a campaign
+  provider: tiktok-ads
+  endpoint: /campaign/report
+  method: GET
+  scopes:
+    - advertising.read
+  tags:
+    - tiktok-ads
+  input_schema:
+    type: object
+    description: Parameters for get campaign report
+    properties: {}
+    required: []
+

@@ -1,0 +1,271 @@
+# Recruitee Tools - Allowlist
+# Curated subset of Recruitee API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recruitee_list_offers          - List all offers
+# 2. recruitee_get_offer            - Get offer details
+# 3. recruitee_create_offer         - Create an offer
+# 4. recruitee_list_candidates      - List candidates
+# 5. recruitee_get_candidate        - Get candidate details
+# 6. recruitee_list_departments     - List departments
+# 7. recruitee_list_positions       - List positions
+# 8. recruitee_get_position         - Get position details
+# 9. recruitee_list_interviews      - List interviews
+# 10. recruitee_create_interview    - Schedule interview
+
+- slug: recruitee_list_offers
+  name: List Offers
+  description: |
+    Retrieve a list of all job offers.
+  provider: recruitee
+  endpoint: /offers
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      limit:
+        type: integer
+        description: "Number of offers to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, accepted, declined"
+    required: []
+
+- slug: recruitee_get_offer
+  name: Get Offer
+  description: |
+    Get details of a specific offer.
+  provider: recruitee
+  endpoint: /offers/{offerId}
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offerId:
+        type: string
+        description: "The offer ID"
+    required:
+      - offerId
+
+- slug: recruitee_create_offer
+  name: Create Offer
+  description: |
+    Create a new job offer for a candidate.
+  provider: recruitee
+  endpoint: /offers
+  method: POST
+  scopes:
+    - offers:write
+  tags:
+    - offers
+    - recruitment
+    - hr
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an offer
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+      positionId:
+        type: string
+        description: "Position ID"
+      salary:
+        type: number
+        description: "Salary amount"
+      startDate:
+        type: string
+        description: "Proposed start date"
+    required:
+      - candidateId
+      - positionId
+
+- slug: recruitee_list_candidates
+  name: List Candidates
+  description: |
+    Retrieve a list of all candidates.
+  provider: recruitee
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Number of candidates"
+        default: 50
+    required: []
+
+- slug: recruitee_get_candidate
+  name: Get Candidate
+  description: |
+    Get details of a specific candidate.
+  provider: recruitee
+  endpoint: /candidates/{candidateId}
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "The candidate ID"
+    required:
+      - candidateId
+
+- slug: recruitee_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of all departments.
+  provider: recruitee
+  endpoint: /departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - departments
+    - organization
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: recruitee_list_positions
+  name: List Positions
+  description: |
+    Retrieve a list of all open positions.
+  provider: recruitee
+  endpoint: /positions
+  method: GET
+  scopes:
+    - positions:read
+  tags:
+    - positions
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing positions
+    properties:
+      limit:
+        type: integer
+        description: "Number of positions"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: recruitee_get_position
+  name: Get Position
+  description: |
+    Get details of a specific position.
+  provider: recruitee
+  endpoint: /positions/{positionId}
+  method: GET
+  scopes:
+    - positions:read
+  tags:
+    - positions
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a position
+    properties:
+      positionId:
+        type: string
+        description: "The position ID"
+    required:
+      - positionId
+
+- slug: recruitee_list_interviews
+  name: List Interviews
+  description: |
+    Retrieve a list of all interviews.
+  provider: recruitee
+  endpoint: /interviews
+  method: GET
+  scopes:
+    - interviews:read
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      limit:
+        type: integer
+        description: "Number of interviews"
+        default: 50
+    required: []
+
+- slug: recruitee_create_interview
+  name: Create Interview
+  description: |
+    Schedule a new interview.
+  provider: recruitee
+  endpoint: /interviews
+  method: POST
+  scopes:
+    - interviews:write
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an interview
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+      positionId:
+        type: string
+        description: "Position ID"
+      scheduledTime:
+        type: string
+        description: "Interview time"
+      interviewType:
+        type: string
+        description: "Type: phone, video, onsite"
+    required:
+      - candidateId
+      - positionId
+      - scheduledTime

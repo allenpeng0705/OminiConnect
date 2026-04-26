@@ -1,0 +1,187 @@
+# TapClicks Tools - Allowlist
+# Curated subset of TapClicks API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. tapclicks_list_clients           - List all clients in TapClicks
+# # 2. tapclicks_get_client           - Get details of a specific client
+# # 3. tapclicks_list_sources           - List all data sources
+# # 4. tapclicks_get_source           - Get details of a data source
+# # 5. tapclicks_list_reports           - List all reports
+# # 6. tapclicks_get_report           - Get a specific report
+# # 7. tapclicks_create_report           - Create a new report
+# # 8. tapclicks_list_dashboards           - List all dashboards
+# # 9. tapclicks_get_dashboard           - Get a specific dashboard
+# # 10. tapclicks_export_data           - Export data from a source
+
+- slug: tapclicks_list_clients
+  name: List Clients
+  description: |
+    List all clients in TapClicks
+  provider: tapclicks
+  endpoint: /clients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for list clients
+    properties: {}
+    required: []
+
+- slug: tapclicks_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client
+  provider: tapclicks
+  endpoint: /clients/{client_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for get client
+    properties: {}
+    required: []
+
+- slug: tapclicks_list_sources
+  name: List Sources
+  description: |
+    List all data sources
+  provider: tapclicks
+  endpoint: /sources
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for list sources
+    properties: {}
+    required: []
+
+- slug: tapclicks_get_source
+  name: Get Source
+  description: |
+    Get details of a data source
+  provider: tapclicks
+  endpoint: /sources/{source_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for get source
+    properties: {}
+    required: []
+
+- slug: tapclicks_list_reports
+  name: List Reports
+  description: |
+    List all reports
+  provider: tapclicks
+  endpoint: /reports
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for list reports
+    properties: {}
+    required: []
+
+- slug: tapclicks_get_report
+  name: Get Report
+  description: |
+    Get a specific report
+  provider: tapclicks
+  endpoint: /reports/{report_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for get report
+    properties: {}
+    required: []
+
+- slug: tapclicks_create_report
+  name: Create Report
+  description: |
+    Create a new report
+  provider: tapclicks
+  endpoint: /reports
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for create report
+    properties: {}
+    required: []
+
+- slug: tapclicks_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards
+  provider: tapclicks
+  endpoint: /dashboards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for list dashboards
+    properties: {}
+    required: []
+
+- slug: tapclicks_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get a specific dashboard
+  provider: tapclicks
+  endpoint: /dashboards/{dashboard_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for get dashboard
+    properties: {}
+    required: []
+
+- slug: tapclicks_export_data
+  name: Export Data
+  description: |
+    Export data from a source
+  provider: tapclicks
+  endpoint: /sources/{source_id}/export
+  method: POST
+  scopes:
+    - read
+  tags:
+    - tapclicks
+  input_schema:
+    type: object
+    description: Parameters for export data
+    properties: {}
+    required: []
+

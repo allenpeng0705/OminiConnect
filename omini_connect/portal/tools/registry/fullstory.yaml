@@ -1,0 +1,227 @@
+- slug: fullstory_list_recordings
+  name: List Recordings
+  description: |
+    Retrieve a list of session recordings with filtering options.
+  provider: fullstory
+  endpoint: /v1/recordings
+  method: GET
+  scopes:
+    - recordings:read
+  tags:
+    - recordings
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of recordings to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      user_id:
+        type: string
+        description: "Filter recordings by user ID"
+    required: []
+
+- slug: fullstory_get_recording
+  name: Get Recording
+  description: |
+    Retrieve a specific session recording by its ID.
+  provider: fullstory
+  endpoint: /v1/recordings/{recording_id}
+  method: GET
+  scopes:
+    - recordings:read
+  tags:
+    - recordings
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recording_id:
+        type: string
+        description: "Unique identifier of the recording"
+    required:
+      - recording_id
+
+- slug: fullstory_list_events
+  name: List Events
+  description: |
+    Retrieve a list of custom events with filtering options.
+  provider: fullstory
+  endpoint: /v1/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of events to return"
+      start_time:
+        type: string
+        description: "Start time in ISO 8601 format"
+      end_time:
+        type: string
+        description: "End time in ISO 8601 format"
+    required: []
+
+- slug: fullstory_get_event
+  name: Get Event
+  description: |
+    Retrieve a specific custom event by its ID.
+  provider: fullstory
+  endpoint: /v1/events/{event_id}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      event_id:
+        type: string
+        description: "Unique identifier of the event"
+    required:
+      - event_id
+
+- slug: fullstory_list_users
+  name: List Users
+  description: |
+    Retrieve a list of identified users with their attributes.
+  provider: fullstory
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: fullstory_get_user
+  name: Get User
+  description: |
+    Retrieve a specific user by their ID with session history.
+  provider: fullstory
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "Unique identifier of the user"
+    required:
+      - user_id
+
+- slug: fullstory_list_segments
+  name: List Segments
+  description: |
+    Retrieve a list of user segments for targeting.
+  provider: fullstory
+  endpoint: /v1/segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of segments to return"
+    required: []
+
+- slug: fullstory_get_segment
+  name: Get Segment
+  description: |
+    Retrieve a specific segment by its ID with membership rules.
+  provider: fullstory
+  endpoint: /v1/segments/{segment_id}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: string
+        description: "Unique identifier of the segment"
+    required:
+      - segment_id
+
+- slug: fullstory_search_sessions
+  name: Search Sessions
+  description: |
+    Search for sessions matching specific criteria and filters.
+  provider: fullstory
+  endpoint: /v1/sessions/search
+  method: POST
+  scopes:
+    - sessions:read
+  tags:
+    - sessions
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching sessions
+    properties:
+      query:
+        type: string
+        description: "Search query for session filtering"
+      filters:
+        type: object
+        description: "Additional filters for session search"
+      limit:
+        type: integer
+        description: "Maximum number of sessions to return"
+    required:
+      - query
+
+- slug: fullstory_get_session
+  name: Get Session
+  description: |
+    Retrieve a specific session by its ID with full details.
+  provider: fullstory
+  endpoint: /v1/sessions/{session_id}
+  method: GET
+  scopes:
+    - sessions:read
+  tags:
+    - sessions
+  input_schema:
+    type: object
+    description: Parameters for getting a session
+    properties:
+      session_id:
+        type: string
+        description: "Unique identifier of the session"
+    required:
+      - session_id

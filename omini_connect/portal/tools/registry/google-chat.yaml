@@ -1,0 +1,259 @@
+# Google Chat Tools - Allowlist
+# Curated subset of Google Chat API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_chat_list_spaces        - List spaces
+# 2. google_chat_get_space         - Get space details
+# 3. google_chat_list_messages     - List messages
+# 4. google_chat_get_message       - Get message details
+# 5. google_chat_create_message    - Create message
+# 6. google_chat_list_members      - List members
+# 7. google_chat_get_member        - Get member details
+# 8. google_chat_list_reactions   - List reactions
+# 9. google_chat_create_reaction   - Create reaction
+# 10. google_chat_get_space_event  - Get space event
+
+- slug: google_chat_list_spaces
+  name: List Spaces
+  description: |
+    List spaces in Google Chat.
+  provider: google-chat
+  endpoint: /chat/v1/spaces
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - spaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties: {}
+
+- slug: google_chat_get_space
+  name: Get Space
+  description: |
+    Get detailed information about a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_chat_list_messages
+  name: List Messages
+  description: |
+    List messages in a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/messages
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_chat_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a message.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - space_id
+      - message_id
+
+- slug: google_chat_create_message
+  name: Create Message
+  description: |
+    Create a message in a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/messages
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - messages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      text:
+        type: string
+        description: "Message text"
+    required:
+      - space_id
+      - text
+
+- slug: google_chat_list_members
+  name: List Members
+  description: |
+    List members in a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/members
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_chat_get_member
+  name: Get Member
+  description: |
+    Get details about a member in a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/members/{member_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      member_id:
+        type: string
+        description: "Member ID"
+    required:
+      - space_id
+      - member_id
+
+- slug: google_chat_list_reactions
+  name: List Reactions
+  description: |
+    List reactions to a message.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}/reactions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - reactions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reactions
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - space_id
+      - message_id
+
+- slug: google_chat_create_reaction
+  name: Create Reaction
+  description: |
+    Add a reaction to a message.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/messages/{message_id}/reactions
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - reactions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a reaction
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      message_id:
+        type: string
+        description: "Message ID"
+      emoji:
+        type: string
+        description: "Emoji reaction"
+    required:
+      - space_id
+      - message_id
+      - emoji
+
+- slug: google_chat_get_space_event
+  name: Get Space Event
+  description: |
+    Get a specific event in a space.
+  provider: google-chat
+  endpoint: /chat/v1/spaces/{space_id}/events/{event_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/chat.bot
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space event
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      event_id:
+        type: string
+        description: "Event ID"
+    required:
+      - space_id
+      - event_id

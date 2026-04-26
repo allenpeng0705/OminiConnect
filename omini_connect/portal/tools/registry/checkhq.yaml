@@ -1,0 +1,241 @@
+# CheckHQ Tools - Allowlist
+# Curated subset of the CheckHQ API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. checkhq_list_accounts              - List accounts
+# 2. checkhq_get_account                 - Get account details
+# 3. checkhq_list_transactions          - List transactions
+# 4. checkhq_get_transaction            - Get transaction details
+# 5. checkhq_list_invoices              - List invoices
+# 6. checkhq_get_invoice                - Get invoice details
+# 7. checkhq_create_invoice             - Create an invoice
+# 8. checkhq_list_payments              - List payments
+# 9. checkhq_get_payment                - Get payment details
+# 10. checkhq_list_contacts            - List contacts
+
+- slug: checkhq_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the organization.
+  provider: checkhq
+  endpoint: /api/v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkhq_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: checkhq
+  endpoint: /api/v1/accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: integer
+        description: "Account ID"
+    required:
+      - id
+
+- slug: checkhq_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: checkhq
+  endpoint: /api/v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      account_id:
+        type: integer
+        description: "Filter by account ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkhq_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction.
+  provider: checkhq
+  endpoint: /api/v1/transactions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      id:
+        type: integer
+        description: "Transaction ID"
+    required:
+      - id
+
+- slug: checkhq_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: checkhq
+  endpoint: /api/v1/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkhq_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: checkhq
+  endpoint: /api/v1/invoices/{id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: integer
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: checkhq_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice.
+  provider: checkhq
+  endpoint: /api/v1/invoices
+  method: POST
+  scopes: []
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+      items:
+        type: array
+        items:
+          type: object
+        description: "Invoice line items"
+      due_date:
+        type: string
+        description: "Due date"
+    required:
+      - contact_id
+      - items
+
+- slug: checkhq_list_payments
+  name: List Payments
+  description: |
+    List all payments.
+  provider: checkhq
+  endpoint: /api/v1/payments
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkhq_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment.
+  provider: checkhq
+  endpoint: /api/v1/payments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      id:
+        type: integer
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: checkhq_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: checkhq
+  endpoint: /api/v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

@@ -1,0 +1,286 @@
+# Sinch Tools - Allowlist
+# Curated subset of Sinch API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sinch_list_messages              - List SMS messages
+# 2. sinch_get_message                - Get message details
+# 3. sinch_send_sms                   - Send SMS message
+# 4. sinch_send_whatsapp              - Send WhatsApp message
+# 5. sinch_verify_number              - Verify phone number
+# 6. sinch_initiate_call              - Initiate a call
+# 7. sinch_list_voice_applications    - List voice applications
+# 8. sinch_get_voice_application     - Get voice application details
+# 9. sinch_get_customer_support_ticket - Get support ticket
+# 10. sinch_list_conversations        - List conversations
+
+- slug: sinch_list_messages
+  name: List Messages
+  description: |
+    List all SMS messages sent or received through Sinch.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 100)"
+        default: 100
+      page_token:
+        type: string
+        description: "Token for next page"
+    required: []
+
+- slug: sinch_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a specific Sinch message.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/messages/{message_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - message_id
+
+- slug: sinch_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message via Sinch.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/messages:send
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - sms
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending an SMS
+    properties:
+      from:
+        type: string
+        description: "Sender phone number"
+      to:
+        type: array
+        description: "Recipient phone numbers"
+      body:
+        type: string
+        description: "Message text"
+    required:
+      - from
+      - to
+      - body
+
+- slug: sinch_send_whatsapp
+  name: Send WhatsApp
+  description: |
+    Send a WhatsApp message via Sinch.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/messages:send
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - whatsapp
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending WhatsApp message
+    properties:
+      from:
+        type: string
+        description: "Sender WhatsApp number"
+      to:
+        type: array
+        description: "Recipient WhatsApp numbers"
+      body:
+        type: string
+        description: "Message text"
+      channel:
+        type: string
+        description: "Channel type (whatsapp)"
+    required:
+      - from
+      - to
+      - body
+
+- slug: sinch_verify_number
+  name: Verify Number
+  description: |
+    Start a phone number verification via SMS or voice.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/verifications
+  method: POST
+  scopes:
+    - write
+  tags:
+    - verification
+    - verify
+  input_schema:
+    type: object
+    description: Parameters for verifying a number
+    properties:
+      endpoint:
+        type: string
+        description: "Phone number to verify"
+      method:
+        type: string
+        description: "Verification method (sms, voice)"
+      reference_id:
+        type: string
+        description: "Custom reference ID"
+    required:
+      - endpoint
+      - method
+
+- slug: sinch_initiate_call
+  name: Initiate Call
+  description: |
+    Initiate a new outbound phone call via Sinch.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/callouts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - calls
+    - voice
+    - create
+  input_schema:
+    type: object
+    description: Parameters for initiating a call
+    properties:
+      method:
+        type: string
+        description: "Callout method (tts, flash)"
+      destination:
+        type: string
+        description: "Recipient phone number"
+      domain:
+        type: string
+        description: "Call domain (ppe for production)"
+    required:
+      - method
+      - destination
+
+- slug: sinch_list_voice_applications
+  name: List Voice Applications
+  description: |
+    List all voice applications in your Sinch project.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/applications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - voice
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing voice applications
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 100)"
+        default: 100
+      page_token:
+        type: string
+        description: "Token for next page"
+    required: []
+
+- slug: sinch_get_voice_application
+  name: Get Voice Application
+  description: |
+    Get details about a specific voice application.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/applications/{application_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - voice
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a voice application
+    properties:
+      application_id:
+        type: string
+        description: "Application ID"
+    required:
+      - application_id
+
+- slug: sinch_get_customer_support_ticket
+  name: Get Customer Support Ticket
+  description: |
+    Get details about a specific customer support ticket.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/tickets/{ticket_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - support
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a support ticket
+    properties:
+      ticket_id:
+        type: string
+        description: "Ticket ID"
+    required:
+      - ticket_id
+
+- slug: sinch_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in your Sinch project.
+  provider: sinch
+  endpoint: /v1/projects/{project_id}/conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 100)"
+        default: 100
+      page_token:
+        type: string
+        description: "Token for next page"
+    required: []

@@ -1,0 +1,300 @@
+# Shopify Tools - Allowlist
+# Curated subset of Shopify Admin API for AI agent use.
+
+# === TOOL LIST ===
+# 1. shopify_more_list_orders        - List orders
+# 2. shopify_more_get_order          - Get order details
+# 3. shopify_more_create_order       - Create a new order
+# 4. shopify_more_list_fulfillments  - List fulfillments
+# 5. shopify_more_create_fulfillment  - Create a fulfillment
+# 6. shopify_more_list_products      - List products
+# 7. shopify_more_get_product        - Get product details
+# 8. shopify_more_create_product     - Create a new product
+# 9. shopify_more_list_customers     - List customers
+# 10. shopify_more_get_customer      - Get customer details
+
+- slug: shopify_more_list_orders
+  name: List Orders
+  description: |
+    List all orders in the Shopify store. Filter by status, fulfillment status, and date range.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/orders.json
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status: any, open, closed, cancelled, pending"
+      fulfillment_status:
+        type: string
+        description: "Filter by fulfillment status: shipped, partial, unshipped, unfulfilled"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 250)"
+        default: 50
+      created_at_min:
+        type: string
+        description: "Created after this date (ISO 8601)"
+    required: []
+
+- slug: shopify_more_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order including line items, shipping, and payment details.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/orders/{order_id}.json
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: integer
+        description: "The order ID"
+    required:
+      - order_id
+
+- slug: shopify_more_create_order
+  name: Create Order
+  description: |
+    Create a new order in the Shopify store. Include line items, shipping address, and payment details.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/orders.json
+  method: POST
+  scopes:
+    - write_orders
+  tags:
+    - orders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      line_items:
+        type: array
+        description: "Line items array with variant_id and quantity"
+      email:
+        type: string
+        description: "Customer email"
+      shipping_address:
+        type: object
+        description: "Shipping address object"
+      financial_status:
+        type: string
+        description: "Payment status: pending, paid, partially_paid"
+    required:
+      - line_items
+
+- slug: shopify_more_list_fulfillments
+  name: List Fulfillments
+  description: |
+    List all fulfillments for an order. Fulfillments represent shipments and tracking information.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
+  method: GET
+  scopes:
+    - read_fulfillments
+  tags:
+    - fulfillments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing fulfillments
+    properties:
+      order_id:
+        type: integer
+        description: "The order ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - order_id
+
+- slug: shopify_more_create_fulfillment
+  name: Create Fulfillment
+  description: |
+    Create a fulfillment for an order. Add tracking numbers and notification emails.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
+  method: POST
+  scopes:
+    - write_fulfillments
+  tags:
+    - fulfillments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a fulfillment
+    properties:
+      order_id:
+        type: integer
+        description: "The order ID"
+      tracking_number:
+        type: string
+        description: "Tracking number for the shipment"
+      tracking_company:
+        type: string
+        description: "Tracking company name"
+      notify_customer:
+        type: boolean
+        description: "Send notification email to customer"
+        default: true
+    required:
+      - order_id
+
+- slug: shopify_more_list_products
+  name: List Products
+  description: |
+    List all products in the Shopify store. Filter by collection, product type, and vendor.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/products.json
+  method: GET
+  scopes:
+    - read_products
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      collection_id:
+        type: integer
+        description: "Filter by collection ID"
+      product_type:
+        type: string
+        description: "Filter by product type"
+      vendor:
+        type: string
+        description: "Filter by vendor"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 250)"
+        default: 50
+    required: []
+
+- slug: shopify_more_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product including variants, images, and metafields.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/products/{product_id}.json
+  method: GET
+  scopes:
+    - read_products
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: integer
+        description: "The product ID"
+    required:
+      - product_id
+
+- slug: shopify_more_create_product
+  name: Create Product
+  description: |
+    Create a new product in the Shopify store. Include title, description, variants, and images.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/products.json
+  method: POST
+  scopes:
+    - write_products
+  tags:
+    - products
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a product
+    properties:
+      title:
+        type: string
+        description: "Product title"
+      body_html:
+        type: string
+        description: "Product description (HTML)"
+      vendor:
+        type: string
+        description: "Product vendor"
+      product_type:
+        type: string
+        description: "Product type"
+      variants:
+        type: array
+        description: "Product variants array"
+    required:
+      - title
+
+- slug: shopify_more_list_customers
+  name: List Customers
+  description: |
+    List all customers in the Shopify store. Filter by tags, accepts marketing, and date created.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/customers.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      tags:
+        type: string
+        description: "Filter by tags (comma-separated)"
+      accepts_marketing:
+        type: boolean
+        description: "Filter by marketing acceptance"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 250)"
+        default: 50
+      created_at_min:
+        type: string
+        description: "Created after this date (ISO 8601)"
+    required: []
+
+- slug: shopify_more_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer including orders, addresses, and metafields.
+  provider: shopify_more
+  endpoint: /admin/api/2024-01/customers/{customer_id}.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: integer
+        description: "The customer ID"
+    required:
+      - customer_id

@@ -1,0 +1,224 @@
+# Incident.io Tools - Allowlist
+# Curated subset of Incident.io API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. incident_list_incidents       - List incidents
+# 2. incident_get_incident         - Get incident details
+# 3. incident_list_severities     - List severities
+# 4. incident_list_urgencies      - List urgencies
+# 5. incident_list_status_pages   - List status pages
+# 6. incident_list_members        - List members
+# 7. incident_list_roles          - List roles
+# 8. incident_list_catalog         - List catalog items
+# 9. incident_get_catalog         - Get catalog item details
+# 10. incident_list_metrics        - List metrics
+
+- slug: incident_list_incidents
+  name: List Incidents
+  description: |
+    List all incidents in incident.io.
+    Returns incident details including title, status, and severity.
+  provider: incident-io
+  endpoint: /v1/incidents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - incidents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing incidents
+    properties:
+      status:
+        type: string
+        description: "Filter by status: investigating, identified, monitoring, resolved"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: incident_get_incident
+  name: Get Incident
+  description: |
+    Get detailed information about a specific incident.
+    Includes timeline, severity, and affected services.
+  provider: incident-io
+  endpoint: /v1/incidents/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - incidents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an incident
+    properties:
+      id:
+        type: string
+        description: "Incident ID"
+    required:
+      - id
+
+- slug: incident_list_severities
+  name: List Severities
+  description: |
+    List all severity levels in incident.io.
+    Returns severity details including name and rank.
+  provider: incident-io
+  endpoint: /v1/severities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - severities
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing severities
+    properties: {}
+    required: []
+
+- slug: incident_list_urgencies
+  name: List Urgencies
+  description: |
+    List all urgency levels in incident.io.
+    Returns urgency details including name and rank.
+  provider: incident-io
+  endpoint: /v1/urgencies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - urgencies
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing urgencies
+    properties: {}
+    required: []
+
+- slug: incident_list_status_pages
+  name: List Status Pages
+  description: |
+    List all status pages in incident.io.
+    Returns status page details including name and subdomain.
+  provider: incident-io
+  endpoint: /v1/status-pages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - status_pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing status pages
+    properties: {}
+    required: []
+
+- slug: incident_list_members
+  name: List Members
+  description: |
+    List all team members in incident.io.
+    Returns member details including name and email.
+  provider: incident-io
+  endpoint: /v1/members
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties: {}
+    required: []
+
+- slug: incident_list_roles
+  name: List Roles
+  description: |
+    List all incident roles in incident.io.
+    Returns role details including name and description.
+  provider: incident-io
+  endpoint: /v1/roles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - roles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties: {}
+    required: []
+
+- slug: incident_list_catalog
+  name: List Catalog
+  description: |
+    List all catalog items in incident.io.
+    Returns catalog item details including type and name.
+  provider: incident-io
+  endpoint: /v1/catalog
+  method: GET
+  scopes:
+    - read
+  tags:
+    - catalog
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing catalog items
+    properties:
+      type:
+        type: string
+        description: "Filter by type"
+    required: []
+
+- slug: incident_get_catalog
+  name: Get Catalog Item
+  description: |
+    Get detailed information about a specific catalog item.
+    Includes catalog item properties and links.
+  provider: incident-io
+  endpoint: /v1/catalog/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - catalog
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a catalog item
+    properties:
+      id:
+        type: string
+        description: "Catalog item ID"
+    required:
+      - id
+
+- slug: incident_list_metrics
+  name: List Metrics
+  description: |
+    List all metrics in incident.io.
+    Returns metric details including name and type.
+  provider: incident-io
+  endpoint: /v1/metrics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - metrics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing metrics
+    properties: {}
+    required: []

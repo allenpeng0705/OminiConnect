@@ -1,0 +1,279 @@
+# Salesloft Tools - Sales Engagement Platform
+# Curated subset of Salesloft API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesloft_list_people              - List people
+# 2. salesloft_get_person              - Get person details
+# 3. salesloft_create_person            - Create a person
+# 4. salesloft_list_cadences            - List cadences
+# 5. salesloft_get_cadence              - Get cadence details
+# 6. salesloft_add_person_to_cadence     - Add person to cadence
+# 7. salesloft_list_calls               - List calls
+# 8. salesloft_get_call                 - Get call details
+# 9. salesloft_list_emails              - List emails
+# 10. salesloft_get_email               - Get email details
+
+- slug: salesloft_list_people
+  name: List People
+  description: |
+    List people in Salesloft. Filter by name, email, cadence, or stage.
+  provider: salesloft
+  endpoint: /api/v2/people
+  method: GET
+  scopes:
+    - people.read
+  tags:
+    - people
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., cadence_id='123')"
+    required: []
+
+- slug: salesloft_get_person
+  name: Get Person
+  description: |
+    Get detailed information about a Salesloft person including contact info and activities.
+  provider: salesloft
+  endpoint: /api/v2/people/{personId}
+  method: GET
+  scopes:
+    - people.read
+  tags:
+    - people
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      person_id:
+        type: string
+        description: "The person ID"
+    required:
+      - person_id
+
+- slug: salesloft_create_person
+  name: Create Person
+  description: |
+    Create a new person in Salesloft with name, email, phone, and company information.
+  provider: salesloft
+  endpoint: /api/v2/people
+  method: POST
+  scopes:
+    - people.write
+  tags:
+    - people
+    - sales engagement
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email_address:
+        type: string
+        description: "Email address"
+      phone_number:
+        type: string
+        description: "Phone number"
+      company_name:
+        type: string
+        description: "Company name"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - email_address
+
+- slug: salesloft_list_cadences
+  name: List Cadences
+  description: |
+    List cadences in Salesloft. Filter by status, type, or assigned team.
+  provider: salesloft
+  endpoint: /api/v2/cadences
+  method: GET
+  scopes:
+    - cadences.read
+  tags:
+    - cadences
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing cadences
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., status='active')"
+    required: []
+
+- slug: salesloft_get_cadence
+  name: Get Cadence
+  description: |
+    Get detailed information about a Salesloft cadence including steps and settings.
+  provider: salesloft
+  endpoint: /api/v2/cadences/{cadenceId}
+  method: GET
+  scopes:
+    - cadences.read
+  tags:
+    - cadences
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cadence
+    properties:
+      cadence_id:
+        type: string
+        description: "The cadence ID"
+    required:
+      - cadence_id
+
+- slug: salesloft_add_person_to_cadence
+  name: Add Person to Cadence
+  description: |
+    Add a person to a Salesloft cadence with optional scheduled date.
+  provider: salesloft
+  endpoint: /api/v2/cadence_enrollments
+  method: POST
+  scopes:
+    - cadences.write
+  tags:
+    - cadences
+    - sales engagement
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding person to cadence
+    properties:
+      person_id:
+        type: string
+        description: "The person ID"
+      cadence_id:
+        type: string
+        description: "The cadence ID"
+      scheduled_for:
+        type: string
+        description: "Schedule date (ISO 8601 format)"
+    required:
+      - person_id
+      - cadence_id
+
+- slug: salesloft_list_calls
+  name: List Calls
+  description: |
+    List calls in Salesloft. Filter by person, user, date, or outcome.
+  provider: salesloft
+  endpoint: /api/v2/calls
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., outcome='connected')"
+    required: []
+
+- slug: salesloft_get_call
+  name: Get Call
+  description: |
+    Get detailed information about a Salesloft call including duration, outcome, and recording.
+  provider: salesloft
+  endpoint: /api/v2/calls/{callId}
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      call_id:
+        type: string
+        description: "The call ID"
+    required:
+      - call_id
+
+- slug: salesloft_list_emails
+  name: List Emails
+  description: |
+    List emails in Salesloft. Filter by person, cadence, date, or status.
+  provider: salesloft
+  endpoint: /api/v2/emails
+  method: GET
+  scopes:
+    - emails.read
+  tags:
+    - emails
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing emails
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., status='sent')"
+    required: []
+
+- slug: salesloft_get_email
+  name: Get Email
+  description: |
+    Get detailed information about a Salesloft email including subject, body, and status.
+  provider: salesloft
+  endpoint: /api/v2/emails/{emailId}
+  method: GET
+  scopes:
+    - emails.read
+  tags:
+    - emails
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an email
+    properties:
+      email_id:
+        type: string
+        description: "The email ID"
+    required:
+      - email_id

@@ -1,0 +1,310 @@
+- slug: alibaba_list_ecs_instances
+  name: List ECS Instances
+  description: |
+    List all Elastic Compute Service (ECS) instances in Alibaba Cloud.
+  provider: alibaba
+  endpoint: /ecs/v1/instances
+  method: GET
+  scopes:
+    - ecs
+  tags:
+    - ecs
+    - compute
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing ECS instances
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID (e.g., cn-hangzhou, us-west-1)."
+      status:
+        type: string
+        description: "Instance status: Running, Stopped, etc."
+      page_size:
+        type: integer
+        description: "Number of instances per page (max 100)."
+      page_number:
+        type: integer
+        description: "Page number for pagination."
+    required:
+      - region_id
+
+- slug: alibaba_get_ecs_instance
+  name: Get ECS Instance
+  description: |
+    Get details of a specific ECS instance by ID.
+  provider: alibaba
+  endpoint: /ecs/v1/instances/{instance_id}
+  method: GET
+  scopes:
+    - ecs
+  tags:
+    - ecs
+    - compute
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting ECS instance details
+    properties:
+      instance_id:
+        type: string
+        description: "The ECS instance ID."
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+    required:
+      - instance_id
+      - region_id
+
+- slug: alibaba_create_ecs_instance
+  name: Create ECS Instance
+  description: |
+    Create a new Elastic Compute Service (ECS) instance in Alibaba Cloud.
+  provider: alibaba
+  endpoint: /ecs/v1/instances
+  method: POST
+  scopes:
+    - ecs
+  tags:
+    - ecs
+    - compute
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for creating an ECS instance
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+      image_id:
+        type: string
+        description: "OS image ID to use for the instance."
+      instance_type:
+        type: string
+        description: "Instance type (e.g., ecs.n4.small)."
+      security_group_id:
+        type: string
+        description: "Security group ID to attach."
+      vswitch_id:
+        type: string
+        description: "VSwitch ID for VPC network."
+      instance_name:
+        type: string
+        description: "Display name for the instance."
+    required:
+      - region_id
+      - image_id
+      - instance_type
+
+- slug: alibaba_list_slbs
+  name: List SLBs
+  description: |
+    List all Server Load Balancer (SLB) instances in Alibaba Cloud.
+  provider: alibaba
+  endpoint: /slb/v1/loadbalancers
+  method: GET
+  scopes:
+    - slb
+  tags:
+    - slb
+    - load-balancer
+    - networking
+  input_schema:
+    type: object
+    description: Parameters for listing SLB instances
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100)."
+      page_number:
+        type: integer
+        description: "Page number for pagination."
+    required:
+      - region_id
+
+- slug: alibaba_get_slb
+  name: Get SLB
+  description: |
+    Get details of a specific Server Load Balancer by ID.
+  provider: alibaba
+  endpoint: /slb/v1/loadbalancers/{loadbalancer_id}
+  method: GET
+  scopes:
+    - slb
+  tags:
+    - slb
+    - load-balancer
+    - networking
+  input_schema:
+    type: object
+    description: Parameters for getting SLB details
+    properties:
+      loadbalancer_id:
+        type: string
+        description: "The SLB instance ID."
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+    required:
+      - loadbalancer_id
+      - region_id
+
+- slug: alibaba_list_rds_instances
+  name: List RDS Instances
+  description: |
+    List all Relational Database Service (RDS) instances in Alibaba Cloud.
+  provider: alibaba
+  endpoint: /rds/v1/instances
+  method: GET
+  scopes:
+    - rds
+  tags:
+    - rds
+    - database
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing RDS instances
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+      engine:
+        type: string
+        description: "Database engine: MySQL, PostgreSQL, SQLServer, MariaDB."
+      status:
+        type: string
+        description: "Instance status: Running, Stopped, etc."
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100)."
+      page_number:
+        type: integer
+        description: "Page number for pagination."
+    required:
+      - region_id
+
+- slug: alibaba_get_rds_instance
+  name: Get RDS Instance
+  description: |
+    Get details of a specific RDS database instance by ID.
+  provider: alibaba
+  endpoint: /rds/v1/instances/{instance_id}
+  method: GET
+  scopes:
+    - rds
+  tags:
+    - rds
+    - database
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting RDS instance details
+    properties:
+      instance_id:
+        type: string
+        description: "The RDS instance ID."
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+    required:
+      - instance_id
+      - region_id
+
+- slug: alibaba_list_oss_buckets
+  name: List OSS Buckets
+  description: |
+    List all Object Storage Service (OSS) buckets in Alibaba Cloud.
+  provider: alibaba
+  endpoint: /oss/v1/buckets
+  method: GET
+  scopes:
+    - oss
+  tags:
+    - oss
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing OSS buckets
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+    required:
+      - region_id
+
+- slug: alibaba_get_oss_bucket
+  name: Get OSS Bucket
+  description: |
+    Get details and list objects in an OSS bucket.
+  provider: alibaba
+  endpoint: /oss/v1/buckets/{bucket_name}
+  method: GET
+  scopes:
+    - oss
+  tags:
+    - oss
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting OSS bucket details
+    properties:
+      bucket_name:
+        type: string
+        description: "Name of the OSS bucket."
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+      max_keys:
+        type: integer
+        description: "Maximum number of objects to return (max 1000)."
+      marker:
+        type: string
+        description: "Object name to start listing from for pagination."
+    required:
+      - bucket_name
+      - region_id
+
+- slug: alibaba_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message using Alibaba Cloud DirectMail.
+  provider: alibaba
+  endpoint: /dysms/v1/regions/{region_id}/sms
+  method: POST
+  scopes:
+    - sms
+  tags:
+    - sms
+    - messaging
+    - communications
+  input_schema:
+    type: object
+    description: Parameters for sending SMS
+    properties:
+      region_id:
+        type: string
+        description: "Alibaba Cloud region ID."
+      phone_numbers:
+        type: string
+        description: "Recipient phone number(s), comma-separated for multiple."
+      sign_name:
+        type: string
+        description: "SMS signature name (approved by Alibaba Cloud)."
+      template_code:
+        type: string
+        description: "SMS template code."
+      template_param:
+        type: string
+        description: "JSON string of template parameter key-value pairs."
+    required:
+      - region_id
+      - phone_numbers
+      - sign_name
+      - template_code

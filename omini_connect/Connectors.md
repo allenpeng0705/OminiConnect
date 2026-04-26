@@ -4,25 +4,80 @@ This document defines the connector spec for OminiConnect and platform notes for
 
 ## Connector Spec (v1)
 
-OminiConnect supports two connector types:
+OminiConnect supports connectors through two integration engines:
 
-1. OAuth2 connectors
-2. API key connectors
+1. **Native** — Built-in OAuth2 / API key connectors (legacy, for Feishu, DingTalk, WeChat Work, QQ Mail, LinkedIn, Facebook, X, Maton)
+2. **Nango** — 700+ providers via Nango's integration hub, supporting multiple auth modes
 
-All connectors are configured via the OminiConnect Portal UI and used through `/api/proxy/{platform}/{path}` with an OminiConnect API key.
+All connectors are configured via the OminiConnect Portal UI and used through `/api/proxy/{platform}/{path}` or `/api/ominiconnect/proxy/{platform}/*path` with an OminiConnect API key.
 
 ### Unified Connector Config
 
 Stored model:
 
-- `platform`: unique platform key (`linkedin`, `facebook`, `x`, `maton`, `qqmail`, ...)
-- `client_id`: OAuth client ID or API key ID field
-- `client_secret`: OAuth client secret or API key secret field
-- `redirect_uri`: OAuth callback URI (auto-generated, empty for API key connectors)
-- `scopes`: OAuth scopes list (space-separated, empty for API key connectors)
+- `platform`: unique platform key (`github`, `slack`, `salesforce`, ...)
+- `client_id`: OAuth client ID or API key / username field
+- `client_secret`: OAuth client secret or password/API key secret field
+- `redirect_uri`: OAuth callback URI (auto-generated)
+- `scopes`: OAuth scopes list
+- `engine`: `omini_connect_native` | `nango`
+- `provider_key`: Nango integration key (for Nango-managed connectors)
+- `connection_ref`: Nango connection ID (for Nango-managed connectors)
 - `enabled`: connector on/off
 
-### Type A: OAuth2 Connector
+---
+
+## Supported Auth Modes
+
+OminiConnect supports the following auth modes via the Nango integration hub:
+
+### Tier 1 — Full Support (Direct credential entry or Nango popup)
+
+| Auth Mode | Flow | Count |
+|-----------|------|-------|
+| **OAuth2** | Nango popup → OAuth authorize → polling for connection | 258 |
+| **OAuth1** | Nango popup (legacy OAuth) | 4 |
+| **MCP_OAuth2** | Nango popup (OAuth with MCP endpoint) | 12 |
+| **Unknown** | Treated as OAuth2 (51 major platforms missing auth_mode in Nango YAML) | 51 |
+| **API_KEY** | Direct entry → credentials posted to Nango | 229 |
+| **BASIC** | Direct entry (username + password) → posted to Nango | 81 |
+| **SIGNATURE** | Direct entry (Emarsys WSSE) → posted to Nango | 1 |
+
+**Total Tier 1: 636 providers**
+
+### Tier 2 — Full Support (Nango Connect popup + polling)
+
+| Auth Mode | Flow | Count |
+|-----------|------|-------|
+| **OAUTH2_CC** | Direct entry (client_id + client_secret) → posted to Nango | 72 |
+| **TWO_STEP** | Nango popup → user completes provider-specific flow | 42 |
+| **BILL** | Nango popup (Bill.com custom auth) | 2 |
+| **TBA** | Nango popup (NetSuite Token Based Auth) | 1 |
+
+**Total Tier 2: 117 providers**
+
+### Skipped (Deferred)
+
+These auth modes are not yet supported in the portal:
+
+| Auth Mode | Reason | Count |
+|-----------|--------|-------|
+| JWT | Complex key format, rare | 3 |
+| APP | GitHub App auth | 2 |
+| CUSTOM | Custom auth per provider | 1 |
+| APP_STORE | Apple App Store ecosystem | 1 |
+| INSTALL_PLUGIN | Browser plugin install | 1 |
+| NONE | Unauthenticated webhook routing | 1 |
+
+**Total skipped: 7 providers**
+
+---
+
+## Integration Engine: Native
+
+For Feishu, DingTalk, WeChat Work, QQ Mail, LinkedIn, Facebook, X, and Maton.
+
+### Type A: Native OAuth2 Connector
 
 Flow:
 
@@ -34,7 +89,7 @@ Flow:
 6. Proxy calls use vault token automatically
 7. Expired token is auto-refreshed when refresh token exists
 
-### Type B: API Key Connector
+### Type B: Native API Key Connector
 
 Flow:
 
@@ -42,12 +97,27 @@ Flow:
 2. No OAuth flow and no callback
 3. Proxy directly uses configured key from connector secret field
 
+---
+
+## Integration Engine: Nango
+
+For all other providers (700+ integrations via Nango).
+
+### How Nango Managed Connectors Work
+
+1. User selects a provider from the catalog in the Portal UI
+2. Based on auth mode, either:
+   - **Direct flow**: User enters credentials in the portal form → sent directly to Nango `/connections`
+   - **Popup flow**: Portal opens Nango Connect UI in a popup → user authenticates with the provider → Nango notifies portal via WebSocket → portal polls for the new connection
+3. Nango stores the connection credentials
+4. OminiConnect proxies API calls through Nango using the stored connection
+
 ### Proxy Contract
 
 Client calls:
 
 ```bash
-POST /api/proxy/{platform}/{native_api_path}
+POST /api/ominiconnect/proxy/{platform}/{path}
 Authorization: Bearer YOUR_OMNICONNECT_API_KEY
 Content-Type: application/json
 
@@ -57,8 +127,8 @@ Content-Type: application/json
 OminiConnect responsibilities:
 
 1. Validate OminiConnect API key
-2. Resolve platform credential (OAuth token or API key)
-3. Inject provider auth header (Bearer token or API key)
+2. Resolve platform credential (via Nango connection or native vault)
+3. Inject provider auth header (Bearer token, API key, or Basic auth)
 4. Forward request to provider base URL
 5. Return raw upstream response
 

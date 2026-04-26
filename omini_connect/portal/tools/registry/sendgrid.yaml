@@ -1,0 +1,301 @@
+# SendGrid Tools - Email API
+# Transactional email, contact management, lists, templates, and campaigns.
+
+# === TOOL LIST ===
+# 1. sendgrid_send_email        - Send a transactional email
+# 2. sendgrid_list_contacts      - List all contacts
+# 3. sendgrid_get_contact        - Get a specific contact by email
+# 4. sendgrid_add_contact         - Add a new contact
+# 5. sendgrid_list_lists         - List all contact lists
+# 6. sendgrid_get_list           - Get a specific list by ID
+# 7. sendgrid_add_contact_to_list - Add a contact to a list
+# 8. sendgrid_list_templates     - List email templates
+# 9. sendgrid_get_template       - Get a specific template by ID
+# 10. sendgrid_create_campaign    - Create a marketing campaign
+
+- slug: sendgrid_send_email
+  name: Send Email
+  description: |
+    Send a transactional email to one or more recipients.
+    Supports HTML content, attachments, and custom headers.
+  provider: sendgrid
+  endpoint: /mail/send
+  method: POST
+  scopes:
+    - mail.send
+  tags:
+    - email
+    - transactional
+  input_schema:
+    type: object
+    description: Parameters for sending email
+    properties:
+      to:
+        type: array
+        items:
+          type: object
+        description: "Array of recipient objects with email and name, e.g. [{'email': 'test@example.com', 'name': 'Test User'}]"
+      from:
+        type: object
+        description: "Sender object with email and name"
+      subject:
+        type: string
+        description: "Email subject line"
+      text:
+        type: string
+        description: "Plain text body content"
+      html:
+        type: string
+        description: "HTML body content"
+      reply_to:
+        type: object
+        description: "Reply-to address object"
+    required:
+      - to
+      - from
+      - subject
+
+- slug: sendgrid_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve all contacts in your SendGrid marketing lists.
+    Returns paginated results with contact details.
+  provider: sendgrid
+  endpoint: /marketing/contacts
+  method: GET
+  scopes:
+    - marketing.contacts
+  tags:
+    - contacts
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      page_token:
+        type: string
+        description: "Pagination token from previous response"
+    required: []
+
+- slug: sendgrid_get_contact
+  name: Get Contact
+  description: |
+    Retrieve a specific contact by their email address.
+    Returns all stored contact information and metadata.
+  provider: sendgrid
+  endpoint: /marketing/contacts/{email}
+  method: GET
+  scopes:
+    - marketing.contacts
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email address (URL encoded)"
+    required:
+      - email
+
+- slug: sendgrid_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact to your SendGrid marketing lists.
+    Include custom field data and list associations.
+  provider: sendgrid
+  endpoint: /marketing/contacts
+  method: PUT
+  scopes:
+    - marketing.contacts
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email address (required)"
+      first_name:
+        type: string
+        description: "Contact first name"
+      last_name:
+        type: string
+        description: "Contact last name"
+      custom_fields:
+        type: object
+        description: "Custom field key-value pairs"
+    required:
+      - email
+
+- slug: sendgrid_list_lists
+  name: List Contact Lists
+  description: |
+    Retrieve all contact lists in your SendGrid account.
+    Lists are used to organize contacts for targeted campaigns.
+  provider: sendgrid
+  endpoint: /marketing/lists
+  method: GET
+  scopes:
+    - marketing.lists
+  tags:
+    - lists
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing contact lists
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      page_token:
+        type: string
+        description: "Pagination token from previous response"
+    required: []
+
+- slug: sendgrid_get_list
+  name: Get Contact List
+  description: |
+    Get details of a specific contact list including member count.
+    Use this to verify list existence before adding contacts.
+  provider: sendgrid
+  endpoint: /marketing/lists/{list_id}
+  method: GET
+  scopes:
+    - marketing.lists
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact list
+    properties:
+      list_id:
+        type: string
+        description: "List ID (integer as string)"
+    required:
+      - list_id
+
+- slug: sendgrid_add_contact_to_list
+  name: Add Contact to List
+  description: |
+    Add an existing contact to a contact list by their email.
+    The contact must already exist in your SendGrid account.
+  provider: sendgrid
+  endpoint: /marketing/lists/{list_id}/contacts
+  method: POST
+  scopes:
+    - marketing.lists
+  tags:
+    - lists
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for adding contact to list
+    properties:
+      list_id:
+        type: string
+        description: "List ID to add contact to"
+      emails:
+        type: array
+        items:
+          type: string
+        description: "Array of contact emails to add"
+    required:
+      - list_id
+      - emails
+
+- slug: sendgrid_list_templates
+  name: List Email Templates
+  description: |
+    Retrieve all email templates in your SendGrid account.
+    Templates can be dynamic templates with Handlebars syntax.
+  provider: sendgrid
+  endpoint: /templates
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      generation:
+        type: string
+        description: "Filter by generation: dynamic or raw (default all)"
+        enum: [dynamic, raw]
+    required: []
+
+- slug: sendgrid_get_template
+  name: Get Email Template
+  description: |
+    Get a specific email template by ID including versions.
+    Returns template body and settings for rendering.
+  provider: sendgrid
+  endpoint: /templates/{template_id}
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "Template ID"
+    required:
+      - template_id
+
+- slug: sendgrid_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new marketing email campaign.
+    Set recipients, subject, content, and send settings.
+  provider: sendgrid
+  endpoint: /marketing/campaigns
+  method: POST
+  scopes:
+    - marketing.campaigns
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      name:
+        type: string
+        description: "Campaign name (required)"
+      send_at:
+        type: string
+        description: "ISO 8601 date to send the campaign"
+      subject:
+        type: string
+        description: "Email subject line"
+      sender_id:
+        type: integer
+        description: "Sender identity ID"
+      list_ids:
+        type: array
+        items:
+          type: string
+        description: "Array of contact list IDs to send to"
+      template_id:
+        type: string
+        description: "Template ID to use"
+    required:
+      - name

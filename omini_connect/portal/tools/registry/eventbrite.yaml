@@ -1,0 +1,245 @@
+- slug: eventbrite_list_events
+  name: List Events
+  description: |
+    Retrieve a list of all events for the authenticated organization.
+  provider: eventbrite
+  endpoint: /v3/organizations/{organization_id}/events/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      organization_id:
+        type: string
+        description: "The Eventbrite organization ID"
+      status:
+        type: string
+        description: "Filter by status (live, started, ended, canceled, draft)"
+      expand:
+        type: string
+        description: "Comma-separated list of fields to expand (venue, ticket_classes)"
+    required:
+      - organization_id
+
+- slug: eventbrite_get_event
+  name: Get Event
+  description: |
+    Retrieve detailed information about a specific event by ID.
+  provider: eventbrite
+  endpoint: /v3/events/{event_id}/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      expand:
+        type: string
+        description: "Comma-separated list of fields to expand (venue, ticket_classes, organizers)"
+    required:
+      - event_id
+
+- slug: eventbrite_create_event
+  name: Create Event
+  description: |
+    Create a new event under the specified organization with timing and venue details.
+  provider: eventbrite
+  endpoint: /v3/organizations/{organization_id}/events/
+  method: POST
+  scopes:
+    - event:write
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      organization_id:
+        type: string
+        description: "The Eventbrite organization ID"
+      name:
+        type: string
+        description: "The name/title of the event"
+      description_html:
+        type: string
+        description: "HTML description of the event"
+      start_utc:
+        type: string
+        description: "Start datetime in UTC ISO 8601 format"
+      end_utc:
+        type: string
+        description: "End datetime in UTC ISO 8601 format"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD, EUR)"
+      online_event:
+        type: boolean
+        description: "Whether the event is online"
+      venue_id:
+        type: string
+        description: "ID of an existing venue to use"
+    required:
+      - organization_id
+      - name
+      - start_utc
+      - end_utc
+      - currency
+
+- slug: eventbrite_list_orders
+  name: List Orders
+  description: |
+    Retrieve all orders for a specific event including purchaser and payment details.
+  provider: eventbrite
+  endpoint: /v3/events/{event_id}/orders/
+  method: GET
+  scopes:
+    - order:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      status:
+        type: string
+        description: "Filter by order status (placed, completed, refunded, canceled)"
+    required:
+      - event_id
+
+- slug: eventbrite_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order including attendee list.
+  provider: eventbrite
+  endpoint: /v3/orders/{order_id}/
+  method: GET
+  scopes:
+    - order:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "The unique identifier of the order"
+    required:
+      - order_id
+
+- slug: eventbrite_list_attendees
+  name: List Attendees
+  description: |
+    Retrieve all attendees for a specific event with their ticket and status information.
+  provider: eventbrite
+  endpoint: /v3/events/{event_id}/attendees/
+  method: GET
+  scopes:
+    - attendee:read
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for listing attendees
+    properties:
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+      status:
+        type: string
+        description: "Filter by status (attending, not_attending)"
+    required:
+      - event_id
+
+- slug: eventbrite_get_attendee
+  name: Get Attendee
+  description: |
+    Retrieve detailed information about a specific attendee including their ticket type.
+  provider: eventbrite
+  endpoint: /v3/attendees/{attendee_id}/
+  method: GET
+  scopes:
+    - attendee:read
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for getting an attendee
+    properties:
+      attendee_id:
+        type: string
+        description: "The unique identifier of the attendee"
+    required:
+      - attendee_id
+
+- slug: eventbrite_list_categories
+  name: List Categories
+  description: |
+    Retrieve all event categories available in Eventbrite for classification.
+  provider: eventbrite
+  endpoint: /v3/categories/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - categories
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties: {}
+    required: []
+
+- slug: eventbrite_get_category
+  name: Get Category
+  description: |
+    Retrieve information about a specific event category by ID.
+  provider: eventbrite
+  endpoint: /v3/categories/{category_id}/
+  method: GET
+  scopes:
+    - event:read
+  tags:
+    - categories
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      category_id:
+        type: string
+        description: "The unique identifier of the category"
+    required:
+      - category_id
+
+- slug: eventbrite_list_venues
+  name: List Venues
+  description: |
+    Retrieve all venues associated with the authenticated organization.
+  provider: eventbrite
+  endpoint: /v3/organizations/{organization_id}/venues/
+  method: GET
+  scopes:
+    - venue:read
+  tags:
+    - venues
+  input_schema:
+    type: object
+    description: Parameters for listing venues
+    properties:
+      organization_id:
+        type: string
+        description: "The Eventbrite organization ID"
+    required:
+      - organization_id

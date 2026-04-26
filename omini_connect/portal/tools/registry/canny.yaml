@@ -1,0 +1,287 @@
+# Canny Tools - Allowlist
+# Curated subset of the Canny API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. canny_list_boards     - List all boards
+# 2. canny_get_board       - Get details of a specific board
+# 3. canny_list_posts      - List posts in a board
+# 4. canny_get_post        - Get details of a specific post
+# 5. canny_create_post     - Create a new post
+# 6. canny_list_comments   - List comments on a post
+# 7. canny_get_comment     - Get details of a specific comment
+# 8. canny_list_users      - List users
+# 9. canny_get_user        - Get details of a specific user
+# 10. canny_vote_on_post   - Vote on a post
+
+- slug: canny_list_boards
+  name: List Boards
+  description: |
+    Returns a list of all boards in your Canny workspace. Boards contain grouped feature requests.
+  provider: canny
+  endpoint: /boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of boards to return"
+        default: 50
+      skip:
+        type: integer
+        description: "Number of boards to skip for pagination"
+        default: 0
+    required: []
+
+- slug: canny_get_board
+  name: Get Board
+  description: |
+    Get details of a specific board including name, description, post counts, and category.
+  provider: canny
+  endpoint: /boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      id:
+        type: string
+        description: "Board ID"
+    required:
+      - id
+
+- slug: canny_list_posts
+  name: List Posts
+  description: |
+    Returns a paginated list of posts (feature requests) in a board. Filter by status, author, or visibility.
+  provider: canny
+  endpoint: /posts
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - feedback
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      boardID:
+        type: string
+        description: "Board ID to filter posts by"
+      status:
+        type: string
+        description: "Filter by post status: open, closed, open, under review, etc."
+      authorID:
+        type: string
+        description: "Filter by author user ID"
+      limit:
+        type: integer
+        description: "Maximum number of posts to return"
+        default: 50
+      skip:
+        type: integer
+        description: "Number of posts to skip"
+        default: 0
+    required:
+      - boardID
+
+- slug: canny_get_post
+  name: Get Post
+  description: |
+    Get full details of a specific post including title, body, author, status, and vote count.
+  provider: canny
+  endpoint: /posts
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      id:
+        type: string
+        description: "Post ID"
+    required:
+      - id
+
+- slug: canny_create_post
+  name: Create Post
+  description: |
+    Create a new feature request post in a specified board. Include title, description, and optional author.
+  provider: canny
+  endpoint: /posts
+  method: POST
+  scopes:
+    - posts:create
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      boardID:
+        type: string
+        description: "Board ID to create post in"
+      title:
+        type: string
+        description: "Post title (feature request summary)"
+      details:
+        type: string
+        description: "Detailed description of the feature request"
+      authorID:
+        type: string
+        description: "User ID of the post author"
+      categoryID:
+        type: string
+        description: "Category ID for the post"
+    required:
+      - boardID
+      - title
+
+- slug: canny_list_comments
+  name: List Comments
+  description: |
+    Returns a paginated list of comments on a specific post. Includes author and timestamp.
+  provider: canny
+  endpoint: /comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      postID:
+        type: string
+        description: "Post ID to get comments for"
+      limit:
+        type: integer
+        description: "Maximum number of comments to return"
+        default: 50
+      skip:
+        type: integer
+        description: "Number of comments to skip"
+        default: 0
+    required:
+      - postID
+
+- slug: canny_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment including text, author, and creation date.
+  provider: canny
+  endpoint: /comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      id:
+        type: string
+        description: "Comment ID"
+    required:
+      - id
+
+- slug: canny_list_users
+  name: List Users
+  description: |
+    Returns a paginated list of users in your Canny workspace.
+  provider: canny
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+        default: 50
+      skip:
+        type: integer
+        description: "Number of users to skip"
+        default: 0
+    required: []
+
+- slug: canny_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including name, email, and avatar.
+  provider: canny
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: canny_vote_on_post
+  name: Vote on Post
+  description: |
+    Vote on a feature request post. Supports both upvoting and removing a vote.
+  provider: canny
+  endpoint: /posts/vote
+  method: POST
+  scopes:
+    - posts:vote
+  tags:
+    - posts
+    - voting
+  input_schema:
+    type: object
+    description: Parameters for voting on a post
+    properties:
+      postID:
+        type: string
+        description: "Post ID to vote on"
+      voterID:
+        type: string
+        description: "User ID of the voter"
+      type:
+        type: string
+        description: "Vote type"
+        enum: [upvote, removeVote]
+        default: upvote
+    required:
+      - postID
+      - voterID

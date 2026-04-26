@@ -34,8 +34,16 @@ pub struct ApiKey {
 /// Login request body.
 #[derive(Debug, Deserialize)]
 pub struct LoginRequest {
-    pub username: String,
+    pub email: String,
     pub password: String,
+}
+
+/// Signup request body.
+#[derive(Debug, Deserialize)]
+pub struct SignupRequest {
+    pub email: String,
+    pub password: String,
+    pub name: Option<String>,
 }
 
 /// Generate API key request.

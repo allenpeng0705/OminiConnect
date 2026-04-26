@@ -22,7 +22,7 @@ import type { ConnectSession, DBAPISecret, DBEnvironment, DBPlan, DBTeam, DBUser
 //       };
 
 export interface RequestLocals {
-    authType?: 'secretKey' | 'publicKey' | 'basic' | 'adminKey' | 'none' | 'session' | 'connectSession';
+    authType?: 'secretKey' | 'publicKey' | 'basic' | 'adminKey' | 'none' | 'session' | 'connectSession' | 'externalTrust';
     user?: DBUser;
     account?: DBTeam;
     environment?: DBEnvironment;

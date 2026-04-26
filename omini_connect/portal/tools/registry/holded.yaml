@@ -1,0 +1,246 @@
+# Holded Tools - Allowlist
+# Curated subset of Holded API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. holded_list_contacts         - List contacts
+# 2. holded_get_contact           - Get contact details
+# 3. holded_list_invoices         - List invoices
+# 4. holded_get_invoice           - Get invoice details
+# 5. holded_list_products         - List products
+# 6. holded_get_product           - Get product details
+# 7. holded_list_expenses         - List expenses
+# 8. holded_get_expense           - Get expense details
+# 9. holded_list_treasury         - List treasury movements
+# 10. holded_list_projects        - List projects
+
+- slug: holded_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Holded.
+    Returns contact details including name, email, and type.
+  provider: holded
+  endpoint: /invoicing/v1/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      type:
+        type: string
+        description: "Filter by type: customer, vendor"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: holded_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+    Includes contact details and invoice history.
+  provider: holded
+  endpoint: /invoicing/v1/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: holded_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Holded.
+    Returns invoice details including number, status, and amount.
+  provider: holded
+  endpoint: /invoicing/v1/invoices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+      status:
+        type: string
+        description: "Filter by status: draft, sent, paid"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: holded_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice.
+    Includes invoice lines and payment status.
+  provider: holded
+  endpoint: /invoicing/v1/invoices/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: holded_list_products
+  name: List Products
+  description: |
+    List all products in Holded.
+    Returns product details including name, price, and stock.
+  provider: holded
+  endpoint: /invoicing/v1/products
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties: {}
+    required: []
+
+- slug: holded_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product.
+    Includes product details and inventory.
+  provider: holded
+  endpoint: /invoicing/v1/products/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: holded_list_expenses
+  name: List Expenses
+  description: |
+    List all expenses in Holded.
+    Returns expense details including amount and category.
+  provider: holded
+  endpoint: /invoicing/v1/expenses
+  method: GET
+  scopes:
+    - read
+  tags:
+    - expenses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: holded_get_expense
+  name: Get Expense
+  description: |
+    Get detailed information about a specific expense.
+    Includes expense details and receipt.
+  provider: holded
+  endpoint: /invoicing/v1/expenses/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - expenses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      id:
+        type: string
+        description: "Expense ID"
+    required:
+      - id
+
+- slug: holded_list_treasury
+  name: List Treasury Movements
+  description: |
+    List all treasury movements in Holded.
+    Returns movement details including type and amount.
+  provider: holded
+  endpoint: /invoicing/v1/treasury
+  method: GET
+  scopes:
+    - read
+  tags:
+    - treasury
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing treasury movements
+    properties: {}
+    required: []
+
+- slug: holded_list_projects
+  name: List Projects
+  description: |
+    List all projects in Holded.
+    Returns project details including name and status.
+  provider: holded
+  endpoint: /invoicing/v1/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties: {}
+    required: []

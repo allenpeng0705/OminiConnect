@@ -1,0 +1,230 @@
+# KnowBe4 Tools - Allowlist
+# Curated subset of KnowBe4 API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. knowbe4_list_users          - List users
+# 2. knowbe4_get_user           - Get user details
+# 3. knowbe4_list_groups        - List groups
+# 4. knowbe4_get_group          - Get group details
+# 5. knowbe4_list_campaigns     - List campaigns
+# 6. knowbe4_get_campaign       - Get campaign details
+# 7. knowbe4_list_policies      - List policies
+# 8. knowbe4_list_phishing_tests - List phishing tests
+# 9. knowbe4_list_risky_users   - List risky users
+# 10. knowbe4_list_remediations  - List remediations
+
+- slug: knowbe4_list_users
+  name: List Users
+  description: |
+    List all users in KnowBe4.
+  provider: knowbe4
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: knowbe4_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: knowbe4
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: integer
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: knowbe4_list_groups
+  name: List Groups
+  description: |
+    List all groups.
+  provider: knowbe4
+  endpoint: /v1/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: knowbe4_get_group
+  name: Get Group
+  description: |
+    Get details for a specific group.
+  provider: knowbe4
+  endpoint: /v1/groups/{group_id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: integer
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: knowbe4_list_campaigns
+  name: List Campaigns
+  description: |
+    List all phishing campaigns.
+  provider: knowbe4
+  endpoint: /v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: knowbe4_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: knowbe4
+  endpoint: /v1/campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: knowbe4_list_policies
+  name: List Policies
+  description: |
+    List all policies.
+  provider: knowbe4
+  endpoint: /v1/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []
+
+- slug: knowbe4_list_phishing_tests
+  name: List Phishing Tests
+  description: |
+    List all phishing tests.
+  provider: knowbe4
+  endpoint: /v1/phishing
+  method: GET
+  scopes: []
+  tags:
+    - phishing
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing phishing tests
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: knowbe4_list_risky_users
+  name: List Risky Users
+  description: |
+    List all risky users.
+  provider: knowbe4
+  endpoint: /v1/risky-users
+  method: GET
+  scopes: []
+  tags:
+    - risky
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing risky users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: knowbe4_list_remediations
+  name: List Remediations
+  description: |
+    List all remediations.
+  provider: knowbe4
+  endpoint: /v1/remediations
+  method: GET
+  scopes: []
+  tags:
+    - remediations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing remediations
+    properties: {}
+    required: []

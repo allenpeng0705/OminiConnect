@@ -1,0 +1,308 @@
+# SuiteDash Tools - Allowlist
+# Curated subset of SuiteDash API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. suitedash_list_users      - List all users
+# 2. suitedash_get_user       - Get user details
+# 3. suitedash_create_user    - Create a new user
+# 4. suitedash_list_teams     - List all teams
+# 5. suitedash_get_team       - Get team details
+# 6. suitedash_list_projects  - List all projects
+# 7. suitedash_get_project    - Get project details
+# 8. suitedash_list_tasks     - List all tasks
+# 9. suitedash_get_task       - Get task details
+# 10. suitedash_list_invoices - List all invoices
+
+- slug: suitedash_list_users
+  name: List Users
+  description: |
+    List all users in SuiteDash. Filter by role, status, or team.
+  provider: suitedash
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      role:
+        type: string
+        description: "Filter by role"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: suitedash_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including profile, role, and permissions.
+  provider: suitedash
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: suitedash_create_user
+  name: Create User
+  description: |
+    Create a new user. Set name, email, role, and team assignment.
+  provider: suitedash
+  endpoint: /users
+  method: POST
+  scopes:
+    - users:write
+  tags:
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      role:
+        type: string
+        description: "User role (admin, member, guest)"
+      team_ids:
+        type: array
+        description: "Team IDs to assign"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: suitedash_list_teams
+  name: List Teams
+  description: |
+    List all teams in SuiteDash. Returns team names, members, and settings.
+  provider: suitedash
+  endpoint: /teams
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: suitedash_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team including members and settings.
+  provider: suitedash
+  endpoint: /teams/{id}
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: string
+        description: "Team ID"
+    required:
+      - id
+
+- slug: suitedash_list_projects
+  name: List Projects
+  description: |
+    List all projects in SuiteDash. Filter by status, team, or client.
+  provider: suitedash
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed, on-hold)"
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: suitedash_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project including tasks, team, and timeline.
+  provider: suitedash
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: suitedash_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in SuiteDash. Filter by project, assignee, or status.
+  provider: suitedash
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      assignee_id:
+        type: string
+        description: "Filter by assignee user ID"
+      status:
+        type: string
+        description: "Filter by status (todo, in-progress, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: suitedash_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task including description, assignee, due date, and comments.
+  provider: suitedash
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: suitedash_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in SuiteDash. Filter by status, client, or date range.
+  provider: suitedash
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status (draft, sent, paid, overdue)"
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []

@@ -1,0 +1,233 @@
+- slug: dixa_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve all conversations with optional status and date filters.
+  provider: dixa
+  endpoint: /v1/conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, pending"
+      from_date:
+        type: string
+        description: "Filter from date (ISO 8601)"
+      to_date:
+        type: string
+        description: "Filter to date (ISO 8601)"
+      page_size:
+        type: integer
+        description: "Number of results per page"
+        default: 50
+      page_token:
+        type: string
+        description: "Pagination token"
+
+- slug: dixa_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation including messages.
+  provider: dixa
+  endpoint: /v1/conversations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "The conversation ID"
+    required:
+      - id
+
+- slug: dixa_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation with an initial message.
+  provider: dixa
+  endpoint: /v1/conversations
+  method: POST
+  scopes:
+    - write
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      channel:
+        type: string
+        description: "Channel type: email, chat, facebook, twitter"
+      contact_id:
+        type: string
+        description: "The contact ID"
+      message:
+        type: object
+        description: "Initial message object"
+      priority:
+        type: string
+        description: "Priority: normal, high"
+    required:
+      - channel
+      - contact_id
+
+- slug: dixa_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve all contacts with optional search filters.
+  provider: dixa
+  endpoint: /v1/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      search:
+        type: string
+        description: "Search by name or email"
+      page_size:
+        type: integer
+        description: "Number of results per page"
+        default: 50
+      page_token:
+        type: string
+        description: "Pagination token"
+
+- slug: dixa_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: dixa
+  endpoint: /v1/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "The contact ID"
+    required:
+      - id
+
+- slug: dixa_list_agents
+  name: List Agents
+  description: |
+    Retrieve all agents in the organization.
+  provider: dixa
+  endpoint: /v1/agents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      status:
+        type: string
+        description: "Filter by status: online, offline, away"
+
+- slug: dixa_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific agent.
+  provider: dixa
+  endpoint: /v1/agents/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: string
+        description: "The agent ID"
+    required:
+      - id
+
+- slug: dixa_list_teams
+  name: List Teams
+  description: |
+    Retrieve all teams in the organization.
+  provider: dixa
+  endpoint: /v1/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page"
+        default: 50
+
+- slug: dixa_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team.
+  provider: dixa
+  endpoint: /v1/teams/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: string
+        description: "The team ID"
+    required:
+      - id
+
+- slug: dixa_list_routing_rules
+  name: List Routing Rules
+  description: |
+    Retrieve all routing rules that determine conversation distribution.
+  provider: dixa
+  endpoint: /v1/routing-rules
+  method: GET
+  scopes:
+    - read
+  tags:
+    - routing
+  input_schema:
+    type: object
+    description: Parameters for listing routing rules
+    properties:
+      channel:
+        type: string
+        description: "Filter by channel type"

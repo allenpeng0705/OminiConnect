@@ -1,0 +1,247 @@
+- slug: printify_list_products
+  name: List Products
+  description: |
+    Retrieve a list of all products in your Printify catalog with variant details.
+  provider: printify
+  endpoint: /v1/catalog/products
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of products per page (default 50, max 100)"
+      search:
+        type: string
+        description: "Search term to filter products by name"
+    required: []
+
+- slug: printify_get_product
+  name: Get Product
+  description: |
+    Retrieve detailed information about a specific product including variants and blueprints.
+  provider: printify
+  endpoint: /v1/catalog/products/{id}
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: printify_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of orders with filtering options for status and date range.
+  provider: printify
+  endpoint: /v1/orders
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of orders per page (default 50, max 100)"
+      status:
+        type: string
+        description: "Filter by status: pending, printing, shipped, delivered, canceled"
+      from_date:
+        type: string
+        description: "Start date filter (ISO 8601 format)"
+      to_date:
+        type: string
+        description: "End date filter (ISO 8601 format)"
+    required: []
+
+- slug: printify_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order including line items and shipping.
+  provider: printify
+  endpoint: /v1/orders/{id}
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: printify_create_order
+  name: Create Order
+  description: |
+    Create a new order by specifying items, shipping address, and print provider.
+  provider: printify
+  endpoint: /v1/orders
+  method: POST
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      line_items:
+        type: array
+        description: "Array of items with product_id, variant_id, and quantity"
+      shipping_address:
+        type: object
+        description: "Shipping address details"
+      shipping_provider:
+        type: string
+        description: "Shipping provider ID"
+      external_id:
+        type: string
+        description: "External order reference ID"
+    required:
+      - line_items
+      - shipping_address
+
+- slug: printify_list_shipments
+  name: List Shipments
+  description: |
+    Retrieve a list of shipments with tracking information for shipped orders.
+  provider: printify
+  endpoint: /v1/shipments
+  method: GET
+  scopes:
+    - shipments
+  tags:
+    - shipments
+  input_schema:
+    type: object
+    description: Parameters for listing shipments
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of shipments per page (default 50)"
+    required: []
+
+- slug: printify_get_shipment
+  name: Get Shipment
+  description: |
+    Retrieve detailed tracking information for a specific shipment.
+  provider: printify
+  endpoint: /v1/shipments/{id}
+  method: GET
+  scopes:
+    - shipments
+  tags:
+    - shipments
+  input_schema:
+    type: object
+    description: Parameters for getting a shipment
+    properties:
+      id:
+        type: string
+        description: "Shipment ID"
+    required:
+      - id
+
+- slug: printify_list_returns
+  name: List Returns
+  description: |
+    Retrieve a list of return requests with their status and details.
+  provider: printify
+  endpoint: /v1/returns
+  method: GET
+  scopes:
+    - returns
+  tags:
+    - returns
+  input_schema:
+    type: object
+    description: Parameters for listing returns
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of returns per page (default 50)"
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected, received"
+    required: []
+
+- slug: printify_get_return
+  name: Get Return
+  description: |
+    Retrieve detailed information about a specific return request.
+  provider: printify
+  endpoint: /v1/returns/{id}
+  method: GET
+  scopes:
+    - returns
+  tags:
+    - returns
+  input_schema:
+    type: object
+    description: Parameters for getting a return
+    properties:
+      id:
+        type: string
+        description: "Return ID"
+    required:
+      - id
+
+- slug: printify_get_product_catalog
+  name: Get Product Catalog
+  description: |
+    Browse the full Printify product catalog with blueprints and available providers.
+  provider: printify
+  endpoint: /v1/catalog
+  method: GET
+  scopes:
+    - catalog
+  tags:
+    - catalog
+  input_schema:
+    type: object
+    description: Parameters for browsing product catalog
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+      limit:
+        type: integer
+        description: "Number of products per page (default 50)"
+      category:
+        type: string
+        description: "Filter by product category (e.g., t-shirts, hoodies)"
+    required: []

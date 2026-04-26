@@ -1,0 +1,248 @@
+- slug: lattice_list_goals
+  name: List Goals
+  description: |
+    Retrieve a list of all goals in the organization.
+  provider: lattice
+  endpoint: /goals
+  method: GET
+  scopes:
+    - goals:read
+  tags:
+    - goals
+  input_schema:
+    type: object
+    description: Parameters for listing goals
+    properties:
+      status:
+        type: string
+        description: "Filter goals by status (e.g., active, completed)"
+      owner_id:
+        type: string
+        description: "Filter goals by owner ID"
+    required: []
+
+- slug: lattice_get_goal
+  name: Get Goal
+  description: |
+    Retrieve details of a specific goal by ID.
+  provider: lattice
+  endpoint: /goals/{goal_id}
+  method: GET
+  scopes:
+    - goals:read
+  tags:
+    - goals
+  input_schema:
+    type: object
+    description: Parameters for getting a goal
+    properties:
+      goal_id:
+        type: string
+        description: "The unique identifier of the goal"
+    required:
+      - goal_id
+
+- slug: lattice_create_goal
+  name: Create Goal
+  description: |
+    Create a new goal in the organization.
+  provider: lattice
+  endpoint: /goals
+  method: POST
+  scopes:
+    - goals:write
+  tags:
+    - goals
+  input_schema:
+    type: object
+    description: Parameters for creating a goal
+    properties:
+      name:
+        type: string
+        description: "The name of the goal"
+      description:
+        type: string
+        description: "The description of the goal"
+      owner_id:
+        type: string
+        description: "The ID of the user who owns the goal"
+      due_date:
+        type: string
+        description: "The due date for the goal (ISO 8601 format)"
+    required:
+      - name
+
+- slug: lattice_update_goal
+  name: Update Goal
+  description: |
+    Update an existing goal's details.
+  provider: lattice
+  endpoint: /goals/{goal_id}
+  method: PUT
+  scopes:
+    - goals:write
+  tags:
+    - goals
+  input_schema:
+    type: object
+    description: Parameters for updating a goal
+    properties:
+      goal_id:
+        type: string
+        description: "The unique identifier of the goal"
+      name:
+        type: string
+        description: "The updated name of the goal"
+      description:
+        type: string
+        description: "The updated description"
+      status:
+        type: string
+        description: "The updated status"
+      due_date:
+        type: string
+        description: "The updated due date (ISO 8601 format)"
+    required:
+      - goal_id
+
+- slug: lattice_list_reviews
+  name: List Reviews
+  description: |
+    Retrieve a list of all performance reviews.
+  provider: lattice
+  endpoint: /reviews
+  method: GET
+  scopes:
+    - reviews:read
+  tags:
+    - reviews
+  input_schema:
+    type: object
+    description: Parameters for listing reviews
+    properties:
+      status:
+        type: string
+        description: "Filter reviews by status"
+      reviewer_id:
+        type: string
+        description: "Filter reviews by reviewer ID"
+    required: []
+
+- slug: lattice_get_review
+  name: Get Review
+  description: |
+    Retrieve details of a specific review by ID.
+  provider: lattice
+  endpoint: /reviews/{review_id}
+  method: GET
+  scopes:
+    - reviews:read
+  tags:
+    - reviews
+  input_schema:
+    type: object
+    description: Parameters for getting a review
+    properties:
+      review_id:
+        type: string
+        description: "The unique identifier of the review"
+    required:
+      - review_id
+
+- slug: lattice_create_review
+  name: Create Review
+  description: |
+    Create a new performance review.
+  provider: lattice
+  endpoint: /reviews
+  method: POST
+  scopes:
+    - reviews:write
+  tags:
+    - reviews
+  input_schema:
+    type: object
+    description: Parameters for creating a review
+    properties:
+      reviewee_id:
+        type: string
+        description: "The ID of the user being reviewed"
+      reviewer_id:
+        type: string
+        description: "The ID of the user conducting the review"
+      review_type:
+        type: string
+        description: "The type of review (e.g., annual, quarterly)"
+      due_date:
+        type: string
+        description: "The due date for completing the review"
+    required:
+      - reviewee_id
+      - reviewer_id
+
+- slug: lattice_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users in the organization.
+  provider: lattice
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      role:
+        type: string
+        description: "Filter users by role"
+      department:
+        type: string
+        description: "Filter users by department"
+    required: []
+
+- slug: lattice_get_user
+  name: Get User
+  description: |
+    Retrieve details of a specific user by ID.
+  provider: lattice
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "The unique identifier of the user"
+    required:
+      - user_id
+
+- slug: lattice_list_feeds
+  name: List Feeds
+  description: |
+    Retrieve a list of activity feed items.
+  provider: lattice
+  endpoint: /feeds
+  method: GET
+  scopes:
+    - feed:read
+  tags:
+    - feed
+  input_schema:
+    type: object
+    description: Parameters for listing feed items
+    properties:
+      feed_type:
+        type: string
+        description: "Filter by feed type (e.g., updates, comments)"
+      user_id:
+        type: string
+        description: "Filter feed items by user ID"
+    required: []

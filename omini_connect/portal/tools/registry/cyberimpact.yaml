@@ -1,0 +1,264 @@
+# Cyberimpact Tools - Allowlist
+# Curated subset of the Cyberimpact API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cyberimpact_list_campaigns       - List email campaigns
+# 2. cyberimpact_get_campaign        - Get campaign details
+# 3. cyberimpact_create_campaign     - Create a new campaign
+# 4. cyberimpact_list_contacts       - List contacts
+# 5. cyberimpact_get_contact         - Get contact details
+# 6. cyberimpact_add_contact         - Add a new contact
+# 7. cyberimpact_list_lists          - List contact lists
+# 8. cyberimpact_get_list            - Get list details
+# 9. cyberimpact_list_templates      - List email templates
+# 10. cyberimpact_get_template      - Get template details
+
+- slug: cyberimpact_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns in Cyberimpact.
+  provider: cyberimpact
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+    - marketing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: draft, scheduled, sent"
+    required: []
+
+- slug: cyberimpact_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information for a specific campaign.
+  provider: cyberimpact
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: cyberimpact_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new email campaign in Cyberimpact.
+  provider: cyberimpact
+  endpoint: /campaigns
+  method: POST
+  scopes: []
+  tags:
+    - campaigns
+    - email
+    - marketing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      name:
+        type: string
+        description: "Campaign name"
+      subject:
+        type: string
+        description: "Email subject"
+      template_id:
+        type: integer
+        description: "Template ID to use"
+      list_id:
+        type: integer
+        description: "Contact list ID to send to"
+    required:
+      - name
+      - subject
+
+- slug: cyberimpact_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Cyberimpact.
+  provider: cyberimpact
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      list_id:
+        type: integer
+        description: "Filter by list ID"
+    required: []
+
+- slug: cyberimpact_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information for a specific contact.
+  provider: cyberimpact
+  endpoint: /contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: cyberimpact_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact to Cyberimpact.
+  provider: cyberimpact
+  endpoint: /contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email (required)"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      list_id:
+        type: integer
+        description: "List ID to add to"
+    required:
+      - email
+
+- slug: cyberimpact_list_lists
+  name: List Contact Lists
+  description: |
+    List all contact lists in Cyberimpact.
+  provider: cyberimpact
+  endpoint: /lists
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: cyberimpact_get_list
+  name: Get List
+  description: |
+    Get details of a specific contact list.
+  provider: cyberimpact
+  endpoint: /lists/{id}
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      id:
+        type: integer
+        description: "List ID"
+    required:
+      - id
+
+- slug: cyberimpact_list_templates
+  name: List Templates
+  description: |
+    List all email templates available.
+  provider: cyberimpact
+  endpoint: /templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - email
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: cyberimpact_get_template
+  name: Get Template
+  description: |
+    Get detailed information for a specific template.
+  provider: cyberimpact
+  endpoint: /templates/{id}
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - email
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      id:
+        type: integer
+        description: "Template ID"
+    required:
+      - id

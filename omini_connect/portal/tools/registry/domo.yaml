@@ -1,0 +1,240 @@
+- slug: domo_list_datasets
+  name: List Datasets
+  description: |
+    Retrieve all datasets in the Domo instance.
+  provider: domo
+  endpoint: /v1/datasets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of datasets to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      sort:
+        type: string
+        description: "Sort field"
+      ascending:
+        type: boolean
+        description: "Sort in ascending order"
+
+- slug: domo_get_dataset
+  name: Get Dataset
+  description: |
+    Get metadata for a specific dataset by ID.
+  provider: domo
+  endpoint: /v1/datasets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      id:
+        type: string
+        description: "The dataset ID"
+    required:
+      - id
+
+- slug: domo_create_dataset
+  name: Create Dataset
+  description: |
+    Create a new dataset with specified schema.
+  provider: domo
+  endpoint: /v1/datasets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for creating a dataset
+    properties:
+      name:
+        type: string
+        description: "Dataset name"
+      description:
+        type: string
+        description: "Dataset description"
+      schema:
+        type: object
+        description: "Column definitions"
+      rows:
+        type: integer
+        description: "Initial number of rows"
+    required:
+      - name
+
+- slug: domo_list_dataflows
+  name: List Dataflows
+  description: |
+    Retrieve all dataflows in the Domo instance.
+  provider: domo
+  endpoint: /v1/dataflows
+  method: GET
+  scopes:
+    - read
+  tags:
+    - dataflows
+  input_schema:
+    type: object
+    description: Parameters for listing dataflows
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of dataflows to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+
+- slug: domo_get_dataflow
+  name: Get Dataflow
+  description: |
+    Get details of a specific dataflow including execution history.
+  provider: domo
+  endpoint: /v1/dataflows/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - dataflows
+  input_schema:
+    type: object
+    description: Parameters for getting a dataflow
+    properties:
+      id:
+        type: string
+        description: "The dataflow ID"
+    required:
+      - id
+
+- slug: domo_list_cards
+  name: List Cards
+  description: |
+    Retrieve all cards (visualizations/dashboards) in Domo.
+  provider: domo
+  endpoint: /v1/cards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of cards to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      project_id:
+        type: string
+        description: "Filter by project ID"
+
+- slug: domo_get_card
+  name: Get Card
+  description: |
+    Get details of a specific card including its visualization settings.
+  provider: domo
+  endpoint: /v1/cards/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      id:
+        type: string
+        description: "The card ID"
+    required:
+      - id
+
+- slug: domo_list_users
+  name: List Users
+  description: |
+    Retrieve all users in the Domo instance.
+  provider: domo
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      email:
+        type: string
+        description: "Filter by email address"
+
+- slug: domo_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: domo
+  endpoint: /v1/users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "The user ID"
+    required:
+      - id
+
+- slug: domo_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects in the Domo instance.
+  provider: domo
+  endpoint: /v1/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"

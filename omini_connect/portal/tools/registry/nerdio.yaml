@@ -1,0 +1,231 @@
+# Nerdio Tools - Allowlist
+# Curated subset of Nerdio Manager API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nerdio_list_desktops              - List virtual desktops
+# 2. nerdio_get_desktop               - Get desktop details
+# 3. nerdio_list_hosts                - List host servers
+# 4. nerdio_list_sessions             - List active sessions
+# 5. nerdio_list_users                - List users
+# 6. nerdio_get_user                 - Get user details
+# 7. nerdio_list_policies             - List management policies
+# 8. nerdio_list_reports              - List available reports
+# 9. nerdio_list_settings            - List system settings
+# 10. nerdio_get_status               - Get system status
+
+- slug: nerdio_list_desktops
+  name: List Desktops
+  description: |
+    List all virtual desktops in the environment.
+  provider: nerdio
+  endpoint: /v1/desktops
+  method: GET
+  scopes:
+    - desktops:read
+  tags:
+    - vdi
+    - desktops
+    - virtual
+  input_schema:
+    type: object
+    description: Parameters for listing desktops
+    properties:
+      status:
+        type: string
+        description: "Filter by status (running, stopped, provisioning)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: nerdio_get_desktop
+  name: Get Desktop
+  description: |
+    Get detailed information for a specific desktop.
+  provider: nerdio
+  endpoint: /v1/desktops/{id}
+  method: GET
+  scopes:
+    - desktops:read
+  tags:
+    - vdi
+    - desktops
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a desktop
+    properties:
+      id:
+        type: string
+        description: "Desktop ID"
+    required:
+      - id
+
+- slug: nerdio_list_hosts
+  name: List Hosts
+  description: |
+    List all host servers in the environment.
+  provider: nerdio
+  endpoint: /v1/hosts
+  method: GET
+  scopes:
+    - hosts:read
+  tags:
+    - vdi
+    - hosts
+    - servers
+  input_schema:
+    type: object
+    description: Parameters for listing hosts
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: nerdio_list_sessions
+  name: List Sessions
+  description: |
+    List all active user sessions.
+  provider: nerdio
+  endpoint: /v1/sessions
+  method: GET
+  scopes:
+    - sessions:read
+  tags:
+    - vdi
+    - sessions
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing sessions
+    properties:
+      desktop_id:
+        type: string
+        description: "Filter by desktop ID"
+    required: []
+
+- slug: nerdio_list_users
+  name: List Users
+  description: |
+    List all users in the Nerdio environment.
+  provider: nerdio
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - vdi
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: nerdio_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: nerdio
+  endpoint: /v1/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - vdi
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: nerdio_list_policies
+  name: List Policies
+  description: |
+    List all management policies.
+  provider: nerdio
+  endpoint: /v1/policies
+  method: GET
+  scopes:
+    - policies:read
+  tags:
+    - vdi
+    - policies
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []
+
+- slug: nerdio_list_reports
+  name: List Reports
+  description: |
+    List available management reports.
+  provider: nerdio
+  endpoint: /v1/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - vdi
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties: {}
+    required: []
+
+- slug: nerdio_list_settings
+  name: List Settings
+  description: |
+    List system settings and configuration.
+  provider: nerdio
+  endpoint: /v1/settings
+  method: GET
+  scopes:
+    - settings:read
+  tags:
+    - vdi
+    - settings
+    - configuration
+  input_schema:
+    type: object
+    description: Parameters for listing settings
+    properties: {}
+    required: []
+
+- slug: nerdio_get_status
+  name: Get Status
+  description: |
+    Get overall system status and health.
+  provider: nerdio
+  endpoint: /v1/status
+  method: GET
+  scopes:
+    - status:read
+  tags:
+    - vdi
+    - status
+    - health
+  input_schema:
+    type: object
+    description: Parameters for getting status
+    properties: {}
+    required: []

@@ -1,0 +1,270 @@
+- slug: postmark_send_email
+  name: Send Email
+  description: |
+    Send an email message via Postmark.
+  provider: postmark
+  endpoint: /v3/email
+  method: POST
+  scopes:
+    - email
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      To:
+        type: string
+        description: "Recipient email address"
+      From:
+        type: string
+        description: "Sender email address"
+      Subject:
+        type: string
+        description: "Email subject line"
+      HtmlBody:
+        type: string
+        description: "HTML email body"
+      TextBody:
+        type: string
+        description: "Plain text email body"
+      Tag:
+        type: string
+        description: "Tag for tracking and filtering"
+      TrackOpens:
+        type: boolean
+        description: "Enable open tracking"
+    required:
+      - To
+      - From
+      - Subject
+
+- slug: postmark_list_templates
+  name: List Templates
+  description: |
+    Retrieve all email templates in your Postmark account.
+  provider: postmark
+  endpoint: /v3/templates
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      count:
+        type: integer
+        description: "Number of templates to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: postmark_get_template
+  name: Get Template
+  description: |
+    Retrieve a specific email template by ID.
+  provider: postmark
+  endpoint: /v3/templates/{template_id}
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: integer
+        description: "ID of the template to retrieve"
+    required:
+      - template_id
+
+- slug: postmark_create_template
+  name: Create Template
+  description: |
+    Create a new email template in Postmark.
+  provider: postmark
+  endpoint: /v3/templates
+  method: POST
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for creating a template
+    properties:
+      Name:
+        type: string
+        description: "Name of the template"
+      Subject:
+        type: string
+        description: "Template subject line"
+      HtmlBody:
+        type: string
+        description: "HTML body with handlebar tokens"
+      TextBody:
+        type: string
+        description: "Plain text body"
+    required:
+      - Name
+      - Subject
+
+- slug: postmark_list_bounces
+  name: List Bounces
+  description: |
+    Retrieve all bounces (failed deliveries) for your server.
+  provider: postmark
+  endpoint: /v3/bounces
+  method: GET
+  scopes:
+    - bounces
+  tags:
+    - bounces
+  input_schema:
+    type: object
+    description: Parameters for listing bounces
+    properties:
+      count:
+        type: integer
+        description: "Number of bounces to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      type:
+        type: string
+        description: "Filter by bounce type"
+      inactive:
+        type: boolean
+        description: "Filter by inactive status"
+    required: []
+
+- slug: postmark_get_bounce
+  name: Get Bounce
+  description: |
+    Retrieve details about a specific bounce by ID.
+  provider: postmark
+  endpoint: /v3/bounces/{bounce_id}
+  method: GET
+  scopes:
+    - bounces
+  tags:
+    - bounces
+  input_schema:
+    type: object
+    description: Parameters for getting a bounce
+    properties:
+      bounce_id:
+        type: integer
+        description: "ID of the bounce to retrieve"
+    required:
+      - bounce_id
+
+- slug: postmark_list_webhooks
+  name: List Webhooks
+  description: |
+    Retrieve all webhooks configured for your server.
+  provider: postmark
+  endpoint: /v3/webhooks
+  method: GET
+  scopes:
+    - webhooks
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      server_id:
+        type: integer
+        description: "Server ID to list webhooks for"
+    required:
+      - server_id
+
+- slug: postmark_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook for tracking email events.
+  provider: postmark
+  endpoint: /v3/webhooks
+  method: POST
+  scopes:
+    - webhooks
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      ServerId:
+        type: integer
+        description: "Server ID to attach webhook to"
+      URL:
+        type: string
+        description: "Webhook callback URL"
+      Token:
+        type: string
+        description: "Secret token for webhook verification"
+      Triggers:
+        type: object
+        description: "Event types to trigger on (bounce, spam, etc.)"
+      BasicAuth:
+        type: object
+        description: "Basic authentication credentials"
+    required:
+      - ServerId
+      - URL
+
+- slug: postmark_list_tags
+  name: List Tags
+  description: |
+    Retrieve all tags used for email tracking.
+  provider: postmark
+  endpoint: /v3/tags
+  method: GET
+  scopes:
+    - tags
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      count:
+        type: integer
+        description: "Number of tags to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: postmark_get_tag
+  name: Get Tag
+  description: |
+    Retrieve statistics and details for a specific tag.
+  provider: postmark
+  endpoint: /v3/tags/{tag_name}
+  method: GET
+  scopes:
+    - tags
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      tag_name:
+        type: string
+        description: "Name of the tag to retrieve"
+      from_date:
+        type: string
+        description: "Start date for statistics (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date for statistics (YYYY-MM-DD)"
+    required:
+      - tag_name

@@ -1,0 +1,251 @@
+# Microsoft OAuth2 CC Tools - Allowlist
+# Curated subset of Microsoft Graph API for AI agent use.
+# OAUTH2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ms_cc_list_users              - List all users
+# 2. ms_cc_get_user               - Get user details
+# 3. ms_cc_list_groups            - List groups
+# 4. ms_cc_get_group              - Get group details
+# 5. ms_cc_list_applications      - List applications
+# 6. ms_cc_get_application        - Get application details
+# 7. ms_cc_list_service_principals - List service principals
+# 8. ms_cc_list_audit_logs       - List audit logs
+# 9. ms_cc_list_sign_ins         - List sign-ins
+# 10. ms_cc_list_reports         - Get usage reports
+
+- slug: ms_cc_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_cc_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: ms_cc_list_groups
+  name: List Groups
+  description: |
+    List all groups in the organization.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_cc_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/groups/{groupId}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: ms_cc_list_applications
+  name: List Applications
+  description: |
+    List all registered applications.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/applications
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_cc_get_application
+  name: Get Application
+  description: |
+    Get details of a specific application.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/applications/{applicationId}
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      applicationId:
+        type: string
+        description: "Application ID"
+    required:
+      - applicationId
+
+- slug: ms_cc_list_service_principals
+  name: List Service Principals
+  description: |
+    List all service principals in the directory.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/servicePrincipals
+  method: GET
+  scopes: []
+  tags:
+    - serviceprincipals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing service principals
+    properties:
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_cc_list_audit_logs
+  name: List Audit Logs
+  description: |
+    List audit logs for the organization.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/auditLogs/directoryAudits
+  method: GET
+  scopes: []
+  tags:
+    - audit
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing audit logs
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      startDateTime:
+        type: string
+        description: "Start date"
+      endDateTime:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: ms_cc_list_sign_ins
+  name: List Sign-ins
+  description: |
+    List sign-in logs for the organization.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/auditLogs/signIns
+  method: GET
+  scopes: []
+  tags:
+    - signins
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sign-ins
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      startDateTime:
+        type: string
+        description: "Start date"
+      endDateTime:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: ms_cc_list_reports
+  name: List Reports
+  description: |
+    Get usage reports for the organization.
+  provider: microsoft-oauth2-cc
+  endpoint: /v1.0/reports/getOffice365ActivationsUserDetail
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - usage
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      period:
+        type: string
+        description: "Reporting period (D7, D30, D90, etc.)"
+    required: []

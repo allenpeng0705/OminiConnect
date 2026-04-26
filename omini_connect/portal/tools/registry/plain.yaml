@@ -1,0 +1,219 @@
+# Plain Tools - Allowlist
+# Curated subset of Plain API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. plain_list_customers            - List customers
+# 2. plain_get_customer             - Get customer details
+# 3. plain_list_components          - List components
+# 4. plain_get_component            - Get component details
+# 5. plain_list_comments            - List comments
+# 6. plain_create_comment           - Create a comment
+# 7. plain_list_tags                - List tags
+# 8. plain_get_user                 - Get user info
+# 9. plain_list_teams               - List teams
+# 10. plain_get_customer_by_email   - Get customer by email
+
+- slug: plain_list_customers
+  name: List Customers
+  description: |
+    List all customers.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: plain_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: plain_list_components
+  name: List Components
+  description: |
+    List all components in the system.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - components
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing components
+    properties:
+      customerId:
+        type: string
+        description: "Filter by customer ID"
+    required: []
+
+- slug: plain_get_component
+  name: Get Component
+  description: |
+    Get detailed information about a specific component.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - components
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a component
+    properties:
+      componentId:
+        type: string
+        description: "Component ID"
+    required:
+      - componentId
+
+- slug: plain_list_comments
+  name: List Comments
+  description: |
+    List all comments.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      customerId:
+        type: string
+        description: "Filter by customer ID"
+    required: []
+
+- slug: plain_create_comment
+  name: Create Comment
+  description: |
+    Create a new comment.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+      content:
+        type: string
+        description: "Comment content"
+    required:
+      - customerId
+      - content
+
+- slug: plain_list_tags
+  name: List Tags
+  description: |
+    List all tags.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: plain_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - user
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: plain_list_teams
+  name: List Teams
+  description: |
+    List all teams.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: plain_get_customer_by_email
+  name: Get Customer By Email
+  description: |
+    Get customer by email address.
+  provider: plain
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - lookup
+  input_schema:
+    type: object
+    description: Parameters for getting customer by email
+    properties:
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - email

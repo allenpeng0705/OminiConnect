@@ -1,0 +1,257 @@
+# Oracle Cloud Identity Tools - Allowlist
+# Curated subset of Oracle Cloud Identity API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. oracle_list_users                - List users
+# 2. oracle_get_user                  - Get user details
+# 3. oracle_create_user               - Create user
+# 4. oracle_update_user               - Update user
+# 5. oracle_delete_user               - Delete user
+# 6. oracle_list_groups               - List groups
+# 7. oracle_add_user_to_group        - Add user to group
+# 8. oracle_list_applications         - List applications
+# 9. oracle_get_reports              - Get reports
+# 10. oracle_get_audit_logs          - Get audit logs
+
+- slug: oracle_list_users
+  name: List Users
+  description: |
+    List all users in Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Users
+  method: GET
+  scopes:
+    - urn:opc:idm:__user:read
+  tags:
+    - iam
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users"
+        default: 50
+    required: []
+
+- slug: oracle_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Users/{userId}
+  method: GET
+  scopes:
+    - urn:opc:idm:__user:read
+  tags:
+    - iam
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: oracle_create_user
+  name: Create User
+  description: |
+    Create a new user in Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Users
+  method: POST
+  scopes:
+    - urn:opc:idm:__user:manage
+  tags:
+    - iam
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      userName:
+        type: string
+        description: "Username"
+      email:
+        type: string
+        description: "Email address"
+      displayName:
+        type: string
+        description: "Display name"
+    required:
+      - userName
+      - email
+
+- slug: oracle_update_user
+  name: Update User
+  description: |
+    Update an existing user.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Users/{userId}
+  method: PUT
+  scopes:
+    - urn:opc:idm:__user:manage
+  tags:
+    - iam
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+      displayName:
+        type: string
+        description: "Display name"
+      active:
+        type: boolean
+        description: "Active status"
+    required:
+      - userId
+
+- slug: oracle_delete_user
+  name: Delete User
+  description: |
+    Delete a user from Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Users/{userId}
+  method: DELETE
+  scopes:
+    - urn:opc:idm:__user:manage
+  tags:
+    - iam
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: oracle_list_groups
+  name: List Groups
+  description: |
+    List all groups in Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Groups
+  method: GET
+  scopes:
+    - urn:opc:idm:__group:read
+  tags:
+    - iam
+    - groups
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      limit:
+        type: integer
+        description: "Number of groups"
+        default: 50
+    required: []
+
+- slug: oracle_add_user_to_group
+  name: Add User to Group
+  description: |
+    Add a user to a group.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/Groups/{groupId}/members
+  method: POST
+  scopes:
+    - urn:opc:idm:__group:manage
+  tags:
+    - iam
+    - groups
+    - membership
+  input_schema:
+    type: object
+    description: Parameters for adding user to group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - groupId
+      - userId
+
+- slug: oracle_list_applications
+  name: List Applications
+  description: |
+    List all applications in Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/applications
+  method: GET
+  scopes:
+    - urn:opc:idm:__app:read
+  tags:
+    - iam
+    - applications
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties: {}
+    required: []
+
+- slug: oracle_get_reports
+  name: Get Reports
+  description: |
+    Get reports from Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/reports
+  method: GET
+  scopes:
+    - urn:opc:idm:__report:read
+  tags:
+    - iam
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties: {}
+    required: []
+
+- slug: oracle_get_audit_logs
+  name: Get Audit Logs
+  description: |
+    Get audit logs from Oracle Cloud Identity.
+  provider: oracle-cloud-identity
+  endpoint: /admin/v1/auditLogs
+  method: GET
+  scopes:
+    - urn:opc:idm:__audit:read
+  tags:
+    - iam
+    - audit
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for getting audit logs
+    properties:
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required: []

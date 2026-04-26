@@ -1,0 +1,254 @@
+# Ragieai Tools - Allowlist
+# Curated subset of Ragie AI API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ragieai_list_documents       - List all documents
+# 2. ragieai_get_document         - Get document details
+# 3. ragieai_delete_document      - Delete a document
+# 4. ragieai_list_tasks           - List processing tasks
+# 5. ragieai_get_task             - Get task status
+# 6. ragieai_list_collections     - List collections
+# 7. ragieai_create_collection    - Create a collection
+# 8. ragieai_search               - Search documents
+# 9. ragieai_get_usage            - Get API usage stats
+# 10. ragieai_list_webhooks       - List webhooks
+
+- slug: ragieai_list_documents
+  name: List Documents
+  description: |
+    Retrieve a list of all documents processed by Ragie.
+  provider: ragieai
+  endpoint: /documents
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+    - ragie
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      limit:
+        type: integer
+        description: "Number of documents to return"
+        default: 20
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: ragieai_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document including status and metadata.
+  provider: ragieai
+  endpoint: /documents/{documentId}
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+    - ragie
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+    required:
+      - documentId
+
+- slug: ragieai_delete_document
+  name: Delete Document
+  description: |
+    Delete a document and its associated data from Ragie.
+  provider: ragieai
+  endpoint: /documents/{documentId}
+  method: DELETE
+  scopes:
+    - documents:write
+  tags:
+    - documents
+    - ragie
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a document
+    properties:
+      documentId:
+        type: string
+        description: "The document ID to delete"
+    required:
+      - documentId
+
+- slug: ragieai_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of document processing tasks.
+  provider: ragieai
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - ragie
+    - processing
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Number of tasks to return"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: pending, processing, completed, failed"
+    required: []
+
+- slug: ragieai_get_task
+  name: Get Task
+  description: |
+    Get status and details of a specific processing task.
+  provider: ragieai
+  endpoint: /tasks/{taskId}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - ragie
+    - processing
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "The task ID"
+    required:
+      - taskId
+
+- slug: ragieai_list_collections
+  name: List Collections
+  description: |
+    Retrieve a list of all document collections.
+  provider: ragieai
+  endpoint: /collections
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - collections
+    - ragie
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      limit:
+        type: integer
+        description: "Number of collections to return"
+        default: 20
+    required: []
+
+- slug: ragieai_create_collection
+  name: Create Collection
+  description: |
+    Create a new document collection for organizing documents.
+  provider: ragieai
+  endpoint: /collections
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - collections
+    - ragie
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a collection
+    properties:
+      name:
+        type: string
+        description: "Collection name"
+      description:
+        type: string
+        description: "Collection description"
+    required:
+      - name
+
+- slug: ragieai_search
+  name: Search Documents
+  description: |
+    Search through documents using natural language queries.
+  provider: ragieai
+  endpoint: /search
+  method: POST
+  scopes:
+    - search:read
+  tags:
+    - search
+    - ragie
+    - retrieval
+  input_schema:
+    type: object
+    description: Parameters for searching documents
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 10
+      collectionId:
+        type: string
+        description: "Optional collection ID to search within"
+    required:
+      - query
+
+- slug: ragieai_get_usage
+  name: Get Usage
+  description: |
+    Get API usage statistics and quotas.
+  provider: ragieai
+  endpoint: /usage
+  method: GET
+  scopes:
+    - usage:read
+  tags:
+    - usage
+    - ragie
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties: {}
+    required: []
+
+- slug: ragieai_list_webhooks
+  name: List Webhooks
+  description: |
+    Retrieve a list of configured webhooks.
+  provider: ragieai
+  endpoint: /webhooks
+  method: GET
+  scopes:
+    - webhooks:read
+  tags:
+    - webhooks
+    - ragie
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      limit:
+        type: integer
+        description: "Number of webhooks to return"
+        default: 20
+    required: []

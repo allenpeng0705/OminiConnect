@@ -1,0 +1,260 @@
+- slug: levelhead_list_campaigns
+  name: List Campaigns
+  description: |
+    List all analytics campaigns in your Levelhead account.
+  provider: levelhead
+  endpoint: /api/v1/campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of items per page (default: 20)"
+      status:
+        type: string
+        description: "Filter by status (active, paused, completed)"
+      start_date:
+        type: string
+        description: "Filter by start date (ISO 8601 format)"
+      end_date:
+        type: string
+        description: "Filter by end date (ISO 8601 format)"
+    required: []
+
+- slug: levelhead_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information for a specific analytics campaign.
+  provider: levelhead
+  endpoint: /api/v1/campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "The unique campaign ID"
+    required:
+      - campaign_id
+
+- slug: levelhead_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new analytics campaign with specified parameters.
+  provider: levelhead
+  endpoint: /api/v1/campaigns
+  method: POST
+  scopes:
+    - campaigns:write
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      name:
+        type: string
+        description: "Name for the campaign"
+      description:
+        type: string
+        description: "Optional description"
+      start_date:
+        type: string
+        description: "Start date (ISO 8601 format)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601 format)"
+      status:
+        type: string
+        description: "Initial status (active, paused)"
+    required:
+      - name
+
+- slug: levelhead_list_audiences
+  name: List Audiences
+  description: |
+    List all audience segments defined in your Levelhead account.
+  provider: levelhead
+  endpoint: /api/v1/audiences
+  method: GET
+  scopes:
+    - audiences:read
+  tags:
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of items per page (default: 20)"
+      type:
+        type: string
+        description: "Filter by audience type"
+    required: []
+
+- slug: levelhead_get_audience
+  name: Get Audience
+  description: |
+    Get detailed information for a specific audience segment.
+  provider: levelhead
+  endpoint: /api/v1/audiences/{audience_id}
+  method: GET
+  scopes:
+    - audiences:read
+  tags:
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for getting an audience
+    properties:
+      audience_id:
+        type: string
+        description: "The unique audience ID"
+    required:
+      - audience_id
+
+- slug: levelhead_create_audience
+  name: Create Audience
+  description: |
+    Create a new audience segment with defined criteria.
+  provider: levelhead
+  endpoint: /api/v1/audiences
+  method: POST
+  scopes:
+    - audiences:write
+  tags:
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for creating an audience
+    properties:
+      name:
+        type: string
+        description: "Name for the audience"
+      description:
+        type: string
+        description: "Optional description"
+      criteria:
+        type: object
+        description: "Audience definition criteria"
+      source:
+        type: string
+        description: "Data source for the audience"
+    required:
+      - name
+      - criteria
+
+- slug: levelhead_list_reports
+  name: List Reports
+  description: |
+    List all analytics reports generated in your Levelhead account.
+  provider: levelhead
+  endpoint: /api/v1/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of items per page (default: 20)"
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+      format:
+        type: string
+        description: "Filter by report format (pdf, csv, xlsx)"
+    required: []
+
+- slug: levelhead_get_report
+  name: Get Report
+  description: |
+    Get details and download URL for a specific analytics report.
+  provider: levelhead
+  endpoint: /api/v1/reports/{report_id}
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      report_id:
+        type: string
+        description: "The unique report ID"
+    required:
+      - report_id
+
+- slug: levelhead_list_segments
+  name: List Segments
+  description: |
+    List all data segments available for analytics queries.
+  provider: levelhead
+  endpoint: /api/v1/segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of items per page (default: 20)"
+      category:
+        type: string
+        description: "Filter by segment category"
+    required: []
+
+- slug: levelhead_get_segment
+  name: Get Segment
+  description: |
+    Get detailed information for a specific data segment.
+  provider: levelhead
+  endpoint: /api/v1/segments/{segment_id}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: string
+        description: "The unique segment ID"
+    required:
+      - segment_id

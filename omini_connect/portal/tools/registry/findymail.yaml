@@ -1,0 +1,254 @@
+# FindyMail Tools - Allowlist
+# Curated subset of FindyMail API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. findymail_list_prospects       - List prospects
+# 2. findymail_get_prospect        - Get prospect details
+# 3. findymail_create_prospect    - Create a prospect
+# 4. findymail_update_prospect    - Update prospect details
+# 5. findymail_list_campaigns     - List campaigns
+# 6. findymail_get_campaign       - Get campaign details
+# 7. findymail_enrich_prospect   - Enrich prospect data
+# 8. findymail_list_sequences    - List sequences
+# 9. findymail_get_sequence      - Get sequence details
+# 10. findymail_get_stats       - Get campaign stats
+
+- slug: findymail_list_prospects
+  name: List Prospects
+  description: |
+    List all prospects in the account.
+  provider: findymail
+  endpoint: /api/v1/prospects
+  method: GET
+  scopes: []
+  tags:
+    - prospects
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing prospects
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: findymail_get_prospect
+  name: Get Prospect
+  description: |
+    Get details of a specific prospect.
+  provider: findymail
+  endpoint: /api/v1/prospects/{id}
+  method: GET
+  scopes: []
+  tags:
+    - prospects
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting prospect
+    properties:
+      id:
+        type: string
+        description: "Prospect ID"
+    required:
+      - id
+
+- slug: findymail_create_prospect
+  name: Create Prospect
+  description: |
+    Create a new prospect.
+  provider: findymail
+  endpoint: /api/v1/prospects
+  method: POST
+  scopes: []
+  tags:
+    - prospects
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating prospect
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - email
+
+- slug: findymail_update_prospect
+  name: Update Prospect
+  description: |
+    Update prospect details.
+  provider: findymail
+  endpoint: /api/v1/prospects/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - prospects
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating prospect
+    properties:
+      id:
+        type: string
+        description: "Prospect ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - id
+
+- slug: findymail_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns.
+  provider: findymail
+  endpoint: /api/v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: findymail_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: findymail
+  endpoint: /api/v1/campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: findymail_enrich_prospect
+  name: Enrich Prospect
+  description: |
+    Enrich prospect with additional data.
+  provider: findymail
+  endpoint: /api/v1/prospects/{id}/enrich
+  method: POST
+  scopes: []
+  tags:
+    - prospects
+    - enrichment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for enriching prospect
+    properties:
+      id:
+        type: string
+        description: "Prospect ID"
+    required:
+      - id
+
+- slug: findymail_list_sequences
+  name: List Sequences
+  description: |
+    List all email sequences.
+  provider: findymail
+  endpoint: /api/v1/sequences
+  method: GET
+  scopes: []
+  tags:
+    - sequences
+    - email
+    - automation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties: {}
+    required: []
+
+- slug: findymail_get_sequence
+  name: Get Sequence
+  description: |
+    Get details of a specific sequence.
+  provider: findymail
+  endpoint: /api/v1/sequences/{id}
+  method: GET
+  scopes: []
+  tags:
+    - sequences
+    - email
+    - automation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting sequence
+    properties:
+      id:
+        type: string
+        description: "Sequence ID"
+    required:
+      - id
+
+- slug: findymail_get_stats
+  name: Get Stats
+  description: |
+    Get campaign statistics.
+  provider: findymail
+  endpoint: /api/v1/campaigns/{id}/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id

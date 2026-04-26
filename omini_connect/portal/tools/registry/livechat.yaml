@@ -1,0 +1,298 @@
+# Livechat Tools - Allowlist
+# Curated subset of Livechat API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. livechat_list_conversations    - List all conversations
+# 2. livechat_get_conversation      - Get conversation details
+# 3. livechat_send_message          - Send a message
+# 4. livechat_list_visitors        - List all visitors
+# 5. livechat_get_visitor           - Get visitor details
+# 6. livechat_list_agents          - List all agents
+# 7. livechat_get_agent             - Get agent details
+# 8. livechat_list_canned_responses - List all canned responses
+# 9. livechat_get_canned_response  - Get canned response details
+# 10. livechat_get_report           - Get reporting data
+
+- slug: livechat_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Livechat.
+    Filter by status, agent, or date range.
+  provider: livechat
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversations:r
+  tags:
+    - conversations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+      agent_id:
+        type: string
+        description: "Filter by agent ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: livechat_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a specific Livechat conversation.
+  provider: livechat
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversations:r
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: livechat_send_message
+  name: Send Message
+  description: |
+    Send a message in a Livechat conversation.
+    Use to reply to visitors.
+  provider: livechat
+  endpoint: /conversations/{id}/messages
+  method: POST
+  scopes:
+    - messages:w
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      body:
+        type: string
+        description: "Message body content"
+      type:
+        type: string
+        description: "Message type (message, system)"
+    required:
+      - conversation_id
+      - body
+
+- slug: livechat_list_visitors
+  name: List Visitors
+  description: |
+    List all visitors in Livechat.
+    Filter by name, email, or country.
+  provider: livechat
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - visitors:r
+  tags:
+    - visitors
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      name:
+        type: string
+        description: "Filter by name"
+      email:
+        type: string
+        description: "Filter by email"
+      country:
+        type: string
+        description: "Filter by country code"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: livechat_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific Livechat visitor.
+  provider: livechat
+  endpoint: /visitors/{id}
+  method: GET
+  scopes:
+    - visitors:r
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      id:
+        type: string
+        description: "Visitor ID"
+    required:
+      - id
+
+- slug: livechat_list_agents
+  name: List Agents
+  description: |
+    List all agents in Livechat.
+    Agents handle incoming conversations.
+  provider: livechat
+  endpoint: /agents
+  method: GET
+  scopes:
+    - agents:r
+  tags:
+    - agents
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      status:
+        type: string
+        description: "Filter by status (online, offline, away)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: livechat_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific Livechat agent.
+  provider: livechat
+  endpoint: /agents/{id}
+  method: GET
+  scopes:
+    - agents:r
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: string
+        description: "Agent ID"
+    required:
+      - id
+
+- slug: livechat_list_canned_responses
+  name: List Canned Responses
+  description: |
+    List all canned responses in Livechat.
+    Pre-written responses for common questions.
+  provider: livechat
+  endpoint: /canned_responses
+  method: GET
+  scopes:
+    - canned_responses:r
+  tags:
+    - canned_responses
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing canned responses
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: livechat_get_canned_response
+  name: Get Canned Response
+  description: |
+    Get detailed information about a specific canned response.
+  provider: livechat
+  endpoint: /canned_responses/{id}
+  method: GET
+  scopes:
+    - canned_responses:r
+  tags:
+    - canned_responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a canned response
+    properties:
+      id:
+        type: string
+        description: "Canned response ID"
+    required:
+      - id
+
+- slug: livechat_get_report
+  name: Get Report
+  description: |
+    Get reporting data from Livechat.
+    Includes chat metrics and agent performance.
+  provider: livechat
+  endpoint: /reports/{type}
+  method: GET
+  scopes:
+    - reports:r
+  tags:
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      type:
+        type: string
+        description: "Report type (chats, agents, queue)"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+    required:
+      - type

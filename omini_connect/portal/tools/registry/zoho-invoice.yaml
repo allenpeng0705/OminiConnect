@@ -1,0 +1,187 @@
+# Zoho Invoice Tools - Allowlist
+# Curated subset of Zoho Invoice API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zoho_invoice_list_invoices           - List all invoices
+# # 2. zoho_invoice_get_invoice           - Get invoice details
+# # 3. zoho_invoice_create_invoice           - Create a new invoice
+# # 4. zoho_invoice_email_invoice           - Email an invoice to customer
+# # 5. zoho_invoice_list_contacts           - List all contacts
+# # 6. zoho_invoice_get_contact           - Get contact details
+# # 7. zoho_invoice_create_contact           - Create a new contact
+# # 8. zoho_invoice_list_estimates           - List all estimates
+# # 9. zoho_invoice_create_estimate           - Create a new estimate
+# # 10. zoho_invoice_list_recurring_invoices           - List all recurring invoices
+
+- slug: zoho_invoice_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices
+  provider: zoho-invoice
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for list invoices
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_get_invoice
+  name: Get Invoice
+  description: |
+    Get invoice details
+  provider: zoho-invoice
+  endpoint: /invoices/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for get invoice
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice
+  provider: zoho-invoice
+  endpoint: /invoices
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for create invoice
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_email_invoice
+  name: Email Invoice
+  description: |
+    Email an invoice to customer
+  provider: zoho-invoice
+  endpoint: /invoices/{id}/email
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for email invoice
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts
+  provider: zoho-invoice
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for list contacts
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_get_contact
+  name: Get Contact
+  description: |
+    Get contact details
+  provider: zoho-invoice
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for get contact
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact
+  provider: zoho-invoice
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for create contact
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_list_estimates
+  name: List Estimates
+  description: |
+    List all estimates
+  provider: zoho-invoice
+  endpoint: /estimates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for list estimates
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_create_estimate
+  name: Create Estimate
+  description: |
+    Create a new estimate
+  provider: zoho-invoice
+  endpoint: /estimates
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for create estimate
+    properties: {}
+    required: []
+
+- slug: zoho_invoice_list_recurring_invoices
+  name: List Recurring Invoices
+  description: |
+    List all recurring invoices
+  provider: zoho-invoice
+  endpoint: /recurringinvoices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-invoice
+  input_schema:
+    type: object
+    description: Parameters for list recurring invoices
+    properties: {}
+    required: []
+

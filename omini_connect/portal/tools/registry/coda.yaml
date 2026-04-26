@@ -1,0 +1,289 @@
+# Coda Tools - Allowlist
+# Curated subset of Coda API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. coda_list_docs            - List all documents
+# 2. coda_get_doc             - Get document details
+# 3. coda_create_doc          - Create a new document
+# 4. coda_list_tables         - List tables in a document
+# 5. coda_get_table           - Get table schema
+# 6. coda_list_rows           - List rows in a table
+# 7. coda_get_row             - Get a single row
+# 8. coda_create_row          - Create a new row
+# 9. coda_update_row          - Update a row
+# 10. coda_list_collaborators - List document collaborators
+
+- slug: coda_list_docs
+  name: List Docs
+  description: |
+    List all accessible Coda documents. Returns doc metadata including title, owner, and workspace.
+  provider: coda
+  endpoint: /docs
+  method: GET
+  scopes:
+    - docs:read
+  tags:
+    - documents
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of documents to return"
+      offset:
+        type: integer
+        description: "Number of documents to skip for pagination"
+    required: []
+
+- slug: coda_get_doc
+  name: Get Doc
+  description: |
+    Get details and metadata for a specific document by ID including name, workspace, and settings.
+  provider: coda
+  endpoint: /docs/{docId}
+  method: GET
+  scopes:
+    - docs:read
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting document details
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - docId
+
+- slug: coda_create_doc
+  name: Create Doc
+  description: |
+    Create a new Coda document with specified title in a workspace or folder.
+  provider: coda
+  endpoint: /docs
+  method: POST
+  scopes:
+    - docs:write
+  tags:
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      title:
+        type: string
+        description: "Title of the new document"
+      folderId:
+        type: string
+        description: "Folder ID to create document in"
+    required:
+      - title
+
+- slug: coda_list_tables
+  name: List Tables
+  description: |
+    List all tables within a specific document. Returns table metadata and column schemas.
+  provider: coda
+  endpoint: /docs/{docId}/tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - docId
+
+- slug: coda_get_table
+  name: Get Table
+  description: |
+    Get details, schema, and structure of a specific table including column definitions.
+  provider: coda
+  endpoint: /docs/{docId}/tables/{tableId}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting table details
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - docId
+      - tableId
+
+- slug: coda_list_rows
+  name: List Rows
+  description: |
+    Retrieve all rows from a specific table with optional filtering, sorting, and pagination.
+  provider: coda
+  endpoint: /docs/{docId}/tables/{tableId}/rows
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - rows
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing rows
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      limit:
+        type: integer
+        description: "Maximum number of rows to return"
+      offset:
+        type: integer
+        description: "Number of rows to skip for pagination"
+      filter:
+        type: string
+        description: "Filter expression for rows"
+    required:
+      - docId
+      - tableId
+
+- slug: coda_get_row
+  name: Get Row
+  description: |
+    Get a single row by its unique identifier including all cell values.
+  provider: coda
+  endpoint: /docs/{docId}/tables/{tableId}/rows/{rowId}
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - rows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a row
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+    required:
+      - docId
+      - tableId
+      - rowId
+
+- slug: coda_create_row
+  name: Create Row
+  description: |
+    Insert a new row into a specified table with cell values for each column.
+  provider: coda
+  endpoint: /docs/{docId}/tables/{tableId}/rows
+  method: POST
+  scopes:
+    - rows:write
+  tags:
+    - rows
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a row
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      cells:
+        type: array
+        description: "Row cell values as array of column-value objects"
+    required:
+      - docId
+      - tableId
+      - cells
+
+- slug: coda_update_row
+  name: Update Row
+  description: |
+    Update an existing row with new cell values in a specified table.
+  provider: coda
+  endpoint: /docs/{docId}/tables/{tableId}/rows/{rowId}
+  method: PUT
+  scopes:
+    - rows:write
+  tags:
+    - rows
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a row
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+      cells:
+        type: array
+        description: "Updated row cell values as array of column-value objects"
+    required:
+      - docId
+      - tableId
+      - rowId
+      - cells
+
+- slug: coda_list_collaborators
+  name: List Collaborators
+  description: |
+    List all collaborators on a specific document including their email and permission level.
+  provider: coda
+  endpoint: /docs/{docId}/collaborators
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - collaboration
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing collaborators
+    properties:
+      docId:
+        type: string
+        description: "The unique identifier of the document"
+    required:
+      - docId

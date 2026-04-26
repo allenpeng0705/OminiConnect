@@ -1,0 +1,277 @@
+# Google Drive Tools - Allowlist
+# Curated subset of Google Drive API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_drive_list_files       - List files
+# 2. google_drive_get_file        - Get file details
+# 3. google_drive_create_file     - Create file
+# 4. google_drive_update_file     - Update file
+# 5. google_drive_delete_file     - Delete file
+# 6. google_drive_list_permissions - List permissions
+# 7. google_drive_create_permission - Create permission
+# 8. google_drive_list_revisions  - List revisions
+# 9. google_drive_get_revision   - Get revision
+# 10. google_drive_search_files  - Search files
+
+- slug: google_drive_list_files
+  name: List Files
+  description: |
+    List files in Google Drive.
+  provider: google-drive
+  endpoint: /drive/v3/files
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: google_drive_get_file
+  name: Get File
+  description: |
+    Get detailed information about a file.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+    required:
+      - fileId
+
+- slug: google_drive_create_file
+  name: Create File
+  description: |
+    Create a new file in Google Drive.
+  provider: google-drive
+  endpoint: /drive/v3/files
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a file
+    properties:
+      name:
+        type: string
+        description: "File name"
+      mimeType:
+        type: string
+        description: "MIME type (e.g., text/plain, application/vnd.google-apps.document)"
+      parents:
+        type: array
+        description: "Parent folder IDs"
+    required:
+      - name
+
+- slug: google_drive_update_file
+  name: Update File
+  description: |
+    Update a file's metadata.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}
+  method: PATCH
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a file
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+      name:
+        type: string
+        description: "New file name"
+    required:
+      - fileId
+
+- slug: google_drive_delete_file
+  name: Delete File
+  description: |
+    Delete a file from Google Drive.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+    required:
+      - fileId
+
+- slug: google_drive_list_permissions
+  name: List Permissions
+  description: |
+    List permissions for a file.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}/permissions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - permissions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing permissions
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+    required:
+      - fileId
+
+- slug: google_drive_create_permission
+  name: Create Permission
+  description: |
+    Create a permission for a file.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}/permissions
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - permissions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a permission
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+      type:
+        type: string
+        description: "Permission type (user, group, domain, anyone)"
+      role:
+        type: string
+        description: "Role (reader, writer, commenter, owner)"
+      emailAddress:
+        type: string
+        description: "Email for user/group"
+    required:
+      - fileId
+      - type
+      - role
+
+- slug: google_drive_list_revisions
+  name: List Revisions
+  description: |
+    List revisions of a file.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}/revisions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - revisions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing revisions
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+    required:
+      - fileId
+
+- slug: google_drive_get_revision
+  name: Get Revision
+  description: |
+    Get a specific revision of a file.
+  provider: google-drive
+  endpoint: /drive/v3/files/{fileId}/revisions/{revisionId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - revisions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a revision
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+      revisionId:
+        type: string
+        description: "Revision ID"
+    required:
+      - fileId
+      - revisionId
+
+- slug: google_drive_search_files
+  name: Search Files
+  description: |
+    Search for files in Google Drive.
+  provider: google-drive
+  endpoint: /drive/v3/files
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching files
+    properties:
+      q:
+        type: string
+        description: "Search query (e.g., name contains 'report')"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required:
+      - q

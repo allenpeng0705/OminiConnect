@@ -1,0 +1,233 @@
+# Perk Tools - Allowlist
+# Curated subset of Perk (TravelPerk) API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. perk_list_users              - List users
+# 2. perk_get_user                - Get user details
+# 3. perk_list_trips              - List trips
+# 4. perk_get_trip                - Get trip details
+# 5. perk_list_expenses           - List expenses
+# 6. perk_get_expense             - Get expense details
+# 7. perk_list_invoices          - List invoices
+# 8. perk_get_invoice             - Get invoice details
+# 9. perk_list_cost_centers      - List cost centers
+# 10. perk_get_profile           - Get user profile
+
+- slug: perk_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: perk
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: perk_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: perk
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: perk_list_trips
+  name: List Trips
+  description: |
+    List all trips in the organization.
+  provider: perk
+  endpoint: /v1/trips
+  method: GET
+  scopes: []
+  tags:
+    - trips
+    - travel
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing trips
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: perk_get_trip
+  name: Get Trip
+  description: |
+    Get detailed information about a specific trip.
+  provider: perk
+  endpoint: /v1/trips/{tripId}
+  method: GET
+  scopes: []
+  tags:
+    - trips
+    - travel
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a trip
+    properties:
+      tripId:
+        type: string
+        description: "Trip ID"
+    required:
+      - tripId
+
+- slug: perk_list_expenses
+  name: List Expenses
+  description: |
+    List all expenses in the organization.
+  provider: perk
+  endpoint: /v1/expenses
+  method: GET
+  scopes: []
+  tags:
+    - expenses
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      userId:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: perk_get_expense
+  name: Get Expense
+  description: |
+    Get detailed information about a specific expense.
+  provider: perk
+  endpoint: /v1/expenses/{expenseId}
+  method: GET
+  scopes: []
+  tags:
+    - expenses
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      expenseId:
+        type: string
+        description: "Expense ID"
+    required:
+      - expenseId
+
+- slug: perk_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the organization.
+  provider: perk
+  endpoint: /v1/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: perk_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice.
+  provider: perk
+  endpoint: /v1/invoices/{invoiceId}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "Invoice ID"
+    required:
+      - invoiceId
+
+- slug: perk_list_cost_centers
+  name: List Cost Centers
+  description: |
+    List all cost centers in the organization.
+  provider: perk
+  endpoint: /v1/cost-centers
+  method: GET
+  scopes: []
+  tags:
+    - cost-centers
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing cost centers
+    properties: {}
+    required: []
+
+- slug: perk_get_profile
+  name: Get Profile
+  description: |
+    Get current user profile information.
+  provider: perk
+  endpoint: /v1/profile
+  method: GET
+  scopes: []
+  tags:
+    - profile
+    - user
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting profile
+    properties: {}
+    required: []

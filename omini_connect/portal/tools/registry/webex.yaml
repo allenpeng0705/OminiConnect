@@ -1,0 +1,335 @@
+# Webex Tools - Allowlist
+# Curated subset of the Webex API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. webex_list_meetings        - List meetings for the authenticated user
+# 2. webex_get_meeting          - Get details of a specific meeting
+# 3. webex_create_meeting       - Create a new meeting
+# 4. webex_update_meeting       - Update an existing meeting
+# 5. webex_list_messages        - List messages in a room
+# 6. webex_get_message          - Get details of a specific message
+# 7. webex_send_message         - Send a message to a room
+# 8. webex_list_teams           - List teams the user belongs to
+# 9. webex_get_team             - Get details of a specific team
+# 10. webex_list_recordings      - List recordings
+
+- slug: webex_list_meetings
+  name: List Meetings
+  description: |
+    List meetings for the authenticated user. Returns meeting details including title,
+    start time, duration, and participant info. Filter by scheduled or past meetings.
+  provider: webex
+  endpoint: /meetings
+  method: GET
+  scopes:
+    - meeting:read
+  tags:
+    - meetings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      meetingType:
+        type: string
+        description: "Type: scheduled or scheduledType"
+        enum: [scheduled, scheduledType]
+      from:
+        type: string
+        description: "Start date/time filter (ISO 8601)"
+      to:
+        type: string
+        description: "End date/time filter (ISO 8601)"
+      max:
+        type: integer
+        description: "Maximum results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: webex_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting including title, description, timing, and host info.
+    Use this to retrieve full meeting details before updating or joining.
+  provider: webex
+  endpoint: /meetings/{meetingId}
+  method: GET
+  scopes:
+    - meeting:read
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Webex meeting ID"
+    required:
+      - meetingId
+
+- slug: webex_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new Webex meeting. Specify title, start time, duration, and settings.
+    Use this to schedule meetings programmatically.
+  provider: webex
+  endpoint: /meetings
+  method: POST
+  scopes:
+    - meeting:write
+  tags:
+    - meetings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      title:
+        type: string
+        description: "Meeting title (required)"
+      agenda:
+        type: string
+        description: "Meeting agenda/description"
+      start:
+        type: string
+        description: "Start time (ISO 8601, required)"
+      end:
+        type: string
+        description: "End time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      timezone:
+        type: string
+        description: "Timezone (e.g., America/Los_Angeles)"
+      recurrence:
+        type: object
+        description: "Recurrence settings for recurring meetings"
+      password:
+        type: string
+        description: "Meeting password"
+      settings:
+        type: object
+        description: "Meeting settings (hostKey, joinBeforeHost, etc.)"
+    required:
+      - title
+      - start
+
+- slug: webex_update_meeting
+  name: Update Meeting
+  description: |
+    Update an existing meeting's title, time, duration, or other settings.
+    Use this to reschedule or modify meeting details.
+  provider: webex
+  endpoint: /meetings/{meetingId}
+  method: PUT
+  scopes:
+    - meeting:write
+  tags:
+    - meetings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Webex meeting ID"
+      title:
+        type: string
+        description: "New meeting title"
+      agenda:
+        type: string
+        description: "New meeting agenda"
+      start:
+        type: string
+        description: "New start time (ISO 8601)"
+      end:
+        type: string
+        description: "New end time (ISO 8601)"
+      duration:
+        type: integer
+        description: "New duration in minutes"
+      timezone:
+        type: string
+        description: "New timezone"
+      password:
+        type: string
+        description: "New meeting password"
+    required:
+      - meetingId
+
+- slug: webex_list_messages
+  name: List Messages
+  description: |
+    List messages in a Webex room (space). Returns message text, sender, and timestamp.
+    Use this to read conversation history or monitor room activity.
+  provider: webex
+  endpoint: /messages
+  method: GET
+  scopes:
+    - spark:all
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      roomId:
+        type: string
+        description: "Room ID to list messages from"
+      roomType:
+        type: string
+        description: "Filter by room type: direct or group"
+      mentionedPeople:
+        type: string
+        description: "Filter messages mentioning a person"
+      before:
+        type: string
+        description: "Messages before this date (ISO 8601)"
+      beforeMessage:
+        type: string
+        description: "Messages before this message ID"
+      max:
+        type: integer
+        description: "Maximum results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: webex_get_message
+  name: Get Message
+  description: |
+    Get details of a specific message including text content, attachments, and metadata.
+    Use this to retrieve full message details including quoted replies.
+  provider: webex
+  endpoint: /messages/{messageId}
+  method: GET
+  scopes:
+    - spark:all
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Webex message ID"
+    required:
+      - messageId
+
+- slug: webex_send_message
+  name: Send Message
+  description: |
+    Send a message to a Webex room or person. Include text, markdown, or file attachments.
+    Use this to send notifications, responses, or alerts.
+  provider: webex
+  endpoint: /messages
+  method: POST
+  scopes:
+    - spark:all
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      roomId:
+        type: string
+        description: "Room ID to send to"
+      toPersonId:
+        type: string
+        description: "Person ID to send direct message"
+      toPersonEmail:
+        type: string
+        description: "Email address to send direct message"
+      text:
+        type: string
+        description: "Message text content"
+      markdown:
+        type: string
+        description: "Markdown formatted message"
+      attachments:
+        type: array
+        items:
+          type: object
+        description: "Message attachments"
+    required: []
+
+- slug: webex_list_teams
+  name: List Teams
+  description: |
+    List teams that the authenticated user belongs to.
+    Teams organize rooms and members for collaboration.
+  provider: webex
+  endpoint: /teams
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      max:
+        type: integer
+        description: "Maximum results (default 100, max 1000)"
+        default: 100
+    required: []
+
+- slug: webex_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team including name, description, and member count.
+    Use this to learn about a team before joining or creating rooms within it.
+  provider: webex
+  endpoint: /teams/{teamId}
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Webex team ID"
+    required:
+      - teamId
+
+- slug: webex_list_recordings
+  name: List Recordings
+  description: |
+    List recorded meetings for the authenticated user.
+    Returns recording details including meeting topic, duration, and download URLs.
+  provider: webex
+  endpoint: /recordings
+  method: GET
+  scopes:
+    - meeting:recordings:read
+  tags:
+    - recordings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      siteUrl:
+        type: string
+        description: "Filter by Webex site URL"
+      max:
+        type: integer
+        description: "Maximum results (default 50, max 1000)"
+        default: 50
+    required: []

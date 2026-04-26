@@ -1,0 +1,239 @@
+# Mindbody Tools - Allowlist
+# Curated subset of Mindbody API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mindbody_list_locations       - List locations
+# 2. mindbody_get_location        - Get location details
+# 3. mindbody_list_staff          - List staff members
+# 4. mindbody_get_staff           - Get staff details
+# 5. mindbody_list_services       - List services
+# 6. mindbody_get_service         - Get service details
+# 7. mindbody_list_classes        - List classes
+# 8. mindbody_get_class           - Get class details
+# 9. mindbody_list_clients        - List clients
+# 10. mindbody_get_client        - Get client details
+
+- slug: mindbody_list_locations
+  name: List Locations
+  description: |
+    List all Mindbody locations.
+  provider: mindbody
+  endpoint: /public/v6/site/locations
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []
+
+- slug: mindbody_get_location
+  name: Get Location
+  description: |
+    Get details of a specific Mindbody location.
+  provider: mindbody
+  endpoint: /public/v6/site/locations/{locationId}
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a location
+    properties:
+      locationId:
+        type: integer
+        description: "Location ID"
+    required:
+      - locationId
+
+- slug: mindbody_list_staff
+  name: List Staff
+  description: |
+    List all staff members in Mindbody.
+    Filter by location or service.
+  provider: mindbody
+  endpoint: /public/v6/staff/staffmembers
+  method: GET
+  scopes: []
+  tags:
+    - staff
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing staff
+    properties:
+      location_id:
+        type: integer
+        description: "Filter by location ID"
+    required: []
+
+- slug: mindbody_get_staff
+  name: Get Staff
+  description: |
+    Get details of a specific staff member.
+  provider: mindbody
+  endpoint: /public/v6/staff/staffmembers/{staffId}
+  method: GET
+  scopes: []
+  tags:
+    - staff
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a staff member
+    properties:
+      staffId:
+        type: integer
+        description: "Staff ID"
+    required:
+      - staffId
+
+- slug: mindbody_list_services
+  name: List Services
+  description: |
+    List all services (classes, appointments) in Mindbody.
+  provider: mindbody
+  endpoint: /public/v6/services
+  method: GET
+  scopes: []
+  tags:
+    - services
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      location_id:
+        type: integer
+        description: "Filter by location ID"
+    required: []
+
+- slug: mindbody_get_service
+  name: Get Service
+  description: |
+    Get details of a specific service.
+  provider: mindbody
+  endpoint: /public/v6/services/{serviceId}
+  method: GET
+  scopes: []
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      serviceId:
+        type: integer
+        description: "Service ID"
+    required:
+      - serviceId
+
+- slug: mindbody_list_classes
+  name: List Classes
+  description: |
+    List all classes in Mindbody.
+    Filter by location, date, or instructor.
+  provider: mindbody
+  endpoint: /public/v6/classes
+  method: GET
+  scopes: []
+  tags:
+    - classes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing classes
+    properties:
+      location_id:
+        type: integer
+        description: "Filter by location ID"
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      staff_id:
+        type: integer
+        description: "Filter by instructor"
+    required: []
+
+- slug: mindbody_get_class
+  name: Get Class
+  description: |
+    Get details of a specific class.
+  provider: mindbody
+  endpoint: /public/v6/classes/{classId}
+  method: GET
+  scopes: []
+  tags:
+    - classes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a class
+    properties:
+      classId:
+        type: integer
+        description: "Class ID"
+    required:
+      - classId
+
+- slug: mindbody_list_clients
+  name: List Clients
+  description: |
+    List all clients in Mindbody.
+    Filter by search term or status.
+  provider: mindbody
+  endpoint: /public/v6/clients
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      search_text:
+        type: string
+        description: "Search by name or email"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: mindbody_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client.
+  provider: mindbody
+  endpoint: /public/v6/clients/{clientId}
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      clientId:
+        type: string
+        description: "Client ID"
+    required:
+      - clientId

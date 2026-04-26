@@ -1,0 +1,341 @@
+# Jira Tools - Allowlist
+# Curated subset of the Jira REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jira_list_issues   - Search and list issues using JQL
+# 2. jira_get_issue     - Get details of a specific issue
+# 3. jira_create_issue  - Create a new issue
+# 4. jira_update_issue  - Update an existing issue
+# 5. jira_list_projects - List projects the user has access to
+# 6. jira_get_project   - Get details of a specific project
+# 7. jira_list_sprints  - List sprints in a project
+# 8. jira_get_sprint    - Get details of a specific sprint
+# 9. jira_add_worklog   - Add a worklog entry to an issue
+# 10. jira_get_worklog  - Get worklog entries for an issue
+
+- slug: jira_list_issues
+  name: List Issues
+  description: |
+    Search and list issues using Jira Query Language (JQL).
+    Filter by project, status, assignee, labels, or custom fields.
+  provider: jira
+  endpoint: /rest/api/3/search
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - issues
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching issues
+    properties:
+      jql:
+        type: string
+        description: "JQL query string (e.g., project = MYPROJ AND status = Open)"
+      maxResults:
+        type: integer
+        description: "Maximum results (default 50, max 100)"
+        default: 50
+      startAt:
+        type: integer
+        description: "Starting index for pagination"
+        default: 0
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to include in response (default: summary, status, assignee)"
+      expand:
+        type: string
+        description: "Additional expand options: renderedFields, names, schema, transitions, operations"
+    required: []
+
+- slug: jira_get_issue
+  name: Get Issue
+  description: |
+    Get details of a specific issue including description, status, assignee, and comments.
+  provider: jira
+  endpoint: /rest/api/3/issue/{issueIdOrKey}
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issueIdOrKey:
+        type: string
+        description: "Issue ID or key (e.g., MYPROJ-123)"
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to include (default includes most fields)"
+      expand:
+        type: string
+        description: "Additional expand options: renderedFields, names, schema, transitions, operations, comments"
+    required:
+      - issueIdOrKey
+
+- slug: jira_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue in a project. Include issue type, summary, and optional description.
+    Optionally set assignee, labels, and sprint.
+  provider: jira
+  endpoint: /rest/api/3/issue
+  method: POST
+  scopes:
+    - create:jira-work
+  tags:
+    - issues
+    - create
+  input_schema:
+    type: object
+    description: Issue creation parameters
+    properties:
+      projectId:
+        type: string
+        description: "Project ID (required if projectKey not used)"
+      projectKey:
+        type: string
+        description: "Project key (e.g., MYPROJ)"
+      issuetype:
+        type: object
+        description: "Issue type object (name: Bug, Story, Task, etc.)"
+      summary:
+        type: string
+        description: "Issue summary/title (required)"
+      description:
+        type: object
+        description: "Issue description (Atlassian Document Format)"
+      assignee:
+        type: object
+        description: "Assignee (accountId or name)"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "Array of label strings"
+    required:
+      - issuetype
+      - summary
+
+- slug: jira_update_issue
+  name: Update Issue
+  description: |
+    Update an existing issue: change summary, description, status, assignee, or add labels.
+  provider: jira
+  endpoint: /rest/api/3/issue/{issueIdOrKey}
+  method: PUT
+  scopes:
+    - edit:jira-work
+  tags:
+    - issues
+    - update
+  input_schema:
+    type: object
+    description: Issue update parameters
+    properties:
+      issueIdOrKey:
+        type: string
+        description: "Issue ID or key"
+      summary:
+        type: string
+        description: "New summary"
+      description:
+        type: object
+        description: "New description (Atlassian Document Format)"
+      assignee:
+        type: object
+        description: "New assignee"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "New labels (replaces existing)"
+    required:
+      - issueIdOrKey
+
+- slug: jira_list_projects
+  name: List Projects
+  description: |
+    List all projects the authenticated user has access to.
+    Returns project keys, names, types, and lead information.
+  provider: jira
+  endpoint: /rest/api/3/project
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - projects
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      expand:
+        type: string
+        description: "Additional expand: description, issueTypes, lead, projectKeys"
+      maxResults:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      recent:
+        type: integer
+        description: "Number of recent projects to return"
+        default: 0
+    required: []
+
+- slug: jira_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including description, lead, issue types, and versions.
+  provider: jira
+  endpoint: /rest/api/3/project/{projectIdOrKey}
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectIdOrKey:
+        type: string
+        description: "Project ID or key"
+      expand:
+        type: string
+        description: "Additional expand: description, issueTypes, lead, projectKeys, versions"
+    required:
+      - projectIdOrKey
+
+- slug: jira_list_sprints
+  name: List Sprints
+  description: |
+    List sprints in a project. Filter by state (active, closed, future).
+    Use for agile planning and sprint management.
+  provider: jira
+  endpoint: /rest/agile/1.0/board/{boardId}/sprint
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - sprints
+    - agile
+  input_schema:
+    type: object
+    description: Parameters for listing sprints
+    properties:
+      boardId:
+        type: integer
+        description: "Board ID (required)"
+      state:
+        type: string
+        description: "Filter by state: active, closed, future"
+        enum: [active, closed, future]
+      maxResults:
+        type: integer
+        description: "Maximum results"
+        default: 50
+      startAt:
+        type: integer
+        description: "Starting index"
+        default: 0
+    required:
+      - boardId
+
+- slug: jira_get_sprint
+  name: Get Sprint
+  description: |
+    Get details of a specific sprint including name, state, start/end dates, and issues.
+  provider: jira
+  endpoint: /rest/agile/1.0/sprint/{sprintId}
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - sprints
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sprint
+    properties:
+      sprintId:
+        type: integer
+        description: "Sprint ID"
+      expand:
+        type: string
+        description: "Expand options: issues, actions, estimatedBM, linkedPages"
+    required:
+      - sprintId
+
+- slug: jira_add_worklog
+  name: Add Worklog
+  description: |
+    Add a worklog entry to an issue to track time spent.
+    Include time spent and optional start date and comment.
+  provider: jira
+  endpoint: /rest/api/3/issue/{issueIdOrKey}/worklog
+  method: POST
+  scopes:
+    - edit:jira-work
+  tags:
+    - worklog
+    - time tracking
+  input_schema:
+    type: object
+    description: Parameters for adding a worklog
+    properties:
+      issueIdOrKey:
+        type: string
+        description: "Issue ID or key"
+      timeSpent:
+        type: string
+        description: "Time spent (e.g., 3h 30m) (required)"
+      started:
+        type: string
+        description: "Start time (ISO 8601 format)"
+      comment:
+        type: string
+        description: "Worklog comment/description"
+    required:
+      - issueIdOrKey
+      - timeSpent
+
+- slug: jira_get_worklog
+  name: Get Worklog
+  description: |
+    Get worklog entries for an issue. Shows time tracking data and comments.
+  provider: jira
+  endpoint: /rest/api/3/issue/{issueIdOrKey}/worklog
+  method: GET
+  scopes:
+    - read:jira-work
+  tags:
+    - worklog
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting worklog entries
+    properties:
+      issueIdOrKey:
+        type: string
+        description: "Issue ID or key"
+      maxResults:
+        type: integer
+        description: "Maximum results"
+        default: 100
+      startAt:
+        type: integer
+        description: "Starting index"
+        default: 0
+    required:
+      - issueIdOrKey

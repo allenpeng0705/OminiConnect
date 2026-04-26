@@ -1,0 +1,249 @@
+# Brevo (API Key) Tools - Allowlist
+# Curated subset of Brevo API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. brevo_list_contacts          - List contacts
+# 2. brevo_get_contact           - Get contact details
+# 3. brevo_create_contact        - Create contact
+# 4. brevo_update_contact        - Update contact
+# 5. brevo_delete_contact        - Delete contact
+# 6. brevo_list_campaigns        - List email campaigns
+# 7. brevo_get_campaign          - Get campaign details
+# 8. brevo_send_campaign         - Send campaign
+# 9. brevo_list_sms_campaigns    - List SMS campaigns
+# 10. brevo_get_sms_campaign     - Get SMS campaign details
+
+- slug: brevo_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Brevo.
+  provider: brevo-api-key
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Contacts per page"
+        default: 20
+    required: []
+
+- slug: brevo_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: brevo-api-key
+  endpoint: /contacts/{identifier}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      identifier:
+        type: string
+        description: "Contact email or ID"
+    required:
+      - identifier
+
+- slug: brevo_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Brevo.
+  provider: brevo-api-key
+  endpoint: /contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      attributes:
+        type: object
+        description: "Custom attributes"
+    required:
+      - email
+
+- slug: brevo_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: brevo-api-key
+  endpoint: /contacts/{identifier}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      identifier:
+        type: string
+        description: "Contact email or ID"
+      attributes:
+        type: object
+        description: "Attributes to update"
+    required:
+      - identifier
+
+- slug: brevo_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact from Brevo.
+  provider: brevo-api-key
+  endpoint: /contacts/{identifier}
+  method: DELETE
+  scopes: []
+  tags:
+    - contacts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      identifier:
+        type: string
+        description: "Contact email or ID"
+    required:
+      - identifier
+
+- slug: brevo_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns.
+  provider: brevo-api-key
+  endpoint: /emailCampaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brevo_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: brevo-api-key
+  endpoint: /emailCampaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: brevo_send_campaign
+  name: Send Campaign
+  description: |
+    Send an email campaign.
+  provider: brevo-api-key
+  endpoint: /emailCampaigns/{campaignId}/sendNow"
+  method: POST
+  scopes: []
+  tags:
+    - campaigns
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a campaign
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: brevo_list_sms_campaigns
+  name: List SMS Campaigns
+  description: |
+    List all SMS campaigns.
+  provider: brevo-api-key
+  endpoint: /smsCampaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - sms
+  input_schema:
+    type: object
+    description: Parameters for listing SMS campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: brevo_get_sms_campaign
+  name: Get SMS Campaign
+  description: |
+    Get details for a specific SMS campaign.
+  provider: brevo-api-key
+  endpoint: /smsCampaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - sms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an SMS campaign
+    properties:
+      campaignId:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaignId

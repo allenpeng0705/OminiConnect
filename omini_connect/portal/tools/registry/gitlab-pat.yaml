@@ -1,0 +1,258 @@
+# GitLab PAT Tools - Allowlist
+# Curated subset of GitLab API for AI agent use.
+# API_KEY via Nango (Personal Access Token).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gitlab_pat_list_projects        - List projects
+# 2. gitlab_pat_get_project        - Get project details
+# 3. gitlab_pat_list_issues        - List issues
+# 4. gitlab_pat_get_issue          - Get issue details
+# 5. gitlab_pat_list_mrs           - List merge requests
+# 6. gitlab_pat_get_mr             - Get merge request details
+# 7. gitlab_pat_list_members      - List project members
+# 8. gitlab_pat_list_groups        - List groups
+# 9. gitlab_pat_list_branches      - List branches
+# 10. gitlab_pat_list_tags        - List tags
+
+- slug: gitlab_pat_list_projects
+  name: List Projects
+  description: |
+    List GitLab projects the authenticated user has access to.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      membership:
+        type: boolean
+        description: "Only show projects user is a member"
+        default: true
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gitlab_pat_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID or path (encoded)"
+    required:
+      - id
+
+- slug: gitlab_pat_list_issues
+  name: List Issues
+  description: |
+    List issues across projects or within a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/issues
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      state:
+        type: string
+        description: "Filter by state (opened, closed, all)"
+        default: opened
+    required: []
+
+- slug: gitlab_pat_get_issue
+  name: Get Issue
+  description: |
+    Get detailed information about a specific issue.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{project_id}/issues/{issue_iid}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      project_id:
+        type: string
+        description: "Project ID or path"
+      issue_iid:
+        type: integer
+        description: "Issue IID (internal ID)"
+    required:
+      - project_id
+      - issue_iid
+
+- slug: gitlab_pat_list_mrs
+  name: List Merge Requests
+  description: |
+    List merge requests in a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}/merge_requests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - merge-requests
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing merge requests
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      state:
+        type: string
+        description: "Filter by state (opened, closed, merged, all)"
+        default: opened
+    required:
+      - id
+
+- slug: gitlab_pat_get_mr
+  name: Get Merge Request
+  description: |
+    Get detailed information about a merge request.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}/merge_requests/{mr_iid}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - merge-requests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a merge request
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      mr_iid:
+        type: integer
+        description: "Merge request IID"
+    required:
+      - id
+      - mr_iid
+
+- slug: gitlab_pat_list_members
+  name: List Project Members
+  description: |
+    List members of a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}/members
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+    required:
+      - id
+
+- slug: gitlab_pat_list_groups
+  name: List Groups
+  description: |
+    List GitLab groups the user has access to.
+  provider: gitlab-pat
+  endpoint: /api/v4/groups
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      min_access_level:
+        type: integer
+        description: "Minimum access level"
+    required: []
+
+- slug: gitlab_pat_list_branches
+  name: List Branches
+  description: |
+    List branches in a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}/repository/branches
+  method: GET
+  scopes:
+    - read
+  tags:
+    - branches
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+    required:
+      - id
+
+- slug: gitlab_pat_list_tags
+  name: List Tags
+  description: |
+    List tags in a project.
+  provider: gitlab-pat
+  endpoint: /api/v4/projects/{id}/repository/tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+    required:
+      - id

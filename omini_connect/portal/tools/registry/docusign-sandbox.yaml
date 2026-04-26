@@ -1,0 +1,257 @@
+# DocuSign Sandbox Tools - Allowlist
+# Curated subset of the DocuSign API for AI agent use.
+# OAuth2 via Nango (Sandbox environment).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. docusign_sandbox_list_envelopes        - List envelopes
+# 2. docusign_sandbox_get_envelope          - Get envelope details
+# 3. docusign_sandbox_create_envelope       - Create an envelope
+# 4. docusign_sandbox_list_documents        - List documents
+# 5. docusign_sandbox_get_document          - Get document details
+# 6. docusign_sandbox_list_recipients       - List recipients
+# 7. docusign_sandbox_get_recipient         - Get recipient details
+# 8. docusign_sandbox_list_templates        - List templates
+# 9. docusign_sandbox_get_template          - Get template details
+# 10. docusign_sandbox_list_users          - List users
+
+- slug: docusign_sandbox_list_envelopes
+  name: List Envelopes
+  description: |
+    List all envelopes (sent documents) in DocuSign sandbox.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes
+  method: GET
+  scopes: []
+  tags:
+    - envelopes
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing envelopes
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: created, sent, delivered, signed, completed"
+    required: []
+
+- slug: docusign_sandbox_get_envelope
+  name: Get Envelope
+  description: |
+    Get details of a specific envelope.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes/{envelope_id}
+  method: GET
+  scopes: []
+  tags:
+    - envelopes
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an envelope
+    properties:
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - envelope_id
+
+- slug: docusign_sandbox_create_envelope
+  name: Create Envelope
+  description: |
+    Create and send a new envelope.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes
+  method: POST
+  scopes: []
+  tags:
+    - envelopes
+    - esignature
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an envelope
+    properties:
+      email_subject:
+        type: string
+        description: "Email subject"
+      documents:
+        type: array
+        items:
+          type: object
+        description: "Documents to include"
+      recipients:
+        type: array
+        items:
+          type: object
+        description: "Recipients to sign"
+    required:
+      - email_subject
+
+- slug: docusign_sandbox_list_documents
+  name: List Documents
+  description: |
+    List all documents in an envelope.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes/{envelope_id}/documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - envelope_id
+
+- slug: docusign_sandbox_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes/{envelope_id}/documents/{document_id}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - envelope_id
+      - document_id
+
+- slug: docusign_sandbox_list_recipients
+  name: List Recipients
+  description: |
+    List all recipients of an envelope.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes/{envelope_id}/recipients
+  method: GET
+  scopes: []
+  tags:
+    - recipients
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing recipients
+    properties:
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+    required:
+      - envelope_id
+
+- slug: docusign_sandbox_get_recipient
+  name: Get Recipient
+  description: |
+    Get details of a specific recipient.
+  provider: docusign-sandbox
+  endpoint: /v2.1/envelopes/{envelope_id}/recipients/{recipient_id}
+  method: GET
+  scopes: []
+  tags:
+    - recipients
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recipient
+    properties:
+      envelope_id:
+        type: string
+        description: "Envelope ID"
+      recipient_id:
+        type: string
+        description: "Recipient ID"
+    required:
+      - envelope_id
+      - recipient_id
+
+- slug: docusign_sandbox_list_templates
+  name: List Templates
+  description: |
+    List all templates in the account.
+  provider: docusign-sandbox
+  endpoint: /v2.1/templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - esignature
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: docusign_sandbox_get_template
+  name: Get Template
+  description: |
+    Get details of a specific template.
+  provider: docusign-sandbox
+  endpoint: /v2.1/templates/{template_id}
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - esignature
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "Template ID"
+    required:
+      - template_id
+
+- slug: docusign_sandbox_list_users
+  name: List Users
+  description: |
+    List all users in the account.
+  provider: docusign-sandbox
+  endpoint: /v2.1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - account
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []

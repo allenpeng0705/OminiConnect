@@ -1,0 +1,244 @@
+# La Growth Machine Tools - Allowlist
+# Curated subset of La Growth Machine API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lagrowthmachine_list_sequences   - List sequences
+# 2. lagrowthmachine_get_sequence    - Get sequence details
+# 3. lagrowthmachine_list_contacts   - List contacts
+# 4. lagrowthmachine_get_contact     - Get contact details
+# 5. lagrowthmachine_add_contact     - Add a contact
+# 6. lagrowthmachine_update_contact  - Update a contact
+# 7. lagrowthmachine_list_tasks      - List tasks
+# 8. lagrowthmachine_complete_task   - Complete a task
+# 9. lagrowthmachine_list_campaigns   - List campaigns
+# 10. lagrowthmachine_get_campaign  - Get campaign details
+
+- slug: lagrowthmachine_list_sequences
+  name: List Sequences
+  description: |
+    List all sequences.
+  provider: lagrowthmachine
+  endpoint: /sequences
+  method: GET
+  scopes: []
+  tags:
+    - sequences
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lagrowthmachine_get_sequence
+  name: Get Sequence
+  description: |
+    Get details for a specific sequence.
+  provider: lagrowthmachine
+  endpoint: /sequences/{sequence_id}
+  method: GET
+  scopes: []
+  tags:
+    - sequences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      sequence_id:
+        type: string
+        description: "Sequence ID"
+    required:
+      - sequence_id
+
+- slug: lagrowthmachine_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: lagrowthmachine
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lagrowthmachine_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: lagrowthmachine
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: lagrowthmachine_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact.
+  provider: lagrowthmachine
+  endpoint: /contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email
+
+- slug: lagrowthmachine_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: lagrowthmachine
+  endpoint: /contacts/{contact_id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - contact_id
+
+- slug: lagrowthmachine_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: lagrowthmachine
+  endpoint: /tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+    required: []
+
+- slug: lagrowthmachine_complete_task
+  name: Complete Task
+  description: |
+    Mark a task as complete.
+  provider: lagrowthmachine
+  endpoint: /tasks/{task_id}/complete
+  method: POST
+  scopes: []
+  tags:
+    - tasks
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for completing a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: lagrowthmachine_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: lagrowthmachine
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lagrowthmachine_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: lagrowthmachine
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id

@@ -1,0 +1,238 @@
+# NinjaOne RMM (OAuth2) Tools - Allowlist
+# Curated subset of NinjaOne RMM API for AI agent use.
+# OAuth2 Authorization Code via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ninjaone_list_devices             - List devices
+# 2. ninjaone_get_device              - Get device details
+# 3. ninjaone_list_alerts             - List alerts
+# 4. ninjaone_list_policies           - List policies
+# 5. ninjaone_list_schedules          - List schedules
+# 6. ninjaone_list_scripts           - List automation scripts
+# 7. ninjaone_run_script             - Run automation script
+# 8. ninjaone_list_users              - List users
+# 9. ninjaone_get_dashboard           - Get dashboard summary
+# 10. ninjaone_list_locations        - List locations
+
+- slug: ninjaone_list_devices
+  name: List Devices
+  description: |
+    List all devices monitored by NinjaOne RMM.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/devices
+  method: GET
+  scopes:
+    - devices:read
+  tags:
+    - rmm
+    - devices
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      size:
+        type: integer
+        description: "Page size (default 50)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status (online, offline)"
+    required: []
+
+- slug: ninjaone_get_device
+  name: Get Device
+  description: |
+    Get detailed information for a specific device.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/devices/{id}
+  method: GET
+  scopes:
+    - devices:read
+  tags:
+    - rmm
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      id:
+        type: integer
+        description: "Device ID"
+    required:
+      - id
+
+- slug: ninjaone_list_alerts
+  name: List Alerts
+  description: |
+    List all alerts in NinjaOne RMM.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/alerts
+  method: GET
+  scopes:
+    - alerts:read
+  tags:
+    - rmm
+    - alerts
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      device_id:
+        type: integer
+        description: "Filter by device ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: ninjaone_list_policies
+  name: List Policies
+  description: |
+    List all management policies.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/policies
+  method: GET
+  scopes:
+    - policies:read
+  tags:
+    - rmm
+    - policies
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []
+
+- slug: ninjaone_list_schedules
+  name: List Schedules
+  description: |
+    List all scheduled tasks.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/schedules
+  method: GET
+  scopes:
+    - schedules:read
+  tags:
+    - rmm
+    - schedules
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing schedules
+    properties: {}
+    required: []
+
+- slug: ninjaone_list_scripts
+  name: List Scripts
+  description: |
+    List all automation scripts.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/scripts
+  method: GET
+  scopes:
+    - scripts:read
+  tags:
+    - rmm
+    - scripts
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing scripts
+    properties: {}
+    required: []
+
+- slug: ninjaone_run_script
+  name: Run Script
+  description: |
+    Run an automation script on a device.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/devices/{deviceId}/scripts/{scriptId}/run
+  method: POST
+  scopes:
+    - scripts:execute
+  tags:
+    - rmm
+    - scripts
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for running a script
+    properties:
+      deviceId:
+        type: integer
+        description: "Device ID"
+      scriptId:
+        type: integer
+        description: "Script ID"
+      parameters:
+        type: object
+        description: "Script parameters"
+    required:
+      - deviceId
+      - scriptId
+
+- slug: ninjaone_list_users
+  name: List Users
+  description: |
+    List all users in NinjaOne.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - rmm
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: ninjaone_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get dashboard summary and overview.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/dashboard
+  method: GET
+  scopes:
+    - dashboard:read
+  tags:
+    - rmm
+    - dashboard
+    - overview
+  input_schema:
+    type: object
+    description: Parameters for getting dashboard
+    properties: {}
+    required: []
+
+- slug: ninjaone_list_locations
+  name: List Locations
+  description: |
+    List all locations in NinjaOne.
+  provider: ninjaone-rmm-oauth2
+  endpoint: /v1/locations
+  method: GET
+  scopes:
+    - locations:read
+  tags:
+    - rmm
+    - locations
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []

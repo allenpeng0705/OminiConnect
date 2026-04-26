@@ -1,0 +1,255 @@
+# Greenhouse Basic Tools - Allowlist
+# Curated subset of Greenhouse API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_list_candidates     - List candidates
+# 2. greenhouse_get_candidate      - Get candidate details
+# 3. greenhouse_list_jobs         - List jobs
+# 4. greenhouse_get_job            - Get job details
+# 5. greenhouse_list_applications  - List applications
+# 6. greenhouse_get_application    - Get application details
+# 7. greenhouse_list_interviews    - List interviews
+# 8. greenhouse_get_interview      - Get interview details
+# 9. greenhouse_list_offers        - List offers
+# 10. greenhouse_list_scorecards    - List scorecards
+
+- slug: greenhouse_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Greenhouse.
+    Returns candidate details including name, email, and social links.
+  provider: greenhouse-basic
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+    Includes profile, applications, and activity.
+  provider: greenhouse-basic
+  endpoint: /candidates/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - id
+
+- slug: greenhouse_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in Greenhouse.
+    Returns job details including title, status, and department.
+  provider: greenhouse-basic
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job.
+    Includes job description, hiring team, and pipeline stages.
+  provider: greenhouse-basic
+  endpoint: /jobs/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      id:
+        type: integer
+        description: "Job ID"
+    required:
+      - id
+
+- slug: greenhouse_list_applications
+  name: List Applications
+  description: |
+    List all applications in Greenhouse.
+    Returns application details including candidate, job, and status.
+  provider: greenhouse-basic
+  endpoint: /applications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application.
+    Includes candidate, job, stage, and scorecards.
+  provider: greenhouse-basic
+  endpoint: /applications/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      id:
+        type: integer
+        description: "Application ID"
+    required:
+      - id
+
+- slug: greenhouse_list_interviews
+  name: List Interviews
+  description: |
+    List all scheduled interviews.
+    Returns interview details including candidate, interviewer, and time.
+  provider: greenhouse-basic
+  endpoint: /scheduled_interviews
+  method: GET
+  scopes:
+    - read
+  tags:
+    - interviews
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_interview
+  name: Get Interview
+  description: |
+    Get detailed information about a specific interview.
+    Includes interview scorecards and feedback.
+  provider: greenhouse-basic
+  endpoint: /scheduled_interviews/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - interviews
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an interview
+    properties:
+      id:
+        type: integer
+        description: "Interview ID"
+    required:
+      - id
+
+- slug: greenhouse_list_offers
+  name: List Offers
+  description: |
+    List all job offers in Greenhouse.
+    Returns offer details including candidate, job, and status.
+  provider: greenhouse-basic
+  endpoint: /offers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties: {}
+    required: []
+
+- slug: greenhouse_list_scorecards
+  name: List Scorecards
+  description: |
+    List all scorecards for applications.
+    Returns scorecard details including interviewer and ratings.
+  provider: greenhouse-basic
+  endpoint: /scorecards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - scorecards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing scorecards
+    properties:
+      application_id:
+        type: integer
+        description: "Filter by application ID"
+    required: []

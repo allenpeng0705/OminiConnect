@@ -1,0 +1,268 @@
+# Discord Tools - Allowlist
+# Curated subset of Discord API for AI agent use.
+# Bot tokens via Nango. HTTP API only.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. discord_list_guilds      - List guilds/servers
+# 2. discord_get_guild        - Get guild info
+# 3. discord_list_channels    - List guild channels
+# 4. discord_get_channel     - Get channel info
+# 5. discord_list_messages    - List channel messages
+# 6. discord_get_message     - Get a message
+# 7. discord_post_message    - Post message to channel
+# 8. discord_list_members    - List guild members
+# 9. discord_get_member     - Get member info
+# 10. discord_list_roles     - List guild roles
+
+- slug: discord_list_guilds
+  name: List Guilds
+  description: |
+    List all guilds (servers) the bot is connected to. Returns guild IDs, names, and icons.
+  provider: discord
+  endpoint: /users/@me/guilds
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - guilds
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing guilds
+    properties:
+      limit:
+        type: integer
+        description: "Number of guilds (default 100, max 200)"
+        default: 100
+      after:
+        type: string
+        description: "Guild ID to get guilds after"
+    required: []
+
+- slug: discord_get_guild
+  name: Get Guild
+  description: |
+    Get information about a specific guild (server). Returns name, description, member count, and features.
+  provider: discord
+  endpoint: /guilds/{guild_id}
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - guilds
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting guild info
+    properties:
+      guild_id:
+        type: string
+        description: "Guild/server ID"
+    required:
+      - guild_id
+
+- slug: discord_list_channels
+  name: List Channels
+  description: |
+    List all channels in a guild. Returns channel IDs, names, and types.
+  provider: discord
+  endpoint: /guilds/{guild_id}/channels
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - channels
+    - list
+    - guild
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      guild_id:
+        type: string
+        description: "Guild/server ID"
+    required:
+      - guild_id
+
+- slug: discord_get_channel
+  name: Get Channel
+  description: |
+    Get information about a specific channel.
+  provider: discord
+  endpoint: /channels/{channel_id}
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting channel info
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID"
+    required:
+      - channel_id
+
+- slug: discord_list_messages
+  name: List Messages
+  description: |
+    List messages in a channel. Returns recent messages with author info.
+  provider: discord
+  endpoint: /channels/{channel_id}/messages
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - messages
+    - read
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID"
+      limit:
+        type: integer
+        description: "Number of messages (default 50, max 100)"
+        default: 50
+      before:
+        type: string
+        description: "Message ID to get messages before"
+    required:
+      - channel_id
+
+- slug: discord_get_message
+  name: Get Message
+  description: |
+    Get a specific message by ID.
+  provider: discord
+  endpoint: /channels/{channel_id}/messages/{message_id}
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID"
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - channel_id
+      - message_id
+
+- slug: discord_post_message
+  name: Post Message
+  description: |
+    Send a message to a Discord channel.
+  provider: discord
+  endpoint: /channels/{channel_id}/messages
+  method: POST
+  scopes:
+    - bot
+  tags:
+    - messages
+    - create
+    - send
+  input_schema:
+    type: object
+    description: Parameters for posting a message
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID"
+      content:
+        type: string
+        description: "Message content (max 2000 chars)"
+    required:
+      - channel_id
+      - content
+
+- slug: discord_list_members
+  name: List Members
+  description: |
+    List members in a guild. Requires permission to view member list.
+  provider: discord
+  endpoint: /guilds/{guild_id}/members
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - members
+    - guild
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      guild_id:
+        type: string
+        description: "Guild/server ID"
+      limit:
+        type: integer
+        description: "Number of members (default 20, max 100)"
+        default: 20
+    required:
+      - guild_id
+
+- slug: discord_get_member
+  name: Get Member
+  description: |
+    Get information about a specific guild member.
+  provider: discord
+  endpoint: /guilds/{guild_id}/members/{user_id}
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - members
+    - guild
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting member info
+    properties:
+      guild_id:
+        type: string
+        description: "Guild/server ID"
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - guild_id
+      - user_id
+
+- slug: discord_list_roles
+  name: List Roles
+  description: |
+    List all roles in a guild. Returns role IDs, names, colors, and permissions.
+  provider: discord
+  endpoint: /guilds/{guild_id}/roles
+  method: GET
+  scopes:
+    - bot
+  tags:
+    - roles
+    - guild
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties:
+      guild_id:
+        type: string
+        description: "Guild/server ID"
+    required:
+      - guild_id

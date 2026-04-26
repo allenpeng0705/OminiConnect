@@ -1,0 +1,234 @@
+# Hibob Service User Tools - Allowlist
+# Curated subset of Hibob API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. hibob_list_employees          - List employees
+# 2. hibob_get_employee            - Get employee details
+# 3. hibob_list_departments        - List departments
+# 4. hibob_get_department          - Get department details
+# 5. hibob_list_jobs               - List job titles
+# 6. hibob_get_job                  - Get job title details
+# 7. hibob_list_named_lists         - List named lists
+# 8. hibob_get_named_list          - Get named list details
+# 9. hibob_list_anniversaries       - List anniversaries
+# 10. hibob_list_birthdays          - List birthdays
+
+- slug: hibob_list_employees
+  name: List Employees
+  description: |
+    List all employees in Hibob.
+    Returns employee details including name, email, and status.
+  provider: hibob-service-user
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: hibob_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about a specific employee.
+    Includes profile, role, and company details.
+  provider: hibob-service-user
+  endpoint: /v1/employees/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: hibob_list_departments
+  name: List Departments
+  description: |
+    List all departments in Hibob.
+    Returns department details including name and manager.
+  provider: hibob-service-user
+  endpoint: /v1/company/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: hibob_get_department
+  name: Get Department
+  description: |
+    Get detailed information about a specific department.
+    Includes department members and settings.
+  provider: hibob-service-user
+  endpoint: /v1/company/departments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      id:
+        type: string
+        description: "Department ID"
+    required:
+      - id
+
+- slug: hibob_list_jobs
+  name: List Job Titles
+  description: |
+    List all job titles in Hibob.
+    Returns job title details including level and department.
+  provider: hibob-service-user
+  endpoint: /v1/company/job-titles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing job titles
+    properties: {}
+    required: []
+
+- slug: hibob_get_job
+  name: Get Job Title
+  description: |
+    Get detailed information about a specific job title.
+    Includes job title details and employees.
+  provider: hibob-service-user
+  endpoint: /v1/company/job-titles/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job title
+    properties:
+      id:
+        type: string
+        description: "Job title ID"
+    required:
+      - id
+
+- slug: hibob_list_named_lists
+  name: List Named Lists
+  description: |
+    List all named lists in Hibob.
+    Returns named list details including type and values.
+  provider: hibob-service-user
+  endpoint: /v1/company/named-lists
+  method: GET
+  scopes:
+    - read
+  tags:
+    - named_lists
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing named lists
+    properties: {}
+    required: []
+
+- slug: hibob_get_named_list
+  name: Get Named List
+  description: |
+    Get detailed information about a specific named list.
+    Includes list values and settings.
+  provider: hibob-service-user
+  endpoint: /v1/company/named-lists/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - named_lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a named list
+    properties:
+      id:
+        type: string
+        description: "Named list ID"
+    required:
+      - id
+
+- slug: hibob_list_anniversaries
+  name: List Anniversaries
+  description: |
+    List upcoming work anniversaries.
+    Returns employee anniversaries with dates.
+  provider: hibob-service-user
+  endpoint: /v1/employees/anniversaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - anniversaries
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing anniversaries
+    properties:
+      months_ahead:
+        type: integer
+        description: "Months ahead to look"
+        default: 1
+    required: []
+
+- slug: hibob_list_birthdays
+  name: List Birthdays
+  description: |
+    List upcoming employee birthdays.
+    Returns employee birthdays with dates.
+  provider: hibob-service-user
+  endpoint: /v1/employees/birthdays
+  method: GET
+  scopes:
+    - read
+  tags:
+    - birthdays
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing birthdays
+    properties:
+      months_ahead:
+        type: integer
+        description: "Months ahead to look"
+        default: 1
+    required: []

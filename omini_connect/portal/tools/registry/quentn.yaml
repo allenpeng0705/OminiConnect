@@ -1,0 +1,279 @@
+# Quentn Tools - Allowlist
+# Curated subset of Quentn REST API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. quentn_list_contacts        - List all contacts
+# 2. quentn_get_contact          - Get a specific contact
+# 3. quentn_create_contact       - Create a new contact
+# 4. quentn_update_contact        - Update an existing contact
+# 5. quentn_delete_contact        - Delete a contact
+# 6. quentn_list_campaigns        - List all campaigns
+# 7. quentn_get_campaign          - Get campaign details
+# 8. quentn_list_forms            - List all forms
+# 9. quentn_get_form              - Get form details
+# 10. quentn_create_task          - Create a task
+
+- slug: quentn_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a paginated list of all contacts in your Quentn account.
+  provider: quentn
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts to return (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: quentn_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by ID.
+  provider: quentn
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "The contact ID"
+    required:
+      - id
+
+- slug: quentn_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in your Quentn account.
+  provider: quentn
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Email address of the contact"
+      firstName:
+        type: string
+        description: "First name of the contact"
+      lastName:
+        type: string
+        description: "Last name of the contact"
+      phone:
+        type: string
+        description: "Phone number of the contact"
+    required:
+      - email
+
+- slug: quentn_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact's information.
+  provider: quentn
+  endpoint: /contacts/{id}
+  method: PUT
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      id:
+        type: integer
+        description: "The contact ID"
+      email:
+        type: string
+        description: "Updated email address"
+      firstName:
+        type: string
+        description: "Updated first name"
+      lastName:
+        type: string
+        description: "Updated last name"
+      phone:
+        type: string
+        description: "Updated phone number"
+    required:
+      - id
+
+- slug: quentn_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact from your Quentn account.
+  provider: quentn
+  endpoint: /contacts/{id}
+  method: DELETE
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      id:
+        type: integer
+        description: "The contact ID to delete"
+    required:
+      - id
+
+- slug: quentn_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve a list of all email campaigns in your Quentn account.
+  provider: quentn
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - email
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Number of campaigns to return"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: active, paused, draft"
+    required: []
+
+- slug: quentn_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign by ID.
+  provider: quentn
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - email
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: integer
+        description: "The campaign ID"
+    required:
+      - id
+
+- slug: quentn_list_forms
+  name: List Forms
+  description: |
+    Retrieve a list of all forms in your Quentn account.
+  provider: quentn
+  endpoint: /forms
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - forms
+    - landing-pages
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties:
+      limit:
+        type: integer
+        description: "Number of forms to return"
+        default: 20
+    required: []
+
+- slug: quentn_get_form
+  name: Get Form
+  description: |
+    Get details of a specific form by ID.
+  provider: quentn
+  endpoint: /forms/{id}
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - forms
+    - landing-pages
+  input_schema:
+    type: object
+    description: Parameters for getting a form
+    properties:
+      id:
+        type: integer
+        description: "The form ID"
+    required:
+      - id
+
+- slug: quentn_create_task
+  name: Create Task
+  description: |
+    Create a new task in your Quentn account.
+  provider: quentn
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Title of the task"
+      contactId:
+        type: integer
+        description: "Associated contact ID"
+      dueDate:
+        type: string
+        description: "Due date for the task (ISO 8601 format)"
+      priority:
+        type: string
+        description: "Priority: low, normal, high"
+        default: normal
+    required:
+      - title

@@ -1,0 +1,283 @@
+# Gorgias Basic Tools - Allowlist
+# Curated subset of Gorgias API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gorgias_list_tickets         - List support tickets
+# 2. gorgias_get_ticket           - Get ticket details
+# 3. gorgias_create_ticket         - Create a new ticket
+# 4. gorgias_update_ticket        - Update a ticket
+# 5. gorgias_list_customers       - List customers
+# 6. gorgias_get_customer         - Get customer details
+# 7. gorgias_list_messages        - List messages
+# 8. gorgias_create_message       - Create a message
+# 9. gorgias_list_macros          - List macros
+# 10. gorgias_list_users           - List agents/users
+
+- slug: gorgias_list_tickets
+  name: List Tickets
+  description: |
+    List all support tickets with optional filtering.
+    Returns ticket details including subject, status, assignee, and customer.
+  provider: gorgias-basic
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - list
+    - support
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, pending, solved, spam"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: gorgias_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a specific ticket.
+    Includes messages, customer info, and metadata.
+  provider: gorgias-basic
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - id
+
+- slug: gorgias_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new support ticket.
+    Set subject, customer, assignee, and initial message.
+  provider: gorgias-basic
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tickets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "Ticket subject"
+      customer_email:
+        type: string
+        description: "Customer email"
+      assignee_email:
+        type: string
+        description: "Assignee email"
+      status:
+        type: string
+        description: "Status: open, pending, solved"
+        default: open
+      priority:
+        type: string
+        description: "Priority: low, medium, high, urgent"
+        default: medium
+    required:
+      - subject
+      - customer_email
+
+- slug: gorgias_update_ticket
+  name: Update Ticket
+  description: |
+    Update an existing ticket.
+    Change status, assignee, or priority.
+  provider: gorgias-basic
+  endpoint: /tickets/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - tickets
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+      status:
+        type: string
+        description: "New status"
+      assignee_email:
+        type: string
+        description: "New assignee email"
+      priority:
+        type: string
+        description: "New priority"
+    required:
+      - id
+
+- slug: gorgias_list_customers
+  name: List Customers
+  description: |
+    List all customers in your Gorgias account.
+    Returns customer details including email, name, and company.
+  provider: gorgias-basic
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: gorgias_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+    Includes contact info, ticket history, and notes.
+  provider: gorgias-basic
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: gorgias_list_messages
+  name: List Messages
+  description: |
+    List messages for a specific ticket.
+    Returns message details including sender, body, and timestamp.
+  provider: gorgias-basic
+  endpoint: /tickets/{ticket_id}/messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      ticket_id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - ticket_id
+
+- slug: gorgias_create_message
+  name: Create Message
+  description: |
+    Create a new message in a ticket.
+    Add a reply or note to an existing ticket.
+  provider: gorgias-basic
+  endpoint: /tickets/{ticket_id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      ticket_id:
+        type: integer
+        description: "Ticket ID"
+      body:
+        type: string
+        description: "Message body"
+      is_note:
+        type: boolean
+        description: "Is this a note (internal)?"
+        default: false
+    required:
+      - ticket_id
+      - body
+
+- slug: gorgias_list_macros
+  name: List Macros
+  description: |
+    List all available macros in your Gorgias account.
+    Macros are templated responses for common tickets.
+  provider: gorgias-basic
+  endpoint: /macros
+  method: GET
+  scopes:
+    - read
+  tags:
+    - macros
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing macros
+    properties: {}
+    required: []
+
+- slug: gorgias_list_users
+  name: List Users
+  description: |
+    List all agents/users in your Gorgias account.
+    Returns user details including email, name, and role.
+  provider: gorgias-basic
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []

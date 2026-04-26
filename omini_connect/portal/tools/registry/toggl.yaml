@@ -1,0 +1,506 @@
+# Toggl Tools - Allowlist
+# Curated subset of Toggl Track API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. toggl_list_time_entries          - List time entries
+# 2. toggl_get_time_entry             - Get time entry details
+# 3. toggl_create_time_entry          - Create a new time entry
+# 4. toggl_update_time_entry          - Update a time entry
+# 5. toggl_list_projects              - List projects
+# 6. toggl_get_project                - Get project details
+# 7. toggl_list_clients               - List clients
+# 8. toggl_get_client                 - Get client details
+# 9. toggl_get_weekly_report          - Get weekly report
+# 10. toggl_list_workspaces           - List workspaces
+
+- slug: toggl_list_time_entries
+  name: List Time Entries
+  description: |
+    Retrieve time entries with optional workspace and date filtering.
+  provider: toggl
+  endpoint: /me/time-entries
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      start_date:
+        type: string
+        description: "Filter entries from this date"
+      end_date:
+        type: string
+        description: "Filter entries until this date"
+      workspace_id:
+        type: integer
+        description: "Filter by workspace ID"
+    required: []
+
+- slug: toggl_get_time_entry
+  name: Get Time Entry
+  description: |
+    Retrieve details of a specific time entry by ID.
+  provider: toggl
+  endpoint: /time-entries/{id}
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: integer
+        description: "The ID of the time entry"
+    required:
+      - id
+
+- slug: toggl_create_time_entry
+  name: Create Time Entry
+  description: |
+    Create a new time entry in Toggl.
+  provider: toggl
+  endpoint: /time-entries
+  method: POST
+  scopes:
+    - time_entries:write
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for creating a time entry
+    properties:
+      description:
+        type: string
+        description: "Description of the work done"
+      start:
+        type: string
+        description: "Start time in ISO 8601 format"
+      duration:
+        type: integer
+        description: "Duration in seconds"
+      project_id:
+        type: integer
+        description: "Optional project ID to associate"
+    required:
+      - description
+      - start
+
+- slug: toggl_update_time_entry
+  name: Update Time Entry
+  description: |
+    Update an existing time entry.
+  provider: toggl
+  endpoint: /time-entries/{id}
+  method: PUT
+  scopes:
+    - time_entries:write
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for updating a time entry
+    properties:
+      id:
+        type: integer
+        description: "The ID of the time entry to update"
+      description:
+        type: string
+        description: "Updated description"
+      duration:
+        type: integer
+        description: "Updated duration in seconds"
+    required:
+      - id
+
+- slug: toggl_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects in a workspace.
+  provider: toggl
+  endpoint: /workspaces/{workspace_id}/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      workspace_id:
+        type: integer
+        description: "The workspace ID"
+    required:
+      - workspace_id
+
+- slug: toggl_get_project
+  name: Get Project
+  description: |
+    Retrieve details of a specific project by ID.
+  provider: toggl
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "The ID of the project"
+    required:
+      - id
+
+- slug: toggl_list_clients
+  name: List Clients
+  description: |
+    Retrieve all clients in a workspace.
+  provider: toggl
+  endpoint: /workspaces/{workspace_id}/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      workspace_id:
+        type: integer
+        description: "The workspace ID"
+    required:
+      - workspace_id
+
+- slug: toggl_get_client
+  name: Get Client
+  description: |
+    Retrieve details of a specific client by ID.
+  provider: toggl
+  endpoint: /clients/{id}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: integer
+        description: "The ID of the client"
+    required:
+      - id
+
+- slug: toggl_get_weekly_report
+  name: Get Weekly Report
+  description: |
+    Get a weekly time report for a workspace.
+  provider: toggl
+  endpoint: /reports/weekly
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for weekly report
+    properties:
+      workspace_id:
+        type: integer
+        description: "The workspace ID"
+      start_date:
+        type: string
+        description: "Start date for the report"
+    required:
+      - workspace_id
+
+- slug: toggl_list_workspaces
+  name: List Workspaces
+  description: |
+    Retrieve all workspaces for the user.
+  provider: toggl
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: toggl_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries with optional filtering by date range, project, or workspace.
+  provider: toggl
+  endpoint: /api/v9/time_entries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_entries
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      workspaceId:
+        type: integer
+        description: "Workspace ID"
+      projectId:
+        type: integer
+        description: "Project ID"
+    required: []
+
+- slug: toggl_get_time_entry
+  name: Get Time Entry
+  description: |
+    Get detailed information about a specific time entry.
+  provider: toggl
+  endpoint: /api/v9/time_entries/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+    required:
+      - id
+
+- slug: toggl_create_time_entry
+  name: Create Time Entry
+  description: |
+    Create a new time entry.
+  provider: toggl
+  endpoint: /api/v9/time_entries
+  method: POST
+  scopes:
+    - write
+  tags:
+    - time_entries
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a time entry
+    properties:
+      description:
+        type: string
+        description: "Time entry description"
+      start:
+        type: string
+        description: "Start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in seconds"
+      projectId:
+        type: integer
+        description: "Project ID"
+      workspaceId:
+        type: integer
+        description: "Workspace ID"
+    required:
+      - workspaceId
+
+- slug: toggl_update_time_entry
+  name: Update Time Entry
+  description: |
+    Update an existing time entry.
+  provider: toggl
+  endpoint: /api/v9/time_entries/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - time_entries
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+      description:
+        type: string
+        description: "New description"
+      start:
+        type: string
+        description: "New start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "New duration in seconds"
+      projectId:
+        type: integer
+        description: "New project ID"
+    required:
+      - id
+
+- slug: toggl_list_projects
+  name: List Projects
+  description: |
+    List all projects in a workspace.
+  provider: toggl
+  endpoint: /api/v9/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      workspaceId:
+        type: integer
+        description: "Workspace ID"
+    required:
+      - workspaceId
+
+- slug: toggl_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: toggl
+  endpoint: /api/v9/projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id
+
+- slug: toggl_create_project
+  name: Create Project
+  description: |
+    Create a new project in a workspace.
+  provider: toggl
+  endpoint: /api/v9/projects
+  method: POST
+  scopes:
+    - write
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      workspaceId:
+        type: integer
+        description: "Workspace ID"
+      clientId:
+        type: integer
+        description: "Client ID"
+      color:
+        type: string
+        description: "Project color"
+      active:
+        type: boolean
+        description: "Is project active (default true)"
+    required:
+      - name
+      - workspaceId
+
+- slug: toggl_list_clients
+  name: List Clients
+  description: |
+    List all clients in a workspace.
+  provider: toggl
+  endpoint: /api/v9/clients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      workspaceId:
+        type: integer
+        description: "Workspace ID"
+    required:
+      - workspaceId
+
+- slug: toggl_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+  provider: toggl
+  endpoint: /api/v9/clients/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: integer
+        description: "Client ID"
+    required:
+      - id
+
+- slug: toggl_get_current_user
+  name: Get Current User
+  description: |
+    Get information about the currently authenticated user.
+  provider: toggl
+  endpoint: /api/v9/me
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

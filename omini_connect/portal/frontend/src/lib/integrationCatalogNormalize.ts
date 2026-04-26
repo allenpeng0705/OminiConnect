@@ -19,6 +19,14 @@ export function normalizeCatalogRow(r: unknown): IntegrationCatalogRow | null {
   const logo_url = typeof o.logo_url === 'string' ? o.logo_url : '';
   const auth_mode = typeof o.auth_mode === 'string' ? o.auth_mode : undefined;
   const docs = typeof o.docs === 'string' ? o.docs : undefined;
+  // available_scopes: array of strings, each scope string
+  let available_scopes: string[] | undefined;
+  if (Array.isArray(o.available_scopes)) {
+    available_scopes = o.available_scopes
+      .map((s) => (typeof s === 'string' ? s.trim() : ''))
+      .filter(Boolean);
+    if (available_scopes.length === 0) available_scopes = undefined;
+  }
   return {
     name,
     display_name,
@@ -26,12 +34,14 @@ export function normalizeCatalogRow(r: unknown): IntegrationCatalogRow | null {
     auth_mode,
     categories: normalizeCategories(o.categories),
     docs,
+    ...(available_scopes ? { available_scopes } : {}),
   };
 }
 
 export function providerSearchBlob(p: IntegrationCatalogRow): string {
   const cats = (p.categories || []).join(' ');
-  return `${p.name} ${p.display_name} ${cats} ${p.auth_mode || ''}`.toLowerCase();
+  const scopes = (p.available_scopes || []).join(' ');
+  return `${p.name} ${p.display_name} ${cats} ${p.auth_mode || ''} ${scopes}`.toLowerCase();
 }
 
 /** Normalize raw API JSON into sorted rows (by display name). */

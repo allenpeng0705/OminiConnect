@@ -1,0 +1,277 @@
+- slug: front_more_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve a list of conversations from your Front workspace.
+    Supports filtering by status, inbox, and contact.
+  provider: front_more
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      q:
+        type: object
+        description: "Query object for filtering"
+        properties:
+          status:
+            type: string
+            description: "Filter by status: open, closed, all"
+            enum: [open, closed, all]
+          inbox_id:
+            type: string
+            description: "Filter by inbox ID"
+          contact_id:
+            type: string
+            description: "Filter by contact ID"
+      page_token:
+        type: string
+        description: "Pagination token"
+      limit:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 25
+    required: []
+
+- slug: front_more_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation including messages, metadata, and participants.
+  provider: front_more
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes:
+    - conversation
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - conversation_id
+
+- slug: front_more_create_message
+  name: Create Message
+  description: |
+    Send a message or reply to a conversation in Front.
+    Can send via email, chat, or other channels.
+  provider: front_more
+  endpoint: /messages
+  method: POST
+  scopes:
+    - message
+  tags:
+    - messages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID to reply to"
+      type:
+        type: string
+        description: "Message type: reply, note, or direct"
+        enum: [reply, note, direct]
+      body:
+        type: string
+        description: "Message body (HTML or plain text)"
+      author_id:
+        type: string
+        description: "Teammate ID sending the message"
+      channel_id:
+        type: string
+        description: "Channel ID to send through"
+      to:
+        type: array
+        items:
+          type: object
+        description: "Recipients array with contact_id or email"
+    required:
+      - conversation_id
+      - body
+
+- slug: front_more_list_channels
+  name: List Channels
+  description: |
+    Retrieve a list of channels (inboxes) configured in your Front workspace.
+    Channels represent different communication channels like email, chat, SMS, etc.
+  provider: front_more
+  endpoint: /channels
+  method: GET
+  scopes:
+    - channel
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      page_token:
+        type: string
+        description: "Pagination token"
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: front_more_get_channel
+  name: Get Channel
+  description: |
+    Get details of a specific channel including settings and configuration.
+  provider: front_more
+  endpoint: /channels/{channel_id}
+  method: GET
+  scopes:
+    - channel
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID (path parameter)"
+    required:
+      - channel_id
+
+- slug: front_more_list_teammates
+  name: List Teammates
+  description: |
+    Retrieve a list of teammates in your Front workspace.
+    Shows admin status, availability, and permissions.
+  provider: front_more
+  endpoint: /teammates
+  method: GET
+  scopes:
+    - teammate
+  tags:
+    - teammates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teammates
+    properties:
+      page_token:
+        type: string
+        description: "Pagination token"
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: front_more_get_teammate
+  name: Get Teammate
+  description: |
+    Get detailed information about a specific teammate including their profile, role, and assignment rules.
+  provider: front_more
+  endpoint: /teammates/{teammate_id}
+  method: GET
+  scopes:
+    - teammate
+  tags:
+    - teammates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a teammate
+    properties:
+      teammate_id:
+        type: string
+        description: "Teammate ID (path parameter)"
+    required:
+      - teammate_id
+
+- slug: front_more_list_templates
+  name: List Templates
+  description: |
+    Retrieve a list of message templates in your Front workspace.
+    Templates are reusable messages for common responses.
+  provider: front_more
+  endpoint: /templates
+  method: GET
+  scopes:
+    - template
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      type:
+        type: string
+        description: "Template type: text, html, or email"
+        enum: [text, html, email]
+      page_token:
+        type: string
+        description: "Pagination token"
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: front_more_get_template
+  name: Get Template
+  description: |
+    Get details of a specific template including the body and variables.
+  provider: front_more
+  endpoint: /templates/{template_id}
+  method: GET
+  scopes:
+    - template
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "Template ID (path parameter)"
+    required:
+      - template_id
+
+- slug: front_more_list_rules
+  name: List Rules
+  description: |
+    Retrieve a list of automation rules in your Front workspace.
+    Rules automatically assign conversations, add tags, or trigger actions.
+  provider: front_more
+  endpoint: /rules
+  method: GET
+  scopes:
+    - rule
+  tags:
+    - rules
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing rules
+    properties:
+      page_token:
+        type: string
+        description: "Pagination token"
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []

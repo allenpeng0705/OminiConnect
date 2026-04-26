@@ -1,0 +1,247 @@
+- slug: n8n_list_workflows
+  name: List Workflows
+  description: |
+    Retrieve a list of all workflows.
+  provider: n8n
+  endpoint: /workflows
+  method: GET
+  scopes:
+    - workflow:read
+  tags:
+    - workflows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workflows
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of workflows to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: n8n_get_workflow
+  name: Get Workflow
+  description: |
+    Retrieve details of a specific workflow by its ID.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}
+  method: GET
+  scopes:
+    - workflow:read
+  tags:
+    - workflows
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow"
+    required:
+      - workflow_id
+
+- slug: n8n_create_workflow
+  name: Create Workflow
+  description: |
+    Create a new workflow with specified nodes and connections.
+  provider: n8n
+  endpoint: /workflows
+  method: POST
+  scopes:
+    - workflow:write
+  tags:
+    - workflows
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a workflow
+    properties:
+      name:
+        type: string
+        description: "Name of the workflow"
+      nodes:
+        type: array
+        description: "Array of node configurations"
+      connections:
+        type: object
+        description: "Object defining node connections"
+    required:
+      - name
+
+- slug: n8n_update_workflow
+  name: Update Workflow
+  description: |
+    Update an existing workflow's configuration.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}
+  method: PUT
+  scopes:
+    - workflow:write
+  tags:
+    - workflows
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow"
+      name:
+        type: string
+        description: "Updated name of the workflow"
+      nodes:
+        type: array
+        description: "Updated array of node configurations"
+      connections:
+        type: object
+        description: "Updated object defining node connections"
+    required:
+      - workflow_id
+
+- slug: n8n_delete_workflow
+  name: Delete Workflow
+  description: |
+    Delete a workflow by its ID.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}
+  method: DELETE
+  scopes:
+    - workflow:delete
+  tags:
+    - workflows
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow to delete"
+    required:
+      - workflow_id
+
+- slug: n8n_list_executions
+  name: List Executions
+  description: |
+    Retrieve a list of executions, optionally filtered by workflow.
+  provider: n8n
+  endpoint: /executions
+  method: GET
+  scopes:
+    - execution:read
+  tags:
+    - executions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing executions
+    properties:
+      workflow_id:
+        type: string
+        description: "Filter by workflow ID"
+      limit:
+        type: integer
+        description: "Maximum number of executions to return (default 50)"
+      status:
+        type: string
+        description: "Filter by status (success, error, running)"
+    required: []
+
+- slug: n8n_get_execution
+  name: Get Execution
+  description: |
+    Retrieve details of a specific execution by its ID.
+  provider: n8n
+  endpoint: /executions/{execution_id}
+  method: GET
+  scopes:
+    - execution:read
+  tags:
+    - executions
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting an execution
+    properties:
+      execution_id:
+        type: string
+        description: "The unique identifier of the execution"
+    required:
+      - execution_id
+
+- slug: n8n_run_workflow
+  name: Run Workflow
+  description: |
+    Trigger a manual run of a workflow with optional input data.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}/run
+  method: POST
+  scopes:
+    - workflow:execute
+  tags:
+    - workflows
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for running a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow to run"
+      start_nodes:
+        type: array
+        description: "Optional array of node names to start from"
+      destination_node:
+        type: string
+        description: "Optional node name to stop at"
+    required:
+      - workflow_id
+
+- slug: n8n_activate_workflow
+  name: Activate Workflow
+  description: |
+    Activate a workflow to enable scheduled and trigger-based runs.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}/activate
+  method: POST
+  scopes:
+    - workflow:write
+  tags:
+    - workflows
+    - activate
+  input_schema:
+    type: object
+    description: Parameters for activating a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow to activate"
+    required:
+      - workflow_id
+
+- slug: n8n_deactivate_workflow
+  name: Deactivate Workflow
+  description: |
+    Deactivate a workflow to disable scheduled and trigger-based runs.
+  provider: n8n
+  endpoint: /workflows/{workflow_id}/deactivate
+  method: POST
+  scopes:
+    - workflow:write
+  tags:
+    - workflows
+    - deactivate
+  input_schema:
+    type: object
+    description: Parameters for deactivating a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "The unique identifier of the workflow to deactivate"
+    required:
+      - workflow_id

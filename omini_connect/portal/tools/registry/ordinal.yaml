@@ -1,0 +1,260 @@
+# Ordinal Tools - Allowlist
+# Curated subset of Ordinal API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ordinal_list_workspaces          - List workspaces
+# 2. ordinal_get_workspace           - Get workspace details
+# 3. ordinal_list_projects           - List projects
+# 4. ordinal_get_project             - Get project details
+# 5. ordinal_create_task             - Create task
+# 6. ordinal_list_tasks              - List tasks
+# 7. ordinal_update_task             - Update task
+# 8. ordinal_get_comments            - Get comments
+# 9. ordinal_create_comment          - Create comment
+# 10. ordinal_search                - Search
+
+- slug: ordinal_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces in Ordinal.
+  provider: ordinal
+  endpoint: /v1/workspace
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - productivity
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties: {}
+    required: []
+
+- slug: ordinal_get_workspace
+  name: Get Workspace
+  description: |
+    Get detailed information for a specific workspace.
+  provider: ordinal
+  endpoint: /v1/workspace/{id}
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - productivity
+    - workspaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      id:
+        type: string
+        description: "Workspace ID"
+    required:
+      - id
+
+- slug: ordinal_list_projects
+  name: List Projects
+  description: |
+    List all projects in Ordinal.
+  provider: ordinal
+  endpoint: /v1/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - productivity
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+    required: []
+
+- slug: ordinal_get_project
+  name: Get Project
+  description: |
+    Get detailed information for a specific project.
+  provider: ordinal
+  endpoint: /v1/projects/{id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - productivity
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: ordinal_create_task
+  name: Create Task
+  description: |
+    Create a new task in Ordinal.
+  provider: ordinal
+  endpoint: /v1/tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - productivity
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      project_id:
+        type: string
+        description: "Project ID"
+      description:
+        type: string
+        description: "Task description"
+    required:
+      - title
+      - project_id
+
+- slug: ordinal_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Ordinal.
+  provider: ordinal
+  endpoint: /v1/tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - productivity
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: ordinal_update_task
+  name: Update Task
+  description: |
+    Update an existing task.
+  provider: ordinal
+  endpoint: /v1/tasks/{id}
+  method: PUT
+  scopes:
+    - tasks:write
+  tags:
+    - productivity
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+      title:
+        type: string
+        description: "Task title"
+      status:
+        type: string
+        description: "Task status"
+    required:
+      - id
+
+- slug: ordinal_get_comments
+  name: Get Comments
+  description: |
+    Get comments for a task or project.
+  provider: ordinal
+  endpoint: /v1/comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - productivity
+    - comments
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for getting comments
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: ordinal_create_comment
+  name: Create Comment
+  description: |
+    Create a comment on a task.
+  provider: ordinal
+  endpoint: /v1/comments
+  method: POST
+  scopes:
+    - comments:write
+  tags:
+    - productivity
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+      content:
+        type: string
+        description: "Comment content"
+    required:
+      - task_id
+      - content
+
+- slug: ordinal_search
+  name: Search
+  description: |
+    Search for tasks, projects, and other records.
+  provider: ordinal
+  endpoint: /v1/search
+  method: GET
+  scopes:
+    - search:read
+  tags:
+    - productivity
+    - search
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query

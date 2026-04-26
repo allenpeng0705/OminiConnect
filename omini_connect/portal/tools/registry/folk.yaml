@@ -1,0 +1,242 @@
+# Folk Tools - Allowlist
+# Curated subset of Folk API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. folk_list_contacts         - List contacts
+# 2. folk_get_contact          - Get contact details
+# 3. folk_create_contact       - Create a contact
+# 4. folk_update_contact       - Update contact details
+# 5. folk_list_deals           - List deals
+# 6. folk_get_deal             - Get deal details
+# 7. folk_list_companies       - List companies
+# 8. folk_get_company          - Get company details
+# 9. folk_list_tasks          - List tasks
+# 10. folk_get_task           - Get task details
+
+- slug: folk_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: folk
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: folk_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: folk
+  endpoint: /v1/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: folk_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: folk
+  endpoint: /v1/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating contact
+    properties:
+      name:
+        type: string
+        description: "Contact name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - name
+
+- slug: folk_update_contact
+  name: Update Contact
+  description: |
+    Update contact details.
+  provider: folk
+  endpoint: /v1/contacts/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+      name:
+        type: string
+        description: "Contact name"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - id
+
+- slug: folk_list_deals
+  name: List Deals
+  description: |
+    List all deals.
+  provider: folk
+  endpoint: /v1/deals
+  method: GET
+  scopes: []
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      stage:
+        type: string
+        description: "Filter by stage"
+    required: []
+
+- slug: folk_get_deal
+  name: Get Deal
+  description: |
+    Get details of a specific deal.
+  provider: folk
+  endpoint: /v1/deals/{id}
+  method: GET
+  scopes: []
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting deal
+    properties:
+      id:
+        type: string
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: folk_list_companies
+  name: List Companies
+  description: |
+    List all companies.
+  provider: folk
+  endpoint: /v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: folk_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: folk
+  endpoint: /v1/companies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: folk_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: folk
+  endpoint: /v1/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: folk_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task.
+  provider: folk
+  endpoint: /v1/tasks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id

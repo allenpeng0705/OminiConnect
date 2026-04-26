@@ -1,0 +1,335 @@
+# GoToMeeting Tools - Allowlist
+# Curated subset of GoToMeeting API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gotomeeting_list_meetings      - List all meetings
+# 2. gotomeeting_get_meeting       - Get meeting details
+# 3. gotomeeting_create_meeting   - Create a new meeting
+# 4. gotomeeting_update_meeting   - Update a meeting
+# 5. gotomeeting_delete_meeting   - Delete a meeting
+# 6. gotomeeting_list_participants - List meeting participants
+# 7. gotomeeting_get_participant  - Get participant details
+# 8. gotomeeting_list_recordings   - List meeting recordings
+# 9. gotomeeting_get_recording    - Get recording details
+# 10. gotomeeting_list_users       - List users
+
+- slug: gotomeeting_list_meetings
+  name: List Meetings
+  description: |
+    List all scheduled meetings for the authenticated user.
+    Filter by date range, topic, or status.
+  provider: gotomeeting
+  endpoint: /meetings
+  method: GET
+  scopes:
+    - meetings:r
+  tags:
+    - meetings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      subject:
+        type: string
+        description: "Filter by subject"
+      status:
+        type: string
+        description: "Filter by status (active, started, ended)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: gotomeeting_get_meeting
+  name: Get Meeting
+  description: |
+    Get detailed information about a specific meeting including
+    participants, timing, and meeting settings.
+  provider: gotomeeting
+  endpoint: /meetings/{meetingId}
+  method: GET
+  scopes:
+    - meetings:r
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: integer
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: gotomeeting_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new GoToMeeting session with subject, start time,
+    duration, and optional participant list.
+  provider: gotomeeting
+  endpoint: /meetings
+  method: POST
+  scopes:
+    - meetings:w
+  tags:
+    - meetings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      subject:
+        type: string
+        description: "Meeting subject"
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      password:
+        type: string
+        description: "Meeting password"
+      timezone:
+        type: string
+        description: "Timezone"
+      conference_call_info:
+        type: string
+        description: "Conference call settings"
+      auto_record:
+        type: boolean
+        description: "Auto-record meeting"
+        default: false
+    required:
+      - subject
+      - start_time
+
+- slug: gotomeeting_update_meeting
+  name: Update Meeting
+  description: |
+    Update an existing meeting subject, time, or settings.
+    Cannot update a meeting that has already started.
+  provider: gotomeeting
+  endpoint: /meetings/{meetingId}
+  method: PUT
+  scopes:
+    - meetings:w
+  tags:
+    - meetings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a meeting
+    properties:
+      meetingId:
+        type: integer
+        description: "Meeting ID"
+      subject:
+        type: string
+        description: "New meeting subject"
+      start_time:
+        type: string
+        description: "New start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "New end time (ISO 8601)"
+      duration:
+        type: integer
+        description: "New duration in minutes"
+      password:
+        type: string
+        description: "New meeting password"
+      timezone:
+        type: string
+        description: "Timezone"
+    required:
+      - meetingId
+
+- slug: gotomeeting_delete_meeting
+  name: Delete Meeting
+  description: |
+    Delete a scheduled meeting. Cannot delete meetings
+    that are currently in progress.
+  provider: gotomeeting
+  endpoint: /meetings/{meetingId}
+  method: DELETE
+  scopes:
+    - meetings:d
+  tags:
+    - meetings
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a meeting
+    properties:
+      meetingId:
+        type: integer
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: gotomeeting_list_participants
+  name: List Participants
+  description: |
+    List all participants for a specific meeting including
+    join time, leave time, and email addresses.
+  provider: gotomeeting
+  endpoint: /meetings/{meetingId}/participants
+  method: GET
+  scopes:
+    - meetings:r
+  tags:
+    - participants
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      meetingId:
+        type: integer
+        description: "Meeting ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required:
+      - meetingId
+
+- slug: gotomeeting_get_participant
+  name: Get Participant
+  description: |
+    Get detailed information about a specific participant
+    including their join/leave times and device info.
+  provider: gotomeeting
+  endpoint: /meetings/{meetingId}/participants/{participantId}
+  method: GET
+  scopes:
+    - meetings:r
+  tags:
+    - participants
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a participant
+    properties:
+      meetingId:
+        type: integer
+        description: "Meeting ID"
+      participantId:
+        type: integer
+        description: "Participant ID"
+    required:
+      - meetingId
+      - participantId
+
+- slug: gotomeeting_list_recordings
+  name: List Recordings
+  description: |
+    List all recorded meetings. Filter by date range,
+    subject, or meeting ID.
+  provider: gotomeeting
+  endpoint: /recordings
+  method: GET
+  scopes:
+    - recordings:r
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      meeting_id:
+        type: integer
+        description: "Filter by meeting ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: gotomeeting_get_recording
+  name: Get Recording
+  description: |
+    Get detailed information about a specific recording
+    including download URL, duration, and file size.
+  provider: gotomeeting
+  endpoint: /recordings/{recordingId}
+  method: GET
+  scopes:
+    - recordings:r
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recordingId:
+        type: integer
+        description: "Recording ID"
+    required:
+      - recordingId
+
+- slug: gotomeeting_list_users
+  name: List Users
+  description: |
+    List all users in the account. Requires admin permissions
+    for listing all users.
+  provider: gotomeeting
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:r
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []

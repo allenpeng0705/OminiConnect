@@ -1,0 +1,187 @@
+# Tally Tools - Allowlist
+# Curated subset of Tally API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. tally_list_forms           - List all forms in your Tally account
+# # 2. tally_get_form           - Get details of a specific form
+# # 3. tally_get_form_schema           - Get the schema/fields of a form
+# # 4. tally_list_submissions           - List all submissions for a form
+# # 5. tally_get_submission           - Get a specific submission
+# # 6. tally_create_form           - Create a new form
+# # 7. tally_update_form           - Update an existing form
+# # 8. tally_delete_form           - Delete a form
+# # 9. tally_calculate_form           - Calculate form metrics
+# # 10. tally_list_webhooks           - List webhooks for a form
+
+- slug: tally_list_forms
+  name: List Forms
+  description: |
+    List all forms in your Tally account
+  provider: tally
+  endpoint: /forms
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for list forms
+    properties: {}
+    required: []
+
+- slug: tally_get_form
+  name: Get Form
+  description: |
+    Get details of a specific form
+  provider: tally
+  endpoint: /forms/{form_id}
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for get form
+    properties: {}
+    required: []
+
+- slug: tally_get_form_schema
+  name: Get Form Schema
+  description: |
+    Get the schema/fields of a form
+  provider: tally
+  endpoint: /forms/{form_id}/schema
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for get form schema
+    properties: {}
+    required: []
+
+- slug: tally_list_submissions
+  name: List Submissions
+  description: |
+    List all submissions for a form
+  provider: tally
+  endpoint: /forms/{form_id}/submissions
+  method: GET
+  scopes:
+    - submissions:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for list submissions
+    properties: {}
+    required: []
+
+- slug: tally_get_submission
+  name: Get Submission
+  description: |
+    Get a specific submission
+  provider: tally
+  endpoint: /forms/{form_id}/submissions/{submission_id}
+  method: GET
+  scopes:
+    - submissions:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for get submission
+    properties: {}
+    required: []
+
+- slug: tally_create_form
+  name: Create Form
+  description: |
+    Create a new form
+  provider: tally
+  endpoint: /forms
+  method: POST
+  scopes:
+    - forms:write
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for create form
+    properties: {}
+    required: []
+
+- slug: tally_update_form
+  name: Update Form
+  description: |
+    Update an existing form
+  provider: tally
+  endpoint: /forms/{form_id}
+  method: PUT
+  scopes:
+    - forms:write
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for update form
+    properties: {}
+    required: []
+
+- slug: tally_delete_form
+  name: Delete Form
+  description: |
+    Delete a form
+  provider: tally
+  endpoint: /forms/{form_id}
+  method: DELETE
+  scopes:
+    - forms:write
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for delete form
+    properties: {}
+    required: []
+
+- slug: tally_calculate_form
+  name: Calculate Form
+  description: |
+    Calculate form metrics
+  provider: tally
+  endpoint: /forms/{form_id}/calculate
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for calculate form
+    properties: {}
+    required: []
+
+- slug: tally_list_webhooks
+  name: List Webhooks
+  description: |
+    List webhooks for a form
+  provider: tally
+  endpoint: /forms/{form_id}/webhooks
+  method: GET
+  scopes:
+    - forms:read
+  tags:
+    - tally
+  input_schema:
+    type: object
+    description: Parameters for list webhooks
+    properties: {}
+    required: []
+

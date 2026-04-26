@@ -1,0 +1,257 @@
+# Pivotal Tracker Tools - Allowlist
+# Curated subset of Pivotal Tracker API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pivotaltracker_list_projects        - List projects
+# 2. pivotaltracker_get_project         - Get project details
+# 3. pivotaltracker_list_stories        - List stories
+# 4. pivotaltracker_get_story          - Get story details
+# 5. pivotaltracker_list_tasks          - List tasks
+# 6. pivotaltracker_get_task           - Get task details
+# 7. pivotaltracker_list_members       - List project members
+# 8. pivotaltracker_get_iteration      - Get iteration details
+# 9. pivotaltracker_list_iterations    - List iterations
+# 10. pivotaltracker_get_account       - Get account info
+
+- slug: pivotaltracker_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: pivotaltracker
+  endpoint: /projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - agile
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties: {}
+    required: []
+
+- slug: pivotaltracker_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - agile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: pivotaltracker_list_stories
+  name: List Stories
+  description: |
+    List all stories in a project.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/stories
+  method: GET
+  scopes: []
+  tags:
+    - stories
+    - agile
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing stories
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      storyType:
+        type: string
+        description: "Filter by type (feature, bug, chore, release)"
+      state:
+        type: string
+        description: "Filter by state"
+    required:
+      - projectId
+
+- slug: pivotaltracker_get_story
+  name: Get Story
+  description: |
+    Get detailed information about a specific story.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/stories/{storyId}
+  method: GET
+  scopes: []
+  tags:
+    - stories
+    - agile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a story
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      storyId:
+        type: string
+        description: "Story ID"
+    required:
+      - projectId
+      - storyId
+
+- slug: pivotaltracker_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in a story.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/stories/{storyId}/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - agile
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      storyId:
+        type: string
+        description: "Story ID"
+    required:
+      - projectId
+      - storyId
+
+- slug: pivotaltracker_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/stories/{storyId}/tasks/{taskId}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - agile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      storyId:
+        type: string
+        description: "Story ID"
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - projectId
+      - storyId
+      - taskId
+
+- slug: pivotaltracker_list_members
+  name: List Members
+  description: |
+    List all members in a project.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/memberships
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: pivotaltracker_get_iteration
+  name: Get Iteration
+  description: |
+    Get detailed information about a specific iteration.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/iterations/{iterationId}
+  method: GET
+  scopes: []
+  tags:
+    - iterations
+    - agile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an iteration
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      iterationId:
+        type: string
+        description: "Iteration ID"
+    required:
+      - projectId
+      - iterationId
+
+- slug: pivotaltracker_list_iterations
+  name: List Iterations
+  description: |
+    List all iterations in a project.
+  provider: pivotaltracker
+  endpoint: /projects/{projectId}/iterations
+  method: GET
+  scopes: []
+  tags:
+    - iterations
+    - agile
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing iterations
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      limit:
+        type: integer
+        description: "Number of iterations to return"
+        default: 10
+    required:
+      - projectId
+
+- slug: pivotaltracker_get_account
+  name: Get Account
+  description: |
+    Get account information.
+  provider: pivotaltracker
+  endpoint: /accounts
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account info
+    properties: {}
+    required: []

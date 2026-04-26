@@ -1,0 +1,259 @@
+- slug: clio_list_clients
+  name: List Clients
+  description: |
+    Retrieve all clients in your legal practice.
+  provider: clio
+  endpoint: /clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Optional client filters
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive, archived)"
+      limit:
+        type: integer
+        description: "Maximum number of clients to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: clio_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+  provider: clio
+  endpoint: /clients/{client_id}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Client ID parameter
+    properties:
+      client_id:
+        type: string
+        description: "Unique identifier of the client"
+    required:
+      - client_id
+
+- slug: clio_create_client
+  name: Create Client
+  description: |
+    Add a new client to your legal practice management.
+  provider: clio
+  endpoint: /clients
+  method: POST
+  scopes:
+    - clients:write
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Client creation parameters
+    properties:
+      name:
+        type: string
+        description: "Client or company name"
+      type:
+        type: string
+        description: "Client type (individual, corporation)"
+      email:
+        type: string
+        description: "Primary email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - name
+
+- slug: clio_list_matters
+  name: List Matters
+  description: |
+    Retrieve all matters (cases) in your practice.
+  provider: clio
+  endpoint: /matters
+  method: GET
+  scopes:
+    - matters:read
+  tags:
+    - matters
+  input_schema:
+    type: object
+    description: Matter filter options
+    properties:
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      status:
+        type: string
+        description: "Filter by status (open, closed, pending)"
+      limit:
+        type: integer
+        description: "Maximum number of matters to return"
+    required: []
+
+- slug: clio_get_matter
+  name: Get Matter
+  description: |
+    Get detailed information about a specific matter.
+  provider: clio
+  endpoint: /matters/{matter_id}
+  method: GET
+  scopes:
+    - matters:read
+  tags:
+    - matters
+  input_schema:
+    type: object
+    description: Matter ID parameter
+    properties:
+      matter_id:
+        type: string
+        description: "Unique identifier of the matter"
+    required:
+      - matter_id
+
+- slug: clio_create_matter
+  name: Create Matter
+  description: |
+    Open a new matter (case) for a client.
+  provider: clio
+  endpoint: /matters
+  method: POST
+  scopes:
+    - matters:write
+  tags:
+    - matters
+  input_schema:
+    type: object
+    description: Matter creation parameters
+    properties:
+      client_id:
+        type: string
+        description: "Associated client ID"
+      name:
+        type: string
+        description: "Matter title or case name"
+      matter_type:
+        type: string
+        description: "Type of matter (litigation, corporate, family)"
+      case_number:
+        type: string
+        description: "Case or file number"
+    required:
+      - client_id
+      - name
+
+- slug: clio_list_documents
+  name: List Documents
+  description: |
+    Retrieve all documents in your practice.
+  provider: clio
+  endpoint: /documents
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+  input_schema:
+    type: object
+    description: Document filter options
+    properties:
+      matter_id:
+        type: string
+        description: "Filter by matter ID"
+      type:
+        type: string
+        description: "Filter by document type"
+      limit:
+        type: integer
+        description: "Maximum number of documents to return"
+    required: []
+
+- slug: clio_get_document
+  name: Get Document
+  description: |
+    Get metadata and details of a specific document.
+  provider: clio
+  endpoint: /documents/{document_id}
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+  input_schema:
+    type: object
+    description: Document ID parameter
+    properties:
+      document_id:
+        type: string
+        description: "Unique identifier of the document"
+    required:
+      - document_id
+
+- slug: clio_list_calendar_events
+  name: List Calendar Events
+  description: |
+    Retrieve all calendar events and deadlines.
+  provider: clio
+  endpoint: /calendar/events
+  method: GET
+  scopes:
+    - calendar:read
+  tags:
+    - calendar
+  input_schema:
+    type: object
+    description: Calendar event filters
+    properties:
+      matter_id:
+        type: string
+        description: "Filter by matter ID"
+      start_date:
+        type: string
+        description: "Filter events from this date"
+      end_date:
+        type: string
+        description: "Filter events until this date"
+      limit:
+        type: integer
+        description: "Maximum number of events to return"
+    required: []
+
+- slug: clio_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve all tasks in your practice management.
+  provider: clio
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Task filter options
+    properties:
+      matter_id:
+        type: string
+        description: "Filter by matter ID"
+      status:
+        type: string
+        description: "Filter by status (pending, completed, overdue)"
+      assignee:
+        type: string
+        description: "Filter by assignee ID"
+      limit:
+        type: integer
+        description: "Maximum number of tasks to return"
+    required: []

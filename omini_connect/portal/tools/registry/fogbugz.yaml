@@ -1,0 +1,261 @@
+# FogBugz Tools - Allowlist
+# Curated subset of FogBugz REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fogbugz_list_cases         - List cases
+# 2. fogbugz_get_case          - Get case details
+# 3. fogbugz_create_case       - Create a case
+# 4. fogbugz_update_case       - Update a case
+# 5. fogbugz_list_projects     - List projects
+# 6. fogbugz_get_project        - Get project details
+# 7. fogbugz_list_users        - List users
+# 8. fogbugz_get_user          - Get user details
+# 9. fogbugz_list_mailboxes    - List mailboxes
+# 10. fogbugz_get_mailbox      - Get mailbox details
+
+- slug: fogbugz_list_cases
+  name: List Cases
+  description: |
+    Retrieve a list of cases, optionally filtered by project or status.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for listing cases
+    properties:
+      project:
+        type: integer
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by case status"
+      assigned_to:
+        type: integer
+        description: "Filter by assignee user ID"
+      limit:
+        type: integer
+        description: "Maximum number of cases to return (default: 20)"
+    required: []
+
+- slug: fogbugz_get_case
+  name: Get Case
+  description: |
+    Retrieve details for a specific case by its ID.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for getting a case
+    properties:
+      case_id:
+        type: integer
+        description: "The case ID"
+    required:
+      - case_id
+
+- slug: fogbugz_create_case
+  name: Create Case
+  description: |
+    Create a new case in a project.
+  provider: fogbugz
+  endpoint: /api/query
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for creating a case
+    properties:
+      title:
+        type: string
+        description: "Case title"
+      project:
+        type: integer
+        description: "Project ID to create the case in"
+      description:
+        type: string
+        description: "Case description"
+      priority:
+        type: integer
+        description: "Priority level (1-4)"
+      assigned_to:
+        type: integer
+        description: "Assignee user ID"
+    required:
+      - title
+      - project
+
+- slug: fogbugz_update_case
+  name: Update Case
+  description: |
+    Update an existing case.
+  provider: fogbugz
+  endpoint: /api/query
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for updating a case
+    properties:
+      case_id:
+        type: integer
+        description: "The case ID"
+      title:
+        type: string
+        description: "Updated case title"
+      description:
+        type: string
+        description: "Updated case description"
+      status:
+        type: string
+        description: "Updated status"
+      priority:
+        type: integer
+        description: "Updated priority level"
+      assigned_to:
+        type: integer
+        description: "Updated assignee user ID"
+      resolved:
+        type: boolean
+        description: "Mark case as resolved"
+    required:
+      - case_id
+
+- slug: fogbugz_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return (default: 20)"
+    required: []
+
+- slug: fogbugz_get_project
+  name: Get Project
+  description: |
+    Retrieve details for a specific project by its ID.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: fogbugz_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      active:
+        type: boolean
+        description: "Filter by active status"
+    required: []
+
+- slug: fogbugz_get_user
+  name: Get User
+  description: |
+    Retrieve details for a specific user by their ID.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: integer
+        description: "The user ID"
+    required:
+      - user_id
+
+- slug: fogbugz_list_mailboxes
+  name: List Mailboxes
+  description: |
+    Retrieve a list of mailboxes in the system.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mailboxes
+  input_schema:
+    type: object
+    description: Parameters for listing mailboxes
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of mailboxes to return (default: 20)"
+    required: []
+
+- slug: fogbugz_get_mailbox
+  name: Get Mailbox
+  description: |
+    Retrieve details for a specific mailbox by its ID.
+  provider: fogbugz
+  endpoint: /api/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mailboxes
+  input_schema:
+    type: object
+    description: Parameters for getting a mailbox
+    properties:
+      mailbox_id:
+        type: integer
+        description: "The mailbox ID"
+    required:
+      - mailbox_id

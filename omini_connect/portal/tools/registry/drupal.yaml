@@ -1,0 +1,258 @@
+# Drupal Tools - Allowlist
+# Curated subset of the Drupal API for AI agent use.
+# Two-Step auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. drupal_list_nodes               - List content nodes
+# 2. drupal_get_node                 - Get node details
+# 3. drupal_create_node              - Create a node
+# 4. drupal_update_node              - Update a node
+# 5. drupal_list_users               - List users
+# 6. drupal_get_user                 - Get user details
+# 7. drupal_list_taxonomies          - List taxonomy terms
+# 8. drupal_get_taxonomy             - Get taxonomy details
+# 9. drupal_list_comments            - List comments
+# 10. drupal_get_comment            - Get comment details
+
+- slug: drupal_list_nodes
+  name: List Nodes
+  description: |
+    List all content nodes in Drupal.
+  provider: drupal
+  endpoint: /node
+  method: GET
+  scopes: []
+  tags:
+    - nodes
+    - content
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing nodes
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      type:
+        type: string
+        description: "Filter by content type"
+    required: []
+
+- slug: drupal_get_node
+  name: Get Node
+  description: |
+    Get details of a specific content node.
+  provider: drupal
+  endpoint: /node/{node_id}
+  method: GET
+  scopes: []
+  tags:
+    - nodes
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a node
+    properties:
+      node_id:
+        type: string
+        description: "Node ID"
+    required:
+      - node_id
+
+- slug: drupal_create_node
+  name: Create Node
+  description: |
+    Create a new content node in Drupal.
+  provider: drupal
+  endpoint: /node
+  method: POST
+  scopes: []
+  tags:
+    - nodes
+    - content
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a node
+    properties:
+      type:
+        type: string
+        description: "Content type"
+        default: article
+      title:
+        type: string
+        description: "Node title"
+      body:
+        type: string
+        description: "Node body content"
+    required:
+      - title
+
+- slug: drupal_update_node
+  name: Update Node
+  description: |
+    Update an existing content node.
+  provider: drupal
+  endpoint: /node/{node_id}
+  method: PUT
+  scopes: []
+  tags:
+    - nodes
+    - content
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a node
+    properties:
+      node_id:
+        type: string
+        description: "Node ID"
+      title:
+        type: string
+        description: "Node title"
+      body:
+        type: string
+        description: "Node body content"
+    required:
+      - node_id
+
+- slug: drupal_list_users
+  name: List Users
+  description: |
+    List all users in Drupal.
+  provider: drupal
+  endpoint: /user
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - membership
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: drupal_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: drupal
+  endpoint: /user/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - membership
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: drupal_list_taxonomies
+  name: List Taxonomies
+  description: |
+    List all taxonomy terms.
+  provider: drupal
+  endpoint: /taxonomy_term
+  method: GET
+  scopes: []
+  tags:
+    - taxonomies
+    - content
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing taxonomies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      vocabulary:
+        type: string
+        description: "Filter by vocabulary name"
+    required: []
+
+- slug: drupal_get_taxonomy
+  name: Get Taxonomy
+  description: |
+    Get details of a specific taxonomy term.
+  provider: drupal
+  endpoint: /taxonomy_term/{term_id}
+  method: GET
+  scopes: []
+  tags:
+    - taxonomies
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a taxonomy
+    properties:
+      term_id:
+        type: string
+        description: "Term ID"
+    required:
+      - term_id
+
+- slug: drupal_list_comments
+  name: List Comments
+  description: |
+    List all comments.
+  provider: drupal
+  endpoint: /comment
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - discussion
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      node_id:
+        type: string
+        description: "Filter by node ID"
+    required: []
+
+- slug: drupal_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment.
+  provider: drupal
+  endpoint: /comment/{comment_id}
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - discussion
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID"
+    required:
+      - comment_id

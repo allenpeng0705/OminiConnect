@@ -1,0 +1,230 @@
+# Factorial Tools - Allowlist
+# Curated subset of Factorial HR API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. factorial_list_employees         - List employees
+# 2. factorial_get_employee         - Get employee details
+# 3. factorial_list_leaves          - List leave requests
+# 4. factorial_get_leave           - Get leave details
+# 5. factorial_list_departments    - List departments
+# 6. factorial_list_positions      - List positions
+# 7. factorial_list_companies       - List companies
+# 8. factorial_get_company         - Get company details
+# 9. factorial_list_contracts      - List contracts
+# 10. factorial_list_attendances  - List attendances
+
+- slug: factorial_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: factorial
+  endpoint: /api/v1/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: factorial_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: factorial
+  endpoint: /api/v1/employees/{id}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: factorial_list_leaves
+  name: List Leaves
+  description: |
+    List all leave requests.
+  provider: factorial
+  endpoint: /api/v1/leaves
+  method: GET
+  scopes: []
+  tags:
+    - leaves
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leaves
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, approved, rejected)"
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+    required: []
+
+- slug: factorial_get_leave
+  name: Get Leave
+  description: |
+    Get details of a specific leave request.
+  provider: factorial
+  endpoint: /api/v1/leaves/{id}
+  method: GET
+  scopes: []
+  tags:
+    - leaves
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting leave
+    properties:
+      id:
+        type: string
+        description: "Leave ID"
+    required:
+      - id
+
+- slug: factorial_list_departments
+  name: List Departments
+  description: |
+    List all departments.
+  provider: factorial
+  endpoint: /api/v1/departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: factorial_list_positions
+  name: List Positions
+  description: |
+    List all positions/job titles.
+  provider: factorial
+  endpoint: /api/v1/positions
+  method: GET
+  scopes: []
+  tags:
+    - positions
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing positions
+    properties: {}
+    required: []
+
+- slug: factorial_list_companies
+  name: List Companies
+  description: |
+    List all companies.
+  provider: factorial
+  endpoint: /api/v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: factorial_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: factorial
+  endpoint: /api/v1/companies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: factorial_list_contracts
+  name: List Contracts
+  description: |
+    List all employment contracts.
+  provider: factorial
+  endpoint: /api/v1/contracts
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+    required: []
+
+- slug: factorial_list_attendances
+  name: List Attendances
+  description: |
+    List attendance records.
+  provider: factorial
+  endpoint: /api/v1/attendances
+  method: GET
+  scopes: []
+  tags:
+    - attendances
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing attendances
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

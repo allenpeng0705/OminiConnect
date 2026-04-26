@@ -1,0 +1,255 @@
+# Google Contacts Tools - Allowlist
+# Curated subset of Google People API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_contacts_list_connections   - List contacts
+# 2. google_contacts_get_person        - Get contact details
+# 3. google_contacts_create_contact    - Create contact
+# 4. google_contacts_update_contact    - Update contact
+# 5. google_contacts_delete_contact    - Delete contact
+# 6. google_contacts_list_contact_groups - List contact groups
+# 7. google_contacts_get_contact_group - Get contact group
+# 8. google_contacts_search_contacts   - Search contacts
+# 9. google_contacts_batch_get        - Batch get contacts
+# 10. google_contacts_list_other_contacts - List other contacts
+
+- slug: google_contacts_list_connections
+  name: List Contacts
+  description: |
+    List contacts from Google Contacts.
+  provider: google-contacts
+  endpoint: /v1/people/me/connections
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      pageSize:
+        type: integer
+        description: "Number of contacts"
+        default: 20
+      personFields:
+        type: string
+        description: "Fields to return"
+        default: names,emailAddresses,phoneNumbers
+    required: []
+
+- slug: google_contacts_get_person
+  name: Get Contact
+  description: |
+    Get detailed information about a contact.
+  provider: google-contacts
+  endpoint: /v1/people/{resourceName}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      resourceName:
+        type: string
+        description: "Contact resource name"
+    required:
+      - resourceName
+
+- slug: google_contacts_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact.
+  provider: google-contacts
+  endpoint: /v1/people
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      givenName:
+        type: string
+        description: "First name"
+      familyName:
+        type: string
+        description: "Last name"
+      emailAddress:
+        type: string
+        description: "Email address"
+      phoneNumber:
+        type: string
+        description: "Phone number"
+    required:
+      - givenName
+
+- slug: google_contacts_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: google-contacts
+  endpoint: /v1/people/{resourceName}
+  method: PATCH
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      resourceName:
+        type: string
+        description: "Contact resource name"
+      givenName:
+        type: string
+        description: "New first name"
+      familyName:
+        type: string
+        description: "New last name"
+    required:
+      - resourceName
+
+- slug: google_contacts_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact.
+  provider: google-contacts
+  endpoint: /v1/people/{resourceName}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      resourceName:
+        type: string
+        description: "Contact resource name"
+    required:
+      - resourceName
+
+- slug: google_contacts_list_contact_groups
+  name: List Contact Groups
+  description: |
+    List contact groups.
+  provider: google-contacts
+  endpoint: /v1/contactGroups
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts.readonly
+  tags:
+    - contact-groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contact groups
+    properties: {}
+
+- slug: google_contacts_get_contact_group
+  name: Get Contact Group
+  description: |
+    Get a contact group by ID.
+  provider: google-contacts
+  endpoint: /v1/contactGroups/{resourceName}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts.readonly
+  tags:
+    - contact-groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact group
+    properties:
+      resourceName:
+        type: string
+        description: "Contact group resource name"
+    required:
+      - resourceName
+
+- slug: google_contacts_search_contacts
+  name: Search Contacts
+  description: |
+    Search contacts by query.
+  provider: google-contacts
+  endpoint: /v1/people:searchContacts
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching contacts
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required:
+      - query
+
+- slug: google_contacts_batch_get
+  name: Batch Get Contacts
+  description: |
+    Get multiple contacts by resource names.
+  provider: google-contacts
+  endpoint: /v1/people:batchGet
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts
+  tags:
+    - contacts
+    - batch
+  input_schema:
+    type: object
+    description: Parameters for batch getting contacts
+    properties:
+      resourceNames:
+        type: array
+        description: "Contact resource names"
+    required:
+      - resourceNames
+
+- slug: google_contacts_list_other_contacts
+  name: List Other Contacts
+  description: |
+    List contacts outside user's direct contacts.
+  provider: google-contacts
+  endpoint: /v1/people/me/otherContacts
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts.other.readonly
+  tags:
+    - contacts
+    - other
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing other contacts
+    properties:
+      pageSize:
+        type: integer
+        description: "Number of contacts"
+        default: 20
+    required: []

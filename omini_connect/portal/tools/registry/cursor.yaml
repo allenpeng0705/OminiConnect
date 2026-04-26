@@ -1,0 +1,258 @@
+# Cursor Tools - Allowlist
+# Curated subset of the Cursor AI API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cursor_list_projects          - List projects
+# 2. cursor_get_project            - Get project details
+# 3. cursor_list_files             - List files in project
+# 4. cursor_get_file               - Get file content
+# 5. cursor_create_file            - Create a new file
+# 6. cursor_update_file            - Update file content
+# 7. cursor_delete_file            - Delete a file
+# 8. cursor_list_changelists       - List changelists
+# 9. cursor_create_changelist      - Create a changelist
+# 10. cursor_get_me                - Get current user info
+
+- slug: cursor_list_projects
+  name: List Projects
+  description: |
+    List all projects in Cursor workspace.
+  provider: cursor
+  endpoint: /v0/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: cursor_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including settings and metadata.
+  provider: cursor
+  endpoint: /v0/projects/{project_id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: cursor_list_files
+  name: List Files
+  description: |
+    List all files in a Cursor project.
+  provider: cursor
+  endpoint: /v0/files
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - project
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      path:
+        type: string
+        description: "Folder path within project"
+        default: /
+    required:
+      - project_id
+
+- slug: cursor_get_file
+  name: Get File
+  description: |
+    Get content of a specific file in Cursor.
+  provider: cursor
+  endpoint: /v0/files/{file_id}
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - project
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: cursor_create_file
+  name: Create File
+  description: |
+    Create a new file in Cursor project.
+  provider: cursor
+  endpoint: /v0/files
+  method: POST
+  scopes: []
+  tags:
+    - files
+    - project
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a file
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      path:
+        type: string
+        description: "File path within project"
+      content:
+        type: string
+        description: "File content"
+    required:
+      - project_id
+      - path
+      - content
+
+- slug: cursor_update_file
+  name: Update File
+  description: |
+    Update content of an existing file in Cursor.
+  provider: cursor
+  endpoint: /v0/files/{file_id}
+  method: PUT
+  scopes: []
+  tags:
+    - files
+    - project
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      content:
+        type: string
+        description: "New file content"
+    required:
+      - file_id
+      - content
+
+- slug: cursor_delete_file
+  name: Delete File
+  description: |
+    Delete a file from Cursor project.
+  provider: cursor
+  endpoint: /v0/files/{file_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - files
+    - project
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: cursor_list_changelists
+  name: List Changelists
+  description: |
+    List all changelists (code changes) in a project.
+  provider: cursor
+  endpoint: /v0/changelists
+  method: GET
+  scopes: []
+  tags:
+    - changelists
+    - code
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing changelists
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - project_id
+
+- slug: cursor_create_changelist
+  name: Create Changelist
+  description: |
+    Create a new changelist for code changes.
+  provider: cursor
+  endpoint: /v0/changelists
+  method: POST
+  scopes: []
+  tags:
+    - changelists
+    - code
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a changelist
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      name:
+        type: string
+        description: "Changelist name"
+      description:
+        type: string
+        description: "Changelist description"
+    required:
+      - project_id
+      - name
+
+- slug: cursor_get_me
+  name: Get Current User
+  description: |
+    Get information about the currently authenticated Cursor user.
+  provider: cursor
+  endpoint: /v0/me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting current user
+    properties: {}

@@ -1,0 +1,187 @@
+# Sedna (Basic Auth) Tools - Allowlist
+# Curated subset of Sedna (Basic Auth) API for AI agent use.
+# Auth mode: BASIC.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. get_user                                 - Get current user profile
+# 2. list_messages                            - List messages in workspace
+# 3. send_message                             - Send a message
+# 4. list_channels                            - List all channels
+# 5. create_channel                           - Create a new channel
+# 6. get_channel                              - Get channel details
+# 7. list_members                             - List workspace members
+# 8. list_files                               - List files in workspace
+# 9. upload_file                              - Upload a file
+# 10. get_workspace                            - Get workspace details
+
+- slug: get_user
+  name: Get User
+  description: |
+    Get current user profile
+  provider: sedna-basic
+  endpoint: /users/me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_messages
+  name: List Messages
+  description: |
+    List messages in workspace
+  provider: sedna-basic
+  endpoint: /messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: send_message
+  name: Send Message
+  description: |
+    Send a message
+  provider: sedna-basic
+  endpoint: /messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_channels
+  name: List Channels
+  description: |
+    List all channels
+  provider: sedna-basic
+  endpoint: /channels
+  method: GET
+  scopes: []
+  tags:
+    - channels
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_channel
+  name: Create Channel
+  description: |
+    Create a new channel
+  provider: sedna-basic
+  endpoint: /channels
+  method: POST
+  scopes: []
+  tags:
+    - channels
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_channel
+  name: Get Channel
+  description: |
+    Get channel details
+  provider: sedna-basic
+  endpoint: /channels/{id}
+  method: GET
+  scopes: []
+  tags:
+    - channels
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_members
+  name: List Members
+  description: |
+    List workspace members
+  provider: sedna-basic
+  endpoint: /members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_files
+  name: List Files
+  description: |
+    List files in workspace
+  provider: sedna-basic
+  endpoint: /files
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: upload_file
+  name: Upload File
+  description: |
+    Upload a file
+  provider: sedna-basic
+  endpoint: /files
+  method: POST
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_workspace
+  name: Get Workspace
+  description: |
+    Get workspace details
+  provider: sedna-basic
+  endpoint: /workspace
+  method: GET
+  scopes: []
+  tags:
+    - workspace
+    - config
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

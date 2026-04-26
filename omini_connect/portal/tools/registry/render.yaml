@@ -1,0 +1,259 @@
+- slug: render_list_services
+  name: List Services
+  description: |
+    List all services (web services, background workers, cron jobs) in your Render account.
+  provider: render
+  endpoint: /services
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of services to return (default: 100)"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: render_get_service
+  name: Get Service
+  description: |
+    Get details for a specific service by ID.
+  provider: render
+  endpoint: /services/{serviceId}
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      serviceId:
+        type: string
+        description: "The ID of the service"
+    required:
+      - serviceId
+
+- slug: render_create_service
+  name: Create Service
+  description: |
+    Create a new service (web service, background worker, or cron job) on Render.
+  provider: render
+  endpoint: /services
+  method: POST
+  scopes:
+    - services:write
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for creating a service
+    properties:
+      name:
+        type: string
+        description: "Service name"
+      type:
+        type: string
+        description: "Service type: web_service, background_worker, cron_job, private_service"
+      region:
+        type: string
+        description: "Region (e.g., oregon, virginia, frankfurt, singapore)"
+      plan:
+        type: string
+        description: "Plan tier: free, starter, pro, pro_plus"
+      repo:
+        type: string
+        description: "Git repository URL"
+      branch:
+        type: string
+        description: "Branch to deploy"
+      buildCommand:
+        type: string
+        description: "Build command"
+      startCommand:
+        type: string
+        description: "Start command"
+    required:
+      - name
+      - type
+
+- slug: render_update_service
+  name: Update Service
+  description: |
+    Update an existing service's configuration, environment variables, or scaling.
+  provider: render
+  endpoint: /services/{serviceId}
+  method: PATCH
+  scopes:
+    - services:write
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for updating a service
+    properties:
+      serviceId:
+        type: string
+        description: "The ID of the service"
+      name:
+        type: string
+        description: "Updated service name"
+      plan:
+        type: string
+        description: "Updated plan tier"
+      environment:
+        type: string
+        description: "Environment variables as base64 encoded JSON"
+      numInstances:
+        type: integer
+        description: "Number of instances"
+    required:
+      - serviceId
+
+- slug: render_delete_service
+  name: Delete Service
+  description: |
+    Delete a service and all associated resources.
+  provider: render
+  endpoint: /services/{serviceId}
+  method: DELETE
+  scopes:
+    - services:write
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for deleting a service
+    properties:
+      serviceId:
+        type: string
+        description: "The ID of the service to delete"
+    required:
+      - serviceId
+
+- slug: render_list_deploys
+  name: List Deploys
+  description: |
+    List all deployments for a specific service.
+  provider: render
+  endpoint: /services/{serviceId}/deploys
+  method: GET
+  scopes:
+    - deploys:read
+  tags:
+    - deploys
+  input_schema:
+    type: object
+    description: Parameters for listing deploys
+    properties:
+      serviceId:
+        type: string
+        description: "The ID of the service"
+      limit:
+        type: integer
+        description: "Maximum number of deploys to return"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required:
+      - serviceId
+
+- slug: render_get_deploy
+  name: Get Deploy
+  description: |
+    Get details for a specific deployment.
+  provider: render
+  endpoint: /deploys/{deployId}
+  method: GET
+  scopes:
+    - deploys:read
+  tags:
+    - deploys
+  input_schema:
+    type: object
+    description: Parameters for getting a deploy
+    properties:
+      deployId:
+        type: string
+        description: "The ID of the deployment"
+    required:
+      - deployId
+
+- slug: render_create_deploy
+  name: Create Deploy
+  description: |
+    Trigger a new manual deployment for a service.
+  provider: render
+  endpoint: /services/{serviceId}/deploys
+  method: POST
+  scopes:
+    - deploys:write
+  tags:
+    - deploys
+  input_schema:
+    type: object
+    description: Parameters for creating a deploy
+    properties:
+      serviceId:
+        type: string
+        description: "The ID of the service to deploy"
+      clearCache:
+        type: boolean
+        description: "Clear build cache during deployment"
+      sync:
+        type: boolean
+        description: "Wait for deployment to complete"
+    required:
+      - serviceId
+
+- slug: render_list_disks
+  name: List Disks
+  description: |
+    List all persistent disks attached to services.
+  provider: render
+  endpoint: /disks
+  method: GET
+  scopes:
+    - disks:read
+  tags:
+    - disks
+  input_schema:
+    type: object
+    description: Parameters for listing disks
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of disks to return"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: render_get_disk
+  name: Get Disk
+  description: |
+    Get details for a specific persistent disk.
+  provider: render
+  endpoint: /disks/{diskId}
+  method: GET
+  scopes:
+    - disks:read
+  tags:
+    - disks
+  input_schema:
+    type: object
+    description: Parameters for getting a disk
+    properties:
+      diskId:
+        type: string
+        description: "The ID of the disk"
+    required:
+      - diskId

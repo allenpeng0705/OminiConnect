@@ -1,0 +1,225 @@
+# Hover Tools - Allowlist
+# Curated subset of Hover API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. hover_list_projects          - List projects
+# 2. hover_get_project            - Get project details
+# 3. hover_list_captures          - List captures
+# 4. hover_get_capture            - Get capture details
+# 5. hover_list_users             - List users
+# 6. hover_get_user               - Get user details
+# 7. hover_list_devices           - List devices
+# 8. hover_get_device             - Get device details
+# 9. hover_list_alerts            - List alerts
+# 10. hover_list_locations         - List locations
+
+- slug: hover_list_projects
+  name: List Projects
+  description: |
+    List all projects in Hover.
+    Returns project details including name and status.
+  provider: hover
+  endpoint: /api/v1/projects
+  method: GET
+  scopes:
+    - all
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties: {}
+    required: []
+
+- slug: hover_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+    Includes project details and captures.
+  provider: hover
+  endpoint: /api/v1/projects/{id}
+  method: GET
+  scopes:
+    - all
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id
+
+- slug: hover_list_captures
+  name: List Captures
+  description: |
+    List all captures in Hover.
+    Returns capture details including type and date.
+  provider: hover
+  endpoint: /api/v1/captures
+  method: GET
+  scopes:
+    - all
+  tags:
+    - captures
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing captures
+    properties:
+      project_id:
+        type: integer
+        description: "Filter by project ID"
+    required: []
+
+- slug: hover_get_capture
+  name: Get Capture
+  description: |
+    Get detailed information about a specific capture.
+    Includes capture content and metadata.
+  provider: hover
+  endpoint: /api/v1/captures/{id}
+  method: GET
+  scopes:
+    - all
+  tags:
+    - captures
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a capture
+    properties:
+      id:
+        type: integer
+        description: "Capture ID"
+    required:
+      - id
+
+- slug: hover_list_users
+  name: List Users
+  description: |
+    List all users in Hover.
+    Returns user details including name and email.
+  provider: hover
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - all
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: hover_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+    Includes user profile and permissions.
+  provider: hover
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes:
+    - all
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id
+
+- slug: hover_list_devices
+  name: List Devices
+  description: |
+    List all devices in Hover.
+    Returns device details including name and status.
+  provider: hover
+  endpoint: /api/v1/devices
+  method: GET
+  scopes:
+    - all
+  tags:
+    - devices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties: {}
+    required: []
+
+- slug: hover_get_device
+  name: Get Device
+  description: |
+    Get detailed information about a specific device.
+    Includes device settings and status.
+  provider: hover
+  endpoint: /api/v1/devices/{id}
+  method: GET
+  scopes:
+    - all
+  tags:
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      id:
+        type: integer
+        description: "Device ID"
+    required:
+      - id
+
+- slug: hover_list_alerts
+  name: List Alerts
+  description: |
+    List all alerts in Hover.
+    Returns alert details including type and status.
+  provider: hover
+  endpoint: /api/v1/alerts
+  method: GET
+  scopes:
+    - all
+  tags:
+    - alerts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties: {}
+    required: []
+
+- slug: hover_list_locations
+  name: List Locations
+  description: |
+    List all locations in Hover.
+    Returns location details including address and devices.
+  provider: hover
+  endpoint: /api/v1/locations
+  method: GET
+  scopes:
+    - all
+  tags:
+    - locations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []

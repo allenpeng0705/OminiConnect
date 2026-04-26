@@ -1,0 +1,295 @@
+# Autodesk Tools - Allowlist
+# Curated subset of the Autodesk Construction Cloud API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. autodesk_list_projects        - List projects in the account
+# 2. autodesk_get_project          - Get details of a specific project
+# 3. autodesk_list_users           - List users in a project
+# 4. autodesk_get_user              - Get details of a specific user
+# 5. autodesk_list_items           - List items in a project
+# 6. autodesk_get_item              - Get details of a specific item
+# 7. autodesk_list_folders          - List folders in a project
+# 8. autodesk_get_folder            - Get details of a specific folder
+# 9. autodesk_upload_file          - Upload a file to a project
+# 10. autodesk_get_project_details  - Get detailed info about a project
+
+- slug: autodesk_list_projects
+  name: List Projects
+  description: |
+    List all projects in the Autodesk account. Returns a paginated list of projects with details like name, description, and status.
+  provider: autodesk
+  endpoint: /construction/projects
+  method: GET
+  scopes:
+    - account:read
+  tags:
+    - projects
+    - account
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: autodesk_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including name, description, status, and creation date.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}
+  method: GET
+  scopes:
+    - account:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+    required:
+      - project_id
+
+- slug: autodesk_list_users
+  name: List Users
+  description: |
+    List all users in a specific project. Returns user details including email, name, and role.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/users
+  method: GET
+  scopes:
+    - account:read
+  tags:
+    - users
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing project users
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - project_id
+
+- slug: autodesk_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including email, name, company, and project permissions.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/users/{user_id}
+  method: GET
+  scopes:
+    - account:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      user_id:
+        type: string
+        description: "Unique identifier of the user"
+    required:
+      - project_id
+      - user_id
+
+- slug: autodesk_list_items
+  name: List Items
+  description: |
+    List all items (files, models, documents) in a project. Returns item details including name, type, and version.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/items
+  method: GET
+  scopes:
+    - bucket:read
+  tags:
+    - items
+    - files
+    - documents
+  input_schema:
+    type: object
+    description: Parameters for listing project items
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - project_id
+
+- slug: autodesk_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item including name, type, version history, and storage location.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/items/{item_id}
+  method: GET
+  scopes:
+    - bucket:read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      item_id:
+        type: string
+        description: "Unique identifier of the item"
+    required:
+      - project_id
+      - item_id
+
+- slug: autodesk_list_folders
+  name: List Folders
+  description: |
+    List all folders in a project. Returns folder details including name, parent folder, and contents count.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/folders
+  method: GET
+  scopes:
+    - bucket:read
+  tags:
+    - folders
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing project folders
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      parent_folder_id:
+        type: string
+        description: "Filter by parent folder ID"
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - project_id
+
+- slug: autodesk_get_folder
+  name: Get Folder
+  description: |
+    Get details of a specific folder including name, parent folder, and contents.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/folders/{folder_id}
+  method: GET
+  scopes:
+    - bucket:read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      folder_id:
+        type: string
+        description: "Unique identifier of the folder"
+    required:
+      - project_id
+      - folder_id
+
+- slug: autodesk_upload_file
+  name: Upload File
+  description: |
+    Upload a file to a project folder. Supports design files, documents, and other project assets.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/storage
+  method: POST
+  scopes:
+    - bucket:create
+  tags:
+    - files
+    - upload
+    - create
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+      folder_id:
+        type: string
+        description: "Destination folder ID"
+      file_name:
+        type: string
+        description: "Name of the file to upload"
+      content_type:
+        type: string
+        description: "MIME type of the file"
+        default: application/octet-stream
+    required:
+      - project_id
+      - file_name
+
+- slug: autodesk_get_project_details
+  name: Get Project Details
+  description: |
+    Get detailed information about a project including statistics, member count, and storage usage.
+  provider: autodesk
+  endpoint: /construction/projects/{project_id}/details
+  method: GET
+  scopes:
+    - account:read
+  tags:
+    - projects
+    - details
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting project details
+    properties:
+      project_id:
+        type: string
+        description: "Unique identifier of the project"
+    required:
+      - project_id

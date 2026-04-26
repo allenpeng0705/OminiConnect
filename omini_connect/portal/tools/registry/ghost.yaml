@@ -1,0 +1,292 @@
+- slug: ghost_list_posts
+  name: List Posts
+  description: |
+    Retrieve a list of posts from the Ghost CMS.
+  provider: ghost
+  endpoint: /posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 25)"
+      filter:
+        type: string
+        description: "Filter expression (e.g., 'status:published+author:admin')"
+      include:
+        type: string
+        description: "Related resources to include (e.g., 'tags,authors')"
+    required: []
+
+- slug: ghost_get_post
+  name: Get Post
+  description: |
+    Get details about a specific post by its ID or slug.
+  provider: ghost
+  endpoint: /posts/{post_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID or slug"
+      include:
+        type: string
+        description: "Related resources to include (e.g., 'tags,authors')"
+    required:
+      - post_id
+
+- slug: ghost_create_post
+  name: Create Post
+  description: |
+    Create a new post in Ghost.
+  provider: ghost
+  endpoint: /posts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      title:
+        type: string
+        description: "The post title"
+      html:
+        type: string
+        description: "The post content in HTML"
+      markdown:
+        type: string
+        description: "The post content in markdown"
+      status:
+        type: string
+        enum: ["draft", "published", "scheduled"]
+        description: "Publication status"
+      published_at:
+        type: string
+        format: date-time
+        description: "ISO 8601 datetime for scheduled publication"
+      tags:
+        type: array
+        items:
+          type: object
+        description: "Tags to assign to the post"
+      authors:
+        type: array
+        items:
+          type: object
+        description: "Authors to assign to the post"
+    required:
+      - title
+
+- slug: ghost_update_post
+  name: Update Post
+  description: |
+    Update an existing post in Ghost.
+  provider: ghost
+  endpoint: /posts/{post_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for updating a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID or slug"
+      title:
+        type: string
+        description: "Updated post title"
+      html:
+        type: string
+        description: "Updated post content in HTML"
+      markdown:
+        type: string
+        description: "Updated post content in markdown"
+      status:
+        type: string
+        enum: ["draft", "published", "scheduled"]
+        description: "Updated publication status"
+      tags:
+        type: array
+        items:
+          type: object
+        description: "Updated tags"
+    required:
+      - post_id
+
+- slug: ghost_delete_post
+  name: Delete Post
+  description: |
+    Delete a post from Ghost.
+  provider: ghost
+  endpoint: /posts/{post_id}
+  method: DELETE
+  scopes:
+    - delete
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for deleting a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID or slug to delete"
+    required:
+      - post_id
+
+- slug: ghost_list_pages
+  name: List Pages
+  description: |
+    Retrieve a list of pages from the Ghost CMS.
+  provider: ghost
+  endpoint: /pages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 25)"
+      filter:
+        type: string
+        description: "Filter expression"
+      include:
+        type: string
+        description: "Related resources to include"
+    required: []
+
+- slug: ghost_get_page
+  name: Get Page
+  description: |
+    Get details about a specific page by its ID or slug.
+  provider: ghost
+  endpoint: /pages/{page_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      page_id:
+        type: string
+        description: "The page ID or slug"
+      include:
+        type: string
+        description: "Related resources to include"
+    required:
+      - page_id
+
+- slug: ghost_list_members
+  name: List Members
+  description: |
+    Retrieve a list of members from the Ghost CMS.
+  provider: ghost
+  endpoint: /members
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 25)"
+      filter:
+        type: string
+        description: "Filter expression (e.g., 'subscribed:true')"
+      include:
+        type: string
+        description: "Related resources to include"
+    required: []
+
+- slug: ghost_get_member
+  name: Get Member
+  description: |
+    Get details about a specific member by their ID or email.
+  provider: ghost
+  endpoint: /members/{member_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      member_id:
+        type: string
+        description: "The member ID or email"
+      include:
+        type: string
+        description: "Related resources to include"
+    required:
+      - member_id
+
+- slug: ghost_list_tags
+  name: List Tags
+  description: |
+    Retrieve a list of tags from the Ghost CMS.
+  provider: ghost
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 25)"
+      filter:
+        type: string
+        description: "Filter expression"
+      include:
+        type: string
+        description: "Related resources to include"
+    required: []

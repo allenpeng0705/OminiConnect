@@ -1,0 +1,279 @@
+# Apollo Tools - Sales Intelligence Platform
+# Curated subset of Apollo API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. apollo_list_contacts              - List contacts
+# 2. apollo_get_contact               - Get contact details
+# 3. apollo_create_contact             - Create a contact
+# 4. apollo_list_companies             - List companies
+# 5. apollo_get_company                - Get company details
+# 6. apollo_list_campaigns            - List campaigns
+# 7. apollo_get_campaign               - Get campaign details
+# 8. apollo_list_sequences            - List sequences
+# 9. apollo_get_sequence              - Get sequence details
+# 10. apollo_add_contact_to_sequence   - Add contact to sequence
+
+- slug: apollo_list_contacts
+  name: List Contacts
+  description: |
+    List contacts in Apollo. Filter by name, email, company, or campaign.
+  provider: apollo
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts.read
+  tags:
+    - contacts
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., company_id='123')"
+    required: []
+
+- slug: apollo_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about an Apollo contact including contact info and account data.
+  provider: apollo
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes:
+    - contacts.read
+  tags:
+    - contacts
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "The contact ID"
+    required:
+      - contact_id
+
+- slug: apollo_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Apollo with name, email, phone, and company information.
+  provider: apollo
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contacts.write
+  tags:
+    - contacts
+    - sales intelligence
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone_number:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: string
+        description: "Company ID to associate"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - email
+
+- slug: apollo_list_companies
+  name: List Companies
+  description: |
+    List companies in Apollo. Filter by name, industry, or location.
+  provider: apollo
+  endpoint: /companies
+  method: GET
+  scopes:
+    - companies.read
+  tags:
+    - companies
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., industry='Technology')"
+    required: []
+
+- slug: apollo_get_company
+  name: Get Company
+  description: |
+    Get detailed information about an Apollo company including funding and metrics.
+  provider: apollo
+  endpoint: /companies/{company_id}
+  method: GET
+  scopes:
+    - companies.read
+  tags:
+    - companies
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      company_id:
+        type: string
+        description: "The company ID"
+    required:
+      - company_id
+
+- slug: apollo_list_campaigns
+  name: List Campaigns
+  description: |
+    List campaigns in Apollo. Filter by status, type, or team.
+  provider: apollo
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaigns.read
+  tags:
+    - campaigns
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., status='active')"
+    required: []
+
+- slug: apollo_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about an Apollo campaign including contacts and stats.
+  provider: apollo
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns.read
+  tags:
+    - campaigns
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "The campaign ID"
+    required:
+      - campaign_id
+
+- slug: apollo_list_sequences
+  name: List Sequences
+  description: |
+    List email sequences in Apollo. Filter by status or type.
+  provider: apollo
+  endpoint: /sequences
+  method: GET
+  scopes:
+    - sequences.read
+  tags:
+    - sequences
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., status='active')"
+    required: []
+
+- slug: apollo_get_sequence
+  name: Get Sequence
+  description: |
+    Get detailed information about an Apollo sequence including steps and settings.
+  provider: apollo
+  endpoint: /sequences/{sequence_id}
+  method: GET
+  scopes:
+    - sequences.read
+  tags:
+    - sequences
+    - sales intelligence
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      sequence_id:
+        type: string
+        description: "The sequence ID"
+    required:
+      - sequence_id
+
+- slug: apollo_add_contact_to_sequence
+  name: Add Contact to Sequence
+  description: |
+    Add a contact to an Apollo sequence with optional scheduled date.
+  provider: apollo
+  endpoint: /sequence_enrollments
+  method: POST
+  scopes:
+    - sequences.write
+  tags:
+    - sequences
+    - sales intelligence
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding contact to sequence
+    properties:
+      contact_id:
+        type: string
+        description: "The contact ID"
+      sequence_id:
+        type: string
+        description: "The sequence ID"
+      scheduled_for:
+        type: string
+        description: "Schedule date (ISO 8601 format)"
+    required:
+      - contact_id
+      - sequence_id

@@ -1,0 +1,274 @@
+# Harvest Tools - Allowlist
+# Curated subset of Harvest API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. harvest_list_time_entries          - List time entries
+# 2. harvest_get_time_entry             - Get time entry details
+# 3. harvest_create_time_entry          - Create a new time entry
+# 4. harvest_update_time_entry          - Update a time entry
+# 5. harvest_list_projects              - List projects
+# 6. harvest_get_project                - Get project details
+# 7. harvest_list_clients               - List clients
+# 8. harvest_get_client                 - Get client details
+# 9. harvest_list_tasks                 - List tasks
+# 10. harvest_get_task                  - Get task details
+
+- slug: harvest_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries with optional filtering by user, project, or date range.
+  provider: harvest
+  endpoint: /v2/time_entries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_entries
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      userId:
+        type: integer
+        description: "User ID"
+      projectId:
+        type: integer
+        description: "Project ID"
+      from:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+    required: []
+
+- slug: harvest_get_time_entry
+  name: Get Time Entry
+  description: |
+    Get detailed information about a specific time entry.
+  provider: harvest
+  endpoint: /v2/time_entries/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time_entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+    required:
+      - id
+
+- slug: harvest_create_time_entry
+  name: Create Time Entry
+  description: |
+    Create a new time entry.
+  provider: harvest
+  endpoint: /v2/time_entries
+  method: POST
+  scopes:
+    - write
+  tags:
+    - time_entries
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a time entry
+    properties:
+      userId:
+        type: integer
+        description: "User ID"
+      projectId:
+        type: integer
+        description: "Project ID"
+      taskId:
+        type: integer
+        description: "Task ID"
+      spentDate:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+      hours:
+        type: number
+        description: "Hours worked"
+      notes:
+        type: string
+        description: "Notes"
+    required:
+      - projectId
+      - spentDate
+
+- slug: harvest_update_time_entry
+  name: Update Time Entry
+  description: |
+    Update an existing time entry.
+  provider: harvest
+  endpoint: /v2/time_entries/{id}
+  method: PATCH
+  scopes:
+    - write
+  tags:
+    - time_entries
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+      projectId:
+        type: integer
+        description: "New project ID"
+      taskId:
+        type: integer
+        description: "New task ID"
+      spentDate:
+        type: string
+        description: "New date (YYYY-MM-DD)"
+      hours:
+        type: number
+        description: "New hours"
+      notes:
+        type: string
+        description: "New notes"
+    required:
+      - id
+
+- slug: harvest_list_projects
+  name: List Projects
+  description: |
+    List all projects with optional filtering by client or status.
+  provider: harvest
+  endpoint: /v2/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      clientId:
+        type: integer
+        description: "Client ID"
+      isActive:
+        type: boolean
+        description: "Filter by active status"
+    required: []
+
+- slug: harvest_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: harvest
+  endpoint: /v2/projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id
+
+- slug: harvest_list_clients
+  name: List Clients
+  description: |
+    List all clients.
+  provider: harvest
+  endpoint: /v2/clients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      isActive:
+        type: boolean
+        description: "Filter by active status"
+    required: []
+
+- slug: harvest_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+  provider: harvest
+  endpoint: /v2/clients/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: integer
+        description: "Client ID"
+    required:
+      - id
+
+- slug: harvest_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: harvest
+  endpoint: /v2/tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      isActive:
+        type: boolean
+        description: "Filter by active status"
+    required: []
+
+- slug: harvest_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: harvest
+  endpoint: /v2/tasks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id

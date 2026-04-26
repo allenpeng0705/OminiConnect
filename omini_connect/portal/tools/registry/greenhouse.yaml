@@ -1,0 +1,329 @@
+# Greenhouse Tools - Allowlist
+# Curated subset of the Greenhouse Recruiting API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_list_applications   - List all job applications
+# 2. greenhouse_get_application     - Get application details
+# 3. greenhouse_update_application  - Update application status/fields
+# 4. greenhouse_list_jobs           - List all open jobs
+# 5. greenhouse_get_job              - Get job details
+# 6. greenhouse_create_job          - Create a new job posting
+# 7. greenhouse_list_offers        - List offers for candidates
+# 8. greenhouse_get_offer           - Get offer details
+# 9. greenhouse_create_offer        - Create an offer for candidate
+# 10. greenhouse_list_users         - List users (hiring team, recruiters)
+
+- slug: greenhouse_list_applications
+  name: List Applications
+  description: |
+    List all job applications with optional filters for status, job, or date range.
+    Returns candidate info, job applied to, current stage, and application status.
+  provider: greenhouse
+  endpoint: /applications
+  method: GET
+  scopes:
+    - applications:read
+  tags:
+    - applications
+    - recruiting
+    - candidates
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      status:
+        type: string
+        description: "Filter by status: active, rejected, hired, etc."
+      limit:
+        type: integer
+        description: "Number of results (default 100, max 500)"
+        default: 100
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application including candidate profile,
+    interview scorecards, offer details, and activity history.
+  provider: greenhouse
+  endpoint: /applications/{application_id}
+  method: GET
+  scopes:
+    - applications:read
+  tags:
+    - applications
+    - recruiting
+    - candidates
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      application_id:
+        type: integer
+        description: "Application ID"
+    required:
+      - application_id
+
+- slug: greenhouse_update_application
+  name: Update Application
+  description: |
+    Update an application's status, assigned recruiter, or custom fields.
+    Use this to move candidates through hiring stages or reject/hire candidates.
+  provider: greenhouse
+  endpoint: /applications/{application_id}
+  method: PUT
+  scopes:
+    - applications:write
+  tags:
+    - applications
+    - update
+    - recruiting
+  input_schema:
+    type: object
+    description: Application update parameters
+    properties:
+      application_id:
+        type: integer
+        description: "Application ID"
+      status:
+        type: string
+        description: "New status: active, rejected, hired, etc."
+      recruiter_id:
+        type: integer
+        description: "Assign a recruiter by user ID"
+      notes:
+        type: string
+        description: "Add a note to the application"
+    required:
+      - application_id
+
+- slug: greenhouse_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs with optional filters for status, department, or office location.
+    Returns job titles, descriptions, status, and hiring team info.
+  provider: greenhouse
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruiting
+    - openings
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, draft"
+        enum: [open, closed, draft]
+      department_id:
+        type: integer
+        description: "Filter by department ID"
+      office_id:
+        type: integer
+        description: "Filter by office ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job including description, requirements,
+    hiring team, interview plan, and application statistics.
+  provider: greenhouse
+  endpoint: /jobs/{job_id}
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: integer
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: greenhouse_create_job
+  name: Create Job
+  description: |
+    Create a new job posting with title, description, department, and office.
+    Jobs are created in draft status by default and must be published to accept applications.
+  provider: greenhouse
+  endpoint: /jobs
+  method: POST
+  scopes:
+    - jobs:write
+  tags:
+    - jobs
+    - create
+    - recruiting
+  input_schema:
+    type: object
+    description: Job creation parameters
+    properties:
+      title:
+        type: string
+        description: "Job title (required)"
+      departments:
+        type: array
+        items:
+          type: integer
+        description: "Array of department IDs"
+      offices:
+        type: array
+        items:
+          type: integer
+        description: "Array of office IDs"
+      description:
+        type: string
+        description: "Job description (HTML)"
+      status:
+        type: string
+        description: "Job status: open, closed, draft"
+        default: draft
+    required:
+      - title
+
+- slug: greenhouse_list_offers
+  name: List Offers
+  description: |
+    List all offers with optional filters for status, candidate, or job.
+    Returns offer amounts, statuses, start dates, and associated applications.
+  provider: greenhouse
+  endpoint: /offers
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      application_id:
+        type: integer
+        description: "Filter by application ID"
+      status:
+        type: string
+        description: "Filter by status: pending, approved, declined, etc."
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_offer
+  name: Get Offer
+  description: |
+    Get detailed information about a specific offer including compensation details,
+    start date, approval status, and offer letter content.
+  provider: greenhouse
+  endpoint: /offers/{offer_id}
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offer_id:
+        type: integer
+        description: "Offer ID"
+    required:
+      - offer_id
+
+- slug: greenhouse_create_offer
+  name: Create Offer
+  description: |
+    Create an offer for a candidate who has completed the hiring process.
+    Includes salary, start date, and other compensation details.
+  provider: greenhouse
+  endpoint: /offers
+  method: POST
+  scopes:
+    - offers:write
+  tags:
+    - offers
+    - create
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Offer creation parameters
+    properties:
+      application_id:
+        type: integer
+        description: "Application ID (required)"
+      payload:
+        type: object
+        description: "Offer details: salary, start_date, etc. (required)"
+    required:
+      - application_id
+      - payload
+
+- slug: greenhouse_list_users
+  name: List Users
+  description: |
+    List all users in the organization including recruiters, hiring managers, and admins.
+    Returns names, email addresses, roles, and permission levels.
+  provider: greenhouse
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      email:
+        type: string
+        description: "Filter by email address"
+      name:
+        type: string
+        description: "Search by name"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []

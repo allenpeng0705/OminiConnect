@@ -1,0 +1,259 @@
+# Halo PSA Tools - Allowlist
+# Curated subset of Halo PSA API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. halo_list_tickets            - List tickets
+# 2. halo_get_ticket              - Get ticket details
+# 3. halo_list_clients           - List clients
+# 4. halo_get_client             - Get client details
+# 5. halo_list_contacts          - List contacts
+# 6. halo_get_contact            - Get contact details
+# 7. halo_list_invoices          - List invoices
+# 8. halo_get_invoice            - Get invoice details
+# 9. halo_list_projects          - List projects
+# 10. halo_get_project            - Get project details
+
+- slug: halo_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets in Halo PSA.
+    Returns ticket details including subject, status, and assignee.
+  provider: halo-psa
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Page size"
+        default: 20
+    required: []
+
+- slug: halo_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a specific ticket.
+    Includes ticket details, comments, and history.
+  provider: halo-psa
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - id
+
+- slug: halo_list_clients
+  name: List Clients
+  description: |
+    List all clients in Halo PSA.
+    Returns client details including name and status.
+  provider: halo-psa
+  endpoint: /clients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: halo_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+    Includes client details and associated contacts.
+  provider: halo-psa
+  endpoint: /clients/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: integer
+        description: "Client ID"
+    required:
+      - id
+
+- slug: halo_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Halo PSA.
+    Returns contact details including name and email.
+  provider: halo-psa
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      client_id:
+        type: integer
+        description: "Filter by client ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: halo_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+    Includes contact details and associated client.
+  provider: halo-psa
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: halo_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Halo PSA.
+    Returns invoice details including number and status.
+  provider: halo-psa
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      client_id:
+        type: integer
+        description: "Filter by client ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: halo_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice.
+    Includes invoice lines and payment status.
+  provider: halo-psa
+  endpoint: /invoices/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: integer
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: halo_list_projects
+  name: List Projects
+  description: |
+    List all projects in Halo PSA.
+    Returns project details including name and status.
+  provider: halo-psa
+  endpoint: /projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      client_id:
+        type: integer
+        description: "Filter by client ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: halo_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+    Includes project details, tasks, and time entries.
+  provider: halo-psa
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id

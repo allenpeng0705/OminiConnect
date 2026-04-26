@@ -1,0 +1,297 @@
+# Mural Tools - Allowlist
+# Curated subset of the Mural REST API for AI agent use.
+
+# === TOOL LIST ===
+# 1. mural_list_rooms            - List rooms in Mural
+# 2. mural_get_room              - Get a specific room
+# 3. mural_create_room           - Create a new room
+# 4. mural_list_murals           - List murals in a room
+# 5. mural_get_mural             - Get a specific mural
+# 6. mural_create_mural          - Create a new mural
+# 7. mural_list_templates        - List available templates
+# 8. mural_get_template          - Get a specific template
+# 9. mural_list_users            - List users in workspace
+# 10. mural_get_user             - Get a specific user
+
+- slug: mural_list_rooms
+  name: List Rooms
+  description: |
+    List all rooms in the workspace. Rooms are virtual workspaces that contain murals and team members.
+    Use rooms to organize murals by project, team, or initiative.
+  provider: mural
+  endpoint: /v1/rooms
+  method: GET
+  scopes:
+    - room:read
+  tags:
+    - rooms
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing rooms
+    properties:
+      workspace_id:
+        type: string
+        description: "Filter by workspace ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: mural_get_room
+  name: Get Room
+  description: |
+    Get details of a specific room including its name, description, member count, and mural count.
+    Use this to retrieve room information before accessing its murals.
+  provider: mural
+  endpoint: /v1/rooms/{roomId}
+  method: GET
+  scopes:
+    - room:read
+  tags:
+    - rooms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a room
+    properties:
+      roomId:
+        type: string
+        description: "Room ID (path parameter)"
+    required:
+      - roomId
+
+- slug: mural_create_room
+  name: Create Room
+  description: |
+    Create a new room in a workspace. Rooms are containers for murals and provide a collaborative space for teams.
+    Specify a name to help identify the room's purpose.
+  provider: mural
+  endpoint: /v1/rooms
+  method: POST
+  scopes:
+    - room:write
+  tags:
+    - rooms
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a room
+    properties:
+      name:
+        type: string
+        description: "Room name (required)"
+      description:
+        type: string
+        description: "Room description"
+      workspace_id:
+        type: string
+        description: "Workspace ID to create the room in"
+      is_private:
+        type: boolean
+        description: "Make room private (default false)"
+        default: false
+    required:
+      - name
+
+- slug: mural_list_murals
+  name: List Murals
+  description: |
+    List all murals within a specific room. Murals are visual collaboration canvases where teams create and organize ideas.
+    Each mural can contain sticky notes, images, shapes, and other elements.
+  provider: mural
+  endpoint: /v1/rooms/{roomId}/murals
+  method: GET
+  scopes:
+    - mural:read
+  tags:
+    - murals
+    - room
+  input_schema:
+    type: object
+    description: Parameters for listing murals
+    properties:
+      roomId:
+        type: string
+        description: "Room ID (path parameter)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required:
+      - roomId
+
+- slug: mural_get_mural
+  name: Get Mural
+  description: |
+    Get details of a specific mural including its name, description, size, and current state.
+    Use this to retrieve mural metadata before accessing its contents.
+  provider: mural
+  endpoint: /v1/murals/{muralId}
+  method: GET
+  scopes:
+    - mural:read
+  tags:
+    - murals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a mural
+    properties:
+      muralId:
+        type: string
+        description: "Mural ID (path parameter)"
+    required:
+      - muralId
+
+- slug: mural_create_mural
+  name: Create Mural
+  description: |
+    Create a new mural in a specified room. Murals start as blank canvases that can be populated with visual elements.
+    Optionally use a template to get started with predefined structures.
+  provider: mural
+  endpoint: /v1/rooms/{roomId}/murals
+  method: POST
+  scopes:
+    - mural:write
+  tags:
+    - murals
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a mural
+    properties:
+      roomId:
+        type: string
+        description: "Room ID (path parameter)"
+      name:
+        type: string
+        description: "Mural name (required)"
+      description:
+        type: string
+        description: "Mural description"
+      template_id:
+        type: string
+        description: "Template ID to use for the mural"
+      width:
+        type: number
+        description: "Mural width in pixels"
+        default: 3000
+      height:
+        type: number
+        description: "Mural height in pixels"
+        default: 2000
+    required:
+      - roomId
+      - name
+
+- slug: mural_list_templates
+  name: List Templates
+  description: |
+    List all available templates in the workspace. Templates provide predefined structures for murals,
+    including frameworks for brainstorming, retrospectives, and workshops.
+  provider: mural
+  endpoint: /v1/templates
+  method: GET
+  scopes:
+    - template:read
+  tags:
+    - templates
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      workspace_id:
+        type: string
+        description: "Filter by workspace ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: mural_get_template
+  name: Get Template
+  description: |
+    Get details of a specific template including its name, description, and structure.
+    Use this to understand what a template offers before creating a mural from it.
+  provider: mural
+  endpoint: /v1/templates/{templateId}
+  method: GET
+  scopes:
+    - template:read
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      templateId:
+        type: string
+        description: "Template ID (path parameter)"
+    required:
+      - templateId
+
+- slug: mural_list_users
+  name: List Users
+  description: |
+    List all users in the workspace. Returns user information including name, email, and role.
+    Use this to find team members or check workspace membership.
+  provider: mural
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - workspace:read
+  tags:
+    - users
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      workspace_id:
+        type: string
+        description: "Filter by workspace ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: mural_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including their name, email, avatar, and permissions.
+    Use this to verify user information or check their role in the workspace.
+  provider: mural
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes:
+    - workspace:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID (path parameter)"
+    required:
+      - userId

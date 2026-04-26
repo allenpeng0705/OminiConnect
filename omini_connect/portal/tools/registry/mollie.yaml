@@ -1,0 +1,282 @@
+# Mollie Tools - Allowlist
+# Curated subset of Mollie API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mollie_list_payments          - List all payments
+# 2. mollie_get_payment           - Get payment details
+# 3. mollie_create_payment       - Create a payment
+# 4. mollie_list_refunds         - List refunds
+# 5. mollie_get_refund           - Get refund details
+# 6. mollie_create_refund       - Create a refund
+# 7. mollie_list_customers       - List customers
+# 8. mollie_get_customer         - Get customer details
+# 9. mollie_list_subscriptions   - List subscriptions
+# 10. mollie_get_subscription  - Get subscription details
+
+- slug: mollie_list_payments
+  name: List Payments
+  description: |
+    List all payments in Mollie.
+    Filter by status, customer, or date.
+  provider: mollie
+  endpoint: /v2/payments
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, paid, failed, etc.)"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      from_date:
+        type: string
+        description: "From date (ISO 8601)"
+      to_date:
+        type: string
+        description: "To date (ISO 8601)"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: mollie_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment.
+  provider: mollie
+  endpoint: /v2/payments/{paymentId}
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      paymentId:
+        type: string
+        description: "Payment ID"
+    required:
+      - paymentId
+
+- slug: mollie_create_payment
+  name: Create Payment
+  description: |
+    Create a new payment in Mollie.
+  provider: mollie
+  endpoint: /v2/payments
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment
+    properties:
+      amount:
+        type: object
+        description: "Payment amount"
+        properties:
+          currency:
+            type: string
+            description: "Currency code (EUR, USD, etc.)"
+          value:
+            type: string
+            description: "Amount value"
+      description:
+        type: string
+        description: "Payment description"
+      redirect_url:
+        type: string
+        description: "Redirect URL after payment"
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - amount
+      - description
+
+- slug: mollie_list_refunds
+  name: List Refunds
+  description: |
+    List all refunds in Mollie.
+    Filter by payment or status.
+  provider: mollie
+  endpoint: /v2/refunds
+  method: GET
+  scopes: []
+  tags:
+    - refunds
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing refunds
+    properties:
+      payment_id:
+        type: string
+        description: "Filter by payment ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: mollie_get_refund
+  name: Get Refund
+  description: |
+    Get details of a specific refund.
+  provider: mollie
+  endpoint: /v2/refunds/{refundId}
+  method: GET
+  scopes: []
+  tags:
+    - refunds
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a refund
+    properties:
+      refundId:
+        type: string
+        description: "Refund ID"
+    required:
+      - refundId
+
+- slug: mollie_create_refund
+  name: Create Refund
+  description: |
+    Create a refund for a payment.
+  provider: mollie
+  endpoint: /v2/payments/{paymentId}/refunds
+  method: POST
+  scopes: []
+  tags:
+    - refunds
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a refund
+    properties:
+      paymentId:
+        type: string
+        description: "Payment ID"
+      amount:
+        type: object
+        description: "Refund amount (optional, full if not specified)"
+        properties:
+          currency:
+            type: string
+          value:
+            type: string
+      description:
+        type: string
+        description: "Refund description"
+    required:
+      - paymentId
+
+- slug: mollie_list_customers
+  name: List Customers
+  description: |
+    List all customers in Mollie.
+  provider: mollie
+  endpoint: /v2/customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: mollie_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer.
+  provider: mollie
+  endpoint: /v2/customers/{customerId}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: mollie_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions for a customer.
+  provider: mollie
+  endpoint: /v2/customers/{customerId}/subscriptions
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - customerId
+
+- slug: mollie_get_subscription
+  name: Get Subscription
+  description: |
+    Get details of a specific subscription.
+  provider: mollie
+  endpoint: /v2/customers/{customerId}/subscriptions/{subscriptionId}
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+      subscriptionId:
+        type: string
+        description: "Subscription ID"
+    required:
+      - customerId
+      - subscriptionId

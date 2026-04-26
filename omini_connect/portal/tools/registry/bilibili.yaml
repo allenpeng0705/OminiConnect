@@ -1,0 +1,286 @@
+# Bilibili Tools - Allowlist
+# Curated subset of Bilibili API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bilibili_list_videos           - List user's videos
+# 2. bilibili_get_video            - Get video details
+# 3. bilibili_search_videos         - Search for videos
+# 4. bilibili_list_users            - List users
+# 5. bilibili_get_user             - Get user profile
+# 6. bilibili_list_subtitles       - List video subtitles
+# 7. bilibili_update_subtitle       - Update subtitle status
+# 8. bilibili_list_favorites        - List favorite videos
+# 9. bilibili_get_favorite_folder   - Get favorite folder details
+# 10. bilibili_get_video_stats      - Get video statistics
+
+- slug: bilibili_list_videos
+  name: List Videos
+  description: |
+    List videos for the authenticated user.
+    Returns user's uploaded videos with title, description, and view count.
+  provider: bilibili
+  endpoint: /video/get_my_videos
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - videos
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Videos per page (default 30, max 50)"
+        default: 30
+    required: []
+
+- slug: bilibili_get_video
+  name: Get Video
+  description: |
+    Get detailed information about a specific video.
+    Returns title, description, duration, view count, and metadata.
+  provider: bilibili
+  endpoint: /video/{avid}
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      avid:
+        type: string
+        description: "Video av ID (required)"
+    required:
+      - avid
+
+- slug: bilibili_search_videos
+  name: Search Videos
+  description: |
+    Search for videos by keyword query.
+    Returns matching videos with title, author, and stats.
+  provider: bilibili
+  endpoint: /video/search
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - search
+    - videos
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for searching videos
+    properties:
+      keyword:
+        type: string
+        description: "Search keyword (required)"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Videos per page (default 30, max 50)"
+        default: 30
+    required:
+      - keyword
+
+- slug: bilibili_list_users
+  name: List Users
+  description: |
+    List users by keyword search or browse.
+    Returns user profiles with follower counts.
+  provider: bilibili
+  endpoint: /user/search
+  method: GET
+  scopes:
+    - user_info
+  tags:
+    - users
+    - list
+    - search
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      keyword:
+        type: string
+        description: "Search keyword (required for search)"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Users per page (default 30)"
+        default: 30
+    required:
+      - keyword
+
+- slug: bilibili_get_user
+  name: Get User
+  description: |
+    Get detailed user profile information.
+    Returns nickname, avatar, follower count, and bio.
+  provider: bilibili
+  endpoint: /user/{mid}
+  method: GET
+  scopes:
+    - user_info
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      mid:
+        type: string
+        description: "User mid (required)"
+    required:
+      - mid
+
+- slug: bilibili_list_subtitles
+  name: List Subtitles
+  description: |
+    List subtitles for a video.
+    Returns subtitle tracks with language and timing info.
+  provider: bilibili
+  endpoint: /video/{avid}/subtitles
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - subtitles
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subtitles
+    properties:
+      avid:
+        type: string
+        description: "Video av ID (required)"
+    required:
+      - avid
+
+- slug: bilibili_update_subtitle
+  name: Update Subtitle
+  description: |
+    Update subtitle status or settings for a video.
+    Modifies subtitle visibility or default track.
+  provider: bilibili
+  endpoint: /video/{avid}/subtitles/{subtitle_id}
+  method: PUT
+  scopes:
+    - video_write
+  tags:
+    - subtitles
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating subtitle
+    properties:
+      avid:
+        type: string
+        description: "Video av ID (required)"
+      subtitle_id:
+        type: string
+        description: "Subtitle ID (required)"
+      is_default:
+        type: boolean
+        description: "Set as default subtitle"
+        default: false
+      status:
+        type: string
+        description: "Subtitle status: active, disabled"
+    required:
+      - avid
+      - subtitle_id
+
+- slug: bilibili_list_favorites
+  name: List Favorites
+  description: |
+    List videos in user's favorite folder.
+    Returns favorite videos with collection info.
+  provider: bilibili
+  endpoint: /favorite/get
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - favorites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing favorites
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Videos per page (default 30)"
+        default: 30
+    required: []
+
+- slug: bilibili_get_favorite_folder
+  name: Get Favorite Folder
+  description: |
+    Get detailed information about a favorite folder.
+    Returns folder name, description, and video count.
+  provider: bilibili
+  endpoint: /favorite/{folder_id}
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - favorites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting favorite folder
+    properties:
+      folder_id:
+        type: string
+        description: "Folder ID (required)"
+    required:
+      - folder_id
+
+- slug: bilibili_get_video_stats
+  name: Get Video Stats
+  description: |
+    Get detailed statistics for a video.
+    Returns view count, likes, coins, favorites, and shares.
+  provider: bilibili
+  endpoint: /video/{avid}/stats
+  method: GET
+  scopes:
+    - video_read
+  tags:
+    - videos
+    - stats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting video stats
+    properties:
+      avid:
+        type: string
+        description: "Video av ID (required)"
+    required:
+      - avid

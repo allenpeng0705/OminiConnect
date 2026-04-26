@@ -1,0 +1,244 @@
+- slug: integromat_list_scenarios
+  name: List Scenarios
+  description: |
+    Retrieve a list of all scenarios in a workspace.
+  provider: integromat
+  endpoint: /scenarios
+  method: GET
+  scopes:
+    - scenarios:read
+  tags:
+    - scenarios
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing scenarios
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID to list scenarios from"
+      limit:
+        type: integer
+        description: "Maximum number of scenarios to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required:
+      - workspace_id
+
+- slug: integromat_get_scenario
+  name: Get Scenario
+  description: |
+    Retrieve details of a specific scenario by its ID.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}
+  method: GET
+  scopes:
+    - scenarios:read
+  tags:
+    - scenarios
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+    required:
+      - scenario_id
+
+- slug: integromat_create_scenario
+  name: Create Scenario
+  description: |
+    Create a new scenario with specified modules and connections.
+  provider: integromat
+  endpoint: /scenarios
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a scenario
+    properties:
+      name:
+        type: string
+        description: "Name of the scenario"
+      workspace_id:
+        type: string
+        description: "Workspace ID to create the scenario in"
+      flow:
+        type: array
+        description: "Array of module configurations"
+    required:
+      - name
+      - workspace_id
+
+- slug: integromat_list_bundles
+  name: List Bundles
+  description: |
+    Retrieve a list of data bundles processed by a scenario.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}/bundles
+  method: GET
+  scopes:
+    - bundles:read
+  tags:
+    - bundles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing bundles
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+      limit:
+        type: integer
+        description: "Maximum number of bundles to return (default 50)"
+    required:
+      - scenario_id
+
+- slug: integromat_get_bundle
+  name: Get Bundle
+  description: |
+    Retrieve details of a specific bundle by its ID.
+  provider: integromat
+  endpoint: /bundles/{bundle_id}
+  method: GET
+  scopes:
+    - bundles:read
+  tags:
+    - bundles
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a bundle
+    properties:
+      bundle_id:
+        type: string
+        description: "The unique identifier of the bundle"
+    required:
+      - bundle_id
+
+- slug: integromat_list_logs
+  name: List Logs
+  description: |
+    Retrieve execution logs for a scenario.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}/logs
+  method: GET
+  scopes:
+    - logs:read
+  tags:
+    - logs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing logs
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+      limit:
+        type: integer
+        description: "Maximum number of logs to return (default 50)"
+      level:
+        type: string
+        description: "Filter by log level (info, error, debug)"
+    required:
+      - scenario_id
+
+- slug: integromat_get_log
+  name: Get Log
+  description: |
+    Retrieve details of a specific log entry by its ID.
+  provider: integromat
+  endpoint: /logs/{log_id}
+  method: GET
+  scopes:
+    - logs:read
+  tags:
+    - logs
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a log
+    properties:
+      log_id:
+        type: string
+        description: "The unique identifier of the log entry"
+    required:
+      - log_id
+
+- slug: integromat_run_scenario
+  name: Run Scenario
+  description: |
+    Trigger a manual run of a scenario with optional input data.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}/run
+  method: POST
+  scopes:
+    - scenarios:execute
+  tags:
+    - scenarios
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for running a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to run"
+      data:
+        type: object
+        description: "Optional input data to pass to the scenario"
+    required:
+      - scenario_id
+
+- slug: integromat_start_scenario
+  name: Start Scenario
+  description: |
+    Start a scenario to begin processing on a schedule.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}/start
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - start
+  input_schema:
+    type: object
+    description: Parameters for starting a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to start"
+    required:
+      - scenario_id
+
+- slug: integromat_stop_scenario
+  name: Stop Scenario
+  description: |
+    Stop a running scenario.
+  provider: integromat
+  endpoint: /scenarios/{scenario_id}/stop
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - stop
+  input_schema:
+    type: object
+    description: Parameters for stopping a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to stop"
+    required:
+      - scenario_id

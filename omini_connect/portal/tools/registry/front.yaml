@@ -1,0 +1,280 @@
+# Front Tools - Team Inbox
+# Tools for managing conversations, channels, teammates, inboxes, and rules.
+
+# === TOOL LIST ===
+# 1. front_list_conversations      - List conversations
+# 2. front_get_conversation        - Get a specific conversation
+# 3. front_create_message         - Create a message
+# 4. front_list_channels          - List channels
+# 5. front_get_channel            - Get a specific channel
+# 6. front_list_teammates         - List teammates
+# 7. front_get_teammate           - Get a specific teammate
+# 8. front_list_inboxes          - List inboxes
+# 9. front_get_inbox              - Get a specific inbox
+# 10. front_list_rules           - List rules
+
+- slug: front_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from your Front workspace.
+    Returns a paginated list of conversations with their status, assignees, and latest message.
+  provider: front
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - inbox
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      inbox_id:
+        type: string
+        description: "Filter by inbox ID"
+      teammate_id:
+        type: string
+        description: "Filter by assigned teammate"
+      status:
+        type: string
+        description: "Filter by status: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      limit:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []
+
+- slug: front_get_conversation
+  name: Get Conversation
+  description: |
+    Get a specific conversation by ID. Returns full conversation details including messages, comments, and metadata.
+  provider: front
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - inbox
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - id
+
+- slug: front_create_message
+  name: Create Message
+  description: |
+    Create a new message or reply in a conversation. Use this to send messages to contacts through your Front inbox.
+  provider: front
+  endpoint: /messages
+  method: POST
+  scopes:
+    - conversation_write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Reply to existing conversation"
+      channel_id:
+        type: string
+        description: "Channel ID to send message through (required for new conversations)"
+      contact_id:
+        type: string
+        description: "Recipient contact ID"
+      body:
+        type: string
+        description: "Message content in HTML (required)"
+      subject:
+        type: string
+        description: "Subject for email messages"
+    required:
+      - body
+
+- slug: front_list_channels
+  name: List Channels
+  description: |
+    List all channels in your Front workspace. Returns channel names, types, and settings.
+  provider: front
+  endpoint: /channels
+  method: GET
+  scopes:
+    - channel_read
+  tags:
+    - channels
+    - inbox
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []
+
+- slug: front_get_channel
+  name: Get Channel
+  description: |
+    Get a specific channel by ID. Returns full channel details including settings, rules, and statistics.
+  provider: front
+  endpoint: /channels/{id}
+  method: GET
+  scopes:
+    - channel_read
+  tags:
+    - channels
+    - inbox
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      id:
+        type: string
+        description: "Channel ID (path parameter)"
+    required:
+      - id
+
+- slug: front_list_teammates
+  name: List Teammates
+  description: |
+    List all teammates in your Front workspace. Returns their names, emails, availability, and assignment rules.
+  provider: front
+  endpoint: /teammates
+  method: GET
+  scopes:
+    - teammate_read
+  tags:
+    - teammates
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing teammates
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []
+
+- slug: front_get_teammate
+  name: Get Teammate
+  description: |
+    Get a specific teammate by ID. Returns their profile including name, email, availability status, and permissions.
+  provider: front
+  endpoint: /teammates/{id}
+  method: GET
+  scopes:
+    - teammate_read
+  tags:
+    - teammates
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a teammate
+    properties:
+      id:
+        type: string
+        description: "Teammate ID (path parameter)"
+    required:
+      - id
+
+- slug: front_list_inboxes
+  name: List Inboxes
+  description: |
+    List all inboxes in your Front workspace. Returns inbox names, member assignments, and channel connections.
+  provider: front
+  endpoint: /inboxes
+  method: GET
+  scopes:
+    - inbox_read
+  tags:
+    - inboxes
+    - inbox
+  input_schema:
+    type: object
+    description: Parameters for listing inboxes
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []
+
+- slug: front_get_inbox
+  name: Get Inbox
+  description: |
+    Get a specific inbox by ID. Returns full inbox details including settings, members, and statistics.
+  provider: front
+  endpoint: /inboxes/{id}
+  method: GET
+  scopes:
+    - inbox_read
+  tags:
+    - inboxes
+    - inbox
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an inbox
+    properties:
+      id:
+        type: string
+        description: "Inbox ID (path parameter)"
+    required:
+      - id
+
+- slug: front_list_rules
+  name: List Rules
+  description: |
+    List all rules in your Front workspace. Returns rule names, conditions, and actions for inbox automation.
+  provider: front
+  endpoint: /rules
+  method: GET
+  scopes:
+    - rule_read
+  tags:
+    - rules
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing rules
+    properties:
+      inbox_id:
+        type: string
+        description: "Filter by inbox ID"
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page_token:
+        type: string
+        description: "Pagination token"
+    required: []

@@ -1,0 +1,264 @@
+# Readwise-Reader Tools - Allowlist
+# Curated subset of Readwise Reader API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. readwise-reader_list_documents    - List all documents
+# 2. readwise-reader_get_document     - Get document details
+# 3. readwise-reader_list_highlights  - List document highlights
+# 4. readwise-reader_create_note      - Create a note on a document
+# 5. readwise-reader_archive_document - Archive a document
+# 6. readwise-reader_list_folders     - List folders
+# 7. readwise-reader_create_folder    - Create a folder
+# 8. readwise-reader_move_document    - Move document to folder
+# 9. readwise-reader_get_reading_progress - Get reading progress
+# 10. readwise-reader_export_reader   - Export reader data
+
+- slug: readwise-reader_list_documents
+  name: List Documents
+  description: |
+    Retrieve a list of all documents saved in Readwise Reader.
+  provider: readwise-reader
+  endpoint: /v3/documents
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+    - reader
+    - reading
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      folderId:
+        type: string
+        description: "Filter by folder ID"
+      limit:
+        type: integer
+        description: "Number of documents"
+        default: 50
+      unread:
+        type: boolean
+        description: "Filter to unread only"
+    required: []
+
+- slug: readwise-reader_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+    required:
+      - documentId
+
+- slug: readwise-reader_list_highlights
+  name: List Highlights
+  description: |
+    List all highlights from a specific document.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}/highlights
+  method: GET
+  scopes:
+    - highlights:read
+  tags:
+    - highlights
+    - documents
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for listing highlights
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+    required:
+      - documentId
+
+- slug: readwise-reader_create_note
+  name: Create Note
+  description: |
+    Create a note on a document.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}/notes
+  method: POST
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - documents
+    - reader
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+      content:
+        type: string
+        description: "Note content"
+      highlightId:
+        type: string
+        description: "Optional highlight ID to attach note to"
+    required:
+      - documentId
+      - content
+
+- slug: readwise-reader_archive_document
+  name: Archive Document
+  description: |
+    Archive a document in Reader.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}/archive
+  method: POST
+  scopes:
+    - documents:write
+  tags:
+    - documents
+    - reader
+    - archive
+  input_schema:
+    type: object
+    description: Parameters for archiving a document
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+    required:
+      - documentId
+
+- slug: readwise-reader_list_folders
+  name: List Folders
+  description: |
+    Retrieve a list of all folders in Reader.
+  provider: readwise-reader
+  endpoint: /v3/folders
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+    - organization
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties: {}
+    required: []
+
+- slug: readwise-reader_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder for organizing documents.
+  provider: readwise-reader
+  endpoint: /v3/folders
+  method: POST
+  scopes:
+    - folders:write
+  tags:
+    - folders
+    - organization
+    - create
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parentId:
+        type: string
+        description: "Optional parent folder ID for nested folders"
+    required:
+      - name
+
+- slug: readwise-reader_move_document
+  name: Move Document
+  description: |
+    Move a document to a different folder.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}/move
+  method: POST
+  scopes:
+    - documents:write
+  tags:
+    - documents
+    - folders
+    - organization
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for moving a document
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+      folderId:
+        type: string
+        description: "Destination folder ID"
+    required:
+      - documentId
+      - folderId
+
+- slug: readwise-reader_get_reading_progress
+  name: Get Reading Progress
+  description: |
+    Get reading progress for a specific document.
+  provider: readwise-reader
+  endpoint: /v3/documents/{documentId}/progress
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - documents
+    - progress
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for getting reading progress
+    properties:
+      documentId:
+        type: string
+        description: "The document ID"
+    required:
+      - documentId
+
+- slug: readwise-reader_export_reader
+  name: Export Reader Data
+  description: |
+    Export all Reader data including documents and highlights.
+  provider: readwise-reader
+  endpoint: /v3/export
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - export
+    - documents
+    - reader
+  input_schema:
+    type: object
+    description: Parameters for exporting reader data
+    properties:
+      format:
+        type: string
+        description: "Export format: json, csv"
+        default: json
+    required: []

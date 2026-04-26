@@ -1,0 +1,265 @@
+# Zeplin Tools - Allowlist
+# Curated subset of Zeplin API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zeplin_list_projects   - List all projects
+# 2. zeplin_get_project     - Get project details
+# 3. zeplin_list_screens    - List screens in a project
+# 4. zeplin_get_screen      - Get screen details
+# 5. zeplin_list_users      - List project users
+# 6. zeplin_get_user        - Get user details
+# 7. zeplin_list_comments   - List comments on a screen
+# 8. zeplin_get_comment     - Get comment details
+# 9. zeplin_get_styleguide  - Get styleguide for a project
+# 10. zeplin_get_spec       - Get spec for a screen
+
+- slug: zeplin_list_projects
+  name: List Projects
+  description: |
+    List all Zeplin projects the user has access to.
+  provider: zeplin
+  endpoint: /api/v1/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: zeplin_get_project
+  name: Get Project
+  description: |
+    Get details about a specific Zeplin project including its stories and members.
+  provider: zeplin
+  endpoint: /api/v1/projects/{project_id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+    required:
+      - project_id
+
+- slug: zeplin_list_screens
+  name: List Screens
+  description: |
+    List all screens in a Zeplin project or story.
+  provider: zeplin
+  endpoint: /api/v1/projects/{project_id}/screens
+  method: GET
+  scopes:
+    - screens:read
+  tags:
+    - screens
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing screens
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      story_id:
+        type: string
+        description: "Story ID to filter by"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required:
+      - project_id
+
+- slug: zeplin_get_screen
+  name: Get Screen
+  description: |
+    Get details about a specific screen including its layers and assets.
+  provider: zeplin
+  endpoint: /api/v1/screens/{screen_id}
+  method: GET
+  scopes:
+    - screens:read
+  tags:
+    - screens
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a screen
+    properties:
+      screen_id:
+        type: string
+        description: "Screen ID (required)"
+    required:
+      - screen_id
+
+- slug: zeplin_list_users
+  name: List Users
+  description: |
+    List all users in a Zeplin project.
+  provider: zeplin
+  endpoint: /api/v1/projects/{project_id}/members
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - users
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing project users
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required:
+      - project_id
+
+- slug: zeplin_get_user
+  name: Get User
+  description: |
+    Get details about a specific Zeplin user.
+  provider: zeplin
+  endpoint: /api/v1/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - user_id
+
+- slug: zeplin_list_comments
+  name: List Comments
+  description: |
+    List all comments on a Zeplin screen.
+  provider: zeplin
+  endpoint: /api/v1/screens/{screen_id}/comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - screens
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      screen_id:
+        type: string
+        description: "Screen ID (required)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required:
+      - screen_id
+
+- slug: zeplin_get_comment
+  name: Get Comment
+  description: |
+    Get details about a specific comment on a screen.
+  provider: zeplin
+  endpoint: /api/v1/comments/{comment_id}
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID (required)"
+    required:
+      - comment_id
+
+- slug: zeplin_get_styleguide
+  name: Get Styleguide
+  description: |
+    Get the styleguide for a Zeplin project including colors, typography, and components.
+  provider: zeplin
+  endpoint: /api/v1/projects/{project_id}/styleguide
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - styleguide
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a styleguide
+    properties:
+      project_id:
+        type: string
+        description: "Project ID (required)"
+    required:
+      - project_id
+
+- slug: zeplin_get_spec
+  name: Get Spec
+  description: |
+    Get the specification for a screen including dimensions, spacing, and assets.
+  provider: zeplin
+  endpoint: /api/v1/screens/{screen_id}/spec
+  method: GET
+  scopes:
+    - screens:read
+  tags:
+    - spec
+    - screens
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a screen spec
+    properties:
+      screen_id:
+        type: string
+        description: "Screen ID (required)"
+    required:
+      - screen_id

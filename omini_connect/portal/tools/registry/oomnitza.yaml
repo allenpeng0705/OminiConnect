@@ -1,0 +1,256 @@
+# Oomnitza Tools - Allowlist
+# Curated subset of Oomnitza API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. oomnitza_list_assets             - List assets
+# 2. oomnitza_get_asset              - Get asset details
+# 3. oomnitza_create_asset           - Create asset
+# 4. oomnitza_update_asset           - Update asset
+# 5. oomnitza_list_users             - List users
+# 6. oomnitza_get_user               - Get user details
+# 7. oomnitza_assign_asset           - Assign asset to user
+# 8. oomnitza_list_locations         - List locations
+# 9. oomnitza_get_reports           - Get reports
+# 10. oomnitza_search                - Search records
+
+- slug: oomnitza_list_assets
+  name: List Assets
+  description: |
+    List all assets in Oomnitza.
+  provider: oomnitza
+  endpoint: /api/v3/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - asset-management
+    - assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: oomnitza_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information for a specific asset.
+  provider: oomnitza
+  endpoint: /api/v3/assets/{id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - asset-management
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      id:
+        type: string
+        description: "Asset ID"
+    required:
+      - id
+
+- slug: oomnitza_create_asset
+  name: Create Asset
+  description: |
+    Create a new asset in Oomnitza.
+  provider: oomnitza
+  endpoint: /api/v3/assets
+  method: POST
+  scopes:
+    - assets:write
+  tags:
+    - asset-management
+    - assets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an asset
+    properties:
+      name:
+        type: string
+        description: "Asset name"
+      type:
+        type: string
+        description: "Asset type"
+      serial_number:
+        type: string
+        description: "Serial number"
+    required:
+      - name
+      - type
+
+- slug: oomnitza_update_asset
+  name: Update Asset
+  description: |
+    Update an existing asset.
+  provider: oomnitza
+  endpoint: /api/v3/assets/{id}
+  method: PUT
+  scopes:
+    - assets:write
+  tags:
+    - asset-management
+    - assets
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an asset
+    properties:
+      id:
+        type: string
+        description: "Asset ID"
+      status:
+        type: string
+        description: "Asset status"
+    required:
+      - id
+
+- slug: oomnitza_list_users
+  name: List Users
+  description: |
+    List all users in Oomnitza.
+  provider: oomnitza
+  endpoint: /api/v3/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - asset-management
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: oomnitza_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: oomnitza
+  endpoint: /api/v3/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - asset-management
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: oomnitza_assign_asset
+  name: Assign Asset
+  description: |
+    Assign an asset to a user.
+  provider: oomnitza
+  endpoint: /api/v3/assets/{id}/assign
+  method: POST
+  scopes:
+    - assets:manage
+  tags:
+    - asset-management
+    - assets
+    - assignment
+  input_schema:
+    type: object
+    description: Parameters for assigning an asset
+    properties:
+      id:
+        type: string
+        description: "Asset ID"
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+      - user_id
+
+- slug: oomnitza_list_locations
+  name: List Locations
+  description: |
+    List all locations in Oomnitza.
+  provider: oomnitza
+  endpoint: /api/v3/locations
+  method: GET
+  scopes:
+    - locations:read
+  tags:
+    - asset-management
+    - locations
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []
+
+- slug: oomnitza_get_reports
+  name: Get Reports
+  description: |
+    Get reports from Oomnitza.
+  provider: oomnitza
+  endpoint: /api/v3/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - asset-management
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties: {}
+    required: []
+
+- slug: oomnitza_search
+  name: Search
+  description: |
+    Search for assets and records.
+  provider: oomnitza
+  endpoint: /api/v3/search
+  method: GET
+  scopes:
+    - search:read
+  tags:
+    - asset-management
+    - search
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query

@@ -1,0 +1,302 @@
+- slug: tencent_list_cvm_instances
+  name: List CVM Instances
+  description: |
+    List all Cloud Virtual Machine (CVM) instances in Tencent Cloud.
+  provider: tencent
+  endpoint: /cvm/v1/instances
+  method: GET
+  scopes:
+    - cvm
+  tags:
+    - cvm
+    - compute
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing CVM instances
+    properties:
+      region:
+        type: string
+        description: "Tencent Cloud region (e.g., ap-guangzhou, ap-singapore)."
+      filters:
+        type: string
+        description: "Filter conditions as JSON string (e.g., {'instance-state-name': ['RUNNING']})."
+      limit:
+        type: integer
+        description: "Number of instances to return (max 100)."
+      offset:
+        type: integer
+        description: "Offset for pagination."
+    required:
+      - region
+
+- slug: tencent_get_cvm_instance
+  name: Get CVM Instance
+  description: |
+    Get details of a specific CVM instance by ID.
+  provider: tencent
+  endpoint: /cvm/v1/instances/{instance_id}
+  method: GET
+  scopes:
+    - cvm
+  tags:
+    - cvm
+    - compute
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting CVM instance details
+    properties:
+      instance_id:
+        type: string
+        description: "The CVM instance ID."
+      region:
+        type: string
+        description: "Tencent Cloud region."
+    required:
+      - instance_id
+      - region
+
+- slug: tencent_list_cos_buckets
+  name: List COS Buckets
+  description: |
+    List all Cloud Object Storage (COS) buckets in Tencent Cloud.
+  provider: tencent
+  endpoint: /cos/v1/buckets
+  method: GET
+  scopes:
+    - cos
+  tags:
+    - cos
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing COS buckets
+    properties:
+      region:
+        type: string
+        description: "Tencent Cloud region."
+    required:
+      - region
+
+- slug: tencent_list_cos_objects
+  name: List COS Objects
+  description: |
+    List objects in a COS bucket.
+  provider: tencent
+  endpoint: /cos/v1/buckets/{bucket}/objects
+  method: GET
+  scopes:
+    - cos
+  tags:
+    - cos
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing COS objects
+    properties:
+      bucket:
+        type: string
+        description: "COS bucket name (e.g., mybucket-1234567890)."
+      region:
+        type: string
+        description: "Tencent Cloud region."
+      prefix:
+        type: string
+        description: "Object key prefix to filter results."
+      marker:
+        type: string
+        description: "Object key to start listing from for pagination."
+      max_keys:
+        type: integer
+        description: "Maximum number of objects to return (max 1000)."
+    required:
+      - bucket
+      - region
+
+- slug: tencent_upload_cos_object
+  name: Upload COS Object
+  description: |
+    Upload a file to COS bucket in Tencent Cloud.
+  provider: tencent
+  endpoint: /cos/v1/buckets/{bucket}/objects
+  method: POST
+  scopes:
+    - cos
+  tags:
+    - cos
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for uploading a COS object
+    properties:
+      bucket:
+        type: string
+        description: "COS bucket name."
+      region:
+        type: string
+        description: "Tencent Cloud region."
+      key:
+        type: string
+        description: "Object key (file path in bucket)."
+      body:
+        type: string
+        description: "Base64-encoded file content."
+      content_type:
+        type: string
+        description: "MIME type of the file (e.g., image/jpeg, application/pdf)."
+    required:
+      - bucket
+      - region
+      - key
+      - body
+
+- slug: tencent_list_cbs_volumes
+  name: List CBS Volumes
+  description: |
+    List all Cloud Block Storage (CBS) volumes in Tencent Cloud.
+  provider: tencent
+  endpoint: /cbs/v1/volumes
+  method: GET
+  scopes:
+    - cbs
+  tags:
+    - cbs
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing CBS volumes
+    properties:
+      region:
+        type: string
+        description: "Tencent Cloud region."
+      filters:
+        type: string
+        description: "Filter conditions as JSON string."
+      limit:
+        type: integer
+        description: "Number of volumes to return (max 100)."
+      offset:
+        type: integer
+        description: "Offset for pagination."
+    required:
+      - region
+
+- slug: tencent_get_cbs_volume
+  name: Get CBS Volume
+  description: |
+    Get details of a specific CBS volume by ID.
+  provider: tencent
+  endpoint: /cbs/v1/volumes/{volume_id}
+  method: GET
+  scopes:
+    - cbs
+  tags:
+    - cbs
+    - storage
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting CBS volume details
+    properties:
+      volume_id:
+        type: string
+        description: "The CBS volume ID."
+      region:
+        type: string
+        description: "Tencent Cloud region."
+    required:
+      - volume_id
+      - region
+
+- slug: tencent_list_vpcs
+  name: List VPCs
+  description: |
+    List all Virtual Private Cloud (VPC) networks in Tencent Cloud.
+  provider: tencent
+  endpoint: /vpc/v1/vpcs
+  method: GET
+  scopes:
+    - vpc
+  tags:
+    - vpc
+    - networking
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for listing VPCs
+    properties:
+      region:
+        type: string
+        description: "Tencent Cloud region."
+      limit:
+        type: integer
+        description: "Number of VPCs to return (max 100)."
+      offset:
+        type: integer
+        description: "Offset for pagination."
+    required:
+      - region
+
+- slug: tencent_get_vpc
+  name: Get VPC
+  description: |
+    Get details of a specific VPC by ID.
+  provider: tencent
+  endpoint: /vpc/v1/vpcs/{vpc_id}
+  method: GET
+  scopes:
+    - vpc
+  tags:
+    - vpc
+    - networking
+    - cloud
+  input_schema:
+    type: object
+    description: Parameters for getting VPC details
+    properties:
+      vpc_id:
+        type: string
+        description: "The VPC ID."
+      region:
+        type: string
+        description: "Tencent Cloud region."
+    required:
+      - vpc_id
+      - region
+
+- slug: tencent_list_load_balancers
+  name: List Load Balancers
+  description: |
+    List all CLB (Cloud Load Balancer) instances in Tencent Cloud.
+  provider: tencent
+  endpoint: /clb/v1/loadbalancers
+  method: GET
+  scopes:
+    - clb
+  tags:
+    - clb
+    - load-balancer
+    - networking
+  input_schema:
+    type: object
+    description: Parameters for listing load balancers
+    properties:
+      region:
+        type: string
+        description: "Tencent Cloud region."
+      filters:
+        type: string
+        description: "Filter conditions as JSON string."
+      limit:
+        type: integer
+        description: "Number of load balancers to return (max 100)."
+      offset:
+        type: integer
+        description: "Offset for pagination."
+    required:
+      - region

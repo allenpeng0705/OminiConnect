@@ -1,0 +1,270 @@
+# Renovate Tools - Allowlist
+# Curated subset of Renovate bot API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. renovate_list_repositories       - List repositories with Renovate
+# 2. renovate_get_repository        - Get repository configuration
+# 3. renovate_list_pull_requests    - List pull requests
+# 4. renovate_get_pull_request     - Get PR details
+# 5. renovate_get_config           - Get Renovate config
+# 6. renovate_update_config        - Update Renovate config
+# 7. renovate_list_branches        - List update branches
+# 8. renovate_get_branch           - Get branch details
+# 9. renovate_create_branch       - Create update branch
+# 10. renovate_get_repository_status - Get repository status
+
+- slug: renovate_list_repositories
+  name: List Repositories
+  description: |
+    Retrieve all repositories configured with Renovate in the organization.
+  provider: renovate
+  endpoint: /api/repositories
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - repositories
+  input_schema:
+    type: object
+    description: Parameters for listing Renovate repositories
+    properties:
+      org:
+        type: string
+        description: "Organization name"
+      include_pull_requests:
+        type: boolean
+        description: "Include active pull requests (default: true)"
+    required:
+      - org
+
+- slug: renovate_get_repository
+  name: Get Repository
+  description: |
+    Retrieve detailed configuration and status for a Renovate repository.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - repositories
+  input_schema:
+    type: object
+    description: Parameters for getting repository details
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+    required:
+      - repo_name
+
+- slug: renovate_list_pull_requests
+  name: List Pull Requests
+  description: |
+    Retrieve all Renovate-managed pull requests for repositories.
+  provider: renovate
+  endpoint: /api/pull-requests
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - pull_requests
+  input_schema:
+    type: object
+    description: Parameters for listing Renovate pull requests
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      status:
+        type: string
+        description: "Filter by status (open, closed, merged)"
+      limit:
+        type: integer
+        description: "Maximum number of results (default: 100)"
+    required:
+      - repo_name
+
+- slug: renovate_get_pull_request
+  name: Get Pull Request
+  description: |
+    Retrieve details about a specific Renovate pull request.
+  provider: renovate
+  endpoint: /api/pull-requests/{prNumber}
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - pull_requests
+  input_schema:
+    type: object
+    description: Parameters for getting pull request details
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      pr_number:
+        type: integer
+        description: "Pull request number"
+    required:
+      - repo_name
+      - pr_number
+
+- slug: renovate_get_config
+  name: Get Config
+  description: |
+    Retrieve the Renovate configuration for a repository.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/config
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - config
+  input_schema:
+    type: object
+    description: Parameters for getting Renovate config
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+    required:
+      - repo_name
+
+- slug: renovate_update_config
+  name: Update Config
+  description: |
+    Update the Renovate configuration for a repository.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/config
+  method: PUT
+  scopes:
+    - renovate_write
+  tags:
+    - config
+  input_schema:
+    type: object
+    description: Parameters for updating Renovate config
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      config:
+        type: object
+        description: "Renovate configuration object"
+        properties:
+          extends:
+            type: array
+            items:
+              type: string
+            description: "Configuration presets to extend"
+          package_rules:
+            type: array
+            description: "Package-specific rules"
+          schedule:
+            type: string
+            description: "Update schedule (e.g., 'at any time')"
+    required:
+      - repo_name
+      - config
+
+- slug: renovate_list_branches
+  name: List Branches
+  description: |
+    Retrieve all branches managed by Renovate for a repository.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/branches
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - branches
+  input_schema:
+    type: object
+    description: Parameters for listing Renovate branches
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      limit:
+        type: integer
+        description: "Maximum number of results"
+    required:
+      - repo_name
+
+- slug: renovate_get_branch
+  name: Get Branch
+  description: |
+    Retrieve details about a specific Renovate-managed branch.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/branches/{branchName}
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - branches
+  input_schema:
+    type: object
+    description: Parameters for getting branch details
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      branch_name:
+        type: string
+        description: "Branch name"
+    required:
+      - repo_name
+      - branch_name
+
+- slug: renovate_create_branch
+  name: Create Branch
+  description: |
+    Create a new Renovate-managed branch for dependency updates.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/branches
+  method: POST
+  scopes:
+    - renovate_write
+  tags:
+    - branches
+  input_schema:
+    type: object
+    description: Parameters for creating Renovate branch
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+      package_rules:
+        type: array
+        description: "Rules for dependency updates"
+      branch_name:
+        type: string
+        description: "Desired branch name"
+      commit_message:
+        type: string
+        description: "Custom commit message"
+    required:
+      - repo_name
+
+- slug: renovate_get_repository_status
+  name: Get Repository Status
+  description: |
+    Retrieve the overall Renovate status for a repository including dashboard state.
+  provider: renovate
+  endpoint: /api/repositories/{repoName}/status
+  method: GET
+  scopes:
+    - renovate_read
+  tags:
+    - status
+  input_schema:
+    type: object
+    description: Parameters for getting repository status
+    properties:
+      repo_name:
+        type: string
+        description: "Full repository name (org/repo)"
+    required:
+      - repo_name

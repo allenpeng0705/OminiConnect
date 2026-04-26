@@ -1,0 +1,243 @@
+# eBay Tools - Allowlist
+# Curated subset of the eBay API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ebay_list_items                - List items for sale
+# 2. ebay_get_item                  - Get item details
+# 3. ebay_list_orders               - List orders
+# 4. ebay_get_order                 - Get order details
+# 5. ebay_list_users                - List users
+# 6. ebay_get_user                  - Get user details
+# 7. ebay_list_categories           - List categories
+# 8. ebay_get_category              - Get category details
+# 9. ebay_list_transactions         - List transactions
+# 10. ebay_get_transaction         - Get transaction details
+
+- slug: ebay_list_items
+  name: List Items
+  description: |
+    List all items for sale in eBay.
+  provider: ebay
+  endpoint: /sell/inventory/v1/inventory_item
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - inventory
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: ebay_get_item
+  name: Get Item
+  description: |
+    Get details of a specific inventory item.
+  provider: ebay
+  endpoint: /sell/inventory/v1/inventory_item/{sku}
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - inventory
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      sku:
+        type: string
+        description: "Item SKU"
+    required:
+      - sku
+
+- slug: ebay_list_orders
+  name: List Orders
+  description: |
+    List all orders in eBay.
+  provider: ebay
+  endpoint: /sell/fulfillment/v1/order
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - fulfillment
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      order_state:
+        type: string
+        description: "Filter by state: ACTIVE, COMPLETED, CANCELLED"
+    required: []
+
+- slug: ebay_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order.
+  provider: ebay
+  endpoint: /sell/fulfillment/v1/order/{order_id}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - fulfillment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: string
+        description: "Order ID"
+    required:
+      - order_id
+
+- slug: ebay_list_users
+  name: List Users
+  description: |
+    List users (for OAuth user context).
+  provider: ebay
+  endpoint: /user
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - account
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: ebay_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: ebay
+  endpoint: /user/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: ebay_list_categories
+  name: List Categories
+  description: |
+    List all eBay categories.
+  provider: ebay
+  endpoint: /commerce/category/v1/tree
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - catalog
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ebay_get_category
+  name: Get Category
+  description: |
+    Get details of a specific category.
+  provider: ebay
+  endpoint: /commerce/category/v1/category/{category_id}
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - catalog
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      category_id:
+        type: string
+        description: "Category ID"
+    required:
+      - category_id
+
+- slug: ebay_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: ebay
+  endpoint: /sell/fulfillment/v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - fulfillment
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: ebay_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction.
+  provider: ebay
+  endpoint: /sell/fulfillment/v1/transactions/{transaction_id}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - fulfillment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transaction_id:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transaction_id

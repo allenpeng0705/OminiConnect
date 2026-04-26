@@ -1,0 +1,284 @@
+# Meta Marketing API Tools - Allowlist
+# Curated subset of Meta Marketing API for AI agent use.
+# OAuth2 via Nango (alias: facebook).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. meta_list_ad_accounts       - List advertising accounts
+# 2. meta_get_ad_account         - Get ad account details
+# 3. meta_list_campaigns         - List campaigns
+# 4. meta_get_campaign           - Get campaign details
+# 5. meta_list_ad_sets           - List ad sets
+# 6. meta_get_ad_set             - Get ad set details
+# 7. meta_list_ads               - List ads
+# 8. meta_get_ad                 - Get ad details
+# 9. meta_list_adsets_insights   - Get ad set insights
+# 10. meta_list_campaign_insights - Get campaign insights
+
+- slug: meta_list_ad_accounts
+  name: List Ad Accounts
+  description: |
+    List all advertising accounts accessible to the user.
+  provider: meta-marketing-api
+  endpoint: /me/adaccounts
+  method: GET
+  scopes: []
+  tags:
+    - adaccounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ad accounts
+    properties:
+      fields:
+        type: string
+        description: "Fields to return"
+        default: "name,account_id,account_status"
+    required: []
+
+- slug: meta_get_ad_account
+  name: Get Ad Account
+  description: |
+    Get detailed information about a specific ad account.
+  provider: meta-marketing-api
+  endpoint: /act_{accountId}
+  method: GET
+  scopes: []
+  tags:
+    - adaccounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad account
+    properties:
+      accountId:
+        type: string
+        description: "Ad account ID"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - accountId
+
+- slug: meta_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns for an ad account.
+    Filter by status or objective.
+  provider: meta-marketing-api
+  endpoint: /act_{accountId}/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      accountId:
+        type: string
+        description: "Ad account ID"
+      status:
+        type: integer
+        description: "Filter by status (1=active, 2=paused)"
+      objective:
+        type: string
+        description: "Filter by objective"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - accountId
+
+- slug: meta_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: meta-marketing-api
+  endpoint: /{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - campaignId
+
+- slug: meta_list_ad_sets
+  name: List Ad Sets
+  description: |
+    List all ad sets for a campaign or account.
+  provider: meta-marketing-api
+  endpoint: /act_{accountId}/adsets
+  method: GET
+  scopes: []
+  tags:
+    - adsets
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ad sets
+    properties:
+      accountId:
+        type: string
+        description: "Ad account ID"
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+      status:
+        type: integer
+        description: "Filter by status"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - accountId
+
+- slug: meta_get_ad_set
+  name: Get Ad Set
+  description: |
+    Get details of a specific ad set.
+  provider: meta-marketing-api
+  endpoint: /{adsetId}
+  method: GET
+  scopes: []
+  tags:
+    - adsets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad set
+    properties:
+      adsetId:
+        type: string
+        description: "Ad set ID"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - adsetId
+
+- slug: meta_list_ads
+  name: List Ads
+  description: |
+    List all ads for an ad set or account.
+  provider: meta-marketing-api
+  endpoint: /act_{accountId}/ads
+  method: GET
+  scopes: []
+  tags:
+    - ads
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      accountId:
+        type: string
+        description: "Ad account ID"
+      adset_id:
+        type: string
+        description: "Filter by ad set ID"
+      status:
+        type: integer
+        description: "Filter by status"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - accountId
+
+- slug: meta_get_ad
+  name: Get Ad
+  description: |
+    Get details of a specific ad.
+  provider: meta-marketing-api
+  endpoint: /{adId}
+  method: GET
+  scopes: []
+  tags:
+    - ads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad
+    properties:
+      adId:
+        type: string
+        description: "Ad ID"
+      fields:
+        type: string
+        description: "Fields to return"
+    required:
+      - adId
+
+- slug: meta_list_adsets_insights
+  name: Get Ad Set Insights
+  description: |
+    Get insights data for an ad set.
+  provider: meta-marketing-api
+  endpoint: /{adsetId}/insights
+  method: GET
+  scopes: []
+  tags:
+    - insights
+    - adsets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting ad set insights
+    properties:
+      adsetId:
+        type: string
+        description: "Ad set ID"
+      date_preset:
+        type: string
+        description: "Date range preset (today, yesterday, last_7d, etc.)"
+      fields:
+        type: string
+        description: "Insights fields to return"
+    required:
+      - adsetId
+
+- slug: meta_list_campaign_insights
+  name: Get Campaign Insights
+  description: |
+    Get insights data for a campaign.
+  provider: meta-marketing-api
+  endpoint: /{campaignId}/insights
+  method: GET
+  scopes: []
+  tags:
+    - insights
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign insights
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+      date_preset:
+        type: string
+        description: "Date range preset"
+      fields:
+        type: string
+        description: "Insights fields to return"
+    required:
+      - campaignId

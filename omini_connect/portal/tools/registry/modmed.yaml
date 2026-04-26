@@ -1,0 +1,258 @@
+# ModMed Tools - Allowlist
+# Curated subset of ModMed API for AI agent use.
+# TWO_STEP via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. modmed_list_patients          - List patients
+# 2. modmed_get_patient            - Get patient details
+# 3. modmed_list_appointments     - List appointments
+# 4. modmed_get_appointment       - Get appointment details
+# 5. modmed_list_practices        - List practices
+# 6. modmed_get_practice          - Get practice details
+# 7. modmed_list_providers        - List providers
+# 8. modmed_get_provider          - Get provider details
+# 9. modmed_list_medical_records  - List medical records
+# 10. modmed_get_record          - Get medical record details
+
+- slug: modmed_list_patients
+  name: List Patients
+  description: |
+    List all patients in ModMed.
+    Filter by name, DOB, or practice.
+  provider: modmed
+  endpoint: /ema/api/v1/patients
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing patients
+    properties:
+      search:
+        type: string
+        description: "Search by name or patient ID"
+      practice_id:
+        type: string
+        description: "Filter by practice ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: modmed_get_patient
+  name: Get Patient
+  description: |
+    Get details of a specific patient.
+  provider: modmed
+  endpoint: /ema/api/v1/patients/{patientId}
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a patient
+    properties:
+      patientId:
+        type: string
+        description: "Patient ID"
+    required:
+      - patientId
+
+- slug: modmed_list_appointments
+  name: List Appointments
+  description: |
+    List appointments in ModMed.
+    Filter by date, provider, or status.
+  provider: modmed
+  endpoint: /ema/api/v1/appointments
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      provider_id:
+        type: string
+        description: "Filter by provider ID"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: modmed_get_appointment
+  name: Get Appointment
+  description: |
+    Get details of a specific appointment.
+  provider: modmed
+  endpoint: /ema/api/v1/appointments/{appointmentId}
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      appointmentId:
+        type: string
+        description: "Appointment ID"
+    required:
+      - appointmentId
+
+- slug: modmed_list_practices
+  name: List Practices
+  description: |
+    List all practices in ModMed.
+  provider: modmed
+  endpoint: /ema/api/v1/practices
+  method: GET
+  scopes: []
+  tags:
+    - practices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing practices
+    properties: {}
+    required: []
+
+- slug: modmed_get_practice
+  name: Get Practice
+  description: |
+    Get details of a specific practice.
+  provider: modmed
+  endpoint: /ema/api/v1/practices/{practiceId}
+  method: GET
+  scopes: []
+  tags:
+    - practices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a practice
+    properties:
+      practiceId:
+        type: string
+        description: "Practice ID"
+    required:
+      - practiceId
+
+- slug: modmed_list_providers
+  name: List Providers
+  description: |
+    List all healthcare providers in ModMed.
+  provider: modmed
+  endpoint: /ema/api/v1/providers
+  method: GET
+  scopes: []
+  tags:
+    - providers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing providers
+    properties:
+      practice_id:
+        type: string
+        description: "Filter by practice ID"
+    required: []
+
+- slug: modmed_get_provider
+  name: Get Provider
+  description: |
+    Get details of a specific provider.
+  provider: modmed
+  endpoint: /ema/api/v1/providers/{providerId}
+  method: GET
+  scopes: []
+  tags:
+    - providers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a provider
+    properties:
+      providerId:
+        type: string
+        description: "Provider ID"
+    required:
+      - providerId
+
+- slug: modmed_list_medical_records
+  name: List Medical Records
+  description: |
+    List medical records for a patient.
+  provider: modmed
+  endpoint: /ema/api/v1/patients/{patientId}/records
+  method: GET
+  scopes: []
+  tags:
+    - records
+    - medical
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing medical records
+    properties:
+      patientId:
+        type: string
+        description: "Patient ID"
+      record_type:
+        type: string
+        description: "Filter by record type"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - patientId
+
+- slug: modmed_get_record
+  name: Get Medical Record
+  description: |
+    Get details of a specific medical record.
+  provider: modmed
+  endpoint: /ema/api/v1/records/{recordId}
+  method: GET
+  scopes: []
+  tags:
+    - records
+    - medical
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a medical record
+    properties:
+      recordId:
+        type: string
+        description: "Record ID"
+    required:
+      - recordId

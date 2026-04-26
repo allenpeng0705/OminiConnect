@@ -1,0 +1,235 @@
+# PingOne Client Credentials Tools - Allowlist
+# Curated subset of PingOne API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+# NOTE: pingone-cc uses the same API endpoints as pingone - only auth is different.
+
+# === TOOL LIST ===
+# 1. pingone_cc_list_users              - List users
+# 2. pingone_cc_get_user                - Get user details
+# 3. pingone_cc_list_groups             - List groups
+# 4. pingone_cc_get_group              - Get group details
+# 5. pingone_cc_list_applications       - List applications
+# 6. pingone_cc_get_application        - Get application details
+# 7. pingone_cc_list_populations        - List populations
+# 8. pingone_cc_get_population         - Get population details
+# 9. pingone_cc_list_events            - List audit events
+# 10. pingone_cc_get_environment       - Get environment info
+
+- slug: pingone_cc_list_users
+  name: List Users
+  description: |
+    List all users in the environment.
+  provider: pingone-cc
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      populationId:
+        type: string
+        description: "Filter by population ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: pingone_cc_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: pingone-cc
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: pingone_cc_list_groups
+  name: List Groups
+  description: |
+    List all groups in the environment.
+  provider: pingone-cc
+  endpoint: /v1/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - identity
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: pingone_cc_get_group
+  name: Get Group
+  description: |
+    Get detailed information about a specific group.
+  provider: pingone-cc
+  endpoint: /v1/groups/{groupId}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - identity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: pingone_cc_list_applications
+  name: List Applications
+  description: |
+    List all applications in the environment.
+  provider: pingone-cc
+  endpoint: /v1/applications
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - sso
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pingone_cc_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application.
+  provider: pingone-cc
+  endpoint: /v1/applications/{applicationId}
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - sso
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      applicationId:
+        type: string
+        description: "Application ID"
+    required:
+      - applicationId
+
+- slug: pingone_cc_list_populations
+  name: List Populations
+  description: |
+    List all populations in the environment.
+  provider: pingone-cc
+  endpoint: /v1/populations
+  method: GET
+  scopes: []
+  tags:
+    - populations
+    - identity
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing populations
+    properties: {}
+    required: []
+
+- slug: pingone_cc_get_population
+  name: Get Population
+  description: |
+    Get detailed information about a specific population.
+  provider: pingone-cc
+  endpoint: /v1/populations/{populationId}
+  method: GET
+  scopes: []
+  tags:
+    - populations
+    - identity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a population
+    properties:
+      populationId:
+        type: string
+        description: "Population ID"
+    required:
+      - populationId
+
+- slug: pingone_cc_list_events
+  name: List Events
+  description: |
+    List audit events in the environment.
+  provider: pingone-cc
+  endpoint: /v1/events
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - audit
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+      userId:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: pingone_cc_get_environment
+  name: Get Environment
+  description: |
+    Get environment information.
+  provider: pingone-cc
+  endpoint: /v1/environments/{environmentId}
+  method: GET
+  scopes: []
+  tags:
+    - environment
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting environment info
+    properties:
+      environmentId:
+        type: string
+        description: "Environment ID"
+    required:
+      - environmentId

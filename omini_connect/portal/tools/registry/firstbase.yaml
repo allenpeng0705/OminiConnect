@@ -1,0 +1,238 @@
+# Firstbase Tools - Allowlist
+# Curated subset of Firstbase API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. firstbase_list_employees       - List employees
+# 2. firstbase_get_employee       - Get employee details
+# 3. firstbase_create_employee    - Create an employee
+# 4. firstbase_update_employee   - Update employee details
+# 5. firstbase_list_orders        - List orders
+# 6. firstbase_get_order         - Get order details
+# 7. firstbase_list_documents    - List documents
+# 8. firstbase_get_document      - Get document details
+# 9. firstbase_list_offers       - List offers
+# 10. firstbase_get_offer       - Get offer details
+
+- slug: firstbase_list_employees
+  name: List Employees
+  description: |
+    List all employees.
+  provider: firstbase
+  endpoint: /api/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: firstbase_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: firstbase
+  endpoint: /api/employees/{id}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: firstbase_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee.
+  provider: firstbase
+  endpoint: /api/employees
+  method: POST
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating employee
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email
+
+- slug: firstbase_update_employee
+  name: Update Employee
+  description: |
+    Update employee details.
+  provider: firstbase
+  endpoint: /api/employees/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - id
+
+- slug: firstbase_list_orders
+  name: List Orders
+  description: |
+    List all orders.
+  provider: firstbase
+  endpoint: /api/orders
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: firstbase_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order.
+  provider: firstbase
+  endpoint: /api/orders/{id}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: firstbase_list_documents
+  name: List Documents
+  description: |
+    List all documents.
+  provider: firstbase
+  endpoint: /api/documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+    required: []
+
+- slug: firstbase_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document.
+  provider: firstbase
+  endpoint: /api/documents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id
+
+- slug: firstbase_list_offers
+  name: List Offers
+  description: |
+    List all offers.
+  provider: firstbase
+  endpoint: /api/offers
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties: {}
+    required: []
+
+- slug: firstbase_get_offer
+  name: Get Offer
+  description: |
+    Get details of a specific offer.
+  provider: firstbase
+  endpoint: /api/offers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting offer
+    properties:
+      id:
+        type: string
+        description: "Offer ID"
+    required:
+      - id

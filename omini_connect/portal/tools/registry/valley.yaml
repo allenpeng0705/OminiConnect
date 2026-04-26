@@ -1,0 +1,187 @@
+# Valley Tools - Allowlist
+# Curated subset of Valley API for AI agent use.
+# Two-Step OAuth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. valley_list_accounts           - List all bank accounts
+# # 2. valley_get_account           - Get account details
+# # 3. valley_list_transactions           - List all transactions
+# # 4. valley_get_transaction           - Get transaction details
+# # 5. valley_create_transfer           - Create a transfer
+# # 6. valley_list_payments           - List all payments
+# # 7. valley_create_payment           - Create a payment
+# # 8. valley_list_contacts           - List saved contacts
+# # 9. valley_create_contact           - Create a contact
+# # 10. valley_get_balance           - Get account balance
+
+- slug: valley_list_accounts
+  name: List Accounts
+  description: |
+    List all bank accounts
+  provider: valley
+  endpoint: /accounts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for list accounts
+    properties: {}
+    required: []
+
+- slug: valley_get_account
+  name: Get Account
+  description: |
+    Get account details
+  provider: valley
+  endpoint: /accounts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for get account
+    properties: {}
+    required: []
+
+- slug: valley_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions
+  provider: valley
+  endpoint: /transactions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for list transactions
+    properties: {}
+    required: []
+
+- slug: valley_get_transaction
+  name: Get Transaction
+  description: |
+    Get transaction details
+  provider: valley
+  endpoint: /transactions/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for get transaction
+    properties: {}
+    required: []
+
+- slug: valley_create_transfer
+  name: Create Transfer
+  description: |
+    Create a transfer
+  provider: valley
+  endpoint: /transfers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for create transfer
+    properties: {}
+    required: []
+
+- slug: valley_list_payments
+  name: List Payments
+  description: |
+    List all payments
+  provider: valley
+  endpoint: /payments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for list payments
+    properties: {}
+    required: []
+
+- slug: valley_create_payment
+  name: Create Payment
+  description: |
+    Create a payment
+  provider: valley
+  endpoint: /payments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for create payment
+    properties: {}
+    required: []
+
+- slug: valley_list_contacts
+  name: List Contacts
+  description: |
+    List saved contacts
+  provider: valley
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for list contacts
+    properties: {}
+    required: []
+
+- slug: valley_create_contact
+  name: Create Contact
+  description: |
+    Create a contact
+  provider: valley
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for create contact
+    properties: {}
+    required: []
+
+- slug: valley_get_balance
+  name: Get Balance
+  description: |
+    Get account balance
+  provider: valley
+  endpoint: /accounts/{id}/balance
+  method: GET
+  scopes:
+    - read
+  tags:
+    - valley
+  input_schema:
+    type: object
+    description: Parameters for get balance
+    properties: {}
+    required: []
+

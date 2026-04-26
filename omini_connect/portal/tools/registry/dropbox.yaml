@@ -1,0 +1,270 @@
+# Dropbox Tools - Allowlist
+# Curated subset of Dropbox API v2 for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. dropbox_list_files           - List files in folder
+# 2. dropbox_get_file             - Get file metadata
+# 3. dropbox_download_file       - Download file content
+# 4. dropbox_upload_file         - Upload file content
+# 5. dropbox_create_folder       - Create a folder
+# 6. dropbox_delete_file         - Delete file or folder
+# 7. dropbox_search_files        - Search for files
+# 8. dropbox_list_shared_links   - List shared links
+# 9. dropbox_create_shared_link  - Create a shared link
+# 10. dropbox_list_folder_members - List folder members
+
+- slug: dropbox_list_files
+  name: List Files
+  description: |
+    List files and folders in a Dropbox directory.
+  provider: dropbox
+  endpoint: /2/files/list_folder
+  method: POST
+  scopes:
+    - files.content.read
+  tags:
+    - files
+    - folders
+    - browse
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      path:
+        type: string
+        description: "Folder path (default: /)"
+        default: /
+      recursive:
+        type: boolean
+        description: "List subfolders recursively"
+        default: false
+      limit:
+        type: integer
+        description: "Max files to return (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: dropbox_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file or folder.
+  provider: dropbox
+  endpoint: /2/files/get_metadata
+  method: POST
+  scopes:
+    - files.metadata.read
+  tags:
+    - files
+    - metadata
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting file metadata
+    properties:
+      path:
+        type: string
+        description: "File or folder path"
+    required:
+      - path
+
+- slug: dropbox_download_file
+  name: Download File
+  description: |
+    Download file content. Returns file as base64-encoded content.
+  provider: dropbox
+  endpoint: /2/files/download
+  method: POST
+  scopes:
+    - files.content.read
+  tags:
+    - files
+    - download
+    - read
+  input_schema:
+    type: object
+    description: Parameters for downloading a file
+    properties:
+      path:
+        type: string
+        description: "File path"
+    required:
+      - path
+
+- slug: dropbox_upload_file
+  name: Upload File
+  description: |
+    Upload or create a file with content. Overwrites if exists.
+  provider: dropbox
+  endpoint: /2/files/upload
+  method: POST
+  scopes:
+    - files.content.write
+  tags:
+    - files
+    - upload
+    - write
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      path:
+        type: string
+        description: "Destination file path"
+      content:
+        type: string
+        description: "File content (base64-encoded or raw text)"
+      mode:
+        type: string
+        description: "Write mode: add, overwrite, update"
+        default: overwrite
+    required:
+      - path
+      - content
+
+- slug: dropbox_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in Dropbox.
+  provider: dropbox
+  endpoint: /2/files/create_folder_v2
+  method: POST
+  scopes:
+    - files.metadata.write
+  tags:
+    - files
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      path:
+        type: string
+        description: "Folder path to create"
+    required:
+      - path
+
+- slug: dropbox_delete_file
+  name: Delete File
+  description: |
+    Delete a file or folder. Folders are deleted recursively.
+  provider: dropbox
+  endpoint: /2/files/delete_v2
+  method: POST
+  scopes:
+    - files.content.write
+  tags:
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      path:
+        type: string
+        description: "File or folder path to delete"
+    required:
+      - path
+
+- slug: dropbox_search_files
+  name: Search Files
+  description: |
+    Search for files and folders matching a query.
+  provider: dropbox
+  endpoint: /2/files/search_v2
+  method: POST
+  scopes:
+    - files.metadata.read
+  tags:
+    - files
+    - search
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching files
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      path:
+        type: string
+        description: "Folder to search in"
+        default: /
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required:
+      - query
+
+- slug: dropbox_list_shared_links
+  name: List Shared Links
+  description: |
+    List all shared links for files and folders.
+  provider: dropbox
+  endpoint: /2/sharing/list_shared_links
+  method: POST
+  scopes:
+    - sharing.read
+  tags:
+    - sharing
+    - links
+  input_schema:
+    type: object
+    description: Parameters for listing shared links
+    properties:
+      path:
+        type: string
+        description: "File or folder path (optional)"
+    required: []
+
+- slug: dropbox_create_shared_link
+  name: Create Shared Link
+  description: |
+    Create or modify a shared link for a file or folder.
+  provider: dropbox
+  endpoint: /2/sharing/create_shared_link
+  method: POST
+  scopes:
+    - sharing.write
+  tags:
+    - sharing
+    - links
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a shared link
+    properties:
+      path:
+        type: string
+        description: "File or folder path"
+      settings:
+        type: object
+        description: "Link settings (visibility, expires)"
+    required:
+      - path
+
+- slug: dropbox_list_folder_members
+  name: List Folder Members
+  description: |
+    List members of a shared folder with their access level.
+  provider: dropbox
+  endpoint: /2/sharing/list_folder_members
+  method: POST
+  scopes:
+    - sharing.read
+  tags:
+    - sharing
+    - folders
+    - members
+  input_schema:
+    type: object
+    description: Parameters for listing folder members
+    properties:
+      folder_id:
+        type: string
+        description: "Shared folder ID"
+    required:
+      - folder_id

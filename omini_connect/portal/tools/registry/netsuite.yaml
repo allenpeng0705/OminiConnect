@@ -1,0 +1,279 @@
+# NetSuite Tools - Allowlist
+# Curated subset of NetSuite SuiteTalks REST API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. netsuite_list_customers           - List customers
+# 2. netsuite_get_customer            - Get customer details
+# 3. netsuite_list_invoices           - List invoices
+# 4. netsuite_get_invoice             - Get invoice details
+# 5. netsuite_list_items              - List items/products
+# 6. netsuite_list_vendors             - List vendors
+# 7. netsuite_list_purchase_orders     - List purchase orders
+# 8. netsuite_list_employees          - List employees
+# 9. netsuite_list_departments       - List departments
+# 10. netsuite_get_server_time         - Get server time
+
+- slug: netsuite_list_customers
+  name: List Customers
+  description: |
+    List all customers in NetSuite.
+  provider: netsuite
+  endpoint: /customer
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - crm
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Number of records (default 10, max 1000)"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset for pagination"
+        default: 0
+    required: []
+
+- slug: netsuite_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information for a specific customer.
+  provider: netsuite
+  endpoint: /customer/{id}
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - crm
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: netsuite_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in NetSuite.
+  provider: netsuite
+  endpoint: /invoice
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - accounting
+    - invoices
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: netsuite_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information for a specific invoice.
+  provider: netsuite
+  endpoint: /invoice/{id}
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - accounting
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: integer
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: netsuite_list_items
+  name: List Items
+  description: |
+    List all items/products in NetSuite.
+  provider: netsuite
+  endpoint: /item
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - inventory
+    - items
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+      type:
+        type: string
+        description: "Filter by item type"
+    required: []
+
+- slug: netsuite_list_vendors
+  name: List Vendors
+  description: |
+    List all vendors in NetSuite.
+  provider: netsuite
+  endpoint: /vendor
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - crm
+    - vendors
+    - procurement
+  input_schema:
+    type: object
+    description: Parameters for listing vendors
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+    required: []
+
+- slug: netsuite_list_purchase_orders
+  name: List Purchase Orders
+  description: |
+    List all purchase orders in NetSuite.
+  provider: netsuite
+  endpoint: /purchaseOrder
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - procurement
+    - purchase-orders
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing purchase orders
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: netsuite_list_employees
+  name: List Employees
+  description: |
+    List all employees in NetSuite.
+  provider: netsuite
+  endpoint: /employee
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - hr
+    - employees
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+    required: []
+
+- slug: netsuite_list_departments
+  name: List Departments
+  description: |
+    List all departments in NetSuite.
+  provider: netsuite
+  endpoint: /department
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - organization
+    - departments
+    - structure
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      limit:
+        type: integer
+        description: "Number of records"
+        default: 10
+      offset:
+        type: integer
+        description: "Record offset"
+        default: 0
+    required: []
+
+- slug: netsuite_get_server_time
+  name: Get Server Time
+  description: |
+    Get the current server time from NetSuite.
+  provider: netsuite
+  endpoint: /authentication
+  method: GET
+  scopes:
+    - rest_webservices
+  tags:
+    - system
+    - time
+    - utility
+  input_schema:
+    type: object
+    description: Parameters for getting server time
+    properties: {}
+    required: []

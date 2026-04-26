@@ -1,0 +1,246 @@
+# DrChrono Tools - Allowlist
+# Curated subset of the DrChrono API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. drchrono_list_patients            - List patients
+# 2. drchrono_get_patient             - Get patient details
+# 3. drchrono_list_appointments       - List appointments
+# 4. drchrono_get_appointment         - Get appointment details
+# 5. drchrono_list_calendar_entries   - List calendar entries
+# 6. drchrono_get_calendar_entry      - Get calendar entry details
+# 7. drchrono_list_insurance          - List insurance providers
+# 8. drchrono_get_insurance           - Get insurance details
+# 9. drchrono_list_offices           - List offices
+# 10. drchrono_get_office           - Get office details
+
+- slug: drchrono_list_patients
+  name: List Patients
+  description: |
+    List all patients in DrChrono.
+  provider: drchrono
+  endpoint: /api/patients
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing patients
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: drchrono_get_patient
+  name: Get Patient
+  description: |
+    Get details of a specific patient.
+  provider: drchrono
+  endpoint: /api/patients/{patient_id}
+  method: GET
+  scopes: []
+  tags:
+    - patients
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a patient
+    properties:
+      patient_id:
+        type: string
+        description: "Patient ID"
+    required:
+      - patient_id
+
+- slug: drchrono_list_appointments
+  name: List Appointments
+  description: |
+    List all appointments.
+  provider: drchrono
+  endpoint: /api/appointments
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      date:
+        type: string
+        description: "Filter by date (YYYY-MM-DD)"
+    required: []
+
+- slug: drchrono_get_appointment
+  name: Get Appointment
+  description: |
+    Get details of a specific appointment.
+  provider: drchrono
+  endpoint: /api/appointments/{appointment_id}
+  method: GET
+  scopes: []
+  tags:
+    - appointments
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      appointment_id:
+        type: string
+        description: "Appointment ID"
+    required:
+      - appointment_id
+
+- slug: drchrono_list_calendar_entries
+  name: List Calendar Entries
+  description: |
+    List all calendar entries.
+  provider: drchrono
+  endpoint: /api/calendar_entries
+  method: GET
+  scopes: []
+  tags:
+    - calendar
+    - scheduling
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calendar entries
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      start_date:
+        type: string
+        description: "Filter by start date (YYYY-MM-DD)"
+    required: []
+
+- slug: drchrono_get_calendar_entry
+  name: Get Calendar Entry
+  description: |
+    Get details of a specific calendar entry.
+  provider: drchrono
+  endpoint: /api/calendar_entries/{entry_id}
+  method: GET
+  scopes: []
+  tags:
+    - calendar
+    - scheduling
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a calendar entry
+    properties:
+      entry_id:
+        type: string
+        description: "Calendar Entry ID"
+    required:
+      - entry_id
+
+- slug: drchrono_list_insurance
+  name: List Insurance
+  description: |
+    List all insurance providers.
+  provider: drchrono
+  endpoint: /api/insurance_providers
+  method: GET
+  scopes: []
+  tags:
+    - insurance
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing insurance
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: drchrono_get_insurance
+  name: Get Insurance
+  description: |
+    Get details of a specific insurance provider.
+  provider: drchrono
+  endpoint: /api/insurance_providers/{insurance_id}
+  method: GET
+  scopes: []
+  tags:
+    - insurance
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting insurance
+    properties:
+      insurance_id:
+        type: string
+        description: "Insurance Provider ID"
+    required:
+      - insurance_id
+
+- slug: drchrono_list_offices
+  name: List Offices
+  description: |
+    List all offices.
+  provider: drchrono
+  endpoint: /api/offices
+  method: GET
+  scopes: []
+  tags:
+    - offices
+    - healthcare
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offices
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: drchrono_get_office
+  name: Get Office
+  description: |
+    Get details of a specific office.
+  provider: drchrono
+  endpoint: /api/offices/{office_id}
+  method: GET
+  scopes: []
+  tags:
+    - offices
+    - healthcare
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an office
+    properties:
+      office_id:
+        type: string
+        description: "Office ID"
+    required:
+      - office_id

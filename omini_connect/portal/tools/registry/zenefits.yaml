@@ -1,0 +1,187 @@
+# Zenefits Tools - Allowlist
+# Curated subset of Zenefits API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zenefits_list_employees           - List all employees
+# # 2. zenefits_get_employee           - Get employee details
+# # 3. zenefits_list_departments           - List all departments
+# # 4. zenefits_list_locations           - List all locations
+# # 5. zenefits_list_jobs           - List all job positions
+# # 6. zenefits_list_time_off           - List time off requests
+# # 7. zenefits_create_time_off           - Create time off request
+# # 8. zenefits_list_beneficiaries           - List all beneficiaries
+# # 9. zenefits_list_payrolls           - List payroll runs
+# # 10. zenefits_list_approvals           - List pending approvals
+
+- slug: zenefits_list_employees
+  name: List Employees
+  description: |
+    List all employees
+  provider: zenefits
+  endpoint: /core/employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list employees
+    properties: {}
+    required: []
+
+- slug: zenefits_get_employee
+  name: Get Employee
+  description: |
+    Get employee details
+  provider: zenefits
+  endpoint: /core/employees/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for get employee
+    properties: {}
+    required: []
+
+- slug: zenefits_list_departments
+  name: List Departments
+  description: |
+    List all departments
+  provider: zenefits
+  endpoint: /core/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list departments
+    properties: {}
+    required: []
+
+- slug: zenefits_list_locations
+  name: List Locations
+  description: |
+    List all locations
+  provider: zenefits
+  endpoint: /core/locations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list locations
+    properties: {}
+    required: []
+
+- slug: zenefits_list_jobs
+  name: List Jobs
+  description: |
+    List all job positions
+  provider: zenefits
+  endpoint: /core/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list jobs
+    properties: {}
+    required: []
+
+- slug: zenefits_list_time_off
+  name: List Time Off
+  description: |
+    List time off requests
+  provider: zenefits
+  endpoint: /time_off/requests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list time off
+    properties: {}
+    required: []
+
+- slug: zenefits_create_time_off
+  name: Create Time Off
+  description: |
+    Create time off request
+  provider: zenefits
+  endpoint: /time_off/requests
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for create time off
+    properties: {}
+    required: []
+
+- slug: zenefits_list_beneficiaries
+  name: List Beneficiaries
+  description: |
+    List all beneficiaries
+  provider: zenefits
+  endpoint: /people/beneficiaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list beneficiaries
+    properties: {}
+    required: []
+
+- slug: zenefits_list_payrolls
+  name: List Payrolls
+  description: |
+    List payroll runs
+  provider: zenefits
+  endpoint: /payroll/payrolls
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list payrolls
+    properties: {}
+    required: []
+
+- slug: zenefits_list_approvals
+  name: List Approvals
+  description: |
+    List pending approvals
+  provider: zenefits
+  endpoint: /approvals/requests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zenefits
+  input_schema:
+    type: object
+    description: Parameters for list approvals
+    properties: {}
+    required: []
+

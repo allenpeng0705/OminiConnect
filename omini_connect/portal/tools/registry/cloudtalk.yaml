@@ -1,0 +1,232 @@
+# CloudTalk Tools - Allowlist
+# Curated subset of the CloudTalk API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cloudtalk_list_contacts              - List contacts
+# 2. cloudtalk_get_contact               - Get contact details
+# 3. cloudtalk_list_calls                - List calls
+# 4. cloudtalk_get_call                  - Get call details
+# 5. cloudtalk_list_agents               - List agents
+# 6. cloudtalk_get_agent                - Get agent details
+# 7. cloudtalk_list_campaigns            - List campaigns
+# 8. cloudtalk_get_campaign             - Get campaign details
+# 9. cloudtalk_list_call_history        - List call history
+# 10. cloudtalk_get_call_recording     - Get call recording
+
+- slug: cloudtalk_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: cloudtalk
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudtalk_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: cloudtalk
+  endpoint: /contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: cloudtalk_list_calls
+  name: List Calls
+  description: |
+    List all calls.
+  provider: cloudtalk
+  endpoint: /calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      from_date:
+        type: string
+        description: "Start date"
+      to_date:
+        type: string
+        description: "End date"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudtalk_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: cloudtalk
+  endpoint: /calls/{id}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      id:
+        type: integer
+        description: "Call ID"
+    required:
+      - id
+
+- slug: cloudtalk_list_agents
+  name: List Agents
+  description: |
+    List all agents.
+  provider: cloudtalk
+  endpoint: /agents
+  method: GET
+  scopes: []
+  tags:
+    - agents
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudtalk_get_agent
+  name: Get Agent
+  description: |
+    Get details of a specific agent.
+  provider: cloudtalk
+  endpoint: /agents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: integer
+        description: "Agent ID"
+    required:
+      - id
+
+- slug: cloudtalk_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: cloudtalk
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudtalk_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: cloudtalk
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: cloudtalk_list_call_history
+  name: List Call History
+  description: |
+    List all call history.
+  provider: cloudtalk
+  endpoint: /callhistory
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing call history
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudtalk_get_call_recording
+  name: Get Call Recording
+  description: |
+    Get the recording for a specific call.
+  provider: cloudtalk
+  endpoint: /calls/{id}/recording
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - recording
+  input_schema:
+    type: object
+    description: Parameters for getting call recording
+    properties:
+      id:
+        type: integer
+        description: "Call ID"
+    required:
+      - id

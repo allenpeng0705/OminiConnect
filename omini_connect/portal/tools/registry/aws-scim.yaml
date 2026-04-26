@@ -1,0 +1,267 @@
+# AWS SCIM Tools - Allowlist
+# Curated subset of AWS IAM Identity Center SCIM API for AI agent use.
+# API_KEY auth via Nango (SCIM Access Token).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. aws_scim_list_users      - List users via SCIM
+# 2. aws_scim_get_user        - Get user details
+# 3. aws_scim_create_user     - Create a new user
+# 4. aws_scim_update_user     - Update user attributes
+# 5. aws_scim_delete_user     - Delete a user
+# 6. aws_scim_list_groups     - List groups via SCIM
+# 7. aws_scim_get_group       - Get group details
+# 8. aws_scim_create_group   - Create a new group
+# 9. aws_scim_update_group   - Update group members
+# 10. aws_scim_list_service_providers - List SCIM service provider info
+
+- slug: aws_scim_list_users
+  name: List Users
+  description: |
+    List all users in AWS IAM Identity Center via SCIM.
+  provider: aws-scim
+  endpoint: /Users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - scim
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      filter:
+        type: string
+        description: "SCIM filter expression"
+      startIndex:
+        type: integer
+        description: "Pagination start index"
+        default: 1
+      count:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: aws_scim_get_user
+  name: Get User
+  description: |
+    Get details for a specific user by ID.
+  provider: aws-scim
+  endpoint: /Users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: aws_scim_create_user
+  name: Create User
+  description: |
+    Create a new user in AWS IAM Identity Center.
+  provider: aws-scim
+  endpoint: /Users
+  method: POST
+  scopes: []
+  tags:
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      userName:
+        type: string
+        description: "Username (must be unique)"
+      name:
+        type: object
+        description: "Name object with givenName and familyName"
+      emails:
+        type: array
+        description: "Email addresses"
+      active:
+        type: boolean
+        description: "User active status"
+        default: true
+    required:
+      - userName
+
+- slug: aws_scim_update_user
+  name: Update User
+  description: |
+    Update user attributes in AWS IAM Identity Center.
+  provider: aws-scim
+  endpoint: /Users/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      userName:
+        type: string
+        description: "Username"
+      name:
+        type: object
+        description: "Name object"
+      emails:
+        type: array
+        description: "Email addresses"
+      active:
+        type: boolean
+        description: "User active status"
+    required:
+      - id
+
+- slug: aws_scim_delete_user
+  name: Delete User
+  description: |
+    Delete a user from AWS IAM Identity Center.
+  provider: aws-scim
+  endpoint: /Users/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: aws_scim_list_groups
+  name: List Groups
+  description: |
+    List all groups in AWS IAM Identity Center via SCIM.
+  provider: aws-scim
+  endpoint: /Groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - scim
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      filter:
+        type: string
+        description: "SCIM filter expression"
+      startIndex:
+        type: integer
+        description: "Pagination start index"
+        default: 1
+      count:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: aws_scim_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including members.
+  provider: aws-scim
+  endpoint: /Groups/{id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+    required:
+      - id
+
+- slug: aws_scim_create_group
+  name: Create Group
+  description: |
+    Create a new group in AWS IAM Identity Center.
+  provider: aws-scim
+  endpoint: /Groups
+  method: POST
+  scopes: []
+  tags:
+    - groups
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a group
+    properties:
+      displayName:
+        type: string
+        description: "Group display name"
+      members:
+        type: array
+        description: "Array of member IDs"
+    required:
+      - displayName
+
+- slug: aws_scim_update_group
+  name: Update Group
+  description: |
+    Update group members in AWS IAM Identity Center.
+  provider: aws-scim
+  endpoint: /Groups/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - groups
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+      displayName:
+        type: string
+        description: "Group display name"
+      members:
+        type: array
+        description: "Array of member IDs"
+    required:
+      - id
+
+- slug: aws_scim_list_service_providers
+  name: List Service Providers
+  description: |
+    Get SCIM service provider configuration information.
+  provider: aws-scim
+  endpoint: /ServiceProviderConfig
+  method: GET
+  scopes: []
+  tags:
+    - service-provider
+    - config
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

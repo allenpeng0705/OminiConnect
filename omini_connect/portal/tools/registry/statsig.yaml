@@ -1,0 +1,267 @@
+# Statsig Tools - Allowlist
+# Curated subset of Statsig REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. statsig_list_feature_gates     - List feature gates
+# 2. statsig_get_feature_gate       - Get feature gate details
+# 3. statsig_create_feature_gate    - Create a feature gate
+# 4. statsig_update_feature_gate    - Update a feature gate
+# 5. statsig_list_experiments       - List experiments
+# 6. statsig_get_experiment         - Get experiment details
+# 7. statsig_list_users            - List users
+# 8. statsig_get_user              - Get user details
+# 9. statsig_list_metrics          - List metrics
+# 10. statsig_get_metric           - Get metric details
+
+- slug: statsig_list_feature_gates
+  name: List Feature Gates
+  description: |
+    List all feature gates in a Statsig project.
+    Feature gates are boolean flags used for gradual rollouts and targeting.
+  provider: statsig
+  endpoint: /v1/feature_gates
+  method: GET
+  scopes:
+    - feature_gates:read
+  tags:
+    - feature_gates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing feature gates
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of gates to return"
+    required:
+      - project_id
+
+- slug: statsig_get_feature_gate
+  name: Get Feature Gate
+  description: |
+    Get detailed information about a specific feature gate including rules and targeting.
+  provider: statsig
+  endpoint: /v1/feature_gates/{gate_name}
+  method: GET
+  scopes:
+    - feature_gates:read
+  tags:
+    - feature_gates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature gate
+    properties:
+      gate_name:
+        type: string
+        description: "The feature gate name"
+    required:
+      - gate_name
+
+- slug: statsig_create_feature_gate
+  name: Create Feature Gate
+  description: |
+    Create a new feature gate in Statsig.
+    Set the gate name, description, project, and unit type for targeting.
+  provider: statsig
+  endpoint: /v1/feature_gates
+  method: POST
+  scopes:
+    - feature_gates:write
+  tags:
+    - feature_gates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a feature gate
+    properties:
+      name:
+        type: string
+        description: "The unique gate name"
+      description:
+        type: string
+        description: "Description of the gate"
+      project_id:
+        type: string
+        description: "The project ID"
+      id_type:
+        type: string
+        description: "The unit type (user, device, custom)"
+    required:
+      - name
+      - project_id
+
+- slug: statsig_update_feature_gate
+  name: Update Feature Gate
+  description: |
+    Update an existing feature gate. Modify description, rules, or status.
+  provider: statsig
+  endpoint: /v1/feature_gates/{gate_name}
+  method: PATCH
+  scopes:
+    - feature_gates:write
+  tags:
+    - feature_gates
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a feature gate
+    properties:
+      gate_name:
+        type: string
+        description: "The feature gate name"
+      description:
+        type: string
+        description: "Updated description"
+      status:
+        type: string
+        description: "Gate status (active, inactive)"
+    required:
+      - gate_name
+
+- slug: statsig_list_experiments
+  name: List Experiments
+  description: |
+    List all experiments in a Statsig project.
+    Experiments are multivariate tests with multiple variants.
+  provider: statsig
+  endpoint: /v1/experiments
+  method: GET
+  scopes:
+    - experiments:read
+  tags:
+    - experiments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing experiments
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of experiments to return"
+    required:
+      - project_id
+
+- slug: statsig_get_experiment
+  name: Get Experiment
+  description: |
+    Get detailed information about an experiment including variants, metrics, and results.
+  provider: statsig
+  endpoint: /v1/experiments/{experiment_id}
+  method: GET
+  scopes:
+    - experiments:read
+  tags:
+    - experiments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an experiment
+    properties:
+      experiment_id:
+        type: string
+        description: "The experiment ID"
+    required:
+      - experiment_id
+
+- slug: statsig_list_users
+  name: List Users
+  description: |
+    List all users in a Statsig project who have been evaluated.
+  provider: statsig
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+    required:
+      - project_id
+
+- slug: statsig_get_user
+  name: Get User
+  description: |
+    Get details about a specific user including their gate states and experiment assignments.
+  provider: statsig
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+    required:
+      - user_id
+
+- slug: statsig_list_metrics
+  name: List Metrics
+  description: |
+    List all metrics in a Statsig project.
+    Metrics are measurements tracked for experiments and feature gates.
+  provider: statsig
+  endpoint: /v1/metrics
+  method: GET
+  scopes:
+    - metrics:read
+  tags:
+    - metrics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing metrics
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of metrics to return"
+    required:
+      - project_id
+
+- slug: statsig_get_metric
+  name: Get Metric
+  description: |
+    Get details about a specific metric including its type and configuration.
+  provider: statsig
+  endpoint: /v1/metrics/{metric_id}
+  method: GET
+  scopes:
+    - metrics:read
+  tags:
+    - metrics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a metric
+    properties:
+      metric_id:
+        type: string
+        description: "The metric ID"
+    required:
+      - metric_id

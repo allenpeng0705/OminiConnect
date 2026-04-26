@@ -1,0 +1,233 @@
+- slug: simpleview_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a paginated list of all contacts in the CRM.
+  provider: simpleview
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts_read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of records per page"
+    required: []
+
+- slug: simpleview_get_contact
+  name: Get Contact
+  description: |
+    Retrieve detailed information for a specific contact by ID.
+  provider: simpleview
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contacts_read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: simpleview_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in the CRM with the provided details.
+  provider: simpleview
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contacts_write
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name of the contact"
+      last_name:
+        type: string
+        description: "Last name of the contact"
+      email:
+        type: string
+        description: "Email address of the contact"
+      phone:
+        type: string
+        description: "Phone number of the contact"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: simpleview_list_companies
+  name: List Companies
+  description: |
+    Retrieve a paginated list of all companies in the CRM.
+  provider: simpleview
+  endpoint: /companies
+  method: GET
+  scopes:
+    - companies_read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of records per page"
+    required: []
+
+- slug: simpleview_get_company
+  name: Get Company
+  description: |
+    Retrieve detailed information for a specific company by ID.
+  provider: simpleview
+  endpoint: /companies/{id}
+  method: GET
+  scopes:
+    - companies_read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: simpleview_list_activities
+  name: List Activities
+  description: |
+    Retrieve a list of all activities such as calls, meetings, and notes.
+  provider: simpleview
+  endpoint: /activities
+  method: GET
+  scopes:
+    - activities_read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      contact_id:
+        type: string
+        description: "Filter activities by contact ID"
+      type:
+        type: string
+        description: "Filter by activity type (call, meeting, note)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: simpleview_get_activity
+  name: Get Activity
+  description: |
+    Retrieve detailed information for a specific activity by ID.
+  provider: simpleview
+  endpoint: /activities/{id}
+  method: GET
+  scopes:
+    - activities_read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: string
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: simpleview_list_opportunities
+  name: List Opportunities
+  description: |
+    Retrieve a list of all sales opportunities in the pipeline.
+  provider: simpleview
+  endpoint: /opportunities
+  method: GET
+  scopes:
+    - opportunities_read
+  tags:
+    - opportunities
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage:
+        type: string
+        description: "Filter by pipeline stage"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: simpleview_get_opportunity
+  name: Get Opportunity
+  description: |
+    Retrieve detailed information for a specific opportunity by ID.
+  provider: simpleview
+  endpoint: /opportunities/{id}
+  method: GET
+  scopes:
+    - opportunities_read
+  tags:
+    - opportunities
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: simpleview_list_tickets
+  name: List Tickets
+  description: |
+    Retrieve a list of all support tickets.
+  provider: simpleview
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - tickets_read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      status:
+        type: string
+        description: "Filter by ticket status (open, closed, pending)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []

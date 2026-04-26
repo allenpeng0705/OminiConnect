@@ -1,0 +1,239 @@
+# ConductorOne Tools - Allowlist
+# Curated subset of the ConductorOne API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. conductorone_list_users                - List users
+# 2. conductorone_get_user                 - Get user details
+# 3. conductorone_list_groups              - List groups
+# 4. conductorone_get_group                 - Get group details
+# 5. conductorone_list_entitlements         - List entitlements
+# 6. conductorone_get_entitlement          - Get entitlement details
+# 7. conductorone_list_grants             - List grants
+# 8. conductorone_create_grant            - Create a grant
+# 9. conductorone_revoke_grant            - Revoke a grant
+# 10. conductorone_list_activities        - List activities
+
+- slug: conductorone_list_users
+  name: List Users
+  description: |
+    List all users in the directory.
+  provider: conductorone
+  endpoint: /api/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: conductorone_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: conductorone
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: conductorone_list_groups
+  name: List Groups
+  description: |
+    List all groups in the directory.
+  provider: conductorone
+  endpoint: /api/v1/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: conductorone_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: conductorone
+  endpoint: /api/v1/groups/{id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+    required:
+      - id
+
+- slug: conductorone_list_entitlements
+  name: List Entitlements
+  description: |
+    List all entitlements in the system.
+  provider: conductorone
+  endpoint: /api/v1/entitlements
+  method: GET
+  scopes: []
+  tags:
+    - entitlements
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing entitlements
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: conductorone_get_entitlement
+  name: Get Entitlement
+  description: |
+    Get details of a specific entitlement.
+  provider: conductorone
+  endpoint: /api/v1/entitlements/{id}
+  method: GET
+  scopes: []
+  tags:
+    - entitlements
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an entitlement
+    properties:
+      id:
+        type: string
+        description: "Entitlement ID"
+    required:
+      - id
+
+- slug: conductorone_list_grants
+  name: List Grants
+  description: |
+    List all grants (access assignments).
+  provider: conductorone
+  endpoint: /api/v1/grants
+  method: GET
+  scopes: []
+  tags:
+    - grants
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing grants
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: conductorone_create_grant
+  name: Create Grant
+  description: |
+    Create a new grant (assign access).
+  provider: conductorone
+  endpoint: /api/v1/grants
+  method: POST
+  scopes: []
+  tags:
+    - grants
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a grant
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+      entitlement_id:
+        type: string
+        description: "Entitlement ID"
+    required:
+      - user_id
+      - entitlement_id
+
+- slug: conductorone_revoke_grant
+  name: Revoke Grant
+  description: |
+    Revoke a specific grant.
+  provider: conductorone
+  endpoint: /api/v1/grants/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - grants
+    - revoke
+  input_schema:
+    type: object
+    description: Parameters for revoking a grant
+    properties:
+      id:
+        type: string
+        description: "Grant ID"
+    required:
+      - id
+
+- slug: conductorone_list_activities
+  name: List Activities
+  description: |
+    List all activity logs.
+  provider: conductorone
+  endpoint: /api/v1/activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - audit
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

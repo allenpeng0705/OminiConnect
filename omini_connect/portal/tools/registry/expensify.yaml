@@ -1,0 +1,258 @@
+- slug: expensify_list_reports
+  name: List Reports
+  description: |
+    Retrieve all expense reports with optional status filters.
+  provider: expensify
+  endpoint: /v1/reports
+  method: GET
+  scopes:
+    - read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, submitted, approved, rejected, paid"
+      from_date:
+        type: string
+        description: "Filter from date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "Filter to date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Maximum number of reports to return"
+        default: 100
+
+- slug: expensify_get_report
+  name: Get Report
+  description: |
+    Get detailed information about a specific expense report.
+  provider: expensify
+  endpoint: /v1/reports/{reportID}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportID:
+        type: string
+        description: "The report ID"
+    required:
+      - reportID
+
+- slug: expensify_create_report
+  name: Create Report
+  description: |
+    Create a new expense report.
+  provider: expensify
+  endpoint: /v1/reports
+  method: POST
+  scopes:
+    - write
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for creating a report
+    properties:
+      title:
+        type: string
+        description: "Report title"
+      policyID:
+        type: string
+        description: "The policy ID to use"
+      fields:
+        type: object
+        description: "Additional report fields"
+    required:
+      - title
+
+- slug: expensify_submit_report
+  name: Submit Report
+  description: |
+    Submit an expense report for approval.
+  provider: expensify
+  endpoint: /v1/reports/{reportID}/submit
+  method: POST
+  scopes:
+    - write
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for submitting a report
+    properties:
+      reportID:
+        type: string
+        description: "The report ID to submit"
+    required:
+      - reportID
+
+- slug: expensify_list_expenses
+  name: List Expenses
+  description: |
+    Retrieve all expenses with optional filters.
+  provider: expensify
+  endpoint: /v1/expenses
+  method: GET
+  scopes:
+    - read
+  tags:
+    - expenses
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      report_id:
+        type: string
+        description: "Filter by report ID"
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected"
+      from_date:
+        type: string
+        description: "Filter from date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "Filter to date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Maximum number of expenses to return"
+        default: 100
+
+- slug: expensify_get_expense
+  name: Get Expense
+  description: |
+    Get details of a specific expense.
+  provider: expensify
+  endpoint: /v1/expenses/{expenseID}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - expenses
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      expenseID:
+        type: string
+        description: "The expense ID"
+    required:
+      - expenseID
+
+- slug: expensify_create_expense
+  name: Create Expense
+  description: |
+    Create a new expense, optionally adding it to a report.
+  provider: expensify
+  endpoint: /v1/expenses
+  method: POST
+  scopes:
+    - write
+  tags:
+    - expenses
+  input_schema:
+    type: object
+    description: Parameters for creating an expense
+    properties:
+      amount:
+        type: number
+        description: "Expense amount"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD)"
+      merchant:
+        type: string
+        description: "Merchant name"
+      date:
+        type: string
+        description: "Expense date (YYYY-MM-DD)"
+      report_id:
+        type: string
+        description: "Report ID to add expense to"
+      category:
+        type: string
+        description: "Expense category"
+    required:
+      - amount
+      - currency
+      - merchant
+
+- slug: expensify_list_policies
+  name: List Policies
+  description: |
+    Retrieve all expense policies in the organization.
+  provider: expensify
+  endpoint: /v1/policies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - policies
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      status:
+        type: string
+        description: "Filter by status: enabled, disabled"
+      limit:
+        type: integer
+        description: "Maximum number of policies to return"
+        default: 100
+
+- slug: expensify_get_policy
+  name: Get Policy
+  description: |
+    Get detailed information about a specific expense policy.
+  provider: expensify
+  endpoint: /v1/policies/{policyID}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - policies
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policyID:
+        type: string
+        description: "The policy ID"
+    required:
+      - policyID
+
+- slug: expensify_list_employees
+  name: List Employees
+  description: |
+    Retrieve all employees in the organization.
+  provider: expensify
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by employment status: active, inactive"
+      policy_id:
+        type: string
+        description: "Filter by policy ID"
+      limit:
+        type: integer
+        description: "Maximum number of employees to return"
+        default: 100

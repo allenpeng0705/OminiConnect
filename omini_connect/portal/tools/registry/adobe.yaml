@@ -1,0 +1,266 @@
+# Adobe Tools - Allowlist
+# Curated subset of Adobe Creative Cloud API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. adobe_list_assets           - List assets in Creative Cloud
+# 2. adobe_get_asset              - Get asset details
+# 3. adobe_upload_asset           - Upload a new asset
+# 4. adobe_create_asset_folder    - Create an asset folder
+# 5. adobe_list_libraries         - List Creative Cloud libraries
+# 6. adobe_get_library            - Get library details
+# 7. adobe_list_fonts             - List Adobe fonts
+# 8. adobe_get_font               - Get font details
+# 9. adobe_search_assets          - Search assets by keyword
+# 10. adobe_download_asset        - Download an asset
+
+- slug: adobe_list_assets
+  name: List Assets
+  description: |
+    List assets in Adobe Creative Cloud storage.
+    Filter by folder, type, and tags.
+  provider: adobe
+  endpoint: /api/assets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      folder:
+        type: string
+        description: "Folder path to list assets from"
+      mimeType:
+        type: string
+        description: "Filter by MIME type (e.g., image/jpeg)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: adobe_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information about a specific Creative Cloud asset including metadata and renditions.
+  provider: adobe
+  endpoint: /api/assets/{assetId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      assetId:
+        type: string
+        description: "Asset ID"
+    required:
+      - assetId
+
+- slug: adobe_upload_asset
+  name: Upload Asset
+  description: |
+    Upload a new asset to Adobe Creative Cloud storage.
+    Set metadata and destination folder.
+  provider: adobe
+  endpoint: /api/assets
+  method: POST
+  scopes:
+    - create
+  tags:
+    - assets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for uploading an asset
+    properties:
+      name:
+        type: string
+        description: "File name for the asset"
+      folderPath:
+        type: string
+        description: "Destination folder path"
+      mimeType:
+        type: string
+        description: "MIME type (e.g., image/png)"
+    required:
+      - name
+
+- slug: adobe_create_asset_folder
+  name: Create Asset Folder
+  description: |
+    Create a new folder in Adobe Creative Cloud storage for organizing assets.
+  provider: adobe
+  endpoint: /api/assets/folders
+  method: POST
+  scopes:
+    - create
+  tags:
+    - assets
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parentFolderId:
+        type: string
+        description: "Parent folder ID (optional)"
+    required:
+      - name
+
+- slug: adobe_list_libraries
+  name: List Libraries
+  description: |
+    List all Creative Cloud libraries.
+    Libraries contain design elements like colors, fonts, and assets.
+  provider: adobe
+  endpoint: /api/libraries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - libraries
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing libraries
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: adobe_get_library
+  name: Get Library
+  description: |
+    Get details about a specific Creative Cloud library including its elements.
+  provider: adobe
+  endpoint: /api/libraries/{libraryId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - libraries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a library
+    properties:
+      libraryId:
+        type: string
+        description: "Library ID"
+    required:
+      - libraryId
+
+- slug: adobe_list_fonts
+  name: List Fonts
+  description: |
+    List Adobe Fonts available in the account.
+    Shows font families and styles.
+  provider: adobe
+  endpoint: /api/fonts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - fonts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing fonts
+    properties:
+      family:
+        type: string
+        description: "Filter by font family"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: adobe_get_font
+  name: Get Font
+  description: |
+    Get detailed information about a specific Adobe Font including variants and usage rights.
+  provider: adobe
+  endpoint: /api/fonts/{fontId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - fonts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a font
+    properties:
+      fontId:
+        type: string
+        description: "Font ID or family name"
+    required:
+      - fontId
+
+- slug: adobe_search_assets
+  name: Search Assets
+  description: |
+    Search assets in Adobe Creative Cloud by keyword, type, or tag.
+  provider: adobe
+  endpoint: /api/assets/search
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching assets
+    properties:
+      query:
+        type: string
+        description: "Search query string"
+      type:
+        type: string
+        description: "Asset type filter (image, video, document)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - query
+
+- slug: adobe_download_asset
+  name: Download Asset
+  description: |
+    Download an asset from Adobe Creative Cloud to local storage.
+  provider: adobe
+  endpoint: /api/assets/{assetId}/download
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+    - download
+  input_schema:
+    type: object
+    description: Parameters for downloading an asset
+    properties:
+      assetId:
+        type: string
+        description: "Asset ID to download"
+    required:
+      - assetId

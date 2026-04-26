@@ -1,0 +1,187 @@
+# SignNow Tools - Allowlist
+# Curated subset of SignNow API for AI agent use.
+# Auth mode: OAUTH2.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_documents                           - List all documents
+# 2. get_document                             - Get document details
+# 3. upload_document                          - Upload a document
+# 4. download_document                        - Download document PDF
+# 5. create_signature_request                 - Create signature request
+# 6. list_signature_requests                  - List signature requests
+# 7. get_signature_request                    - Get signature request status
+# 8. cancel_signature_request                 - Cancel a signature request
+# 9. create_folder                            - Create a folder
+# 10. list_folders                             - List all folders
+
+- slug: list_documents
+  name: List Documents
+  description: |
+    List all documents
+  provider: signnow
+  endpoint: /documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_document
+  name: Get Document
+  description: |
+    Get document details
+  provider: signnow
+  endpoint: /documents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: upload_document
+  name: Upload Document
+  description: |
+    Upload a document
+  provider: signnow
+  endpoint: /documents
+  method: POST
+  scopes: []
+  tags:
+    - documents
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: download_document
+  name: Download Document
+  description: |
+    Download document PDF
+  provider: signnow
+  endpoint: /documents/{id}/download
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_signature_request
+  name: Create Signature Request
+  description: |
+    Create signature request
+  provider: signnow
+  endpoint: /signature_requests
+  method: POST
+  scopes: []
+  tags:
+    - signatures
+    - esign
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_signature_requests
+  name: List Signature Requests
+  description: |
+    List signature requests
+  provider: signnow
+  endpoint: /signature_requests
+  method: GET
+  scopes: []
+  tags:
+    - signatures
+    - esign
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_signature_request
+  name: Get Signature Request
+  description: |
+    Get signature request status
+  provider: signnow
+  endpoint: /signature_requests/{id}
+  method: GET
+  scopes: []
+  tags:
+    - signatures
+    - esign
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: cancel_signature_request
+  name: Cancel Signature Request
+  description: |
+    Cancel a signature request
+  provider: signnow
+  endpoint: /signature_requests/{id}/cancel
+  method: POST
+  scopes: []
+  tags:
+    - signatures
+    - esign
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_folder
+  name: Create Folder
+  description: |
+    Create a folder
+  provider: signnow
+  endpoint: /folders
+  method: POST
+  scopes: []
+  tags:
+    - folders
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_folders
+  name: List Folders
+  description: |
+    List all folders
+  provider: signnow
+  endpoint: /folders
+  method: GET
+  scopes: []
+  tags:
+    - folders
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

@@ -1,0 +1,349 @@
+# Bitbucket Tools - Allowlist
+# Curated subset of the Bitbucket REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bitbucket_list_repositories - List repositories for a workspace
+# 2. bitbucket_get_repository    - Get details of a specific repository
+# 3. bitbucket_create_repository - Create a new repository
+# 4. bitbucket_list_branches     - List branches in a repository
+# 5. bitbucket_get_branch        - Get a specific branch
+# 6. bitbucket_list_commits      - List commits in a repository
+# 7. bitbucket_get_commit        - Get a specific commit
+# 8. bitbucket_list_pullrequests - List pull requests in a repository
+# 9. bitbucket_get_pullrequest   - Get a specific pull request
+# 10. bitbucket_list_snippets    - List snippets in a workspace
+
+- slug: bitbucket_list_repositories
+  name: List Repositories
+  description: |
+    List repositories in a workspace. Returns a list of public and private repositories.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - repositories
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      role:
+        type: string
+        description: "Filter by role: owner, collaborator, member"
+        enum: [owner, collaborator, member]
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 10)"
+        default: 10
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - workspace
+
+- slug: bitbucket_get_repository
+  name: Get Repository
+  description: |
+    Get details of a specific repository including description, visibility, and main branch.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - repositories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+    required:
+      - workspace
+      - repo_slug
+
+- slug: bitbucket_create_repository
+  name: Create Repository
+  description: |
+    Create a new repository in a workspace.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}
+  method: POST
+  scopes:
+    - repository
+  tags:
+    - repository
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a repository
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      name:
+        type: string
+        description: "Repository name (required)"
+      description:
+        type: string
+        description: "Repository description"
+      is_private:
+        type: boolean
+        description: "Make repository private (default true)"
+        default: true
+      scm:
+        type: string
+        description: "Scm type: git (default)"
+        enum: [git]
+        default: git
+    required:
+      - workspace
+      - name
+
+- slug: bitbucket_list_branches
+  name: List Branches
+  description: |
+    List all branches in a repository including protected branch info.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/refs/branches
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - branches
+    - repository
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      sort:
+        type: string
+        description: "Sort by: -timestamp, alphabetical"
+        default: -timestamp
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 10
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - workspace
+      - repo_slug
+
+- slug: bitbucket_get_branch
+  name: Get Branch
+  description: |
+    Get details of a specific branch including the target commit and branch metadata.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/refs/branches/{branch}
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - branches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a branch
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      branch:
+        type: string
+        description: "Branch name"
+    required:
+      - workspace
+      - repo_slug
+      - branch
+
+- slug: bitbucket_list_commits
+  name: List Commits
+  description: |
+    List commits in a repository. Filter by branch, author, or date range.
+    Useful for viewing change history and authorship.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/commits
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - commits
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing commits
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      branch:
+        type: string
+        description: "Branch name to list commits from"
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 10
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - workspace
+      - repo_slug
+
+- slug: bitbucket_get_commit
+  name: Get Commit
+  description: |
+    Get details of a specific commit including message, author, date, and changed files.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/commit/{revision}
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - commits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a commit
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      revision:
+        type: string
+        description: "Commit hash or branch name"
+    required:
+      - workspace
+      - repo_slug
+      - revision
+
+- slug: bitbucket_list_pullrequests
+  name: List Pull Requests
+  description: |
+    List pull requests in a repository. Filter by state (open/closed/merged), author, or destination.
+    Use for code review and merge tracking.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/pullrequests
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - pull requests
+    - code review
+  input_schema:
+    type: object
+    description: Parameters for listing pull requests
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      state:
+        type: string
+        description: "PR state: OPEN, CLOSED, MERGED, SUPERSEDED (default OPEN)"
+        enum: [OPEN, CLOSED, MERGED, SUPERSEDED]
+        default: OPEN
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 10
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - workspace
+      - repo_slug
+
+- slug: bitbucket_get_pullrequest
+  name: Get Pull Request
+  description: |
+    Get details of a specific pull request: title, description, state, participants, and merge status.
+  provider: bitbucket
+  endpoint: /repositories/{workspace}/{repo_slug}/pullrequests/{pull_request_id}
+  method: GET
+  scopes:
+    - repository
+  tags:
+    - pull requests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pull request
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      repo_slug:
+        type: string
+        description: "Repository name (slug)"
+      pull_request_id:
+        type: integer
+        description: "Pull request ID"
+    required:
+      - workspace
+      - repo_slug
+      - pull_request_id
+
+- slug: bitbucket_list_snippets
+  name: List Snippets
+  description: |
+    List snippets in a workspace. Snippets are a way to share code fragments and scripts.
+  provider: bitbucket
+  endpoint: /snippets/{workspace}
+  method: GET
+  scopes:
+    - snippet
+  tags:
+    - snippets
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing snippets
+    properties:
+      workspace:
+        type: string
+        description: "Workspace ID or slug"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 10
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - workspace

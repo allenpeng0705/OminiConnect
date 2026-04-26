@@ -1,0 +1,226 @@
+# Fairing Tools - Allowlist
+# Curated subset of Fairing API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fairing_list_questions        - List questions
+# 2. fairing_get_question         - Get question details
+# 3. fairing_list_surveys         - List surveys
+# 4. fairing_get_survey          - Get survey details
+# 5. fairing_list_responses      - List responses
+# 6. fairing_get_response       - Get response details
+# 7. fairing_list_referrals      - List referrals
+# 8. fairing_get_stats          - Get survey statistics
+# 9. fairing_list_sources       - List traffic sources
+# 10. fairing_get_overlay      - Get overlay settings
+
+- slug: fairing_list_questions
+  name: List Questions
+  description: |
+    List all survey questions.
+  provider: fairing
+  endpoint: /questions
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing questions
+    properties:
+      survey_id:
+        type: string
+        description: "Filter by survey ID"
+    required: []
+
+- slug: fairing_get_question
+  name: Get Question
+  description: |
+    Get details of a specific question.
+  provider: fairing
+  endpoint: /questions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting question
+    properties:
+      id:
+        type: string
+        description: "Question ID"
+    required:
+      - id
+
+- slug: fairing_list_surveys
+  name: List Surveys
+  description: |
+    List all surveys.
+  provider: fairing
+  endpoint: /surveys
+  method: GET
+  scopes: []
+  tags:
+    - surveys
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing surveys
+    properties: {}
+    required: []
+
+- slug: fairing_get_survey
+  name: Get Survey
+  description: |
+    Get details of a specific survey.
+  provider: fairing
+  endpoint: /surveys/{id}
+  method: GET
+  scopes: []
+  tags:
+    - surveys
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting survey
+    properties:
+      id:
+        type: string
+        description: "Survey ID"
+    required:
+      - id
+
+- slug: fairing_list_responses
+  name: List Responses
+  description: |
+    List all survey responses.
+  provider: fairing
+  endpoint: /responses
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      survey_id:
+        type: string
+        description: "Filter by survey ID"
+    required: []
+
+- slug: fairing_get_response
+  name: Get Response
+  description: |
+    Get details of a specific response.
+  provider: fairing
+  endpoint: /responses/{id}
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting response
+    properties:
+      id:
+        type: string
+        description: "Response ID"
+    required:
+      - id
+
+- slug: fairing_list_referrals
+  name: List Referrals
+  description: |
+    List all referral data.
+  provider: fairing
+  endpoint: /referrals
+  method: GET
+  scopes: []
+  tags:
+    - referrals
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing referrals
+    properties:
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: fairing_get_stats
+  name: Get Stats
+  description: |
+    Get survey statistics and metrics.
+  provider: fairing
+  endpoint: /stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties:
+      survey_id:
+        type: string
+        description: "Survey ID"
+    required: []
+
+- slug: fairing_list_sources
+  name: List Sources
+  description: |
+    List traffic sources for responses.
+  provider: fairing
+  endpoint: /sources
+  method: GET
+  scopes: []
+  tags:
+    - sources
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sources
+    properties: {}
+    required: []
+
+- slug: fairing_get_overlay
+  name: Get Overlay
+  description: |
+    Get survey overlay settings.
+  provider: fairing
+  endpoint: /overlay
+  method: GET
+  scopes: []
+  tags:
+    - overlay
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting overlay
+    properties:
+      survey_id:
+        type: string
+        description: "Survey ID"
+    required: []

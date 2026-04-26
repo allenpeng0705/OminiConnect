@@ -1,0 +1,244 @@
+# Checkr Partner Tools - Allowlist
+# Curated subset of the Checkr Partner API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. checkr_partner_list_candidates       - List candidates
+# 2. checkr_partner_get_candidate        - Get candidate details
+# 3. checkr_partner_create_candidate     - Create a candidate
+# 4. checkr_partner_list_background_checks - List background checks
+# 5. checkr_partner_get_background_check - Get background check details
+# 6. checkr_partner_create_background_check - Create a background check
+# 7. checkr_partner_list_reports         - List reports
+# 8. checkr_partner_get_report          - Get report details
+# 9. checkr_partner_list_invitations    - List invitations
+# 10. checkr_partner_create_invitation  - Create an invitation
+
+- slug: checkr_partner_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in the account.
+  provider: checkr-partner
+  endpoint: /api/v1/candidates
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkr_partner_get_candidate
+  name: Get Candidate
+  description: |
+    Get details of a specific candidate.
+  provider: checkr-partner
+  endpoint: /api/v1/candidates/{id}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: string
+        description: "Candidate ID"
+    required:
+      - id
+
+- slug: checkr_partner_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate.
+  provider: checkr-partner
+  endpoint: /api/v1/candidates
+  method: POST
+  scopes: []
+  tags:
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      zipcode:
+        type: string
+        description: "Zip code"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: checkr_partner_list_background_checks
+  name: List Background Checks
+  description: |
+    List all background checks for a candidate.
+  provider: checkr-partner
+  endpoint: /api/v1/background_checks
+  method: GET
+  scopes: []
+  tags:
+    - background-checks
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing background checks
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidate_id
+
+- slug: checkr_partner_get_background_check
+  name: Get Background Check
+  description: |
+    Get details of a specific background check.
+  provider: checkr-partner
+  endpoint: /api/v1/background_checks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - background-checks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a background check
+    properties:
+      id:
+        type: string
+        description: "Background check ID"
+    required:
+      - id
+
+- slug: checkr_partner_create_background_check
+  name: Create Background Check
+  description: |
+    Create a new background check for a candidate.
+  provider: checkr-partner
+  endpoint: /api/v1/background_checks
+  method: POST
+  scopes: []
+  tags:
+    - background-checks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a background check
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+      package:
+        type: string
+        description: "Background check package"
+    required:
+      - candidate_id
+      - package
+
+- slug: checkr_partner_list_reports
+  name: List Reports
+  description: |
+    List all reports for a background check.
+  provider: checkr-partner
+  endpoint: /api/v1/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      background_check_id:
+        type: string
+        description: "Background check ID"
+    required:
+      - background_check_id
+
+- slug: checkr_partner_get_report
+  name: Get Report
+  description: |
+    Get details of a specific report.
+  provider: checkr-partner
+  endpoint: /api/v1/reports/{id}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      id:
+        type: string
+        description: "Report ID"
+    required:
+      - id
+
+- slug: checkr_partner_list_invitations
+  name: List Invitations
+  description: |
+    List all invitations sent to candidates.
+  provider: checkr-partner
+  endpoint: /api/v1/invitations
+  method: GET
+  scopes: []
+  tags:
+    - invitations
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing invitations
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+    required: []
+
+- slug: checkr_partner_create_invitation
+  name: Create Invitation
+  description: |
+    Send an invitation to a candidate.
+  provider: checkr-partner
+  endpoint: /api/v1/invitations
+  method: POST
+  scopes: []
+  tags:
+    - invitations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invitation
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+      package:
+        type: string
+        description: "Background check package"
+    required:
+      - candidate_id
+      - package

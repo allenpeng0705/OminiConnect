@@ -1,0 +1,264 @@
+# Rally Tools - Allowlist
+# Curated subset of Rally REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rally_list_projects        - List projects
+# 2. rally_get_project          - Get project details
+# 3. rally_list_defects         - List defects
+# 4. rally_get_defect           - Get defect details
+# 5. rally_create_defect        - Create a defect
+# 6. rally_list_iterations      - List iterations
+# 7. rally_get_iteration        - Get iteration details
+# 8. rally_list_users           - List users
+# 9. rally_get_user             - Get user details
+# 10. rally_list_artifact_children - List child artifacts
+
+- slug: rally_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects the user has access to.
+  provider: rally
+  endpoint: /project
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      fetch:
+        type: string
+        description: "Comma-separated list of fields to fetch (default: Name,ObjectID,State)"
+      start:
+        type: integer
+        description: "Start index for pagination (default: 0)"
+      pageSize:
+        type: integer
+        description: "Number of results per page (default: 20)"
+    required: []
+
+- slug: rally_get_project
+  name: Get Project
+  description: |
+    Retrieve details for a specific project by its ID.
+  provider: rally
+  endpoint: /project/{projectId}
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The ObjectID of the project"
+    required:
+      - projectId
+
+- slug: rally_list_defects
+  name: List Defects
+  description: |
+    Retrieve a list of defects, optionally filtered by project or iteration.
+  provider: rally
+  endpoint: /defect
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - defects
+  input_schema:
+    type: object
+    description: Parameters for listing defects
+    properties:
+      project:
+        type: string
+        description: "Filter by project ObjectID"
+      iteration:
+        type: string
+        description: "Filter by iteration ObjectID"
+      fetch:
+        type: string
+        description: "Comma-separated list of fields to fetch"
+      start:
+        type: integer
+        description: "Start index for pagination"
+      pageSize:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: rally_get_defect
+  name: Get Defect
+  description: |
+    Retrieve details for a specific defect by its ID.
+  provider: rally
+  endpoint: /defect/{defectId}
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - defects
+  input_schema:
+    type: object
+    description: Parameters for getting a defect
+    properties:
+      defectId:
+        type: string
+        description: "The ObjectID of the defect"
+    required:
+      - defectId
+
+- slug: rally_create_defect
+  name: Create Defect
+  description: |
+    Create a new defect in a project.
+  provider: rally
+  endpoint: /defect
+  method: POST
+  scopes:
+    - rally_api
+  tags:
+    - defects
+  input_schema:
+    type: object
+    description: Parameters for creating a defect
+    properties:
+      Name:
+        type: string
+        description: "Defect title"
+      Description:
+        type: string
+        description: "Defect description"
+      Project:
+        type: string
+        description: "Project ObjectID"
+      Severity:
+        type: string
+        description: "Severity level"
+      Priority:
+        type: string
+        description: "Priority level"
+    required:
+      - Name
+      - Project
+
+- slug: rally_list_iterations
+  name: List Iterations
+  description: |
+    Retrieve a list of iterations for a project.
+  provider: rally
+  endpoint: /iteration
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - iterations
+  input_schema:
+    type: object
+    description: Parameters for listing iterations
+    properties:
+      project:
+        type: string
+        description: "Filter by project ObjectID"
+      start:
+        type: integer
+        description: "Start index for pagination"
+      pageSize:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: rally_get_iteration
+  name: Get Iteration
+  description: |
+    Retrieve details for a specific iteration by its ID.
+  provider: rally
+  endpoint: /iteration/{iterationId}
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - iterations
+  input_schema:
+    type: object
+    description: Parameters for getting an iteration
+    properties:
+      iterationId:
+        type: string
+        description: "The ObjectID of the iteration"
+    required:
+      - iterationId
+
+- slug: rally_list_users
+  name: List Users
+  description: |
+    Retrieve a list of users in the workspace.
+  provider: rally
+  endpoint: /user
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      fetch:
+        type: string
+        description: "Comma-separated list of fields to fetch"
+      start:
+        type: integer
+        description: "Start index for pagination"
+    required: []
+
+- slug: rally_get_user
+  name: Get User
+  description: |
+    Retrieve details for a specific user by their ID.
+  provider: rally
+  endpoint: /user/{userId}
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "The ObjectID of the user"
+    required:
+      - userId
+
+- slug: rally_list_artifact_children
+  name: List Artifact Children
+  description: |
+    Retrieve child artifacts (tasks, defects, stories) of a parent artifact.
+  provider: rally
+  endpoint: /artifact/{artifactId}/children
+  method: GET
+  scopes:
+    - rally_api
+  tags:
+    - artifacts
+  input_schema:
+    type: object
+    description: Parameters for listing artifact children
+    properties:
+      artifactId:
+        type: string
+        description: "The ObjectID of the parent artifact"
+      type:
+        type: string
+        description: "Filter by child type (Task, Defect, HierarchicalRequirement)"
+    required:
+      - artifactId

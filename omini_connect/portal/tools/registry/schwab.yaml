@@ -1,0 +1,285 @@
+# Schwab Tools - Allowlist
+# Curated subset of Schwab API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. schwab_list_accounts                    - List all accounts
+# 2. schwab_get_account                     - Get account details
+# 3. schwab_list_positions                  - List all positions
+# 4. schwab_get_portfolio                   - Get portfolio details
+# 5. schwab_list_transactions               - List all transactions
+# 6. schwab_get_transaction                 - Get transaction details
+# 7. schwab_get_quotes                      - Get stock quotes
+# 8. schwab_list_orders                     - List all orders
+# 9. schwab_place_order                     - Place a trade order
+# 10. schwab_get_balances                   - Get account balances
+
+- slug: schwab_list_accounts
+  name: List Accounts
+  description: |
+    Retrieve a list of all brokerage accounts.
+  provider: schwab
+  endpoint: /v1/accounts
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      limit:
+        type: integer
+        description: "Number of accounts"
+        default: 50
+    required: []
+
+- slug: schwab_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+    required:
+      - accountId
+
+- slug: schwab_list_positions
+  name: List Positions
+  description: |
+    Retrieve a list of all positions.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/positions
+  method: GET
+  scopes:
+    - positions:read
+  tags:
+    - positions
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for listing positions
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+      limit:
+        type: integer
+        description: "Number of positions"
+        default: 50
+    required:
+      - accountId
+
+- slug: schwab_get_portfolio
+  name: Get Portfolio
+  description: |
+    Get portfolio details and allocations.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/portfolio
+  method: GET
+  scopes:
+    - portfolio:read
+  tags:
+    - portfolio
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for getting portfolio
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+    required:
+      - accountId
+
+- slug: schwab_list_transactions
+  name: List Transactions
+  description: |
+    Retrieve a list of all transactions.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/transactions
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+      limit:
+        type: integer
+        description: "Number of transactions"
+        default: 50
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required:
+      - accountId
+
+- slug: schwab_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction.
+  provider: schwab
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "The transaction ID"
+    required:
+      - transactionId
+
+- slug: schwab_get_quotes
+  name: Get Quotes
+  description: |
+    Get stock quotes for symbols.
+  provider: schwab
+  endpoint: /v1/marketdata/quotes
+  method: GET
+  scopes:
+    - marketdata:read
+  tags:
+    - quotes
+    - market-data
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for getting quotes
+    properties:
+      symbols:
+        type: array
+        description: "Stock symbols"
+        items:
+          type: string
+    required:
+      - symbols
+
+- slug: schwab_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of all orders.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+    - trading
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - accountId
+
+- slug: schwab_place_order
+  name: Place Order
+  description: |
+    Place a new trade order.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/orders
+  method: POST
+  scopes:
+    - orders:write
+  tags:
+    - orders
+    - trading
+    - brokerage
+    - schwab
+    - create
+  input_schema:
+    type: object
+    description: Parameters for placing an order
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+      symbol:
+        type: string
+        description: "Stock symbol"
+      quantity:
+        type: integer
+        description: "Number of shares"
+      side:
+        type: string
+        description: "Buy or sell"
+      orderType:
+        type: string
+        description: "Order type"
+    required:
+      - accountId
+      - symbol
+      - quantity
+      - side
+
+- slug: schwab_get_balances
+  name: Get Balances
+  description: |
+    Get account balances.
+  provider: schwab
+  endpoint: /v1/accounts/{accountId}/balances
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - balances
+    - accounts
+    - brokerage
+    - schwab
+  input_schema:
+    type: object
+    description: Parameters for getting balances
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+    required:
+      - accountId

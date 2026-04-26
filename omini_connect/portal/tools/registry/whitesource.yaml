@@ -1,0 +1,284 @@
+# WhiteSource Tools - Allowlist
+# Curated subset of WhiteSource REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. whitesource_list_projects              - List all projects
+# 2. whitesource_get_project               - Get project details
+# 3. whitesource_list_licenses             - List licenses
+# 4. whitesource_get_license               - Get license details
+# 5. whitesource_list_vulnerabilities      - List vulnerabilities
+# 6. whitesource_get_vulnerability        - Get vulnerability details
+# 7. whitesource_get_license_report        - Get license report
+# 8. whitesource_get_vulnerability_report  - Get vulnerability report
+# 9. whitesource_list_alerts               - List alerts
+# 10. whitesource_get_alert                - Get alert details
+
+- slug: whitesource_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects in the WhiteSource organization.
+  provider: whitesource
+  endpoint: /api/v1/projects
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing WhiteSource projects
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      product_ids:
+        type: array
+        items:
+          type: string
+        description: "Filter by product IDs"
+      project_ids:
+        type: array
+        items:
+          type: string
+        description: "Filter by project IDs"
+    required:
+      - org_token
+
+- slug: whitesource_get_project
+  name: Get Project
+  description: |
+    Retrieve detailed information about a specific WhiteSource project.
+  provider: whitesource
+  endpoint: /api/v1/projects/{projectToken}
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a WhiteSource project
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      project_token:
+        type: string
+        description: "The unique project token"
+    required:
+      - org_token
+      - project_token
+
+- slug: whitesource_list_licenses
+  name: List Licenses
+  description: |
+    Retrieve all licenses identified across projects in the organization.
+  provider: whitesource
+  endpoint: /api/v1/licenses
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - licenses
+  input_schema:
+    type: object
+    description: Parameters for listing licenses
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      project_tokens:
+        type: array
+        items:
+          type: string
+        description: "Filter by project tokens"
+    required:
+      - org_token
+
+- slug: whitesource_get_license
+  name: Get License
+  description: |
+    Retrieve detailed information about a specific license.
+  provider: whitesource
+  endpoint: /api/v1/licenses/{licenseId}
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - licenses
+  input_schema:
+    type: object
+    description: Parameters for getting license details
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      license_id:
+        type: string
+        description: "The license identifier"
+    required:
+      - org_token
+      - license_id
+
+- slug: whitesource_list_vulnerabilities
+  name: List Vulnerabilities
+  description: |
+    Retrieve all vulnerabilities detected across projects.
+  provider: whitesource
+  endpoint: /api/v1/vulnerabilities
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - vulnerabilities
+  input_schema:
+    type: object
+    description: Parameters for listing vulnerabilities
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      project_token:
+        type: string
+        description: "Filter by project token"
+      severity:
+        type: string
+        description: "Filter by severity (HIGH, MEDIUM, LOW)"
+    required:
+      - org_token
+
+- slug: whitesource_get_vulnerability
+  name: Get Vulnerability
+  description: |
+    Retrieve detailed information about a specific vulnerability.
+  provider: whitesource
+  endpoint: /api/v1/vulnerabilities/{vulnerabilityId}
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - vulnerabilities
+  input_schema:
+    type: object
+    description: Parameters for getting vulnerability details
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      vulnerability_id:
+        type: string
+        description: "The vulnerability identifier"
+    required:
+      - org_token
+      - vulnerability_id
+
+- slug: whitesource_get_license_report
+  name: Get License Report
+  description: |
+    Generate and retrieve a license compliance report.
+  provider: whitesource
+  endpoint: /api/v1/reports/licenses
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for generating license report
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      project_tokens:
+        type: array
+        items:
+          type: string
+        description: "Include specific projects"
+      report_format:
+        type: string
+        description: "Report format (JSON, CSV, PDF)"
+    required:
+      - org_token
+
+- slug: whitesource_get_vulnerability_report
+  name: Get Vulnerability Report
+  description: |
+    Generate and retrieve a vulnerability report for the organization.
+  provider: whitesource
+  endpoint: /api/v1/reports/vulnerabilities
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for generating vulnerability report
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      project_token:
+        type: string
+        description: "Specific project token"
+      severity_filter:
+        type: array
+        items:
+          type: string
+        description: "Filter by severities"
+    required:
+      - org_token
+
+- slug: whitesource_list_alerts
+  name: List Alerts
+  description: |
+    Retrieve all active alerts for the organization.
+  provider: whitesource
+  endpoint: /api/v1/alerts
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - alerts
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      alert_type:
+        type: string
+        description: "Filter by alert type (SECURITY, LICENSE, OUTDATED)"
+      project_token:
+        type: string
+        description: "Filter by project token"
+    required:
+      - org_token
+
+- slug: whitesource_get_alert
+  name: Get Alert
+  description: |
+    Retrieve detailed information about a specific alert.
+  provider: whitesource
+  endpoint: /api/v1/alerts/{alertId}
+  method: GET
+  scopes:
+    - whitesource_read
+  tags:
+    - alerts
+  input_schema:
+    type: object
+    description: Parameters for getting alert details
+    properties:
+      org_token:
+        type: string
+        description: "The WhiteSource organization API token"
+      alert_id:
+        type: string
+        description: "The alert identifier"
+    required:
+      - org_token
+      - alert_id

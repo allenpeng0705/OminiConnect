@@ -1,0 +1,237 @@
+# Mimecast Tools - Allowlist
+# Curated subset of Mimecast API for AI agent use.
+# OAUTH2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mimecast_list_audit_logs       - List audit logs
+# 2. mimecast_list_managed_urls    - List managed URLs
+# 3. mimecast_create_managed_url   - Create managed URL
+# 4. mimecast_list_templates      - List templates
+# 5. mimecast_get_template        - Get template details
+# 6. mimecast_list_groups         - List groups
+# 7. mimecast_get_group           - Get group details
+# 8. mimecast_list_domains        - List domains
+# 9. mimecast_list_accounts       - List accounts
+# 10. mimecast_get_account       - Get account details
+
+- slug: mimecast_list_audit_logs
+  name: List Audit Logs
+  description: |
+    List audit logs from Mimecast.
+    Filter by date, user, or event type.
+  provider: mimecast
+  endpoint: /api/audit/get-audit-events
+  method: POST
+  scopes: []
+  tags:
+    - audit
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing audit logs
+    properties:
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+      event_type:
+        type: string
+        description: "Filter by event type"
+      user:
+        type: string
+        description: "Filter by user email"
+    required: []
+
+- slug: mimecast_list_managed_urls
+  name: List Managed URLs
+  description: |
+    List all managed URLs in Mimecast.
+  provider: mimecast
+  endpoint: /api/managed-headers/get-managed-urls
+  method: POST
+  scopes: []
+  tags:
+    - urls
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing managed URLs
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: mimecast_create_managed_url
+  name: Create Managed URL
+  description: |
+    Create a new managed URL entry.
+  provider: mimecast
+  endpoint: /api/managed-headers/create-managed-url
+  method: POST
+  scopes: []
+  tags:
+    - urls
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a managed URL
+    properties:
+      url:
+        type: string
+        description: "URL to manage"
+      action:
+        type: string
+        description: "Action to take (permit, block, warn)"
+    required:
+      - url
+      - action
+
+- slug: mimecast_list_templates
+  name: List Templates
+  description: |
+    List all email templates in Mimecast.
+  provider: mimecast
+  endpoint: /api/templates/get-templates
+  method: POST
+  scopes: []
+  tags:
+    - templates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: mimecast_get_template
+  name: Get Template
+  description: |
+    Get details of a specific template.
+  provider: mimecast
+  endpoint: /api/templates/get-template
+  method: POST
+  scopes: []
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      id:
+        type: string
+        description: "Template ID"
+    required:
+      - id
+
+- slug: mimecast_list_groups
+  name: List Groups
+  description: |
+    List all distribution groups in Mimecast.
+  provider: mimecast
+  endpoint: /api/directory/list-groups
+  method: POST
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: mimecast_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: mimecast
+  endpoint: /api/directory/get-group
+  method: POST
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+    required:
+      - id
+
+- slug: mimecast_list_domains
+  name: List Domains
+  description: |
+    List all configured domains in Mimecast.
+  provider: mimecast
+  endpoint: /api/domain/get-domains
+  method: POST
+  scopes: []
+  tags:
+    - domains
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties: {}
+    required: []
+
+- slug: mimecast_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in Mimecast.
+  provider: mimecast
+  endpoint: /api/account/get-accounts
+  method: POST
+  scopes: []
+  tags:
+    - accounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: mimecast_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: mimecast
+  endpoint: /api/account/get-account
+  method: POST
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      account:
+        type: string
+        description: "Account key"
+    required:
+      - account

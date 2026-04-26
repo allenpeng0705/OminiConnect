@@ -1,0 +1,284 @@
+# Intercom More Tools - Allowlist
+# Additional Intercom tools for conversations, messages, teammates, and articles.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. intercom_list_conversations      - List conversations
+# 2. intercom_get_conversation        - Get a specific conversation
+# 3. intercom_reply_to_conversation   - Reply to a conversation
+# 4. intercom_list_messages          - List messages in a conversation
+# 5. intercom_get_message            - Get a specific message
+# 6. intercom_list_teammates         - List teammates
+# 7. intercom_get_teammate           - Get a specific teammate
+# 8. intercom_list_articles          - List articles
+# 9. intercom_get_article            - Get a specific article
+# 10. intercom_create_article        - Create an article
+
+- slug: intercom_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from your Intercom workspace.
+    Returns a paginated list of conversations with their status, participants, and latest message.
+  provider: intercom_more
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - support
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      state:
+        type: string
+        description: "Filter by state: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      per_page:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: intercom_get_conversation
+  name: Get Conversation
+  description: |
+    Get a specific conversation by ID. Returns full conversation details including messages, parts, and metadata.
+  provider: intercom_more
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_reply_to_conversation
+  name: Reply to Conversation
+  description: |
+    Reply to a conversation. Use this to send a message to a contact or team member in an existing conversation.
+    Supports text and emoji responses.
+  provider: intercom_more
+  endpoint: /conversations/{id}/reply
+  method: POST
+  scopes:
+    - conversation_write
+  tags:
+    - conversations
+    - support
+    - reply
+  input_schema:
+    type: object
+    description: Parameters for replying to a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+      message:
+        type: string
+        description: "Reply message content (required)"
+      type:
+        type: string
+        description: "Reply type: admin (default)"
+        enum: [admin]
+        default: admin
+    required:
+      - id
+      - message
+
+- slug: intercom_list_messages
+  name: List Messages
+  description: |
+    List all messages in a conversation. Returns the message thread with timestamps and sender information.
+  provider: intercom_more
+  endpoint: /conversations/{id}/messages
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - messages
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required:
+      - id
+
+- slug: intercom_get_message
+  name: Get Message
+  description: |
+    Get a specific message by ID within a conversation. Returns message content, author, and metadata.
+  provider: intercom_more
+  endpoint: /messages/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      id:
+        type: string
+        description: "Message ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_list_teammates
+  name: List Teammates
+  description: |
+    List all teammates in your Intercom workspace. Returns their names, emails, and availability status.
+  provider: intercom_more
+  endpoint: /teammates
+  method: GET
+  scopes:
+    - team_read
+  tags:
+    - teammates
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing teammates
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: intercom_get_teammate
+  name: Get Teammate
+  description: |
+    Get a specific teammate by ID. Returns their profile including name, email, avatar, and role.
+  provider: intercom_more
+  endpoint: /teammates/{id}
+  method: GET
+  scopes:
+    - team_read
+  tags:
+    - teammates
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a teammate
+    properties:
+      id:
+        type: string
+        description: "Teammate ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_list_articles
+  name: List Articles
+  description: |
+    List all articles in your Intercom help center. Returns title, description, state, and author information.
+  provider: intercom_more
+  endpoint: /articles
+  method: GET
+  scopes:
+    - article_read
+  tags:
+    - articles
+    - help_center
+  input_schema:
+    type: object
+    description: Parameters for listing articles
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: intercom_get_article
+  name: Get Article
+  description: |
+    Get a specific article by ID. Returns full article content including title, body, and statistics.
+  provider: intercom_more
+  endpoint: /articles/{id}
+  method: GET
+  scopes:
+    - article_read
+  tags:
+    - articles
+    - help_center
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an article
+    properties:
+      id:
+        type: string
+        description: "Article ID (path parameter)"
+    required:
+      - id
+
+- slug: intercom_create_article
+  name: Create Article
+  description: |
+    Create a new article in your Intercom help center. Include title and body content with optional state.
+  provider: intercom_more
+  endpoint: /articles
+  method: POST
+  scopes:
+    - article_write
+  tags:
+    - articles
+    - help_center
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an article
+    properties:
+      title:
+        type: string
+        description: "Article title (required)"
+      body:
+        type: string
+        description: "Article body content in HTML (required)"
+      state:
+        type: string
+        description: "Article state: draft or published (default draft)"
+        enum: [draft, published]
+        default: draft
+      author_id:
+        type: integer
+        description: "Author user ID"
+    required:
+      - title
+      - body

@@ -1,0 +1,266 @@
+# Retell-ai Tools - Allowlist
+# Curated subset of Retell AI API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. retell-ai_list_calls             - List all calls
+# 2. retell-ai_get_call               - Get call details
+# 3. retell-ai_create_call            - Create an outbound call
+# 4. retell-ai_end_call               - End an active call
+# 5. retell-ai_list_agents            - List AI agents
+# 6. retell-ai_get_agent              - Get agent details
+# 7. retell-ai_create_agent           - Create an AI agent
+# 8. retell-ai_list_analytics         - Get call analytics
+# 9. retell-ai_get_call_transcript    - Get call transcript
+# 10. retell-ai_list_phone_numbers    - List phone numbers
+
+- slug: retell-ai_list_calls
+  name: List Calls
+  description: |
+    Retrieve a list of all calls made through Retell AI.
+  provider: retell-ai
+  endpoint: /v1/calls
+  method: GET
+  scopes:
+    - calls:read
+  tags:
+    - calls
+    - voice
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Number of calls to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: in-progress, completed, failed"
+    required: []
+
+- slug: retell-ai_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: retell-ai
+  endpoint: /v1/calls/{callId}
+  method: GET
+  scopes:
+    - calls:read
+  tags:
+    - calls
+    - voice
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      callId:
+        type: string
+        description: "The call ID"
+    required:
+      - callId
+
+- slug: retell-ai_create_call
+  name: Create Call
+  description: |
+    Create and initiate an outbound call with an AI agent.
+  provider: retell-ai
+  endpoint: /v1/calls
+  method: POST
+  scopes:
+    - calls:write
+  tags:
+    - calls
+    - voice
+    - ai
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a call
+    properties:
+      agentId:
+        type: string
+        description: "AI agent ID to use"
+      phoneNumber:
+        type: string
+        description: "Phone number to call"
+      metadata:
+        type: object
+        description: "Custom metadata to attach"
+    required:
+      - agentId
+      - phoneNumber
+
+- slug: retell-ai_end_call
+  name: End Call
+  description: |
+    End an active call.
+  provider: retell-ai
+  endpoint: /v1/calls/{callId}/end
+  method: POST
+  scopes:
+    - calls:write
+  tags:
+    - calls
+    - voice
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for ending a call
+    properties:
+      callId:
+        type: string
+        description: "The call ID to end"
+    required:
+      - callId
+
+- slug: retell-ai_list_agents
+  name: List Agents
+  description: |
+    Retrieve a list of all AI agents.
+  provider: retell-ai
+  endpoint: /v1/agents
+  method: GET
+  scopes:
+    - agents:read
+  tags:
+    - agents
+    - voice
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      limit:
+        type: integer
+        description: "Number of agents"
+        default: 50
+    required: []
+
+- slug: retell-ai_get_agent
+  name: Get Agent
+  description: |
+    Get details of a specific AI agent.
+  provider: retell-ai
+  endpoint: /v1/agents/{agentId}
+  method: GET
+  scopes:
+    - agents:read
+  tags:
+    - agents
+    - voice
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      agentId:
+        type: string
+        description: "The agent ID"
+    required:
+      - agentId
+
+- slug: retell-ai_create_agent
+  name: Create Agent
+  description: |
+    Create a new AI agent for voice calls.
+  provider: retell-ai
+  endpoint: /v1/agents
+  method: POST
+  scopes:
+    - agents:write
+  tags:
+    - agents
+    - voice
+    - ai
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an agent
+    properties:
+      name:
+        type: string
+        description: "Agent name"
+      model:
+        type: string
+        description: "AI model to use"
+      voice:
+        type: object
+        description: "Voice configuration"
+    required:
+      - name
+
+- slug: retell-ai_list_analytics
+  name: List Analytics
+  description: |
+    Get call analytics and metrics.
+  provider: retell-ai
+  endpoint: /v1/analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - calls
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      startDate:
+        type: string
+        description: "Start date (ISO 8601)"
+      endDate:
+        type: string
+        description: "End date (ISO 8601)"
+    required: []
+
+- slug: retell-ai_get_call_transcript
+  name: Get Call Transcript
+  description: |
+    Get the transcript of a completed call.
+  provider: retell-ai
+  endpoint: /v1/calls/{callId}/transcript
+  method: GET
+  scopes:
+    - calls:read
+  tags:
+    - calls
+    - transcript
+    - voice
+  input_schema:
+    type: object
+    description: Parameters for getting transcript
+    properties:
+      callId:
+        type: string
+        description: "The call ID"
+    required:
+      - callId
+
+- slug: retell-ai_list_phone_numbers
+  name: List Phone Numbers
+  description: |
+    Retrieve a list of all phone numbers.
+  provider: retell-ai
+  endpoint: /v1/phone-numbers
+  method: GET
+  scopes:
+    - phone-numbers:read
+  tags:
+    - phone-numbers
+    - voice
+    - telephony
+  input_schema:
+    type: object
+    description: Parameters for listing phone numbers
+    properties:
+      limit:
+        type: integer
+        description: "Number of phone numbers"
+        default: 50
+    required: []

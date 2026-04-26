@@ -1,0 +1,327 @@
+# Square Tools - Allowlist
+# Curated subset of the Square API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. square_list_payments         - List payments
+# 2. square_get_payment           - Get details of a specific payment
+# 3. square_create_payment        - Create a new payment
+# 4. square_list_items            - List catalog items
+# 5. square_get_item              - Get details of a specific catalog item
+# 6. square_create_item          - Create a new catalog item
+# 7. square_list_customers        - List customers
+# 8. square_get_customer          - Get details of a specific customer
+# 9. square_list_orders           - List orders
+# 10. square_get_order            - Get details of a specific order
+
+- slug: square_list_payments
+  name: List Payments
+  description: |
+    List payments processed through Square. Returns payments with amounts, status, and payment method details.
+  provider: square
+  endpoint: /v2/payments
+  method: GET
+  scopes:
+    - payments.read
+  tags:
+    - payments
+    - transactions
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      location_id:
+        type: string
+        description: "Filter by location ID"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: COMPLETED, APPROVED, PENDING, CANCELED, FAILED"
+        enum: [COMPLETED, APPROVED, PENDING, CANCELED, FAILED]
+      begin_time:
+        type: string
+        description: "Filter by start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "Filter by end time (ISO 8601)"
+      sort_order:
+        type: string
+        description: "Sort order: ASC or DESC"
+        default: DESC
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: square_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment including amount, status, receipt URL, and funding details.
+  provider: square
+  endpoint: /v2/payments/{id}
+  method: GET
+  scopes:
+    - payments.read
+  tags:
+    - payments
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: square_create_payment
+  name: Create Payment
+  description: |
+    Create a new payment for an order. Specify source ID (card nonce) and amount to charge.
+  provider: square
+  endpoint: /v2/payments
+  method: POST
+  scopes:
+    - payments.write
+  tags:
+    - payments
+    - transactions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment
+    properties:
+      source_id:
+        type: string
+        description: "Payment source ID (card nonce from Square Web Payments SDK)"
+      idempotency_key:
+        type: string
+        description: "Unique key to prevent duplicate charges"
+      amount_money:
+        type: object
+        description: "Amount object with amount (in cents) and currency"
+        properties:
+          amount:
+            type: integer
+            description: "Amount in smallest currency unit"
+          currency:
+            type: string
+            description: "Three-letter ISO currency code"
+      location_id:
+        type: string
+        description: "Location ID for the payment"
+      customer_id:
+        type: string
+        description: "Customer ID to associate"
+      note:
+        type: string
+        description: "Payment note"
+    required:
+      - source_id
+      - idempotency_key
+      - amount_money
+
+- slug: square_list_items
+  name: List Items
+  description: |
+    List catalog items (products) from the Square catalog. Returns item details, variations, and pricing.
+  provider: square
+  endpoint: /v2/catalog/list
+  method: GET
+  scopes:
+    - catalog.read
+  tags:
+    - catalog
+    - items
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing catalog items
+    properties:
+      types:
+        type: string
+        description: "Filter by object type: ITEM, MODIFIER_LIST, CATEGORY"
+        default: ITEM
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      limit:
+        type: integer
+        description: "Max results to return (max 100, default 100)"
+        default: 100
+    required: []
+
+- slug: square_get_item
+  name: Get Item
+  description: |
+    Get details of a specific catalog item including name, description, variations, and pricing.
+  provider: square
+  endpoint: /v2/catalog/object/{id}
+  method: GET
+  scopes:
+    - catalog.read
+  tags:
+    - catalog
+    - items
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a catalog item
+    properties:
+      id:
+        type: string
+        description: "Catalog object ID"
+    required:
+      - id
+
+- slug: square_create_item
+  name: Create Item
+  description: |
+    Create a new item in the Square catalog with variations, pricing, and category associations.
+  provider: square
+  endpoint: /v2/catalog/object
+  method: POST
+  scopes:
+    - catalog.write
+  tags:
+    - catalog
+    - items
+    - products
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a catalog item
+    properties:
+      idempotency_key:
+        type: string
+        description: "Unique key for idempotency"
+      object:
+        type: object
+        description: "Catalog object with type ITEM and item_data"
+    required:
+      - idempotency_key
+      - object
+
+- slug: square_list_customers
+  name: List Customers
+  description: |
+    List all customers in the Square customer directory. Returns names, emails, addresses, and preferences.
+  provider: square
+  endpoint: /v2/customers
+  method: GET
+  scopes:
+    - customers.read
+  tags:
+    - customers
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      limit:
+        type: integer
+        description: "Max results to return (max 100, default 100)"
+        default: 100
+      sort_field:
+        type: string
+        description: "Sort field: DEFAULT, CREATED_AT, UPDATED_AT"
+        default: DEFAULT
+      sort_order:
+        type: string
+        description: "Sort order: ASC or DESC"
+        default: ASC
+    required: []
+
+- slug: square_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer including contact info, address, and purchase history.
+  provider: square
+  endpoint: /v2/customers/{id}
+  method: GET
+  scopes:
+    - customers.read
+  tags:
+    - customers
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: square_list_orders
+  name: List Orders
+  description: |
+    List orders from Square. Returns order details including line items, totals, and fulfillment status.
+  provider: square
+  endpoint: /v2/orders/search
+  method: POST
+  scopes:
+    - orders.read
+  tags:
+    - orders
+    - commerce
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      location_ids:
+        type: array
+        items:
+          type: string
+        description: "Filter by location IDs"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: OPEN, COMPLETED, CANCELED, FAILED"
+        enum: [OPEN, COMPLETED, CANCELED, FAILED]
+      date_time_filter:
+        type: object
+        description: "Filter by created_at or updated_at"
+      limit:
+        type: integer
+        description: "Max results to return (max 200)"
+        default: 100
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: square_get_order
+  name: Get Order
+  description: |
+    Get details of a specific order including line items, modifiers, taxes, and fulfillment info.
+  provider: square
+  endpoint: /v2/orders/{id}
+  method: GET
+  scopes:
+    - orders.read
+  tags:
+    - orders
+    - commerce
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id

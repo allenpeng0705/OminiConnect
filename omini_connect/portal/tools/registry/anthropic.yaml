@@ -1,0 +1,234 @@
+- slug: anthropic_create_message
+  name: Create Message
+  description: |
+    Create a message in a conversation with Claude.
+  provider: anthropic
+  endpoint: /v1/messages
+  method: POST
+  scopes:
+    - messages:write
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      model:
+        type: string
+        description: "The model to use (e.g., claude-3-5-haiku-20241007)"
+      messages:
+        type: array
+        description: "Array of message objects with role and content"
+      max_tokens:
+        type: integer
+        description: "Maximum tokens to generate"
+      system:
+        type: string
+        description: "System prompt"
+      temperature:
+        type: number
+        description: "Sampling temperature (0-1)"
+    required:
+      - model
+      - messages
+      - max_tokens
+
+- slug: anthropic_list_models
+  name: List Models
+  description: |
+    Retrieve a list of available Anthropic models.
+  provider: anthropic
+  endpoint: /v1/models
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: No parameters required.
+    properties: {}
+    required: []
+
+- slug: anthropic_get_model
+  name: Get Model
+  description: |
+    Retrieve details for a specific model.
+  provider: anthropic
+  endpoint: /v1/models/{model}
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for retrieving a model
+    properties:
+      model:
+        type: string
+        description: "The model identifier"
+    required:
+      - model
+
+- slug: anthropic_create_message_stream
+  name: Create Message Stream
+  description: |
+    Create a streaming message for real-time response.
+  provider: anthropic
+  endpoint: /v1/messages_stream
+  method: POST
+  scopes:
+    - messages:write
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for creating a streaming message
+    properties:
+      model:
+        type: string
+        description: "The model to use for streaming"
+      messages:
+        type: array
+        description: "Array of message objects"
+      max_tokens:
+        type: integer
+        description: "Maximum tokens to generate"
+    required:
+      - model
+      - messages
+      - max_tokens
+
+- slug: anthropic_list_count_messages
+  name: List Count Messages
+  description: |
+    Retrieve a list of message counts for a given conversation.
+  provider: anthropic
+  endpoint: /v1/count_messages
+  method: GET
+  scopes:
+    - count_messages:read
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for listing count messages
+    properties:
+      conversation_id:
+        type: string
+        description: "The conversation ID"
+    required:
+      - conversation_id
+
+- slug: anthropic_count_tokens
+  name: Count Tokens
+  description: |
+    Count tokens in a text or messages for a specific model.
+  provider: anthropic
+  endpoint: /v1/messages/count_tokens
+  method: POST
+  scopes:
+    - tokens:write
+  tags:
+    - tokens
+  input_schema:
+    type: object
+    description: Parameters for counting tokens
+    properties:
+      model:
+        type: string
+        description: "The model to count tokens for"
+      messages:
+        type: array
+        description: "Array of messages to count"
+    required:
+      - model
+      - messages
+
+- slug: anthropic_list_runs
+  name: List Runs
+  description: |
+    Retrieve a list of runs for a thread.
+  provider: anthropic
+  endpoint: /v1/threads/{thread_id}/runs
+  method: GET
+  scopes:
+    - runs:read
+  tags:
+    - runs
+  input_schema:
+    type: object
+    description: Parameters for listing runs
+    properties:
+      thread_id:
+        type: string
+        description: "The thread ID"
+      limit:
+        type: integer
+        description: "Maximum number of runs to return"
+    required:
+      - thread_id
+
+- slug: anthropic_get_run
+  name: Get Run
+  description: |
+    Retrieve a specific run by ID.
+  provider: anthropic
+  endpoint: /v1/threads/{thread_id}/runs/{run_id}
+  method: GET
+  scopes:
+    - runs:read
+  tags:
+    - runs
+  input_schema:
+    type: object
+    description: Parameters for retrieving a run
+    properties:
+      thread_id:
+        type: string
+        description: "The thread ID"
+      run_id:
+        type: string
+        description: "The run ID"
+    required:
+      - thread_id
+      - run_id
+
+- slug: anthropic_list_evaluation_metrics
+  name: List Evaluation Metrics
+  description: |
+    Retrieve a list of evaluation metrics for model assessment.
+  provider: anthropic
+  endpoint: /v1/evaluation_metrics
+  method: GET
+  scopes:
+    - evaluation:read
+  tags:
+    - evaluation
+  input_schema:
+    type: object
+    description: No parameters required.
+    properties: {}
+    required: []
+
+- slug: anthropic_get_evaluation_metric
+  name: Get Evaluation Metric
+  description: |
+    Retrieve a specific evaluation metric by ID.
+  provider: anthropic
+  endpoint: /v1/evaluation_metrics/{metric_id}
+  method: GET
+  scopes:
+    - evaluation:read
+  tags:
+    - evaluation
+  input_schema:
+    type: object
+    description: Parameters for retrieving an evaluation metric
+    properties:
+      metric_id:
+        type: string
+        description: "The evaluation metric ID"
+    required:
+      - metric_id

@@ -1,0 +1,283 @@
+# Klaviyo Tools - E-commerce Marketing API
+# Profile management, lists, segments, campaigns, and automation flows.
+
+# === TOOL LIST ===
+# 1. klaviyo_list_profiles         - List all profiles
+# 2. klaviyo_get_profile           - Get profile by ID
+# 3. klaviyo_create_profile        - Create a new profile
+# 4. klaviyo_list_lists            - List all lists
+# 5. klaviyo_get_list              - Get list by ID
+# 6. klaviyo_add_profile_to_list   - Add a profile to a list
+# 7. klaviyo_list_segments         - List all segments
+# 8. klaviyo_get_segment           - Get segment by ID
+# 9. klaviyo_list_campaigns        - List all campaigns
+# 10. klaviyo_get_campaign         - Get campaign by ID
+
+- slug: klaviyo_list_profiles
+  name: List Profiles
+  description: |
+    Retrieve all profiles in your Klaviyo account.
+    Profiles contain customer data including email, name, and custom properties.
+  provider: klaviyo
+  endpoint: /api/profiles/
+  method: GET
+  scopes:
+    - profiles
+  tags:
+    - profiles
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing profiles
+    properties:
+      page:
+        type: integer
+        description: "Cursor for pagination"
+      page_size:
+        type: integer
+        description: "Number of results per page (default 50, max 100)"
+        default: 50
+      attributes:
+        type: object
+        description: "Filter profiles by attributes"
+    required: []
+
+- slug: klaviyo_get_profile
+  name: Get Profile
+  description: |
+    Get a specific profile by its ID.
+    Returns all profile attributes and subscription status.
+  provider: klaviyo
+  endpoint: /api/profiles/{profile_id}/
+  method: GET
+  scopes:
+    - profiles
+  tags:
+    - profiles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a profile
+    properties:
+      profile_id:
+        type: string
+        description: "Profile ID (UUID format)"
+    required:
+      - profile_id
+
+- slug: klaviyo_create_profile
+  name: Create Profile
+  description: |
+    Create a new profile in Klaviyo.
+    Include email, phone, name, and custom properties.
+  provider: klaviyo
+  endpoint: /api/profiles/
+  method: POST
+  scopes:
+    - profiles
+  tags:
+    - profiles
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a profile
+    properties:
+      email:
+        type: string
+        description: "Profile email address"
+      phone_number:
+        type: string
+        description: "Profile phone number"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      organization:
+        type: string
+        description: "Company or organization name"
+      properties:
+        type: object
+        description: "Custom profile properties"
+    required: []
+
+- slug: klaviyo_list_lists
+  name: List Lists
+  description: |
+    Get all lists in your Klaviyo account.
+    Lists are static groups of profiles for targeted campaigns.
+  provider: klaviyo
+  endpoint: /api/lists/
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - lists
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      page:
+        type: integer
+        description: "Cursor for pagination"
+      page_size:
+        type: integer
+        description: "Number of results per page (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: klaviyo_get_list
+  name: Get List
+  description: |
+    Get details about a specific list including profile count.
+    Use this to verify a list before adding profiles.
+  provider: klaviyo
+  endpoint: /api/lists/{list_id}/
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      list_id:
+        type: string
+        description: "List ID (UUID format)"
+    required:
+      - list_id
+
+- slug: klaviyo_add_profile_to_list
+  name: Add Profile to List
+  description: |
+    Add an existing profile to a list.
+    The profile must already exist in your Klaviyo account.
+  provider: klaviyo
+  endpoint: /api/lists/{list_id}/relationships/profiles/
+  method: POST
+  scopes:
+    - lists
+  tags:
+    - lists
+    - profiles
+  input_schema:
+    type: object
+    description: Parameters for adding profile to list
+    properties:
+      list_id:
+        type: string
+        description: "List ID to add profile to"
+      profiles:
+        type: array
+        items:
+          type: object
+        description: "Array of profile objects with id property"
+    required:
+      - list_id
+      - profiles
+
+- slug: klaviyo_list_segments
+  name: List Segments
+  description: |
+    Get all segments in your Klaviyo account.
+    Segments are dynamic groups based on profile criteria.
+  provider: klaviyo
+  endpoint: /api/segments/
+  method: GET
+  scopes:
+    - segments
+  tags:
+    - segments
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      page:
+        type: integer
+        description: "Cursor for pagination"
+      page_size:
+        type: integer
+        description: "Number of results per page (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: klaviyo_get_segment
+  name: Get Segment
+  description: |
+    Get details about a specific segment including member count.
+    Segments update dynamically based on profile criteria.
+  provider: klaviyo
+  endpoint: /api/segments/{segment_id}/
+  method: GET
+  scopes:
+    - segments
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: string
+        description: "Segment ID (UUID format)"
+    required:
+      - segment_id
+
+- slug: klaviyo_list_campaigns
+  name: List Campaigns
+  description: |
+    Get all campaigns in your Klaviyo account.
+    Includes sent, scheduled, and draft campaigns.
+  provider: klaviyo
+  endpoint: /api/campaigns/
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Cursor for pagination"
+      page_size:
+        type: integer
+        description: "Number of results per page (default 50, max 100)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: draft, scheduled, sent, cancelled"
+        enum: [draft, scheduled, sent, cancelled]
+    required: []
+
+- slug: klaviyo_get_campaign
+  name: Get Campaign
+  description: |
+    Get details about a specific campaign.
+    Returns subject, content, send status, and tracking metrics.
+  provider: klaviyo
+  endpoint: /api/campaigns/{campaign_id}/
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign details
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID (UUID format)"
+    required:
+      - campaign_id

@@ -1,0 +1,459 @@
+# Timeular Tools - Allowlist
+# Curated subset of Timeular Public API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. timeular_list_time_entries         - List time entries
+# 2. timeular_get_time_entry            - Get time entry details
+# 3. timeular_create_time_entry         - Create a new time entry
+# 4. timeular_stop_time_entry           - Stop tracking time
+# 5. timeular_list_activities           - List activities
+# 6. timeular_get_activity              - Get activity details
+# 7. timeular_list_projects             - List projects
+# 8. timeular_get_project               - Get project details
+# 9. timeular_get_daily_summary         - Get daily summary
+# 10. timeular_list_users               - List users
+
+- slug: timeular_list_time_entries
+  name: List Time Entries
+  description: |
+    Retrieve a list of time entries with optional date filtering.
+  provider: timeular
+  endpoint: /time-entries
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      start_date:
+        type: string
+        description: "Filter entries from this date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "Filter entries until this date (YYYY-MM-DD)"
+    required: []
+
+- slug: timeular_get_time_entry
+  name: Get Time Entry
+  description: |
+    Retrieve details of a specific time entry by ID.
+  provider: timeular
+  endpoint: /time-entries/{id}
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: string
+        description: "The ID of the time entry"
+    required:
+      - id
+
+- slug: timeular_create_time_entry
+  name: Create Time Entry
+  description: |
+    Create a new time entry manually.
+  provider: timeular
+  endpoint: /time-entries
+  method: POST
+  scopes:
+    - time_entries:write
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for creating a time entry
+    properties:
+      activity_id:
+        type: integer
+        description: "The activity ID to track"
+      start_time:
+        type: string
+        description: "Start time in ISO 8601 format"
+      end_time:
+        type: string
+        description: "End time in ISO 8601 format"
+      note:
+        type: string
+        description: "Optional note for the entry"
+    required:
+      - activity_id
+      - start_time
+      - end_time
+
+- slug: timeular_stop_time_entry
+  name: Stop Time Entry
+  description: |
+    Stop the currently running time tracking entry.
+  provider: timeular
+  endpoint: /time-entries/{id}/stop
+  method: POST
+  scopes:
+    - time_entries:write
+  tags:
+    - time_entries
+  input_schema:
+    type: object
+    description: Parameters for stopping a time entry
+    properties:
+      id:
+        type: string
+        description: "The ID of the time entry to stop"
+    required:
+      - id
+
+- slug: timeular_list_activities
+  name: List Activities
+  description: |
+    Retrieve all available activities for time tracking.
+  provider: timeular
+  endpoint: /activities
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: timeular_get_activity
+  name: Get Activity
+  description: |
+    Retrieve details of a specific activity by ID.
+  provider: timeular
+  endpoint: /activities/{id}
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - activities
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: integer
+        description: "The ID of the activity"
+    required:
+      - id
+
+- slug: timeular_list_projects
+  name: List Projects
+  description: |
+    Retrieve all projects for time tracking.
+  provider: timeular
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: timeular_get_project
+  name: Get Project
+  description: |
+    Retrieve details of a specific project by ID.
+  provider: timeular
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "The ID of the project"
+    required:
+      - id
+
+- slug: timeular_get_daily_summary
+  name: Get Daily Summary
+  description: |
+    Get a summary of time tracked for a specific day.
+  provider: timeular
+  endpoint: /reports/daily-summary
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for daily summary
+    properties:
+      date:
+        type: string
+        description: "The date to get summary for (YYYY-MM-DD)"
+    required:
+      - date
+
+- slug: timeular_list_users
+  name: List Users
+  description: |
+    Retrieve all users in the Timeular workspace.
+  provider: timeular
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: timeular_list_activities
+  name: List Activities
+  description: |
+    List all Timeular activities.
+  provider: timeular
+  endpoint: /api/v4/activities
+  method: GET
+  scopes:
+    - default
+  tags:
+    - activities
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties: {}
+    required: []
+
+- slug: timeular_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information about a specific activity.
+  provider: timeular
+  endpoint: /api/v4/activities/{id}
+  method: GET
+  scopes:
+    - default
+  tags:
+    - activities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: integer
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: timeular_create_activity
+  name: Create Activity
+  description: |
+    Create a new activity in Timeular.
+  provider: timeular
+  endpoint: /api/v4/activities
+  method: POST
+  scopes:
+    - default
+  tags:
+    - activities
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an activity
+    properties:
+      name:
+        type: string
+        description: "Activity name"
+      color:
+        type: string
+        description: "Hex color code (e.g., #FF5733)"
+      icon:
+        type: string
+        description: "Icon name"
+    required:
+      - name
+      - color
+
+- slug: timeular_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries with optional date range filtering.
+  provider: timeular
+  endpoint: /api/v4/time-entries
+  method: GET
+  scopes:
+    - default
+  tags:
+    - time_entries
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: timeular_get_time_entry
+  name: Get Time Entry
+  description: |
+    Get detailed information about a specific time entry.
+  provider: timeular
+  endpoint: /api/v4/time-entries/{id}
+  method: GET
+  scopes:
+    - default
+  tags:
+    - time_entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+    required:
+      - id
+
+- slug: timeular_start_tracking
+  name: Start Tracking
+  description: |
+    Start tracking time for an activity.
+  provider: timeular
+  endpoint: /api/v4/time-entries/start
+  method: POST
+  scopes:
+    - default
+  tags:
+    - time_entries
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for starting tracking
+    properties:
+      activityId:
+        type: integer
+        description: "Activity ID to track"
+      startTime:
+        type: string
+        description: "Start time (ISO 8601 format)"
+    required:
+      - activityId
+
+- slug: timeular_stop_tracking
+  name: Stop Tracking
+  description: |
+    Stop the currently running time tracking.
+  provider: timeular
+  endpoint: /api/v4/time-entries/stop
+  method: POST
+  scopes:
+    - default
+  tags:
+    - time_entries
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for stopping tracking
+    properties:
+      stopTime:
+        type: string
+        description: "Stop time (ISO 8601 format)"
+    required: []
+
+- slug: timeular_list_annotations
+  name: List Annotations
+  description: |
+    List annotations (notes) for time entries.
+  provider: timeular
+  endpoint: /api/v4/annotations
+  method: GET
+  scopes:
+    - default
+  tags:
+    - annotations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing annotations
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: timeular_get_annotation
+  name: Get Annotation
+  description: |
+    Get details about a specific annotation.
+  provider: timeular
+  endpoint: /api/v4/annotations/{id}
+  method: GET
+  scopes:
+    - default
+  tags:
+    - annotations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an annotation
+    properties:
+      id:
+        type: integer
+        description: "Annotation ID"
+    required:
+      - id
+
+- slug: timeular_create_annotation
+  name: Create Annotation
+  description: |
+    Create an annotation (note) for a time entry.
+  provider: timeular
+  endpoint: /api/v4/annotations
+  method: POST
+  scopes:
+    - default
+  tags:
+    - annotations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an annotation
+    properties:
+      timeEntryId:
+        type: integer
+        description: "Time entry ID"
+      text:
+        type: string
+        description: "Annotation text"
+    required:
+      - timeEntryId
+      - text

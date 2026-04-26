@@ -1,0 +1,187 @@
+# Workday (Refresh Token) Tools - Allowlist
+# Curated subset of Workday (Refresh Token) API for AI agent use.
+# Two-Step OAuth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. workday_list_workers           - List all workers
+# # 2. workday_get_worker           - Get worker details
+# # 3. workday_list_jobs           - List all jobs
+# # 4. workday_list_organizations           - List all organizations
+# # 5. workday_list_positions           - List all positions
+# # 6. workday_list_time_entries           - List time entries
+# # 7. workday_submit_time_entry           - Submit a time entry
+# # 8. workday_list_approvals           - List pending approvals
+# # 9. workday_approve_request           - Approve a request
+# # 10. workday_get_business_title           - Get business title details
+
+- slug: workday_list_workers
+  name: List Workers
+  description: |
+    List all workers
+  provider: workday-refresh-token
+  endpoint: /v1/workers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list workers
+    properties: {}
+    required: []
+
+- slug: workday_get_worker
+  name: Get Worker
+  description: |
+    Get worker details
+  provider: workday-refresh-token
+  endpoint: /v1/workers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for get worker
+    properties: {}
+    required: []
+
+- slug: workday_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs
+  provider: workday-refresh-token
+  endpoint: /v1/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list jobs
+    properties: {}
+    required: []
+
+- slug: workday_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations
+  provider: workday-refresh-token
+  endpoint: /v1/organizations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list organizations
+    properties: {}
+    required: []
+
+- slug: workday_list_positions
+  name: List Positions
+  description: |
+    List all positions
+  provider: workday-refresh-token
+  endpoint: /v1/positions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list positions
+    properties: {}
+    required: []
+
+- slug: workday_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries
+  provider: workday-refresh-token
+  endpoint: /v1/time-entries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list time entries
+    properties: {}
+    required: []
+
+- slug: workday_submit_time_entry
+  name: Submit Time Entry
+  description: |
+    Submit a time entry
+  provider: workday-refresh-token
+  endpoint: /v1/time-entries
+  method: POST
+  scopes:
+    - write
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for submit time entry
+    properties: {}
+    required: []
+
+- slug: workday_list_approvals
+  name: List Approvals
+  description: |
+    List pending approvals
+  provider: workday-refresh-token
+  endpoint: /v1/approvals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for list approvals
+    properties: {}
+    required: []
+
+- slug: workday_approve_request
+  name: Approve Request
+  description: |
+    Approve a request
+  provider: workday-refresh-token
+  endpoint: /v1/approvals/{id}/approve
+  method: POST
+  scopes:
+    - write
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for approve request
+    properties: {}
+    required: []
+
+- slug: workday_get_business_title
+  name: Get Business Title
+  description: |
+    Get business title details
+  provider: workday-refresh-token
+  endpoint: /v1/business-titles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workday-refresh-token
+  input_schema:
+    type: object
+    description: Parameters for get business title
+    properties: {}
+    required: []
+

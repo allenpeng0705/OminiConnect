@@ -6,10 +6,8 @@ interface ApiKeyResponse {
   created_at: string;
 }
 
-interface AuthConfig {
-  mode: string;
-  oidc_ready: boolean;
-  login_path: string;
+interface AuthCapabilities {
+  google_login_enabled: boolean;
 }
 
 interface ConnectorStatus {
@@ -18,7 +16,7 @@ interface ConnectorStatus {
   connected: boolean;
 }
 
-interface ConnectorConfig {
+export interface ConnectorConfig {
   platform: string;
   client_id: string;
   client_secret?: string;
@@ -30,6 +28,18 @@ interface ConnectorConfig {
   connection_ref?: string;
   agent_id?: string;
   enabled: boolean;
+  /** Server-computed logical entry id (managed = provider slug before `__`). */
+  catalog_entry?: string;
+}
+
+export class ConnectorConflictError extends Error {
+  readonly existing_platform: string;
+
+  constructor(message: string, existing_platform: string) {
+    super(message);
+    this.name = 'ConnectorConflictError';
+    this.existing_platform = existing_platform;
+  }
 }
 
 async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
@@ -44,10 +54,10 @@ async function apiFetch(path: string, options: RequestInit = {}): Promise<Respon
   return res;
 }
 
-export async function login(username: string, password: string): Promise<void> {
+export async function login(email: string, password: string): Promise<void> {
   const res = await apiFetch('/auth/login', {
     method: 'POST',
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ email, password }),
   });
   if (!res.ok) {
     const text = await res.text();
@@ -55,10 +65,21 @@ export async function login(username: string, password: string): Promise<void> {
   }
 }
 
-export async function getAuthConfig(): Promise<AuthConfig> {
-  const res = await apiFetch('/auth/config');
+export async function signup(email: string, password: string, name?: string): Promise<void> {
+  const res = await apiFetch('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify({ email, password, name }),
+  });
   if (!res.ok) {
-    throw new Error('Failed to load auth config');
+    const text = await res.text();
+    throw new Error(text || 'Signup failed');
+  }
+}
+
+export async function getAuthCapabilities(): Promise<AuthCapabilities> {
+  const res = await apiFetch('/auth/capabilities');
+  if (!res.ok) {
+    return { google_login_enabled: false };
   }
   return res.json();
 }
@@ -94,8 +115,19 @@ export async function upsertConnector(config: Partial<ConnectorConfig>): Promise
     body: JSON.stringify(config),
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || 'Failed to save connector');
+    const raw = await res.text();
+    if (res.status === 409) {
+      try {
+        const j = JSON.parse(raw) as { error?: string; existing_platform?: string };
+        throw new ConnectorConflictError(
+          typeof j.error === 'string' && j.error.trim() ? j.error : 'A connector for this integration already exists.',
+          typeof j.existing_platform === 'string' ? j.existing_platform : '',
+        );
+      } catch (e) {
+        if (e instanceof ConnectorConflictError) throw e;
+      }
+    }
+    throw new Error(raw || 'Failed to save connector');
   }
 }
 
@@ -111,12 +143,24 @@ export async function getConnectorStatus(platform: string): Promise<ConnectorSta
 }
 
 export async function testConnector(platform: string): Promise<{ status: string; message: string }> {
-  const res = await apiFetch(`/api/connectors/${platform}/test`, { method: 'POST' });
-  if (!res.ok) throw new Error('Failed to test connector');
-  return res.json();
+  const res = await apiFetch(`/api/connectors/${encodeURIComponent(platform)}/test`, { method: 'POST' });
+  if (!res.ok) {
+    const j = await res.json().catch(() => ({} as { error?: string }));
+    const msg = (j as { error?: string }).error || res.statusText;
+    throw new Error(msg || 'Failed to test connector');
+  }
+  return res.json() as Promise<{ status: string; message: string }>;
 }
 
-export async function healthCheck(): Promise<{ status: string }> {
+export type PortalHealth = {
+  service?: string;
+  status: string;
+  version?: string;
+  /** Same as server `PORTAL_BASE_URL` (trimmed, no trailing slash). */
+  portal_base_url?: string;
+};
+
+export async function healthCheck(): Promise<PortalHealth> {
   const res = await apiFetch('/api/status');
   return res.json();
 }
@@ -142,9 +186,10 @@ export async function getNangoIntegrations(): Promise<NangoIntegrationRow[]> {
 
 /** Start Nango Connect for a managed (`engine=nango`) connector — returns URL to open in a popup or new tab. */
 export async function createNangoConnectSession(platform: string): Promise<{ connect_url: string }> {
+  const connect_api_base = window.location.origin;
   const res = await apiFetch('/api/nango/connect-session', {
     method: 'POST',
-    body: JSON.stringify({ platform }),
+    body: JSON.stringify({ platform, connect_api_base }),
   });
   if (!res.ok) {
     let detail = res.statusText || 'Failed to start Nango Connect';
@@ -159,6 +204,53 @@ export async function createNangoConnectSession(platform: string): Promise<{ con
   return res.json() as Promise<{ connect_url: string }>;
 }
 
+/** Create a Nango connection with credentials directly (API_KEY, BASIC, or OAUTH2_CC), no Connect UI needed. */
+export async function createNangoConnectionDirect(options: {
+  platform: string;
+  auth_mode: 'API_KEY' | 'BASIC' | 'OAUTH2_CC' | 'SIGNATURE';
+  api_key?: string;
+  username?: string;
+  password?: string;
+}): Promise<{ connection_id: string }> {
+  const res = await apiFetch('/api/nango/connections', {
+    method: 'POST',
+    body: JSON.stringify(options),
+  });
+  if (!res.ok) {
+    let detail = res.statusText || 'Failed to create Nango connection';
+    try {
+      const j = (await res.json()) as { error?: unknown };
+      if (typeof j?.error === 'string' && j.error.trim()) detail = j.error.trim();
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+  return res.json() as Promise<{ connection_id: string }>;
+}
+
+export interface NangoConnectionSummary {
+  connection_id: string;
+  provider_config_key: string;
+  created?: string;
+}
+
+/** List Nango connections for the current user (used after Nango Connect popup closes). */
+export async function listNangoConnections(platform: string): Promise<NangoConnectionSummary[]> {
+  const res = await apiFetch(`/api/nango/connections?platform=${encodeURIComponent(platform)}`);
+  if (!res.ok) {
+    let detail = res.statusText || 'Failed to list Nango connections';
+    try {
+      const j = (await res.json()) as { error?: unknown };
+      if (typeof j?.error === 'string' && j.error.trim()) detail = j.error.trim();
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+  return res.json() as Promise<NangoConnectionSummary[]>;
+}
+
 /** One row in the OminiConnect integration library (server-backed catalog). */
 export interface IntegrationCatalogRow {
   name: string;
@@ -167,6 +259,7 @@ export interface IntegrationCatalogRow {
   auth_mode?: string;
   categories?: string[];
   docs?: string;
+  available_scopes?: string[];
 }
 
 export async function getIntegrationCatalog(search?: string): Promise<IntegrationCatalogRow[]> {

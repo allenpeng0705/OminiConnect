@@ -1,0 +1,302 @@
+# HubSpot More Tools - Deals, Tickets, Line Items, Products
+# Curated subset of HubSpot CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. hubspot_more_list_deals      - List deals
+# 2. hubspot_more_get_deal        - Get deal details
+# 3. hubspot_more_create_deal     - Create a deal
+# 4. hubspot_more_list_tickets    - List support tickets
+# 5. hubspot_more_get_ticket      - Get ticket details
+# 6. hubspot_more_create_ticket   - Create a support ticket
+# 7. hubspot_more_list_line_items - List line items
+# 8. hubspot_more_get_line_item   - Get line item details
+# 9. hubspot_more_list_products   - List products
+# 10. hubspot_more_get_product    - Get product details
+
+- slug: hubspot_more_list_deals
+  name: List Deals
+  description: |
+    List deals in HubSpot CRM. Filter by stage, amount, close date, or associated company.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/deals
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+      properties:
+        type: string
+        description: "Comma-separated properties to include (e.g., dealname,amount,closedate)"
+      filter_groups:
+        type: string
+        description: "Filter groups as JSON"
+    required: []
+
+- slug: hubspot_more_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a HubSpot deal including properties, associations, and engagements.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/deals/{dealId}
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      deal_id:
+        type: string
+        description: "The deal ID"
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+    required:
+      - deal_id
+
+- slug: hubspot_more_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in HubSpot CRM with properties like name, amount, stage, and close date.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/deals
+  method: POST
+  scopes:
+    - crm.objects.deals.write
+  tags:
+    - deals
+    - crm
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      dealname:
+        type: string
+        description: "The deal name"
+      amount:
+        type: string
+        description: "The deal amount"
+      dealstage:
+        type: string
+        description: "The deal stage (e.g., appointmentscheduled)"
+      closedate:
+        type: string
+        description: "The close date (ISO 8601 format)"
+      pipeline:
+        type: string
+        description: "The pipeline ID"
+    required:
+      - dealname
+
+- slug: hubspot_more_list_tickets
+  name: List Tickets
+  description: |
+    List support tickets in HubSpot CRM. Filter by status, priority, or assigned agent.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/tickets
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+    - support
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+      filter_groups:
+        type: string
+        description: "Filter groups as JSON"
+    required: []
+
+- slug: hubspot_more_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a HubSpot support ticket including properties and associations.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/tickets/{ticketId}
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+    - support
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      ticket_id:
+        type: string
+        description: "The ticket ID"
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+    required:
+      - ticket_id
+
+- slug: hubspot_more_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new support ticket in HubSpot CRM with subject, description, and priority.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/tickets
+  method: POST
+  scopes:
+    - crm.objects.tickets.write
+  tags:
+    - tickets
+    - support
+    - crm
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "The ticket subject"
+      description:
+        type: string
+        description: "The ticket description"
+      hs_ticket_priority:
+        type: string
+        description: "Priority: HIGH, MEDIUM, or LOW"
+    required:
+      - subject
+
+- slug: hubspot_more_list_line_items
+  name: List Line Items
+  description: |
+    List line items in HubSpot CRM. Filter by product, quantity, or associated deal.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/line_items
+  method: GET
+  scopes:
+    - crm.objects.line_items.read
+  tags:
+    - line_items
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing line items
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+      filter_groups:
+        type: string
+        description: "Filter groups as JSON"
+    required: []
+
+- slug: hubspot_more_get_line_item
+  name: Get Line Item
+  description: |
+    Get detailed information about a HubSpot line item including product and quantity.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/line_items/{lineItemId}
+  method: GET
+  scopes:
+    - crm.objects.line_items.read
+  tags:
+    - line_items
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a line item
+    properties:
+      line_item_id:
+        type: string
+        description: "The line item ID"
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+    required:
+      - line_item_id
+
+- slug: hubspot_more_list_products
+  name: List Products
+  description: |
+    List products in HubSpot CRM. Filter by name, description, or price.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/products
+  method: GET
+  scopes:
+    - crm.objects.products.read
+  tags:
+    - products
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+      properties:
+        type: string
+        description: "Comma-separated properties to include (e.g., name,price,description)"
+      filter_groups:
+        type: string
+        description: "Filter groups as JSON"
+    required: []
+
+- slug: hubspot_more_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a HubSpot product including name, price, and description.
+  provider: hubspot_more
+  endpoint: /crm/v3/objects/products/{productId}
+  method: GET
+  scopes:
+    - crm.objects.products.read
+  tags:
+    - products
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: string
+        description: "The product ID"
+      properties:
+        type: string
+        description: "Comma-separated properties to include"
+    required:
+      - product_id

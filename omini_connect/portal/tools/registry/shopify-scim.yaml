@@ -1,0 +1,187 @@
+# Shopify (SCIM API) Tools - Allowlist
+# Curated subset of Shopify (SCIM API) API for AI agent use.
+# Auth mode: API_KEY.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_products                            - List all products
+# 2. get_product                              - Get product details
+# 3. list_orders                              - List all orders
+# 4. get_order                                - Get order details
+# 5. list_customers                           - List customers
+# 6. get_customer                             - Get customer details
+# 7. list_fulfillments                        - List fulfillments
+# 8. create_fulfillment                       - Create fulfillment
+# 9. list_inventory                           - List inventory levels
+# 10. get_shop                                 - Get shop details
+
+- slug: list_products
+  name: List Products
+  description: |
+    List all products
+  provider: shopify-scim
+  endpoint: /products.json
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - ecommerce
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_product
+  name: Get Product
+  description: |
+    Get product details
+  provider: shopify-scim
+  endpoint: /products/{id}.json
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - ecommerce
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_orders
+  name: List Orders
+  description: |
+    List all orders
+  provider: shopify-scim
+  endpoint: /orders.json
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_order
+  name: Get Order
+  description: |
+    Get order details
+  provider: shopify-scim
+  endpoint: /orders/{id}.json
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_customers
+  name: List Customers
+  description: |
+    List customers
+  provider: shopify-scim
+  endpoint: /customers.json
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_customer
+  name: Get Customer
+  description: |
+    Get customer details
+  provider: shopify-scim
+  endpoint: /customers/{id}.json
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_fulfillments
+  name: List Fulfillments
+  description: |
+    List fulfillments
+  provider: shopify-scim
+  endpoint: /fulfillments.json
+  method: GET
+  scopes: []
+  tags:
+    - fulfillments
+    - shipping
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_fulfillment
+  name: Create Fulfillment
+  description: |
+    Create fulfillment
+  provider: shopify-scim
+  endpoint: /orders/{order_id}/fulfillments.json
+  method: POST
+  scopes: []
+  tags:
+    - fulfillments
+    - shipping
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_inventory
+  name: List Inventory
+  description: |
+    List inventory levels
+  provider: shopify-scim
+  endpoint: /inventory_levels.json
+  method: GET
+  scopes: []
+  tags:
+    - inventory
+    - warehouse
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_shop
+  name: Get Shop
+  description: |
+    Get shop details
+  provider: shopify-scim
+  endpoint: /shop.json
+  method: GET
+  scopes: []
+  tags:
+    - shop
+    - config
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

@@ -1,0 +1,229 @@
+# Fireflies Tools - Allowlist
+# Curated subset of Fireflies API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fireflies_list_transcripts    - List transcripts
+# 2. fireflies_get_transcript     - Get transcript details
+# 3. fireflies_list_users        - List team members
+# 4. fireflies_get_user          - Get user details
+# 5. fireflies_list_meetings     - List meetings
+# 6. fireflies_get_meeting       - Get meeting details
+# 7. fireflies_list_summaries    - List AI summaries
+# 8. fireflies_search_transcript - Search transcripts
+# 9. fireflies_list_analytics   - List analytics
+# 10. fireflies_get_overview    - Get analytics overview
+
+- slug: fireflies_list_transcripts
+  name: List Transcripts
+  description: |
+    List all meeting transcripts.
+  provider: fireflies
+  endpoint: /api/v1/transcripts
+  method: GET
+  scopes: []
+  tags:
+    - transcripts
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing transcripts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fireflies_get_transcript
+  name: Get Transcript
+  description: |
+    Get details of a specific transcript.
+  provider: fireflies
+  endpoint: /api/v1/transcripts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - transcripts
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting transcript
+    properties:
+      id:
+        type: string
+        description: "Transcript ID"
+    required:
+      - id
+
+- slug: fireflies_list_users
+  name: List Users
+  description: |
+    List all team members.
+  provider: fireflies
+  endpoint: /api/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: fireflies_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: fireflies
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: fireflies_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings.
+  provider: fireflies
+  endpoint: /api/v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fireflies_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: fireflies
+  endpoint: /api/v1/meetings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - video
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting meeting
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: fireflies_list_summaries
+  name: List Summaries
+  description: |
+    List AI-generated summaries.
+  provider: fireflies
+  endpoint: /api/v1/summaries
+  method: GET
+  scopes: []
+  tags:
+    - summaries
+    - ai
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing summaries
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: fireflies_search_transcript
+  name: Search Transcript
+  description: |
+    Search across transcripts.
+  provider: fireflies
+  endpoint: /api/v1/transcripts/search
+  method: GET
+  scopes: []
+  tags:
+    - transcripts
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      q:
+        type: string
+        description: "Search query"
+    required:
+      - q
+
+- slug: fireflies_list_analytics
+  name: List Analytics
+  description: |
+    List meeting analytics.
+  provider: fireflies
+  endpoint: /api/v1/analytics
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: fireflies_get_overview
+  name: Get Overview
+  description: |
+    Get analytics overview.
+  provider: fireflies
+  endpoint: /api/v1/analytics/overview
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - overview
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting overview
+    properties: {}
+    required: []

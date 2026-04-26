@@ -1,0 +1,241 @@
+# Cal.com (v2) Tools - Allowlist
+# Curated subset of the Cal.com API v2 for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cal_com_v2_list_event_types       - List event types
+# 2. cal_com_v2_get_event_type          - Get event type details
+# 3. cal_com_v2_list_bookings           - List bookings
+# 4. cal_com_v2_get_booking             - Get booking details
+# 5. cal_com_v2_create_booking          - Create a booking
+# 6. cal_com_v2_cancel_booking          - Cancel a booking
+# 7. cal_com_v2_get_current_user        - Get current user
+# 8. cal_com_v2_list_schedules          - List schedules
+# 9. cal_com_v2_get_schedule            - Get schedule details
+# 10. cal_com_v2_list_webhooks          - List webhooks
+
+- slug: cal_com_v2_list_event_types
+  name: List Event Types
+  description: |
+    List all event types for the authenticated user.
+  provider: cal-com-v2
+  endpoint: /event-types
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing event types
+    properties:
+      userId:
+        type: integer
+        description: "Filter by user ID"
+    required: []
+
+- slug: cal_com_v2_get_event_type
+  name: Get Event Type
+  description: |
+    Get details of a specific event type.
+  provider: cal-com-v2
+  endpoint: /event-types/{id}
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event type
+    properties:
+      id:
+        type: integer
+        description: "Event type ID"
+    required:
+      - id
+
+- slug: cal_com_v2_list_bookings
+  name: List Bookings
+  description: |
+    List all bookings for the authenticated user.
+  provider: cal-com-v2
+  endpoint: /bookings
+  method: GET
+  scopes: []
+  tags:
+    - bookings
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing bookings
+    properties:
+      status:
+        type: string
+        description: "Filter by status: upcoming, past, cancelled"
+        enum: [upcoming, past, cancelled]
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: cal_com_v2_get_booking
+  name: Get Booking
+  description: |
+    Get details of a specific booking.
+  provider: cal-com-v2
+  endpoint: /bookings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - bookings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a booking
+    properties:
+      id:
+        type: integer
+        description: "Booking ID"
+    required:
+      - id
+
+- slug: cal_com_v2_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking.
+  provider: cal-com-v2
+  endpoint: /bookings
+  method: POST
+  scopes: []
+  tags:
+    - bookings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a booking
+    properties:
+      eventTypeId:
+        type: integer
+        description: "Event type ID"
+      start:
+        type: string
+        description: "ISO 8601 start time"
+      end:
+        type: string
+        description: "ISO 8601 end time"
+      attendee:
+        type: object
+        description: "Attendee details with name and email"
+    required:
+      - eventTypeId
+      - start
+      - attendee
+
+- slug: cal_com_v2_cancel_booking
+  name: Cancel Booking
+  description: |
+    Cancel a specific booking.
+  provider: cal-com-v2
+  endpoint: /bookings/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - bookings
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for cancelling a booking
+    properties:
+      id:
+        type: integer
+        description: "Booking ID"
+      reason:
+        type: string
+        description: "Cancellation reason"
+    required:
+      - id
+
+- slug: cal_com_v2_get_current_user
+  name: Get Current User
+  description: |
+    Get the currently authenticated user profile.
+  provider: cal-com-v2
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []
+
+- slug: cal_com_v2_list_schedules
+  name: List Schedules
+  description: |
+    List all schedules for the authenticated user.
+  provider: cal-com-v2
+  endpoint: /schedules
+  method: GET
+  scopes: []
+  tags:
+    - schedules
+    - calendar
+  input_schema:
+    type: object
+    description: Parameters for listing schedules
+    properties:
+      userId:
+        type: integer
+        description: "Filter by user ID"
+    required: []
+
+- slug: cal_com_v2_get_schedule
+  name: Get Schedule
+  description: |
+    Get details of a specific schedule.
+  provider: cal-com-v2
+  endpoint: /schedules/{id}
+  method: GET
+  scopes: []
+  tags:
+    - schedules
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schedule
+    properties:
+      id:
+        type: integer
+        description: "Schedule ID"
+    required:
+      - id
+
+- slug: cal_com_v2_list_webhooks
+  name: List Webhooks
+  description: |
+    List all webhooks for an event type.
+  provider: cal-com-v2
+  endpoint: /event-types/{id}/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      eventTypeId:
+        type: integer
+        description: "Event type ID"
+    required:
+      - eventTypeId

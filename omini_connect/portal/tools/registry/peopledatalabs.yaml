@@ -1,0 +1,257 @@
+# People Data Labs Tools - Allowlist
+# Curated subset of People Data Labs API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. peopledatalabs_search_persons       - Search for persons
+# 2. peopledatalabs_get_person          - Get person by ID
+# 3. peopledatalabs_lookup_email        - Lookup email
+# 4. peopledatalabs_enrich_person       - Enrich person data
+# 5. peopledatalabs_search_companies    - Search for companies
+# 6. peopledatalabs_get_company         - Get company by ID
+# 7. peopledatalabs_enrich_company      - Enrich company data
+# 8. peopledatalabs_get_school          - Get school by ID
+# 9. peopledatalabs_get_location        - Get location by ID
+# 10. peopledatalabs_get_api_usage      - Get API usage stats
+
+- slug: peopledatalabs_search_persons
+  name: Search Persons
+  description: |
+    Search for persons matching criteria.
+  provider: peopledatalabs
+  endpoint: /v5/person/search
+  method: GET
+  scopes: []
+  tags:
+    - persons
+    - search
+    - people
+  input_schema:
+    type: object
+    description: Parameters for searching persons
+    properties:
+      query:
+        type: string
+        description: "Search query string"
+      title:
+        type: string
+        description: "Filter by job title"
+      company:
+        type: string
+        description: "Filter by company name"
+      location:
+        type: string
+        description: "Filter by location"
+      skills:
+        type: string
+        description: "Filter by skills (comma-separated)"
+    required:
+      - query
+
+- slug: peopledatalabs_get_person
+  name: Get Person
+  description: |
+    Get person by their unique identifier.
+  provider: peopledatalabs
+  endpoint: /v5/person
+  method: GET
+  scopes: []
+  tags:
+    - persons
+    - read
+    - people
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      personId:
+        type: string
+        description: "Person ID (may be emails_md5, phones_md5, etc.)"
+    required:
+      - personId
+
+- slug: peopledatalabs_lookup_email
+  name: Lookup Email
+  description: |
+    Lookup person by email address.
+  provider: peopledatalabs
+  endpoint: /v5/person/lookup
+  method: GET
+  scopes: []
+  tags:
+    - persons
+    - email
+    - lookup
+  input_schema:
+    type: object
+    description: Parameters for email lookup
+    properties:
+      email:
+        type: string
+        description: "Email address to lookup"
+    required:
+      - email
+
+- slug: peopledatalabs_enrich_person
+  name: Enrich Person
+  description: |
+    Enrich person data with additional fields.
+  provider: peopledatalabs
+  endpoint: /v5/person/enrich
+  method: GET
+  scopes: []
+  tags:
+    - persons
+    - enrich
+    - people
+  input_schema:
+    type: object
+    description: Parameters for enriching person data
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+    required: []
+
+- slug: peopledatalabs_search_companies
+  name: Search Companies
+  description: |
+    Search for companies matching criteria.
+  provider: peopledatalabs
+  endpoint: /v5/company/search
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - search
+    - business
+  input_schema:
+    type: object
+    description: Parameters for searching companies
+    properties:
+      query:
+        type: string
+        description: "Search query string"
+      name:
+        type: string
+        description: "Filter by company name"
+      location:
+        type: string
+        description: "Filter by location"
+    required:
+      - query
+
+- slug: peopledatalabs_get_company
+  name: Get Company
+  description: |
+    Get company by ID.
+  provider: peopledatalabs
+  endpoint: /v5/company
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+    - business
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: peopledatalabs_enrich_company
+  name: Enrich Company
+  description: |
+    Enrich company data with additional fields.
+  provider: peopledatalabs
+  endpoint: /v5/company/enrich
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - enrich
+    - business
+  input_schema:
+    type: object
+    description: Parameters for enriching company data
+    properties:
+      domain:
+        type: string
+        description: "Company domain"
+      name:
+        type: string
+        description: "Company name"
+    required: []
+
+- slug: peopledatalabs_get_school
+  name: Get School
+  description: |
+    Get school by ID.
+  provider: peopledatalabs
+  endpoint: /v5/school
+  method: GET
+  scopes: []
+  tags:
+    - schools
+    - education
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a school
+    properties:
+      schoolId:
+        type: string
+        description: "School ID"
+    required:
+      - schoolId
+
+- slug: peopledatalabs_get_location
+  name: Get Location
+  description: |
+    Get location by ID.
+  provider: peopledatalabs
+  endpoint: /v5/location
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - geography
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a location
+    properties:
+      locationId:
+        type: string
+        description: "Location ID"
+    required:
+      - locationId
+
+- slug: peopledatalabs_get_api_usage
+  name: Get API Usage
+  description: |
+    Get API usage statistics.
+  provider: peopledatalabs
+  endpoint: /v5/api_usage
+  method: GET
+  scopes: []
+  tags:
+    - api
+    - usage
+    - stats
+  input_schema:
+    type: object
+    description: Parameters for getting API usage
+    properties: {}
+    required: []

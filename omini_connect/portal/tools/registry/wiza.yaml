@@ -1,0 +1,187 @@
+# Wiza Tools - Allowlist
+# Curated subset of Wiza API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. wiza_list_people           - List all people/contacts
+# # 2. wiza_get_person           - Get person details
+# # 3. wiza_enrich_person           - Enrich person data
+# # 4. wiza_list_companies           - List all companies
+# # 5. wiza_get_company           - Get company details
+# # 6. wiza_enrich_company           - Enrich company data
+# # 7. wiza_search_people           - Search for people
+# # 8. wiza_lookup_email           - Lookup email by person data
+# # 9. wiza_list_verifications           - List email verifications
+# # 10. wiza_verify_email           - Verify an email address
+
+- slug: wiza_list_people
+  name: List People
+  description: |
+    List all people/contacts
+  provider: wiza
+  endpoint: /v1/people
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for list people
+    properties: {}
+    required: []
+
+- slug: wiza_get_person
+  name: Get Person
+  description: |
+    Get person details
+  provider: wiza
+  endpoint: /v1/people/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for get person
+    properties: {}
+    required: []
+
+- slug: wiza_enrich_person
+  name: Enrich Person
+  description: |
+    Enrich person data
+  provider: wiza
+  endpoint: /v1/enrich
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for enrich person
+    properties: {}
+    required: []
+
+- slug: wiza_list_companies
+  name: List Companies
+  description: |
+    List all companies
+  provider: wiza
+  endpoint: /v1/companies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for list companies
+    properties: {}
+    required: []
+
+- slug: wiza_get_company
+  name: Get Company
+  description: |
+    Get company details
+  provider: wiza
+  endpoint: /v1/companies/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for get company
+    properties: {}
+    required: []
+
+- slug: wiza_enrich_company
+  name: Enrich Company
+  description: |
+    Enrich company data
+  provider: wiza
+  endpoint: /v1/companies/enrich
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for enrich company
+    properties: {}
+    required: []
+
+- slug: wiza_search_people
+  name: Search People
+  description: |
+    Search for people
+  provider: wiza
+  endpoint: /v1/search/people
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for search people
+    properties: {}
+    required: []
+
+- slug: wiza_lookup_email
+  name: Lookup Email
+  description: |
+    Lookup email by person data
+  provider: wiza
+  endpoint: /v1/lookup
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for lookup email
+    properties: {}
+    required: []
+
+- slug: wiza_list_verifications
+  name: List Verifications
+  description: |
+    List email verifications
+  provider: wiza
+  endpoint: /v1/verifications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for list verifications
+    properties: {}
+    required: []
+
+- slug: wiza_verify_email
+  name: Verify Email
+  description: |
+    Verify an email address
+  provider: wiza
+  endpoint: /v1/verify
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wiza
+  input_schema:
+    type: object
+    description: Parameters for verify email
+    properties: {}
+    required: []
+

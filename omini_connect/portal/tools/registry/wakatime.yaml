@@ -1,0 +1,187 @@
+# Wakatime Tools - Allowlist
+# Curated subset of Wakatime API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. wakatime_get_current_user           - Get current user info
+# # 2. wakatime_list_summaries           - Get time tracking summaries
+# # 3. wakatime_list_all_time_since_today           - Get all time tracked since today
+# # 4. wakatime_list_leaders           - Get leaderboard data
+# # 5. wakatime_list_goals           - List all goals
+# # 6. wakatime_get_goal           - Get goal details
+# # 7. wakatime_list_projects           - List all projects
+# # 8. wakatime_list_entities           - List coded entities by date range
+# # 9. wakatime_get_stats           - Get coding statistics
+# # 10. wakatime_list_heartbeats           - List heartbeat data
+
+- slug: wakatime_get_current_user
+  name: Get Current User
+  description: |
+    Get current user info
+  provider: wakatime
+  endpoint: /api/v1/users/current
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for get current user
+    properties: {}
+    required: []
+
+- slug: wakatime_list_summaries
+  name: List Summaries
+  description: |
+    Get time tracking summaries
+  provider: wakatime
+  endpoint: /api/v1/users/current/summaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list summaries
+    properties: {}
+    required: []
+
+- slug: wakatime_list_all_time_since_today
+  name: Get All Time Since Today
+  description: |
+    Get all time tracked since today
+  provider: wakatime
+  endpoint: /api/v1/users/current/all_time_since_today
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for get all time since today
+    properties: {}
+    required: []
+
+- slug: wakatime_list_leaders
+  name: List Leaders
+  description: |
+    Get leaderboard data
+  provider: wakatime
+  endpoint: /api/v1/leaders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list leaders
+    properties: {}
+    required: []
+
+- slug: wakatime_list_goals
+  name: List Goals
+  description: |
+    List all goals
+  provider: wakatime
+  endpoint: /api/v1/goals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list goals
+    properties: {}
+    required: []
+
+- slug: wakatime_get_goal
+  name: Get Goal
+  description: |
+    Get goal details
+  provider: wakatime
+  endpoint: /api/v1/goals/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for get goal
+    properties: {}
+    required: []
+
+- slug: wakatime_list_projects
+  name: List Projects
+  description: |
+    List all projects
+  provider: wakatime
+  endpoint: /api/v1/users/current/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list projects
+    properties: {}
+    required: []
+
+- slug: wakatime_list_entities
+  name: List Entities
+  description: |
+    List coded entities by date range
+  provider: wakatime
+  endpoint: /api/v1/users/current/entities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list entities
+    properties: {}
+    required: []
+
+- slug: wakatime_get_stats
+  name: Get Stats
+  description: |
+    Get coding statistics
+  provider: wakatime
+  endpoint: /api/v1/users/current/stats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for get stats
+    properties: {}
+    required: []
+
+- slug: wakatime_list_heartbeats
+  name: List Heartbeats
+  description: |
+    List heartbeat data
+  provider: wakatime
+  endpoint: /api/v1/users/current/heartbeats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wakatime
+  input_schema:
+    type: object
+    description: Parameters for list heartbeats
+    properties: {}
+    required: []
+

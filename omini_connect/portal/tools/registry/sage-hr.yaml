@@ -1,0 +1,267 @@
+# Sage-hr Tools - Allowlist
+# Curated subset of Sage HR API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sage-hr_list_employees         - List all employees
+# 2. sage-hr_get_employee           - Get employee details
+# 3. sage-hr_create_employee        - Create an employee
+# 4. sage-hr_list_departments       - List departments
+# 5. sage-hr_list_leave_requests    - List leave requests
+# 6. sage-hr_approve_leave          - Approve leave request
+# 7. sage-hr_list_attendance        - List attendance records
+# 8. sage-hr_record_attendance      - Record attendance
+# 9. sage-hr_list_companies         - List companies
+# 10. sage-hr_get_company_info      - Get company info
+
+- slug: sage-hr_list_employees
+  name: List Employees
+  description: |
+    Retrieve a list of all employees in Sage HR.
+  provider: sage-hr
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - people
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Number of employees"
+        default: 50
+      departmentId:
+        type: string
+        description: "Filter by department"
+    required: []
+
+- slug: sage-hr_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: sage-hr
+  endpoint: /v1/employees/{employeeId}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - people
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "The employee ID"
+    required:
+      - employeeId
+
+- slug: sage-hr_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee in Sage HR.
+  provider: sage-hr
+  endpoint: /v1/employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - hr
+    - people
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Work email"
+      departmentId:
+        type: string
+        description: "Department ID"
+    required:
+      - firstName
+      - lastName
+      - email
+
+- slug: sage-hr_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of all departments.
+  provider: sage-hr
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - departments
+    - organization
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: sage-hr_list_leave_requests
+  name: List Leave Requests
+  description: |
+    Retrieve a list of leave requests.
+  provider: sage-hr
+  endpoint: /v1/leave-requests
+  method: GET
+  scopes:
+    - leave:read
+  tags:
+    - leave
+    - hr
+    - time-off
+  input_schema:
+    type: object
+    description: Parameters for listing leave requests
+    properties:
+      limit:
+        type: integer
+        description: "Number of requests"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, approved, denied"
+    required: []
+
+- slug: sage-hr_approve_leave
+  name: Approve Leave
+  description: |
+    Approve a leave request.
+  provider: sage-hr
+  endpoint: /v1/leave-requests/{requestId}/approve
+  method: POST
+  scopes:
+    - leave:write
+  tags:
+    - leave
+    - hr
+    - time-off
+    - approve
+  input_schema:
+    type: object
+    description: Parameters for approving leave
+    properties:
+      requestId:
+        type: string
+        description: "The request ID"
+    required:
+      - requestId
+
+- slug: sage-hr_list_attendance
+  name: List Attendance
+  description: |
+    Retrieve attendance records.
+  provider: sage-hr
+  endpoint: /v1/attendance
+  method: GET
+  scopes:
+    - attendance:read
+  tags:
+    - attendance
+    - hr
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for listing attendance
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee"
+      date:
+        type: string
+        description: "Filter by date"
+    required: []
+
+- slug: sage-hr_record_attendance
+  name: Record Attendance
+  description: |
+    Record attendance for an employee.
+  provider: sage-hr
+  endpoint: /v1/attendance
+  method: POST
+  scopes:
+    - attendance:write
+  tags:
+    - attendance
+    - hr
+    - tracking
+    - create
+  input_schema:
+    type: object
+    description: Parameters for recording attendance
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID"
+      date:
+        type: string
+        description: "Attendance date"
+      status:
+        type: string
+        description: "Status: present, absent, late"
+    required:
+      - employeeId
+      - date
+      - status
+
+- slug: sage-hr_list_companies
+  name: List Companies
+  description: |
+    Retrieve a list of companies.
+  provider: sage-hr
+  endpoint: /v1/companies
+  method: GET
+  scopes:
+    - companies:read
+  tags:
+    - companies
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: sage-hr_get_company_info
+  name: Get Company Info
+  description: |
+    Get company information.
+  provider: sage-hr
+  endpoint: /v1/companies/{companyId}
+  method: GET
+  scopes:
+    - companies:read
+  tags:
+    - companies
+    - organization
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties:
+      companyId:
+        type: string
+        description: "The company ID"
+    required:
+      - companyId

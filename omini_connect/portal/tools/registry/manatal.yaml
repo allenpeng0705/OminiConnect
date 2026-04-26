@@ -1,0 +1,287 @@
+# Manatal Tools - Allowlist
+# Curated subset of Manatal API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. manatal_list_candidates     - List all candidates
+# 2. manatal_get_candidate       - Get candidate details
+# 3. manatal_create_candidate   - Create a candidate
+# 4. manatal_update_candidate   - Update a candidate
+# 5. manatal_list_jobs          - List all job postings
+# 6. manatal_get_job            - Get job details
+# 7. manatal_create_job         - Create a job posting
+# 8. manatal_list_departments   - List departments
+# 9. manatal_get_department     - Get department details
+# 10. manatal_list_offices      - List offices
+
+- slug: manatal_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Manatal ATS.
+    Filter by stage, job, or search query.
+  provider: manatal
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      stage_id:
+        type: integer
+        description: "Filter by stage ID"
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      search:
+        type: string
+        description: "Search query"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: manatal_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+  provider: manatal
+  endpoint: /users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      userId:
+        type: integer
+        description: "Candidate user ID"
+    required:
+      - userId
+
+- slug: manatal_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate in Manatal.
+  provider: manatal
+  endpoint: /users
+  method: POST
+  scopes: []
+  tags:
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      job_id:
+        type: integer
+        description: "Associated job ID"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: manatal_update_candidate
+  name: Update Candidate
+  description: |
+    Update an existing candidate.
+  provider: manatal
+  endpoint: /users/{userId}
+  method: PUT
+  scopes: []
+  tags:
+    - candidates
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a candidate
+    properties:
+      userId:
+        type: integer
+        description: "Candidate user ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - userId
+
+- slug: manatal_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings in Manatal.
+    Filter by status, department, or office.
+  provider: manatal
+  endpoint: /jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, draft)"
+      department_id:
+        type: integer
+        description: "Filter by department ID"
+      office_id:
+        type: integer
+        description: "Filter by office ID"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: manatal_get_job
+  name: Get Job
+  description: |
+    Get details of a specific job posting.
+  provider: manatal
+  endpoint: /jobs/{jobId}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      jobId:
+        type: integer
+        description: "Job ID"
+    required:
+      - jobId
+
+- slug: manatal_create_job
+  name: Create Job
+  description: |
+    Create a new job posting in Manatal.
+  provider: manatal
+  endpoint: /jobs
+  method: POST
+  scopes: []
+  tags:
+    - jobs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a job
+    properties:
+      title:
+        type: string
+        description: "Job title"
+      description:
+        type: string
+        description: "Job description"
+      department_id:
+        type: integer
+        description: "Department ID"
+      office_id:
+        type: integer
+        description: "Office ID"
+      status:
+        type: string
+        description: "Job status (open, closed, draft)"
+        default: open
+    required:
+      - title
+      - description
+
+- slug: manatal_list_departments
+  name: List Departments
+  description: |
+    List all departments in Manatal.
+  provider: manatal
+  endpoint: /departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: manatal_get_department
+  name: Get Department
+  description: |
+    Get details of a specific department.
+  provider: manatal
+  endpoint: /departments/{departmentId}
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      departmentId:
+        type: integer
+        description: "Department ID"
+    required:
+      - departmentId
+
+- slug: manatal_list_offices
+  name: List Offices
+  description: |
+    List all offices in Manatal.
+  provider: manatal
+  endpoint: /offices
+  method: GET
+  scopes: []
+  tags:
+    - offices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offices
+    properties: {}
+    required: []

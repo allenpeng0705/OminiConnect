@@ -1,0 +1,260 @@
+# Fillout OAuth Tools - Allowlist
+# Curated subset of Fillout API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fillout_list_forms           - List forms
+# 2. fillout_get_form            - Get form details
+# 3. fillout_list_responses      - List responses
+# 4. fillout_get_response        - Get response details
+# 5. fillout_list_questions      - List questions
+# 6. fillout_get_question       - Get question details
+# 7. fillout_list_answers       - List answers
+# 8. fillout_get_answer         - Get answer details
+# 9. fillout_list_captures       - List file captures
+# 10. fillout_get_workflow     - Get workflow status
+
+- slug: fillout_list_forms
+  name: List Forms
+  description: |
+    List all forms.
+  provider: fillout
+  endpoint: /v1/api/forms
+  method: GET
+  scopes: []
+  tags:
+    - forms
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: fillout_get_form
+  name: Get Form
+  description: |
+    Get details of a specific form.
+  provider: fillout
+  endpoint: /v1/api/forms/{id}
+  method: GET
+  scopes: []
+  tags:
+    - forms
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting form
+    properties:
+      id:
+        type: string
+        description: "Form ID"
+    required:
+      - id
+
+- slug: fillout_list_responses
+  name: List Responses
+  description: |
+    List all responses to a form.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/responses
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required:
+      - formId
+
+- slug: fillout_get_response
+  name: Get Response
+  description: |
+    Get details of a specific response.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/responses/{responseId}
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting response
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      responseId:
+        type: string
+        description: "Response ID"
+    required:
+      - formId
+      - responseId
+
+- slug: fillout_list_questions
+  name: List Questions
+  description: |
+    List all questions in a form.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/questions
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing questions
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: fillout_get_question
+  name: Get Question
+  description: |
+    Get details of a specific question.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/questions/{questionId}
+  method: GET
+  scopes: []
+  tags:
+    - questions
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting question
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      questionId:
+        type: string
+        description: "Question ID"
+    required:
+      - formId
+      - questionId
+
+- slug: fillout_list_answers
+  name: List Answers
+  description: |
+    List all answers to questions.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/questions/{questionId}/answers
+  method: GET
+  scopes: []
+  tags:
+    - answers
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing answers
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      questionId:
+        type: string
+        description: "Question ID"
+    required:
+      - formId
+      - questionId
+
+- slug: fillout_get_answer
+  name: Get Answer
+  description: |
+    Get a specific answer.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/questions/{questionId}/answers/{answerId}
+  method: GET
+  scopes: []
+  tags:
+    - answers
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting answer
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      questionId:
+        type: string
+        description: "Question ID"
+      answerId:
+        type: string
+        description: "Answer ID"
+    required:
+      - formId
+      - questionId
+      - answerId
+
+- slug: fillout_list_captures
+  name: List Captures
+  description: |
+    List file captures from form responses.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/captures
+  method: GET
+  scopes: []
+  tags:
+    - captures
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing captures
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: fillout_get_workflow
+  name: Get Workflow
+  description: |
+    Get workflow status for a form.
+  provider: fillout
+  endpoint: /v1/api/forms/{formId}/workflow
+  method: GET
+  scopes: []
+  tags:
+    - workflow
+    - automation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting workflow
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId

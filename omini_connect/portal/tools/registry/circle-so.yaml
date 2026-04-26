@@ -1,0 +1,322 @@
+# Circle.so Tools - Allowlist
+# Curated subset of the Circle.so API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. circle_so_list_communities   - List communities
+# 2. circle_so_get_community      - Get details of a community
+# 3. circle_so_list_members       - List members in a community
+# 4. circle_so_get_member         - Get details of a member
+# 5. circle_so_list_posts         - List posts in a community
+# 6. circle_so_get_post           - Get details of a post
+# 7. circle_so_create_post        - Create a new post
+# 8. circle_so_list_comments      - List comments on a post
+# 9. circle_so_get_comment        - Get details of a comment
+# 10. circle_so_list_events       - List events in a community
+
+- slug: circle_so_list_communities
+  name: List Communities
+  description: |
+    Returns a paginated list of communities the authenticated user has access to.
+  provider: circle-so
+  endpoint: /communities
+  method: GET
+  scopes:
+    - communities:read
+  tags:
+    - communities
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing communities
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Number of results per page"
+        default: 20
+    required: []
+
+- slug: circle_so_get_community
+  name: Get Community
+  description: |
+    Get details of a specific community including name, description, member count, and settings.
+  provider: circle-so
+  endpoint: /communities/{community_id}
+  method: GET
+  scopes:
+    - communities:read
+  tags:
+    - communities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a community
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+    required:
+      - community_id
+
+- slug: circle_so_list_members
+  name: List Members
+  description: |
+    Returns a paginated list of members in a specific community. Filter by role or join date.
+  provider: circle-so
+  endpoint: /communities/{community_id}/members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - community
+  input_schema:
+    type: object
+    description: Parameters for listing community members
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      sort:
+        type: string
+        description: "Sort order: join_date, name, created_at"
+        default: join_date
+    required:
+      - community_id
+
+- slug: circle_so_get_member
+  name: Get Member
+  description: |
+    Get details of a specific community member including name, email, role, and join date.
+  provider: circle-so
+  endpoint: /communities/{community_id}/members/{member_id}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      member_id:
+        type: string
+        description: "Member ID"
+    required:
+      - community_id
+      - member_id
+
+- slug: circle_so_list_posts
+  name: List Posts
+  description: |
+    Returns a paginated list of posts in a community. Filter by author, tag, or content type.
+  provider: circle-so
+  endpoint: /communities/{community_id}/posts
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      author_id:
+        type: string
+        description: "Filter by author member ID"
+      tag_id:
+        type: string
+        description: "Filter by tag ID"
+    required:
+      - community_id
+
+- slug: circle_so_get_post
+  name: Get Post
+  description: |
+    Get full details of a specific post including title, body, author, likes, and comments count.
+  provider: circle-so
+  endpoint: /communities/{community_id}/posts/{post_id}
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      post_id:
+        type: string
+        description: "Post ID"
+    required:
+      - community_id
+      - post_id
+
+- slug: circle_so_create_post
+  name: Create Post
+  description: |
+    Create a new post in a community. Include title, body content, and optional tags.
+  provider: circle-so
+  endpoint: /communities/{community_id}/posts
+  method: POST
+  scopes:
+    - posts:create
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      community_id:
+        type: string
+        description: "Community ID to create post in"
+      title:
+        type: string
+        description: "Post title"
+      body:
+        type: string
+        description: "Post body content (HTML or markdown)"
+      tag_ids:
+        type: array
+        items:
+          type: string
+        description: "Array of tag IDs to assign"
+      pinned:
+        type: boolean
+        description: "Pin the post to top of community"
+        default: false
+    required:
+      - community_id
+      - title
+      - body
+
+- slug: circle_so_list_comments
+  name: List Comments
+  description: |
+    Returns a paginated list of comments on a specific post. Includes author and timestamps.
+  provider: circle-so
+  endpoint: /communities/{community_id}/posts/{post_id}/comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      post_id:
+        type: string
+        description: "Post ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - community_id
+      - post_id
+
+- slug: circle_so_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment including text, author, and creation date.
+  provider: circle-so
+  endpoint: /communities/{community_id}/posts/{post_id}/comments/{comment_id}
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      post_id:
+        type: string
+        description: "Post ID"
+      comment_id:
+        type: string
+        description: "Comment ID"
+    required:
+      - community_id
+      - post_id
+      - comment_id
+
+- slug: circle_so_list_events
+  name: List Events
+  description: |
+    Returns a paginated list of events in a community. Filter by date, type, or status.
+  provider: circle-so
+  endpoint: /communities/{community_id}/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - community
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      community_id:
+        type: string
+        description: "Community ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status: upcoming, past, all"
+        default: upcoming
+    required:
+      - community_id

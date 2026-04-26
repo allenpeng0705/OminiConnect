@@ -1,0 +1,231 @@
+# Perdoo Tools - Allowlist
+# Curated subset of Perdoo API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. perdoo_list_goals              - List goals
+# 2. perdoo_get_goal                - Get goal details
+# 3. perdoo_list_key_results        - List key results
+# 4. perdoo_get_key_result         - Get key result details
+# 5. perdoo_list_projects           - List projects
+# 6. perdoo_get_project            - Get project details
+# 7. perdoo_list_tasks             - List tasks
+# 8. perdoo_get_task               - Get task details
+# 9. perdoo_list_users             - List team members
+# 10. perdoo_get_user              - Get user details
+
+- slug: perdoo_list_goals
+  name: List Goals
+  description: |
+    List all goals in the organization.
+  provider: perdoo
+  endpoint: /goals
+  method: GET
+  scopes: []
+  tags:
+    - goals
+    - okrs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing goals
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed)"
+    required: []
+
+- slug: perdoo_get_goal
+  name: Get Goal
+  description: |
+    Get detailed information about a specific goal.
+  provider: perdoo
+  endpoint: /goals/{goalId}
+  method: GET
+  scopes: []
+  tags:
+    - goals
+    - okrs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a goal
+    properties:
+      goalId:
+        type: string
+        description: "Goal ID"
+    required:
+      - goalId
+
+- slug: perdoo_list_key_results
+  name: List Key Results
+  description: |
+    List all key results.
+  provider: perdoo
+  endpoint: /key-results
+  method: GET
+  scopes: []
+  tags:
+    - key-results
+    - okrs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing key results
+    properties:
+      goalId:
+        type: string
+        description: "Filter by goal ID"
+    required: []
+
+- slug: perdoo_get_key_result
+  name: Get Key Result
+  description: |
+    Get detailed information about a specific key result.
+  provider: perdoo
+  endpoint: /key-results/{keyResultId}
+  method: GET
+  scopes: []
+  tags:
+    - key-results
+    - okrs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a key result
+    properties:
+      keyResultId:
+        type: string
+        description: "Key result ID"
+    required:
+      - keyResultId
+
+- slug: perdoo_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: perdoo
+  endpoint: /projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - work
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: perdoo_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: perdoo
+  endpoint: /projects/{projectId}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - work
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: perdoo_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: perdoo
+  endpoint: /tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: perdoo_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: perdoo
+  endpoint: /tasks/{taskId}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - taskId
+
+- slug: perdoo_list_users
+  name: List Users
+  description: |
+    List all team members.
+  provider: perdoo
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: perdoo_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: perdoo
+  endpoint: /users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId

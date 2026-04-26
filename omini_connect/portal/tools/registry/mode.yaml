@@ -1,0 +1,307 @@
+# Mode Tools - Allowlist
+# Curated subset of the Mode API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mode_list_reports            - List reports in a workspace
+# 2. mode_get_report              - Get report details
+# 3. mode_create_report           - Create a new report
+# 4. mode_list_dashboards         - List dashboards in a workspace
+# 5. mode_get_dashboard           - Get dashboard details
+# 6. mode_run_query               - Run a SQL query
+# 7. mode_list_queries            - List saved queries
+# 8. mode_get_query               - Get query details
+# 9. mode_list_users             - List workspace users
+# 10. mode_get_user              - Get user details
+
+- slug: mode_list_reports
+  name: List Reports
+  description: |
+    List all reports in a Mode workspace. Returns report names, descriptions, and creation dates.
+    Use this to discover available analyses and visualizations.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/reports
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - report
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      limit:
+        type: integer
+        description: "Maximum number of reports to return"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - workspaceId
+
+- slug: mode_get_report
+  name: Get Report
+  description: |
+    Get detailed information about a specific report including the query, visualization, and parameters.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/reports/{reportId}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - report
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      reportId:
+        type: string
+        description: "Report ID (required)"
+    required:
+      - workspaceId
+      - reportId
+
+- slug: mode_create_report
+  name: Create Report
+  description: |
+    Create a new report in a Mode workspace. Specify the query, name, and visualization settings.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/reports
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - report
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a report
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      name:
+        type: string
+        description: "Report name (required)"
+      query:
+        type: object
+        description: "Query definition including SQL and data source"
+      visualization:
+        type: object
+        description: "Visualization type and options"
+    required:
+      - workspaceId
+      - name
+      - query
+
+- slug: mode_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards in a Mode workspace. Returns dashboard names, descriptions, and publication status.
+    Use this to discover available dashboards for sharing or analysis.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/dashboards
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - dashboard
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      limit:
+        type: integer
+        description: "Maximum number of dashboards to return"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - workspaceId
+
+- slug: mode_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get detailed information about a specific dashboard including its reports, filters, and layout.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/dashboards/{dashboardId}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - dashboard
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      dashboardId:
+        type: string
+        description: "Dashboard ID (required)"
+    required:
+      - workspaceId
+      - dashboardId
+
+- slug: mode_run_query
+  name: Run Query
+  description: |
+    Execute a SQL query in Mode and return results. The query runs against the specified data source.
+    Use this for ad-hoc analysis or to retrieve specific data.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/query
+  method: POST
+  scopes:
+    - api_key
+  tags:
+    - query
+    - execute
+    - sql
+  input_schema:
+    type: object
+    description: Parameters for running a query
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      sql:
+        type: string
+        description: "SQL query string (required)"
+      dataSourceId:
+        type: string
+        description: "Data source ID to query against"
+    required:
+      - workspaceId
+      - sql
+
+- slug: mode_list_queries
+  name: List Queries
+  description: |
+    List all saved queries in a Mode workspace. Returns query names, SQL, and execution history.
+    Use this to discover reusable SQL snippets for common analyses.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/queries
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - query
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing queries
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      limit:
+        type: integer
+        description: "Maximum number of queries to return"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - workspaceId
+
+- slug: mode_get_query
+  name: Get Query
+  description: |
+    Get detailed information about a saved query including the SQL, parameters, and last execution results.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/queries/{queryId}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - query
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a query
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      queryId:
+        type: string
+        description: "Query ID (required)"
+    required:
+      - workspaceId
+      - queryId
+
+- slug: mode_list_users
+  name: List Users
+  description: |
+    List all users in a Mode workspace. Returns user names, emails, and roles.
+    Use this to discover workspace members.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/members
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - user
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - workspaceId
+
+- slug: mode_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific workspace user including their role and permissions.
+  provider: mode
+  endpoint: /api/workspaces/{workspaceId}/members/{userId}
+  method: GET
+  scopes:
+    - api_key
+  tags:
+    - user
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID (required)"
+      userId:
+        type: string
+        description: "User ID (required)"
+    required:
+      - workspaceId
+      - userId

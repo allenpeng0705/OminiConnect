@@ -1,0 +1,296 @@
+# FigJam Tools - Allowlist
+# Curated subset of the FigJam API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. figjam_list_boards         - List all boards
+# 2. figjam_get_board          - Get details of a specific board
+# 3. figjam_create_board       - Create a new board
+# 4. figjam_list_items         - List items on a board
+# 5. figjam_get_item           - Get details of a specific item
+# 6. figjam_list_members       - List all members
+# 7. figjam_get_member         - Get details of a specific member
+# 8. figjam_list_teams         - List all teams
+# 9. figjam_get_team           - Get details of a specific team
+# 10. figjam_list_comments     - List comments on a board
+
+- slug: figjam_list_boards
+  name: List Boards
+  description: |
+    List all FigJam boards the authenticated user has access to.
+    Returns board details including name, thumbnail, and last modified time.
+  provider: figjam
+  endpoint: /boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - whiteboard
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      sort:
+        type: string
+        description: "Sort order: modified, created, name"
+        enum: [modified, created, name]
+      per_page:
+        type: integer
+        description: "Results per page (default 20)"
+        default: 20
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: figjam_get_board
+  name: Get Board
+  description: |
+    Get details of a specific board including name, description, and metadata.
+  provider: figjam
+  endpoint: /boards/{id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      id:
+        type: string
+        description: "Board ID"
+    required:
+      - id
+
+- slug: figjam_create_board
+  name: Create Board
+  description: |
+    Create a new FigJam board. Optionally specify team, template, or initial settings.
+  provider: figjam
+  endpoint: /boards
+  method: POST
+  scopes:
+    - boards:write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      name:
+        type: string
+        description: "Board name"
+      description:
+        type: string
+        description: "Board description"
+      team_id:
+        type: string
+        description: "Team ID to create the board under"
+      template_id:
+        type: string
+        description: "Use a template as starting point"
+    required:
+      - name
+
+- slug: figjam_list_items
+  name: List Items
+  description: |
+    List all items on a specific board including shapes, sticky notes, connectors, and text.
+  provider: figjam
+  endpoint: /boards/{board_id}/items
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - items
+    - board
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      type:
+        type: string
+        description: "Filter by item type: shape, sticky, text, connector, embed"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - board_id
+
+- slug: figjam_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item on a board including position, size, style, and content.
+  provider: figjam
+  endpoint: /boards/{board_id}/items/{id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      id:
+        type: string
+        description: "Item ID"
+    required:
+      - board_id
+      - id
+
+- slug: figjam_list_members
+  name: List Members
+  description: |
+    List all members in the workspace with their roles and access levels.
+  provider: figjam
+  endpoint: /members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      role:
+        type: string
+        description: "Filter by role: owner, editor, viewer"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: figjam_get_member
+  name: Get Member
+  description: |
+    Get details of a specific member including email, name, role, and last active time.
+  provider: figjam
+  endpoint: /members/{id}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      id:
+        type: string
+        description: "Member ID"
+    required:
+      - id
+
+- slug: figjam_list_teams
+  name: List Teams
+  description: |
+    List all teams in the workspace with their member counts and board counts.
+  provider: figjam
+  endpoint: /teams
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page (default 20)"
+        default: 20
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: figjam_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team including name, description, members, and boards.
+  provider: figjam
+  endpoint: /teams/{id}
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: string
+        description: "Team ID"
+    required:
+      - id
+
+- slug: figjam_list_comments
+  name: List Comments
+  description: |
+    List all comments on a specific board including author, timestamp, and resolved status.
+  provider: figjam
+  endpoint: /boards/{board_id}/comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - comments
+    - board
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      resolved:
+        type: boolean
+        description: "Filter by resolved status"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required:
+      - board_id

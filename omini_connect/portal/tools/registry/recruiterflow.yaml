@@ -1,0 +1,286 @@
+# Recruiterflow Tools - Allowlist
+# Curated subset of Recruiterflow API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recruiterflow_list_jobs          - List all job openings
+# 2. recruiterflow_get_job            - Get job details
+# 3. recruiterflow_list_candidates    - List all candidates
+# 4. recruiterflow_get_candidate      - Get candidate details
+# 5. recruiterflow_add_candidate       - Add a candidate to a job
+# 6. recruiterflow_list_interviews    - List all interviews
+# 7. recruiterflow_schedule_interview - Schedule an interview
+# 8. recruiterflow_list_tasks         - List all tasks
+# 9. recruiterflow_create_task       - Create a task
+# 10. recruiterflow_get_pipeline      - Get pipeline for a job
+
+- slug: recruiterflow_list_jobs
+  name: List Jobs
+  description: |
+    Retrieve a list of all job openings.
+  provider: recruiterflow
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Number of jobs to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: open, closed, draft"
+        default: open
+    required: []
+
+- slug: recruiterflow_get_job
+  name: Get Job
+  description: |
+    Get details of a specific job.
+  provider: recruiterflow
+  endpoint: /jobs/{jobId}
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      jobId:
+        type: string
+        description: "The job ID"
+    required:
+      - jobId
+
+- slug: recruiterflow_list_candidates
+  name: List Candidates
+  description: |
+    Retrieve a list of all candidates.
+  provider: recruiterflow
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Number of candidates"
+        default: 50
+      jobId:
+        type: string
+        description: "Filter by job ID"
+    required: []
+
+- slug: recruiterflow_get_candidate
+  name: Get Candidate
+  description: |
+    Get details of a specific candidate.
+  provider: recruiterflow
+  endpoint: /candidates/{candidateId}
+  method: GET
+  scopes:
+    - candidates:read
+  tags:
+    - candidates
+    - recruitment
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "The candidate ID"
+    required:
+      - candidateId
+
+- slug: recruiterflow_add_candidate
+  name: Add Candidate
+  description: |
+    Add a candidate to a specific job.
+  provider: recruiterflow
+  endpoint: /jobs/{jobId}/candidates
+  method: POST
+  scopes:
+    - candidates:write
+  tags:
+    - candidates
+    - jobs
+    - recruitment
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a candidate
+    properties:
+      jobId:
+        type: string
+        description: "The job ID"
+      candidateId:
+        type: string
+        description: "The candidate ID"
+      stage:
+        type: string
+        description: "Initial pipeline stage"
+    required:
+      - jobId
+      - candidateId
+
+- slug: recruiterflow_list_interviews
+  name: List Interviews
+  description: |
+    Retrieve a list of all interviews.
+  provider: recruiterflow
+  endpoint: /interviews
+  method: GET
+  scopes:
+    - interviews:read
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      limit:
+        type: integer
+        description: "Number of interviews"
+        default: 50
+    required: []
+
+- slug: recruiterflow_schedule_interview
+  name: Schedule Interview
+  description: |
+    Schedule a new interview.
+  provider: recruiterflow
+  endpoint: /interviews
+  method: POST
+  scopes:
+    - interviews:write
+  tags:
+    - interviews
+    - recruitment
+    - scheduling
+    - create
+  input_schema:
+    type: object
+    description: Parameters for scheduling an interview
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+      jobId:
+        type: string
+        description: "Job ID"
+      scheduledTime:
+        type: string
+        description: "Interview time (ISO 8601)"
+      interviewType:
+        type: string
+        description: "Type: phone, video, in-person"
+    required:
+      - candidateId
+      - jobId
+      - scheduledTime
+
+- slug: recruiterflow_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of all tasks.
+  provider: recruiterflow
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - recruitment
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Number of tasks"
+        default: 50
+      completed:
+        type: boolean
+        description: "Filter by completion status"
+    required: []
+
+- slug: recruiterflow_create_task
+  name: Create Task
+  description: |
+    Create a new task.
+  provider: recruiterflow
+  endpoint: /tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - tasks
+    - recruitment
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      description:
+        type: string
+        description: "Task description"
+      candidateId:
+        type: string
+        description: "Related candidate ID"
+      dueDate:
+        type: string
+        description: "Due date (ISO 8601)"
+    required:
+      - title
+
+- slug: recruiterflow_get_pipeline
+  name: Get Pipeline
+  description: |
+    Get the hiring pipeline for a specific job.
+  provider: recruiterflow
+  endpoint: /jobs/{jobId}/pipeline
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - pipeline
+    - recruitment
+  input_schema:
+    type: object
+    description: Parameters for getting pipeline
+    properties:
+      jobId:
+        type: string
+        description: "The job ID"
+    required:
+      - jobId

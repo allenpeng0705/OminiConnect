@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Docker option: Nango via docker-compose in the submodule, then OminiConnect portal.
-# No Docker: use ./scripts/dev_omini_connect_nango_native.sh or `make dev`.
+# Docker option: Nango via docker-compose in the vendored Nango tree, then OminiConnect portal.
+# No Docker: use ./scripts/dev.sh or `make dev`.
 #
 # Usage:
 #   ./scripts/dev_with_nango.sh              # docker up + cargo run -p omini-connect-portal

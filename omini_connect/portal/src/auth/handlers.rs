@@ -3,73 +3,320 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Query, State},
+    extract::State,
     response::{IntoResponse, Redirect, Response},
     Json,
 };
-use http::{header, StatusCode};
+use http::{header, HeaderMap, StatusCode};
 use serde::Deserialize;
-use serde_json::Value;
 use uuid::Uuid;
 
 use crate::app::AppState;
 use crate::auth::middleware::try_auth;
-use crate::auth::models::{
-    ApiKey, ApiKeyResponse, GenerateApiKeyRequest, LoginRequest,
-};
+use crate::auth::models::{ApiKey, ApiKeyResponse, GenerateApiKeyRequest, LoginRequest, SignupRequest};
 
-#[derive(Debug, Deserialize)]
-pub struct OidcCallbackQuery {
-    pub code: Option<String>,
-    pub state: Option<String>,
-    pub error: Option<String>,
-    pub error_description: Option<String>,
+fn nango_http_client() -> anyhow::Result<reqwest::Client> {
+    // Avoid inheriting host proxy settings for localhost bridge calls.
+    reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(30))
+        .no_proxy()
+        .build()
+        .map_err(Into::into)
 }
 
-#[derive(Debug, Deserialize)]
-struct OidcProviderMetadata {
-    authorization_endpoint: String,
-    token_endpoint: String,
-    userinfo_endpoint: Option<String>,
-}
-
-fn auth_mode() -> String {
-    std::env::var("AUTH_MODE")
+fn nango_auth_bridge_base_url() -> Option<String> {
+    std::env::var("NANGO_BASE_URL")
         .ok()
-        .map(|s| s.trim().to_ascii_lowercase())
+        .map(|s| s.trim().trim_end_matches('/').to_string())
         .filter(|s| !s.is_empty())
-        .unwrap_or_else(|| "local".to_string())
 }
 
-fn oidc_env() -> Option<(String, String, String, String)> {
-    let issuer = std::env::var("OIDC_ISSUER_URL").ok()?.trim().trim_end_matches('/').to_string();
-    let client_id = std::env::var("OIDC_CLIENT_ID").ok()?.trim().to_string();
-    let client_secret = std::env::var("OIDC_CLIENT_SECRET").ok()?.trim().to_string();
-    let redirect_uri = std::env::var("OIDC_REDIRECT_URI").ok()?.trim().to_string();
-    if issuer.is_empty() || client_id.is_empty() || client_secret.is_empty() || redirect_uri.is_empty() {
-        return None;
+fn google_auth_configured() -> bool {
+    let managed = std::env::var("FLAG_MANAGED_AUTH_ENABLED")
+        .ok()
+        .or_else(|| std::env::var("FLAG_HAS_MANAGED_AUTH").ok())
+        .map(|s| matches!(s.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on"))
+        .unwrap_or(false);
+    let workos_key = std::env::var("WORKOS_API_KEY").ok().map(|s| s.trim().to_string()).unwrap_or_default();
+    let workos_client = std::env::var("WORKOS_CLIENT_ID").ok().map(|s| s.trim().to_string()).unwrap_or_default();
+    managed && !workos_key.is_empty() && !workos_client.is_empty() && nango_auth_bridge_base_url().is_some()
+}
+
+fn cookie_bridge_path() -> String {
+    std::env::var("NANGO_BRIDGE_COOKIE_PATH")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "/".to_string())
+}
+
+fn cookie_bridge_same_site() -> String {
+    std::env::var("NANGO_BRIDGE_COOKIE_SAMESITE")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "Lax".to_string())
+}
+
+fn cookie_bridge_secure() -> bool {
+    // If explicitly set, use that value.
+    if let Ok(v) = std::env::var("NANGO_BRIDGE_COOKIE_SECURE") {
+        return matches!(v.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on");
     }
-    Some((issuer, client_id, client_secret, redirect_uri))
+    // Default: auto-detect from PORTAL_BASE_URL scheme (HTTPS → Secure, HTTP → no Secure).
+    let base = std::env::var("PORTAL_BASE_URL")
+        .unwrap_or_else(|_| "http://localhost:9000".to_string());
+    base.trim().starts_with("https://")
 }
 
-async fn fetch_oidc_metadata(issuer: &str) -> anyhow::Result<OidcProviderMetadata> {
-    let url = format!("{issuer}/.well-known/openid-configuration");
-    let client = reqwest::Client::builder().timeout(std::time::Duration::from_secs(30)).build()?;
-    let resp = client.get(url).send().await?;
+fn cookie_bridge_domain() -> Option<String> {
+    std::env::var("NANGO_BRIDGE_COOKIE_DOMAIN")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+}
+
+fn normalize_set_cookie(line: &str) -> String {
+    let mut parts = line.split(';').map(|s| s.trim().to_string()).collect::<Vec<_>>();
+    if parts.is_empty() {
+        return line.to_string();
+    }
+
+    let mut has_path = false;
+    let mut has_same_site = false;
+    let mut has_secure = false;
+    let mut has_http_only = false;
+    let mut domain_idx: Option<usize> = None;
+
+    for (i, p) in parts.iter().enumerate().skip(1) {
+        let lower = p.to_ascii_lowercase();
+        if lower.starts_with("path=") {
+            has_path = true;
+        } else if lower.starts_with("samesite=") {
+            has_same_site = true;
+        } else if lower == "secure" {
+            has_secure = true;
+        } else if lower == "httponly" {
+            has_http_only = true;
+        } else if lower.starts_with("domain=") {
+            domain_idx = Some(i);
+        }
+    }
+
+    if has_path {
+        for p in parts.iter_mut().skip(1) {
+            if p.to_ascii_lowercase().starts_with("path=") {
+                *p = format!("Path={}", cookie_bridge_path());
+            }
+        }
+    } else {
+        parts.push(format!("Path={}", cookie_bridge_path()));
+    }
+
+    if has_same_site {
+        for p in parts.iter_mut().skip(1) {
+            if p.to_ascii_lowercase().starts_with("samesite=") {
+                *p = format!("SameSite={}", cookie_bridge_same_site());
+            }
+        }
+    } else {
+        parts.push(format!("SameSite={}", cookie_bridge_same_site()));
+    }
+
+    if cookie_bridge_secure() && !has_secure {
+        parts.push("Secure".to_string());
+    }
+    if !has_http_only {
+        parts.push("HttpOnly".to_string());
+    }
+
+    match (cookie_bridge_domain(), domain_idx) {
+        (Some(domain), Some(i)) => parts[i] = format!("Domain={domain}"),
+        (Some(domain), None) => parts.push(format!("Domain={domain}")),
+        (None, Some(i)) => {
+            parts.remove(i);
+        }
+        (None, None) => {}
+    }
+
+    parts.join("; ")
+}
+
+fn format_cookie(
+    name: &str,
+    value: &str,
+    max_age: i64,
+    http_only: bool,
+) -> String {
+    let mut parts = vec![
+        format!("{name}={value}"),
+        format!("Path={}", cookie_bridge_path()),
+        format!("Max-Age={max_age}"),
+        format!("SameSite={}", cookie_bridge_same_site()),
+    ];
+    if cookie_bridge_secure() {
+        parts.push("Secure".to_string());
+    }
+    if http_only {
+        parts.push("HttpOnly".to_string());
+    }
+    if let Some(domain) = cookie_bridge_domain() {
+        parts.push(format!("Domain={domain}"));
+    }
+    parts.join("; ")
+}
+
+fn build_session_response_with_bridge(session_id: &str, redirect_to: &str, extra_set_cookies: &[String]) -> Response {
+    let mut resp = Redirect::to(redirect_to).into_response();
+    let cookie = format_cookie("session", session_id, 86400, true);
+    if let Ok(h) = http::HeaderValue::from_str(&cookie) {
+        resp.headers_mut().append(header::SET_COOKIE, h);
+    }
+    for c in extra_set_cookies {
+        if let Ok(h) = http::HeaderValue::from_str(c) {
+            resp.headers_mut().append(header::SET_COOKIE, h);
+        }
+    }
+    resp
+}
+
+fn extract_set_cookie_headers(headers: &HeaderMap) -> Vec<String> {
+    headers
+        .get_all(header::SET_COOKIE)
+        .iter()
+        .filter_map(|v| v.to_str().ok().map(normalize_set_cookie))
+        .collect()
+}
+
+async fn nango_signup(base_url: &str, name: &str, email: &str, password: &str) -> anyhow::Result<Vec<String>> {
+    let client = nango_http_client()?;
+    let url = format!("{}/api/v1/account/signup", base_url.trim_end_matches('/'));
+    let resp = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&serde_json::json!({
+            "name": name,
+            "email": email,
+            "password": password
+        }))
+        .send()
+        .await?;
+    if resp.status().is_success() {
+        return Ok(extract_set_cookie_headers(resp.headers()));
+    }
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    anyhow::bail!("Nango signup failed {status}: {text}");
+}
+
+async fn nango_signin(base_url: &str, email: &str, password: &str) -> anyhow::Result<Vec<String>> {
+    let client = nango_http_client()?;
+    let url = format!("{}/api/v1/account/signin", base_url.trim_end_matches('/'));
+    let resp = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&serde_json::json!({
+            "email": email,
+            "password": password
+        }))
+        .send()
+        .await?;
+    if resp.status().is_success() {
+        return Ok(extract_set_cookie_headers(resp.headers()));
+    }
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    anyhow::bail!("Nango signin failed {status}: {text}");
+}
+
+async fn nango_logout(base_url: &str, incoming_cookie_header: Option<&str>) -> anyhow::Result<Vec<String>> {
+    let client = nango_http_client()?;
+    let url = format!("{}/api/v1/account/logout", base_url.trim_end_matches('/'));
+    let mut req = client.post(url);
+    if let Some(cookies) = incoming_cookie_header.filter(|v| !v.trim().is_empty()) {
+        req = req.header(header::COOKIE, cookies);
+    }
+    let resp = req.send().await?;
+    if resp.status().is_success() {
+        return Ok(extract_set_cookie_headers(resp.headers()));
+    }
+    let status = resp.status();
+    let text = resp.text().await.unwrap_or_default();
+    anyhow::bail!("Nango logout failed {status}: {text}");
+}
+
+#[derive(Debug, Deserialize)]
+struct ManagedSignupUrlData {
+    url: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ManagedSignupUrlResponse {
+    data: ManagedSignupUrlData,
+}
+
+async fn nango_google_auth_url(base_url: &str) -> anyhow::Result<String> {
+    let client = nango_http_client()?;
+    let url = format!("{}/api/v1/account/managed/signup", base_url.trim_end_matches('/'));
+    let resp = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&serde_json::json!({
+            "provider": "GoogleOAuth"
+        }))
+        .send()
+        .await?;
     if !resp.status().is_success() {
         let status = resp.status();
         let text = resp.text().await.unwrap_or_default();
-        anyhow::bail!("OIDC discovery failed {status}: {text}");
+        anyhow::bail!("Nango managed signup failed {status}: {text}");
     }
-    Ok(resp.json::<OidcProviderMetadata>().await?)
+    let body = resp.text().await.unwrap_or_default();
+    let parsed: ManagedSignupUrlResponse = serde_json::from_str(&body)
+        .map_err(|e| anyhow::anyhow!("Nango managed signup JSON parse failed: {e}. Body: {body}"))?;
+    if parsed.data.url.trim().is_empty() {
+        anyhow::bail!("Nango managed signup returned empty URL");
+    }
+    Ok(parsed.data.url)
 }
 
-async fn ensure_user_exists(state: &Arc<AppState>, username: &str) -> anyhow::Result<()> {
-    if state.users.get(username).await?.is_none() {
+/// GET /auth/google — start Google OAuth sign-in via Nango managed auth.
+pub async fn google_start() -> Response {
+    if !google_auth_configured() {
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            "Google sign-in is not configured. Set FLAG_MANAGED_AUTH_ENABLED=true and WorkOS credentials.",
+        )
+            .into_response();
+    }
+    let Some(base) = nango_auth_bridge_base_url() else {
+        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
+    };
+    match nango_google_auth_url(&base).await {
+        Ok(url) => Redirect::to(&url).into_response(),
+        Err(e) => {
+            tracing::error!("Google sign-in start failed: {}", e);
+            (
+                StatusCode::BAD_GATEWAY,
+                format!("Google sign-in is not available: {e}"),
+            )
+                .into_response()
+        }
+    }
+}
+
+/// GET /auth/capabilities
+pub async fn capabilities() -> impl IntoResponse {
+    Json(serde_json::json!({
+        "google_login_enabled": google_auth_configured(),
+    }))
+}
+
+async fn ensure_local_user(state: &Arc<AppState>, email: &str) -> anyhow::Result<()> {
+    if state.users.get(email).await?.is_none() {
         let user = crate::auth::models::User {
-            username: username.to_string(),
-            // Local password is unused for OIDC-provisioned users.
-            password_hash: "!oidc-managed!".to_string(),
+            username: email.to_string(),
+            password_hash: "!managed-by-nango!".to_string(),
             created_at: chrono::Utc::now(),
         };
         state.users.insert(&user).await?;
@@ -77,270 +324,86 @@ async fn ensure_user_exists(state: &Arc<AppState>, username: &str) -> anyhow::Re
     Ok(())
 }
 
-fn build_session_response(session_id: &str, redirect_to: &str) -> Response {
-    let mut resp = Redirect::to(redirect_to).into_response();
-    let cookie = format!(
-        "session={}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax; Secure",
-        session_id
-    );
-    if let Ok(h) = http::HeaderValue::from_str(&cookie) {
-        resp.headers_mut().insert(header::SET_COOKIE, h);
-    }
-    resp
-}
-
-/// GET /auth/config
-pub async fn config() -> impl IntoResponse {
-    let mode = auth_mode();
-    let oidc_ready = oidc_env().is_some();
-    let login_path = if mode == "oidc" && oidc_ready {
-        "/auth/oidc/login"
-    } else {
-        "/auth/login"
-    };
-
-    Json(serde_json::json!({
-        "mode": mode,
-        "oidc_ready": oidc_ready,
-        "login_path": login_path,
-    }))
-}
-
 /// POST /auth/login
 pub async fn login(
     State(state): State<Arc<AppState>>,
     Json(req): Json<LoginRequest>,
 ) -> Response {
-    if auth_mode() == "oidc" {
-        return (
-            StatusCode::BAD_REQUEST,
-            "Local password login is disabled. Use OIDC sign-in.",
-        )
-            .into_response();
+    let email = req.email.trim().to_ascii_lowercase();
+    if email.is_empty() || req.password.is_empty() {
+        return (StatusCode::BAD_REQUEST, "Email and password are required").into_response();
     }
-
-    let user = match state.users.get(&req.username).await {
-        Ok(Some(u)) => u,
-        Ok(None) => {
-            return (StatusCode::UNAUTHORIZED, "Invalid username or password").into_response();
-        }
-        Err(e) => {
-            tracing::error!("DB error looking up user: {}", e);
-            return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
-        }
+    let Some(base) = nango_auth_bridge_base_url() else {
+        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
     };
-
-    match bcrypt::verify(&req.password, &user.password_hash) {
-        Ok(true) => {}
-        _ => {
-            return (StatusCode::UNAUTHORIZED, "Invalid username or password").into_response();
-        }
+    let nango_set_cookies = match nango_signin(&base, &email, &req.password).await {
+        Ok(cookies) => cookies,
+        Err(e) => return (StatusCode::UNAUTHORIZED, format!("Nango sign-in failed: {e}")).into_response(),
+    };
+    if let Err(e) = ensure_local_user(&state, &email).await {
+        tracing::error!("Failed to mirror Nango user {} locally: {}", email, e);
+        return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to mirror user").into_response();
     }
 
     let session_id = Uuid::new_v4().to_string();
     let session = crate::auth::models::Session {
         session_id: session_id.clone(),
-        username: req.username.clone(),
+        username: email.clone(),
         created_at: chrono::Utc::now(),
         expires_at: chrono::Utc::now() + chrono::Duration::hours(24),
     };
-
     if let Err(e) = state.sessions.insert(&session).await {
         tracing::error!("DB error inserting session: {}", e);
         return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
-    tracing::info!("User {} logged in", req.username);
-    build_session_response(&session_id, "/")
+    tracing::info!("User {} logged in via Nango bridge", email);
+    build_session_response_with_bridge(&session_id, "/", &nango_set_cookies)
 }
 
-/// GET /auth/oidc/login
-pub async fn oidc_login() -> Response {
-    if auth_mode() != "oidc" {
-        return (StatusCode::BAD_REQUEST, "OIDC mode is not enabled").into_response();
-    }
-    let Some((issuer, client_id, _client_secret, redirect_uri)) = oidc_env() else {
-        return (StatusCode::SERVICE_UNAVAILABLE, "OIDC is not configured").into_response();
-    };
-
-    let meta = match fetch_oidc_metadata(&issuer).await {
-        Ok(m) => m,
-        Err(e) => {
-            tracing::error!("OIDC metadata fetch failed: {}", e);
-            return (StatusCode::BAD_GATEWAY, "OIDC discovery failed").into_response();
-        }
-    };
-
-    let state = Uuid::new_v4().to_string();
-    let auth_url = format!(
-        "{}?response_type=code&client_id={}&redirect_uri={}&scope={}&state={}",
-        meta.authorization_endpoint,
-        urlencoding::encode(&client_id),
-        urlencoding::encode(&redirect_uri),
-        urlencoding::encode("openid profile email"),
-        urlencoding::encode(&state)
-    );
-    let mut resp = Redirect::to(&auth_url).into_response();
-    let state_cookie = format!(
-        "oidc_state={}; HttpOnly; Path=/auth/oidc; Max-Age=600; SameSite=Lax; Secure",
-        state
-    );
-    if let Ok(h) = http::HeaderValue::from_str(&state_cookie) {
-        resp.headers_mut().append(header::SET_COOKIE, h);
-    }
-    resp
-}
-
-/// GET /auth/oidc/callback
-pub async fn oidc_callback(
+/// POST /auth/signup
+pub async fn signup(
     State(state): State<Arc<AppState>>,
-    headers: http::HeaderMap,
-    Query(q): Query<OidcCallbackQuery>,
+    Json(req): Json<SignupRequest>,
 ) -> Response {
-    if auth_mode() != "oidc" {
-        return (StatusCode::BAD_REQUEST, "OIDC mode is not enabled").into_response();
+    let email = req.email.trim().to_ascii_lowercase();
+    if email.is_empty() || !email.contains('@') {
+        return (StatusCode::BAD_REQUEST, "Invalid email").into_response();
     }
-    if let Some(err) = q.error.as_deref() {
-        let detail = q.error_description.as_deref().unwrap_or("");
-        tracing::warn!("OIDC callback error: {} {}", err, detail);
-        return Redirect::to("/auth/login").into_response();
+    if req.password.len() < 8 {
+        return (StatusCode::BAD_REQUEST, "Password must be at least 8 characters").into_response();
     }
-    let Some(code) = q.code.as_deref() else {
-        return (StatusCode::BAD_REQUEST, "Missing OIDC code").into_response();
-    };
-    let Some(state_param) = q.state.as_deref() else {
-        return (StatusCode::BAD_REQUEST, "Missing OIDC state").into_response();
+    let display_name = req.name.unwrap_or_else(|| email.clone()).trim().to_string();
+    let Some(base) = nango_auth_bridge_base_url() else {
+        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
     };
 
-    let cookie_state = headers
-        .get(header::COOKIE)
-        .and_then(|v| v.to_str().ok())
-        .and_then(|cookies| {
-            cookies
-                .split(';')
-                .find_map(|pair| {
-                    let (k, v) = pair.trim().split_once('=')?;
-                    if k == "oidc_state" { Some(v) } else { None }
-                })
-        });
-    if cookie_state != Some(state_param) {
-        return (StatusCode::UNAUTHORIZED, "OIDC state mismatch").into_response();
-    }
-
-    let Some((issuer, client_id, client_secret, redirect_uri)) = oidc_env() else {
-        return (StatusCode::SERVICE_UNAVAILABLE, "OIDC is not configured").into_response();
-    };
-    let meta = match fetch_oidc_metadata(&issuer).await {
-        Ok(m) => m,
+    let nango_set_cookies = match nango_signup(&base, &display_name, &email, &req.password).await {
+        Ok(cookies) => cookies,
         Err(e) => {
-            tracing::error!("OIDC metadata fetch failed: {}", e);
-            return (StatusCode::BAD_GATEWAY, "OIDC discovery failed").into_response();
+            tracing::error!("Nango signup bridge failed for {}: {}", email, e);
+            return (StatusCode::BAD_GATEWAY, format!("Nango signup failed: {e}")).into_response();
         }
     };
-
-    let client = match reqwest::Client::builder().timeout(std::time::Duration::from_secs(30)).build() {
-        Ok(c) => c,
-        Err(e) => {
-            tracing::error!("OIDC client init failed: {}", e);
-            return (StatusCode::INTERNAL_SERVER_ERROR, "OIDC client init failed").into_response();
-        }
-    };
-
-    let token_resp = client
-        .post(&meta.token_endpoint)
-        .form(&[
-            ("grant_type", "authorization_code"),
-            ("code", code),
-            ("redirect_uri", redirect_uri.as_str()),
-            ("client_id", client_id.as_str()),
-            ("client_secret", client_secret.as_str()),
-        ])
-        .send()
-        .await;
-    let token_json: Value = match token_resp {
-        Ok(resp) if resp.status().is_success() => match resp.json().await {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!("OIDC token JSON parse failed: {}", e);
-                return (StatusCode::BAD_GATEWAY, "OIDC token parse failed").into_response();
-            }
-        },
-        Ok(resp) => {
-            let status = resp.status();
-            let text = resp.text().await.unwrap_or_default();
-            tracing::error!("OIDC token exchange failed {}: {}", status, text);
-            return (StatusCode::BAD_GATEWAY, "OIDC token exchange failed").into_response();
-        }
-        Err(e) => {
-            tracing::error!("OIDC token exchange request failed: {}", e);
-            return (StatusCode::BAD_GATEWAY, "OIDC token exchange failed").into_response();
-        }
-    };
-
-    let access_token = token_json.get("access_token").and_then(|v| v.as_str()).unwrap_or_default();
-    if access_token.is_empty() {
-        return (StatusCode::BAD_GATEWAY, "OIDC access token missing").into_response();
-    }
-
-    let Some(userinfo_endpoint) = meta.userinfo_endpoint.as_deref() else {
-        return (StatusCode::BAD_GATEWAY, "OIDC userinfo endpoint is missing").into_response();
-    };
-    let profile_resp = client
-        .get(userinfo_endpoint)
-        .bearer_auth(access_token)
-        .send()
-        .await;
-    let profile_json: Value = match profile_resp {
-        Ok(resp) if resp.status().is_success() => match resp.json().await {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!("OIDC userinfo JSON parse failed: {}", e);
-                return (StatusCode::BAD_GATEWAY, "OIDC user profile parse failed").into_response();
-            }
-        },
-        Ok(resp) => {
-            let status = resp.status();
-            let text = resp.text().await.unwrap_or_default();
-            tracing::error!("OIDC userinfo failed {}: {}", status, text);
-            return (StatusCode::BAD_GATEWAY, "OIDC user profile fetch failed").into_response();
-        }
-        Err(e) => {
-            tracing::error!("OIDC userinfo request failed: {}", e);
-            return (StatusCode::BAD_GATEWAY, "OIDC user profile fetch failed").into_response();
-        }
-    };
-
-    let username = profile_json
-        .get("preferred_username")
-        .and_then(|v| v.as_str())
-        .or_else(|| profile_json.get("email").and_then(|v| v.as_str()))
-        .or_else(|| profile_json.get("sub").and_then(|v| v.as_str()))
-        .unwrap_or("")
-        .trim()
-        .to_string();
-    if username.is_empty() {
-        return (StatusCode::BAD_GATEWAY, "OIDC profile missing username/email/sub").into_response();
-    }
-
-    if let Err(e) = ensure_user_exists(&state, &username).await {
-        tracing::error!("Failed to provision OIDC user {}: {}", username, e);
-        return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to provision user").into_response();
+    if let Err(e) = ensure_local_user(&state, &email).await {
+        tracing::error!("DB error creating local mirror user {}: {}", email, e);
+        return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
     let session_id = Uuid::new_v4().to_string();
     let session = crate::auth::models::Session {
         session_id: session_id.clone(),
-        username: username.clone(),
+        username: email.clone(),
         created_at: chrono::Utc::now(),
         expires_at: chrono::Utc::now() + chrono::Duration::hours(24),
     };
     if let Err(e) = state.sessions.insert(&session).await {
-        tracing::error!("DB error inserting OIDC session: {}", e);
+        tracing::error!("DB error inserting signup session for {}: {}", email, e);
         return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
     }
 
-    tracing::info!("OIDC user {} logged in", username);
-    build_session_response(&session_id, "/")
+    tracing::info!("User {} signed up via Nango bridge", email);
+    build_session_response_with_bridge(&session_id, "/", &nango_set_cookies)
 }
 
 /// POST /auth/logout
@@ -367,7 +430,32 @@ pub async fn logout(
             }
         }
     }
-    Redirect::to("/auth/login").into_response()
+    let incoming_cookie_header = headers
+        .get(header::COOKIE)
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.to_string());
+    let mut nango_set_cookies: Vec<String> = Vec::new();
+    if let Some(base) = nango_auth_bridge_base_url() {
+        match nango_logout(&base, incoming_cookie_header.as_deref()).await {
+            Ok(cookies) => {
+                nango_set_cookies = cookies;
+            }
+            Err(e) => {
+                tracing::warn!("Nango logout bridge failed: {}", e);
+            }
+        }
+    }
+    let mut resp = Redirect::to("/auth/login").into_response();
+    // Clear local session cookie explicitly.
+    if let Ok(h) = http::HeaderValue::from_str(&format_cookie("session", "", 0, true)) {
+        resp.headers_mut().append(header::SET_COOKIE, h);
+    }
+    for c in nango_set_cookies {
+        if let Ok(h) = http::HeaderValue::from_str(&c) {
+            resp.headers_mut().append(header::SET_COOKIE, h);
+        }
+    }
+    resp
 }
 
 /// POST /auth/apikey — generate a new API key for the current user
@@ -383,7 +471,7 @@ pub async fn generate_api_key(
         }
     };
 
-    let raw_key = format!("{}:{}", username, Uuid::new_v4());
+    let raw_key = Uuid::new_v4().to_string();
     let hash = bcrypt::hash(&raw_key, bcrypt::DEFAULT_COST).unwrap_or_default();
 
     let api_key = ApiKey {

@@ -1,0 +1,236 @@
+# Cloudentity Tools - Allowlist
+# Curated subset of the Cloudentity API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cloudentity_list_users                - List users
+# 2. cloudentity_get_user                 - Get user details
+# 3. cloudentity_create_user              - Create a user
+# 4. cloudentity_delete_user              - Delete a user
+# 5. cloudentity_list_applications        - List applications
+# 6. cloudentity_get_application          - Get application details
+# 7. cloudentity_create_application      - Create an application
+# 8. cloudentity_list_authorizations     - List authorizations
+# 9. cloudentity_get_authorization       - Get authorization details
+# 10. cloudentity_list_identities       - List identities
+
+- slug: cloudentity_list_users
+  name: List Users
+  description: |
+    List all users in the tenant.
+  provider: cloudentity
+  endpoint: /admin/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudentity_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: cloudentity
+  endpoint: /admin/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: cloudentity_create_user
+  name: Create User
+  description: |
+    Create a new user.
+  provider: cloudentity
+  endpoint: /admin/users
+  method: POST
+  scopes: []
+  tags:
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      username:
+        type: string
+        description: "Username"
+      email:
+        type: string
+        description: "Email address"
+      password:
+        type: string
+        description: "Password"
+    required:
+      - username
+      - email
+
+- slug: cloudentity_delete_user
+  name: Delete User
+  description: |
+    Delete a user.
+  provider: cloudentity
+  endpoint: /admin/users/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: cloudentity_list_applications
+  name: List Applications
+  description: |
+    List all applications.
+  provider: cloudentity
+  endpoint: /admin/applications
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - dev-tools
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudentity_get_application
+  name: Get Application
+  description: |
+    Get details of a specific application.
+  provider: cloudentity
+  endpoint: /admin/applications/{id}
+  method: GET
+  scopes: []
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      id:
+        type: string
+        description: "Application ID"
+    required:
+      - id
+
+- slug: cloudentity_create_application
+  name: Create Application
+  description: |
+    Create a new application.
+  provider: cloudentity
+  endpoint: /admin/applications
+  method: POST
+  scopes: []
+  tags:
+    - applications
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an application
+    properties:
+      name:
+        type: string
+        description: "Application name"
+      type:
+        type: string
+        description: "Application type"
+    required:
+      - name
+
+- slug: cloudentity_list_authorizations
+  name: List Authorizations
+  description: |
+    List all authorizations.
+  provider: cloudentity
+  endpoint: /admin/authorizations
+  method: GET
+  scopes: []
+  tags:
+    - authorizations
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing authorizations
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cloudentity_get_authorization
+  name: Get Authorization
+  description: |
+    Get details of a specific authorization.
+  provider: cloudentity
+  endpoint: /admin/authorizations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - authorizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an authorization
+    properties:
+      id:
+        type: string
+        description: "Authorization ID"
+    required:
+      - id
+
+- slug: cloudentity_list_identities
+  name: List Identities
+  description: |
+    List all identities.
+  provider: cloudentity
+  endpoint: /admin/identities
+  method: GET
+  scopes: []
+  tags:
+    - identities
+    - identity
+  input_schema:
+    type: object
+    description: Parameters for listing identities
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

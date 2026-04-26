@@ -1,0 +1,271 @@
+# Groove Tools - Help Desk Platform
+# Curated subset of Groove API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. groove_list_conversations      - List conversations
+# 2. groove_get_conversation        - Get conversation details
+# 3. groove_reply_to_conversation  - Reply to a conversation
+# 4. groove_list_customers         - List customers
+# 5. groove_get_customer            - Get customer details
+# 6. groove_list_agents             - List agents
+# 7. groove_get_agent               - Get agent details
+# 8. groove_list_macros             - List macros
+# 9. groove_get_macro               - Get macro details
+# 10. groove_get_reports            - Get reports
+
+- slug: groove_list_conversations
+  name: List Conversations
+  description: |
+    List conversations in Groove. Filter by status, assignee, mailbox, or tag.
+  provider: groove
+  endpoint: /api/v2/conversations
+  method: GET
+  scopes:
+    - conversations.read
+  tags:
+    - conversations
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., state='open')"
+    required: []
+
+- slug: groove_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a Groove conversation including messages and assignee.
+  provider: groove
+  endpoint: /api/v2/conversations/{conversationId}
+  method: GET
+  scopes:
+    - conversations.read
+  tags:
+    - conversations
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "The conversation ID"
+    required:
+      - conversation_id
+
+- slug: groove_reply_to_conversation
+  name: Reply to Conversation
+  description: |
+    Reply to a Groove conversation with a new message. Supports text and HTML.
+  provider: groove
+  endpoint: /api/v2/conversations/{conversationId}/messages
+  method: POST
+  scopes:
+    - conversations.write
+  tags:
+    - conversations
+    - support
+    - write
+  input_schema:
+    type: object
+    description: Parameters for replying to a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "The conversation ID"
+      body:
+        type: string
+        description: "Reply message body (text or HTML)"
+      type:
+        type: string
+        description: "Message type: reply, note, or forward"
+        default: reply
+    required:
+      - conversation_id
+      - body
+
+- slug: groove_list_customers
+  name: List Customers
+  description: |
+    List customers in Groove. Filter by name, email, or created date.
+  provider: groove
+  endpoint: /api/v2/customers
+  method: GET
+  scopes:
+    - customers.read
+  tags:
+    - customers
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression"
+    required: []
+
+- slug: groove_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a Groove customer including contact info and conversation history.
+  provider: groove
+  endpoint: /api/v2/customers/{customerId}
+  method: GET
+  scopes:
+    - customers.read
+  tags:
+    - customers
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "The customer ID"
+    required:
+      - customer_id
+
+- slug: groove_list_agents
+  name: List Agents
+  description: |
+    List agents in Groove. Filter by name, email, or availability status.
+  provider: groove
+  endpoint: /api/v2/agents
+  method: GET
+  scopes:
+    - agents.read
+  tags:
+    - agents
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression"
+    required: []
+
+- slug: groove_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a Groove agent including name, email, and role.
+  provider: groove
+  endpoint: /api/v2/agents/{agentId}
+  method: GET
+  scopes:
+    - agents.read
+  tags:
+    - agents
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      agent_id:
+        type: string
+        description: "The agent ID"
+    required:
+      - agent_id
+
+- slug: groove_list_macros
+  name: List Macros
+  description: |
+    List macros in Groove. Filter by name, category, or shared status.
+  provider: groove
+  endpoint: /api/v2/macros
+  method: GET
+  scopes:
+    - macros.read
+  tags:
+    - macros
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing macros
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression"
+    required: []
+
+- slug: groove_get_macro
+  name: Get Macro
+  description: |
+    Get detailed information about a Groove macro including steps and actions.
+  provider: groove
+  endpoint: /api/v2/macros/{macroId}
+  method: GET
+  scopes:
+    - macros.read
+  tags:
+    - macros
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a macro
+    properties:
+      macro_id:
+        type: string
+        description: "The macro ID"
+    required:
+      - macro_id
+
+- slug: groove_get_reports
+  name: Get Reports
+  description: |
+    Get reports and analytics from Groove including response times and resolution rates.
+  provider: groove
+  endpoint: /api/v2/reports
+  method: GET
+  scopes:
+    - reports.read
+  tags:
+    - reports
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties:
+      report_type:
+        type: string
+        description: "Report type: conversations, team, or inbox"
+      start_date:
+        type: string
+        description: "Start date (ISO 8601 format)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601 format)"
+    required:
+      - report_type

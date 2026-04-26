@@ -1,0 +1,206 @@
+# LastPass Tools - Allowlist
+# Curated subset of LastPass API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lastpass_list_shared_folders  - List shared folders
+# 2. lastpass_get_shared_folder   - Get shared folder details
+# 3. lastpass_list_users          - List users
+# 4. lastpass_get_user           - Get user details
+# 5. lastpass_list_groups        - List groups
+# 6. lastpass_get_group          - Get group details
+# 7. lastpass_list_policies      - List policies
+# 8. lastpass_list_reports       - List reports
+# 9. lastpass_list_company_settings - List company settings
+# 10. lastpass_get_company_info   - Get company info
+
+- slug: lastpass_list_shared_folders
+  name: List Shared Folders
+  description: |
+    List all shared folders.
+  provider: lastpass
+  endpoint: /api/1.0/shared_folders
+  method: GET
+  scopes: []
+  tags:
+    - shared_folders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing shared folders
+    properties: {}
+    required: []
+
+- slug: lastpass_get_shared_folder
+  name: Get Shared Folder
+  description: |
+    Get details for a specific shared folder.
+  provider: lastpass
+  endpoint: /api/1.0/shared_folders/{folder_id}
+  method: GET
+  scopes: []
+  tags:
+    - shared_folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a shared folder
+    properties:
+      folder_id:
+        type: string
+        description: "Shared folder ID"
+    required:
+      - folder_id
+
+- slug: lastpass_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: lastpass
+  endpoint: /api/1.0/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: lastpass_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: lastpass
+  endpoint: /api/1.0/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: lastpass_list_groups
+  name: List Groups
+  description: |
+    List all groups.
+  provider: lastpass
+  endpoint: /api/1.0/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: lastpass_get_group
+  name: Get Group
+  description: |
+    Get details for a specific group.
+  provider: lastpass
+  endpoint: /api/1.0/groups/{group_id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: lastpass_list_policies
+  name: List Policies
+  description: |
+    List all policies.
+  provider: lastpass
+  endpoint: /api/1.0/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties: {}
+    required: []
+
+- slug: lastpass_list_reports
+  name: List Reports
+  description: |
+    List all reports.
+  provider: lastpass
+  endpoint: /api/1.0/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties: {}
+    required: []
+
+- slug: lastpass_list_company_settings
+  name: List Company Settings
+  description: |
+    List company settings.
+  provider: lastpass
+  endpoint: /api/1.0/company_settings
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - settings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing company settings
+    properties: {}
+    required: []
+
+- slug: lastpass_get_company_info
+  name: Get Company Info
+  description: |
+    Get company information.
+  provider: lastpass
+  endpoint: /api/1.0/company_info
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - info
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

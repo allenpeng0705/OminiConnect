@@ -1,0 +1,258 @@
+# Microsoft Tenant Specific Tools - Allowlist
+# Curated subset of Microsoft Graph API for specific tenant use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ms_tenant_list_users            - List all users
+# 2. ms_tenant_get_user             - Get user details
+# 3. ms_tenant_list_groups         - List groups
+# 4. ms_tenant_get_group           - Get group details
+# 5. ms_tenant_list_applications   - List applications
+# 6. ms_tenant_get_application     - Get application details
+# 7. ms_tenant_list_service_principals - List service principals
+# 8. ms_tenant_list_directory_roles - List directory roles
+# 9. ms_tenant_list_audit_logs    - List audit logs
+# 10. ms_tenant_list_sign_ins     - List sign-ins
+
+- slug: ms_tenant_list_users
+  name: List Users
+  description: |
+    List all users in the specific tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/users
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_tenant_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: ms_tenant_list_groups
+  name: List Groups
+  description: |
+    List all groups in the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_tenant_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: ms_tenant_list_applications
+  name: List Applications
+  description: |
+    List all registered applications in the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/applications
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_tenant_get_application
+  name: Get Application
+  description: |
+    Get details of a specific application.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/applications/{applicationId}
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      applicationId:
+        type: string
+        description: "Application ID"
+    required:
+      - applicationId
+
+- slug: ms_tenant_list_service_principals
+  name: List Service Principals
+  description: |
+    List all service principals in the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/servicePrincipals
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - serviceprincipals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing service principals
+    properties:
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: ms_tenant_list_directory_roles
+  name: List Directory Roles
+  description: |
+    List all directory roles in the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/directoryRoles
+  method: GET
+  scopes:
+    - Directory.Read.All
+  tags:
+    - roles
+    - directory
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing directory roles
+    properties: {}
+    required: []
+
+- slug: ms_tenant_list_audit_logs
+  name: List Audit Logs
+  description: |
+    List audit logs for the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/auditLogs/directoryAudits
+  method: GET
+  scopes:
+    - AuditLog.Read.All
+  tags:
+    - audit
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing audit logs
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      startDateTime:
+        type: string
+        description: "Start date"
+      endDateTime:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: ms_tenant_list_sign_ins
+  name: List Sign-ins
+  description: |
+    List sign-in logs for the tenant.
+  provider: microsoft-tenant-specific
+  endpoint: /v1.0/auditLogs/signIns
+  method: GET
+  scopes:
+    - AuditLog.Read.All
+  tags:
+    - signins
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sign-ins
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      startDateTime:
+        type: string
+        description: "Start date"
+      endDateTime:
+        type: string
+        description: "End date"
+    required: []

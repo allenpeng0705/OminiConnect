@@ -1,0 +1,187 @@
+# Snowflake (JWT) Tools - Allowlist
+# Curated subset of Snowflake (JWT) API for AI agent use.
+# Auth mode: JWT.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. query_data                               - Execute a SQL query
+# 2. list_databases                           - List all databases
+# 3. list_schemas                             - List schemas in database
+# 4. list_tables                              - List tables in schema
+# 5. get_query_status                         - Check query execution status
+# 6. cancel_query                             - Cancel a running query
+# 7. list_pipes                               - List pipes in schema
+# 8. list_streams                             - List streams in schema
+# 9. list_tasks                               - List tasks in schema
+# 10. get_warehouse                            - Get warehouse details
+
+- slug: query_data
+  name: Query Data
+  description: |
+    Execute a SQL query
+  provider: snowflake-jwt
+  endpoint: /api/v2/statements
+  method: POST
+  scopes: []
+  tags:
+    - query
+    - database
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_databases
+  name: List Databases
+  description: |
+    List all databases
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases
+  method: GET
+  scopes: []
+  tags:
+    - databases
+    - structure
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_schemas
+  name: List Schemas
+  description: |
+    List schemas in database
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases/{db}/schemas
+  method: GET
+  scopes: []
+  tags:
+    - schemas
+    - structure
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_tables
+  name: List Tables
+  description: |
+    List tables in schema
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases/{db}/schemas/{schema}/tables
+  method: GET
+  scopes: []
+  tags:
+    - tables
+    - structure
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_query_status
+  name: Get Query Status
+  description: |
+    Check query execution status
+  provider: snowflake-jwt
+  endpoint: /api/v2/statements/{id}
+  method: GET
+  scopes: []
+  tags:
+    - query
+    - status
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: cancel_query
+  name: Cancel Query
+  description: |
+    Cancel a running query
+  provider: snowflake-jwt
+  endpoint: /api/v2/statements/{id}/cancel
+  method: POST
+  scopes: []
+  tags:
+    - query
+    - cancel
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_pipes
+  name: List Pipes
+  description: |
+    List pipes in schema
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases/{db}/schemas/{schema}/pipes
+  method: GET
+  scopes: []
+  tags:
+    - pipes
+    - streaming
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_streams
+  name: List Streams
+  description: |
+    List streams in schema
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases/{db}/schemas/{schema}/streams
+  method: GET
+  scopes: []
+  tags:
+    - streams
+    - streaming
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_tasks
+  name: List Tasks
+  description: |
+    List tasks in schema
+  provider: snowflake-jwt
+  endpoint: /api/v2/databases/{db}/schemas/{schema}/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_warehouse
+  name: Get Warehouse
+  description: |
+    Get warehouse details
+  provider: snowflake-jwt
+  endpoint: /api/v2/warehouses/{name}
+  method: GET
+  scopes: []
+  tags:
+    - warehouse
+    - compute
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

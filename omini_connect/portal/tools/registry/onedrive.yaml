@@ -1,0 +1,278 @@
+# OneDrive Tools - Allowlist
+# Curated subset of Microsoft Graph API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. onedrive_list_files        - List files in folder
+# 2. onedrive_get_file         - Get file metadata
+# 3. onedrive_upload_file      - Upload a file
+# 4. onedrive_download_file    - Download file content
+# 5. onedrive_create_folder    - Create a folder
+# 6. onedrive_delete_file      - Delete a file
+# 7. onedrive_list_permissions - List file permissions
+# 8. onedrive_get_permission   - Get permission details
+# 9. onedrive_share_file      - Share a file
+# 10. onedrive_list_drives    - List available drives
+
+- slug: onedrive_list_files
+  name: List Files
+  description: |
+    List files and folders in a OneDrive folder.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - files
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      folder_id:
+        type: string
+        description: "Folder ID (use 'root' for root)"
+        default: root
+      limit:
+        type: integer
+        description: "Max results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: onedrive_get_file
+  name: Get File
+  description: |
+    Get metadata for a OneDrive file or folder.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - files
+    - read
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      item_id:
+        type: string
+        description: "Item ID (file or folder ID)"
+    required:
+      - item_id
+
+- slug: onedrive_upload_file
+  name: Upload File
+  description: |
+    Create or update a file with content in OneDrive.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{parent_id}:/{name}:/content
+  method: PUT
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - files
+    - upload
+    - write
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      name:
+        type: string
+        description: "File name"
+      parent_id:
+        type: string
+        description: "Parent folder ID or 'root'"
+        default: root
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - name
+      - content
+
+- slug: onedrive_download_file
+  name: Download File
+  description: |
+    Download file content from OneDrive.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}/content
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - files
+    - download
+    - read
+  input_schema:
+    type: object
+    description: Parameters for downloading a file
+    properties:
+      item_id:
+        type: string
+        description: "Item ID"
+    required:
+      - item_id
+
+- slug: onedrive_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in OneDrive.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{parent_id}/children
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parent_id:
+        type: string
+        description: "Parent folder ID or 'root'"
+        default: root
+    required:
+      - name
+      - parent_id
+
+- slug: onedrive_delete_file
+  name: Delete File
+  description: |
+    Delete a file or folder from OneDrive.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}
+  method: DELETE
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - files
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a file
+    properties:
+      item_id:
+        type: string
+        description: "Item ID to delete"
+    required:
+      - item_id
+
+- slug: onedrive_list_permissions
+  name: List Permissions
+  description: |
+    List all permissions on a file or folder.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}/permissions
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - sharing
+    - permissions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing permissions
+    properties:
+      item_id:
+        type: string
+        description: "Item ID"
+    required:
+      - item_id
+
+- slug: onedrive_get_permission
+  name: Get Permission
+  description: |
+    Get details of a specific permission on a file or folder.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}/permissions/{permission_id}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - sharing
+    - permissions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a permission
+    properties:
+      item_id:
+        type: string
+        description: "Item ID"
+      permission_id:
+        type: string
+        description: "Permission ID"
+    required:
+      - item_id
+      - permission_id
+
+- slug: onedrive_share_file
+  name: Share File
+  description: |
+    Create a sharing link or grant access to a file or folder.
+  provider: onedrive
+  endpoint: /v1.0/me/drive/items/{item_id}/invite
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - sharing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for sharing a file
+    properties:
+      item_id:
+        type: string
+        description: "Item ID to share"
+      recipients:
+        type: array
+        items:
+          type: object
+        description: "Array of recipient emails"
+      roles:
+        type: array
+        items:
+          type: string
+        description: "Roles to grant: read, write"
+      message:
+        type: string
+        description: "Optional message to recipients"
+    required:
+      - item_id
+      - recipients
+      - roles
+
+- slug: onedrive_list_drives
+  name: List Drives
+  description: |
+    List all drives (OneDrive instances) available to the user.
+  provider: onedrive
+  endpoint: /v1.0/me/drives
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - drives
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing drives
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []

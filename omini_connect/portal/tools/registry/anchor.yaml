@@ -1,0 +1,289 @@
+# Anchor Tools - Allowlist
+# Curated subset of Anchor/Spotify for Podcasters API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. anchor_list_podcasts           - List user's podcasts
+# 2. anchor_get_podcast            - Get podcast details
+# 3. anchor_create_podcast          - Create a podcast
+# 4. anchor_list_episodes           - List podcast episodes
+# 5. anchor_get_episode             - Get episode details
+# 6. anchor_create_episode          - Create an episode
+# 7. anchor_get_analytics           - Get podcast analytics
+# 8. anchor_list_distributions      - List distribution status
+# 9. anchor_distribute_episode      - Distribute an episode
+# 10. anchor_get_distribution_status - Get distribution status
+
+- slug: anchor_list_podcasts
+  name: List Podcasts
+  description: |
+    List all podcasts for the authenticated user.
+    Returns podcast title, description, and episode count.
+  provider: anchor
+  endpoint: /podcasts
+  method: GET
+  scopes:
+    - podcasts-read
+  tags:
+    - podcasts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing podcasts
+    properties:
+      limit:
+        type: integer
+        description: "Max podcasts (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: anchor_get_podcast
+  name: Get Podcast
+  description: |
+    Get detailed information about a specific podcast.
+    Returns podcast metadata, artwork, and settings.
+  provider: anchor
+  endpoint: /podcasts/{podcast_id}
+  method: GET
+  scopes:
+    - podcasts-read
+  tags:
+    - podcasts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a podcast
+    properties:
+      podcast_id:
+        type: string
+        description: "Podcast ID (required)"
+    required:
+      - podcast_id
+
+- slug: anchor_create_podcast
+  name: Create Podcast
+  description: |
+    Create a new podcast show.
+    Returns podcast ID and initial configuration.
+  provider: anchor
+  endpoint: /podcasts
+  method: POST
+  scopes:
+    - podcasts-write
+  tags:
+    - podcasts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a podcast
+    properties:
+      title:
+        type: string
+        description: "Podcast title (required)"
+      description:
+        type: string
+        description: "Podcast description"
+      language:
+        type: string
+        description: "Language code (e.g., en, zh)"
+        default: en
+      category:
+        type: string
+        description: "Podcast category"
+    required:
+      - title
+
+- slug: anchor_list_episodes
+  name: List Episodes
+  description: |
+    List episodes for a specific podcast.
+    Returns episode title, description, publish date, and duration.
+  provider: anchor
+  endpoint: /podcasts/{podcast_id}/episodes
+  method: GET
+  scopes:
+    - episodes-read
+  tags:
+    - episodes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing episodes
+    properties:
+      podcast_id:
+        type: string
+        description: "Podcast ID (required)"
+      limit:
+        type: integer
+        description: "Max episodes (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - podcast_id
+
+- slug: anchor_get_episode
+  name: Get Episode
+  description: |
+    Get detailed information about a specific episode.
+    Returns title, description, audio URL, and metadata.
+  provider: anchor
+  endpoint: /episodes/{episode_id}
+  method: GET
+  scopes:
+    - episodes-read
+  tags:
+    - episodes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an episode
+    properties:
+      episode_id:
+        type: string
+        description: "Episode ID (required)"
+    required:
+      - episode_id
+
+- slug: anchor_create_episode
+  name: Create Episode
+  description: |
+    Create a new episode for a podcast.
+    Includes title, description, and audio upload.
+  provider: anchor
+  endpoint: /episodes
+  method: POST
+  scopes:
+    - episodes-write
+  tags:
+    - episodes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an episode
+    properties:
+      podcast_id:
+        type: string
+        description: "Podcast ID (required)"
+      title:
+        type: string
+        description: "Episode title (required)"
+      description:
+        type: string
+        description: "Episode description"
+      audio_url:
+        type: string
+        description: "URL to audio file"
+      scheduled_publish_time:
+        type: string
+        description: "ISO 8601 publish time"
+    required:
+      - podcast_id
+      - title
+
+- slug: anchor_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics data for a podcast.
+    Returns listen counts, audience demographics, and engagement.
+  provider: anchor
+  endpoint: /analytics/{podcast_id}
+  method: GET
+  scopes:
+    - analytics-read
+  tags:
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      podcast_id:
+        type: string
+        description: "Podcast ID (required)"
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+    required:
+      - podcast_id
+
+- slug: anchor_list_distributions
+  name: List Distributions
+  description: |
+    List distribution destinations for a podcast.
+    Returns supported platforms and their status.
+  provider: anchor
+  endpoint: /distributions
+  method: GET
+  scopes:
+    - distributions-read
+  tags:
+    - distributions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing distributions
+    properties:
+      podcast_id:
+        type: string
+        description: "Podcast ID"
+    required: []
+
+- slug: anchor_distribute_episode
+  name: Distribute Episode
+  description: |
+    Distribute an episode to all configured platforms.
+    Triggers distribution to podcast directories.
+  provider: anchor
+  endpoint: /episodes/{episode_id}/distribute
+  method: POST
+  scopes:
+    - distributions-write
+  tags:
+    - distributions
+    - episodes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for distributing an episode
+    properties:
+      episode_id:
+        type: string
+        description: "Episode ID (required)"
+    required:
+      - episode_id
+
+- slug: anchor_get_distribution_status
+  name: Get Distribution Status
+  description: |
+    Get distribution status for an episode.
+    Returns per-platform status and any errors.
+  provider: anchor
+  endpoint: /episodes/{episode_id}/distribution
+  method: GET
+  scopes:
+    - distributions-read
+  tags:
+    - distributions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting distribution status
+    properties:
+      episode_id:
+        type: string
+        description: "Episode ID (required)"
+    required:
+      - episode_id

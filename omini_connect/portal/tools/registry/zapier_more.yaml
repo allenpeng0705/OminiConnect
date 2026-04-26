@@ -1,0 +1,250 @@
+- slug: zapier_more_list_zaps
+  name: List Zaps
+  description: |
+    Retrieve a list of all Zaps in the user's Zapier account.
+  provider: zapier_more
+  endpoint: /zaps
+  method: GET
+  scopes:
+    - zaps:read
+  tags:
+    - zaps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing zaps
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of zaps to return (default 50, max 100)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: zapier_more_get_zap
+  name: Get Zap
+  description: |
+    Retrieve details of a specific Zap by its ID.
+  provider: zapier_more
+  endpoint: /zaps/{zap_id}
+  method: GET
+  scopes:
+    - zaps:read
+  tags:
+    - zaps
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a zap
+    properties:
+      zap_id:
+        type: string
+        description: "The unique identifier of the zap"
+    required:
+      - zap_id
+
+- slug: zapier_more_create_zap
+  name: Create Zap
+  description: |
+    Create a new Zap with specified trigger and actions.
+  provider: zapier_more
+  endpoint: /zaps
+  method: POST
+  scopes:
+    - zaps:write
+  tags:
+    - zaps
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a zap
+    properties:
+      name:
+        type: string
+        description: "Name of the zap"
+      trigger:
+        type: object
+        description: "Trigger configuration"
+      actions:
+        type: array
+        description: "List of action configurations"
+    required:
+      - name
+
+- slug: zapier_more_update_zap
+  name: Update Zap
+  description: |
+    Update an existing Zap's configuration or settings.
+  provider: zapier_more
+  endpoint: /zaps/{zap_id}
+  method: PUT
+  scopes:
+    - zaps:write
+  tags:
+    - zaps
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a zap
+    properties:
+      zap_id:
+        type: string
+        description: "The unique identifier of the zap"
+      name:
+        type: string
+        description: "Updated name of the zap"
+      trigger:
+        type: object
+        description: "Updated trigger configuration"
+      actions:
+        type: array
+        description: "Updated list of action configurations"
+    required:
+      - zap_id
+
+- slug: zapier_more_list_runs
+  name: List Runs
+  description: |
+    Retrieve a list of recent runs for a specific zap.
+  provider: zapier_more
+  endpoint: /zaps/{zap_id}/runs
+  method: GET
+  scopes:
+    - runs:read
+  tags:
+    - runs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing runs
+    properties:
+      zap_id:
+        type: string
+        description: "The unique identifier of the zap"
+      limit:
+        type: integer
+        description: "Maximum number of runs to return (default 50)"
+      status:
+        type: string
+        description: "Filter by run status (success, error, queued)"
+    required:
+      - zap_id
+
+- slug: zapier_more_get_run
+  name: Get Run
+  description: |
+    Retrieve details of a specific run by its ID.
+  provider: zapier_more
+  endpoint: /runs/{run_id}
+  method: GET
+  scopes:
+    - runs:read
+  tags:
+    - runs
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a run
+    properties:
+      run_id:
+        type: string
+        description: "The unique identifier of the run"
+    required:
+      - run_id
+
+- slug: zapier_more_list_history
+  name: List History
+  description: |
+    Retrieve the full execution history across all zaps.
+  provider: zapier_more
+  endpoint: /history
+  method: GET
+  scopes:
+    - history:read
+  tags:
+    - history
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing history
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of history items to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      start_date:
+        type: string
+        description: "Filter history from this date (ISO 8601)"
+      end_date:
+        type: string
+        description: "Filter history until this date (ISO 8601)"
+    required: []
+
+- slug: zapier_more_get_history_item
+  name: Get History Item
+  description: |
+    Retrieve details of a specific history item by its ID.
+  provider: zapier_more
+  endpoint: /history/{history_id}
+  method: GET
+  scopes:
+    - history:read
+  tags:
+    - history
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a history item
+    properties:
+      history_id:
+        type: string
+        description: "The unique identifier of the history item"
+    required:
+      - history_id
+
+- slug: zapier_more_enable_zap
+  name: Enable Zap
+  description: |
+    Enable (activate) a zap so it can process triggers.
+  provider: zapier_more
+  endpoint: /zaps/{zap_id}/enable
+  method: POST
+  scopes:
+    - zaps:write
+  tags:
+    - zaps
+    - activate
+  input_schema:
+    type: object
+    description: Parameters for enabling a zap
+    properties:
+      zap_id:
+        type: string
+        description: "The unique identifier of the zap to enable"
+    required:
+      - zap_id
+
+- slug: zapier_more_disable_zap
+  name: Disable Zap
+  description: |
+    Disable (deactivate) a zap to stop processing triggers.
+  provider: zapier_more
+  endpoint: /zaps/{zap_id}/disable
+  method: POST
+  scopes:
+    - zaps:write
+  tags:
+    - zaps
+    - deactivate
+  input_schema:
+    type: object
+    description: Parameters for disabling a zap
+    properties:
+      zap_id:
+        type: string
+        description: "The unique identifier of the zap to disable"
+    required:
+      - zap_id

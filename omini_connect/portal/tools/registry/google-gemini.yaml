@@ -1,0 +1,257 @@
+# Google Gemini Tools - Allowlist
+# Curated subset of Google Gemini API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_gemini_list_models       - List available models
+# 2. google_gemini_get_model        - Get model details
+# 3. google_gemini_generate_content  - Generate content
+# 4. google_gemini_count_tokens      - Count tokens
+# 5. google_gemini_embed_content     - Embed content
+# 6. google_gemini_list_tuned_models - List tuned models
+# 7. google_gemini_create_tuned_model - Create tuned model
+# 8. google_gemini_get_tuned_model  - Get tuned model
+# 9. google_gemini_delete_tuned_model - Delete tuned model
+# 10. google_gemini_batch_embed_contents - Batch embed
+
+- slug: google_gemini_list_models
+  name: List Models
+  description: |
+    List available Gemini models.
+  provider: google-gemini
+  endpoint: /v1beta/models
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+
+- slug: google_gemini_get_model
+  name: Get Model
+  description: |
+    Get details about a specific model.
+  provider: google-gemini
+  endpoint: /v1beta/models/{model_name}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      model_name:
+        type: string
+        description: "Model name (e.g., gemini-pro)"
+    required:
+      - model_name
+
+- slug: google_gemini_generate_content
+  name: Generate Content
+  description: |
+    Generate content using a Gemini model.
+  provider: google-gemini
+  endpoint: /v1beta/models/{model_name}:generateContent
+  method: POST
+  scopes:
+    - write
+  tags:
+    - generate
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for generating content
+    properties:
+      model_name:
+        type: string
+        description: "Model name"
+      prompt:
+        type: string
+        description: "Text prompt"
+      temperature:
+        type: number
+        description: "Temperature (0-1)"
+        default: 0.9
+      max_tokens:
+        type: integer
+        description: "Max output tokens"
+        default: 2048
+    required:
+      - model_name
+      - prompt
+
+- slug: google_gemini_count_tokens
+  name: Count Tokens
+  description: |
+    Count tokens in input content.
+  provider: google-gemini
+  endpoint: /v1beta/models/{model_name}:countTokens
+  method: POST
+  scopes:
+    - read
+  tags:
+    - tokens
+    - count
+  input_schema:
+    type: object
+    description: Parameters for counting tokens
+    properties:
+      model_name:
+        type: string
+        description: "Model name"
+      prompt:
+        type: string
+        description: "Text to count"
+    required:
+      - model_name
+      - prompt
+
+- slug: google_gemini_embed_content
+  name: Embed Content
+  description: |
+    Get embeddings for content.
+  provider: google-gemini
+  endpoint: /v1beta/models/{model_name}:embedContent
+  method: POST
+  scopes:
+    - read
+  tags:
+    - embeddings
+    - ai
+  input_schema:
+    type: object
+    description: Parameters for embedding content
+    properties:
+      model_name:
+        type: string
+        description: "Model name"
+      content:
+        type: string
+        description: "Text to embed"
+    required:
+      - model_name
+      - content
+
+- slug: google_gemini_list_tuned_models
+  name: List Tuned Models
+  description: |
+    List tuned models.
+  provider: google-gemini
+  endpoint: /v1beta/tunedModels
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tuned-models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tuned models
+    properties: {}
+
+- slug: google_gemini_create_tuned_model
+  name: Create Tuned Model
+  description: |
+    Create a tuned Gemini model.
+  provider: google-gemini
+  endpoint: /v1beta/tunedModels
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tuned-models
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tuned model
+    properties:
+      base_model:
+        type: string
+        description: "Base model name"
+      display_name:
+        type: string
+        description: "Display name"
+      training_data:
+        type: string
+        description: "Training data source"
+    required:
+      - base_model
+      - display_name
+
+- slug: google_gemini_get_tuned_model
+  name: Get Tuned Model
+  description: |
+    Get details of a tuned model.
+  provider: google-gemini
+  endpoint: /v1beta/tunedModels/{tuned_model_name}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tuned-models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tuned model
+    properties:
+      tuned_model_name:
+        type: string
+        description: "Tuned model name"
+    required:
+      - tuned_model_name
+
+- slug: google_gemini_delete_tuned_model
+  name: Delete Tuned Model
+  description: |
+    Delete a tuned model.
+  provider: google-gemini
+  endpoint: /v1beta/tunedModels/{tuned_model_name}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - tuned-models
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a tuned model
+    properties:
+      tuned_model_name:
+        type: string
+        description: "Tuned model name"
+    required:
+      - tuned_model_name
+
+- slug: google_gemini_batch_embed_contents
+  name: Batch Embed
+  description: |
+    Batch embed multiple contents.
+  provider: google-gemini
+  endpoint: /v1beta/models/{model_name}:batchEmbedContents
+  method: POST
+  scopes:
+    - read
+  tags:
+    - embeddings
+    - batch
+  input_schema:
+    type: object
+    description: Parameters for batch embedding
+    properties:
+      model_name:
+        type: string
+        description: "Model name"
+      contents:
+        type: array
+        description: "Array of content strings"
+    required:
+      - model_name
+      - contents

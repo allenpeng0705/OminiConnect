@@ -1,0 +1,268 @@
+# Heroku Tools - Allowlist
+# Curated subset of the Heroku Platform API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. heroku_list_apps       - List all apps
+# 2. heroku_get_app         - Get a specific app
+# 3. heroku_create_app      - Create a new app
+# 4. heroku_delete_app      - Delete an app
+# 5. heroku_list_dynos      - List dynos for an app
+# 6. heroku_restart_dyno    - Restart a dyno
+# 7. heroku_list_releases   - List releases for an app
+# 8. heroku_get_release     - Get a specific release
+# 9. heroku_list_config_vars - List config vars for an app
+# 10. heroku_get_config_var  - Get a specific config var
+
+- slug: heroku_list_apps
+  name: List Apps
+  description: |
+    List all apps for the authenticated user.
+    Returns app details including name, region, stack, and creation date.
+  provider: heroku
+  endpoint: /apps
+  method: GET
+  scopes:
+    - read
+  tags:
+    - apps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team/owner ID"
+      limit:
+        type: integer
+        description: "Maximum number of apps to return"
+        default: 20
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: heroku_get_app
+  name: Get App
+  description: |
+    Get details of a specific app including region, stack, dynos, and add-ons.
+  provider: heroku
+  endpoint: /apps/{app_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - apps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+    required:
+      - app_id
+
+- slug: heroku_create_app
+  name: Create App
+  description: |
+    Create a new app. Specify the name, region, and optional stack configuration.
+  provider: heroku
+  endpoint: /apps
+  method: POST
+  scopes:
+    - write
+  tags:
+    - apps
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an app
+    properties:
+      name:
+        type: string
+        description: "App name (optional, auto-generated if not provided)"
+      region:
+        type: string
+        description: "Region: us or eu (default us)"
+        enum: [us, eu]
+      stack:
+        type: string
+        description: "Stack: heroku-20, heroku-22"
+        enum: [heroku-20, heroku-22]
+      team:
+        type: string
+        description: "Team to assign the app to"
+    required: []
+
+- slug: heroku_delete_app
+  name: Delete App
+  description: |
+    Delete an existing app and all its data. This action is irreversible.
+  provider: heroku
+  endpoint: /apps/{app_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - apps
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an app
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+    required:
+      - app_id
+
+- slug: heroku_list_dynos
+  name: List Dynos
+  description: |
+    List all dynos running for a specific app.
+    Returns dyno type, state, and uptime information.
+  provider: heroku
+  endpoint: /apps/{app_id}/dynos
+  method: GET
+  scopes:
+    - read
+  tags:
+    - dynos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dynos
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+    required:
+      - app_id
+
+- slug: heroku_restart_dyno
+  name: Restart Dyno
+  description: |
+    Restart a specific dyno or all dynos of an app.
+  provider: heroku
+  endpoint: /apps/{app_id}/dynos/{dyno_id}/actions/restart
+  method: POST
+  scopes:
+    - write
+  tags:
+    - dynos
+    - restart
+  input_schema:
+    type: object
+    description: Parameters for restarting a dyno
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+      dyno_id:
+        type: string
+        description: "Dyno name (e.g., web.1) or 'all' to restart all dynos (required)"
+    required:
+      - app_id
+      - dyno_id
+
+- slug: heroku_list_releases
+  name: List Releases
+  description: |
+    List all releases for an app, including the version number, deploy date, and description.
+  provider: heroku
+  endpoint: /apps/{app_id}/releases
+  method: GET
+  scopes:
+    - read
+  tags:
+    - releases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing releases
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+    required:
+      - app_id
+
+- slug: heroku_get_release
+  name: Get Release
+  description: |
+    Get details of a specific release including the slug, created date, and description.
+  provider: heroku
+  endpoint: /apps/{app_id}/releases/{release_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - releases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a release
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+      release_id:
+        type: string
+        description: "Release version (e.g., v1, v2) or release ID (required)"
+    required:
+      - app_id
+      - release_id
+
+- slug: heroku_list_config_vars
+  name: List Config Vars
+  description: |
+    List all config vars (environment variables) for an app.
+    Returns key-value pairs for the app's configuration.
+  provider: heroku
+  endpoint: /apps/{app_id}/config-vars
+  method: GET
+  scopes:
+    - read
+  tags:
+    - config
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing config vars
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+    required:
+      - app_id
+
+- slug: heroku_get_config_var
+  name: Get Config Var
+  description: |
+    Get a specific config var value for an app.
+    Returns the value for a single environment variable.
+  provider: heroku
+  endpoint: /apps/{app_id}/config-vars/{key}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - config
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a config var
+    properties:
+      app_id:
+        type: string
+        description: "App name or ID (required)"
+      key:
+        type: string
+        description: "Config var key (required)"
+    required:
+      - app_id
+      - key

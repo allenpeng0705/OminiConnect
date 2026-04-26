@@ -1,0 +1,246 @@
+- slug: workday_list_workers
+  name: List Workers
+  description: |
+    Retrieve a list of all workers (employees) in the Workday HR system.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/workers
+  method: GET
+  scopes:
+    - workday.worker.read
+  tags:
+    - workers
+  input_schema:
+    type: object
+    description: Parameters for listing workers
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of workers to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      supervisory_organization:
+        type: string
+        description: "Filter by supervisory organization ID"
+      status:
+        type: string
+        description: "Filter by worker status (e.g., Active, On Leave, Terminated)"
+    required: []
+
+- slug: workday_get_worker
+  name: Get Worker
+  description: |
+    Retrieve detailed information for a specific worker by ID.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/workers/{worker_id}
+  method: GET
+  scopes:
+    - workday.worker.read
+  tags:
+    - workers
+  input_schema:
+    type: object
+    description: Parameters for getting a worker
+    properties:
+      worker_id:
+        type: string
+        description: "Unique identifier of the worker"
+    required:
+      - worker_id
+
+- slug: workday_list_jobs
+  name: List Jobs
+  description: |
+    Retrieve a list of all job positions in the Workday HR system.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/jobs
+  method: GET
+  scopes:
+    - workday.job.read
+  tags:
+    - jobs
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of jobs to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      job_family:
+        type: string
+        description: "Filter by job family"
+      status:
+        type: string
+        description: "Filter by job status (e.g., Active, Inactive)"
+    required: []
+
+- slug: workday_get_job
+  name: Get Job
+  description: |
+    Retrieve detailed information for a specific job by ID.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/jobs/{job_id}
+  method: GET
+  scopes:
+    - workday.job.read
+  tags:
+    - jobs
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Unique identifier of the job"
+    required:
+      - job_id
+
+- slug: workday_list_organizations
+  name: List Organizations
+  description: |
+    Retrieve a list of all organizations in the Workday HR system.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/organizations
+  method: GET
+  scopes:
+    - workday.organization.read
+  tags:
+    - organizations
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of organizations to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      type:
+        type: string
+        description: "Filter by organization type (e.g., Supervisory, Matrix, Cost Center)"
+    required: []
+
+- slug: workday_get_organization
+  name: Get Organization
+  description: |
+    Retrieve detailed information for a specific organization by ID.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/organizations/{organization_id}
+  method: GET
+  scopes:
+    - workday.organization.read
+  tags:
+    - organizations
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      organization_id:
+        type: string
+        description: "Unique identifier of the organization"
+    required:
+      - organization_id
+
+- slug: workday_list_time_off_requests
+  name: List Time Off Requests
+  description: |
+    Retrieve a list of all time off requests in the Workday HR system.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/time_off_requests
+  method: GET
+  scopes:
+    - workday.time_off.read
+  tags:
+    - time_off
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of requests to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      worker_id:
+        type: string
+        description: "Filter by worker ID"
+      status:
+        type: string
+        description: "Filter by request status (e.g., APPROVED, DENIED, PENDING)"
+    required: []
+
+- slug: workday_get_time_off_request
+  name: Get Time Off Request
+  description: |
+    Retrieve detailed information for a specific time off request by ID.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/time_off_requests/{request_id}
+  method: GET
+  scopes:
+    - workday.time_off.read
+  tags:
+    - time_off
+  input_schema:
+    type: object
+    description: Parameters for getting a time off request
+    properties:
+      request_id:
+        type: string
+        description: "Unique identifier of the time off request"
+    required:
+      - request_id
+
+- slug: workday_list_expenses
+  name: List Expenses
+  description: |
+    Retrieve a list of all expense reports in the Workday financial system.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/expense_reports
+  method: GET
+  scopes:
+    - workday.expense.read
+  tags:
+    - expenses
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of expenses to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      worker_id:
+        type: string
+        description: "Filter by worker ID"
+      status:
+        type: string
+        description: "Filter by expense status (e.g., APPROVED, DENIED, PENDING, PAID)"
+    required: []
+
+- slug: workday_get_expense
+  name: Get Expense
+  description: |
+    Retrieve detailed information for a specific expense report by ID.
+  provider: workday
+  endpoint: /ccx/api/v1/{tenant_id}/expense_reports/{expense_id}
+  method: GET
+  scopes:
+    - workday.expense.read
+  tags:
+    - expenses
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      expense_id:
+        type: string
+        description: "Unique identifier of the expense report"
+    required:
+      - expense_id

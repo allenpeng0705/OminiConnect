@@ -1,0 +1,263 @@
+# Salesforce-experience-cloud Tools - Allowlist
+# Curated subset of Salesforce Experience Cloud API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesforce-experience-cloud_list_communities     - List communities
+# 2. salesforce-experience-cloud_get_community       - Get community details
+# 3. salesforce-experience-cloud_list_chatters       - List Chatter groups
+# 4. salesforce-experience-cloud_create_chatter_post  - Create Chatter post
+# 5. salesforce-experience-cloud_list_files           - List files
+# 6. salesforce-experience-cloud_upload_file          - Upload a file
+# 7. salesforce-experience-cloud_list_articles       - List knowledge articles
+# 8. salesforce-experience-cloud_get_article         - Get article details
+# 9. salesforce-experience-cloud_list_users          - List community users
+# 10. salesforce-experience-cloud_get_user_profile   - Get user profile
+
+- slug: salesforce-experience-cloud_list_communities
+  name: List Communities
+  description: |
+    Retrieve a list of all communities in Experience Cloud.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/communities
+  method: GET
+  scopes:
+    - communities:read
+  tags:
+    - communities
+    - experience-cloud
+  input_schema:
+    type: object
+    description: Parameters for listing communities
+    properties:
+      limit:
+        type: integer
+        description: "Number of communities"
+        default: 50
+    required: []
+
+- slug: salesforce-experience-cloud_get_community
+  name: Get Community
+  description: |
+    Get details of a specific community.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/communities/{communityId}
+  method: GET
+  scopes:
+    - communities:read
+  tags:
+    - communities
+    - experience-cloud
+  input_schema:
+    type: object
+    description: Parameters for getting a community
+    properties:
+      communityId:
+        type: string
+        description: "The community ID"
+    required:
+      - communityId
+
+- slug: salesforce-experience-cloud_list_chatters
+  name: List Chatter Groups
+  description: |
+    Retrieve a list of Chatter groups.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/chatter/groups
+  method: GET
+  scopes:
+    - chatter:read
+  tags:
+    - chatter
+    - groups
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing Chatter groups
+    properties:
+      limit:
+        type: integer
+        description: "Number of groups"
+        default: 50
+    required: []
+
+- slug: salesforce-experience-cloud_create_chatter_post
+  name: Create Chatter Post
+  description: |
+    Create a post in a Chatter group.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/chatter/posts
+  method: POST
+  scopes:
+    - chatter:write
+  tags:
+    - chatter
+    - posts
+    - collaboration
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      groupId:
+        type: string
+        description: "Chatter group ID"
+      message:
+        type: string
+        description: "Post message"
+    required:
+      - groupId
+      - message
+
+- slug: salesforce-experience-cloud_list_files
+  name: List Files
+  description: |
+    Retrieve a list of files in the community.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/files
+  method: GET
+  scopes:
+    - files:read
+  tags:
+    - files
+    - documents
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      limit:
+        type: integer
+        description: "Number of files"
+        default: 50
+      folderId:
+        type: string
+        description: "Filter by folder ID"
+    required: []
+
+- slug: salesforce-experience-cloud_upload_file
+  name: Upload File
+  description: |
+    Upload a file to the community.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/files
+  method: POST
+  scopes:
+    - files:write
+  tags:
+    - files
+    - documents
+    - content
+    - create
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      name:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "File content (base64)"
+      folderId:
+        type: string
+        description: "Folder ID"
+    required:
+      - name
+      - content
+
+- slug: salesforce-experience-cloud_list_articles
+  name: List Articles
+  description: |
+    Retrieve a list of knowledge articles.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/knowledge/articles
+  method: GET
+  scopes:
+    - knowledge:read
+  tags:
+    - articles
+    - knowledge
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing articles
+    properties:
+      limit:
+        type: integer
+        description: "Number of articles"
+        default: 50
+      category:
+        type: string
+        description: "Category filter"
+    required: []
+
+- slug: salesforce-experience-cloud_get_article
+  name: Get Article
+  description: |
+    Get details of a knowledge article.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/knowledge/articles/{articleId}
+  method: GET
+  scopes:
+    - knowledge:read
+  tags:
+    - articles
+    - knowledge
+    - content
+  input_schema:
+    type: object
+    description: Parameters for getting an article
+    properties:
+      articleId:
+        type: string
+        description: "The article ID"
+    required:
+      - articleId
+
+- slug: salesforce-experience-cloud_list_users
+  name: List Users
+  description: |
+    Retrieve a list of community users.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - community
+    - members
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users"
+        default: 50
+    required: []
+
+- slug: salesforce-experience-cloud_get_user_profile
+  name: Get User Profile
+  description: |
+    Get a user's profile information.
+  provider: salesforce-experience-cloud
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - profile
+    - community
+  input_schema:
+    type: object
+    description: Parameters for getting a user profile
+    properties:
+      userId:
+        type: string
+        description: "The user ID"
+    required:
+      - userId

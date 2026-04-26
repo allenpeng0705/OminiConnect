@@ -1,0 +1,286 @@
+# Loop Returns Tools - Allowlist
+# Curated subset of Loop Returns API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. loop_list_returns          - List all returns
+# 2. loop_get_return            - Get return details
+# 3. loop_create_return         - Create a return
+# 4. loop_update_return         - Update a return
+# 5. loop_list_policies         - List return policies
+# 6. loop_get_policy            - Get policy details
+# 7. loop_list_customers        - List customers
+# 8. loop_get_customer           - Get customer details
+# 9. loop_create_exchange       - Create an exchange
+# 10. loop_list_reasons          - List return reasons
+
+- slug: loop_list_returns
+  name: List Returns
+  description: |
+    List all returns in Loop Returns.
+    Filter by status, date, customer, or order.
+  provider: loop-returns
+  endpoint: /v1/returns
+  method: GET
+  scopes: []
+  tags:
+    - returns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing returns
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, approved, rejected, received)"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      order_id:
+        type: string
+        description: "Filter by order ID"
+      from_date:
+        type: string
+        description: "Filter from date (ISO 8601)"
+      to_date:
+        type: string
+        description: "Filter to date (ISO 8601)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loop_get_return
+  name: Get Return
+  description: |
+    Get detailed information about a specific return.
+  provider: loop-returns
+  endpoint: /v1/returns/{returnId}
+  method: GET
+  scopes: []
+  tags:
+    - returns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a return
+    properties:
+      returnId:
+        type: string
+        description: "Return ID"
+    required:
+      - returnId
+
+- slug: loop_create_return
+  name: Create Return
+  description: |
+    Create a new return request.
+  provider: loop-returns
+  endpoint: /v1/returns
+  method: POST
+  scopes: []
+  tags:
+    - returns
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a return
+    properties:
+      order_id:
+        type: string
+        description: "Original order ID"
+      customer_id:
+        type: string
+        description: "Customer ID"
+      reason:
+        type: string
+        description: "Return reason"
+      items:
+        type: array
+        description: "Items to return"
+        properties:
+          item_id:
+            type: string
+          quantity:
+            type: integer
+    required:
+      - order_id
+      - customer_id
+
+- slug: loop_update_return
+  name: Update Return
+  description: |
+    Update an existing return request.
+  provider: loop-returns
+  endpoint: /v1/returns/{returnId}
+  method: PUT
+  scopes: []
+  tags:
+    - returns
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a return
+    properties:
+      returnId:
+        type: string
+        description: "Return ID"
+      status:
+        type: string
+        description: "New status"
+      internal_note:
+        type: string
+        description: "Internal note"
+    required:
+      - returnId
+
+- slug: loop_list_policies
+  name: List Policies
+  description: |
+    List all return policies configured in Loop.
+  provider: loop-returns
+  endpoint: /v1/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loop_get_policy
+  name: Get Policy
+  description: |
+    Get details of a specific return policy.
+  provider: loop-returns
+  endpoint: /v1/policies/{policyId}
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policyId:
+        type: string
+        description: "Policy ID"
+    required:
+      - policyId
+
+- slug: loop_list_customers
+  name: List Customers
+  description: |
+    List all customers in Loop Returns.
+  provider: loop-returns
+  endpoint: /v1/customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      email:
+        type: string
+        description: "Filter by email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loop_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer.
+  provider: loop-returns
+  endpoint: /v1/customers/{customerId}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: loop_create_exchange
+  name: Create Exchange
+  description: |
+    Create an exchange for a return.
+  provider: loop-returns
+  endpoint: /v1/exchanges
+  method: POST
+  scopes: []
+  tags:
+    - exchanges
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an exchange
+    properties:
+      return_id:
+        type: string
+        description: "Return ID"
+      new_item_id:
+        type: string
+        description: "New item ID to exchange for"
+      quantity:
+        type: integer
+        description: "Quantity"
+        default: 1
+    required:
+      - return_id
+      - new_item_id
+
+- slug: loop_list_reasons
+  name: List Reasons
+  description: |
+    List all configured return reasons.
+  provider: loop-returns
+  endpoint: /v1/return-reasons
+  method: GET
+  scopes: []
+  tags:
+    - reasons
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing return reasons
+    properties: {}
+    required: []

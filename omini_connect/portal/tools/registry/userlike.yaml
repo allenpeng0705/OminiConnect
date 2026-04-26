@@ -1,0 +1,286 @@
+- slug: userlike_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve a list of conversations from your Userlike workspace.
+    Supports filtering by state, date range, and operator.
+  provider: userlike
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversations_read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      state:
+        type: string
+        description: "Filter by state: open, closed, all"
+        enum: [open, closed, all]
+        default: open
+      operator_id:
+        type: string
+        description: "Filter by operator ID"
+      date_from:
+        type: string
+        description: "Start date in ISO 8601 format"
+      date_to:
+        type: string
+        description: "End date in ISO 8601 format"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required: []
+
+- slug: userlike_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation including messages, client info, and timeline.
+  provider: userlike
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes:
+    - conversations_read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - conversation_id
+
+- slug: userlike_send_message
+  name: Send Message
+  description: |
+    Send a message to an active conversation.
+    Used for responding to clients or sending follow-up messages.
+  provider: userlike
+  endpoint: /conversations/{conversation_id}/messages
+  method: POST
+  scopes:
+    - conversations_write
+  tags:
+    - messages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID (path parameter)"
+      text:
+        type: string
+        description: "Message text content"
+      channel:
+        type: string
+        description: "Channel type: chat, messenger, sms"
+        enum: [chat, messenger, sms]
+    required:
+      - conversation_id
+      - text
+
+- slug: userlike_list_visitors
+  name: List Visitors
+  description: |
+    Retrieve a list of visitors currently on your website or recently active.
+    Shows current page, location, and visit duration.
+  provider: userlike
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - visitors_read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      state:
+        type: string
+        description: "Visitor state: online, offline, all"
+        enum: [online, offline, all]
+        default: all
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: userlike_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific visitor including their browsing history and contact data.
+  provider: userlike
+  endpoint: /visitors/{visitor_id}
+  method: GET
+  scopes:
+    - visitors_read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      visitor_id:
+        type: string
+        description: "Visitor ID (path parameter)"
+    required:
+      - visitor_id
+
+- slug: userlike_list_agents
+  name: List Agents
+  description: |
+    Retrieve a list of agents (operators) in your Userlike workspace.
+    Shows availability status, role, and assigned channels.
+  provider: userlike
+  endpoint: /operators
+  method: GET
+  scopes:
+    - operators_read
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: userlike_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific agent including their profile and working hours.
+  provider: userlike
+  endpoint: /operators/{operator_id}
+  method: GET
+  scopes:
+    - operators_read
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      operator_id:
+        type: string
+        description: "Operator/Agent ID (path parameter)"
+    required:
+      - operator_id
+
+- slug: userlike_list_canned_responses
+  name: List Canned Responses
+  description: |
+    Retrieve a list of canned responses (saved replies) in your workspace.
+    Canned responses allow quick, consistent answers to common questions.
+  provider: userlike
+  endpoint: /canned-responses
+  method: GET
+  scopes:
+    - canned_responses_read
+  tags:
+    - canned_responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing canned responses
+    properties:
+      category:
+        type: string
+        description: "Filter by category"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: userlike_get_canned_response
+  name: Get Canned Response
+  description: |
+    Get details of a specific canned response including the full text and usage shortcuts.
+  provider: userlike
+  endpoint: /canned-responses/{response_id}
+  method: GET
+  scopes:
+    - canned_responses_read
+  tags:
+    - canned_responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a canned response
+    properties:
+      response_id:
+        type: string
+        description: "Canned response ID (path parameter)"
+    required:
+      - response_id
+
+- slug: userlike_update_availability
+  name: Update Availability
+  description: |
+    Update the availability status of an agent (operator).
+    Used to set online/offline status or configure working hours.
+  provider: userlike
+  endpoint: /operators/{operator_id}/availability
+  method: PUT
+  scopes:
+    - operators_write
+  tags:
+    - agents
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating availability
+    properties:
+      operator_id:
+        type: string
+        description: "Operator/Agent ID (path parameter)"
+      status:
+        type: string
+        description: "Availability status: online, offline, away"
+        enum: [online, offline, away]
+      working_hours:
+        type: object
+        description: "Working hours configuration"
+        properties:
+          timezone:
+            type: string
+            description: "Timezone (e.g., Europe/Berlin)"
+          schedule:
+            type: array
+            description: "Weekly schedule with start/end times"
+    required:
+      - operator_id
+      - status

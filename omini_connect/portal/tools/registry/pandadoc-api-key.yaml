@@ -1,0 +1,243 @@
+# Pandadoc (API Key) Tools - Allowlist
+# Curated subset of Pandadoc API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pandadoc_list_documents         - List documents
+# 2. pandadoc_get_document          - Get document details
+# 3. pandadoc_create_document       - Create document
+# 4. pandadoc_send_document         - Send document
+# 5. pandadoc_list_templates        - List templates
+# 6. pandadoc_get_template         - Get template details
+# 7. pandadoc_list_folders         - List folders
+# 8. pandadoc_get_member           - Get member details
+# 9. pandadoc_list_webhooks       - List webhooks
+# 10. pandadoc_get_analytics      - Get document analytics
+
+- slug: pandadoc_list_documents
+  name: List Documents
+  description: |
+    List all documents in Pandadoc.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/documents
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - legal
+    - documents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      limit:
+        type: integer
+        description: "Number of documents"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pandadoc_get_document
+  name: Get Document
+  description: |
+    Get detailed information for a specific document.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/documents/{id}
+  method: GET
+  scopes:
+    - documents:read
+  tags:
+    - legal
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id
+
+- slug: pandadoc_create_document
+  name: Create Document
+  description: |
+    Create a new document in Pandadoc.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/documents
+  method: POST
+  scopes:
+    - documents:create
+  tags:
+    - legal
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      name:
+        type: string
+        description: "Document name"
+      template_id:
+        type: string
+        description: "Template ID to use"
+    required:
+      - name
+
+- slug: pandadoc_send_document
+  name: Send Document
+  description: |
+    Send a document for signature.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/documents/{id}/send
+  method: POST
+  scopes:
+    - documents:send
+  tags:
+    - legal
+    - documents
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+      recipient:
+        type: string
+        description: "Recipient email"
+      message:
+        type: string
+        description: "Optional message"
+    required:
+      - id
+      - recipient
+
+- slug: pandadoc_list_templates
+  name: List Templates
+  description: |
+    List all templates in Pandadoc.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/templates
+  method: GET
+  scopes:
+    - templates:read
+  tags:
+    - legal
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties: {}
+    required: []
+
+- slug: pandadoc_get_template
+  name: Get Template
+  description: |
+    Get detailed information for a specific template.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/templates/{id}
+  method: GET
+  scopes:
+    - templates:read
+  tags:
+    - legal
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      id:
+        type: string
+        description: "Template ID"
+    required:
+      - id
+
+- slug: pandadoc_list_folders
+  name: List Folders
+  description: |
+    List all folders in Pandadoc.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/folders
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - legal
+    - folders
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties: {}
+    required: []
+
+- slug: pandadoc_get_member
+  name: Get Member
+  description: |
+    Get details for the current member.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/members/current
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - legal
+    - members
+    - account
+  input_schema:
+    type: object
+    description: Parameters for getting member info
+    properties: {}
+    required: []
+
+- slug: pandadoc_list_webhooks
+  name: List Webhooks
+  description: |
+    List all webhooks in Pandadoc.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/webhooks
+  method: GET
+  scopes:
+    - webhooks:read
+  tags:
+    - legal
+    - webhooks
+    - integration
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}
+    required: []
+
+- slug: pandadoc_get_analytics
+  name: Get Analytics
+  description: |
+    Get document analytics and tracking data.
+  provider: pandadoc-api-key
+  endpoint: /public/v1/documents/{id}/analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - legal
+    - documents
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id

@@ -1,0 +1,227 @@
+# Glyphic Tools - Allowlist
+# Curated subset of Glyphic API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. glyphic_list_conversations   - List conversations
+# 2. glyphic_get_conversation    - Get conversation details
+# 3. glyphic_send_message       - Send a message
+# 4. glyphic_list_messages       - List messages
+# 5. glyphic_create_thread       - Create a thread
+# 6. glyphic_list_threads        - List threads
+# 7. glyphic_get_thread          - Get thread details
+# 8. glyphic_list_contacts       - List contacts
+# 9. glyphic_get_contact         - Get contact details
+# 10. glyphic_list_webhooks     - List webhooks
+
+- slug: glyphic_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Glyphic.
+  provider: glyphic
+  endpoint: /v1/conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: glyphic_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a conversation.
+  provider: glyphic
+  endpoint: /v1/conversations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: glyphic_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation.
+  provider: glyphic
+  endpoint: /v1/conversations/{id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - id
+      - content
+
+- slug: glyphic_list_messages
+  name: List Messages
+  description: |
+    List messages in a conversation.
+  provider: glyphic
+  endpoint: /v1/conversations/{id}/messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: glyphic_create_thread
+  name: Create Thread
+  description: |
+    Create a new thread in Glyphic.
+  provider: glyphic
+  endpoint: /v1/threads
+  method: POST
+  scopes:
+    - write
+  tags:
+    - threads
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a thread
+    properties:
+      title:
+        type: string
+        description: "Thread title"
+      participants:
+        type: array
+        description: "Participant IDs"
+    required:
+      - title
+
+- slug: glyphic_list_threads
+  name: List Threads
+  description: |
+    List all threads in Glyphic.
+  provider: glyphic
+  endpoint: /v1/threads
+  method: GET
+  scopes:
+    - read
+  tags:
+    - threads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing threads
+    properties: {}
+
+- slug: glyphic_get_thread
+  name: Get Thread
+  description: |
+    Get detailed information about a thread.
+  provider: glyphic
+  endpoint: /v1/threads/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - threads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a thread
+    properties:
+      id:
+        type: string
+        description: "Thread ID"
+    required:
+      - id
+
+- slug: glyphic_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Glyphic.
+  provider: glyphic
+  endpoint: /v1/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties: {}
+
+- slug: glyphic_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a contact.
+  provider: glyphic
+  endpoint: /v1/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: glyphic_list_webhooks
+  name: List Webhooks
+  description: |
+    List all configured webhooks.
+  provider: glyphic
+  endpoint: /v1/webhooks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - webhooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}

@@ -1,0 +1,235 @@
+# Listmonk Tools - Allowlist
+# Curated subset of Listmonk API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. listmonk_list_lists        - List lists
+# 2. listmonk_get_list         - Get list details
+# 3. listmonk_list_subscribers - List subscribers
+# 4. listmonk_get_subscriber  - Get subscriber details
+# 5. listmonk_add_subscriber  - Add a subscriber
+# 6. listmonk_list_campaigns   - List campaigns
+# 7. listmonk_get_campaign    - Get campaign details
+# 8. listmonk_list_templates   - List templates
+# 9. listmonk_get_template    - Get template details
+# 10. listmonk_list_forms     - List forms
+
+- slug: listmonk_list_lists
+  name: List Lists
+  description: |
+    List all lists.
+  provider: listmonk
+  endpoint: /api/lists
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: listmonk_get_list
+  name: Get List
+  description: |
+    Get details for a specific list.
+  provider: listmonk
+  endpoint: /api/lists/{list_id}
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      list_id:
+        type: integer
+        description: "List ID"
+    required:
+      - list_id
+
+- slug: listmonk_list_subscribers
+  name: List Subscribers
+  description: |
+    List all subscribers.
+  provider: listmonk
+  endpoint: /api/subscribers
+  method: GET
+  scopes: []
+  tags:
+    - subscribers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      list_id:
+        type: integer
+        description: "Filter by list ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: listmonk_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details for a specific subscriber.
+  provider: listmonk
+  endpoint: /api/subscribers/{subscriber_id}
+  method: GET
+  scopes: []
+  tags:
+    - subscribers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      subscriber_id:
+        type: integer
+        description: "Subscriber ID"
+    required:
+      - subscriber_id
+
+- slug: listmonk_add_subscriber
+  name: Add Subscriber
+  description: |
+    Add a new subscriber.
+  provider: listmonk
+  endpoint: /api/subscribers
+  method: POST
+  scopes: []
+  tags:
+    - subscribers
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a subscriber
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      name:
+        type: string
+        description: "Subscriber name"
+      list_ids:
+        type: array
+        items:
+          type: integer
+        description: "List IDs to subscribe to"
+    required:
+      - email
+
+- slug: listmonk_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: listmonk
+  endpoint: /api/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: listmonk_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: listmonk
+  endpoint: /api/campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: listmonk_list_templates
+  name: List Templates
+  description: |
+    List all templates.
+  provider: listmonk
+  endpoint: /api/templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties: {}
+    required: []
+
+- slug: listmonk_get_template
+  name: Get Template
+  description: |
+    Get details for a specific template.
+  provider: listmonk
+  endpoint: /api/templates/{template_id}
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: integer
+        description: "Template ID"
+    required:
+      - template_id
+
+- slug: listmonk_list_forms
+  name: List Forms
+  description: |
+    List all forms.
+  provider: listmonk
+  endpoint: /api/forms
+  method: GET
+  scopes: []
+  tags:
+    - forms
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties: {}
+    required: []

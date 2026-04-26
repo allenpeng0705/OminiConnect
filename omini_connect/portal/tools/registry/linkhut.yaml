@@ -1,0 +1,241 @@
+# LinkHut Tools - Allowlist
+# Curated subset of LinkHut API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. linkhut_list_bookmarks       - List bookmarks
+# 2. linkhut_add_bookmark        - Add a bookmark
+# 3. linkhut_delete_bookmark     - Delete a bookmark
+# 4. linkhut_list_tags           - List tags
+# 5. linkhut_list_notes          - List notes
+# 6. linkhut_add_note           - Add a note
+# 7. linkhut_delete_note        - Delete a note
+# 8. linkhut_get_user           - Get user info
+# 9. linkhut_list_follows       - List follows
+# 10. linkhut_follow_user       - Follow a user
+
+- slug: linkhut_list_bookmarks
+  name: List Bookmarks
+  description: |
+    List all bookmarks.
+  provider: linkhut
+  endpoint: /v1/bookmarks
+  method: GET
+  scopes: []
+  tags:
+    - bookmarks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing bookmarks
+    properties:
+      tag:
+        type: string
+        description: "Filter by tag"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: linkhut_add_bookmark
+  name: Add Bookmark
+  description: |
+    Add a new bookmark.
+  provider: linkhut
+  endpoint: /v1/bookmarks
+  method: POST
+  scopes: []
+  tags:
+    - bookmarks
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a bookmark
+    properties:
+      url:
+        type: string
+        description: "URL to bookmark"
+      description:
+        type: string
+        description: "Bookmark description"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags for the bookmark"
+    required:
+      - url
+
+- slug: linkhut_delete_bookmark
+  name: Delete Bookmark
+  description: |
+    Delete a bookmark.
+  provider: linkhut
+  endpoint: /v1/bookmarks/{bookmark_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - bookmarks
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a bookmark
+    properties:
+      bookmark_id:
+        type: string
+        description: "Bookmark ID"
+    required:
+      - bookmark_id
+
+- slug: linkhut_list_tags
+  name: List Tags
+  description: |
+    List all tags.
+  provider: linkhut
+  endpoint: /v1/tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: linkhut_list_notes
+  name: List Notes
+  description: |
+    List all notes.
+  provider: linkhut
+  endpoint: /v1/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: linkhut_add_note
+  name: Add Note
+  description: |
+    Add a new note.
+  provider: linkhut
+  endpoint: /v1/notes
+  method: POST
+  scopes: []
+  tags:
+    - notes
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a note
+    properties:
+      title:
+        type: string
+        description: "Note title"
+      content:
+        type: string
+        description: "Note content"
+    required:
+      - title
+      - content
+
+- slug: linkhut_delete_note
+  name: Delete Note
+  description: |
+    Delete a note.
+  provider: linkhut
+  endpoint: /v1/notes/{note_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - notes
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a note
+    properties:
+      note_id:
+        type: string
+        description: "Note ID"
+    required:
+      - note_id
+
+- slug: linkhut_get_user
+  name: Get User Info
+  description: |
+    Get current user information.
+  provider: linkhut
+  endpoint: /v1/user
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: linkhut_list_follows
+  name: List Follows
+  description: |
+    List all follows.
+  provider: linkhut
+  endpoint: /v1/follows
+  method: GET
+  scopes: []
+  tags:
+    - follows
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing follows
+    properties: {}
+    required: []
+
+- slug: linkhut_follow_user
+  name: Follow User
+  description: |
+    Follow a user.
+  provider: linkhut
+  endpoint: /v1/follows
+  method: POST
+  scopes: []
+  tags:
+    - follows
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for following a user
+    properties:
+      username:
+        type: string
+        description: "Username to follow"
+    required:
+      - username

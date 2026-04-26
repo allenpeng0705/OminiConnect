@@ -1,0 +1,259 @@
+- slug: substack_list_publications
+  name: List Publications
+  description: |
+    Retrieve a list of publications the user is associated with.
+  provider: substack
+  endpoint: /publications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - publications
+  input_schema:
+    type: object
+    description: Parameters for listing publications
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required: []
+
+- slug: substack_get_publication
+  name: Get Publication
+  description: |
+    Get details about a specific publication.
+  provider: substack
+  endpoint: /publications/{publication_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - publications
+  input_schema:
+    type: object
+    description: Parameters for getting a publication
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+    required:
+      - publication_id
+
+- slug: substack_list_posts
+  name: List Posts
+  description: |
+    Retrieve a list of posts for a publication.
+  provider: substack
+  endpoint: /publications/{publication_id}/posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - publication_id
+
+- slug: substack_get_post
+  name: Get Post
+  description: |
+    Get details about a specific post.
+  provider: substack
+  endpoint: /posts/{post_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "The post ID"
+    required:
+      - post_id
+
+- slug: substack_create_post
+  name: Create Post
+  description: |
+    Create a new post in a publication.
+  provider: substack
+  endpoint: /publications/{publication_id}/posts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      title:
+        type: string
+        description: "The post title"
+      content:
+        type: string
+        description: "The post content in HTML or markdown"
+      is_paid:
+        type: boolean
+        description: "Whether the post is for paid subscribers only"
+      send_email:
+        type: boolean
+        description: "Whether to send the post as an email"
+      scheduled_at:
+        type: string
+        format: date-time
+        description: "ISO 8601 datetime to schedule publication"
+    required:
+      - publication_id
+      - title
+      - content
+
+- slug: substack_list_subscribers
+  name: List Subscribers
+  description: |
+    Retrieve a list of subscribers for a publication.
+  provider: substack
+  endpoint: /publications/{publication_id}/subscribers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      status:
+        type: string
+        enum: ["active", "cancelled", "expired", "all"]
+        description: "Filter by subscription status"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - publication_id
+
+- slug: substack_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details about a specific subscriber.
+  provider: substack
+  endpoint: /subscribers/{subscriber_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      subscriber_id:
+        type: string
+        description: "The subscriber ID"
+    required:
+      - subscriber_id
+
+- slug: substack_send_email
+  name: Send Email
+  description: |
+    Send an email to subscribers of a publication.
+  provider: substack
+  endpoint: /publications/{publication_id}/emails
+  method: POST
+  scopes:
+    - write
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      post_id:
+        type: string
+        description: "The post ID to send as email"
+      recipient_type:
+        type: string
+        enum: ["all", "free", "paid"]
+        description: "Which subscribers to send to"
+    required:
+      - publication_id
+      - post_id
+
+- slug: substack_get_email_stats
+  name: Get Email Stats
+  description: |
+    Get statistics for a sent email.
+  provider: substack
+  endpoint: /emails/{email_id}/stats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Parameters for getting email stats
+    properties:
+      email_id:
+        type: string
+        description: "The email ID"
+    required:
+      - email_id
+
+- slug: substack_list_free_posts
+  name: List Free Posts
+  description: |
+    Retrieve a list of free (non-paid) posts for a publication.
+  provider: substack
+  endpoint: /publications/{publication_id}/posts/free
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+  input_schema:
+    type: object
+    description: Parameters for listing free posts
+    properties:
+      publication_id:
+        type: string
+        description: "The publication ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - publication_id

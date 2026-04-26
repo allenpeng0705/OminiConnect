@@ -1,0 +1,251 @@
+# Databricks Workspace Level Tools - Allowlist
+# Curated subset of the Databricks Workspace API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. databricks_workspace_list_notebooks    - List notebooks
+# 2. databricks_workspace_get_notebook     - Get notebook details
+# 3. databricks_workspace_create_notebook  - Create a notebook
+# 4. databricks_workspace_run_notebook     - Run a notebook
+# 5. databricks_workspace_list_clusters    - List workspace clusters
+# 6. databricks_workspace_get_cluster      - Get cluster details
+# 7. databricks_workspace_list_jobs       - List workspace jobs
+# 8. databricks_workspace_get_job         - Get job details
+# 9. databricks_workspace_list_models      - List MLflow models
+# 10. databricks_workspace_get_model      - Get model details
+
+- slug: databricks_workspace_list_notebooks
+  name: List Notebooks
+  description: |
+    List all notebooks in the Databricks workspace.
+  provider: databricks-workspace
+  endpoint: /2.0/workspace/list
+  method: GET
+  scopes: []
+  tags:
+    - notebooks
+    - workspace
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notebooks
+    properties:
+      path:
+        type: string
+        description: "Folder path (default: /)"
+        default: /
+      limit:
+        type: integer
+        description: "Max results (default 50, max 1000)"
+        default: 50
+    required: []
+
+- slug: databricks_workspace_get_notebook
+  name: Get Notebook
+  description: |
+    Get details and content of a specific notebook.
+  provider: databricks-workspace
+  endpoint: /2.0/workspace/get
+  method: GET
+  scopes: []
+  tags:
+    - notebooks
+    - workspace
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a notebook
+    properties:
+      path:
+        type: string
+        description: "Notebook path"
+    required:
+      - path
+
+- slug: databricks_workspace_create_notebook
+  name: Create Notebook
+  description: |
+    Create a new notebook in the workspace.
+  provider: databricks-workspace
+  endpoint: /2.0/workspace/mkdirs
+  method: POST
+  scopes: []
+  tags:
+    - notebooks
+    - workspace
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a notebook
+    properties:
+      path:
+        type: string
+        description: "Notebook path"
+      language:
+        type: string
+        description: "Language: python, scala, r, sql"
+        default: python
+    required:
+      - path
+
+- slug: databricks_workspace_run_notebook
+  name: Run Notebook
+  description: |
+    Execute a notebook on a cluster.
+  provider: databricks-workspace
+  endpoint: /2.0/jobs/run-now
+  method: POST
+  scopes: []
+  tags:
+    - notebooks
+    - execution
+    - run
+  input_schema:
+    type: object
+    description: Parameters for running a notebook
+    properties:
+      notebook_task:
+        type: object
+        description: "Notebook task configuration"
+        properties:
+          notebook_path:
+            type: string
+            description: "Notebook path"
+      cluster_id:
+        type: string
+        description: "Cluster ID to run on"
+    required:
+      - notebook_task
+
+- slug: databricks_workspace_list_clusters
+  name: List Clusters
+  description: |
+    List all clusters available in the workspace.
+  provider: databricks-workspace
+  endpoint: /2.0/clusters/list
+  method: GET
+  scopes: []
+  tags:
+    - clusters
+    - compute
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clusters
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_workspace_get_cluster
+  name: Get Cluster
+  description: |
+    Get details of a specific cluster.
+  provider: databricks-workspace
+  endpoint: /2.0/clusters/get
+  method: GET
+  scopes: []
+  tags:
+    - clusters
+    - compute
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cluster
+    properties:
+      cluster_id:
+        type: string
+        description: "Cluster ID"
+    required:
+      - cluster_id
+
+- slug: databricks_workspace_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in the workspace.
+  provider: databricks-workspace
+  endpoint: /2.0/jobs/list
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - workflows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_workspace_get_job
+  name: Get Job
+  description: |
+    Get details of a specific job.
+  provider: databricks-workspace
+  endpoint: /2.0/jobs/get
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - workflows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: databricks_workspace_list_models
+  name: List Models
+  description: |
+    List all MLflow models registered in the workspace.
+  provider: databricks-workspace
+  endpoint: /2.0/mlflow/databricks/registered-models/list
+  method: GET
+  scopes: []
+  tags:
+    - mlflow
+    - models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_workspace_get_model
+  name: Get Model
+  description: |
+    Get details of a specific MLflow model including versions.
+  provider: databricks-workspace
+  endpoint: /2.0/mlflow/databricks/registered-models/get
+  method: GET
+  scopes: []
+  tags:
+    - mlflow
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      name:
+        type: string
+        description: "Model name"
+    required:
+      - name

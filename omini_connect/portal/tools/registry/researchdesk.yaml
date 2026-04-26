@@ -1,0 +1,266 @@
+# Researchdesk Tools - Allowlist
+# Curated subset of ResearchDesk API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. researchdesk_list_articles       - List research articles
+# 2. researchdesk_get_article         - Get article details
+# 3. researchdesk_search_articles    - Search articles
+# 4. researchdesk_list_collections   - List collections
+# 5. researchdesk_create_collection   - Create a collection
+# 6. researchdesk_add_to_collection   - Add article to collection
+# 7. researchdesk_list_tags          - List all tags
+# 8. researchdesk_create_tag         - Create a tag
+# 9. researchdesk_get_trending        - Get trending topics
+# 10. researchdesk_export_research   - Export research data
+
+- slug: researchdesk_list_articles
+  name: List Articles
+  description: |
+    Retrieve a list of all saved research articles.
+  provider: researchdesk
+  endpoint: /articles
+  method: GET
+  scopes:
+    - articles:read
+  tags:
+    - articles
+    - research
+    - knowledge
+  input_schema:
+    type: object
+    description: Parameters for listing articles
+    properties:
+      limit:
+        type: integer
+        description: "Number of articles"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: unread, read, archived"
+    required: []
+
+- slug: researchdesk_get_article
+  name: Get Article
+  description: |
+    Get details of a specific research article.
+  provider: researchdesk
+  endpoint: /articles/{articleId}
+  method: GET
+  scopes:
+    - articles:read
+  tags:
+    - articles
+    - research
+    - knowledge
+  input_schema:
+    type: object
+    description: Parameters for getting an article
+    properties:
+      articleId:
+        type: string
+        description: "The article ID"
+    required:
+      - articleId
+
+- slug: researchdesk_search_articles
+  name: Search Articles
+  description: |
+    Search through your saved research articles.
+  provider: researchdesk
+  endpoint: /articles/search
+  method: GET
+  scopes:
+    - articles:read
+  tags:
+    - articles
+    - search
+    - research
+  input_schema:
+    type: object
+    description: Parameters for searching articles
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required:
+      - query
+
+- slug: researchdesk_list_collections
+  name: List Collections
+  description: |
+    Retrieve a list of all research collections.
+  provider: researchdesk
+  endpoint: /collections
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - collections
+    - organization
+    - research
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      limit:
+        type: integer
+        description: "Number of collections"
+        default: 50
+    required: []
+
+- slug: researchdesk_create_collection
+  name: Create Collection
+  description: |
+    Create a new collection for organizing research.
+  provider: researchdesk
+  endpoint: /collections
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - collections
+    - organization
+    - research
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a collection
+    properties:
+      name:
+        type: string
+        description: "Collection name"
+      description:
+        type: string
+        description: "Collection description"
+    required:
+      - name
+
+- slug: researchdesk_add_to_collection
+  name: Add to Collection
+  description: |
+    Add an article to a specific collection.
+  provider: researchdesk
+  endpoint: /collections/{collectionId}/articles
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - collections
+    - articles
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for adding to collection
+    properties:
+      collectionId:
+        type: string
+        description: "The collection ID"
+      articleId:
+        type: string
+        description: "The article ID"
+    required:
+      - collectionId
+      - articleId
+
+- slug: researchdesk_list_tags
+  name: List Tags
+  description: |
+    Retrieve a list of all tags used for research.
+  provider: researchdesk
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      limit:
+        type: integer
+        description: "Number of tags"
+        default: 50
+    required: []
+
+- slug: researchdesk_create_tag
+  name: Create Tag
+  description: |
+    Create a new tag for categorizing research.
+  provider: researchdesk
+  endpoint: /tags
+  method: POST
+  scopes:
+    - tags:write
+  tags:
+    - tags
+    - organization
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tag
+    properties:
+      name:
+        type: string
+        description: "Tag name"
+      color:
+        type: string
+        description: "Tag color"
+    required:
+      - name
+
+- slug: researchdesk_get_trending
+  name: Get Trending
+  description: |
+    Get trending topics and articles.
+  provider: researchdesk
+  endpoint: /trending
+  method: GET
+  scopes:
+    - trending:read
+  tags:
+    - trending
+    - research
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for getting trending topics
+    properties:
+      limit:
+        type: integer
+        description: "Number of topics"
+        default: 10
+    required: []
+
+- slug: researchdesk_export_research
+  name: Export Research
+  description: |
+    Export your research data.
+  provider: researchdesk
+  endpoint: /export
+  method: GET
+  scopes:
+    - articles:read
+  tags:
+    - export
+    - research
+    - data
+  input_schema:
+    type: object
+    description: Parameters for exporting research
+    properties:
+      format:
+        type: string
+        description: "Export format: json, csv, markdown"
+        default: json
+      collectionId:
+        type: string
+        description: "Optional collection to export"
+    required: []

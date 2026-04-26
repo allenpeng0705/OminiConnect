@@ -1,0 +1,302 @@
+# Asana Tools - Allowlist
+# Curated subset of Asana REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. asana_list_tasks           - List tasks
+# 2. asana_get_task             - Get task details
+# 3. asana_create_task          - Create a new task
+# 4. asana_update_task          - Update a task
+# 5. asana_list_projects        - List projects
+# 6. asana_get_project          - Get project details
+# 7. asana_list_teams           - List teams
+# 8. asana_get_team             - Get team details
+# 9. asana_list_portfolios      - List portfolios
+# 10. asana_get_portfolio       - Get portfolio details
+
+- slug: asana_list_tasks
+  name: List Tasks
+  description: |
+    List tasks. Filter by project, assignee, completed status, or due date.
+  provider: asana
+  endpoint: /api/1.0/tasks
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project:
+        type: string
+        description: "Project GID to filter by"
+      assignee:
+        type: string
+        description: "Assignee user GID"
+      completed:
+        type: boolean
+        description: "Filter by completed status"
+      due_on:
+        type: string
+        description: "Due date filter (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: asana_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a task.
+  provider: asana
+  endpoint: /api/1.0/tasks/{task_gid}
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_gid:
+        type: string
+        description: "Task GID"
+    required:
+      - task_gid
+
+- slug: asana_create_task
+  name: Create Task
+  description: |
+    Create a new task in a project or workspace.
+  provider: asana
+  endpoint: /api/1.0/tasks
+  method: POST
+  scopes:
+    - task:write
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      name:
+        type: string
+        description: "Task name"
+      projects:
+        type: array
+        items:
+          type: string
+        description: "Project GIDs to add task to"
+      assignee:
+        type: string
+        description: "Assignee user GID"
+      notes:
+        type: string
+        description: "Task description"
+      due_on:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+    required:
+      - name
+
+- slug: asana_update_task
+  name: Update Task
+  description: |
+    Update a task's name, description, assignee, due date, or completion status.
+  provider: asana
+  endpoint: /api/1.0/tasks/{task_gid}
+  method: PUT
+  scopes:
+    - task:write
+  tags:
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      task_gid:
+        type: string
+        description: "Task GID"
+      name:
+        type: string
+        description: "New name"
+      notes:
+        type: string
+        description: "New description"
+      assignee:
+        type: string
+        description: "New assignee GID"
+      completed:
+        type: boolean
+        description: "Mark as completed (true/false)"
+      due_on:
+        type: string
+        description: "New due date (YYYY-MM-DD)"
+    required:
+      - task_gid
+
+- slug: asana_list_portfolios
+  name: List Portfolios
+  description: |
+    List portfolios in a workspace. Filter by color or owner.
+  provider: asana
+  endpoint: /api/1.0/portfolios
+  method: GET
+  scopes:
+    - portfolio:read
+  tags:
+    - portfolios
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing portfolios
+    properties:
+      workspace:
+        type: string
+        description: "Workspace GID"
+      color:
+        type: string
+        description: "Filter by color"
+      owner:
+        type: string
+        description: "Filter by owner user GID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: asana_get_portfolio
+  name: Get Portfolio
+  description: |
+    Get detailed information about a portfolio including its projects and metrics.
+  provider: asana
+  endpoint: /api/1.0/portfolios/{portfolio_gid}
+  method: GET
+  scopes:
+    - portfolio:read
+  tags:
+    - portfolios
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a portfolio
+    properties:
+      portfolio_gid:
+        type: string
+        description: "Portfolio GID"
+    required:
+      - portfolio_gid
+
+- slug: asana_list_projects
+  name: List Projects
+  description: |
+    List projects in a workspace. Filter by team or archived status.
+  provider: asana
+  endpoint: /api/1.0/projects
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      workspace:
+        type: string
+        description: "Workspace GID"
+      team:
+        type: string
+        description: "Team GID"
+      archived:
+        type: boolean
+        description: "Include archived projects"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - workspace
+
+- slug: asana_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: asana
+  endpoint: /api/1.0/projects/{project_gid}
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_gid:
+        type: string
+        description: "Project GID"
+    required:
+      - project_gid
+
+- slug: asana_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization.
+  provider: asana
+  endpoint: /api/1.0/teams
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      organization:
+        type: string
+        description: "Organization GID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - organization
+
+- slug: asana_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a team.
+  provider: asana
+  endpoint: /api/1.0/teams/{team_gid}
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_gid:
+        type: string
+        description: "Team GID"
+    required:
+      - team_gid

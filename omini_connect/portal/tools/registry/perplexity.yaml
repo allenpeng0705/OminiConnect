@@ -1,0 +1,226 @@
+# Perplexity Tools - Allowlist
+# Curated subset of Perplexity API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. perplexity_list_threads         - List threads
+# 2. perplexity_get_thread           - Get thread details
+# 3. perplexity_create_thread        - Create a thread
+# 4. perplexity_post_message         - Post a message
+# 5. perplexity_list_messages        - List messages in thread
+# 6. perplexity_get_user_info       - Get user information
+# 7. perplexity_list_models          - List available models
+# 8. perplexity_get_usage           - Get API usage
+# 9. perplexity_list_collections    - List collections
+# 10. perplexity_get_collection     - Get collection details
+
+- slug: perplexity_list_threads
+  name: List Threads
+  description: |
+    List all conversation threads.
+  provider: perplexity
+  endpoint: /threads
+  method: GET
+  scopes: []
+  tags:
+    - threads
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing threads
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: perplexity_get_thread
+  name: Get Thread
+  description: |
+    Get detailed information about a specific thread.
+  provider: perplexity
+  endpoint: /threads/{threadId}
+  method: GET
+  scopes: []
+  tags:
+    - threads
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a thread
+    properties:
+      threadId:
+        type: string
+        description: "Thread ID"
+    required:
+      - threadId
+
+- slug: perplexity_create_thread
+  name: Create Thread
+  description: |
+    Create a new conversation thread.
+  provider: perplexity
+  endpoint: /threads
+  method: POST
+  scopes: []
+  tags:
+    - threads
+    - conversations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a thread
+    properties:
+      title:
+        type: string
+        description: "Thread title"
+    required:
+      - title
+
+- slug: perplexity_post_message
+  name: Post Message
+  description: |
+    Post a message to a thread.
+  provider: perplexity
+  endpoint: /threads/{threadId}/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - conversations
+    - write
+  input_schema:
+    type: object
+    description: Parameters for posting a message
+    properties:
+      threadId:
+        type: string
+        description: "Thread ID"
+      content:
+        type: string
+        description: "Message content"
+      model:
+        type: string
+        description: "Model to use (e.g., llama-3.1-sonar-small-128k-online)"
+    required:
+      - threadId
+      - content
+
+- slug: perplexity_list_messages
+  name: List Messages
+  description: |
+    List messages in a thread.
+  provider: perplexity
+  endpoint: /threads/{threadId}/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      threadId:
+        type: string
+        description: "Thread ID"
+    required:
+      - threadId
+
+- slug: perplexity_get_user_info
+  name: Get User Info
+  description: |
+    Get user account information.
+  provider: perplexity
+  endpoint: /user
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: perplexity_list_models
+  name: List Models
+  description: |
+    List available Perplexity models.
+  provider: perplexity
+  endpoint: /models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - ai
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: perplexity_get_usage
+  name: Get Usage
+  description: |
+    Get API usage statistics.
+  provider: perplexity
+  endpoint: /usage
+  method: GET
+  scopes: []
+  tags:
+    - usage
+    - api
+    - stats
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties: {}
+    required: []
+
+- slug: perplexity_list_collections
+  name: List Collections
+  description: |
+    List all collections.
+  provider: perplexity
+  endpoint: /collections
+  method: GET
+  scopes: []
+  tags:
+    - collections
+    - knowledge
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties: {}
+    required: []
+
+- slug: perplexity_get_collection
+  name: Get Collection
+  description: |
+    Get detailed information about a specific collection.
+  provider: perplexity
+  endpoint: /collections/{collectionId}
+  method: GET
+  scopes: []
+  tags:
+    - collections
+    - knowledge
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a collection
+    properties:
+      collectionId:
+        type: string
+        description: "Collection ID"
+    required:
+      - collectionId

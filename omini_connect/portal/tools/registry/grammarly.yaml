@@ -1,0 +1,233 @@
+# Grammarly Tools - Allowlist
+# Curated subset of Grammarly API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. grammarly_get_user            - Get user info
+# 2. grammarly_list_teams         - List teams
+# 3. grammarly_get_team           - Get team details
+# 4. grammarly_list_members       - List team members
+# 5. grammarly_get_member         - Get member details
+# 6. grammarly_list_orgs         - List organizations
+# 7. grammarly_get_org           - Get org details
+# 8. grammarly_list_roles        - List roles
+# 9. grammarly_get_role           - Get role details
+# 10. grammarly_list_analytics    - List analytics
+
+- slug: grammarly_get_user
+  name: Get User
+  description: |
+    Get information about the authenticated user.
+    Returns user details including email and display name.
+  provider: grammarly
+  endpoint: /v1/user
+  method: GET
+  scopes:
+    - read
+  tags:
+    - user
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: grammarly_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization.
+    Returns team details including name and member count.
+  provider: grammarly
+  endpoint: /v1/ecosystem/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: grammarly_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team.
+    Includes team settings and statistics.
+  provider: grammarly
+  endpoint: /v1/ecosystem/teams/{teamId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: grammarly_list_members
+  name: List Members
+  description: |
+    List all members in the organization or team.
+    Returns member details including email and role.
+  provider: grammarly
+  endpoint: /v1/ecosystem/members
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+    required: []
+
+- slug: grammarly_get_member
+  name: Get Member
+  description: |
+    Get detailed information about a specific member.
+    Includes member stats and settings.
+  provider: grammarly
+  endpoint: /v1/ecosystem/members/{memberId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      memberId:
+        type: string
+        description: "Member ID"
+    required:
+      - memberId
+
+- slug: grammarly_list_orgs
+  name: List Orgs
+  description: |
+    List all organizations.
+    Returns org details including name and plan.
+  provider: grammarly
+  endpoint: /v1/ecosystem/orgs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orgs
+    - list
+    - organizations
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties: {}
+    required: []
+
+- slug: grammarly_get_org
+  name: Get Org
+  description: |
+    Get detailed information about a specific organization.
+    Includes org settings and member limits.
+  provider: grammarly
+  endpoint: /v1/ecosystem/orgs/{orgId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - orgs
+    - read
+    - organizations
+  input_schema:
+    type: object
+    description: Parameters for getting an org
+    properties:
+      orgId:
+        type: string
+        description: "Org ID"
+    required:
+      - orgId
+
+- slug: grammarly_list_roles
+  name: List Roles
+  description: |
+    List all available roles in the organization.
+    Returns role details including permissions.
+  provider: grammarly
+  endpoint: /v1/ecosystem/roles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - roles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties: {}
+    required: []
+
+- slug: grammarly_get_role
+  name: Get Role
+  description: |
+    Get detailed information about a specific role.
+    Includes role permissions and settings.
+  provider: grammarly
+  endpoint: /v1/ecosystem/roles/{roleId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - roles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a role
+    properties:
+      roleId:
+        type: string
+        description: "Role ID"
+    required:
+      - roleId
+
+- slug: grammarly_list_analytics
+  name: List Analytics
+  description: |
+    List analytics data for the organization.
+    Returns usage statistics and writing metrics.
+  provider: grammarly
+  endpoint: /v2/analytics/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - analytics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

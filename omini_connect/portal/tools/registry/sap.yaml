@@ -1,0 +1,317 @@
+# SAP Tools - Allowlist
+# Curated subset of SAP S/4HANA API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sap_list_suppliers          - List SAP suppliers/vendors
+# 2. sap_get_supplier             - Get supplier details
+# 3. sap_list_purchase_orders     - List purchase orders
+# 4. sap_get_purchase_order       - Get purchase order details
+# 5. sap_create_purchase_order    - Create a purchase order
+# 6. sap_list_invoices            - List invoices
+# 7. sap_get_invoice              - Get invoice details
+# 8. sap_list_products            - List materials/products
+# 9. sap_get_product              - Get product details
+# 10. sap_list_sales_orders       - List sales orders
+
+- slug: sap_list_suppliers
+  name: List Suppliers
+  description: |
+    List suppliers (vendors) in SAP S/4HANA.
+    Filter by company code, purchasing organization, and supplier group.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_Supplier
+  method: GET
+  scopes:
+    - BUSPARTNER
+  tags:
+    - suppliers
+    - vendors
+    - business_partner
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing suppliers
+    properties:
+      filter:
+        type: string
+        description: "OData filter expression"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: sap_get_supplier
+  name: Get Supplier
+  description: |
+    Get detailed information about a specific SAP supplier including addresses and contacts.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_Supplier('{supplierId}')
+  method: GET
+  scopes:
+    - BUSPARTNER
+  tags:
+    - suppliers
+    - business_partner
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a supplier
+    properties:
+      supplierId:
+        type: string
+        description: "Supplier ID"
+    required:
+      - supplierId
+
+- slug: sap_list_purchase_orders
+  name: List Purchase Orders
+  description: |
+    List purchase orders in SAP S/4HANA.
+    Filter by status, supplier, purchasing organization, and date range.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder
+  method: GET
+  scopes:
+    - PURCHASE_ORDER
+  tags:
+    - purchasing
+    - purchase_orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing purchase orders
+    properties:
+      supplierId:
+        type: string
+        description: "Filter by supplier ID"
+      purchaseOrderStatus:
+        type: string
+        description: "PO status (I=incomplete, H=held, A=approved, E=error, P=pending)"
+      fromDate:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      toDate:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: sap_get_purchase_order
+  name: Get Purchase Order
+  description: |
+    Get detailed information about a specific purchase order including items and schedule lines.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder('{poNumber}')
+  method: GET
+  scopes:
+    - PURCHASE_ORDER
+  tags:
+    - purchasing
+    - purchase_orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a purchase order
+    properties:
+      poNumber:
+        type: string
+        description: "Purchase order number"
+    required:
+      - poNumber
+
+- slug: sap_create_purchase_order
+  name: Create Purchase Order
+  description: |
+    Create a new purchase order in SAP S/4HANA.
+    Set supplier, items, quantities, and pricing.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/A_PurchaseOrder
+  method: POST
+  scopes:
+    - PURCHASE_ORDER
+  tags:
+    - purchasing
+    - purchase_orders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a purchase order
+    properties:
+      supplierId:
+        type: string
+        description: "Supplier ID"
+      purchaseOrderType:
+        type: string
+        description: "PO type (e.g., NB=standard PO)"
+      companyCode:
+        type: string
+        description: "Company code"
+      purchasingOrganization:
+        type: string
+        description: "Purchasing organization"
+      items:
+        type: array
+        items:
+          type: object
+        description: "PO line items"
+    required:
+      - supplierId
+
+- slug: sap_list_invoices
+  name: List Invoices
+  description: |
+    List invoices (incoming supplier invoices) in SAP S/4HANA.
+    Filter by status, supplier, company code, and date range.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_SUPPLIERINVOICE_PROCESS_SRV/A_SupplierInvoice
+  method: GET
+  scopes:
+    - SUPPLIER_INVOICE
+  tags:
+    - invoices
+    - accounts_payable
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      supplierId:
+        type: string
+        description: "Filter by supplier ID"
+      invoiceStatus:
+        type: string
+        description: "Invoice status"
+      fromDate:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      toDate:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: sap_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific supplier invoice including line items and payment terms.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_SUPPLIERINVOICE_PROCESS_SRV/A_SupplierInvoice('{invoiceId}')
+  method: GET
+  scopes:
+    - SUPPLIER_INVOICE
+  tags:
+    - invoices
+    - accounts_payable
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "Supplier invoice ID"
+    required:
+      - invoiceId
+
+- slug: sap_list_products
+  name: List Products
+  description: |
+    List materials and products in SAP S/4HANA.
+    Filter by type, group, plant, and storage location.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_PRODUCT_SRV/A_Product
+  method: GET
+  scopes:
+    - PRODUCT
+  tags:
+    - products
+    - materials
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      productType:
+        type: string
+        description: "Product type filter"
+      productGroup:
+        type: string
+        description: "Product group"
+      plant:
+        type: string
+        description: "Plant"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: sap_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product including descriptions, specifications, and warehouse data.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_PRODUCT_SRV/A_Product('{productId}')
+  method: GET
+  scopes:
+    - PRODUCT
+  tags:
+    - products
+    - materials
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      productId:
+        type: string
+        description: "Product ID"
+    required:
+      - productId
+
+- slug: sap_list_sales_orders
+  name: List Sales Orders
+  description: |
+    List sales orders in SAP S/4HANA.
+    Filter by status, customer, sales organization, and date range.
+  provider: sap
+  endpoint: /sap/opu/odata/sap/API_SALES_ORDER_SRV/A_SalesOrder
+  method: GET
+  scopes:
+    - SALES_ORDER
+  tags:
+    - sales
+    - sales_orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sales orders
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+      salesOrderStatus:
+        type: string
+        description: "Sales order status"
+      salesOrganization:
+        type: string
+        description: "Sales organization"
+      fromDate:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      toDate:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []

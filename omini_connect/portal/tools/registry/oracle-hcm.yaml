@@ -1,0 +1,234 @@
+# Oracle Fusion Cloud (HCM) Tools - Allowlist
+# Curated subset of Oracle HCM REST API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. oracle_list_workers              - List workers
+# 2. oracle_get_worker               - Get worker details
+# 3. oracle_list_departments         - List departments
+# 4. oracle_list_jobs                - List jobs
+# 5. oracle_list_locations           - List locations
+# 6. oracle_list_absences            - List absences
+# 7. oracle_list_salaries           - List salary data
+# 8. oracle_list_performance        - List performance records
+# 9. oracle_list_leave_requests     - List leave requests
+# 10. oracle_get_person            - Get person details
+
+- slug: oracle_list_workers
+  name: List Workers
+  description: |
+    List all workers in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/workers
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - hcm
+    - workers
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing workers
+    properties:
+      limit:
+        type: integer
+        description: "Number of workers"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: oracle_get_worker
+  name: Get Worker
+  description: |
+    Get detailed information for a specific worker.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/workers/{personId}
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - hcm
+    - workers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a worker
+    properties:
+      personId:
+        type: string
+        description: "Person ID"
+    required:
+      - personId
+
+- slug: oracle_list_departments
+  name: List Departments
+  description: |
+    List all departments in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - hcm
+    - departments
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: oracle_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - hcm
+    - jobs
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties: {}
+    required: []
+
+- slug: oracle_list_locations
+  name: List Locations
+  description: |
+    List all locations in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/locations
+  method: GET
+  scopes:
+    - locations:read
+  tags:
+    - hcm
+    - locations
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties: {}
+    required: []
+
+- slug: oracle_list_absences
+  name: List Absences
+  description: |
+    List all absence records in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/absences
+  method: GET
+  scopes:
+    - absences:read
+  tags:
+    - hcm
+    - absences
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing absences
+    properties:
+      personId:
+        type: string
+        description: "Filter by person ID"
+    required: []
+
+- slug: oracle_list_salaries
+  name: List Salaries
+  description: |
+    List salary data in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/salaries
+  method: GET
+  scopes:
+    - salaries:read
+  tags:
+    - hcm
+    - salaries
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for listing salaries
+    properties:
+      personId:
+        type: string
+        description: "Filter by person ID"
+    required: []
+
+- slug: oracle_list_performance
+  name: List Performance
+  description: |
+    List performance records in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/performance
+  method: GET
+  scopes:
+    - performance:read
+  tags:
+    - hcm
+    - performance
+    - reviews
+  input_schema:
+    type: object
+    description: Parameters for listing performance
+    properties:
+      personId:
+        type: string
+        description: "Filter by person ID"
+    required: []
+
+- slug: oracle_list_leave_requests
+  name: List Leave Requests
+  description: |
+    List leave requests in Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/leaveRequests
+  method: GET
+  scopes:
+    - leaveRequests:read
+  tags:
+    - hcm
+    - leave
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for listing leave requests
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: oracle_get_person
+  name: Get Person
+  description: |
+    Get person details from Oracle HCM.
+  provider: oracle-hcm
+  endpoint: /hcm/v1/persons/{personId}
+  method: GET
+  scopes:
+    - persons:read
+  tags:
+    - hcm
+    - persons
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      personId:
+        type: string
+        description: "Person ID"
+    required:
+      - personId

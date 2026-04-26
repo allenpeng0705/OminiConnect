@@ -1,0 +1,229 @@
+- slug: fly_list_apps
+  name: List Apps
+  description: |
+    List all applications in your Fly organization.
+  provider: fly
+  endpoint: /apps
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - apps
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      org:
+        type: string
+        description: "Organization slug (default: personal)"
+      limit:
+        type: integer
+        description: "Maximum number of apps to return"
+    required: []
+
+- slug: fly_get_app
+  name: Get App
+  description: |
+    Get details for a specific application.
+  provider: fly
+  endpoint: /apps/{appName}
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - apps
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      appName:
+        type: string
+        description: "The name of the application"
+    required:
+      - appName
+
+- slug: fly_create_app
+  name: Create App
+  description: |
+    Create a new application on Fly.io.
+  provider: fly
+  endpoint: /apps
+  method: POST
+  scopes:
+    - apps:write
+  tags:
+    - apps
+  input_schema:
+    type: object
+    description: Parameters for creating an app
+    properties:
+      appName:
+        type: string
+        description: "Application name (must be unique)"
+      org:
+        type: string
+        description: "Organization slug"
+      region:
+        type: string
+        description: "Primary region"
+      machines:
+        type: boolean
+        description: "Use Machines (default: true)"
+    required:
+      - appName
+
+- slug: fly_list_machines
+  name: List Machines
+  description: |
+    List all Machines for an application.
+  provider: fly
+  endpoint: /apps/{appName}/machines
+  method: GET
+  scopes:
+    - machines:read
+  tags:
+    - machines
+  input_schema:
+    type: object
+    description: Parameters for listing machines
+    properties:
+      appName:
+        type: string
+        description: "The name of the application"
+      region:
+        type: string
+        description: "Filter by region"
+    required:
+      - appName
+
+- slug: fly_get_machine
+  name: Get Machine
+  description: |
+    Get details for a specific Machine.
+  provider: fly
+  endpoint: /machines/{machineId}
+  method: GET
+  scopes:
+    - machines:read
+  tags:
+    - machines
+  input_schema:
+    type: object
+    description: Parameters for getting a machine
+    properties:
+      machineId:
+        type: string
+        description: "The ID of the machine"
+    required:
+      - machineId
+
+- slug: fly_list_volumes
+  name: List Volumes
+  description: |
+    List all volumes in an organization or for an app.
+  provider: fly
+  endpoint: /volumes
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+  input_schema:
+    type: object
+    description: Parameters for listing volumes
+    properties:
+      appName:
+        type: string
+        description: "Filter by app name"
+      org:
+        type: string
+        description: "Organization slug"
+    required: []
+
+- slug: fly_get_volume
+  name: Get Volume
+  description: |
+    Get details for a specific volume.
+  provider: fly
+  endpoint: /volumes/{volumeId}
+  method: GET
+  scopes:
+    - volumes:read
+  tags:
+    - volumes
+  input_schema:
+    type: object
+    description: Parameters for getting a volume
+    properties:
+      volumeId:
+        type: string
+        description: "The ID of the volume"
+    required:
+      - volumeId
+
+- slug: fly_list_certificates
+  name: List Certificates
+  description: |
+    List all certificates for an application.
+  provider: fly
+  endpoint: /apps/{appName}/certs
+  method: GET
+  scopes:
+    - certificates:read
+  tags:
+    - certificates
+  input_schema:
+    type: object
+    description: Parameters for listing certificates
+    properties:
+      appName:
+        type: string
+        description: "The name of the application"
+    required:
+      - appName
+
+- slug: fly_get_certificate
+  name: Get Certificate
+  description: |
+    Get details for a specific certificate.
+  provider: fly
+  endpoint: /apps/{appName}/certs/{hostname}
+  method: GET
+  scopes:
+    - certificates:read
+  tags:
+    - certificates
+  input_schema:
+    type: object
+    description: Parameters for getting a certificate
+    properties:
+      appName:
+        type: string
+        description: "The name of the application"
+      hostname:
+        type: string
+        description: "The hostname for the certificate"
+    required:
+      - appName
+      - hostname
+
+- slug: fly_list_secrets
+  name: List Secrets
+  description: |
+    List all secrets for an application.
+  provider: fly
+  endpoint: /apps/{appName}/secrets
+  method: GET
+  scopes:
+    - secrets:read
+  tags:
+    - secrets
+  input_schema:
+    type: object
+    description: Parameters for listing secrets
+    properties:
+      appName:
+        type: string
+        description: "The name of the application"
+    required:
+      - appName

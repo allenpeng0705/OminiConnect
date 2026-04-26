@@ -1,0 +1,247 @@
+# Gamma Tools - Allowlist
+# Curated subset of Gamma API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gamma_list_folders          - List folders
+# 2. gamma_get_folder           - Get folder details
+# 3. gamma_list_cards           - List cards (presentations/docs)
+# 4. gamma_get_card             - Get card details
+# 5. gamma_create_card          - Create a card
+# 6. gamma_update_card          - Update a card
+# 7. gamma_delete_card          - Delete a card
+# 8. gamma_list_collaborators  - List collaborators
+# 9. gamma_add_collaborator    - Add collaborator
+# 10. gamma_list_templates      - List templates
+
+- slug: gamma_list_folders
+  name: List Folders
+  description: |
+    List all folders in Gamma workspace.
+  provider: gamma
+  endpoint: /v1.0/folders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties: {}
+
+- slug: gamma_get_folder
+  name: Get Folder
+  description: |
+    Get details of a specific folder.
+  provider: gamma
+  endpoint: /v1.0/folders/{folder_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      folder_id:
+        type: string
+        description: "Folder ID"
+    required:
+      - folder_id
+
+- slug: gamma_list_cards
+  name: List Cards
+  description: |
+    List all cards (presentations, docs, webpages) in Gamma.
+  provider: gamma
+  endpoint: /v1.0/cards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+    required: []
+
+- slug: gamma_get_card
+  name: Get Card
+  description: |
+    Get detailed information about a specific card.
+  provider: gamma
+  endpoint: /v1.0/cards/{card_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+    required:
+      - card_id
+
+- slug: gamma_create_card
+  name: Create Card
+  description: |
+    Create a new card (presentation, doc, or webpage).
+  provider: gamma
+  endpoint: /v1.0/cards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a card
+    properties:
+      title:
+        type: string
+        description: "Card title"
+      type:
+        type: string
+        description: "Card type (presentation, document, webpage)"
+      folder_id:
+        type: string
+        description: "Folder ID"
+    required:
+      - title
+      - type
+
+- slug: gamma_update_card
+  name: Update Card
+  description: |
+    Update an existing card's content or settings.
+  provider: gamma
+  endpoint: /v1.0/cards/{card_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - cards
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a card
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+      title:
+        type: string
+        description: "New title"
+      content:
+        type: string
+        description: "New content"
+    required:
+      - card_id
+
+- slug: gamma_delete_card
+  name: Delete Card
+  description: |
+    Delete a card from Gamma.
+  provider: gamma
+  endpoint: /v1.0/cards/{card_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - cards
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a card
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+    required:
+      - card_id
+
+- slug: gamma_list_collaborators
+  name: List Collaborators
+  description: |
+    List all collaborators on a card.
+  provider: gamma
+  endpoint: /v1.0/cards/{card_id}/collaborators
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+    - collaborators
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing collaborators
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+    required:
+      - card_id
+
+- slug: gamma_add_collaborator
+  name: Add Collaborator
+  description: |
+    Add a collaborator to a card.
+  provider: gamma
+  endpoint: /v1.0/cards/{card_id}/collaborators
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cards
+    - collaborators
+    - add
+  input_schema:
+    type: object
+    description: Parameters for adding a collaborator
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+      email:
+        type: string
+        description: "Collaborator email"
+      role:
+        type: string
+        description: "Role (viewer, editor)"
+    required:
+      - card_id
+      - email
+
+- slug: gamma_list_templates
+  name: List Templates
+  description: |
+    List available templates for creating cards.
+  provider: gamma
+  endpoint: /v1.0/templates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties: {}

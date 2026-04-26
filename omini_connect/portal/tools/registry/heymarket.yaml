@@ -1,0 +1,240 @@
+# Heymarket Tools - Allowlist
+# Curated subset of Heymarket API for AI agent use.
+# JWT via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. heymarket_list_messages       - List messages
+# 2. heymarket_send_message        - Send a message
+# 3. heymarket_list_campaigns      - List campaigns
+# 4. heymarket_get_campaign        - Get campaign details
+# 5. heymarket_list_contacts       - List contacts
+# 6. heymarket_get_contact         - Get contact details
+# 7. heymarket_list_templates      - List templates
+# 8. heymarket_get_template        - Get template details
+# 9. heymarket_list_tags           - List tags
+# 10. heymarket_list_conversations  - List conversations
+
+- slug: heymarket_list_messages
+  name: List Messages
+  description: |
+    List all messages in Heymarket.
+    Returns message details including content, status, and timestamp.
+  provider: heymarket
+  endpoint: /api/messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      conversation_id:
+        type: string
+        description: "Filter by conversation ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: heymarket_send_message
+  name: Send Message
+  description: |
+    Send a message via Heymarket.
+    Set recipient, content, and channel.
+  provider: heymarket
+  endpoint: /api/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      recipient:
+        type: string
+        description: "Recipient phone number"
+      content:
+        type: string
+        description: "Message content"
+      channel:
+        type: string
+        description: "Channel: sms, whatsapp"
+    required:
+      - recipient
+      - content
+
+- slug: heymarket_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Heymarket.
+    Returns campaign details including name and status.
+  provider: heymarket
+  endpoint: /api/campaigns
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: heymarket_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+    Includes campaign stats and messages.
+  provider: heymarket
+  endpoint: /api/campaigns/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: heymarket_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Heymarket.
+    Returns contact details including name and phone.
+  provider: heymarket
+  endpoint: /api/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: heymarket_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+    Includes contact details and conversation history.
+  provider: heymarket
+  endpoint: /api/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: heymarket_list_templates
+  name: List Templates
+  description: |
+    List all message templates in Heymarket.
+    Returns template details including name and content.
+  provider: heymarket
+  endpoint: /api/templates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties: {}
+    required: []
+
+- slug: heymarket_get_template
+  name: Get Template
+  description: |
+    Get detailed information about a specific template.
+    Includes template content and variables.
+  provider: heymarket
+  endpoint: /api/templates/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      id:
+        type: string
+        description: "Template ID"
+    required:
+      - id
+
+- slug: heymarket_list_tags
+  name: List Tags
+  description: |
+    List all tags in Heymarket.
+    Returns tag details including name and usage.
+  provider: heymarket
+  endpoint: /api/tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: heymarket_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Heymarket.
+    Returns conversation details including contact and status.
+  provider: heymarket
+  endpoint: /api/conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties: {}
+    required: []

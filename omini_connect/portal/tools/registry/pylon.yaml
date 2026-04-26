@@ -1,0 +1,233 @@
+# Pylon Tools - Allowlist
+# Curated subset of Pylon API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pylon_list_tasks               - List tasks
+# 2. pylon_get_task                 - Get task details
+# 3. pylon_create_task             - Create a task
+# 4. pylon_update_task             - Update a task
+# 5. pylon_list_projects           - List projects
+# 6. pylon_get_project             - Get project details
+# 7. pylon_list_comments           - List comments
+# 8. pylon_get_user                - Get user info
+# 9. pylon_list_teams             - List teams
+# 10. pylon_get_task_stats         - Get task statistics
+
+- slug: pylon_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pylon_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - taskId
+
+- slug: pylon_create_task
+  name: Create Task
+  description: |
+    Create a new task.
+  provider: pylon
+  endpoint: /me
+  method: POST
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      name:
+        type: string
+        description: "Task name"
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - name
+
+- slug: pylon_update_task
+  name: Update Task
+  description: |
+    Update an existing task.
+  provider: pylon
+  endpoint: /me
+  method: PUT
+  scopes: []
+  tags:
+    - tasks
+    - work
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+      name:
+        type: string
+        description: "Task name"
+      status:
+        type: string
+        description: "Task status"
+    required:
+      - taskId
+
+- slug: pylon_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - work
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties: {}
+    required: []
+
+- slug: pylon_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - work
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: pylon_list_comments
+  name: List Comments
+  description: |
+    List all comments.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - collaboration
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      taskId:
+        type: string
+        description: "Filter by task ID"
+    required: []
+
+- slug: pylon_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: pylon_list_teams
+  name: List Teams
+  description: |
+    List all teams.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: pylon_get_task_stats
+  name: Get Task Stats
+  description: |
+    Get task statistics.
+  provider: pylon
+  endpoint: /me
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - statistics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting task stats
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+    required: []

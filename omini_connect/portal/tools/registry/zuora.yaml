@@ -1,0 +1,313 @@
+# Zuora Tools - Allowlist
+# Curated subset of Zuora billing API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zuora_list_subscriptions       - List all subscriptions
+# 2. zuora_get_subscription       - Get subscription details
+# 3. zuora_create_subscription    - Create a new subscription
+# 4. zuora_update_subscription    - Update a subscription
+# 5. zuora_list_accounts          - List all accounts
+# 6. zuora_get_account            - Get account details
+# 7. zuora_list_invoices          - List all invoices
+# 8. zuora_get_invoice            - Get invoice details
+# 9. zuora_list_orders            - List all orders
+# 10. zuora_get_order             - Get order details
+
+- slug: zuora_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in Zuora. Filter by account, status, or term type.
+  provider: zuora
+  endpoint: /v1/subscriptions
+  method: GET
+  scopes:
+    - Billing:Read
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      accountKey:
+        type: string
+        description: "Filter by account key"
+      status:
+        type: string
+        description: "Filter by status (Active, Cancelled, Expired, etc)"
+      termType:
+        type: string
+        description: "Filter by term type (TERMED, EVERGREEN)"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: zuora_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific Zuora subscription.
+  provider: zuora
+  endpoint: /v1/subscriptions/{subscriptionKey}
+  method: GET
+  scopes:
+    - Billing:Read
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      subscriptionKey:
+        type: string
+        description: "Subscription ID or number"
+    required:
+      - subscriptionKey
+
+- slug: zuora_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new subscription in Zuora with account, product, and pricing details.
+  provider: zuora
+  endpoint: /v1/subscriptions
+  method: POST
+  scopes:
+    - Billing:Create
+  tags:
+    - subscriptions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      accountKey:
+        type: string
+        description: "Account number or ID"
+      subscriptionName:
+        type: string
+        description: "Subscription name"
+      terms:
+        type: object
+        description: "Subscription terms object"
+      initialTerm:
+        type: object
+        description: "Initial term with start date and term length"
+      autoRenew:
+        type: boolean
+        description: "Auto renew flag"
+        default: true
+    required:
+      - accountKey
+
+- slug: zuora_update_subscription
+  name: Update Subscription
+  description: |
+    Update an existing Zuora subscription with new terms or settings.
+  provider: zuora
+  endpoint: /v1/subscriptions/{subscriptionKey}
+  method: PUT
+  scopes:
+    - Billing:Edit
+  tags:
+    - subscriptions
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a subscription
+    properties:
+      subscriptionKey:
+        type: string
+        description: "Subscription ID or number"
+      autoRenew:
+        type: boolean
+        description: "Auto renew flag"
+      renewalTerm:
+        type: object
+        description: "Renewal term settings"
+      contractEffectiveDate:
+        type: string
+        description: "Contract effective date (YYYY-MM-DD)"
+    required:
+      - subscriptionKey
+
+- slug: zuora_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in Zuora. Filter by status, balance, or sales rep.
+  provider: zuora
+  endpoint: /v1/accounts
+  method: GET
+  scopes:
+    - Accounting:Read
+  tags:
+    - accounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Active, Cancelled, etc)"
+      balance:
+        type: number
+        description: "Filter by balance amount"
+      salesRep:
+        type: string
+        description: "Filter by sales rep name"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: zuora_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific Zuora account.
+  provider: zuora
+  endpoint: /v1/accounts/{accountKey}
+  method: GET
+  scopes:
+    - Accounting:Read
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountKey:
+        type: string
+        description: "Account number or ID"
+    required:
+      - accountKey
+
+- slug: zuora_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Zuora. Filter by account, status, or date range.
+  provider: zuora
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - Billing:Read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      accountKey:
+        type: string
+        description: "Filter by account key"
+      status:
+        type: string
+        description: "Filter by status (Draft, Posted, Cancelled, etc)"
+      dueDate:
+        type: string
+        description: "Due date filter"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: zuora_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific Zuora invoice.
+  provider: zuora
+  endpoint: /v1/invoices/{invoiceNumber}
+  method: GET
+  scopes:
+    - Billing:Read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceNumber:
+        type: string
+        description: "Invoice number"
+    required:
+      - invoiceNumber
+
+- slug: zuora_list_orders
+  name: List Orders
+  description: |
+    List all orders in Zuora. Filter by account, status, or order date.
+  provider: zuora
+  endpoint: /v1/orders
+  method: GET
+  scopes:
+    - Orders:Read
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      accountKey:
+        type: string
+        description: "Filter by account key"
+      status:
+        type: string
+        description: "Filter by status (Pending, Activated, Cancelled, etc)"
+      orderDate:
+        type: string
+        description: "Order date filter (YYYY-MM-DD)"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: zuora_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific Zuora order.
+  provider: zuora
+  endpoint: /v1/orders/{orderId}
+  method: GET
+  scopes:
+    - Orders:Read
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      orderId:
+        type: string
+        description: "Order ID"
+    required:
+      - orderId

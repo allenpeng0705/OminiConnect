@@ -1,0 +1,238 @@
+# MCP Generic Tools - Allowlist
+# Curated subset of MCP (Model Context Protocol) Generic OAuth2 API for AI agent use.
+# MCP_OAUTH2_GENERIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# Note: MCP Generic is a special provider that wraps MCP servers as OAuth2 APIs.
+# The actual tools depend on the specific MCP server being connected.
+# This allowlist defines the standard MCP tool patterns.
+
+# === TOOL LIST ===
+# 1. mcp_generic_list_tools      - List available tools from MCP server
+# 2. mcp_generic_call_tool       - Call a specific tool on MCP server
+# 3. mcp_generic_list_resources  - List available resources
+# 4. mcp_generic_read_resource    - Read a specific resource
+# 5. mcp_generic_list_prompts     - List available prompts
+# 6. mcp_generic_get_prompt      - Get a specific prompt
+# 7. mcp_generic_list_servers    - List connected MCP servers
+# 8. mcp_generic_get_server      - Get MCP server info
+# 9. mcp_generic_list_aliases   - List tool aliases
+# 10. mcp_generic_create_alias  - Create a tool alias
+
+- slug: mcp_generic_list_tools
+  name: List MCP Tools
+  description: |
+    List all available tools from the connected MCP server.
+    Returns tool names, descriptions, and input schemas.
+  provider: mcp-generic
+  endpoint: /tools
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - tools
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing MCP tools
+    properties:
+      category:
+        type: string
+        description: "Filter by tool category"
+    required: []
+
+- slug: mcp_generic_call_tool
+  name: Call MCP Tool
+  description: |
+    Call a specific tool on the MCP server with arguments.
+  provider: mcp-generic
+  endpoint: /tools/{toolName}
+  method: POST
+  scopes: []
+  tags:
+    - mcp
+    - tools
+    - call
+  input_schema:
+    type: object
+    description: Parameters for calling an MCP tool
+    properties:
+      toolName:
+        type: string
+        description: "Name of the tool to call"
+      arguments:
+        type: object
+        description: "Tool arguments as key-value pairs"
+    required:
+      - toolName
+      - arguments
+
+- slug: mcp_generic_list_resources
+  name: List MCP Resources
+  description: |
+    List all available resources on the MCP server.
+  provider: mcp-generic
+  endpoint: /resources
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - resources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing MCP resources
+    properties: {}
+    required: []
+
+- slug: mcp_generic_read_resource
+  name: Read MCP Resource
+  description: |
+    Read a specific resource from the MCP server.
+  provider: mcp-generic
+  endpoint: /resources/{uri}
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - resources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for reading an MCP resource
+    properties:
+      uri:
+        type: string
+        description: "Resource URI"
+    required:
+      - uri
+
+- slug: mcp_generic_list_prompts
+  name: List MCP Prompts
+  description: |
+    List all available prompts on the MCP server.
+  provider: mcp-generic
+  endpoint: /prompts
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - prompts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing MCP prompts
+    properties: {}
+    required: []
+
+- slug: mcp_generic_get_prompt
+  name: Get MCP Prompt
+  description: |
+    Get a specific prompt with arguments.
+  provider: mcp-generic
+  endpoint: /prompts/{promptName}
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - prompts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an MCP prompt
+    properties:
+      promptName:
+        type: string
+        description: "Name of the prompt"
+      arguments:
+        type: object
+        description: "Prompt arguments"
+    required:
+      - promptName
+
+- slug: mcp_generic_list_servers
+  name: List MCP Servers
+  description: |
+    List all connected MCP servers.
+  provider: mcp-generic
+  endpoint: /servers
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - servers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing MCP servers
+    properties: {}
+    required: []
+
+- slug: mcp_generic_get_server
+  name: Get MCP Server
+  description: |
+    Get information about a specific MCP server.
+  provider: mcp-generic
+  endpoint: /servers/{serverId}
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - servers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an MCP server
+    properties:
+      serverId:
+        type: string
+        description: "Server ID"
+    required:
+      - serverId
+
+- slug: mcp_generic_list_aliases
+  name: List Tool Aliases
+  description: |
+    List all tool aliases configured for the MCP server.
+  provider: mcp-generic
+  endpoint: /aliases
+  method: GET
+  scopes: []
+  tags:
+    - mcp
+    - aliases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing aliases
+    properties: {}
+    required: []
+
+- slug: mcp_generic_create_alias
+  name: Create Tool Alias
+  description: |
+    Create an alias for an MCP tool.
+  provider: mcp-generic
+  endpoint: /aliases
+  method: POST
+  scopes: []
+  tags:
+    - mcp
+    - aliases
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an alias
+    properties:
+      alias:
+        type: string
+        description: "Alias name"
+      tool_name:
+        type: string
+        description: "Original tool name"
+      description:
+        type: string
+        description: "Alias description"
+    required:
+      - alias
+      - tool_name

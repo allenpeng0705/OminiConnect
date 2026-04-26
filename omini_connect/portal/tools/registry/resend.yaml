@@ -1,0 +1,278 @@
+# Resend Tools - Allowlist
+# Curated subset of Resend Email API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. resend_list_emails              - List sent emails
+# 2. resend_get_email                - Get email details
+# 3. resend_send_email               - Send an email
+# 4. resend_list_audiences           - List audiences
+# 5. resend_create_audience          - Create an audience
+# 6. resend_add_contact              - Add contact to audience
+# 7. resend_list_contacts            - List audience contacts
+# 8. resend_get_audit_log           - Get audit log
+# 9. resend_list_domains            - List verified domains
+# 10. resend_create_domain          - Add a domain
+
+- slug: resend_list_emails
+  name: List Emails
+  description: |
+    Retrieve a list of all emails sent through Resend.
+  provider: resend
+  endpoint: /emails
+  method: GET
+  scopes:
+    - emails:read
+  tags:
+    - emails
+    - transactional
+  input_schema:
+    type: object
+    description: Parameters for listing emails
+    properties:
+      limit:
+        type: integer
+        description: "Number of emails to return"
+        default: 50
+      from:
+        type: string
+        description: "Filter by sender email"
+    required: []
+
+- slug: resend_get_email
+  name: Get Email
+  description: |
+    Get details of a specific email by ID.
+  provider: resend
+  endpoint: /emails/{emailId}
+  method: GET
+  scopes:
+    - emails:read
+  tags:
+    - emails
+    - transactional
+  input_schema:
+    type: object
+    description: Parameters for getting an email
+    properties:
+      emailId:
+        type: string
+        description: "The email ID"
+    required:
+      - emailId
+
+- slug: resend_send_email
+  name: Send Email
+  description: |
+    Send a new transactional email.
+  provider: resend
+  endpoint: /emails
+  method: POST
+  scopes:
+    - emails:write
+  tags:
+    - emails
+    - transactional
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      from:
+        type: string
+        description: "Sender email (must be verified domain)"
+      to:
+        type: array
+        description: "Recipient emails"
+      subject:
+        type: string
+        description: "Email subject"
+      html:
+        type: string
+        description: "Email HTML body"
+      text:
+        type: string
+        description: "Email plain text body"
+    required:
+      - from
+      - to
+      - subject
+
+- slug: resend_list_audiences
+  name: List Audiences
+  description: |
+    Retrieve a list of all audiences.
+  provider: resend
+  endpoint: /audiences
+  method: GET
+  scopes:
+    - audiences:read
+  tags:
+    - audiences
+    - marketing
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties:
+      limit:
+        type: integer
+        description: "Number of audiences"
+        default: 50
+    required: []
+
+- slug: resend_create_audience
+  name: Create Audience
+  description: |
+    Create a new audience for marketing emails.
+  provider: resend
+  endpoint: /audiences
+  method: POST
+  scopes:
+    - audiences:write
+  tags:
+    - audiences
+    - marketing
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an audience
+    properties:
+      name:
+        type: string
+        description: "Audience name"
+      description:
+        type: string
+        description: "Audience description"
+    required:
+      - name
+
+- slug: resend_add_contact
+  name: Add Contact
+  description: |
+    Add a contact to an audience.
+  provider: resend
+  endpoint: /audiences/{audienceId}/contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - audiences
+    - marketing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      audienceId:
+        type: string
+        description: "Audience ID"
+      email:
+        type: string
+        description: "Contact email"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+    required:
+      - audienceId
+      - email
+
+- slug: resend_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of contacts in an audience.
+  provider: resend
+  endpoint: /audiences/{audienceId}/contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      audienceId:
+        type: string
+        description: "Audience ID"
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 100
+    required:
+      - audienceId
+
+- slug: resend_get_audit_log
+  name: Get Audit Log
+  description: |
+    Get audit log for your Resend account.
+  provider: resend
+  endpoint: /audit-logs
+  method: GET
+  scopes:
+    - audit:read
+  tags:
+    - audit
+    - compliance
+    - security
+  input_schema:
+    type: object
+    description: Parameters for getting audit logs
+    properties:
+      limit:
+        type: integer
+        description: "Number of log entries"
+        default: 50
+    required: []
+
+- slug: resend_list_domains
+  name: List Domains
+  description: |
+    Retrieve a list of all verified domains.
+  provider: resend
+  endpoint: /domains
+  method: GET
+  scopes:
+    - domains:read
+  tags:
+    - domains
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties: {}
+    required: []
+
+- slug: resend_create_domain
+  name: Create Domain
+  description: |
+    Add and verify a new domain for sending.
+  provider: resend
+  endpoint: /domains
+  method: POST
+  scopes:
+    - domains:write
+  tags:
+    - domains
+    - settings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a domain
+    properties:
+      name:
+        type: string
+        description: "Domain name"
+      region:
+        type: string
+        description: "Region: us-east-1, eu-west-1"
+        default: us-east-1
+    required:
+      - name

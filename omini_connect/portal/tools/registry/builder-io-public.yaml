@@ -1,0 +1,237 @@
+# Builder.io (Public) Tools - Allowlist
+# Curated subset of Builder.io Content API for AI agent use.
+# API_KEY auth via Nango (public key - read only).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. builder_io_public_list_pages     - List pages
+# 2. builder_io_public_get_page      - Get page content
+# 3. builder_io_public_list_models     - List content models
+# 4. builder_io_public_get_model      - Get model details
+# 5. builder_io_public_list_entries   - List content entries
+# 6. builder_io_public_get_entry      - Get entry details
+# 7. builder_io_public_get_site_info  - Get site information
+# 8. builder_io_public_search_content - Search content
+# 9. builder_io_public_get_model_json - Get model JSON schema
+# 10. builder_io_public_list_namespaces - List content namespaces
+
+- slug: builder_io_public_list_pages
+  name: List Pages
+  description: |
+    List all pages in Builder.io (public).
+  provider: builder-io-public
+  endpoint: /api/v1/pages
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      limit:
+        type: integer
+        description: "Max pages to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: builder_io_public_get_page
+  name: Get Page
+  description: |
+    Get content for a specific page.
+  provider: builder-io-public
+  endpoint: /api/v1/pages/{pageIdOrPath}
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      pageIdOrPath:
+        type: string
+        description: "Page ID or URL path"
+    required:
+      - pageIdOrPath
+
+- slug: builder_io_public_list_models
+  name: List Models
+  description: |
+    List all content models in Builder.io.
+  provider: builder-io-public
+  endpoint: /api/v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: builder_io_public_get_model
+  name: Get Model
+  description: |
+    Get details for a specific content model.
+  provider: builder-io-public
+  endpoint: /api/v1/models/{modelId}
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+    required:
+      - modelId
+
+- slug: builder_io_public_list_entries
+  name: List Entries
+  description: |
+    List content entries for a model.
+  provider: builder-io-public
+  endpoint: /api/v1/entries/{modelId}
+  method: GET
+  scopes: []
+  tags:
+    - entries
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing entries
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+      limit:
+        type: integer
+        description: "Max entries to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - modelId
+
+- slug: builder_io_public_get_entry
+  name: Get Entry
+  description: |
+    Get details for a specific content entry.
+  provider: builder-io-public
+  endpoint: /api/v1/entries/{modelId}/{entryId}
+  method: GET
+  scopes: []
+  tags:
+    - entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an entry
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+      entryId:
+        type: string
+        description: "Entry ID"
+    required:
+      - modelId
+      - entryId
+
+- slug: builder_io_public_get_site_info
+  name: Get Site Info
+  description: |
+    Get site information and configuration.
+  provider: builder-builder-io-public
+  endpoint: /api/v1/site-info
+  method: GET
+  scopes: []
+  tags:
+    - site
+    - info
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: builder_io_public_search_content
+  name: Search Content
+  description: |
+    Search across Builder.io content.
+  provider: builder-io-public
+  endpoint: /api/v1/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - content
+  input_schema:
+    type: object
+    description: Parameters for searching content
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      model:
+        type: string
+        description: "Filter by model ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - query
+
+- slug: builder_io_public_get_model_json
+  name: Get Model JSON
+  description: |
+    Get the JSON schema for a content model.
+  provider: builder-io-public
+  endpoint: /api/v1/models/{modelId}/json
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for getting model JSON
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+    required:
+      - modelId
+
+- slug: builder_io_public_list_namespaces
+  name: List Namespaces
+  description: |
+    List content namespaces in Builder.io.
+  provider: builder-io-public
+  endpoint: /api/v1/namespaces
+  method: GET
+  scopes: []
+  tags:
+    - namespaces
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing namespaces
+    properties: {}
+    required: []

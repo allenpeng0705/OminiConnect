@@ -1,0 +1,266 @@
+# Nutshell Tools - Allowlist
+# Curated subset of Nutshell CRM REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nutshell_list_people       - List people in CRM
+# 2. nutshell_get_person        - Get person details
+# 3. nutshell_create_person     - Create a new person
+# 4. nutshell_list_companies    - List companies
+# 5. nutshell_get_company       - Get company details
+# 6. nutshell_list_deals        - List deals
+# 7. nutshell_get_deal          - Get deal details
+# 8. nutshell_create_deal       - Create a new deal
+# 9. nutshell_list_tasks        - List tasks
+# 10. nutshell_get_task         - Get task details
+
+- slug: nutshell_list_people
+  name: List People
+  description: |
+    List all people in the Nutshell CRM account.
+  provider: nutshell
+  endpoint: /api/people
+  method: GET
+  scopes:
+    - read
+  tags:
+    - people
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties:
+      company:
+        type: integer
+        description: "Filter by company ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: nutshell_get_person
+  name: Get Person
+  description: |
+    Get detailed information about a specific person.
+  provider: nutshell
+  endpoint: /api/people/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - people
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      id:
+        type: integer
+        description: "Person ID"
+    required:
+      - id
+
+- slug: nutshell_create_person
+  name: Create Person
+  description: |
+    Create a new person in Nutshell CRM.
+  provider: nutshell
+  endpoint: /api/people
+  method: POST
+  scopes:
+    - write
+  tags:
+    - people
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      name:
+        type: string
+        description: "Person name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: integer
+        description: "Associated company ID"
+    required:
+      - name
+
+- slug: nutshell_list_companies
+  name: List Companies
+  description: |
+    List all companies in the Nutshell CRM account.
+  provider: nutshell
+  endpoint: /api/companies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: nutshell_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+  provider: nutshell
+  endpoint: /api/companies/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: integer
+        description: "Company ID"
+    required:
+      - id
+
+- slug: nutshell_list_deals
+  name: List Deals
+  description: |
+    List all deals in the Nutshell CRM account.
+  provider: nutshell
+  endpoint: /api/deals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      status:
+        type: string
+        description: "Filter by deal status (open, won, lost)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: nutshell_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a specific deal.
+  provider: nutshell
+  endpoint: /api/deals/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: integer
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: nutshell_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in Nutshell CRM.
+  provider: nutshell
+  endpoint: /api/deals
+  method: POST
+  scopes:
+    - write
+  tags:
+    - deals
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      name:
+        type: string
+        description: "Deal name"
+      value:
+        type: number
+        description: "Deal value (amount)"
+      company_id:
+        type: integer
+        description: "Associated company ID"
+      contact_id:
+        type: integer
+        description: "Associated contact ID"
+    required:
+      - name
+
+- slug: nutshell_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in the Nutshell CRM account.
+  provider: nutshell
+  endpoint: /api/tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: nutshell_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task.
+  provider: nutshell
+  endpoint: /api/tasks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id

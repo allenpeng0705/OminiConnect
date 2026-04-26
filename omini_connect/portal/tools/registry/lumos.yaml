@@ -1,0 +1,272 @@
+# Lumos Tools - Allowlist
+# Curated subset of Lumos API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lumos_list_apps             - List all apps
+# 2. lumos_get_app               - Get app details
+# 3. lumos_list_users            - List users
+# 4. lumos_get_user              - Get user details
+# 5. lumos_list_requests         - List access requests
+# 6. lumos_get_request           - Get request details
+# 7. lumos_approve_request       - Approve access request
+# 8. lumos_deny_request           - Deny access request
+# 9. lumos_list_systems          - List systems
+# 10. lumos_get_system          - Get system details
+
+- slug: lumos_list_apps
+  name: List Apps
+  description: |
+    List all applications in Lumos.
+    Shows app name, description, and status.
+  provider: lumos
+  endpoint: /apps
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: lumos_get_app
+  name: Get App
+  description: |
+    Get detailed information about a specific application.
+  provider: lumos
+  endpoint: /apps/{appId}
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      appId:
+        type: string
+        description: "App ID"
+    required:
+      - appId
+
+- slug: lumos_list_users
+  name: List Users
+  description: |
+    List all users in Lumos.
+  provider: lumos
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+      app_id:
+        type: string
+        description: "Filter by app ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: lumos_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: lumos
+  endpoint: /users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: lumos_list_requests
+  name: List Requests
+  description: |
+    List all access requests in Lumos.
+    Filter by status, app, or requester.
+  provider: lumos
+  endpoint: /requests
+  method: GET
+  scopes: []
+  tags:
+    - requests
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing requests
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, approved, denied)"
+      app_id:
+        type: string
+        description: "Filter by app ID"
+      requester_id:
+        type: string
+        description: "Filter by requester ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: lumos_get_request
+  name: Get Request
+  description: |
+    Get detailed information about a specific request.
+  provider: lumos
+  endpoint: /requests/{requestId}
+  method: GET
+  scopes: []
+  tags:
+    - requests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a request
+    properties:
+      requestId:
+        type: string
+        description: "Request ID"
+    required:
+      - requestId
+
+- slug: lumos_approve_request
+  name: Approve Request
+  description: |
+    Approve an access request.
+  provider: lumos
+  endpoint: /requests/{requestId}/approve
+  method: POST
+  scopes: []
+  tags:
+    - requests
+    - approve
+  input_schema:
+    type: object
+    description: Parameters for approving a request
+    properties:
+      requestId:
+        type: string
+        description: "Request ID"
+      comment:
+        type: string
+        description: "Approval comment"
+    required:
+      - requestId
+
+- slug: lumos_deny_request
+  name: Deny Request
+  description: |
+    Deny an access request.
+  provider: lumos
+  endpoint: /requests/{requestId}/deny
+  method: POST
+  scopes: []
+  tags:
+    - requests
+    - deny
+  input_schema:
+    type: object
+    description: Parameters for denying a request
+    properties:
+      requestId:
+        type: string
+        description: "Request ID"
+      reason:
+        type: string
+        description: "Reason for denial"
+    required:
+      - requestId
+
+- slug: lumos_list_systems
+  name: List Systems
+  description: |
+    List all systems in Lumos.
+  provider: lumos
+  endpoint: /systems
+  method: GET
+  scopes: []
+  tags:
+    - systems
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing systems
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: lumos_get_system
+  name: Get System
+  description: |
+    Get detailed information about a specific system.
+  provider: lumos
+  endpoint: /systems/{systemId}
+  method: GET
+  scopes: []
+  tags:
+    - systems
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a system
+    properties:
+      systemId:
+        type: string
+        description: "System ID"
+    required:
+      - systemId

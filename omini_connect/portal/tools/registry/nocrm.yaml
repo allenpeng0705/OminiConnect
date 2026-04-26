@@ -1,0 +1,273 @@
+# nocrm Tools - Allowlist
+# Curated subset of nocrm.io API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nocrm_list_leads                 - List leads/opportunities
+# 2. nocrm_get_lead                  - Get lead details
+# 3. nocrm_create_lead               - Create new lead
+# 4. nocrm_update_lead               - Update lead
+# 5. nocrm_list_companies            - List companies
+# 6. nocrm_get_company              - Get company details
+# 7. nocrm_list_activities          - List activities
+# 8. nocrm_create_activity          - Create activity
+# 9. nocrm_list_tags                - List tags
+# 10. nocrm_get_pipeline           - Get sales pipeline
+
+- slug: nocrm_list_leads
+  name: List Leads
+  description: |
+    List all leads and opportunities in nocrm.
+  provider: nocrm
+  endpoint: /api/v2/leads
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - crm
+    - leads
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Items per page"
+        default: 20
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: nocrm_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information for a specific lead.
+  provider: nocrm
+  endpoint: /api/v2/leads/{id}
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - crm
+    - leads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: integer
+        description: "Lead ID"
+    required:
+      - id
+
+- slug: nocrm_create_lead
+  name: Create Lead
+  description: |
+    Create a new lead in nocrm.
+  provider: nocrm
+  endpoint: /api/v2/leads
+  method: POST
+  scopes:
+    - leads:write
+  tags:
+    - crm
+    - leads
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a lead
+    properties:
+      name:
+        type: string
+        description: "Lead name"
+      email:
+        type: string
+        description: "Lead email"
+      company_id:
+        type: integer
+        description: "Company ID"
+      pipeline_id:
+        type: integer
+        description: "Pipeline ID"
+      step_id:
+        type: integer
+        description: "Step ID"
+    required:
+      - name
+
+- slug: nocrm_update_lead
+  name: Update Lead
+  description: |
+    Update an existing lead.
+  provider: nocrm
+  endpoint: /api/v2/leads/{id}
+  method: PUT
+  scopes:
+    - leads:write
+  tags:
+    - crm
+    - leads
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a lead
+    properties:
+      id:
+        type: integer
+        description: "Lead ID"
+      name:
+        type: string
+        description: "Lead name"
+      status:
+        type: string
+        description: "Lead status"
+    required:
+      - id
+
+- slug: nocrm_list_companies
+  name: List Companies
+  description: |
+    List all companies in nocrm.
+  provider: nocrm
+  endpoint: /api/v2/companies
+  method: GET
+  scopes:
+    - companies:read
+  tags:
+    - crm
+    - companies
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: nocrm_get_company
+  name: Get Company
+  description: |
+    Get detailed information for a specific company.
+  provider: nocrm
+  endpoint: /api/v2/companies/{id}
+  method: GET
+  scopes:
+    - companies:read
+  tags:
+    - crm
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: integer
+        description: "Company ID"
+    required:
+      - id
+
+- slug: nocrm_list_activities
+  name: List Activities
+  description: |
+    List all activities (calls, emails, meetings).
+  provider: nocrm
+  endpoint: /api/v2/activities
+  method: GET
+  scopes:
+    - activities:read
+  tags:
+    - crm
+    - activities
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      lead_id:
+        type: integer
+        description: "Filter by lead ID"
+      type:
+        type: string
+        description: "Filter by activity type"
+    required: []
+
+- slug: nocrm_create_activity
+  name: Create Activity
+  description: |
+    Log a new activity for a lead.
+  provider: nocrm
+  endpoint: /api/v2/activities
+  method: POST
+  scopes:
+    - activities:write
+  tags:
+    - crm
+    - activities
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an activity
+    properties:
+      lead_id:
+        type: integer
+        description: "Lead ID"
+      type:
+        type: string
+        description: "Activity type (call, email, meeting)"
+      content:
+        type: string
+        description: "Activity description"
+    required:
+      - lead_id
+      - type
+      - content
+
+- slug: nocrm_list_tags
+  name: List Tags
+  description: |
+    List all tags used in nocrm.
+  provider: nocrm
+  endpoint: /api/v2/tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - crm
+    - tags
+    - segmentation
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: nocrm_get_pipeline
+  name: Get Pipeline
+  description: |
+    Get the sales pipeline configuration.
+  provider: nocrm
+  endpoint: /api/v2/pipelines
+  method: GET
+  scopes:
+    - pipelines:read
+  tags:
+    - crm
+    - pipeline
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for getting pipeline
+    properties: {}
+    required: []

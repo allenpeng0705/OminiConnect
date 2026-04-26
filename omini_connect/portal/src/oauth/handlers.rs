@@ -4,32 +4,35 @@ use std::sync::Arc;
 
 use axum::{
     extract::{Path, Query, State},
+    http::{HeaderMap, StatusCode},
     response::{IntoResponse, Redirect, Response},
-    http::StatusCode,
 };
 use uuid::Uuid;
 
 use omini_connect_oauth_vault::platform::{OAuth2Platform, PlatformConfig};
 
 use crate::app::AppState;
+use crate::auth::middleware::try_auth;
 use crate::auth::models::Session;
+use crate::connector_scope::oauth_vault_platform_key;
 use crate::oauth::models::OAuthCallbackQuery;
+use crate::portal_env::portal_base_url;
 
 /// Built-in OminiConnect OAuth vault platforms (`engine=omini_connect_native` only).
 const NATIVE_OAUTH_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork", "linkedin", "facebook", "x"];
 
-/// Base URL for the portal's OAuth callback.
-fn portal_base_url() -> String {
-    std::env::var("PORTAL_BASE_URL")
-        .unwrap_or_else(|_| "http://localhost:9000".to_string())
-}
-
-/// GET /auth/{platform} — initiate OAuth flow for a platform.
+/// GET /oauth/{platform} — initiate OAuth flow for a platform.
 pub async fn oauth_init(
     State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
     Path(platform): Path<String>,
 ) -> Response {
-    let config = match state.connectors.get(&platform).await {
+    let Some(auth) = try_auth(&state, &headers).await else {
+        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to connect OAuth").into_response();
+    };
+    let owner = auth.username.as_str();
+
+    let config = match state.connectors.get(owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
             return (StatusCode::BAD_REQUEST, "Connector not configured yet").into_response();
@@ -39,6 +42,9 @@ pub async fn oauth_init(
             return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
+    if !config.enabled {
+        return (StatusCode::FORBIDDEN, "Connector is disabled").into_response();
+    }
 
     if config.engine == "nango" {
         let Some((base, secret)) = crate::nango::nango_credentials() else {
@@ -56,14 +62,14 @@ pub async fn oauth_init(
             )
                 .into_response();
         }
-        let end_user_id = crate::nango::end_user_id_for_connector(&platform);
+        let end_user_id = crate::nango::end_user_id_for_connector(owner, &platform);
         let scopes_opt = if config.scopes.is_empty() {
             None
         } else {
             Some((integration_key, config.scopes.as_slice()))
         };
         let body = crate::nango::connect_session_body(&end_user_id, integration_key, scopes_opt);
-        return match crate::nango::create_connect_session(&base, &secret, &body).await {
+        return match crate::nango::create_connect_session(&base, &secret, &body, None).await {
             Ok(connect_link) => {
                 tracing::info!("Nango Connect session for {} → redirect", platform);
                 Redirect::to(&connect_link).into_response()
@@ -155,10 +161,16 @@ pub async fn oauth_init(
 /// GET /oauth/{platform}/callback — handle OAuth callback from platform.
 pub async fn oauth_callback(
     State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
     Path(platform): Path<String>,
     Query(query): Query<OAuthCallbackQuery>,
 ) -> Response {
-    let config = match state.connectors.get(&platform).await {
+    let Some(auth) = try_auth(&state, &headers).await else {
+        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to complete OAuth").into_response();
+    };
+    let owner = auth.username.as_str();
+
+    let config = match state.connectors.get(owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
             return (StatusCode::BAD_REQUEST, "Connector not configured").into_response();
@@ -168,6 +180,9 @@ pub async fn oauth_callback(
             return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
+    if !config.enabled {
+        return (StatusCode::FORBIDDEN, "Connector is disabled").into_response();
+    }
 
     if config.engine == "nango" {
         return (
@@ -251,7 +266,7 @@ pub async fn oauth_callback(
     };
 
     match token_result {
-        Ok(token) => {
+        Ok(mut token) => {
             if platform == "x" {
                 if let Some(st) = query.state.as_ref().filter(|s| !s.is_empty()) {
                     let pkce_sid = format!("oauth_pkce:{st}");
@@ -260,6 +275,7 @@ pub async fn oauth_callback(
                 }
             }
 
+            token.platform = oauth_vault_platform_key(owner, &platform);
             if let Err(e) = state.oauth_vault.store_token(token).await {
                 tracing::error!("Failed to store token for {}: {}", platform, e);
                 return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to store token").into_response();
@@ -275,8 +291,17 @@ pub async fn oauth_callback(
 }
 
 /// GET /oauth/{platform}/nango-finalize — after Nango Connect succeeds, persist `connection_ref` from Nango.
-pub async fn nango_finalize(State(state): State<Arc<AppState>>, Path(platform): Path<String>) -> Response {
-    let config = match state.connectors.get(&platform).await {
+pub async fn nango_finalize(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+    Path(platform): Path<String>,
+) -> Response {
+    let Some(auth) = try_auth(&state, &headers).await else {
+        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to finalize this connection").into_response();
+    };
+    let owner = auth.username.as_str();
+
+    let config = match state.connectors.get(owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
             return (StatusCode::BAD_REQUEST, "Connector not configured").into_response();
@@ -286,6 +311,9 @@ pub async fn nango_finalize(State(state): State<Arc<AppState>>, Path(platform): 
             return (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response();
         }
     };
+    if !config.enabled {
+        return (StatusCode::FORBIDDEN, "Connector is disabled").into_response();
+    }
 
     if config.engine != "nango" {
         return (StatusCode::BAD_REQUEST, "Connector engine is not nango").into_response();
@@ -304,7 +332,7 @@ pub async fn nango_finalize(State(state): State<Arc<AppState>>, Path(platform): 
         return (StatusCode::BAD_REQUEST, "provider_key is required").into_response();
     }
 
-    let end_user_id = crate::nango::end_user_id_for_connector(&platform);
+    let end_user_id = crate::nango::end_user_id_for_connector(owner, &platform);
     let connections = match crate::nango::list_connections(&base, &secret, &end_user_id, Some(integration_key)).await {
         Ok(c) => c,
         Err(e) => {
@@ -323,7 +351,7 @@ pub async fn nango_finalize(State(state): State<Arc<AppState>>, Path(platform): 
 
     let mut updated = config;
     updated.connection_ref = connection_id.clone();
-    if let Err(e) = state.connectors.upsert(&updated).await {
+    if let Err(e) = state.connectors.upsert(owner, &updated).await {
         tracing::error!("Failed to persist connection_ref: {}", e);
         return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to save connection").into_response();
     }

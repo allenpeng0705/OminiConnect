@@ -1,0 +1,326 @@
+# Mixpanel Tools - Allowlist
+# Curated subset of the Mixpanel APIs for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mixpanel_list_events         - List events in your project
+# 2. mixpanel_get_event          - Get details about a specific event
+# 3. mixpanel_track_event        - Track an event
+# 4. mixpanel_list_users         - List users matching criteria
+# 5. mixpanel_get_user           - Get user profile details
+# 6. mixpanel_get_funnel        - Get funnel analysis data
+# 7. mixpanel_get_retention      - Get retention analysis
+# 8. mixpanel_get_cohort         - Get cohort details
+# 9. mixpanel_get_engage_report  - Get engagement report
+# 10. mixpanel_get_jql_query     - Execute JQL query
+
+- slug: mixpanel_list_events
+  name: List Events
+  description: |
+    List all events in your Mixpanel project.
+    Returns event names and their occurrence counts over time.
+  provider: mixpanel
+  endpoint: /api/2.0/events/names
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      limit:
+        type: integer
+        description: "Max events to return (default 100)"
+        default: 100
+    required: []
+
+- slug: mixpanel_get_event
+  name: Get Event
+  description: |
+    Get detailed information about a specific event including property distributions.
+    Use this to understand event structure and common property values.
+  provider: mixpanel
+  endpoint: /api/2.0/events/properties
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - properties
+  input_schema:
+    type: object
+    description: Parameters for getting event details
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      event:
+        type: string
+        description: "Name of the event to inspect"
+      name:
+        type: string
+        description: "Property name to get details for"
+    required:
+      - event
+
+- slug: mixpanel_track_event
+  name: Track Event
+  description: |
+    Track an event. Events are actions users take in your application.
+    Include properties to add context and segment users.
+  provider: mixpanel
+  endpoint: /import
+  method: POST
+  scopes:
+    - track:write
+  tags:
+    - events
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for tracking an event
+    properties:
+      event:
+        type: string
+        description: "Event name (required)"
+      properties:
+        type: object
+        description: "Event properties including distinct_id, token, time"
+    required:
+      - event
+      - properties
+
+- slug: mixpanel_list_users
+  name: List Users
+  description: |
+    List users matching specific criteria or profile properties.
+    Use for audience segmentation and user research.
+  provider: mixpanel
+  endpoint: /api/2.0/engage
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - profiles
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      distinct_id:
+        type: string
+        description: "User distinct ID to lookup"
+      limit:
+        type: integer
+        description: "Max users to return (default 100)"
+        default: 100
+      where:
+        type: string
+        description: "JQL filter for user properties"
+    required: []
+
+- slug: mixpanel_get_user
+  name: Get User
+  description: |
+    Get a user profile with all associated properties and event history.
+    Use this for user research and debugging user-specific issues.
+  provider: mixpanel
+  endpoint: /api/2.0/engage/{distinct_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - profiles
+  input_schema:
+    type: object
+    description: Parameters for getting user profile
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      distinct_id:
+        type: string
+        description: "User's distinct ID (required)"
+    required:
+      - distinct_id
+
+- slug: mixpanel_get_funnel
+  name: Get Funnel
+  description: |
+    Get funnel analysis data. Funnels show conversion rates between steps.
+    Define steps by event names and time windows.
+  provider: mixpanel
+  endpoint: /api/2.0/funnels
+  method: POST
+  scopes:
+    - funnels:read
+  tags:
+    - funnels
+    - conversion
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for funnel analysis
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      steps:
+        type: array
+        items:
+          type: object
+        description: "Array of funnel step objects with event name and time window"
+      bucketed_by:
+        type: string
+        description: "Segment by property (e.g., browser, country)"
+    required:
+      - from_date
+      - to_date
+      - steps
+
+- slug: mixpanel_get_retention
+  name: Get Retention
+  description: |
+    Get retention analysis. Shows how users return over time after their first action.
+    Use to measure engagement and product stickiness.
+  provider: mixpanel
+  endpoint: /api/2.0/retention
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - retention
+    - engagement
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for retention analysis
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      event:
+        type: string
+        description: "Initial event to calculate retention from"
+      retention_type:
+        type: string
+        description: "Type: anything, first, repeat"
+        enum: [anything, first, repeat]
+        default: anything
+    required:
+      - from_date
+      - to_date
+      - event
+
+- slug: mixpanel_get_cohort
+  name: Get Cohort
+  description: |
+    Get details about a cohort including member count and properties.
+    Cohorts are groups of users sharing common characteristics.
+  provider: mixpanel
+  endpoint: /api/2.0/cohorts/{cohort_id}
+  method: GET
+  scopes:
+    - cohorts:read
+  tags:
+    - cohorts
+    - users
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for getting cohort details
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      cohort_id:
+        type: integer
+        description: "Cohort ID (required)"
+    required:
+      - cohort_id
+
+- slug: mixpanel_get_engage_report
+  name: Get Engage Report
+  description: |
+    Get an engagement report with metrics like DAU, MAU, and session stats.
+    Use for understanding user engagement trends over time.
+  provider: mixpanel
+  endpoint: /api/2.0/engage
+  method: POST
+  scopes:
+    - analytics:read
+  tags:
+    - engagement
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for engagement report
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      analysis:
+        type: object
+        description: "Analysis type and parameters"
+    required:
+      - from_date
+      - to_date
+
+- slug: mixpanel_get_jql_query
+  name: Get JQL Query
+  description: |
+    Execute a JQL (JavaScript Query Language) query to analyze event and user data.
+    Use for custom analysis not covered by standard APIs.
+  provider: mixpanel
+  endpoint: /api/2.0/jql
+  method: POST
+  scopes:
+    - analytics:read
+  tags:
+    - jql
+    - query
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for JQL query
+    properties:
+      project_id:
+        type: string
+        description: "Mixpanel project ID"
+      script:
+        type: string
+        description: "JQL script to execute (required)"
+      params:
+        type: object
+        description: "Parameters to pass to the JQL script"
+    required:
+      - script

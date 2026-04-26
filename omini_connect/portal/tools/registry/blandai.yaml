@@ -1,0 +1,260 @@
+# BlandAI Tools - Allowlist
+# Curated subset of Bland AI API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. blandai_list_calls         - List calls
+# 2. blandai_get_call           - Get call details
+# 3. blandai_create_call       - Create outbound call
+# 4. blandai_list_campaigns     - List campaigns
+# 5. blandai_get_campaign       - Get campaign details
+# 6. blandai_list_recordings    - List recordings
+# 7. blandai_get_recording     - Get recording details
+# 8. blandai_list_contacts     - List contacts
+# 9. blandai_get_contact       - Get contact details
+# 10. blandai_get_stats        - Get call statistics
+
+- slug: blandai_list_calls
+  name: List Calls
+  description: |
+    List all calls made through Bland AI.
+  provider: blandai
+  endpoint: /v1/calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - phone
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Calls per page"
+        default: 20
+    required: []
+
+- slug: blandai_get_call
+  name: Get Call
+  description: |
+    Get details for a specific call.
+  provider: blandai
+  endpoint: /v1/calls/{callId}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      callId:
+        type: string
+        description: "Call ID"
+    required:
+      - callId
+
+- slug: blandai_create_call
+  name: Create Call
+  description: |
+    Create an outbound call with AI voice.
+  provider: blandai
+  endpoint: /v1/calls
+  method: POST
+  scopes: []
+  tags:
+    - calls
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a call
+    properties:
+      phone_number:
+        type: string
+        description: "Recipient phone number"
+      from:
+        type: string
+        description: "Caller ID number"
+      task:
+        type: string
+        description: "Task description for AI"
+      voice:
+        type: string
+        description: "Voice ID to use"
+      background_track:
+        type: string
+        description: "Background audio URL"
+    required:
+      - phone_number
+      - task
+
+- slug: blandai_list_campaigns
+  name: List Campaigns
+  description: |
+    List all call campaigns.
+  provider: blandai
+  endpoint: /v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - phone
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Campaigns per page"
+        default: 20
+    required: []
+
+- slug: blandai_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: blandai
+  endpoint: /v1/campaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: blandai_list_recordings
+  name: List Recordings
+  description: |
+    List all call recordings.
+  provider: blandai
+  endpoint: /v1/recordings
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - calls
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      callId:
+        type: string
+        description: "Filter by call ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Recordings per page"
+        default: 20
+    required: []
+
+- slug: blandai_get_recording
+  name: Get Recording
+  description: |
+    Get details for a specific recording.
+  provider: blandai
+  endpoint: /v1/recordings/{recordingId}
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recordingId:
+        type: string
+        description: "Recording ID"
+    required:
+      - recordingId
+
+- slug: blandai_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Bland AI.
+  provider: blandai
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - phone
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Contacts per page"
+        default: 20
+    required: []
+
+- slug: blandai_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: blandai
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: blandai_get_stats
+  name: Get Stats
+  description: |
+    Get call statistics and analytics.
+  provider: blandai
+  endpoint: /v1/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

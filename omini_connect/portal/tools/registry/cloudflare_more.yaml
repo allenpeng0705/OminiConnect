@@ -1,0 +1,276 @@
+- slug: cloudflare_more_list_logpull_configs
+  name: List Logpull Configs
+  description: |
+    List all logpush configurations for a Cloudflare zone.
+  provider: cloudflare_more
+  endpoint: /zones/{zone_id}/logspush/ownership
+  method: GET
+  scopes:
+    - Zone Settings
+  tags:
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for listing logpull configs
+    properties:
+      zone_id:
+        type: string
+        description: "The zone ID"
+    required:
+      - zone_id
+
+- slug: cloudflare_more_get_logpull_config
+  name: Get Logpull Config
+  description: |
+    Get details for a specific logpush configuration.
+  provider: cloudflare_more
+  endpoint: /zones/{zone_id}/logspush/ownership/{job_id}
+  method: GET
+  scopes:
+    - Zone Settings
+  tags:
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for getting a logpull config
+    properties:
+      zone_id:
+        type: string
+        description: "The zone ID"
+      job_id:
+        type: integer
+        description: "The logpush job ID"
+    required:
+      - zone_id
+      - job_id
+
+- slug: cloudflare_more_update_logpull_config
+  name: Update Logpull Config
+  description: |
+    Update a logpush configuration to change destination or filters.
+  provider: cloudflare_more
+  endpoint: /zones/{zone_id}/logspush/ownership/{job_id}
+  method: PUT
+  scopes:
+    - Zone Settings
+  tags:
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for updating a logpull config
+    properties:
+      zone_id:
+        type: string
+        description: "The zone ID"
+      job_id:
+        type: integer
+        description: "The logpush job ID"
+      enabled:
+        type: boolean
+        description: "Enable or disable the logpush job"
+      destination_conf:
+        type: string
+        description: "Destination configuration (splunk, s3, etc.)"
+      filter:
+        type: string
+        description: "Log filter expression"
+    required:
+      - zone_id
+      - job_id
+
+- slug: cloudflare_more_list_stream_videos
+  name: List Stream Videos
+  description: |
+    List all videos in your Cloudflare Stream library.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/stream
+  method: GET
+  scopes:
+    - Cloudflare Stream
+  tags:
+    - videos
+  input_schema:
+    type: object
+    description: Parameters for listing stream videos
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      per_page:
+        type: integer
+        description: "Number of items per page (default: 25)"
+    required:
+      - account_id
+
+- slug: cloudflare_more_get_stream_video
+  name: Get Stream Video
+  description: |
+    Get details and metadata for a specific Cloudflare Stream video.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/stream/{video_id}
+  method: GET
+  scopes:
+    - Cloudflare Stream
+  tags:
+    - videos
+  input_schema:
+    type: object
+    description: Parameters for getting a stream video
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      video_id:
+        type: string
+        description: "The video ID"
+    required:
+      - account_id
+      - video_id
+
+- slug: cloudflare_more_upload_stream_video
+  name: Upload Stream Video
+  description: |
+    Upload a new video to Cloudflare Stream.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/stream
+  method: POST
+  scopes:
+    - Cloudflare Stream
+  tags:
+    - videos
+  input_schema:
+    type: object
+    description: Parameters for uploading a stream video
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      video_url:
+        type: string
+        description: "URL of the video to upload"
+      caption_url:
+        type: string
+        description: "URL of VTT caption file"
+      meta:
+        type: object
+        description: "Metadata key-value pairs"
+      require_signed_urls:
+        type: boolean
+        description: "Require signed URLs for playback"
+    required:
+      - account_id
+
+- slug: cloudflare_more_list_images
+  name: List Images
+  description: |
+    List all images in your Cloudflare Images storage.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/images/v1
+  method: GET
+  scopes:
+    - Cloudflare Images
+  tags:
+    - images
+  input_schema:
+    type: object
+    description: Parameters for listing images
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      page:
+        type: integer
+        description: "Page number (default: 1)"
+      per_page:
+        type: integer
+        description: "Items per page (default: 25, max: 100)"
+    required:
+      - account_id
+
+- slug: cloudflare_more_get_image
+  name: Get Image
+  description: |
+    Get metadata for a specific Cloudflare Images image.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/images/v1/{image_id}
+  method: GET
+  scopes:
+    - Cloudflare Images
+  tags:
+    - images
+  input_schema:
+    type: object
+    description: Parameters for getting an image
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      image_id:
+        type: string
+        description: "The image ID"
+    required:
+      - account_id
+      - image_id
+
+- slug: cloudflare_more_upload_image
+  name: Upload Image
+  description: |
+    Upload a new image to Cloudflare Images.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/images/v1
+  method: POST
+  scopes:
+    - Cloudflare Images
+  tags:
+    - images
+  input_schema:
+    type: object
+    description: Parameters for uploading an image
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      file:
+        type: string
+        description: "Base64 encoded image data or URL to image file"
+      name:
+        type: string
+        description: "Image identifier name"
+      require_signed_urls:
+        type: boolean
+        description: "Require signed URLs for access"
+      metadata:
+        type: object
+        description: "Custom metadata key-value pairs"
+    required:
+      - account_id
+
+- slug: cloudflare_more_list_workers
+  name: List Workers
+  description: |
+    List all Workers scripts deployed in your account.
+  provider: cloudflare_more
+  endpoint: /accounts/{account_id}/workers/scripts
+  method: GET
+  scopes:
+    - Cloudflare Workers
+  tags:
+    - workers
+  input_schema:
+    type: object
+    description: Parameters for listing workers
+    properties:
+      account_id:
+        type: string
+        description: "The account ID"
+      page:
+        type: integer
+        description: "Page number (default: 1)"
+      per_page:
+        type: integer
+        description: "Items per page (default: 25)"
+    required:
+      - account_id

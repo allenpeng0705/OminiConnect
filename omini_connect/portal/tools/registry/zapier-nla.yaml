@@ -1,0 +1,187 @@
+# Zapier NLA Tools - Allowlist
+# Curated subset of Zapier NLA API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zapier_list_zaps           - List all Zaps
+# # 2. zapier_get_zap           - Get Zap details
+# # 3. zapier_trigger_zap           - Trigger a Zap
+# # 4. zapier_list_actions           - List available actions
+# # 5. zapier_perform_action           - Perform an action
+# # 6. zapier_list_searches           - List available searches
+# # 7. zapier_perform_search           - Perform a search
+# # 8. zapier_list_history           - List Zap run history
+# # 9. zapier_get_run           - Get Zap run details
+# # 10. zapier_get_me           - Get user info
+
+- slug: zapier_list_zaps
+  name: List Zaps
+  description: |
+    List all Zaps
+  provider: zapier-nla
+  endpoint: /zaps
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for list zaps
+    properties: {}
+    required: []
+
+- slug: zapier_get_zap
+  name: Get Zap
+  description: |
+    Get Zap details
+  provider: zapier-nla
+  endpoint: /zaps/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for get zap
+    properties: {}
+    required: []
+
+- slug: zapier_trigger_zap
+  name: Trigger Zap
+  description: |
+    Trigger a Zap
+  provider: zapier-nla
+  endpoint: /zaps/{id}/trigger
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for trigger zap
+    properties: {}
+    required: []
+
+- slug: zapier_list_actions
+  name: List Actions
+  description: |
+    List available actions
+  provider: zapier-nla
+  endpoint: /actions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for list actions
+    properties: {}
+    required: []
+
+- slug: zapier_perform_action
+  name: Perform Action
+  description: |
+    Perform an action
+  provider: zapier-nla
+  endpoint: /actions/perform
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for perform action
+    properties: {}
+    required: []
+
+- slug: zapier_list_searches
+  name: List Searches
+  description: |
+    List available searches
+  provider: zapier-nla
+  endpoint: /searches
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for list searches
+    properties: {}
+    required: []
+
+- slug: zapier_perform_search
+  name: Perform Search
+  description: |
+    Perform a search
+  provider: zapier-nla
+  endpoint: /searches/perform
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for perform search
+    properties: {}
+    required: []
+
+- slug: zapier_list_history
+  name: List History
+  description: |
+    List Zap run history
+  provider: zapier-nla
+  endpoint: /history
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for list history
+    properties: {}
+    required: []
+
+- slug: zapier_get_run
+  name: Get Run
+  description: |
+    Get Zap run details
+  provider: zapier-nla
+  endpoint: /history/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for get run
+    properties: {}
+    required: []
+
+- slug: zapier_get_me
+  name: Get Me
+  description: |
+    Get user info
+  provider: zapier-nla
+  endpoint: /me
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zapier-nla
+  input_schema:
+    type: object
+    description: Parameters for get me
+    properties: {}
+    required: []
+

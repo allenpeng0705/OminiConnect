@@ -1,0 +1,234 @@
+# Certn Tools - Allowlist
+# Curated subset of the Certn API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. certn_list_teams                  - List teams
+# 2. certn_get_team                    - Get team details
+# 3. certn_list_applicants             - List applicants
+# 4. certn_get_applicant               - Get applicant details
+# 5. certn_list_background_checks      - List background checks
+# 6. certn_get_background_check        - Get background check details
+# 7. certn_create_background_check     - Create a background check
+# 8. certn_list_reports                - List reports
+# 9. certn_get_report                 - Get report details
+# 10. certn_list_invites              - List invites
+
+- slug: certn_list_teams
+  name: List Teams
+  description: |
+    List all teams in the account.
+  provider: certn
+  endpoint: /api/v2/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: certn_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team.
+  provider: certn
+  endpoint: /api/v2/teams/{id}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: string
+        description: "Team ID"
+    required:
+      - id
+
+- slug: certn_list_applicants
+  name: List Applicants
+  description: |
+    List all applicants in a team.
+  provider: certn
+  endpoint: /api/v2/teams/{teamId}/applicants
+  method: GET
+  scopes: []
+  tags:
+    - applicants
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing applicants
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - teamId
+
+- slug: certn_get_applicant
+  name: Get Applicant
+  description: |
+    Get details of a specific applicant.
+  provider: certn
+  endpoint: /api/v2/applicants/{id}
+  method: GET
+  scopes: []
+  tags:
+    - applicants
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an applicant
+    properties:
+      id:
+        type: string
+        description: "Applicant ID"
+    required:
+      - id
+
+- slug: certn_list_background_checks
+  name: List Background Checks
+  description: |
+    List all background checks for an applicant.
+  provider: certn
+  endpoint: /api/v2/applicants/{applicantId}/background-checks
+  method: GET
+  scopes: []
+  tags:
+    - background-checks
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing background checks
+    properties:
+      applicantId:
+        type: string
+        description: "Applicant ID"
+    required:
+      - applicantId
+
+- slug: certn_get_background_check
+  name: Get Background Check
+  description: |
+    Get details of a specific background check.
+  provider: certn
+  endpoint: /api/v2/background-checks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - background-checks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a background check
+    properties:
+      id:
+        type: string
+        description: "Background check ID"
+    required:
+      - id
+
+- slug: certn_create_background_check
+  name: Create Background Check
+  description: |
+    Create a new background check for an applicant.
+  provider: certn
+  endpoint: /api/v2/applicants/{applicantId}/background-checks
+  method: POST
+  scopes: []
+  tags:
+    - background-checks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a background check
+    properties:
+      applicantId:
+        type: string
+        description: "Applicant ID"
+      check_type:
+        type: string
+        description: "Type of background check"
+    required:
+      - applicantId
+      - check_type
+
+- slug: certn_list_reports
+  name: List Reports
+  description: |
+    List all reports for a background check.
+  provider: certn
+  endpoint: /api/v2/background-checks/{checkId}/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      checkId:
+        type: string
+        description: "Background check ID"
+    required:
+      - checkId
+
+- slug: certn_get_report
+  name: Get Report
+  description: |
+    Get details of a specific report.
+  provider: certn
+  endpoint: /api/v2/reports/{id}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      id:
+        type: string
+        description: "Report ID"
+    required:
+      - id
+
+- slug: certn_list_invites
+  name: List Invites
+  description: |
+    List all invites for a team.
+  provider: certn
+  endpoint: /api/v2/teams/{teamId}/invites
+  method: GET
+  scopes: []
+  tags:
+    - invites
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing invites
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId

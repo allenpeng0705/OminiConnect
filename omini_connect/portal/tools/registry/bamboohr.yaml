@@ -1,0 +1,316 @@
+# BambooHR Tools - Allowlist
+# Curated subset of the BambooHR API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bamboohr_list_employees          - List all employees
+# 2. bamboohr_get_employee             - Get employee details
+# 3. bamboohr_create_employee          - Create new employee
+# 4. bamboohr_list_jobs               - List job openings
+# 5. bamboohr_get_job                 - Get job posting details
+# 6. bamboohr_list_time_off           - List time off requests
+# 7. bamboohr_get_time_off_request    - Get time off request details
+# 8. bamboohr_create_time_off_request - Submit time off request
+# 9. bamboohr_list_benefits            - List benefit enrollment
+# 10. bamboohr_get_benefit            - Get benefit details
+
+- slug: bamboohr_list_employees
+  name: List Employees
+  description: |
+    List all employees with optional filters for status, department, or location.
+    Returns employee names, titles, departments, and contact information.
+  provider: bamboohr
+  endpoint: /employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by status: A (active), I (inactive)"
+        enum: [A, I]
+        default: A
+      department:
+        type: string
+        description: "Filter by department ID"
+      location:
+        type: string
+        description: "Filter by location"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required: []
+
+- slug: bamboohr_get_employee
+  name: Get Employee
+  description: |
+    Get detailed employee information including personal info, job details,
+    compensation, manager, and employment history.
+  provider: bamboohr
+  endpoint: /employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required:
+      - employee_id
+
+- slug: bamboohr_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee record with name, job info, start date, and personal details.
+    New employees are added to the directory and can be assigned to departments.
+  provider: bamboohr
+  endpoint: /employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - create
+    - hr
+  input_schema:
+    type: object
+    description: Employee creation parameters
+    properties:
+      firstName:
+        type: string
+        description: "First name (required)"
+      lastName:
+        type: string
+        description: "Last name (required)"
+      workEmail:
+        type: string
+        description: "Work email address"
+      department:
+        type: string
+        description: "Department ID"
+      hireDate:
+        type: string
+        description: "Hire date (YYYY-MM-DD)"
+      employmentHistoryStatus:
+        type: string
+        description: "Employment type: FullTime, PartTime, Contractor"
+        default: FullTime
+    required:
+      - firstName
+      - lastName
+
+- slug: bamboohr_list_jobs
+  name: List Jobs
+  description: |
+    List all job openings with optional filters for status or department.
+    Returns job titles, descriptions, locations, and employment status.
+  provider: bamboohr
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - openings
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed"
+      department:
+        type: string
+        description: "Filter by department ID"
+    required: []
+
+- slug: bamboohr_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job posting including full description,
+    requirements, location, department, and salary range if available.
+  provider: bamboohr
+  endpoint: /jobs/{job_id}
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - jobs
+    - openings
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: bamboohr_list_time_off
+  name: List Time Off
+  description: |
+    List time off requests with optional filters for employee, status, or date range.
+    Returns request details, approval status, and time-off balances.
+  provider: bamboohr
+  endpoint: /time_off/requests
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - requests
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      status:
+        type: string
+        description: "Filter by status: approved, denied, pending, canceled"
+      start:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      end:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+      type:
+        type: string
+        description: "Time off type: Vacation, Sick, Personal, etc."
+    required: []
+
+- slug: bamboohr_get_time_off_request
+  name: Get Time Off Request
+  description: |
+    Get detailed information about a specific time off request including
+    dates, type, notes, approval history, and current status.
+  provider: bamboohr
+  endpoint: /time_off/requests/{request_id}
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - requests
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting a time off request
+    properties:
+      request_id:
+        type: string
+        description: "Time off request ID"
+    required:
+      - request_id
+
+- slug: bamboohr_create_time_off_request
+  name: Create Time Off Request
+  description: |
+    Submit a new time off request for an employee with start date, end date, and type.
+    Request will be sent for approval to the employee's manager.
+  provider: bamboohr
+  endpoint: /time_off/requests
+  method: POST
+  scopes:
+    - time_off:write
+  tags:
+    - time_off
+    - requests
+    - create
+    - hr
+  input_schema:
+    type: object
+    description: Time off request parameters
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID (required)"
+      start:
+        type: string
+        description: "Start date YYYY-MM-DD (required)"
+      end:
+        type: string
+        description: "End date YYYY-MM-DD (required)"
+      type:
+        type: string
+        description: "Time off type: Vacation, Sick, Personal (required)"
+      notes:
+        type: string
+        description: "Optional notes for the request"
+    required:
+      - employeeId
+      - start
+      - end
+      - type
+
+- slug: bamboohr_list_benefits
+  name: List Benefits
+  description: |
+    List benefit enrollments for an employee or all employees with optional filters.
+    Returns benefit plans, coverage levels, and enrollment status.
+  provider: bamboohr
+  endpoint: /benefits
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - benefits
+    - hr
+    - insurance
+  input_schema:
+    type: object
+    description: Parameters for listing benefits
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      benefit_type:
+        type: string
+        description: "Filter by benefit type: health, dental, vision, 401k, etc."
+    required: []
+
+- slug: bamboohr_get_benefit
+  name: Get Benefit
+  description: |
+    Get detailed information about a specific benefit enrollment including
+    coverage details, costs, provider information, and enrollment dates.
+  provider: bamboohr
+  endpoint: /benefits/{benefit_id}
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - benefits
+    - hr
+    - insurance
+  input_schema:
+    type: object
+    description: Parameters for getting a benefit
+    properties:
+      benefit_id:
+        type: string
+        description: "Benefit enrollment ID"
+    required:
+      - benefit_id

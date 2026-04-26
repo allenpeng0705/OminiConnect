@@ -1,0 +1,255 @@
+# Builder.io (Private) Tools - Allowlist
+# Curated subset of Builder.io Content API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. builder_io_private_list_pages     - List pages
+# 2. builder_io_private_get_page      - Get page content
+# 3. builder_io_private_create_page   - Create a page
+# 4. builder_io_private_update_page   - Update a page
+# 5. builder_io_private_delete_page   - Delete a page
+# 6. builder_io_private_list_models   - List content models
+# 7. builder_io_private_get_model    - Get model details
+# 8. builder_io_private_list_entries - List content entries
+# 9. builder_io_private_get_entry    - Get entry details
+# 10. builder_io_private_create_entry - Create content entry
+
+- slug: builder_io_private_list_pages
+  name: List Pages
+  description: |
+    List all pages in Builder.io.
+  provider: builder-io-private
+  endpoint: /api/v1/pages
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      limit:
+        type: integer
+        description: "Max pages to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: builder_io_private_get_page
+  name: Get Page
+  description: |
+    Get content for a specific page.
+  provider: builder-io-private
+  endpoint: /api/v1/pages/{pageId}
+  method: GET
+  scopes: []
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+    required:
+      - pageId
+
+- slug: builder_io_private_create_page
+  name: Create Page
+  description: |
+    Create a new page in Builder.io.
+  provider: builder-io-private
+  endpoint: /api/v1/pages
+  method: POST
+  scopes: []
+  tags:
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      name:
+        type: string
+        description: "Page name"
+      slug:
+        type: string
+        description: "URL slug"
+      content:
+        type: object
+        description: "Page content (JSON)"
+    required:
+      - name
+      - slug
+
+- slug: builder_io_private_update_page
+  name: Update Page
+  description: |
+    Update an existing page.
+  provider: builder-io-private
+  endpoint: /api/v1/pages/{pageId}
+  method: PUT
+  scopes: []
+  tags:
+    - pages
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+      name:
+        type: string
+        description: "Page name"
+      content:
+        type: object
+        description: "Page content (JSON)"
+    required:
+      - pageId
+
+- slug: builder_io_private_delete_page
+  name: Delete Page
+  description: |
+    Delete a page from Builder.io.
+  provider: builder-io-private
+  endpoint: /api/v1/pages/{pageId}
+  method: DELETE
+  scopes: []
+  tags:
+    - pages
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a page
+    properties:
+      pageId:
+        type: string
+        description: "Page ID"
+    required:
+      - pageId
+
+- slug: builder_io_private_list_models
+  name: List Models
+  description: |
+    List all content models in Builder.io.
+  provider: builder-io-private
+  endpoint: /api/v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: builder_io_private_get_model
+  name: Get Model
+  description: |
+    Get details for a specific content model.
+  provider: builder-io-private
+  endpoint: /api/v1/models/{modelId}
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+    required:
+      - modelId
+
+- slug: builder_io_private_list_entries
+  name: List Entries
+  description: |
+    List content entries for a model.
+  provider: builder-io-private
+  endpoint: /api/v1/entries/{modelId}
+  method: GET
+  scopes: []
+  tags:
+    - entries
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing entries
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+      limit:
+        type: integer
+        description: "Max entries to return"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - modelId
+
+- slug: builder_io_private_get_entry
+  name: Get Entry
+  description: |
+    Get details for a specific content entry.
+  provider: builder-io-private
+  endpoint: /api/v1/entries/{modelId}/{entryId}
+  method: GET
+  scopes: []
+  tags:
+    - entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an entry
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+      entryId:
+        type: string
+        description: "Entry ID"
+    required:
+      - modelId
+      - entryId
+
+- slug: builder_io_private_create_entry
+  name: Create Entry
+  description: |
+    Create a new content entry.
+  provider: builder-io-private
+  endpoint: /api/v1/entries/{modelId}
+  method: POST
+  scopes: []
+  tags:
+    - entries
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an entry
+    properties:
+      modelId:
+        type: string
+        description: "Model ID"
+      data:
+        type: object
+        description: "Entry data (JSON)"
+    required:
+      - modelId
+      - data

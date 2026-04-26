@@ -1,0 +1,252 @@
+# Help Scout Docs Tools - Allowlist
+# Curated subset of Help Scout Docs API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. helpscout_docs_list_articles  - List articles
+# 2. helpscout_docs_get_article    - Get article details
+# 3. helpscout_docs_list_collections - List collections
+# 4. helpscout_docs_get_collection - Get collection details
+# 5. helpscout_docs_list_sites    - List sites
+# 6. helpscout_docs_get_site      - Get site details
+# 7. helpscout_docs_list_categories - List categories
+# 8. helpscout_docs_get_category   - Get category details
+# 9. helpscout_docs_search_articles - Search articles
+# 10. helpscout_docs_list_users     - List users
+
+- slug: helpscout_docs_list_articles
+  name: List Articles
+  description: |
+    List all articles in Help Scout Docs.
+    Returns article details including title, status, and visibility.
+  provider: helpscout-docs
+  endpoint: /articles
+  method: GET
+  scopes:
+    - read
+  tags:
+    - articles
+    - list
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing articles
+    properties:
+      site_id:
+        type: integer
+        description: "Filter by site ID"
+      collection_id:
+        type: integer
+        description: "Filter by collection ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: helpscout_docs_get_article
+  name: Get Article
+  description: |
+    Get detailed information about a specific article.
+    Includes article content, metadata, and related articles.
+  provider: helpscout-docs
+  endpoint: /articles/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - articles
+    - read
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for getting an article
+    properties:
+      id:
+        type: integer
+        description: "Article ID"
+    required:
+      - id
+
+- slug: helpscout_docs_list_collections
+  name: List Collections
+  description: |
+    List all collections in Help Scout Docs.
+    Returns collection details including name and article count.
+  provider: helpscout-docs
+  endpoint: /collections
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+    - list
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      site_id:
+        type: integer
+        description: "Filter by site ID"
+    required: []
+
+- slug: helpscout_docs_get_collection
+  name: Get Collection
+  description: |
+    Get detailed information about a specific collection.
+    Includes collection details and articles.
+  provider: helpscout-docs
+  endpoint: /collections/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+    - read
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for getting a collection
+    properties:
+      id:
+        type: integer
+        description: "Collection ID"
+    required:
+      - id
+
+- slug: helpscout_docs_list_sites
+  name: List Sites
+  description: |
+    List all sites in Help Scout Docs.
+    Returns site details including name and domain.
+  provider: helpscout-docs
+  endpoint: /sites
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sites
+    - list
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties: {}
+    required: []
+
+- slug: helpscout_docs_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a specific site.
+    Includes site settings and collections.
+  provider: helpscout-docs
+  endpoint: /sites/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sites
+    - read
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      id:
+        type: integer
+        description: "Site ID"
+    required:
+      - id
+
+- slug: helpscout_docs_list_categories
+  name: List Categories
+  description: |
+    List all categories in Help Scout Docs.
+    Returns category details including name and parent.
+  provider: helpscout-docs
+  endpoint: /categories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+    - list
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties:
+      collection_id:
+        type: integer
+        description: "Filter by collection ID"
+    required: []
+
+- slug: helpscout_docs_get_category
+  name: Get Category
+  description: |
+    Get detailed information about a specific category.
+    Includes category details and articles.
+  provider: helpscout-docs
+  endpoint: /categories/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - categories
+    - read
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      id:
+        type: integer
+        description: "Category ID"
+    required:
+      - id
+
+- slug: helpscout_docs_search_articles
+  name: Search Articles
+  description: |
+    Search for articles matching a query.
+    Searches article titles and content.
+  provider: helpscout-docs
+  endpoint: /articles/search
+  method: GET
+  scopes:
+    - read
+  tags:
+    - articles
+    - search
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for searching articles
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query
+
+- slug: helpscout_docs_list_users
+  name: List Users
+  description: |
+    List all users in Help Scout Docs.
+    Returns user details including name and email.
+  provider: helpscout-docs
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []

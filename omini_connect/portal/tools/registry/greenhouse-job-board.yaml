@@ -1,0 +1,276 @@
+# Greenhouse Job Board Tools - Allowlist
+# Curated subset of Greenhouse Job Board API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_list_board_jobs    - List board jobs
+# 2. greenhouse_get_board_job      - Get board job details
+# 3. greenhouse_list_job_questions - List job questions
+# 4. greenhouse_get_job_question   - Get job question details
+# 5. greenhouse_list_departments   - List departments
+# 6. greenhouse_get_department     - Get department details
+# 7. greenhouse_list_offices       - List offices
+# 8. greenhouse_get_office         - Get office details
+# 9. greenhouse_list_employees     - List employees
+# 10. greenhouse_get_employee       - Get employee details
+
+- slug: greenhouse_list_board_jobs
+  name: List Board Jobs
+  description: |
+    List all jobs on the job board.
+    Returns job details including title, location, and department.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+    - job_board
+  input_schema:
+    type: object
+    description: Parameters for listing board jobs
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      content:
+        type: string
+        description: "Content format: full or minimal"
+        default: full
+    required:
+      - boardToken
+
+- slug: greenhouse_get_board_job
+  name: Get Board Job
+  description: |
+    Get detailed information about a specific job.
+    Includes job description, requirements, and application URL.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/jobs/{jobId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+    - job_board
+  input_schema:
+    type: object
+    description: Parameters for getting a board job
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      jobId:
+        type: integer
+        description: "Job ID"
+    required:
+      - boardToken
+      - jobId
+
+- slug: greenhouse_list_job_questions
+  name: List Job Questions
+  description: |
+    List all questions for a job.
+    Returns question details including type and options.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/jobs/{jobId}/questions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - questions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing job questions
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      jobId:
+        type: integer
+        description: "Job ID"
+    required:
+      - boardToken
+      - jobId
+
+- slug: greenhouse_get_job_question
+  name: Get Job Question
+  description: |
+    Get detailed information about a job question.
+    Includes question text, type, and answer options.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/questions/{questionId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - questions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job question
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      questionId:
+        type: integer
+        description: "Question ID"
+    required:
+      - boardToken
+      - questionId
+
+- slug: greenhouse_list_departments
+  name: List Departments
+  description: |
+    List all departments on the job board.
+    Returns department details including name and child departments.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+    required:
+      - boardToken
+
+- slug: greenhouse_get_department
+  name: Get Department
+  description: |
+    Get detailed information about a department.
+    Includes department jobs and child departments.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/departments/{departmentId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      departmentId:
+        type: integer
+        description: "Department ID"
+    required:
+      - boardToken
+      - departmentId
+
+- slug: greenhouse_list_offices
+  name: List Offices
+  description: |
+    List all offices on the job board.
+    Returns office details including location and department.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/offices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offices
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+    required:
+      - boardToken
+
+- slug: greenhouse_get_office
+  name: Get Office
+  description: |
+    Get detailed information about an office.
+    Includes office location and job listings.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/offices/{officeId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an office
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      officeId:
+        type: integer
+        description: "Office ID"
+    required:
+      - boardToken
+      - officeId
+
+- slug: greenhouse_list_employees
+  name: List Employees
+  description: |
+    List all employees on the job board.
+    Returns employee details including name and department.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+    required:
+      - boardToken
+
+- slug: greenhouse_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about an employee.
+    Includes employee bio and department.
+  provider: greenhouse-job-board
+  endpoint: /v1/boards/{boardToken}/employees/{employeeId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      boardToken:
+        type: string
+        description: "Board token"
+      employeeId:
+        type: integer
+        description: "Employee ID"
+    required:
+      - boardToken
+      - employeeId

@@ -1,0 +1,270 @@
+# Sage-people Tools - Allowlist
+# Curated subset of Sage People API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sage-people_list_people             - List all people
+# 2. sage-people_get_person               - Get person details
+# 3. sage-people_create_person           - Create a person
+# 4. sage-people_list_leave_balances      - List leave balances
+# 5. sage-people_list_leave_requests      - List leave requests
+# 6. sage-people_create_leave_request     - Create leave request
+# 7. sage-people_list_compensation       - List compensation records
+# 8. sage-people_list_benefits            - List benefit plans
+# 9. sage-people_get_org_chart            - Get organization chart
+# 10. sage-people_list_employees_by_role - List employees by role
+
+- slug: sage-people_list_people
+  name: List People
+  description: |
+    Retrieve a list of all people in Sage People.
+  provider: sage-people
+  endpoint: /v1/people
+  method: GET
+  scopes:
+    - people:read
+  tags:
+    - people
+    - hr
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties:
+      limit:
+        type: integer
+        description: "Number of people"
+        default: 50
+      departmentId:
+        type: string
+        description: "Filter by department"
+    required: []
+
+- slug: sage-people_get_person
+  name: Get Person
+  description: |
+    Get details of a specific person.
+  provider: sage-people
+  endpoint: /v1/people/{personId}
+  method: GET
+  scopes:
+    - people:read
+  tags:
+    - people
+    - hr
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      personId:
+        type: string
+        description: "The person ID"
+    required:
+      - personId
+
+- slug: sage-people_create_person
+  name: Create Person
+  description: |
+    Create a new person in Sage People.
+  provider: sage-people
+  endpoint: /v1/people
+  method: POST
+  scopes:
+    - people:write
+  tags:
+    - people
+    - hr
+    - employees
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      departmentId:
+        type: string
+        description: "Department ID"
+    required:
+      - firstName
+      - lastName
+      - email
+
+- slug: sage-people_list_leave_balances
+  name: List Leave Balances
+  description: |
+    Retrieve leave balances for all people.
+  provider: sage-people
+  endpoint: /v1/leave-balances
+  method: GET
+  scopes:
+    - leave:read
+  tags:
+    - leave
+    - hr
+    - balances
+  input_schema:
+    type: object
+    description: Parameters for listing leave balances
+    properties:
+      personId:
+        type: string
+        description: "Filter by person ID"
+    required: []
+
+- slug: sage-people_list_leave_requests
+  name: List Leave Requests
+  description: |
+    Retrieve a list of leave requests.
+  provider: sage-people
+  endpoint: /v1/leave-requests
+  method: GET
+  scopes:
+    - leave:read
+  tags:
+    - leave
+    - hr
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for listing leave requests
+    properties:
+      limit:
+        type: integer
+        description: "Number of requests"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: pending, approved, denied"
+    required: []
+
+- slug: sage-people_create_leave_request
+  name: Create Leave Request
+  description: |
+    Create a new leave request.
+  provider: sage-people
+  endpoint: /v1/leave-requests
+  method: POST
+  scopes:
+    - leave:write
+  tags:
+    - leave
+    - hr
+    - requests
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a leave request
+    properties:
+      personId:
+        type: string
+        description: "Person ID"
+      leaveType:
+        type: string
+        description: "Type of leave"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required:
+      - personId
+      - leaveType
+      - startDate
+
+- slug: sage-people_list_compensation
+  name: List Compensation
+  description: |
+    Retrieve compensation records.
+  provider: sage-people
+  endpoint: /v1/compensation
+  method: GET
+  scopes:
+    - compensation:read
+  tags:
+    - compensation
+    - hr
+    - payroll
+  input_schema:
+    type: object
+    description: Parameters for listing compensation
+    properties:
+      personId:
+        type: string
+        description: "Filter by person ID"
+    required: []
+
+- slug: sage-people_list_benefits
+  name: List Benefits
+  description: |
+    Retrieve a list of benefit plans.
+  provider: sage-people
+  endpoint: /v1/benefits
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - benefits
+    - hr
+    - plans
+  input_schema:
+    type: object
+    description: Parameters for listing benefits
+    properties:
+      limit:
+        type: integer
+        description: "Number of plans"
+        default: 50
+    required: []
+
+- slug: sage-people_get_org_chart
+  name: Get Org Chart
+  description: |
+    Get the organization chart.
+  provider: sage-people
+  endpoint: /v1/org-chart
+  method: GET
+  scopes:
+    - org:read
+  tags:
+    - org-chart
+    - organization
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for getting org chart
+    properties: {}
+    required: []
+
+- slug: sage-people_list_employees_by_role
+  name: List Employees by Role
+  description: |
+    Retrieve employees filtered by role.
+  provider: sage-people
+  endpoint: /v1/people/by-role
+  method: GET
+  scopes:
+    - people:read
+  tags:
+    - people
+    - hr
+    - roles
+  input_schema:
+    type: object
+    description: Parameters for listing by role
+    properties:
+      roleId:
+        type: string
+        description: "Role ID"
+    required:
+      - roleId

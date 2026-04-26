@@ -1,0 +1,277 @@
+# Microsoft Teams Tools - Allowlist
+# Curated subset of Microsoft Teams API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. teams_list_teams             - List teams
+# 2. teams_get_team               - Get team details
+# 3. teams_list_channels         - List channels in a team
+# 4. teams_get_channel            - Get channel details
+# 5. teams_list_messages         - List messages in a channel
+# 6. teams_get_message            - Get message details
+# 7. teams_send_message          - Send a message
+# 8. teams_list_members          - List team members
+# 9. teams_add_member            - Add a member to team
+# 10. teams_list_meetings       - List meetings
+
+- slug: teams_list_teams
+  name: List Teams
+  description: |
+    List all Microsoft Teams accessible to the user.
+  provider: microsoft-teams
+  endpoint: /v1.0/me/joinedTeams
+  method: GET
+  scopes:
+    - Team.Read.All
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: teams_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}
+  method: GET
+  scopes:
+    - Team.Read.All
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: teams_list_channels
+  name: List Channels
+  description: |
+    List all channels in a team.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/channels
+  method: GET
+  scopes:
+    - Channel.Read.All
+  tags:
+    - channels
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: teams_get_channel
+  name: Get Channel
+  description: |
+    Get details of a specific channel.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/channels/{channelId}
+  method: GET
+  scopes:
+    - Channel.Read.All
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      channelId:
+        type: string
+        description: "Channel ID"
+    required:
+      - teamId
+      - channelId
+
+- slug: teams_list_messages
+  name: List Messages
+  description: |
+    List messages in a channel.
+    Filter by date or sender.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/channels/{channelId}/messages
+  method: GET
+  scopes:
+    - ChannelMessage.Read.All
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      channelId:
+        type: string
+        description: "Channel ID"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required:
+      - teamId
+      - channelId
+
+- slug: teams_get_message
+  name: Get Message
+  description: |
+    Get details of a specific message.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/channels/{channelId}/messages/{messageId}
+  method: GET
+  scopes:
+    - ChannelMessage.Read.All
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      channelId:
+        type: string
+        description: "Channel ID"
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - teamId
+      - channelId
+      - messageId
+
+- slug: teams_send_message
+  name: Send Message
+  description: |
+    Send a message to a channel.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/channels/{channelId}/messages
+  method: POST
+  scopes:
+    - ChannelMessage.Send
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      channelId:
+        type: string
+        description: "Channel ID"
+      body:
+        type: string
+        description: "Message content"
+    required:
+      - teamId
+      - channelId
+      - body
+
+- slug: teams_list_members
+  name: List Members
+  description: |
+    List all members of a team.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/members
+  method: GET
+  scopes:
+    - TeamMember.Read.All
+  tags:
+    - members
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: teams_add_member
+  name: Add Member
+  description: |
+    Add a member to a team.
+  provider: microsoft-teams
+  endpoint: /v1.0/teams/{teamId}/members
+  method: POST
+  scopes:
+    - TeamMember.ReadWrite.All
+  tags:
+    - members
+    - add
+  input_schema:
+    type: object
+    description: Parameters for adding a member
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      userId:
+        type: string
+        description: "User ID to add"
+      roles:
+        type: array
+        description: "Member roles"
+        default: ["member"]
+    required:
+      - teamId
+      - userId
+
+- slug: teams_list_meetings
+  name: List Meetings
+  description: |
+    List upcoming and past meetings for the user.
+  provider: microsoft-teams
+  endpoint: /v1.0/me/calendar/events
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - meetings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []

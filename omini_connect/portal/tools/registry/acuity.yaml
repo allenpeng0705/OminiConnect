@@ -1,0 +1,278 @@
+# Acuity Scheduling Tools - Allowlist
+# Curated subset of Acuity API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. acuity_list_appointments      - List appointments
+# 2. acuity_get_appointment        - Get appointment details
+# 3. acuity_create_appointment    - Create an appointment
+# 4. acuity_cancel_appointment    - Cancel an appointment
+# 5. acuity_list_clients          - List clients
+# 6. acuity_get_client            - Get client details
+# 7. acuity_list_services         - List services
+# 8. acuity_get_service           - Get service details
+# 9. acuity_list_staff            - List staff members
+# 10. acuity_get_staff            - Get staff details
+
+- slug: acuity_list_appointments
+  name: List Appointments
+  description: |
+    List all appointments, optionally filtered by date range, client, or service.
+  provider: acuity
+  endpoint: /appointments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing appointments
+    properties:
+      min_date:
+        type: string
+        description: "Filter appointments from this date (YYYY-MM-DD)"
+      max_date:
+        type: string
+        description: "Filter appointments until this date (YYYY-MM-DD)"
+      client_id:
+        type: integer
+        description: "Filter by client ID"
+      service_id:
+        type: integer
+        description: "Filter by service ID"
+      count:
+        type: integer
+        description: "Max appointments to return"
+        default: 100
+    required: []
+
+- slug: acuity_get_appointment
+  name: Get Appointment
+  description: |
+    Get detailed information about a specific appointment.
+  provider: acuity
+  endpoint: /appointments/{appointment_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - appointments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an appointment
+    properties:
+      appointment_id:
+        type: integer
+        description: "Appointment ID"
+    required:
+      - appointment_id
+
+- slug: acuity_create_appointment
+  name: Create Appointment
+  description: |
+    Create a new appointment for a client.
+  provider: acuity
+  endpoint: /appointments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - appointments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an appointment
+    properties:
+      client_id:
+        type: integer
+        description: "Client ID"
+      service_id:
+        type: integer
+        description: "Service ID"
+      datetime:
+        type: string
+        description: "Appointment date and time (YYYY-MM-DDTHH:MM:SS)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      notes:
+        type: string
+        description: "Appointment notes"
+    required:
+      - client_id
+      - service_id
+      - datetime
+
+- slug: acuity_cancel_appointment
+  name: Cancel Appointment
+  description: |
+    Cancel an existing appointment.
+  provider: acuity
+  endpoint: /appointments/{appointment_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - appointments
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for canceling an appointment
+    properties:
+      appointment_id:
+        type: integer
+        description: "Appointment ID"
+      reason:
+        type: string
+        description: "Cancellation reason"
+    required:
+      - appointment_id
+
+- slug: acuity_list_clients
+  name: List Clients
+  description: |
+    List all clients in the account.
+  provider: acuity
+  endpoint: /clients
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      search:
+        type: string
+        description: "Search by name or email"
+      count:
+        type: integer
+        description: "Max clients to return"
+        default: 100
+    required: []
+
+- slug: acuity_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+  provider: acuity
+  endpoint: /clients/{client_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      client_id:
+        type: integer
+        description: "Client ID"
+    required:
+      - client_id
+
+- slug: acuity_list_services
+  name: List Services
+  description: |
+    List all services (appointment types) available.
+  provider: acuity
+  endpoint: /services
+  method: GET
+  scopes:
+    - read
+  tags:
+    - services
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      category:
+        type: string
+        description: "Filter by category name"
+      count:
+        type: integer
+        description: "Max services to return"
+        default: 100
+    required: []
+
+- slug: acuity_get_service
+  name: Get Service
+  description: |
+    Get detailed information about a specific service.
+  provider: acuity
+  endpoint: /services/{service_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      service_id:
+        type: integer
+        description: "Service ID"
+    required:
+      - service_id
+
+- slug: acuity_list_staff
+  name: List Staff
+  description: |
+    List all staff members who provide services.
+  provider: acuity
+  endpoint: /staff
+  method: GET
+  scopes:
+    - read
+  tags:
+    - staff
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing staff
+    properties:
+      active:
+        type: boolean
+        description: "Filter by active status"
+        default: true
+      count:
+        type: integer
+        description: "Max staff to return"
+        default: 100
+    required: []
+
+- slug: acuity_get_staff
+  name: Get Staff
+  description: |
+    Get detailed information about a specific staff member.
+  provider: acuity
+  endpoint: /staff/{staff_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - staff
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a staff member
+    properties:
+      staff_id:
+        type: integer
+        description: "Staff ID"
+    required:
+      - staff_id

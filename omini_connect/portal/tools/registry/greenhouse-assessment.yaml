@@ -1,0 +1,257 @@
+# Greenhouse Assessment Tools - Allowlist
+# Curated subset of Greenhouse Assessment API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_list_tests          - List available tests
+# 2. greenhouse_get_test            - Get test details
+# 3. greenhouse_list_candidates     - List candidates
+# 4. greenhouse_get_candidate      - Get candidate details
+# 5. greenhouse_list_applications  - List applications
+# 6. greenhouse_get_application    - Get application details
+# 7. greenhouse_list_jobs         - List jobs
+# 8. greenhouse_get_job            - Get job details
+# 9. greenhouse_list_offers        - List offers
+# 10. greenhouse_get_offer         - Get offer details
+
+- slug: greenhouse_list_tests
+  name: List Tests
+  description: |
+    List all available assessment tests.
+    Returns test details including name, type, and duration.
+  provider: greenhouse-assessment
+  endpoint: /list_tests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tests
+    - list
+    - assessment
+  input_schema:
+    type: object
+    description: Parameters for listing tests
+    properties: {}
+    required: []
+
+- slug: greenhouse_get_test
+  name: Get Test
+  description: |
+    Get detailed information about a specific test.
+    Includes test structure and questions.
+  provider: greenhouse-assessment
+  endpoint: /get_test
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tests
+    - read
+    - assessment
+  input_schema:
+    type: object
+    description: Parameters for getting a test
+    properties:
+      test_id:
+        type: string
+        description: "Test ID"
+    required:
+      - test_id
+
+- slug: greenhouse_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Greenhouse.
+    Returns candidate details including name, email, and status.
+  provider: greenhouse-assessment
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+    Includes profile, applications, and assessments.
+  provider: greenhouse-assessment
+  endpoint: /candidates/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - id
+
+- slug: greenhouse_list_applications
+  name: List Applications
+  description: |
+    List all job applications.
+    Returns application details including candidate and job.
+  provider: greenhouse-assessment
+  endpoint: /applications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      candidate_id:
+        type: integer
+        description: "Filter by candidate ID"
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_get_application
+  name: Get Application
+  description: |
+    Get detailed information about a specific application.
+    Includes candidate, job, stage, and scorecards.
+  provider: greenhouse-assessment
+  endpoint: /applications/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      id:
+        type: integer
+        description: "Application ID"
+    required:
+      - id
+
+- slug: greenhouse_list_jobs
+  name: List Jobs
+  description: |
+    List all open jobs.
+    Returns job details including title, department, and location.
+  provider: greenhouse-assessment
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: greenhouse_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job.
+    Includes job description, hiring team, and pipeline.
+  provider: greenhouse-assessment
+  endpoint: /jobs/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      id:
+        type: integer
+        description: "Job ID"
+    required:
+      - id
+
+- slug: greenhouse_list_offers
+  name: List Offers
+  description: |
+    List all job offers.
+    Returns offer details including candidate, job, and status.
+  provider: greenhouse-assessment
+  endpoint: /offers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      application_id:
+        type: integer
+        description: "Filter by application ID"
+    required: []
+
+- slug: greenhouse_get_offer
+  name: Get Offer
+  description: |
+    Get detailed information about a specific offer.
+    Includes offer terms, start date, and approval status.
+  provider: greenhouse-assessment
+  endpoint: /offers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - offers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      id:
+        type: integer
+        description: "Offer ID"
+    required:
+      - id

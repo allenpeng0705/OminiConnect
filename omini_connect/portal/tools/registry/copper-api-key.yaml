@@ -1,0 +1,285 @@
+# Copper Tools - Allowlist
+# Curated subset of the Copper CRM API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. copper_api_key_list_accounts      - List all accounts
+# 2. copper_api_key_get_account        - Get a specific account
+# 3. copper_api_key_list_contacts     - List all contacts
+# 4. copper_api_key_get_contact       - Get a specific contact
+# 5. copper_api_key_create_contact    - Create a new contact
+# 6. copper_api_key_list_opportunities - List all opportunities
+# 7. copper_api_key_get_opportunity   - Get a specific opportunity
+# 8. copper_api_key_create_opportunity - Create a new opportunity
+# 9. copper_api_key_list_tasks        - List all tasks
+# 10. copper_api_key_get_task          - Get a specific task
+
+- slug: copper_api_key_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts (companies) in Copper.
+  provider: copper-api-key
+  endpoint: /v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - accounts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 20, max 200)"
+        default: 20
+      page_number:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: copper_api_key_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account by ID.
+  provider: copper-api-key
+  endpoint: /v1/accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: integer
+        description: "Account ID"
+    required:
+      - id
+
+- slug: copper_api_key_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Copper. Contacts are individuals associated with accounts.
+  provider: copper-api-key
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 20, max 200)"
+        default: 20
+      page_number:
+        type: integer
+        description: "Page number"
+        default: 1
+      sort_by:
+        type: string
+        description: "Sort field: name, email_address, date_modified"
+        default: date_modified
+    required: []
+
+- slug: copper_api_key_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by ID.
+  provider: copper-api-key
+  endpoint: /v1/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: copper_api_key_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Copper. Required fields include name and email.
+  provider: copper-api-key
+  endpoint: /v1/contacts
+  method: POST
+  scopes: []
+  tags:
+    - crm
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Contact creation parameters
+    properties:
+      name:
+        type: string
+        description: "Contact name (required)"
+      email:
+        type: string
+        description: "Contact email address"
+      phone:
+        type: string
+        description: "Contact phone number"
+      company_id:
+        type: integer
+        description: "Associated account ID"
+    required:
+      - name
+
+- slug: copper_api_key_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities (deals) in Copper. Filter by status, owner, or date.
+  provider: copper-api-key
+  endpoint: /v1/opportunities
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - opportunities
+    - deals
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 20, max 200)"
+        default: 20
+      page_number:
+        type: integer
+        description: "Page number"
+        default: 1
+      status:
+        type: string
+        description: "Filter by status: open, won, lost"
+    required: []
+
+- slug: copper_api_key_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get details of a specific opportunity by ID including pipeline stage and value.
+  provider: copper-api-key
+  endpoint: /v1/opportunities/{id}
+  method: GET
+  scopes: []
+  tags:
+    - crm
+    - opportunities
+    - deals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: integer
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: copper_api_key_create_opportunity
+  name: Create Opportunity
+  description: |
+    Create a new opportunity (deal) in Copper. Required fields include name and pipeline ID.
+  provider: copper-api-key
+  endpoint: /v1/opportunities
+  method: POST
+  scopes: []
+  tags:
+    - crm
+    - opportunities
+    - deals
+    - create
+  input_schema:
+    type: object
+    description: Opportunity creation parameters
+    properties:
+      name:
+        type: string
+        description: "Opportunity name (required)"
+      pipeline_id:
+        type: integer
+        description: "Pipeline ID (required)"
+      assigned_to_user_id:
+        type: integer
+        description: "Owner user ID"
+      monetary_value:
+        type: number
+        description: "Deal value"
+      customer_source:
+        type: string
+        description: "Lead source"
+    required:
+      - name
+      - pipeline_id
+
+- slug: copper_api_key_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Copper. Filter by status, assignee, or due date.
+  provider: copper-api-key
+  endpoint: /v1/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (default 20, max 200)"
+        default: 20
+      page_number:
+        type: integer
+        description: "Page number"
+        default: 1
+      status:
+        type: string
+        description: "Filter by status: open, completed"
+    required: []
+
+- slug: copper_api_key_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task by ID including assignee and due date.
+  provider: copper-api-key
+  endpoint: /v1/tasks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id

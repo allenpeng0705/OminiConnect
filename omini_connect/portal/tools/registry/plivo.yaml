@@ -1,0 +1,274 @@
+# Plivo Tools - Allowlist
+# Curated subset of Plivo API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. plivo_list_messages       - List SMS messages
+# 2. plivo_get_message         - Get message details
+# 3. plivo_send_sms            - Send SMS message
+# 4. plivo_list_calls          - List phone calls
+# 5. plivo_get_call            - Get call details
+# 6. plivo_create_call         - Initiate a call
+# 7. plivo_list_recordings     - List call recordings
+# 8. plivo_get_recording       - Get recording details
+# 9. plivo_list_applications   - List applications
+# 10. plivo_get_application    - Get application details
+
+- slug: plivo_list_messages
+  name: List Messages
+  description: |
+    List all SMS messages sent or received through Plivo.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Message/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: plivo_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a specific Plivo message.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Message/{message_uuid}/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      message_uuid:
+        type: string
+        description: "Message UUID"
+    required:
+      - message_uuid
+
+- slug: plivo_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS to a single recipient via Plivo.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Message/
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - sms
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending an SMS
+    properties:
+      src:
+        type: string
+        description: "Plivo phone number to send from"
+      dst:
+        type: string
+        description: "Recipient phone number"
+      text:
+        type: string
+        description: "Message text"
+    required:
+      - src
+      - dst
+      - text
+
+- slug: plivo_list_calls
+  name: List Calls
+  description: |
+    List all phone calls made through Plivo.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Call/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: plivo_get_call
+  name: Get Call
+  description: |
+    Get detailed information about a specific Plivo call.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Call/{call_uuid}/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      call_uuid:
+        type: string
+        description: "Call UUID"
+    required:
+      - call_uuid
+
+- slug: plivo_create_call
+  name: Create Call
+  description: |
+    Initiate a new outbound phone call via Plivo.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Call/
+  method: POST
+  scopes:
+    - write
+  tags:
+    - calls
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a call
+    properties:
+      from:
+        type: string
+        description: "Plivo phone number to call from"
+      to:
+        type: string
+        description: "Recipient phone number"
+      answer_url:
+        type: string
+        description: "XML URL for call handling"
+      ring_url:
+        type: string
+        description: "URL to play during ringing"
+      hangup_url:
+        type: string
+        description: "URL to call when call ends"
+    required:
+      - from
+      - to
+      - answer_url
+
+- slug: plivo_list_recordings
+  name: List Recordings
+  description: |
+    List all call recordings stored in Plivo.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Recording/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: plivo_get_recording
+  name: Get Recording
+  description: |
+    Get details about a specific call recording.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Recording/{recording_id}/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recording_id:
+        type: string
+        description: "Recording ID"
+    required:
+      - recording_id
+
+- slug: plivo_list_applications
+  name: List Applications
+  description: |
+    List all Plivo applications.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Application/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: plivo_get_application
+  name: Get Application
+  description: |
+    Get details about a specific Plivo application.
+  provider: plivo
+  endpoint: /Account/{auth_id}/Application/{application_id}/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      application_id:
+        type: string
+        description: "Application ID"
+    required:
+      - application_id

@@ -1,0 +1,279 @@
+# Outreach Tools - Sales Engagement Platform
+# Curated subset of Outreach API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. outreach_list_prospects           - List prospects
+# 2. outreach_get_prospect            - Get prospect details
+# 3. outreach_create_prospect         - Create a prospect
+# 4. outreach_list_sequences          - List sequences
+# 5. outreach_get_sequence             - Get sequence details
+# 6. outreach_add_prospect_to_sequence - Add prospect to sequence
+# 7. outreach_list_templates           - List email templates
+# 8. outreach_get_template              - Get template details
+# 9. outreach_list_calls               - List calls
+# 10. outreach_get_call                 - Get call details
+
+- slug: outreach_list_prospects
+  name: List Prospects
+  description: |
+    List prospects in Outreach. Filter by name, email, stage, or assigned user.
+  provider: outreach
+  endpoint: /api/v2/prospects
+  method: GET
+  scopes:
+    - prospects.read
+  tags:
+    - prospects
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing prospects
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., stage='Qualified')"
+    required: []
+
+- slug: outreach_get_prospect
+  name: Get Prospect
+  description: |
+    Get detailed information about an Outreach prospect including contact info and activities.
+  provider: outreach
+  endpoint: /api/v2/prospects/{prospectId}
+  method: GET
+  scopes:
+    - prospects.read
+  tags:
+    - prospects
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a prospect
+    properties:
+      prospect_id:
+        type: string
+        description: "The prospect ID"
+    required:
+      - prospect_id
+
+- slug: outreach_create_prospect
+  name: Create Prospect
+  description: |
+    Create a new prospect in Outreach with name, email, phone, and company information.
+  provider: outreach
+  endpoint: /api/v2/prospects
+  method: POST
+  scopes:
+    - prospects.write
+  tags:
+    - prospects
+    - sales engagement
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a prospect
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - email
+
+- slug: outreach_list_sequences
+  name: List Sequences
+  description: |
+    List email sequences in Outreach. Filter by status, type, or assigned team.
+  provider: outreach
+  endpoint: /api/v2/sequences
+  method: GET
+  scopes:
+    - sequences.read
+  tags:
+    - sequences
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sequences
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., status='active')"
+    required: []
+
+- slug: outreach_get_sequence
+  name: Get Sequence
+  description: |
+    Get detailed information about an Outreach sequence including steps and settings.
+  provider: outreach
+  endpoint: /api/v2/sequences/{sequenceId}
+  method: GET
+  scopes:
+    - sequences.read
+  tags:
+    - sequences
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sequence
+    properties:
+      sequence_id:
+        type: string
+        description: "The sequence ID"
+    required:
+      - sequence_id
+
+- slug: outreach_add_prospect_to_sequence
+  name: Add Prospect to Sequence
+  description: |
+    Add a prospect to an Outreach sequence with optional scheduled date.
+  provider: outreach
+  endpoint: /api/v2/sequenceenrollments
+  method: POST
+  scopes:
+    - sequences.write
+  tags:
+    - sequences
+    - sales engagement
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding prospect to sequence
+    properties:
+      prospect_id:
+        type: string
+        description: "The prospect ID"
+      sequence_id:
+        type: string
+        description: "The sequence ID"
+      scheduled_at:
+        type: string
+        description: "Schedule date (ISO 8601 format)"
+    required:
+      - prospect_id
+      - sequence_id
+
+- slug: outreach_list_templates
+  name: List Templates
+  description: |
+    List email templates in Outreach. Filter by name, type, or shared status.
+  provider: outreach
+  endpoint: /api/v2/templates
+  method: GET
+  scopes:
+    - templates.read
+  tags:
+    - templates
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression"
+    required: []
+
+- slug: outreach_get_template
+  name: Get Template
+  description: |
+    Get detailed information about an Outreach email template including subject and body.
+  provider: outreach
+  endpoint: /api/v2/templates/{templateId}
+  method: GET
+  scopes:
+    - templates.read
+  tags:
+    - templates
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "The template ID"
+    required:
+      - template_id
+
+- slug: outreach_list_calls
+  name: List Calls
+  description: |
+    List calls in Outreach. Filter by prospect, user, date, or outcome.
+  provider: outreach
+  endpoint: /api/v2/calls
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      filter:
+        type: string
+        description: "Filter expression (e.g., outcome='connected')"
+    required: []
+
+- slug: outreach_get_call
+  name: Get Call
+  description: |
+    Get detailed information about an Outreach call including duration, outcome, and recording.
+  provider: outreach
+  endpoint: /api/v2/calls/{callId}
+  method: GET
+  scopes:
+    - calls.read
+  tags:
+    - calls
+    - sales engagement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      call_id:
+        type: string
+        description: "The call ID"
+    required:
+      - call_id

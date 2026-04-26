@@ -1,0 +1,228 @@
+- slug: apify_list_actors
+  name: List Actors
+  description: |
+    Retrieve a list of all actors in your Apify account.
+  provider: apify
+  endpoint: /actors
+  method: GET
+  scopes:
+    - actor:read
+  tags:
+    - actors
+  input_schema:
+    type: object
+    description: Parameters for listing actors
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of actors to return"
+      offset:
+        type: integer
+        description: "Number of actors to skip"
+    required: []
+
+- slug: apify_get_actor
+  name: Get Actor
+  description: |
+    Get details of a specific actor by ID or name.
+  provider: apify
+  endpoint: /acts/{actorId}
+  method: GET
+  scopes:
+    - actor:read
+  tags:
+    - actors
+  input_schema:
+    type: object
+    description: Parameters for getting an actor
+    properties:
+      actorId:
+        type: string
+        description: "Actor ID or name"
+    required:
+      - actorId
+
+- slug: apify_start_actor_run
+  name: Start Actor Run
+  description: |
+    Start a new run of an actor with optional input.
+  provider: apify
+  endpoint: /acts/{actorId}/runs
+  method: POST
+  scopes:
+    - actor:write
+  tags:
+    - actors
+  input_schema:
+    type: object
+    description: Parameters for starting an actor run
+    properties:
+      actorId:
+        type: string
+        description: "Actor ID or name"
+      input:
+        type: object
+        description: "Input JSON object for the actor"
+      build:
+        type: string
+        description: "Actor build tag or version"
+    required:
+      - actorId
+
+- slug: apify_get_run
+  name: Get Run
+  description: |
+    Get details and status of a specific actor run.
+  provider: apify
+  endpoint: /actor-runs/{runId}
+  method: GET
+  scopes:
+    - actor:read
+  tags:
+    - runs
+  input_schema:
+    type: object
+    description: Parameters for getting a run
+    properties:
+      runId:
+        type: string
+        description: "The run ID"
+    required:
+      - runId
+
+- slug: apify_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of all tasks in your Apify account.
+  provider: apify
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - actor:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of tasks to return"
+      offset:
+        type: integer
+        description: "Number of tasks to skip"
+    required: []
+
+- slug: apify_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task by ID or name.
+  provider: apify
+  endpoint: /tasks/{taskId}
+  method: GET
+  scopes:
+    - actor:read
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID or name"
+    required:
+      - taskId
+
+- slug: apify_start_task
+  name: Start Task
+  description: |
+    Start a new run of a task with optional input.
+  provider: apify
+  endpoint: /tasks/{taskId}/runs
+  method: POST
+  scopes:
+    - actor:write
+  tags:
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for starting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID or name"
+      input:
+        type: object
+        description: "Input JSON object for the task"
+    required:
+      - taskId
+
+- slug: apify_list_datasets
+  name: List Datasets
+  description: |
+    Retrieve a list of all datasets in your Apify account.
+  provider: apify
+  endpoint: /datasets
+  method: GET
+  scopes:
+    - dataset:read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of datasets to return"
+      offset:
+        type: integer
+        description: "Number of datasets to skip"
+    required: []
+
+- slug: apify_get_dataset
+  name: Get Dataset
+  description: |
+    Get details of a specific dataset by ID or name.
+  provider: apify
+  endpoint: /datasets/{datasetId}
+  method: GET
+  scopes:
+    - dataset:read
+  tags:
+    - datasets
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      datasetId:
+        type: string
+        description: "Dataset ID or name"
+    required:
+      - datasetId
+
+- slug: apify_get_storage
+  name: Get Storage
+  description: |
+    Get details of a key-value store or dataset storage.
+  provider: apify
+  endpoint: /storage
+  method: GET
+  scopes:
+    - storage:read
+  tags:
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for getting storage
+    properties:
+      type:
+        type: string
+        description: "Storage type (key-value-store or dataset)"
+      id:
+        type: string
+        description: "Storage ID or name"
+    required:
+      - type
+      - id

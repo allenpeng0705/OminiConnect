@@ -1,0 +1,255 @@
+# Crisp Plugin Install Tools - Allowlist
+# Curated subset of the Crisp API for AI agent use.
+# Plugin Install auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. crisp_plugin_list_conversations   - List conversations
+# 2. crisp_plugin_get_conversation     - Get conversation details
+# 3. crisp_plugin_list_messages        - List messages in conversation
+# 4. crisp_plugin_send_message         - Send a message
+# 5. crisp_plugin_list_operators       - List operators
+# 6. crisp_plugin_get_operator         - Get operator details
+# 7. crisp_plugin_list_websites        - List websites
+# 8. crisp_plugin_get_website         - Get website details
+# 9. crisp_plugin_list_contacts       - List contacts
+# 10. crisp_plugin_get_contact        - Get contact details
+
+- slug: crisp_plugin_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Crisp. Filter by status, assignee, or date.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - support
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, pending"
+        default: open
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: crisp_plugin_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information for a specific conversation including participants and metadata.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/conversations/{conversation_id}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - support
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: crisp_plugin_list_messages
+  name: List Messages
+  description: |
+    List all messages in a specific conversation.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/conversations/{conversation_id}/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - support
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - conversation_id
+
+- slug: crisp_plugin_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation. Use for proactive outreach or bot responses.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/conversations/{conversation_id}/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - support
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Message content"
+      type:
+        type: string
+        description: "Message type: text, email"
+        default: text
+    required:
+      - conversation_id
+      - content
+
+- slug: crisp_plugin_list_operators
+  name: List Operators
+  description: |
+    List all operators (agents) in the Crisp workspace.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/operators
+  method: GET
+  scopes: []
+  tags:
+    - operators
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing operators
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: crisp_plugin_get_operator
+  name: Get Operator
+  description: |
+    Get details of a specific operator including role and availability status.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/operators/{operator_id}
+  method: GET
+  scopes: []
+  tags:
+    - operators
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an operator
+    properties:
+      operator_id:
+        type: string
+        description: "Operator ID"
+    required:
+      - operator_id
+
+- slug: crisp_plugin_list_websites
+  name: List Websites
+  description: |
+    List all websites connected to the Crisp workspace.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/websites
+  method: GET
+  scopes: []
+  tags:
+    - websites
+    - configuration
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing websites
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: crisp_plugin_get_website
+  name: Get Website
+  description: |
+    Get details of a specific website including settings and integration status.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/websites/{website_id}
+  method: GET
+  scopes: []
+  tags:
+    - websites
+    - configuration
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a website
+    properties:
+      website_id:
+        type: string
+        description: "Website ID"
+    required:
+      - website_id
+
+- slug: crisp_plugin_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Crisp. Filter by segments or date added.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      segment:
+        type: string
+        description: "Filter by segment"
+    required: []
+
+- slug: crisp_plugin_get_contact
+  name: Get Contact
+  description: |
+    Get detailed contact information including profile data, segments, and activity.
+  provider: crisp-plugin-install
+  endpoint: /v1/plugin/connect/account/contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - contact_id

@@ -1,0 +1,305 @@
+# Braintree Tools - Allowlist
+# Curated subset of the Braintree API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. braintree_list_transactions   - List transactions
+# 2. braintree_get_transaction     - Get details of a specific transaction
+# 3. braintree_create_transaction  - Create a new transaction
+# 4. braintree_void_transaction    - Void an existing transaction
+# 5. braintree_list_customers      - List customers
+# 6. braintree_get_customer        - Get details of a specific customer
+# 7. braintree_create_customer     - Create a new customer
+# 8. braintree_list_merchants      - List merchant accounts
+# 9. braintree_get_merchant        - Get details of a specific merchant
+# 10. braintree_list_webhooks      - List webhook event types
+
+- slug: braintree_list_transactions
+  name: List Transactions
+  description: |
+    List transactions for the merchant. Returns a collection of transactions with amounts, statuses, and customer info.
+  provider: braintree
+  endpoint: /v1/transactions
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - transactions
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      merchant_account_id:
+        type: string
+        description: "Filter by merchant account ID"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: authorized, submitted_for_settlement, settled, voided"
+      order_id:
+        type: string
+        description: "Filter by order ID"
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction including amount, status, payment method, and gateway response.
+  provider: braintree
+  endpoint: /v1/transactions/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - transactions
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      id:
+        type: string
+        description: "Transaction ID"
+    required:
+      - id
+
+- slug: braintree_create_transaction
+  name: Create Transaction
+  description: |
+    Create a new transaction for collecting payment. Specify amount, payment method, and options.
+  provider: braintree
+  endpoint: /v1/transactions
+  method: POST
+  scopes:
+    - write
+  tags:
+    - transactions
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a transaction
+    properties:
+      amount:
+        type: string
+        description: "Transaction amount"
+      payment_method_nonce:
+        type: string
+        description: "One-time use payment method nonce from client"
+      customer_id:
+        type: string
+        description: "Existing customer ID to associate"
+      merchant_account_id:
+        type: string
+        description: "Merchant account ID for multi-currency"
+      order_id:
+        type: string
+        description: "Order ID for tracking"
+      description:
+        type: string
+        description: "Transaction description"
+      customer:
+        type: object
+        description: "Inline customer object with first_name, last_name, email"
+    required:
+      - amount
+
+- slug: braintree_void_transaction
+  name: Void Transaction
+  description: |
+    Void an authorized transaction before it is submitted for settlement. Cannot void settled transactions.
+  provider: braintree
+  endpoint: /v1/transactions/{id}/void
+  method: POST
+  scopes:
+    - write
+  tags:
+    - transactions
+    - payments
+    - void
+  input_schema:
+    type: object
+    description: Parameters for voiding a transaction
+    properties:
+      id:
+        type: string
+        description: "Transaction ID to void"
+    required:
+      - id
+
+- slug: braintree_list_customers
+  name: List Customers
+  description: |
+    List all customers for the merchant. Returns paginated list with names, emails, and company info.
+  provider: braintree
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      first_name:
+        type: string
+        description: "Filter by first name"
+      last_name:
+        type: string
+        description: "Filter by last name"
+      email:
+        type: string
+        description: "Filter by email"
+      company:
+        type: string
+        description: "Filter by company name"
+      page_size:
+        type: integer
+        description: "Number of results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer including payment methods, addresses, and custom fields.
+  provider: braintree
+  endpoint: /v1/customers/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: braintree_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer with contact info and payment methods. Required for recurring billing.
+  provider: braintree
+  endpoint: /v1/customers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - customers
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      first_name:
+        type: string
+        description: "Customer first name"
+      last_name:
+        type: string
+        description: "Customer last name"
+      email:
+        type: string
+        description: "Customer email address"
+      phone:
+        type: string
+        description: "Customer phone number"
+      company:
+        type: string
+        description: "Customer company name"
+      website:
+        type: string
+        description: "Customer website URL"
+    required: []
+
+- slug: braintree_list_merchants
+  name: List Merchants
+  description: |
+    List all merchant accounts associated with the gateway. Returns merchant IDs, currencies, and status.
+  provider: braintree
+  endpoint: /v1/merchant_accounts
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - merchants
+    - accounts
+  input_schema:
+    type: object
+    description: Parameters for listing merchants
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page"
+        default: 50
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_get_merchant
+  name: Get Merchant
+  description: |
+    Get details of a specific merchant account including currency, status, and takings limits.
+  provider: braintree
+  endpoint: /v1/merchant_accounts/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - merchants
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a merchant
+    properties:
+      id:
+        type: string
+        description: "Merchant account ID"
+    required:
+      - id
+
+- slug: braintree_list_webhooks
+  name: List Webhooks
+  description: |
+    List webhook notification event types available for subscription. Use for configuring webhook endpoints.
+  provider: braintree
+  endpoint: /v1/webhook_notifications/available
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - webhooks
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing webhook types
+    properties: {}
+    required: []

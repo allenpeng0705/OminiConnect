@@ -1,0 +1,359 @@
+# Remote Tools - Allowlist
+# Curated subset of the Remote API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. remote_list_contractors    - List contractors
+# 2. remote_get_contractor      - Get a specific contractor
+# 3. remote_create_contractor  - Create a new contractor
+# 4. remote_list_employees     - List employees
+# 5. remote_get_employee       - Get a specific employee
+# 6. remote_create_employee    - Create a new employee
+# 7. remote_list_payrolls       - List payroll runs
+# 8. remote_get_payroll        - Get a specific payroll run
+# 9. remote_list_time_off      - List time off requests
+# 10. remote_get_time_off_request - Get a specific time off request
+
+- slug: remote_list_contractors
+  name: List Contractors
+  description: |
+    List all contractors in the Remote platform. Returns contractor profiles, contract terms, payment rates, and status.
+    Use this to manage the contractor workforce and track independent relationships.
+  provider: remote
+  endpoint: /v1/contractors
+  method: GET
+  scopes:
+    - contractors:read
+  tags:
+    - contractors
+    - workforce
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing contractors
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      country:
+        type: string
+        description: "Filter by country code"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: remote_get_contractor
+  name: Get Contractor
+  description: |
+    Get details of a specific contractor by ID. Returns full contractor profile, contract terms, payment details, and status.
+  provider: remote
+  endpoint: /v1/contractors/{contractor_id}
+  method: GET
+  scopes:
+    - contractors:read
+  tags:
+    - contractors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contractor
+    properties:
+      contractor_id:
+        type: string
+        description: "Contractor ID"
+    required:
+      - contractor_id
+
+- slug: remote_create_contractor
+  name: Create Contractor
+  description: |
+    Create a new contractor record in Remote. Include personal details, contract terms, hourly/fixed rates, and payment preferences.
+  provider: remote
+  endpoint: /v1/contractors
+  method: POST
+  scopes:
+    - contractors:write
+  tags:
+    - contractors
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contractor
+    properties:
+      first_name:
+        type: string
+        description: "Contractor first name"
+      last_name:
+        type: string
+        description: "Contractor last name"
+      email:
+        type: string
+        description: "Contractor email address"
+      country:
+        type: string
+        description: "Country code (e.g., US, GB, DE)"
+      rate:
+        type: number
+        description: "Contractor rate (hourly or fixed amount)"
+      rate_type:
+        type: string
+        description: "Rate type: hourly, fixed"
+        enum: [hourly, fixed]
+      currency:
+        type: string
+        description: "Payment currency code"
+        default: USD
+      start_date:
+        type: string
+        description: "Contract start date in YYYY-MM-DD format"
+    required:
+      - first_name
+      - last_name
+      - email
+      - country
+
+- slug: remote_list_employees
+  name: List Employees
+  description: |
+    List all employees in the Remote platform. Returns employee profiles, employment status, location, and benefits info.
+    Use this to manage the full-time workforce across global operations.
+  provider: remote
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - workforce
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive, onboarding"
+        enum: [active, inactive, onboarding]
+      country:
+        type: string
+        description: "Filter by country code"
+      department:
+        type: string
+        description: "Filter by department"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: remote_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by ID. Returns full employee profile, employment terms, payroll setup, and benefits enrollment.
+  provider: remote
+  endpoint: /v1/employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: remote_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee record in Remote. Include personal details, employment terms, location, and payroll configuration.
+    Supports onboarding for full-time employees globally.
+  provider: remote
+  endpoint: /v1/employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - create
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      first_name:
+        type: string
+        description: "Employee first name"
+      last_name:
+        type: string
+        description: "Employee last name"
+      email:
+        type: string
+        description: "Employee email address"
+      country:
+        type: string
+        description: "Country code (e.g., US, GB, DE)"
+      employment_type:
+        type: string
+        description: "Employment type: full_time, part_time"
+        enum: [full_time, part_time]
+      start_date:
+        type: string
+        description: "Employment start date in YYYY-MM-DD format"
+      department:
+        type: string
+        description: "Department name"
+      compensation:
+        type: object
+        description: "Compensation details including amount and currency"
+    required:
+      - first_name
+      - last_name
+      - email
+      - country
+
+- slug: remote_list_payrolls
+  name: List Payrolls
+  description: |
+    List all payroll runs in the Remote platform. Returns payroll periods, status, totals, and worker counts.
+    Use this to track payroll cycles, monitor payments, and manage global payroll operations.
+  provider: remote
+  endpoint: /v1/payrolls
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing payrolls
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, processing, completed, failed"
+        enum: [draft, processing, completed, failed]
+      period_start:
+        type: string
+        description: "Payroll period start date in YYYY-MM-DD format"
+      period_end:
+        type: string
+        description: "Payroll period end date in YYYY-MM-DD format"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: remote_get_payroll
+  name: Get Payroll
+  description: |
+    Get details of a specific payroll run by ID. Returns payroll period details, total amounts, worker breakdown, and processing status.
+  provider: remote
+  endpoint: /v1/payrolls/{payroll_id}
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payroll run
+    properties:
+      payroll_id:
+        type: string
+        description: "Payroll run ID"
+    required:
+      - payroll_id
+
+- slug: remote_list_time_off
+  name: List Time Off
+  description: |
+    List all time off requests in the Remote platform. Returns request details, leave types, status, and employee info.
+    Use this to track leave, manage approvals, and monitor time off balances.
+  provider: remote
+  endpoint: /v1/time_off
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - leave
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected"
+        enum: [pending, approved, rejected]
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      leave_type:
+        type: string
+        description: "Filter by leave type: vacation, sick, personal"
+        enum: [vacation, sick, personal]
+      start_date:
+        type: string
+        description: "Start date filter in YYYY-MM-DD format"
+      end_date:
+        type: string
+        description: "End date filter in YYYY-MM-DD format"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: remote_get_time_off_request
+  name: Get Time Off Request
+  description: |
+    Get details of a specific time off request by ID. Returns employee, dates, leave type, status, balance impact, and approver info.
+  provider: remote
+  endpoint: /v1/time_off/{request_id}
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time off request
+    properties:
+      request_id:
+        type: string
+        description: "Time off request ID"
+    required:
+      - request_id

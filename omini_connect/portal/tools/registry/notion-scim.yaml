@@ -1,0 +1,279 @@
+# Notion (SCIM) Tools - Allowlist
+# Curated subset of Notion SCIM API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. notion_scim_list_users            - List users
+# 2. notion_scim_get_user             - Get user details
+# 3. notion_scim_create_user          - Create user
+# 4. notion_scim_update_user         - Update user
+# 5. notion_scim_delete_user         - Delete user
+# 6. notion_scim_list_groups         - List groups
+# 7. notion_scim_get_group           - Get group details
+# 8. notion_scim_create_group        - Create group
+# 9. notion_scim_update_group       - Update group
+# 10. notion_scim_delete_group     - Delete group
+
+- slug: notion_scim_list_users
+  name: List Users
+  description: |
+    List all users in the Notion workspace via SCIM.
+  provider: notion-scim
+  endpoint: /v2/Users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - scim
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      startIndex:
+        type: integer
+        description: "Starting index"
+        default: 1
+      count:
+        type: integer
+        description: "Number of users to return"
+        default: 100
+    required: []
+
+- slug: notion_scim_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: notion-scim
+  endpoint: /v2/Users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - scim
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: notion_scim_create_user
+  name: Create User
+  description: |
+    Create a new user in the Notion workspace.
+  provider: notion-scim
+  endpoint: /v2/Users
+  method: POST
+  scopes:
+    - users:write
+  tags:
+    - scim
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      userName:
+        type: string
+        description: "User email (must be unique)"
+      name:
+        type: object
+        description: "User name object"
+      emails:
+        type: array
+        description: "User emails"
+      active:
+        type: boolean
+        description: "User active status"
+        default: true
+    required:
+      - userName
+
+- slug: notion_scim_update_user
+  name: Update User
+  description: |
+    Update an existing user.
+  provider: notion-scim
+  endpoint: /v2/Users/{id}
+  method: PUT
+  scopes:
+    - users:write
+  tags:
+    - scim
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      name:
+        type: object
+        description: "User name object"
+      active:
+        type: boolean
+        description: "User active status"
+    required:
+      - id
+
+- slug: notion_scim_delete_user
+  name: Delete User
+  description: |
+    Delete a user from the Notion workspace.
+  provider: notion-scim
+  endpoint: /v2/Users/{id}
+  method: DELETE
+  scopes:
+    - users:write
+  tags:
+    - scim
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: notion_scim_list_groups
+  name: List Groups
+  description: |
+    List all groups in the Notion workspace.
+  provider: notion-scim
+  endpoint: /v2/Groups
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - scim
+    - groups
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      startIndex:
+        type: integer
+        description: "Starting index"
+        default: 1
+      count:
+        type: integer
+        description: "Number of groups to return"
+        default: 100
+    required: []
+
+- slug: notion_scim_get_group
+  name: Get Group
+  description: |
+    Get detailed information for a specific group.
+  provider: notion-scim
+  endpoint: /v2/Groups/{id}
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - scim
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+    required:
+      - id
+
+- slug: notion_scim_create_group
+  name: Create Group
+  description: |
+    Create a new group in the Notion workspace.
+  provider: notion-scim
+  endpoint: /v2/Groups
+  method: POST
+  scopes:
+    - groups:write
+  tags:
+    - scim
+    - groups
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a group
+    properties:
+      displayName:
+        type: string
+        description: "Group display name"
+      members:
+        type: array
+        description: "Group member user IDs"
+    required:
+      - displayName
+
+- slug: notion_scim_update_group
+  name: Update Group
+  description: |
+    Update an existing group.
+  provider: notion-scim
+  endpoint: /v2/Groups/{id}
+  method: PUT
+  scopes:
+    - groups:write
+  tags:
+    - scim
+    - groups
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+      displayName:
+        type: string
+        description: "Group display name"
+      members:
+        type: array
+        description: "Group member user IDs"
+    required:
+      - id
+
+- slug: notion_scim_delete_group
+  name: Delete Group
+  description: |
+    Delete a group from the Notion workspace.
+  provider: notion-scim
+  endpoint: /v2/Groups/{id}
+  method: DELETE
+  scopes:
+    - groups:write
+  tags:
+    - scim
+    - groups
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a group
+    properties:
+      id:
+        type: string
+        description: "Group ID"
+    required:
+      - id

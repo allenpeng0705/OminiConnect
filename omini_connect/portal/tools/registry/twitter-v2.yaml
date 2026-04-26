@@ -1,0 +1,187 @@
+# Twitter V2 Tools - Allowlist
+# Curated subset of Twitter V2 API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. twitter_list_tweets           - List tweets from timeline
+# # 2. twitter_get_tweet           - Get tweet details
+# # 3. twitter_create_tweet           - Post a new tweet
+# # 4. twitter_delete_tweet           - Delete a tweet
+# # 5. twitter_list_users           - List Twitter users
+# # 6. twitter_get_user           - Get user profile
+# # 7. twitter_search_tweets           - Search for tweets
+# # 8. twitter_get_followers           - Get user followers
+# # 9. twitter_get_following           - Get users followed by a user
+# # 10. twitter_retweet           - Retweet a tweet
+
+- slug: twitter_list_tweets
+  name: List Tweets
+  description: |
+    List tweets from timeline
+  provider: twitter-v2
+  endpoint: /2/tweets
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for list tweets
+    properties: {}
+    required: []
+
+- slug: twitter_get_tweet
+  name: Get Tweet
+  description: |
+    Get tweet details
+  provider: twitter-v2
+  endpoint: /2/tweets/{id}
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for get tweet
+    properties: {}
+    required: []
+
+- slug: twitter_create_tweet
+  name: Create Tweet
+  description: |
+    Post a new tweet
+  provider: twitter-v2
+  endpoint: /2/tweets
+  method: POST
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for create tweet
+    properties: {}
+    required: []
+
+- slug: twitter_delete_tweet
+  name: Delete Tweet
+  description: |
+    Delete a tweet
+  provider: twitter-v2
+  endpoint: /2/tweets/{id}
+  method: DELETE
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for delete tweet
+    properties: {}
+    required: []
+
+- slug: twitter_list_users
+  name: List Users
+  description: |
+    List Twitter users
+  provider: twitter-v2
+  endpoint: /2/users
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for list users
+    properties: {}
+    required: []
+
+- slug: twitter_get_user
+  name: Get User
+  description: |
+    Get user profile
+  provider: twitter-v2
+  endpoint: /2/users/{id}
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for get user
+    properties: {}
+    required: []
+
+- slug: twitter_search_tweets
+  name: Search Tweets
+  description: |
+    Search for tweets
+  provider: twitter-v2
+  endpoint: /2/tweets/search/recent
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for search tweets
+    properties: {}
+    required: []
+
+- slug: twitter_get_followers
+  name: Get Followers
+  description: |
+    Get user followers
+  provider: twitter-v2
+  endpoint: /2/users/{id}/followers
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for get followers
+    properties: {}
+    required: []
+
+- slug: twitter_get_following
+  name: Get Following
+  description: |
+    Get users followed by a user
+  provider: twitter-v2
+  endpoint: /2/users/{id}/following
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for get following
+    properties: {}
+    required: []
+
+- slug: twitter_retweet
+  name: Retweet
+  description: |
+    Retweet a tweet
+  provider: twitter-v2
+  endpoint: /2/users/{id}/retweets
+  method: POST
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-v2
+  input_schema:
+    type: object
+    description: Parameters for retweet
+    properties: {}
+    required: []
+

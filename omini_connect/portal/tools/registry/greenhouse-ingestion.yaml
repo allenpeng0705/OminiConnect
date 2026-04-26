@@ -1,0 +1,310 @@
+# Greenhouse Ingestion Tools - Allowlist
+# Curated subset of Greenhouse Ingestion API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_ingest_candidate    - Ingest a candidate
+# 2. greenhouse_ingest_job         - Ingest a job
+# 3. greenhouse_ingest_application - Ingest an application
+# 4. greenhouse_ingest_offer       - Ingest an offer
+# 5. greenhouse_ingest_department - Ingest a department
+# 6. greenhouse_ingest_office      - Ingest an office
+# 7. greenhouse_ingest_hiring_team - Ingest a hiring team
+# 8. greenhouse_list_candidates    - List candidates
+# 9. greenhouse_list_jobs          - List jobs
+# 10. greenhouse_list_applications - List applications
+
+- slug: greenhouse_ingest_candidate
+  name: Ingest Candidate
+  description: |
+    Ingest a candidate into Greenhouse.
+    Create or update candidate data.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/candidates
+  method: POST
+  scopes:
+    - write
+  tags:
+    - candidates
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting a candidate
+    properties:
+      email:
+        type: string
+        description: "Candidate email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Current company"
+      title:
+        type: string
+        description: "Current title"
+    required:
+      - email
+
+- slug: greenhouse_ingest_job
+  name: Ingest Job
+  description: |
+    Ingest a job into Greenhouse.
+    Create or update job data.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/jobs
+  method: POST
+  scopes:
+    - write
+  tags:
+    - jobs
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting a job
+    properties:
+      title:
+        type: string
+        description: "Job title"
+      description:
+        type: string
+        description: "Job description"
+      department:
+        type: string
+        description: "Department name"
+      office:
+        type: string
+        description: "Office location"
+    required:
+      - title
+
+- slug: greenhouse_ingest_application
+  name: Ingest Application
+  description: |
+    Ingest an application into Greenhouse.
+    Link candidate to job.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/applications
+  method: POST
+  scopes:
+    - write
+  tags:
+    - applications
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting an application
+    properties:
+      candidate_email:
+        type: string
+        description: "Candidate email"
+      job_title:
+        type: string
+        description: "Job title"
+      status:
+        type: string
+        description: "Application status"
+    required:
+      - candidate_email
+      - job_title
+
+- slug: greenhouse_ingest_offer
+  name: Ingest Offer
+  description: |
+    Ingest an offer into Greenhouse.
+    Create offer data for an application.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/offers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - offers
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting an offer
+    properties:
+      candidate_email:
+        type: string
+        description: "Candidate email"
+      job_title:
+        type: string
+        description: "Job title"
+      salary:
+        type: number
+        description: "Base salary"
+      start_date:
+        type: string
+        description: "Proposed start date"
+    required:
+      - candidate_email
+      - job_title
+
+- slug: greenhouse_ingest_department
+  name: Ingest Department
+  description: |
+    Ingest a department into Greenhouse.
+    Create department structure.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/departments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - departments
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting a department
+    properties:
+      name:
+        type: string
+        description: "Department name"
+      parent_name:
+        type: string
+        description: "Parent department name"
+    required:
+      - name
+
+- slug: greenhouse_ingest_office
+  name: Ingest Office
+  description: |
+    Ingest an office into Greenhouse.
+    Create office location data.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/offices
+  method: POST
+  scopes:
+    - write
+  tags:
+    - offices
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting an office
+    properties:
+      name:
+        type: string
+        description: "Office name"
+      location:
+        type: string
+        description: "Office location"
+      department:
+        type: string
+        description: "Department name"
+    required:
+      - name
+
+- slug: greenhouse_ingest_hiring_team
+  name: Ingest Hiring Team
+  description: |
+    Ingest a hiring team into Greenhouse.
+    Add users to a job's hiring team.
+  provider: greenhouse-ingestion
+  endpoint: /ingestion/hiring_teams
+  method: POST
+  scopes:
+    - write
+  tags:
+    - hiring_teams
+    - ingestion
+    - create
+  input_schema:
+    type: object
+    description: Parameters for ingesting a hiring team
+    properties:
+      job_title:
+        type: string
+        description: "Job title"
+      user_email:
+        type: string
+        description: "User email"
+      role:
+        type: string
+        description: "Hiring team role"
+    required:
+      - job_title
+      - user_email
+
+- slug: greenhouse_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Greenhouse.
+    Returns candidate details.
+  provider: greenhouse-ingestion
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in Greenhouse.
+    Returns job details.
+  provider: greenhouse-ingestion
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_list_applications
+  name: List Applications
+  description: |
+    List all applications in Greenhouse.
+    Returns application details.
+  provider: greenhouse-ingestion
+  endpoint: /applications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - applications
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []

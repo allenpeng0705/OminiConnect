@@ -1,0 +1,250 @@
+# Paligo Tools - Allowlist
+# Curated subset of Paligo documentation platform API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. paligo_list_topics               - List topics/documents
+# 2. paligo_get_topic                - Get topic details
+# 3. paligo_create_topic             - Create topic
+# 4. paligo_update_topic             - Update topic
+# 5. paligo_list_publications        - List publications
+# 6. paligo_get_publication         - Get publication details
+# 7. paligo_list_assets             - List assets
+# 8. paligo_get_asset               - Get asset details
+# 9. paligo_search_content          - Search content
+# 10. paligo_get_tree              - Get content tree
+
+- slug: paligo_list_topics
+  name: List Topics
+  description: |
+    List all topics and documents in Paligo.
+  provider: paligo
+  endpoint: /api/v1/topics
+  method: GET
+  scopes:
+    - topics:read
+  tags:
+    - docs
+    - cms
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing topics
+    properties:
+      limit:
+        type: integer
+        description: "Number of topics"
+        default: 20
+    required: []
+
+- slug: paligo_get_topic
+  name: Get Topic
+  description: |
+    Get detailed information for a specific topic.
+  provider: paligo
+  endpoint: /api/v1/topics/{id}
+  method: GET
+  scopes:
+    - topics:read
+  tags:
+    - docs
+    - cms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a topic
+    properties:
+      id:
+        type: integer
+        description: "Topic ID"
+    required:
+      - id
+
+- slug: paligo_create_topic
+  name: Create Topic
+  description: |
+    Create a new topic in Paligo.
+  provider: paligo
+  endpoint: /api/v1/topics
+  method: POST
+  scopes:
+    - topics:write
+  tags:
+    - docs
+    - cms
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a topic
+    properties:
+      title:
+        type: string
+        description: "Topic title"
+      content:
+        type: string
+        description: "Topic content (XML)"
+      type:
+        type: string
+        description: "Topic type"
+    required:
+      - title
+
+- slug: paligo_update_topic
+  name: Update Topic
+  description: |
+    Update an existing topic.
+  provider: paligo
+  endpoint: /api/v1/topics/{id}
+  method: PUT
+  scopes:
+    - topics:write
+  tags:
+    - docs
+    - cms
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a topic
+    properties:
+      id:
+        type: integer
+        description: "Topic ID"
+      title:
+        type: string
+        description: "Topic title"
+      content:
+        type: string
+        description: "Topic content (XML)"
+    required:
+      - id
+
+- slug: paligo_list_publications
+  name: List Publications
+  description: |
+    List all publications in Paligo.
+  provider: paligo
+  endpoint: /api/v1/publications
+  method: GET
+  scopes:
+    - publications:read
+  tags:
+    - docs
+    - cms
+    - publications
+  input_schema:
+    type: object
+    description: Parameters for listing publications
+    properties: {}
+    required: []
+
+- slug: paligo_get_publication
+  name: Get Publication
+  description: |
+    Get detailed information for a specific publication.
+  provider: paligo
+  endpoint: /api/v1/publications/{id}
+  method: GET
+  scopes:
+    - publications:read
+  tags:
+    - docs
+    - cms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a publication
+    properties:
+      id:
+        type: integer
+        description: "Publication ID"
+    required:
+      - id
+
+- slug: paligo_list_assets
+  name: List Assets
+  description: |
+    List all assets in Paligo.
+  provider: paligo
+  endpoint: /api/v1/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - docs
+    - cms
+    - assets
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      limit:
+        type: integer
+        description: "Number of assets"
+        default: 20
+    required: []
+
+- slug: paligo_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information for a specific asset.
+  provider: paligo
+  endpoint: /api/v1/assets/{id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - docs
+    - cms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - id
+
+- slug: paligo_search_content
+  name: Search Content
+  description: |
+    Search for content in Paligo.
+  provider: paligo
+  endpoint: /api/v1/search
+  method: GET
+  scopes:
+    - search:read
+  tags:
+    - docs
+    - cms
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query
+
+- slug: paligo_get_tree
+  name: Get Tree
+  description: |
+    Get the content tree structure.
+  provider: paligo
+  endpoint: /api/v1/treepaths
+  method: GET
+  scopes:
+    - tree:read
+  tags:
+    - docs
+    - cms
+    - structure
+  input_schema:
+    type: object
+    description: Parameters for getting tree
+    properties: {}
+    required: []

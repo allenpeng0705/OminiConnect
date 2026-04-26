@@ -1,0 +1,270 @@
+# Snapchat Tools - Allowlist
+# Curated subset of Snapchat Marketing API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. snapchat_list_ad_accounts      - List advertising accounts
+# 2. snapchat_get_ad_account       - Get ad account details
+# 3. snapchat_list_campaigns        - List campaigns in an ad account
+# 4. snapchat_get_campaign          - Get campaign details
+# 5. snapchat_create_campaign       - Create a new campaign
+# 6. snapchat_list_ads              - List ads in a campaign
+# 7. snapchat_get_ad                - Get ad details
+# 8. snapchat_create_ad             - Create a new ad
+# 9. snapchat_list_spectacles       - List Spectacles content
+# 10. snapchat_get_spectacle        - Get Spectacle details
+
+- slug: snapchat_list_ad_accounts
+  name: List Ad Accounts
+  description: |
+    List all advertising accounts the authenticated user has access to.
+  provider: snapchat
+  endpoint: /v1/adaccounts
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - ad_accounts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing ad accounts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: snapchat_get_ad_account
+  name: Get Ad Account
+  description: |
+    Get detailed information about a specific advertising account.
+  provider: snapchat
+  endpoint: /v1/adaccounts/{adaccountId}
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - ad_accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad account
+    properties:
+      adaccountId:
+        type: string
+        description: "Ad account ID"
+    required:
+      - adaccountId
+
+- slug: snapchat_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns within an advertising account.
+  provider: snapchat
+  endpoint: /v1/campaigns
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - campaigns
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      adaccountId:
+        type: string
+        description: "Ad account ID"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required:
+      - adaccountId
+
+- slug: snapchat_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+  provider: snapchat
+  endpoint: /v1/campaigns/{campaignId}
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: snapchat_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new campaign within an advertising account.
+  provider: snapchat
+  endpoint: /v1/campaigns
+  method: POST
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - campaigns
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      adaccountId:
+        type: string
+        description: "Ad account ID"
+      name:
+        type: string
+        description: "Campaign name"
+      status:
+        type: string
+        description: "Campaign status (ACTIVE, PAUSED)"
+      daily_budget:
+        type: number
+        description: "Daily budget in cents"
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time (ISO 8601)"
+    required:
+      - adaccountId
+      - name
+
+- slug: snapchat_list_ads
+  name: List Ads
+  description: |
+    List all ads within a campaign.
+  provider: snapchat
+  endpoint: /v1/ads
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - ads
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required:
+      - campaignId
+
+- slug: snapchat_get_ad
+  name: Get Ad
+  description: |
+    Get detailed information about a specific ad.
+  provider: snapchat
+  endpoint: /v1/ads/{adId}
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - ads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an ad
+    properties:
+      adId:
+        type: string
+        description: "Ad ID"
+    required:
+      - adId
+
+- slug: snapchat_create_ad
+  name: Create Ad
+  description: |
+    Create a new ad within a campaign.
+  provider: snapchat
+  endpoint: /v1/ads
+  method: POST
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - ads
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an ad
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+      name:
+        type: string
+        description: "Ad name"
+      ad_type:
+        type: string
+        description: "Ad type (SNAP_AD, STORY, FILTER, etc.)"
+      creative:
+        type: object
+        description: "Ad creative object"
+    required:
+      - campaignId
+      - name
+      - ad_type
+
+- slug: snapchat_list_spectacles
+  name: List Spectacles
+  description: |
+    List all Spectacles content (AR lenses) the user has access to.
+  provider: snapchat
+  endpoint: /v1/spectacles
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - spectacles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spectacles
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: snapchat_get_spectacle
+  name: Get Spectacle
+  description: |
+    Get detailed information about a specific Spectacle (AR lens).
+  provider: snapchat
+  endpoint: /v1/spectacles/{spectacleId}
+  method: GET
+  scopes:
+    - snapchat-marketing-api
+  tags:
+    - spectacles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a spectacle
+    properties:
+      spectacleId:
+        type: string
+        description: "Spectacle ID"
+    required:
+      - spectacleId

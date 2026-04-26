@@ -1,0 +1,236 @@
+# lemlist Tools - Allowlist
+# Curated subset of lemlist API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lemlist_get_team            - Get team info
+# 2. lemlist_list_campaigns      - List campaigns
+# 3. lemlist_get_campaign       - Get campaign details
+# 4. lemlist_list_leads         - List leads
+# 5. lemlist_add_lead           - Add a lead
+# 6. lemlist_update_lead        - Update a lead
+# 7. lemlist_list_unsubscribed  - List unsubscribed leads
+# 8. lemlist_list_blacklisted   - List blacklisted leads
+# 9. lemlist_list_stats         - Get stats
+# 10. lemlist_get_campaign_stats - Get campaign stats
+
+- slug: lemlist_get_team
+  name: Get Team Info
+  description: |
+    Get the current team information.
+  provider: lemlist
+  endpoint: /api/team
+  method: GET
+  scopes: []
+  tags:
+    - team
+    - read
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for getting team info
+    properties: {}
+    required: []
+
+- slug: lemlist_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: lemlist
+  endpoint: /api/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties: {}
+    required: []
+
+- slug: lemlist_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: lemlist
+  endpoint: /api/campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: lemlist_list_leads
+  name: List Leads
+  description: |
+    List all leads in a campaign.
+  provider: lemlist
+  endpoint: /api/campaigns/{campaign_id}/leads
+  method: GET
+  scopes: []
+  tags:
+    - leads
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: lemlist_add_lead
+  name: Add Lead
+  description: |
+    Add a lead to a campaign.
+  provider: lemlist
+  endpoint: /api/campaigns/{campaign_id}/leads
+  method: POST
+  scopes: []
+  tags:
+    - leads
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a lead
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - campaign_id
+      - email
+
+- slug: lemlist_update_lead
+  name: Update Lead
+  description: |
+    Update an existing lead.
+  provider: lemlist
+  endpoint: /api/campaigns/{campaign_id}/leads/{lead_id}
+  method: PUT
+  scopes: []
+  tags:
+    - leads
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a lead
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+      lead_id:
+        type: string
+        description: "Lead ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - campaign_id
+      - lead_id
+
+- slug: lemlist_list_unsubscribed
+  name: List Unsubscribed Leads
+  description: |
+    List all unsubscribed leads.
+  provider: lemlist
+  endpoint: /api/unsubscribed
+  method: GET
+  scopes: []
+  tags:
+    - leads
+    - unsubscribed
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing unsubscribed leads
+    properties: {}
+    required: []
+
+- slug: lemlist_list_blacklisted
+  name: List Blacklisted Leads
+  description: |
+    List all blacklisted leads.
+  provider: lemlist
+  endpoint: /api/blacklisted
+  method: GET
+  scopes: []
+  tags:
+    - leads
+    - blacklisted
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing blacklisted leads
+    properties: {}
+    required: []
+
+- slug: lemlist_list_stats
+  name: Get Stats
+  description: |
+    Get overall statistics.
+  provider: lemlist
+  endpoint: /api/stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting stats
+    properties: {}
+    required: []
+
+- slug: lemlist_get_campaign_stats
+  name: Get Campaign Stats
+  description: |
+    Get statistics for a specific campaign.
+  provider: lemlist
+  endpoint: /api/campaigns/{campaign_id}/stats
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - stats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign stats
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id

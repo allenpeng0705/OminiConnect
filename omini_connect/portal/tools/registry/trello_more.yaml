@@ -1,0 +1,222 @@
+- slug: trello_more_list_boards
+  name: List Boards
+  description: |
+    Retrieve a list of all boards accessible to the authenticated user.
+  provider: trello_more
+  endpoint: /members/me/boards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties: {}
+    required: []
+
+- slug: trello_more_get_board
+  name: Get Board
+  description: |
+    Get details for a specific board by ID.
+  provider: trello_more
+  endpoint: /boards/{board_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      board_id:
+        type: string
+        description: "The unique identifier of the board"
+    required:
+      - board_id
+
+- slug: trello_more_create_board
+  name: Create Board
+  description: |
+    Create a new board with the given name and settings.
+  provider: trello_more
+  endpoint: /boards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      name:
+        type: string
+        description: "Name of the board"
+      description:
+        type: string
+        description: "Optional description for the board"
+    required:
+      - name
+
+- slug: trello_more_list_lists
+  name: List Lists
+  description: |
+    Retrieve all lists on a specific board.
+  provider: trello_more
+  endpoint: /boards/{board_id}/lists
+  method: GET
+  scopes:
+    - read
+  tags:
+    - lists
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      board_id:
+        type: string
+        description: "The board ID to list lists from"
+    required:
+      - board_id
+
+- slug: trello_more_get_list
+  name: Get List
+  description: |
+    Get details for a specific list by ID.
+  provider: trello_more
+  endpoint: /lists/{list_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - lists
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      list_id:
+        type: string
+        description: "The unique identifier of the list"
+    required:
+      - list_id
+
+- slug: trello_more_create_list
+  name: Create List
+  description: |
+    Create a new list on a board.
+  provider: trello_more
+  endpoint: /boards/{board_id}/lists
+  method: POST
+  scopes:
+    - write
+  tags:
+    - lists
+  input_schema:
+    type: object
+    description: Parameters for creating a list
+    properties:
+      board_id:
+        type: string
+        description: "The board ID to create the list on"
+      name:
+        type: string
+        description: "Name of the list"
+    required:
+      - board_id
+      - name
+
+- slug: trello_more_list_cards
+  name: List Cards
+  description: |
+    Retrieve all cards on a board or list.
+  provider: trello_more
+  endpoint: /boards/{board_id}/cards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      board_id:
+        type: string
+        description: "The board ID to list cards from"
+    required:
+      - board_id
+
+- slug: trello_more_get_card
+  name: Get Card
+  description: |
+    Get details for a specific card by ID.
+  provider: trello_more
+  endpoint: /cards/{card_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      card_id:
+        type: string
+        description: "The unique identifier of the card"
+    required:
+      - card_id
+
+- slug: trello_more_create_card
+  name: Create Card
+  description: |
+    Create a new card in a list.
+  provider: trello_more
+  endpoint: /cards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for creating a card
+    properties:
+      name:
+        type: string
+        description: "Name of the card"
+      id_list:
+        type: string
+        description: "The list ID to add the card to"
+      desc:
+        type: string
+        description: "Optional description for the card"
+    required:
+      - name
+      - id_list
+
+- slug: trello_more_get_board_actions
+  name: Get Board Actions
+  description: |
+    Retrieve recent actions performed on a board.
+  provider: trello_more
+  endpoint: /boards/{board_id}/actions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - actions
+  input_schema:
+    type: object
+    description: Parameters for getting board actions
+    properties:
+      board_id:
+        type: string
+        description: "The board ID to get actions from"
+      filter:
+        type: string
+        description: "Optional filter for action types"
+    required:
+      - board_id

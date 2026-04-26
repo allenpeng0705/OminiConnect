@@ -1,0 +1,244 @@
+# Klaviyo OAuth Tools - Allowlist
+# Curated subset of Klaviyo API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. klaviyo_list_profiles        - List profiles
+# 2. klaviyo_get_profile         - Get profile details
+# 3. klaviyo_create_profile      - Create a profile
+# 4. klaviyo_update_profile      - Update a profile
+# 5. klaviyo_list_lists          - List lists
+# 6. klaviyo_get_list           - Get list details
+# 7. klaviyo_list_campaigns     - List campaigns
+# 8. klaviyo_get_campaign       - Get campaign details
+# 9. klaviyo_list_metrics       - List metrics
+# 10. klaviyo_get_metrics_event - Get metrics event
+
+- slug: klaviyo_list_profiles
+  name: List Profiles
+  description: |
+    List all profiles in Klaviyo.
+  provider: klaviyo-oauth
+  endpoint: /api/profiles/
+  method: GET
+  scopes: []
+  tags:
+    - profiles
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing profiles
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: klaviyo_get_profile
+  name: Get Profile
+  description: |
+    Get details for a specific profile.
+  provider: klaviyo-oauth
+  endpoint: /api/profiles/{profile_id}
+  method: GET
+  scopes: []
+  tags:
+    - profiles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a profile
+    properties:
+      profile_id:
+        type: string
+        description: "Profile ID"
+    required:
+      - profile_id
+
+- slug: klaviyo_create_profile
+  name: Create Profile
+  description: |
+    Create a new profile.
+  provider: klaviyo-oauth
+  endpoint: /api/profiles/
+  method: POST
+  scopes: []
+  tags:
+    - profiles
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a profile
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      properties:
+        type: object
+        description: "Additional properties"
+    required:
+      - email
+
+- slug: klaviyo_update_profile
+  name: Update Profile
+  description: |
+    Update an existing profile.
+  provider: klaviyo-oauth
+  endpoint: /api/profiles/{profile_id}
+  method: PUT
+  scopes: []
+  tags:
+    - profiles
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a profile
+    properties:
+      profile_id:
+        type: string
+        description: "Profile ID"
+      properties:
+        type: object
+        description: "Properties to update"
+    required:
+      - profile_id
+
+- slug: klaviyo_list_lists
+  name: List Lists
+  description: |
+    List all lists.
+  provider: klaviyo-oauth
+  endpoint: /api/lists/
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: klaviyo_get_list
+  name: Get List
+  description: |
+    Get details for a specific list.
+  provider: klaviyo-oauth
+  endpoint: /api/lists/{list_id}
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a list
+    properties:
+      list_id:
+        type: string
+        description: "List ID"
+    required:
+      - list_id
+
+- slug: klaviyo_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: klaviyo-oauth
+  endpoint: /api/campaigns/
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: klaviyo_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: klaviyo-oauth
+  endpoint: /api/campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: klaviyo_list_metrics
+  name: List Metrics
+  description: |
+    List all metrics.
+  provider: klaviyo-oauth
+  endpoint: /api/metrics/
+  method: GET
+  scopes: []
+  tags:
+    - metrics
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing metrics
+    properties: {}
+    required: []
+
+- slug: klaviyo_get_metrics_event
+  name: Get Metrics Event
+  description: |
+    Get a metrics event.
+  provider: klaviyo-oauth
+  endpoint: /api/metrics/{metric_id}
+  method: GET
+  scopes: []
+  tags:
+    - metrics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a metrics event
+    properties:
+      metric_id:
+        type: string
+        description: "Metric ID"
+    required:
+      - metric_id

@@ -1,0 +1,187 @@
+# Veeva Vault Tools - Allowlist
+# Curated subset of Veeva Vault API for AI agent use.
+# Two-Step OAuth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. veeva_list_documents           - List all documents
+# # 2. veeva_get_document           - Get document details
+# # 3. veeva_create_document           - Create a new document
+# # 4. veeva_update_document           - Update a document
+# # 5. veeva_list_objects           - List all custom objects
+# # 6. veeva_get_object           - Get object details
+# # 7. veeva_create_object           - Create a new object
+# # 8. veeva_list_packets           - List all packets for submission
+# # 9. veeva_submit_packet           - Submit a packet
+# # 10. veeva_get_audit_trail           - Get audit trail for a document
+
+- slug: veeva_list_documents
+  name: List Documents
+  description: |
+    List all documents
+  provider: veeva-vault
+  endpoint: /documents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for list documents
+    properties: {}
+    required: []
+
+- slug: veeva_get_document
+  name: Get Document
+  description: |
+    Get document details
+  provider: veeva-vault
+  endpoint: /documents/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for get document
+    properties: {}
+    required: []
+
+- slug: veeva_create_document
+  name: Create Document
+  description: |
+    Create a new document
+  provider: veeva-vault
+  endpoint: /documents
+  method: POST
+  scopes:
+    - write
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for create document
+    properties: {}
+    required: []
+
+- slug: veeva_update_document
+  name: Update Document
+  description: |
+    Update a document
+  provider: veeva-vault
+  endpoint: /documents/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for update document
+    properties: {}
+    required: []
+
+- slug: veeva_list_objects
+  name: List Objects
+  description: |
+    List all custom objects
+  provider: veeva-vault
+  endpoint: /objects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for list objects
+    properties: {}
+    required: []
+
+- slug: veeva_get_object
+  name: Get Object
+  description: |
+    Get object details
+  provider: veeva-vault
+  endpoint: /objects/{name}/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for get object
+    properties: {}
+    required: []
+
+- slug: veeva_create_object
+  name: Create Object
+  description: |
+    Create a new object
+  provider: veeva-vault
+  endpoint: /objects/{name}
+  method: POST
+  scopes:
+    - write
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for create object
+    properties: {}
+    required: []
+
+- slug: veeva_list_packets
+  name: List Packets
+  description: |
+    List all packets for submission
+  provider: veeva-vault
+  endpoint: /packages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for list packets
+    properties: {}
+    required: []
+
+- slug: veeva_submit_packet
+  name: Submit Packet
+  description: |
+    Submit a packet
+  provider: veeva-vault
+  endpoint: /packages/{id}/submit
+  method: POST
+  scopes:
+    - write
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for submit packet
+    properties: {}
+    required: []
+
+- slug: veeva_get_audit_trail
+  name: Get Audit Trail
+  description: |
+    Get audit trail for a document
+  provider: veeva-vault
+  endpoint: /documents/{id}/audit
+  method: GET
+  scopes:
+    - read
+  tags:
+    - veeva-vault
+  input_schema:
+    type: object
+    description: Parameters for get audit trail
+    properties: {}
+    required: []
+

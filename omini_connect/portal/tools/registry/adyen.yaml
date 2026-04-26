@@ -1,0 +1,315 @@
+# Adyen Tools - Allowlist
+# Curated subset of Adyen payment platform API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. adyen_list_payments           - List all payments
+# 2. adyen_get_payment            - Get payment details
+# 3. adyen_create_payment         - Create a new payment
+# 4. adyen_get_payment_methods    - Get available payment methods
+# 5. adyen_list_accounts          - List platform accounts
+# 6. adyen_get_account            - Get account details
+# 7. adyen_list_webhooks          - List webhook configurations
+# 8. adyen_get_webhook            - Get webhook details
+# 9. adyen_create_webhook         - Create a new webhook
+# 10. adyen_get_report            - Get settlement reports
+
+- slug: adyen_list_payments
+  name: List Payments
+  description: |
+    List all payments in Adyen. Filter by merchant account, status, or date range.
+  provider: adyen
+  endpoint: /v1/payments
+  method: GET
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+      status:
+        type: string
+        description: "Filter by status (received, pending, refused, etc)"
+      fromCreationDate:
+        type: string
+        description: "From creation date (YYYY-MM-DD HH:mm:ss)"
+      toCreationDate:
+        type: string
+        description: "To creation date (YYYY-MM-DD HH:mm:ss)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: adyen_get_payment
+  name: Get Payment
+  description: |
+    Get detailed information about a specific Adyen payment.
+  provider: adyen
+  endpoint: /v1/payments/{id}
+  method: GET
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID (PSP reference)"
+    required:
+      - id
+
+- slug: adyen_create_payment
+  name: Create Payment
+  description: |
+    Create a new payment in Adyen. Set amount, currency, and payment method.
+  provider: adyen
+  endpoint: /v1/payments
+  method: POST
+  scopes:
+    - payments:write
+  tags:
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment
+    properties:
+      amount:
+        type: object
+        description: "Amount object with value and currency"
+      reference:
+        type: string
+        description: "Your order/rference ID"
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+      paymentMethod:
+        type: object
+        description: "Payment method details"
+      returnUrl:
+        type: string
+        description: "Return URL for redirect payments"
+      shopperEmail:
+        type: string
+        description: "Shopper email address"
+      shopperReference:
+        type: string
+        description: "Shopper ID for recurring payments"
+    required:
+      - amount
+      - reference
+      - merchantAccount
+      - paymentMethod
+
+- slug: adyen_get_payment_methods
+  name: Get Payment Methods
+  description: |
+    Get available payment methods for a merchant account and amount.
+  provider: adyen
+  endpoint: /v1/paymentMethods
+  method: POST
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - methods
+  input_schema:
+    type: object
+    description: Parameters for getting payment methods
+    properties:
+      amount:
+        type: object
+        description: "Amount object with value and currency"
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+      countryCode:
+        type: string
+        description: "Country code (e.g., US, GB)"
+      channel:
+        type: string
+        description: "Channel (ios, android, web)"
+    required:
+      - amount
+      - merchantAccount
+
+- slug: adyen_list_accounts
+  name: List Accounts
+  description: |
+    List all platform accounts in Adyen for marketplaces.
+  provider: adyen
+  endpoint: /v1/accounts
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - list
+    - read
+    - platform
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      pageNumber:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Page size"
+        default: 100
+    required: []
+
+- slug: adyen_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific Adyen platform account.
+  provider: adyen
+  endpoint: /v1/accounts/{id}
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - read
+    - platform
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: adyen_list_webhooks
+  name: List Webhooks
+  description: |
+    List all webhook configurations for a merchant account.
+  provider: adyen
+  endpoint: /v1/webhooks
+  method: GET
+  scopes:
+    - webhooks:read
+  tags:
+    - webhooks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+    required: []
+
+- slug: adyen_get_webhook
+  name: Get Webhook
+  description: |
+    Get detailed information about a specific webhook configuration.
+  provider: adyen
+  endpoint: /v1/webhooks/{id}
+  method: GET
+  scopes:
+    - webhooks:read
+  tags:
+    - webhooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a webhook
+    properties:
+      id:
+        type: string
+        description: "Webhook ID"
+    required:
+      - id
+
+- slug: adyen_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook configuration for merchant events.
+  provider: adyen
+  endpoint: /v1/webhooks
+  method: POST
+  scopes:
+    - webhooks:write
+  tags:
+    - webhooks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+      url:
+        type: string
+        description: "Webhook URL"
+      active:
+        type: boolean
+        description: "Whether webhook is active"
+      eventTypes:
+        type: array
+        description: "Event types to subscribe to"
+      communicationFormat:
+        type: string
+        description: "Format (json, xml)"
+        default: json
+    required:
+      - merchantAccount
+      - url
+      - eventTypes
+
+- slug: adyen_get_report
+  name: Get Report
+  description: |
+    Get settlement or financial reports from Adyen.
+  provider: adyen
+  endpoint: /v1/reports
+  method: POST
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - settlements
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties:
+      reportType:
+        type: string
+        description: "Type of report (settlement, payment, etc)"
+      merchantAccount:
+        type: string
+        description: "Merchant account name"
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - reportType
+      - merchantAccount

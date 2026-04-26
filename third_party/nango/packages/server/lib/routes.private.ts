@@ -123,7 +123,24 @@ let webAuth: RequestHandler[] = flagHasAuth
       : [authMiddleware.noAuth.bind(authMiddleware), rateLimiterMiddleware];
 
 if (process.env['NANGO_AUTH_MODE']?.trim().toLowerCase() === 'external_trust') {
-    webAuth = [authMiddleware.externalTrustedAuth.bind(authMiddleware), rateLimiterMiddleware];
+    const hybridExternalOrSessionAuth: RequestHandler = (req, res, next) => {
+        // OminiConnect internal bridge requests provide trusted headers.
+        const hasExternalHeaders = Boolean(req.get('x-omini-internal-key')) && Boolean(req.get('x-nango-environment-id'));
+        if (hasExternalHeaders) {
+            return authMiddleware.externalTrustedAuth(req, res, next);
+        }
+
+        // Browser-driven Nango dashboard requests use regular session auth.
+        const sessionMiddleware = passport.authenticate('session') as RequestHandler;
+        return sessionMiddleware(req, res, (err?: any) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            void authMiddleware.sessionAuth(req, res, next);
+        });
+    };
+    webAuth = [hybridExternalOrSessionAuth, rateLimiterMiddleware];
 }
 
 // For integration test, we want to bypass session auth

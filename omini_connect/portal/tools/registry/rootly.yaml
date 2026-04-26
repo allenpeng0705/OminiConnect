@@ -1,0 +1,277 @@
+# Rootly Tools - Allowlist
+# Curated subset of Rootly API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rootly_list_incidents          - List all incidents
+# 2. rootly_get_incident            - Get incident details
+# 3. rootly_create_incident         - Create an incident
+# 4. rootly_update_incident          - Update an incident
+# 5. rootly_list_responders         - List responders
+# 6. rootly_add_responder           - Add responder to incident
+# 7. rootly_list_postmortems        - List postmortems
+# 8. rootly_create_postmortem       - Create a postmortem
+# 9. rootly_list_services           - List services
+# 10. rootly_get_incident_timeline - Get incident timeline
+
+- slug: rootly_list_incidents
+  name: List Incidents
+  description: |
+    Retrieve a list of all incidents.
+  provider: rootly
+  endpoint: /v1/incidents
+  method: GET
+  scopes:
+    - incidents:read
+  tags:
+    - incidents
+    - incident-management
+    - on-call
+  input_schema:
+    type: object
+    description: Parameters for listing incidents
+    properties:
+      limit:
+        type: integer
+        description: "Number of incidents"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: triggered, acknowledged, resolved"
+    required: []
+
+- slug: rootly_get_incident
+  name: Get Incident
+  description: |
+    Get details of a specific incident.
+  provider: rootly
+  endpoint: /v1/incidents/{incidentId}
+  method: GET
+  scopes:
+    - incidents:read
+  tags:
+    - incidents
+    - incident-management
+    - on-call
+  input_schema:
+    type: object
+    description: Parameters for getting an incident
+    properties:
+      incidentId:
+        type: string
+        description: "The incident ID"
+    required:
+      - incidentId
+
+- slug: rootly_create_incident
+  name: Create Incident
+  description: |
+    Create a new incident for tracking.
+  provider: rootly
+  endpoint: /v1/incidents
+  method: POST
+  scopes:
+    - incidents:write
+  tags:
+    - incidents
+    - incident-management
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an incident
+    properties:
+      title:
+        type: string
+        description: "Incident title"
+      severity:
+        type: string
+        description: "Severity: critical, high, medium, low"
+      serviceId:
+        type: string
+        description: "Affected service ID"
+      description:
+        type: string
+        description: "Incident description"
+    required:
+      - title
+      - severity
+
+- slug: rootly_update_incident
+  name: Update Incident
+  description: |
+    Update an existing incident.
+  provider: rootly
+  endpoint: /v1/incidents/{incidentId}
+  method: PUT
+  scopes:
+    - incidents:write
+  tags:
+    - incidents
+    - incident-management
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an incident
+    properties:
+      incidentId:
+        type: string
+        description: "The incident ID"
+      status:
+        type: string
+        description: "Updated status: triggered, acknowledged, resolved"
+      severity:
+        type: string
+        description: "Updated severity"
+    required:
+      - incidentId
+
+- slug: rootly_list_responders
+  name: List Responders
+  description: |
+    Retrieve a list of responders for an incident.
+  provider: rootly
+  endpoint: /v1/incidents/{incidentId}/responders
+  method: GET
+  scopes:
+    - responders:read
+  tags:
+    - responders
+    - incidents
+    - incident-management
+  input_schema:
+    type: object
+    description: Parameters for listing responders
+    properties:
+      incidentId:
+        type: string
+        description: "The incident ID"
+    required:
+      - incidentId
+
+- slug: rootly_add_responder
+  name: Add Responder
+  description: |
+    Add a responder to an incident.
+  provider: rootly
+  endpoint: /v1/incidents/{incidentId}/responders
+  method: POST
+  scopes:
+    - responders:write
+  tags:
+    - responders
+    - incidents
+    - incident-management
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a responder
+    properties:
+      incidentId:
+        type: string
+        description: "The incident ID"
+      userId:
+        type: string
+        description: "User ID to add as responder"
+    required:
+      - incidentId
+      - userId
+
+- slug: rootly_list_postmortems
+  name: List Postmortems
+  description: |
+    Retrieve a list of all postmortems.
+  provider: rootly
+  endpoint: /v1/postmortems
+  method: GET
+  scopes:
+    - postmortems:read
+  tags:
+    - postmortems
+    - incidents
+    - learning
+  input_schema:
+    type: object
+    description: Parameters for listing postmortems
+    properties:
+      limit:
+        type: integer
+        description: "Number of postmortems"
+        default: 50
+    required: []
+
+- slug: rootly_create_postmortem
+  name: Create Postmortem
+  description: |
+    Create a postmortem for an incident.
+  provider: rootly
+  endpoint: /v1/postmortems
+  method: POST
+  scopes:
+    - postmortems:write
+  tags:
+    - postmortems
+    - incidents
+    - learning
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a postmortem
+    properties:
+      incidentId:
+        type: string
+        description: "Related incident ID"
+      title:
+        type: string
+        description: "Postmortem title"
+      summary:
+        type: string
+        description: "Incident summary"
+    required:
+      - incidentId
+      - title
+
+- slug: rootly_list_services
+  name: List Services
+  description: |
+    Retrieve a list of all services.
+  provider: rootly
+  endpoint: /v1/services
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+    - infrastructure
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      limit:
+        type: integer
+        description: "Number of services"
+        default: 50
+    required: []
+
+- slug: rootly_get_incident_timeline
+  name: Get Incident Timeline
+  description: |
+    Get the timeline of events for an incident.
+  provider: rootly
+  endpoint: /v1/incidents/{incidentId}/timeline
+  method: GET
+  scopes:
+    - incidents:read
+  tags:
+    - incidents
+    - timeline
+    - incident-management
+  input_schema:
+    type: object
+    description: Parameters for getting incident timeline
+    properties:
+      incidentId:
+        type: string
+        description: "The incident ID"
+    required:
+      - incidentId

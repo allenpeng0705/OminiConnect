@@ -1,0 +1,222 @@
+# BambooHR (Basic Auth) Tools - Allowlist
+# Curated subset of BambooHR API for AI agent use.
+# BASIC auth via Nango (API Key).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bamboohr_get_employee       - Get employee details
+# 2. bamboohr_list_employees    - List employees
+# 3. bamboohr_get_job_info      - Get job information
+# 4. bamboohr_get_time_off     - Get time off requests
+# 5. bamboohr_list_departments  - List departments
+# 6. bamboohr_list_locations   - List locations
+# 7. bamboohr_get_benefits      - Get employee benefits
+# 8. bamboohr_get_compensation  - Get compensation info
+# 9. bamboohr_list_metadata_fields - List custom fields
+# 10. bamboohr_get_reports       - Get report data
+
+- slug: bamboohr_get_employee
+  name: Get Employee
+  description: |
+    Get details for a specific employee by ID or email.
+  provider: bamboohr-basic
+  endpoint: /v1/employees/{id}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: bamboohr_list_employees
+  name: List Employees
+  description: |
+    List all employees in the company.
+  provider: bamboohr-basic
+  endpoint: /v1/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      sort:
+        type: string
+        description: "Sort by: lastName, firstName, hireDate, etc."
+      fields:
+        type: string
+        description: "Comma-separated fields to include"
+    required: []
+
+- slug: bamboohr_get_job_info
+  name: Get Job Info
+  description: |
+    Get job information for an employee (title, department, location).
+  provider: bamboohr-basic
+  endpoint: /v1/employees/{id}/jobInfo
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - job
+  input_schema:
+    type: object
+    description: Parameters for getting job info
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: bamboohr_get_time_off
+  name: Get Time Off
+  description: |
+    Get time off requests and balances for an employee.
+  provider: bamboohr-basic
+  endpoint: /v1/employees/{id}/timeOffRequests
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - time-off
+  input_schema:
+    type: object
+    description: Parameters for getting time off
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+      start:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      end:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required:
+      - id
+
+- slug: bamboohr_list_departments
+  name: List Departments
+  description: |
+    List all departments in the company.
+  provider: bamboohr-basic
+  endpoint: /v1/departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: bamboohr_list_locations
+  name: List Locations
+  description: |
+    List all locations in the company.
+  provider: bamboohr-basic
+  endpoint: /v1/locations
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - organization
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: bamboohr_get_benefits
+  name: Get Benefits
+  description: |
+    Get benefits information for an employee.
+  provider: bamboohr-basic
+  endpoint: /v1/employees/{id}/benefits
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - benefits
+  input_schema:
+    type: object
+    description: Parameters for getting benefits
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: bamboohr_get_compensation
+  name: Get Compensation
+  description: |
+    Get compensation information for an employee.
+  provider: bamboohr-basic
+  endpoint: /v1/employees/{id}/compensation
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for getting compensation
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: bamboohr_list_metadata_fields
+  name: List Metadata Fields
+  description: |
+    List all available employee fields (standard and custom).
+  provider: bamboohr-basic
+  endpoint: /v1/meta/fields
+  method: GET
+  scopes: []
+  tags:
+    - metadata
+    - fields
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: bamboohr_get_reports
+  name: Get Reports
+  description: |
+    Get data from a saved BambooHR report.
+  provider: bamboohr-basic
+  endpoint: /v1/reports/{reportId}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - data
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "Report ID or name"
+    required:
+      - reportId

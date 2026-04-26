@@ -1,0 +1,237 @@
+# Kustomer Tools - Allowlist
+# Curated subset of Kustomer API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. kustomer_list_conversations - List conversations
+# 2. kustomer_get_conversation   - Get conversation details
+# 3. kustomer_list_messages     - List messages
+# 4. kustomer_create_message    - Create a message
+# 5. kustomer_list_customers    - List customers
+# 6. kustomer_get_customer      - Get customer details
+# 7. kustomer_list_tags         - List tags
+# 8. kustomer_list_teams        - List teams
+# 9. kustomer_list_users        - List users
+# 10. kustomer_get_user         - Get user details
+
+- slug: kustomer_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations.
+  provider: kustomer
+  endpoint: /conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: kustomer_get_conversation
+  name: Get Conversation
+  description: |
+    Get details for a specific conversation.
+  provider: kustomer
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: kustomer_list_messages
+  name: List Messages
+  description: |
+    List messages in a conversation.
+  provider: kustomer
+  endpoint: /conversations/{conversation_id}/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: kustomer_create_message
+  name: Create Message
+  description: |
+    Create a message in a conversation.
+  provider: kustomer
+  endpoint: /conversations/{conversation_id}/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      body:
+        type: string
+        description: "Message content"
+    required:
+      - conversation_id
+      - body
+
+- slug: kustomer_list_customers
+  name: List Customers
+  description: |
+    List all customers.
+  provider: kustomer
+  endpoint: /customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: kustomer_get_customer
+  name: Get Customer
+  description: |
+    Get details for a specific customer.
+  provider: kustomer
+  endpoint: /customers/{customer_id}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: kustomer_list_tags
+  name: List Tags
+  description: |
+    List all tags.
+  provider: kustomer
+  endpoint: /tags
+  method: GET
+  scopes: []
+  tags:
+    - tags
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: kustomer_list_teams
+  name: List Teams
+  description: |
+    List all teams.
+  provider: kustomer
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: kustomer_list_users
+  name: List Users
+  description: |
+    List all users (agents).
+  provider: kustomer
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: kustomer_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: kustomer
+  endpoint: /users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id

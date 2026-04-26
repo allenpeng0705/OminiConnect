@@ -1,0 +1,258 @@
+# Intuit Tools - Allowlist
+# Curated subset of QuickBooks API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. intuit_list_companies        - List companies
+# 2. intuit_get_company           - Get company details
+# 3. intuit_list_accounts         - List accounts
+# 4. intuit_get_account          - Get account details
+# 5. intuit_list_customers       - List customers
+# 6. intuit_get_customer         - Get customer details
+# 7. intuit_list_vendors          - List vendors
+# 8. intuit_get_vendor           - Get vendor details
+# 9. intuit_list_invoices        - List invoices
+# 10. intuit_get_invoice          - Get invoice details
+
+- slug: intuit_list_companies
+  name: List Companies
+  description: |
+    List all companies in QuickBooks.
+    Returns company details including name and company ID.
+  provider: intuit
+  endpoint: /v3/company
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties: {}
+    required: []
+
+- slug: intuit_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+    Includes company settings and fiscal year.
+  provider: intuit
+  endpoint: /v3/company/{companyId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: intuit_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in QuickBooks.
+    Returns account details including name and type.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: intuit_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific account.
+    Includes account balance and transactions.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/account/{accountId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - companyId
+      - accountId
+
+- slug: intuit_list_customers
+  name: List Customers
+  description: |
+    List all customers in QuickBooks.
+    Returns customer details including name and email.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: intuit_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+    Includes customer details and balance.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/customer/{customerId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - companyId
+      - customerId
+
+- slug: intuit_list_vendors
+  name: List Vendors
+  description: |
+    List all vendors in QuickBooks.
+    Returns vendor details including name and balance.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vendors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing vendors
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: intuit_get_vendor
+  name: Get Vendor
+  description: |
+    Get detailed information about a specific vendor.
+    Includes vendor details and balance.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/vendor/{vendorId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vendors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a vendor
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+      vendorId:
+        type: string
+        description: "Vendor ID"
+    required:
+      - companyId
+      - vendorId
+
+- slug: intuit_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in QuickBooks.
+    Returns invoice details including number and status.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/query
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: intuit_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice.
+    Includes invoice lines and payment status.
+  provider: intuit
+  endpoint: /v3/company/{companyId}/invoice/{invoiceId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      companyId:
+        type: string
+        description: "Company ID"
+      invoiceId:
+        type: string
+        description: "Invoice ID"
+    required:
+      - companyId
+      - invoiceId

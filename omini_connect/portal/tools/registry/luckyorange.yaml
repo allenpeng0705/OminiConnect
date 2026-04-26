@@ -1,0 +1,275 @@
+# Lucky Orange Tools - Allowlist
+# Curated subset of Lucky Orange API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. luckyorange_list_recordings - List session recordings
+# 2. luckyorange_get_recording   - Get recording details
+# 3. luckyorange_list_heatmaps   - List heatmaps
+# 4. luckyorange_get_heatmap     - Get heatmap details
+# 5. luckyorange_list_chats      - List live chat conversations
+# 6. luckyorange_get_chat        - Get chat details
+# 7. luckyorange_list_funnels    - List conversion funnels
+# 8. luckyorange_get_funnel      - Get funnel details
+# 9. luckyorange_list_visits     - List website visits
+# 10. luckyorange_get_visit      - Get visit details
+
+- slug: luckyorange_list_recordings
+  name: List Recordings
+  description: |
+    Retrieve a list of session recordings with filtering options.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/recordings
+  method: GET
+  scopes:
+    - luckyorange.recordings.read
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      limit:
+        type: integer
+        description: "Maximum number of recordings to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required:
+      - siteId
+
+- slug: luckyorange_get_recording
+  name: Get Recording
+  description: |
+    Retrieve a specific session recording by its ID.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/recordings/{recordingId}
+  method: GET
+  scopes:
+    - luckyorange.recordings.read
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      recordingId:
+        type: string
+        description: "Unique identifier of the recording"
+    required:
+      - siteId
+      - recordingId
+
+- slug: luckyorange_list_heatmaps
+  name: List Heatmaps
+  description: |
+    Retrieve a list of heatmaps for a site.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/heatmaps
+  method: GET
+  scopes:
+    - luckyorange.heatmaps.read
+  tags:
+    - heatmaps
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing heatmaps
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      limit:
+        type: integer
+        description: "Maximum number of heatmaps to return"
+    required:
+      - siteId
+
+- slug: luckyorange_get_heatmap
+  name: Get Heatmap
+  description: |
+    Retrieve a specific heatmap by its ID.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/heatmaps/{heatmapId}
+  method: GET
+  scopes:
+    - luckyorange.heatmaps.read
+  tags:
+    - heatmaps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a heatmap
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      heatmapId:
+        type: string
+        description: "Unique identifier of the heatmap"
+    required:
+      - siteId
+      - heatmapId
+
+- slug: luckyorange_list_chats
+  name: List Chats
+  description: |
+    Retrieve a list of live chat conversations.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/chats
+  method: GET
+  scopes:
+    - luckyorange.chats.read
+  tags:
+    - chats
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      status:
+        type: string
+        description: "Filter by chat status (open, closed)"
+    required:
+      - siteId
+
+- slug: luckyorange_get_chat
+  name: Get Chat
+  description: |
+    Retrieve a specific chat conversation by its ID.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/chats/{chatId}
+  method: GET
+  scopes:
+    - luckyorange.chats.read
+  tags:
+    - chats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a chat
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      chatId:
+        type: string
+        description: "Unique identifier of the chat"
+    required:
+      - siteId
+      - chatId
+
+- slug: luckyorange_list_funnels
+  name: List Funnels
+  description: |
+    Retrieve a list of conversion funnels for a site.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/funnels
+  method: GET
+  scopes:
+    - luckyorange.funnels.read
+  tags:
+    - funnels
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing funnels
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+    required:
+      - siteId
+
+- slug: luckyorange_get_funnel
+  name: Get Funnel
+  description: |
+    Retrieve a specific funnel by its ID with conversion metrics.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/funnels/{funnelId}
+  method: GET
+  scopes:
+    - luckyorange.funnels.read
+  tags:
+    - funnels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a funnel
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      funnelId:
+        type: string
+        description: "Unique identifier of the funnel"
+    required:
+      - siteId
+      - funnelId
+
+- slug: luckyorange_list_visits
+  name: List Visits
+  description: |
+    Retrieve a list of website visits with visitor information.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/visits
+  method: GET
+  scopes:
+    - luckyorange.visits.read
+  tags:
+    - visits
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing visits
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      limit:
+        type: integer
+        description: "Maximum number of visits to return"
+    required:
+      - siteId
+
+- slug: luckyorange_get_visit
+  name: Get Visit
+  description: |
+    Retrieve a specific visit by its ID with detailed information.
+  provider: luckyorange
+  endpoint: /sites/{siteId}/visits/{visitId}
+  method: GET
+  scopes:
+    - luckyorange.visits.read
+  tags:
+    - visits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visit
+    properties:
+      siteId:
+        type: string
+        description: "Lucky Orange site ID"
+      visitId:
+        type: string
+        description: "Unique identifier of the visit"
+    required:
+      - siteId
+      - visitId

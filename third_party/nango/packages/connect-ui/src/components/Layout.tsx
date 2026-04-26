@@ -1,5 +1,5 @@
 import { Outlet } from '@tanstack/react-router';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useClickAway, useKeyPressEvent } from 'react-use';
 
 import { triggerClose } from '@/lib/events';
@@ -9,7 +9,55 @@ import NangoLogoSVG from '@/svg/logo.svg?react';
 export const Layout: React.FC = () => {
     const ref = useRef<HTMLDivElement>(null);
 
-    const { isEmbedded, showWatermark, isAuthLink } = useGlobal();
+    const {
+        isEmbedded,
+        showWatermark,
+        isAuthLink,
+        setSessionToken,
+        setApiURL,
+        setWebsocketsPath,
+        setDetectClosedAuthWindow,
+        setIsEmbedded,
+        setIsPreview,
+        setAuthLink
+    } = useGlobal();
+
+    /** `/go` and other routes skip `Home`; still need query hydration so `@nangohq/frontend` uses the right host + WS. */
+    useEffect(() => {
+        const search = new URLSearchParams(window.location.search);
+        const inUrl = search.get('session_token');
+        if (inUrl) {
+            setSessionToken(inUrl);
+        }
+        const apiU = search.get('apiURL');
+        if (apiU) {
+            setApiURL(apiU);
+        }
+        const wsPath = search.get('websocketsPath');
+        if (wsPath) {
+            setWebsocketsPath(wsPath);
+        }
+        const dc = search.get('detectClosedAuthWindow');
+        if (dc) {
+            setDetectClosedAuthWindow(dc === 'true');
+        }
+        const emb = search.get('embedded');
+        if (emb) {
+            setIsEmbedded(emb === 'true');
+        }
+        if (search.get('preview') === 'true') {
+            setIsPreview(true);
+        }
+        setAuthLink(window.self === window.top);
+    }, [
+        setSessionToken,
+        setApiURL,
+        setWebsocketsPath,
+        setDetectClosedAuthWindow,
+        setIsEmbedded,
+        setIsPreview,
+        setAuthLink
+    ]);
     const isDarkTheme = document.documentElement.classList.contains('dark');
 
     useClickAway(ref, () => {

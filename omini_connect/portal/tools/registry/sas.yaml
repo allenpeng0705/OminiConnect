@@ -1,0 +1,222 @@
+- slug: sas_list_projects
+  name: List Projects
+  description: |
+    Retrieve a paginated list of all analytics projects.
+  provider: sas
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of records per page"
+    required: []
+
+- slug: sas_get_project
+  name: Get Project
+  description: |
+    Retrieve detailed information for a specific project by ID.
+  provider: sas
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects_read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: sas_create_project
+  name: Create Project
+  description: |
+    Create a new analytics project.
+  provider: sas
+  endpoint: /projects
+  method: POST
+  scopes:
+    - projects_write
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Name of the project"
+      description:
+        type: string
+        description: "Description of the project"
+    required:
+      - name
+
+- slug: sas_list_reports
+  name: List Reports
+  description: |
+    Retrieve a list of all analytics reports.
+  provider: sas
+  endpoint: /reports
+  method: GET
+  scopes:
+    - reports_read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: sas_get_report
+  name: Get Report
+  description: |
+    Retrieve detailed information for a specific report by ID.
+  provider: sas
+  endpoint: /reports/{id}
+  method: GET
+  scopes:
+    - reports_read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      id:
+        type: string
+        description: "Report ID"
+    required:
+      - id
+
+- slug: sas_list_dashboards
+  name: List Dashboards
+  description: |
+    Retrieve a list of all analytics dashboards.
+  provider: sas
+  endpoint: /dashboards
+  method: GET
+  scopes:
+    - dashboards_read
+  tags:
+    - dashboards
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: sas_get_dashboard
+  name: Get Dashboard
+  description: |
+    Retrieve detailed information for a specific dashboard by ID.
+  provider: sas
+  endpoint: /dashboards/{id}
+  method: GET
+  scopes:
+    - dashboards_read
+  tags:
+    - dashboards
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      id:
+        type: string
+        description: "Dashboard ID"
+    required:
+      - id
+
+- slug: sas_list_tables
+  name: List Tables
+  description: |
+    Retrieve a list of all data tables in the analytics platform.
+  provider: sas
+  endpoint: /tables
+  method: GET
+  scopes:
+    - tables_read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: sas_get_table
+  name: Get Table
+  description: |
+    Retrieve detailed information for a specific table by ID.
+  provider: sas
+  endpoint: /tables/{id}
+  method: GET
+  scopes:
+    - tables_read
+  tags:
+    - tables
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      id:
+        type: string
+        description: "Table ID"
+    required:
+      - id
+
+- slug: sas_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users in the analytics platform.
+  provider: sas
+  endpoint: /users
+  method: GET
+  scopes:
+    - users_read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      role:
+        type: string
+        description: "Filter by user role"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []

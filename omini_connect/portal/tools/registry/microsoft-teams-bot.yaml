@@ -1,0 +1,248 @@
+# Microsoft Teams Bot Tools - Allowlist
+# Curated subset of Microsoft Teams Bot API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. teams_bot_list_conversations    - List conversations
+# 2. teams_bot_get_conversation      - Get conversation details
+# 3. teams_bot_send_message         - Send bot message
+# 4. teams_bot_list_members         - List conversation members
+# 5. teams_bot_update_activity      - Update message activity
+# 6. teams_bot_delete_activity      - Delete message activity
+# 7. teams_bot_create_conversation  - Create new conversation
+# 8. teams_bot_list_channels        - List team channels
+# 9. teams_bot_get_channel          - Get channel details
+# 10. teams_bot_list_teams         - List teams
+
+- slug: teams_bot_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations the bot is part of.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties: {}
+    required: []
+
+- slug: teams_bot_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations/{conversationId}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversationId
+
+- slug: teams_bot_send_message
+  name: Send Message
+  description: |
+    Send a message to a conversation.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations/{conversationId}/activities
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      text:
+        type: string
+        description: "Message text"
+      contentType:
+        type: string
+        description: "Content type (text, html)"
+        default: text
+    required:
+      - conversationId
+      - text
+
+- slug: teams_bot_list_members
+  name: List Members
+  description: |
+    List all members in a conversation.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations/{conversationId}/members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversationId
+
+- slug: teams_bot_update_activity
+  name: Update Activity
+  description: |
+    Update an existing message activity.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations/{conversationId}/activities/{activityId}
+  method: PUT
+  scopes: []
+  tags:
+    - activities
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an activity
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      activityId:
+        type: string
+        description: "Activity ID"
+      text:
+        type: string
+        description: "Updated message text"
+    required:
+      - conversationId
+      - activityId
+      - text
+
+- slug: teams_bot_delete_activity
+  name: Delete Activity
+  description: |
+    Delete a message activity.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations/{conversationId}/activities/{activityId}
+  method: DELETE
+  scopes: []
+  tags:
+    - activities
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an activity
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      activityId:
+        type: string
+        description: "Activity ID"
+    required:
+      - conversationId
+      - activityId
+
+- slug: teams_bot_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation with a user or channel.
+  provider: microsoft-teams-bot
+  endpoint: /v3/conversations
+  method: POST
+  scopes: []
+  tags:
+    - conversations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      bot:
+        type: object
+        description: "Bot identity"
+      channel:
+        type: object
+        description: "Channel data for the new conversation"
+    required: []
+
+- slug: teams_bot_list_channels
+  name: List Channels
+  description: |
+    List all channels in a team.
+  provider: microsoft-teams-bot
+  endpoint: /v3/teams/{teamId}/channels
+  method: GET
+  scopes: []
+  tags:
+    - channels
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: teams_bot_get_channel
+  name: Get Channel
+  description: |
+    Get details of a specific channel.
+  provider: microsoft-teams-bot
+  endpoint: /v3/teams/{teamId}/channels/{channelId}
+  method: GET
+  scopes: []
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      channelId:
+        type: string
+        description: "Channel ID"
+    required:
+      - teamId
+      - channelId
+
+- slug: teams_bot_list_teams
+  name: List Teams
+  description: |
+    List all teams the bot is installed in.
+  provider: microsoft-teams-bot
+  endpoint: /v3/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []

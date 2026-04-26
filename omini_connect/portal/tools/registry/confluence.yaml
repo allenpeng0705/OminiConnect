@@ -1,0 +1,307 @@
+# Confluence Tools - Allowlist
+# Curated subset of Confluence Cloud REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. confluence_list_pages       - List pages in a space
+# 2. confluence_get_page        - Get page content
+# 3. confluence_create_page     - Create a new page
+# 4. confluence_update_page     - Update a page
+# 5. confluence_list_spaces      - List all spaces
+# 6. confluence_get_space       - Get space details
+# 7. confluence_list_comments   - List page comments
+# 8. confluence_get_comment     - Get comment details
+# 9. confluence_list_attachments - List page attachments
+# 10. confluence_get_attachment  - Get attachment details
+
+- slug: confluence_list_pages
+  name: List Pages
+  description: |
+    List all pages in a Confluence space. Returns page metadata including title, ID, and status.
+  provider: confluence
+  endpoint: /wiki/api/v2/spaces/{spaceKey}/pages
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - pages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      spaceKey:
+        type: string
+        description: "The space key (e.g., ENG, TEAM)"
+      limit:
+        type: integer
+        description: "Maximum number of results"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      status:
+        type: string
+        description: "Page status filter (current, draft, archived)"
+    required:
+      - spaceKey
+
+- slug: confluence_get_page
+  name: Get Page
+  description: |
+    Get detailed content of a Confluence page including body in specified format.
+  provider: confluence
+  endpoint: /wiki/api/v2/pages/{pageId}
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      pageId:
+        type: string
+        description: "The page ID (numeric)"
+      body_format:
+        type: string
+        description: "Body format (storage, editor, view)"
+    required:
+      - pageId
+
+- slug: confluence_create_page
+  name: Create Page
+  description: |
+    Create a new page in a Confluence space with title and HTML body content.
+  provider: confluence
+  endpoint: /wiki/api/v2/pages
+  method: POST
+  scopes:
+    - create:content
+  tags:
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      spaceId:
+        type: string
+        description: "The space ID (numeric, not space key)"
+      title:
+        type: string
+        description: "Page title"
+      body:
+        type: object
+        description: "Page body content"
+        properties:
+          value:
+            type: string
+            description: "HTML content"
+          representation:
+            type: string
+            description: "Format (storage, editor)"
+      parentId:
+        type: string
+        description: "Parent page ID for hierarchy"
+    required:
+      - spaceId
+      - title
+      - body
+
+- slug: confluence_update_page
+  name: Update Page
+  description: |
+    Update an existing Confluence page with new title, body, or version for optimistic locking.
+  provider: confluence
+  endpoint: /wiki/api/v2/pages/{pageId}
+  method: PUT
+  scopes:
+    - update:content
+  tags:
+    - pages
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a page
+    properties:
+      pageId:
+        type: string
+        description: "The page ID (numeric)"
+      title:
+        type: string
+        description: "New page title"
+      body:
+        type: object
+        description: "New body content"
+        properties:
+          value:
+            type: string
+            description: "HTML content"
+          representation:
+            type: string
+            description: "Format (storage, editor)"
+      version:
+        type: object
+        description: "Current version for optimistic locking"
+        properties:
+          number:
+            type: integer
+            description: "Current version number"
+    required:
+      - pageId
+      - version
+
+- slug: confluence_list_spaces
+  name: List Spaces
+  description: |
+    List all Confluence spaces the user has access to. Returns space metadata and details.
+  provider: confluence
+  endpoint: /wiki/api/v2/spaces
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - spaces
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of results"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      status:
+        type: string
+        description: "Status filter (current, archived)"
+    required: []
+
+- slug: confluence_get_space
+  name: Get Space
+  description: |
+    Get detailed information about a Confluence space including name, key, description, and settings.
+  provider: confluence
+  endpoint: /wiki/api/v2/spaces/{spaceKey}
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      spaceKey:
+        type: string
+        description: "The space key (e.g., ENG, TEAM)"
+    required:
+      - spaceKey
+
+- slug: confluence_list_comments
+  name: List Comments
+  description: |
+    List all comments on a Confluence page. Returns comment metadata and content.
+  provider: confluence
+  endpoint: /wiki/api/v2/pages/{pageId}/comments
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - comments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      pageId:
+        type: string
+        description: "The page ID (numeric)"
+      limit:
+        type: integer
+        description: "Maximum number of results"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - pageId
+
+- slug: confluence_get_comment
+  name: Get Comment
+  description: |
+    Get detailed information about a specific comment including body and metadata.
+  provider: confluence
+  endpoint: /wiki/api/v2/comments/{commentId}
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      commentId:
+        type: string
+        description: "The comment ID (numeric)"
+    required:
+      - commentId
+
+- slug: confluence_list_attachments
+  name: List Attachments
+  description: |
+    List all attachments on a Confluence page. Returns attachment metadata and download URLs.
+  provider: confluence
+  endpoint: /wiki/api/v2/pages/{pageId}/attachments
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - attachments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing attachments
+    properties:
+      pageId:
+        type: string
+        description: "The page ID (numeric)"
+      limit:
+        type: integer
+        description: "Maximum number of results"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - pageId
+
+- slug: confluence_get_attachment
+  name: Get Attachment
+  description: |
+    Get detailed information about a specific attachment including filename, size, and media type.
+  provider: confluence
+  endpoint: /wiki/api/v2/attachments/{attachmentId}
+  method: GET
+  scopes:
+    - read:content
+  tags:
+    - attachments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an attachment
+    properties:
+      attachmentId:
+        type: string
+        description: "The attachment ID (numeric)"
+    required:
+      - attachmentId

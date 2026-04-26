@@ -1,0 +1,254 @@
+# fal.ai Tools - Allowlist
+# Curated subset of fal.ai API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. falai_list_models           - List available models
+# 2. falai_get_model            - Get model details
+# 3. falai_generate_image       - Generate an image
+# 4. falai_generate_sdxl        - Generate SDXL image
+# 5. falai_generate_face        - Generate face image
+# 6. falai_generate_llm         - Generate with LLM
+# 7. falai_get_generation       - Get generation status
+# 8. falai_list_webhooks       - List webhooks
+# 9. falai_register_webhook    - Register a webhook
+# 10. falai_get_credits        - Get account credits
+
+- slug: falai_list_models
+  name: List Models
+  description: |
+    List all available AI models.
+  provider: falai
+  endpoint: /v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - ai
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: falai_get_model
+  name: Get Model
+  description: |
+    Get details of a specific model.
+  provider: falai
+  endpoint: /v1/models/{id}
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - ai
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting model
+    properties:
+      id:
+        type: string
+        description: "Model ID"
+    required:
+      - id
+
+- slug: falai_generate_image
+  name: Generate Image
+  description: |
+    Generate an image using AI models.
+  provider: falai
+  endpoint: /fal-ai/fast-sdxl
+  method: POST
+  scopes: []
+  tags:
+    - images
+    - generation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for image generation
+    properties:
+      prompt:
+        type: string
+        description: "Text prompt for image generation"
+      image_size:
+        type: string
+        description: "Image size (e.g., 1024x1024)"
+        default: 1024x1024
+      num_images:
+        type: integer
+        description: "Number of images to generate"
+        default: 1
+    required:
+      - prompt
+
+- slug: falai_generate_sdxl
+  name: Generate SDXL
+  description: |
+    Generate an image using Stable Diffusion XL.
+  provider: falai
+  endpoint: /fal-ai/fast-sdxl
+  method: POST
+  scopes: []
+  tags:
+    - images
+    - sdxl
+    - generation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for SDXL generation
+    properties:
+      prompt:
+        type: string
+        description: "Text prompt"
+      negative_prompt:
+        type: string
+        description: "Negative prompt"
+      image_size:
+        type: string
+        description: "Image size"
+        default: 1024x1024
+    required:
+      - prompt
+
+- slug: falai_generate_face
+  name: Generate Face
+  description: |
+    Generate face images.
+  provider: falai
+  endpoint: /fal-ai/face
+  method: POST
+  scopes: []
+  tags:
+    - images
+    - face
+    - generation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for face generation
+    properties:
+      prompt:
+        type: string
+        description: "Text prompt"
+    required:
+      - prompt
+
+- slug: falai_generate_llm
+  name: Generate LLM
+  description: |
+    Generate text using LLM models.
+  provider: falai
+  endpoint: /fal-ai/llm
+  method: POST
+  scopes: []
+  tags:
+    - llm
+    - text
+    - generation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for LLM generation
+    properties:
+      model:
+        type: string
+        description: "Model name"
+      prompt:
+        type: string
+        description: "Text prompt"
+      max_tokens:
+        type: integer
+        description: "Max tokens to generate"
+        default: 256
+    required:
+      - prompt
+
+- slug: falai_get_generation
+  name: Get Generation
+  description: |
+    Get status of a generation request.
+  provider: falai
+  endpoint: /v1/generations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - generations
+    - status
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting generation
+    properties:
+      id:
+        type: string
+        description: "Generation ID"
+    required:
+      - id
+
+- slug: falai_list_webhooks
+  name: List Webhooks
+  description: |
+    List all registered webhooks.
+  provider: falai
+  endpoint: /v1/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - notifications
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: falai_register_webhook
+  name: Register Webhook
+  description: |
+    Register a new webhook URL.
+  provider: falai
+  endpoint: /v1/webhooks
+  method: POST
+  scopes: []
+  tags:
+    - webhooks
+    - notifications
+    - create
+  input_schema:
+    type: object
+    description: Parameters for registering webhook
+    properties:
+      url:
+        type: string
+        description: "Webhook URL"
+      events:
+        type: array
+        items:
+          type: string
+        description: "Events to subscribe to"
+    required:
+      - url
+
+- slug: falai_get_credits
+  name: Get Credits
+  description: |
+    Get account credit balance.
+  provider: falai
+  endpoint: /v1/credits
+  method: GET
+  scopes: []
+  tags:
+    - credits
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

@@ -1,0 +1,187 @@
+# Sentry (Public Integrations) Tools - Allowlist
+# Curated subset of Sentry (Public Integrations) API for AI agent use.
+# Auth mode: OAUTH2.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_projects                            - List all Sentry projects
+# 2. list_issues                              - List issues across projects
+# 3. get_issue                                - Get details for a specific issue
+# 4. list_events                              - List events for an issue
+# 5. list_teams                               - List teams in organization
+# 6. list_members                             - List organization members
+# 7. list_releases                            - List releases
+# 8. get_org_stats                            - Get organization statistics
+# 9. list_projects_by_team                    - List projects for a team
+# 10. get_event_counts                         - Get event count statistics
+
+- slug: list_projects
+  name: List Projects
+  description: |
+    List all Sentry projects
+  provider: sentry-oauth
+  endpoint: /projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_issues
+  name: List Issues
+  description: |
+    List issues across projects
+  provider: sentry-oauth
+  endpoint: /issues
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - errors
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_issue
+  name: Get Issue
+  description: |
+    Get details for a specific issue
+  provider: sentry-oauth
+  endpoint: /issues/{id}
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - errors
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_events
+  name: List Events
+  description: |
+    List events for an issue
+  provider: sentry-oauth
+  endpoint: /events
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - errors
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_teams
+  name: List Teams
+  description: |
+    List teams in organization
+  provider: sentry-oauth
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_members
+  name: List Members
+  description: |
+    List organization members
+  provider: sentry-oauth
+  endpoint: /members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_releases
+  name: List Releases
+  description: |
+    List releases
+  provider: sentry-oauth
+  endpoint: /releases
+  method: GET
+  scopes: []
+  tags:
+    - releases
+    - deployments
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_org_stats
+  name: Get Org Stats
+  description: |
+    Get organization statistics
+  provider: sentry-oauth
+  endpoint: /stats
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_projects_by_team
+  name: List Projects By Team
+  description: |
+    List projects for a team
+  provider: sentry-oauth
+  endpoint: /teams/{team_id}/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - teams
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_event_counts
+  name: Get Event Counts
+  description: |
+    Get event count statistics
+  provider: sentry-oauth
+  endpoint: /event-counts
+  method: GET
+  scopes: []
+  tags:
+    - stats
+    - events
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

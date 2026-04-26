@@ -1,0 +1,187 @@
+# Trafft Tools - Allowlist
+# Curated subset of Trafft API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. trafft_list_bookings           - List all bookings
+# # 2. trafft_get_booking           - Get booking details
+# # 3. trafft_create_booking           - Create a new booking
+# # 4. trafft_update_booking           - Update a booking
+# # 5. trafft_cancel_booking           - Cancel a booking
+# # 6. trafft_list_customers           - List all customers
+# # 7. trafft_get_customer           - Get customer details
+# # 8. trafft_list_services           - List all services
+# # 9. trafft_list_staff           - List all staff members
+# # 10. trafft_get_availability           - Get available time slots
+
+- slug: trafft_list_bookings
+  name: List Bookings
+  description: |
+    List all bookings
+  provider: trafft
+  endpoint: /v2/bookings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for list bookings
+    properties: {}
+    required: []
+
+- slug: trafft_get_booking
+  name: Get Booking
+  description: |
+    Get booking details
+  provider: trafft
+  endpoint: /v2/bookings/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for get booking
+    properties: {}
+    required: []
+
+- slug: trafft_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking
+  provider: trafft
+  endpoint: /v2/bookings
+  method: POST
+  scopes:
+    - write
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for create booking
+    properties: {}
+    required: []
+
+- slug: trafft_update_booking
+  name: Update Booking
+  description: |
+    Update a booking
+  provider: trafft
+  endpoint: /v2/bookings/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for update booking
+    properties: {}
+    required: []
+
+- slug: trafft_cancel_booking
+  name: Cancel Booking
+  description: |
+    Cancel a booking
+  provider: trafft
+  endpoint: /v2/bookings/{id}/cancel
+  method: POST
+  scopes:
+    - write
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for cancel booking
+    properties: {}
+    required: []
+
+- slug: trafft_list_customers
+  name: List Customers
+  description: |
+    List all customers
+  provider: trafft
+  endpoint: /v2/customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for list customers
+    properties: {}
+    required: []
+
+- slug: trafft_get_customer
+  name: Get Customer
+  description: |
+    Get customer details
+  provider: trafft
+  endpoint: /v2/customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for get customer
+    properties: {}
+    required: []
+
+- slug: trafft_list_services
+  name: List Services
+  description: |
+    List all services
+  provider: trafft
+  endpoint: /v2/services
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for list services
+    properties: {}
+    required: []
+
+- slug: trafft_list_staff
+  name: List Staff
+  description: |
+    List all staff members
+  provider: trafft
+  endpoint: /v2/staff
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for list staff
+    properties: {}
+    required: []
+
+- slug: trafft_get_availability
+  name: Get Availability
+  description: |
+    Get available time slots
+  provider: trafft
+  endpoint: /v2/availability
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trafft
+  input_schema:
+    type: object
+    description: Parameters for get availability
+    properties: {}
+    required: []
+

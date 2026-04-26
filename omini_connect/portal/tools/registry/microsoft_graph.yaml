@@ -1,0 +1,293 @@
+# Microsoft Graph Tools - Allowlist
+# Curated subset of Microsoft Graph API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# Users (2):
+# 1. microsoft_graph_list_users      - List users in directory
+# 2. microsoft_graph_get_user        - Get user details
+# Groups (2):
+# 3. microsoft_graph_list_groups     - List groups
+# 4. microsoft_graph_get_group       - Get group details
+# Mail (3):
+# 5. microsoft_graph_list_messages   - List emails
+# 6. microsoft_graph_get_message     - Get email by ID
+# 7. microsoft_graph_send_message    - Send an email
+# Calendar (2):
+# 8. microsoft_graph_list_calendar_events - List calendar events
+# 9. microsoft_graph_get_calendar_event   - Get event by ID
+# OneDrive (1):
+# 10. microsoft_graph_list_onedrive_files  - List OneDrive files
+
+- slug: microsoft_graph_list_users
+  name: List Users
+  description: |
+    List users in the organization's directory.
+    Supports filtering and pagination.
+  provider: microsoft_graph
+  endpoint: /v1.0/users
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - directory
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression (e.g., displayName eq 'John')"
+      $top:
+        type: integer
+        description: "Number of users to return (default 20, max 999)"
+        default: 20
+      $select:
+        type: string
+        description: "Fields to select (comma-separated)"
+    required: []
+
+- slug: microsoft_graph_get_user
+  name: Get User
+  description: |
+    Get details of a specific user in the directory.
+  provider: microsoft_graph
+  endpoint: /v1.0/users/{id}
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - directory
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "The user's ID or UPN (required)"
+    required:
+      - id
+
+- slug: microsoft_graph_list_groups
+  name: List Groups
+  description: |
+    List groups in the organization.
+    Supports filtering and pagination.
+  provider: microsoft_graph
+  endpoint: /v1.0/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - directory
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Number of groups to return (default 20, max 999)"
+        default: 20
+      $select:
+        type: string
+        description: "Fields to select (comma-separated)"
+    required: []
+
+- slug: microsoft_graph_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including members and settings.
+  provider: microsoft_graph
+  endpoint: /v1.0/groups/{id}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - directory
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: string
+        description: "The group's ID (required)"
+    required:
+      - id
+
+- slug: microsoft_graph_list_messages
+  name: List Messages
+  description: |
+    List messages in the authenticated user's mailbox.
+    Supports filtering by folder, sender, and read status.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/messages
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - mail
+    - email
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      $top:
+        type: integer
+        description: "Number of messages (default 10, max 50)"
+        default: 10
+      $filter:
+        type: string
+        description: "OData filter (e.g., isRead eq false)"
+      $select:
+        type: string
+        description: "Fields to select (comma-separated)"
+    required: []
+
+- slug: microsoft_graph_get_message
+  name: Get Message
+  description: |
+    Get a specific email message by ID.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/messages/{id}
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - mail
+    - email
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      id:
+        type: string
+        description: "Message ID (required)"
+    required:
+      - id
+
+- slug: microsoft_graph_send_message
+  name: Send Message
+  description: |
+    Send an email message to one or more recipients.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/sendMail
+  method: POST
+  scopes:
+    - Mail.Send
+  tags:
+    - mail
+    - email
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      to:
+        type: string
+        description: "Recipient email address (required)"
+      subject:
+        type: string
+        description: "Email subject (required)"
+      body:
+        type: string
+        description: "Email body content (required)"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: microsoft_graph_list_calendar_events
+  name: List Calendar Events
+  description: |
+    List calendar events for the authenticated user.
+    Supports filtering by time range and calendar.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/events
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      $top:
+        type: integer
+        description: "Number of events (default 10)"
+        default: 10
+      $filter:
+        type: string
+        description: "OData filter (e.g., start/dateTime ge '2024-01-01')"
+      $select:
+        type: string
+        description: "Fields to select"
+      $orderby:
+        type: string
+        description: "Order by field (e.g., start/dateTime desc)"
+    required: []
+
+- slug: microsoft_graph_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get a specific calendar event by ID.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/events/{id}
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      id:
+        type: string
+        description: "Event ID (required)"
+    required:
+      - id
+
+- slug: microsoft_graph_list_onedrive_files
+  name: List OneDrive Files
+  description: |
+    List files in the authenticated user's OneDrive.
+    Supports filtering by folder and file type.
+  provider: microsoft_graph
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - onedrive
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      $top:
+        type: integer
+        description: "Number of results (default 20)"
+        default: 20
+      $filter:
+        type: string
+        description: "OData filter"
+    required: []

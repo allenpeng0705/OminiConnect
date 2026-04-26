@@ -1,0 +1,290 @@
+# Linear Tools - Allowlist
+# Curated subset of Linear GraphQL API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. linear_list_issues          - List issues with filters
+# 2. linear_get_issue            - Get issue details
+# 3. linear_create_issue         - Create a new issue
+# 4. linear_update_issue         - Update an issue
+# 5. linear_list_projects         - List projects
+# 6. linear_get_project          - Get project details
+# 7. linear_list_teams           - List teams
+# 8. linear_get_team             - Get team details
+# 9. linear_list_cycles          - List cycles
+# 10. linear_get_cycle           - Get cycle details
+
+- slug: linear_list_issues
+  name: List Issues
+  description: |
+    List Linear issues with filters. Filter by team, status, assignee, priority, label, cycle.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - issues:read
+  tags:
+    - issues
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      team:
+        type: string
+        description: "Team slug or ID"
+      status:
+        type: string
+        description: "Status filter (e.g., Backlog, Todo, In Progress, Done)"
+      assignee:
+        type: string
+        description: "Assignee user ID"
+      priority:
+        type: integer
+        description: "Priority (0=No priority, 1=Urgent, 2=High, 3=Normal, 4=Low)"
+      cycleId:
+        type: string
+        description: "Filter by cycle ID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: linear_get_issue
+  name: Get Issue
+  description: |
+    Get detailed information about a Linear issue.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - issues:read
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issueId:
+        type: string
+        description: "Issue ID"
+    required:
+      - issueId
+
+- slug: linear_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue in a Linear team.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - issues:create
+  tags:
+    - issues
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an issue
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      title:
+        type: string
+        description: "Issue title"
+      description:
+        type: string
+        description: "Issue description (Markdown)"
+      priority:
+        type: integer
+        description: "Priority (0=No priority, 1=Urgent, 2=High, 3=Normal, 4=Low)"
+      assigneeId:
+        type: string
+        description: "Assignee user ID"
+      labelIds:
+        type: array
+        items:
+          type: string
+        description: "Label IDs"
+      cycleId:
+        type: string
+        description: "Cycle ID to add issue to"
+    required:
+      - teamId
+      - title
+
+- slug: linear_update_issue
+  name: Update Issue
+  description: |
+    Update an existing Linear issue.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - issues:update
+  tags:
+    - issues
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an issue
+    properties:
+      issueId:
+        type: string
+        description: "Issue ID"
+      title:
+        type: string
+        description: "New title"
+      description:
+        type: string
+        description: "New description"
+      status:
+        type: string
+        description: "New status (Backlog, Todo, In Progress, Done, Canceled)"
+      priority:
+        type: integer
+        description: "New priority"
+      assigneeId:
+        type: string
+        description: "New assignee ID"
+      cycleId:
+        type: string
+        description: "Cycle ID to move issue to"
+    required:
+      - issueId
+
+- slug: linear_list_projects
+  name: List Projects
+  description: |
+    List all projects in the Linear organization.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: linear_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a Linear project.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: linear_list_teams
+  name: List Teams
+  description: |
+    List all teams in the Linear organization.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: linear_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: linear_list_cycles
+  name: List Cycles
+  description: |
+    List all cycles. Filter by team or status.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - cycles:read
+  tags:
+    - cycles
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing cycles
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+      status:
+        type: string
+        description: "Cycle status (upcoming, active, completed)"
+    required: []
+
+- slug: linear_get_cycle
+  name: Get Cycle
+  description: |
+    Get detailed information about a specific cycle.
+  provider: linear
+  endpoint: /graphql
+  method: POST
+  scopes:
+    - cycles:read
+  tags:
+    - cycles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cycle
+    properties:
+      cycleId:
+        type: string
+        description: "Cycle ID"
+    required:
+      - cycleId

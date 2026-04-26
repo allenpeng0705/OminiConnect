@@ -1,0 +1,270 @@
+# Sap-concur Tools - Allowlist
+# Curated subset of SAP Concur API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sap-concur_list_expenses              - List all expenses
+# 2. sap-concur_get_expense               - Get expense details
+# 3. sap-concur_create_expense            - Create an expense
+# 4. sap-concur_list_reports              - List expense reports
+# 5. sap-concur_get_report                - Get report details
+# 6. sap-concur_create_report             - Create an expense report
+# 7. sap-concur_submit_report             - Submit a report for approval
+# 8. sap-concur_list_users               - List employees
+# 9. sap-concur_get_approval_chain        - Get approval chain
+# 10. sap-concur_get_policy               - Get expense policy
+
+- slug: sap-concur_list_expenses
+  name: List Expenses
+  description: |
+    Retrieve a list of all expenses.
+  provider: sap-concur
+  endpoint: /v1/expenses
+  method: GET
+  scopes:
+    - expenses:read
+  tags:
+    - expenses
+    - travel
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      limit:
+        type: integer
+        description: "Number of expenses"
+        default: 50
+      userId:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: sap-concur_get_expense
+  name: Get Expense
+  description: |
+    Get details of a specific expense.
+  provider: sap-concur
+  endpoint: /v1/expenses/{expenseId}
+  method: GET
+  scopes:
+    - expenses:read
+  tags:
+    - expenses
+    - travel
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      expenseId:
+        type: string
+        description: "The expense ID"
+    required:
+      - expenseId
+
+- slug: sap-concur_create_expense
+  name: Create Expense
+  description: |
+    Create a new expense entry.
+  provider: sap-concur
+  endpoint: /v1/expenses
+  method: POST
+  scopes:
+    - expenses:write
+  tags:
+    - expenses
+    - travel
+    - sap-concur
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an expense
+    properties:
+      expenseType:
+        type: string
+        description: "Expense type"
+      amount:
+        type: number
+        description: "Expense amount"
+      currency:
+        type: string
+        description: "Currency code"
+      description:
+        type: string
+        description: "Expense description"
+      date:
+        type: string
+        description: "Expense date"
+    required:
+      - expenseType
+      - amount
+
+- slug: sap-concur_list_reports
+  name: List Reports
+  description: |
+    Retrieve a list of all expense reports.
+  provider: sap-concur
+  endpoint: /v1/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - expenses
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      limit:
+        type: integer
+        description: "Number of reports"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: sap-concur_get_report
+  name: Get Report
+  description: |
+    Get details of a specific expense report.
+  provider: sap-concur
+  endpoint: /v1/reports/{reportId}
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - expenses
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "The report ID"
+    required:
+      - reportId
+
+- slug: sap-concur_create_report
+  name: Create Report
+  description: |
+    Create a new expense report.
+  provider: sap-concur
+  endpoint: /v1/reports
+  method: POST
+  scopes:
+    - reports:write
+  tags:
+    - reports
+    - expenses
+    - sap-concur
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a report
+    properties:
+      name:
+        type: string
+        description: "Report name"
+      submittedDate:
+        type: string
+        description: "Submission date"
+    required:
+      - name
+
+- slug: sap-concur_submit_report
+  name: Submit Report
+  description: |
+    Submit an expense report for approval.
+  provider: sap-concur
+  endpoint: /v1/reports/{reportId}/submit
+  method: POST
+  scopes:
+    - reports:write
+  tags:
+    - reports
+    - expenses
+    - approval
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for submitting a report
+    properties:
+      reportId:
+        type: string
+        description: "The report ID to submit"
+    required:
+      - reportId
+
+- slug: sap-concur_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users.
+  provider: sap-concur
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - employees
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users"
+        default: 50
+    required: []
+
+- slug: sap-concur_get_approval_chain
+  name: Get Approval Chain
+  description: |
+    Get approval chain for an expense report.
+  provider: sap-concur
+  endpoint: /v1/reports/{reportId}/approvals
+  method: GET
+  scopes:
+    - approvals:read
+  tags:
+    - approvals
+    - reports
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for getting approval chain
+    properties:
+      reportId:
+        type: string
+        description: "The report ID"
+    required:
+      - reportId
+
+- slug: sap-concur_get_policy
+  name: Get Policy
+  description: |
+    Get expense policy information.
+  provider: sap-concur
+  endpoint: /v1/policies
+  method: GET
+  scopes:
+    - policies:read
+  tags:
+    - policies
+    - expenses
+    - sap-concur
+  input_schema:
+    type: object
+    description: Parameters for getting policy
+    properties:
+      policyId:
+        type: string
+        description: "The policy ID"
+    required: []

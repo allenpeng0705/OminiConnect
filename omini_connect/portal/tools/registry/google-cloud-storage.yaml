@@ -1,0 +1,292 @@
+# Google Cloud Storage Tools - Allowlist
+# Curated subset of Google Cloud Storage API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_cloud_storage_list_buckets   - List buckets
+# 2. google_cloud_storage_get_bucket    - Get bucket details
+# 3. google_cloud_storage_list_objects  - List objects
+# 4. google_cloud_storage_get_object    - Get object details
+# 5. google_cloud_storage_insert_object - Upload object
+# 6. google_cloud_storage_copy_object   - Copy object
+# 7. google_cloud_storage_delete_object - Delete object
+# 8. google_cloud_storage_get_acl       - Get ACL for object
+# 9. google_cloud_storage_insert_acl    - Add ACL entry
+# 10. google_cloud_storage_list_default_acl - List default ACL
+
+- slug: google_cloud_storage_list_buckets
+  name: List Buckets
+  description: |
+    List all buckets in the project.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - buckets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing buckets
+    properties:
+      project:
+        type: string
+        description: "Google Cloud project ID"
+    required:
+      - project
+
+- slug: google_cloud_storage_get_bucket
+  name: Get Bucket
+  description: |
+    Get detailed information about a bucket.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - buckets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a bucket
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+    required:
+      - bucket
+
+- slug: google_cloud_storage_list_objects
+  name: List Objects
+  description: |
+    List objects in a bucket.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/o
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - objects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing objects
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      prefix:
+        type: string
+        description: "Object name prefix filter"
+    required:
+      - bucket
+
+- slug: google_cloud_storage_get_object
+  name: Get Object
+  description: |
+    Get detailed information about an object.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/o/{object}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - objects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an object
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      object:
+        type: string
+        description: "Object name (URL-encoded)"
+    required:
+      - bucket
+      - object
+
+- slug: google_cloud_storage_insert_object
+  name: Upload Object
+  description: |
+    Upload an object to a bucket.
+  provider: google-cloud-storage
+  endpoint: /upload/storage/v1/b/{bucket}/o
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - objects
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading an object
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      name:
+        type: string
+        description: "Object name"
+      content:
+        type: string
+        description: "Object content (base64-encoded)"
+    required:
+      - bucket
+      - name
+
+- slug: google_cloud_storage_copy_object
+  name: Copy Object
+  description: |
+    Copy an object to a new location.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destBucket}/o/{destObject}
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - objects
+    - copy
+  input_schema:
+    type: object
+    description: Parameters for copying an object
+    properties:
+      sourceBucket:
+        type: string
+        description: "Source bucket name"
+      sourceObject:
+        type: string
+        description: "Source object name"
+      destBucket:
+        type: string
+        description: "Destination bucket name"
+      destObject:
+        type: string
+        description: "Destination object name"
+    required:
+      - sourceBucket
+      - sourceObject
+      - destBucket
+      - destObject
+
+- slug: google_cloud_storage_delete_object
+  name: Delete Object
+  description: |
+    Delete an object from a bucket.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/o/{object}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - objects
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an object
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      object:
+        type: string
+        description: "Object name (URL-encoded)"
+    required:
+      - bucket
+      - object
+
+- slug: google_cloud_storage_get_acl
+  name: Get ACL
+  description: |
+    Get ACL for an object.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/o/{object}/acl
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - acl
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting ACL
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      object:
+        type: string
+        description: "Object name"
+    required:
+      - bucket
+      - object
+
+- slug: google_cloud_storage_insert_acl
+  name: Add ACL Entry
+  description: |
+    Add an ACL entry for an object.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/o/{object}/acl
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - acl
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding ACL entry
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+      object:
+        type: string
+        description: "Object name"
+      entity:
+        type: string
+        description: "ACL entity (e.g., user:email@example.com)"
+      role:
+        type: string
+        description: "ACL role (READER, WRITER, OWNER)"
+    required:
+      - bucket
+      - object
+      - entity
+      - role
+
+- slug: google_cloud_storage_list_default_acl
+  name: List Default ACL
+  description: |
+    List default ACL for a bucket.
+  provider: google-cloud-storage
+  endpoint: /storage/v1/b/{bucket}/defaultObjectAcl
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/cloud-platform
+  tags:
+    - storage
+    - acl
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing default ACL
+    properties:
+      bucket:
+        type: string
+        description: "Bucket name"
+    required:
+      - bucket

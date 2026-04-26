@@ -1,0 +1,239 @@
+# Gerrit Tools - Allowlist
+# Curated subset of Gerrit Code Review API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gerrit_list_changes         - List changes
+# 2. gerrit_get_change          - Get change details
+# 3. gerrit_list_comments       - List comments on change
+# 4. gerrit_list_files          - List files in change
+# 5. gerrit_get_commit          - Get commit details
+# 6. gerrit_list_projects       - List projects
+# 7. gerrit_get_project         - Get project details
+# 8. gerrit_list_branches       - List branches
+# 9. gerrit_list_groups         - List groups
+# 10. gerrit_get_server_version - Get server version
+
+- slug: gerrit_list_changes
+  name: List Changes
+  description: |
+    List changes (code reviews) in Gerrit.
+  provider: gerrit
+  endpoint: /changes/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+    - list
+    - code-review
+  input_schema:
+    type: object
+    description: Parameters for listing changes
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, merged, abandoned)"
+        default: open
+      project:
+        type: string
+        description: "Filter by project name"
+    required: []
+
+- slug: gerrit_get_change
+  name: Get Change
+  description: |
+    Get detailed information about a specific change.
+  provider: gerrit
+  endpoint: /changes/{change_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a change
+    properties:
+      change_id:
+        type: string
+        description: "Change ID"
+    required:
+      - change_id
+
+- slug: gerrit_list_comments
+  name: List Comments
+  description: |
+    List all comments on a specific change.
+  provider: gerrit
+  endpoint: /changes/{change_id}/comments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+    - comments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      change_id:
+        type: string
+        description: "Change ID"
+    required:
+      - change_id
+
+- slug: gerrit_list_files
+  name: List Files
+  description: |
+    List all files modified in a change.
+  provider: gerrit
+  endpoint: /changes/{change_id}/revisions/{revision_id}/files
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      change_id:
+        type: string
+        description: "Change ID"
+      revision_id:
+        type: string
+        description: "Revision ID (default: current)"
+        default: current
+    required:
+      - change_id
+
+- slug: gerrit_get_commit
+  name: Get Commit
+  description: |
+    Get commit details for a change revision.
+  provider: gerrit
+  endpoint: /changes/{change_id}/revisions/{revision_id}/commit
+  method: GET
+  scopes:
+    - read
+  tags:
+    - commits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a commit
+    properties:
+      change_id:
+        type: string
+        description: "Change ID"
+      revision_id:
+        type: string
+        description: "Revision ID"
+    required:
+      - change_id
+      - revision_id
+
+- slug: gerrit_list_projects
+  name: List Projects
+  description: |
+    List all projects in Gerrit.
+  provider: gerrit
+  endpoint: /projects/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      prefix:
+        type: string
+        description: "Filter by project name prefix"
+    required: []
+
+- slug: gerrit_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: gerrit
+  endpoint: /projects/{project_name}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_name:
+        type: string
+        description: "Project name"
+    required:
+      - project_name
+
+- slug: gerrit_list_branches
+  name: List Branches
+  description: |
+    List all branches in a project.
+  provider: gerrit
+  endpoint: /projects/{project_name}/branches
+  method: GET
+  scopes:
+    - read
+  tags:
+    - branches
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      project_name:
+        type: string
+        description: "Project name"
+    required:
+      - project_name
+
+- slug: gerrit_list_groups
+  name: List Groups
+  description: |
+    List all groups in Gerrit.
+  provider: gerrit
+  endpoint: /groups/
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+
+- slug: gerrit_get_server_version
+  name: Get Server Version
+  description: |
+    Get Gerrit server version information.
+  provider: gerrit
+  endpoint: /config/server/version
+  method: GET
+  scopes:
+    - read
+  tags:
+    - server
+    - version
+  input_schema:
+    type: object
+    description: Parameters for getting server version
+    properties: {}

@@ -1,0 +1,256 @@
+# Coros Tools - Allowlist
+# Curated subset of the Coros API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. coros_list_activities      - List user activities
+# 2. coros_get_activity        - Get a specific activity
+# 3. coros_list_workouts       - List user workouts
+# 4. coros_get_workout         - Get a specific workout
+# 5. coros_list_devices        - List paired devices
+# 6. coros_get_device          - Get device details
+# 7. coros_list_athlete_profile - Get athlete profile
+# 8. coros_update_athlete_profile - Update athlete profile
+# 9. coros_list_teams          - List teams
+# 10. coros_get_team           - Get team details
+
+- slug: coros_list_activities
+  name: List Activities
+  description: |
+    List all activities recorded with Coros devices. Activities include runs, rides, swims, and other workouts.
+  provider: coros
+  endpoint: /v1/activities
+  method: GET
+  scopes:
+    - athlete:read
+  tags:
+    - activities
+    - fitness
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      start_date:
+        type: string
+        description: "ISO 8601 date - filter activities from this date"
+      end_date:
+        type: string
+        description: "ISO 8601 date - filter activities until this date"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: coros_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information for a specific activity including GPS data, heart rate, and performance metrics.
+  provider: coros
+  endpoint: /v1/activities/{activity_id}
+  method: GET
+  scopes:
+    - athlete:read
+  tags:
+    - activities
+    - fitness
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      activity_id:
+        type: string
+        description: "Activity ID"
+    required:
+      - activity_id
+
+- slug: coros_list_workouts
+  name: List Workouts
+  description: |
+    List all planned and completed workouts. Workouts are structured training sessions.
+  provider: coros
+  endpoint: /v1/workouts
+  method: GET
+  scopes:
+    - workout:read
+  tags:
+    - workouts
+    - training
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workouts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: coros_get_workout
+  name: Get Workout
+  description: |
+    Get details of a specific workout including intervals, targets, and description.
+  provider: coros
+  endpoint: /v1/workouts/{workout_id}
+  method: GET
+  scopes:
+    - workout:read
+  tags:
+    - workouts
+    - training
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workout
+    properties:
+      workout_id:
+        type: string
+        description: "Workout ID"
+    required:
+      - workout_id
+
+- slug: coros_list_devices
+  name: List Devices
+  description: |
+    List all Coros devices paired to the account.
+  provider: coros
+  endpoint: /v1/devices
+  method: GET
+  scopes:
+    - device:read
+  tags:
+    - devices
+    - hardware
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties: {}
+
+- slug: coros_get_device
+  name: Get Device
+  description: |
+    Get details of a specific device including firmware version and settings.
+  provider: coros
+  endpoint: /v1/devices/{device_id}
+  method: GET
+  scopes:
+    - device:read
+  tags:
+    - devices
+    - hardware
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id
+
+- slug: coros_list_athlete_profile
+  name: List Athlete Profile
+  description: |
+    Get the athlete's profile information including height, weight, and training zones.
+  provider: coros
+  endpoint: /v1/athlete
+  method: GET
+  scopes:
+    - athlete:read
+  tags:
+    - athlete
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting athlete profile
+    properties: {}
+
+- slug: coros_update_athlete_profile
+  name: Update Athlete Profile
+  description: |
+    Update the athlete's profile information including height, weight, and training zones.
+  provider: coros
+  endpoint: /v1/athlete
+  method: PUT
+  scopes:
+    - athlete:write
+  tags:
+    - athlete
+    - profile
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating athlete profile
+    properties:
+      height:
+        type: number
+        description: "Height in cm"
+      weight:
+        type: number
+        description: "Weight in kg"
+      max_heart_rate:
+        type: integer
+        description: "Maximum heart rate"
+      threshold_heart_rate:
+        type: integer
+        description: "Threshold heart rate"
+      max_power:
+        type: integer
+        description: "Maximum power (FTP)"
+    required: []
+
+- slug: coros_list_teams
+  name: List Teams
+  description: |
+    List all teams the athlete belongs to.
+  provider: coros
+  endpoint: /v1/teams
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - social
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+
+- slug: coros_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team including members and team statistics.
+  provider: coros
+  endpoint: /v1/teams/{team_id}
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - teams
+    - social
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id

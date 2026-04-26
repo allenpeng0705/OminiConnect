@@ -1,0 +1,281 @@
+# Azure Blob Storage Tools - Allowlist
+# Curated subset of Azure Blob Storage REST API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. azure_blob_list_containers       - List blob containers
+# 2. azure_blob_list_blobs           - List blobs in container
+# 3. azure_blob_get_blob             - Get blob properties
+# 4. azure_blob_download_blob        - Download blob content
+# 5. azure_blob_upload_blob          - Upload blob content
+# 6. azure_blob_delete_blob          - Delete blob
+# 7. azure_blob_create_container     - Create container
+# 8. azure_blob_delete_container     - Delete container
+# 9. azure_blob_get_container_props  - Get container properties
+# 10. azure_blob_copy_blob           - Copy blob
+
+- slug: azure_blob_list_containers
+  name: List Containers
+  description: |
+    List all blob containers in the storage account.
+  provider: azure-blob-storage
+  endpoint: /?comp=list
+  method: GET
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - containers
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for listing containers
+    properties:
+      maxresults:
+        type: integer
+        description: "Max containers to return"
+        default: 20
+      prefix:
+        type: string
+        description: "Filter containers by prefix"
+    required: []
+
+- slug: azure_blob_list_blobs
+  name: List Blobs
+  description: |
+    List all blobs in a specific container.
+  provider: azure-blob-storage
+  endpoint: /{container}?restype=container&comp=list
+  method: GET
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for listing blobs
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      prefix:
+        type: string
+        description: "Filter blobs by prefix"
+      include:
+        type: string
+        description: "Include: snapshots, metadata, uncommittedblobs"
+    required:
+      - container
+
+- slug: azure_blob_get_blob
+  name: Get Blob Properties
+  description: |
+    Get properties and metadata of a specific blob.
+  provider: azure-blob-storage
+  endpoint: /{container}/{blob}
+  method: GET
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting blob properties
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      blob:
+        type: string
+        description: "Blob name (URL-encoded)"
+    required:
+      - container
+      - blob
+
+- slug: azure_blob_download_blob
+  name: Download Blob
+  description: |
+    Download the content of a blob.
+  provider: azure-blob-storage
+  endpoint: /{container}/{blob}?comp=blocklist
+  method: GET
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - download
+  input_schema:
+    type: object
+    description: Parameters for downloading a blob
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      blob:
+        type: string
+        description: "Blob name (URL-encoded)"
+    required:
+      - container
+      - blob
+
+- slug: azure_blob_upload_blob
+  name: Upload Blob
+  description: |
+    Upload or create a blob with content.
+  provider: azure-blob-storage
+  endpoint: /{container}/{blob}?comp=blocklist
+  method: PUT
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a blob
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      blob:
+        type: string
+        description: "Blob name (URL-encoded)"
+      content:
+        type: string
+        description: "Blob content (base64-encoded)"
+      contentType:
+        type: string
+        description: "MIME type"
+        default: application/octet-stream
+    required:
+      - container
+      - blob
+      - content
+
+- slug: azure_blob_delete_blob
+  name: Delete Blob
+  description: |
+    Delete a specific blob.
+  provider: azure-blob-storage
+  endpoint: /{container}/{blob}
+  method: DELETE
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a blob
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      blob:
+        type: string
+        description: "Blob name (URL-encoded)"
+    required:
+      - container
+      - blob
+
+- slug: azure_blob_create_container
+  name: Create Container
+  description: |
+    Create a new blob container.
+  provider: azure-blob-storage
+  endpoint: /{container}?restype=container
+  method: PUT
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - containers
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a container
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      publicAccess:
+        type: string
+        description: "Public access level: blob, container, or none"
+        default: none
+    required:
+      - container
+
+- slug: azure_blob_delete_container
+  name: Delete Container
+  description: |
+    Delete a container and all its blobs.
+  provider: azure-blob-storage
+  endpoint: /{container}?restype=container
+  method: DELETE
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - containers
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a container
+    properties:
+      container:
+        type: string
+        description: "Container name"
+    required:
+      - container
+
+- slug: azure_blob_get_container_props
+  name: Get Container Properties
+  description: |
+    Get properties of a container including metadata.
+  provider: azure-blob-storage
+  endpoint: /{container}?restype=container
+  method: HEAD
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - containers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting container properties
+    properties:
+      container:
+        type: string
+        description: "Container name"
+    required:
+      - container
+
+- slug: azure_blob_copy_blob
+  name: Copy Blob
+  description: |
+    Copy a blob from source to destination.
+  provider: azure-blob-storage
+  endpoint: /{container}/{blob}?comp=copy
+  method: PUT
+  scopes:
+    - https://storage.azure.com/.default
+  tags:
+    - blobs
+    - copy
+  input_schema:
+    type: object
+    description: Parameters for copying a blob
+    properties:
+      container:
+        type: string
+        description: "Container name"
+      blob:
+        type: string
+        description: "Destination blob name"
+      source:
+        type: string
+        description: "Source blob URL"
+    required:
+      - container
+      - blob
+      - source

@@ -1,0 +1,278 @@
+# Olark Tools - Allowlist
+# Curated subset of Olark REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. olark_list_conversations - List chat conversations
+# 2. olark_get_conversation   - Get conversation details
+# 3. olark_send_message       - Send a message in a conversation
+# 4. olark_list_visitors      - List all chat visitors
+# 5. olark_get_visitor        - Get visitor details
+# 6. olark_list_operators     - List all operators
+# 7. olark_get_operator       - Get operator details
+# 8. olark_list_chats         - List all chats
+# 9. olark_get_chat           - Get chat details
+# 10. olark_add_note          - Add a note to a conversation
+
+- slug: olark_list_conversations
+  name: List Conversations
+  description: |
+    List all chat conversations in your Olark account.
+    Filter by status, operator, or time period.
+  provider: olark
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, all)"
+        default: all
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: olark_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a specific conversation.
+    Includes all messages, participants, and metadata.
+  provider: olark
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: olark_send_message
+  name: Send Message
+  description: |
+    Send a message in an active chat conversation.
+    Used by operators to respond to visitors.
+  provider: olark
+  endpoint: /conversations/{conversation_id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      body:
+        type: string
+        description: "Message text"
+      author_id:
+        type: string
+        description: "Operator ID sending the message"
+    required:
+      - conversation_id
+      - body
+
+- slug: olark_list_visitors
+  name: List Visitors
+  description: |
+    List all chat visitors currently on your website.
+    Shows active and recent visitors with their browsing context.
+  provider: olark
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - read
+  tags:
+    - visitors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: olark_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific visitor.
+    Includes browsing history, location, and chat context.
+  provider: olark
+  endpoint: /visitors/{visitor_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      visitor_id:
+        type: string
+        description: "Visitor ID"
+    required:
+      - visitor_id
+
+- slug: olark_list_operators
+  name: List Operators
+  description: |
+    List all operators in your Olark account.
+    Shows operator status, role, and availability.
+  provider: olark
+  endpoint: /operators
+  method: GET
+  scopes:
+    - read
+  tags:
+    - operators
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing operators
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status (online, offline, away)"
+    required: []
+
+- slug: olark_get_operator
+  name: Get Operator
+  description: |
+    Get detailed information about a specific operator.
+    Includes role, status, and performance metrics.
+  provider: olark
+  endpoint: /operators/{operator_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - operators
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an operator
+    properties:
+      operator_id:
+        type: string
+        description: "Operator ID"
+    required:
+      - operator_id
+
+- slug: olark_list_chats
+  name: List Chats
+  description: |
+    List all chat sessions in your Olark account.
+    A chat is a single conversation session between visitor and operator.
+  provider: olark
+  endpoint: /chats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - chats
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, ended, all)"
+        default: all
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: olark_get_chat
+  name: Get Chat
+  description: |
+    Get detailed information about a specific chat session.
+    Includes transcript, participants, and metadata.
+  provider: olark
+  endpoint: /chats/{chat_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - chats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a chat
+    properties:
+      chat_id:
+        type: string
+        description: "Chat ID"
+    required:
+      - chat_id
+
+- slug: olark_add_note
+  name: Add Note
+  description: |
+    Add a note to an existing conversation.
+    Notes are internal annotations for operators.
+  provider: olark
+  endpoint: /conversations/{conversation_id}/notes
+  method: POST
+  scopes:
+    - write
+  tags:
+    - conversations
+    - notes
+  input_schema:
+    type: object
+    description: Parameters for adding a note
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      body:
+        type: string
+        description: "Note content"
+      author_id:
+        type: string
+        description: "Operator ID adding the note"
+    required:
+      - conversation_id
+      - body

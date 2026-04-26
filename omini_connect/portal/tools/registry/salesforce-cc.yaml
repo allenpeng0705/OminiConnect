@@ -1,0 +1,259 @@
+# Salesforce-cc Tools - Allowlist
+# Curated subset of Salesforce CDP API for AI agent use.
+# Client Credentials OAuth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesforce-cc_list_data_models       - List data models
+# 2. salesforce-cc_get_data_model         - Get data model details
+# 3. salesforce-cc_list_ingest_definitions - List ingest definitions
+# 4. salesforce-cc_create_ingest_job     - Create ingest job
+# 5. salesforce-cc_list_ingest_jobs      - List ingest jobs
+# 6. salesforce-cc_get_ingest_job_status  - Get job status
+# 7. salesforce-cc_list_connections       - List connections
+# 8. salesforce-cc_create_connection     - Create connection
+# 9. salesforce-cc_list_exports          - List export jobs
+# 10. salesforce-cc_get_segment           - Get segment details
+
+- slug: salesforce-cc_list_data_models
+  name: List Data Models
+  description: |
+    Retrieve a list of all data models in Salesforce CDP.
+  provider: salesforce-cc
+  endpoint: /v1/dataModels
+  method: GET
+  scopes:
+    - data_model:read
+  tags:
+    - data-models
+    - cdp
+    - data
+  input_schema:
+    type: object
+    description: Parameters for listing data models
+    properties:
+      limit:
+        type: integer
+        description: "Number of data models"
+        default: 50
+    required: []
+
+- slug: salesforce-cc_get_data_model
+  name: Get Data Model
+  description: |
+    Get details of a specific data model.
+  provider: salesforce-cc
+  endpoint: /v1/dataModels/{modelId}
+  method: GET
+  scopes:
+    - data_model:read
+  tags:
+    - data-models
+    - cdp
+    - data
+  input_schema:
+    type: object
+    description: Parameters for getting a data model
+    properties:
+      modelId:
+        type: string
+        description: "The data model ID"
+    required:
+      - modelId
+
+- slug: salesforce-cc_list_ingest_definitions
+  name: List Ingest Definitions
+  description: |
+    Retrieve a list of ingest definitions.
+  provider: salesforce-cc
+  endpoint: /v1/ingestDefinitions
+  method: GET
+  scopes:
+    - ingest:read
+  tags:
+    - ingest
+    - data
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing ingest definitions
+    properties:
+      limit:
+        type: integer
+        description: "Number of definitions"
+        default: 50
+    required: []
+
+- slug: salesforce-cc_create_ingest_job
+  name: Create Ingest Job
+  description: |
+    Create a new data ingest job.
+  provider: salesforce-cc
+  endpoint: /v1/ingestJobs
+  method: POST
+  scopes:
+    - ingest:write
+  tags:
+    - ingest
+    - data
+    - cdp
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an ingest job
+    properties:
+      ingestDefinitionId:
+        type: string
+        description: "Ingest definition ID"
+      data:
+        type: array
+        description: "Data records to ingest"
+    required:
+      - ingestDefinitionId
+
+- slug: salesforce-cc_list_ingest_jobs
+  name: List Ingest Jobs
+  description: |
+    Retrieve a list of ingest jobs.
+  provider: salesforce-cc
+  endpoint: /v1/ingestJobs
+  method: GET
+  scopes:
+    - ingest:read
+  tags:
+    - ingest
+    - data
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing ingest jobs
+    properties:
+      limit:
+        type: integer
+        description: "Number of jobs"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: salesforce-cc_get_ingest_job_status
+  name: Get Ingest Job Status
+  description: |
+    Get status of an ingest job.
+  provider: salesforce-cc
+  endpoint: /v1/ingestJobs/{jobId}
+  method: GET
+  scopes:
+    - ingest:read
+  tags:
+    - ingest
+    - data
+    - cdp
+    - status
+  input_schema:
+    type: object
+    description: Parameters for getting job status
+    properties:
+      jobId:
+        type: string
+        description: "The job ID"
+    required:
+      - jobId
+
+- slug: salesforce-cc_list_connections
+  name: List Connections
+  description: |
+    Retrieve a list of all connections.
+  provider: salesforce-cc
+  endpoint: /v1/connections
+  method: GET
+  scopes:
+    - connections:read
+  tags:
+    - connections
+    - integrations
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties:
+      limit:
+        type: integer
+        description: "Number of connections"
+        default: 50
+    required: []
+
+- slug: salesforce-cc_create_connection
+  name: Create Connection
+  description: |
+    Create a new data connection.
+  provider: salesforce-cc
+  endpoint: /v1/connections
+  method: POST
+  scopes:
+    - connections:write
+  tags:
+    - connections
+    - integrations
+    - cdp
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a connection
+    properties:
+      name:
+        type: string
+        description: "Connection name"
+      type:
+        type: string
+        description: "Connection type"
+    required:
+      - name
+      - type
+
+- slug: salesforce-cc_list_exports
+  name: List Exports
+  description: |
+    Retrieve a list of export jobs.
+  provider: salesforce-cc
+  endpoint: /v1/exports
+  method: GET
+  scopes:
+    - exports:read
+  tags:
+    - exports
+    - data
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing exports
+    properties:
+      limit:
+        type: integer
+        description: "Number of exports"
+        default: 50
+    required: []
+
+- slug: salesforce-cc_get_segment
+  name: Get Segment
+  description: |
+    Get details of a specific segment.
+  provider: salesforce-cc
+  endpoint: /v1/segments/{segmentId}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - cdp
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segmentId:
+        type: string
+        description: "The segment ID"
+    required:
+      - segmentId

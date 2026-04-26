@@ -1,0 +1,280 @@
+# botpress Tools - Allowlist
+# Curated subset of the Botpress API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. botpress_list_bots    - List all bots
+# 2. botpress_get_bot      - Get a specific bot
+# 3. botpress_create_bot   - Create a new bot
+# 4. botpress_list_flows   - List all flows
+# 5. botpress_get_flow     - Get a specific flow
+# 6. botpress_create_flow  - Create a new flow
+# 7. botpress_list_intents - List all intents
+# 8. botpress_get_intent   - Get a specific intent
+# 9. botpress_list_entities - List all entities
+# 10. botpress_get_entity  - Get a specific entity
+
+- slug: botpress_list_bots
+  name: List Bots
+  description: |
+    Retrieve all bots in your Botpress workspace.
+    Bots are conversational AI applications.
+  provider: botpress
+  endpoint: /bots
+  method: GET
+  scopes:
+    - bots:read
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Parameters for listing bots
+    properties:
+      status:
+        type: string
+        description: "Filter by bot status (active, archived)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: botpress_get_bot
+  name: Get Bot
+  description: |
+    Get details of a specific bot.
+    Returns configuration, status, and metadata.
+  provider: botpress
+  endpoint: /bots/{id}
+  method: GET
+  scopes:
+    - bots:read
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Parameters for getting a bot
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the bot"
+    required:
+      - id
+
+- slug: botpress_create_bot
+  name: Create Bot
+  description: |
+    Create a new bot in your Botpress workspace.
+    Bots are conversational AI applications that can be configured with flows, intents, and entities.
+  provider: botpress
+  endpoint: /bots
+  method: POST
+  scopes:
+    - bots:write
+  tags:
+    - bots
+  input_schema:
+    type: object
+    description: Parameters for creating a bot
+    properties:
+      name:
+        type: string
+        description: "Name of the bot"
+      description:
+        type: string
+        description: "Description of the bot"
+      category:
+        type: string
+        description: "Category for the bot"
+      language:
+        type: string
+        description: "Primary language code"
+    required:
+      - name
+
+- slug: botpress_list_flows
+  name: List Flows
+  description: |
+    Retrieve all flows in a Botpress bot.
+    Flows define the conversation paths and logic.
+  provider: botpress
+  endpoint: /bots/{bot_id}/flows
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for listing flows
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      status:
+        type: string
+        description: "Filter by flow status"
+    required:
+      - bot_id
+
+- slug: botpress_get_flow
+  name: Get Flow
+  description: |
+    Get details of a specific flow including nodes and transitions.
+    Use this to understand the conversation logic.
+  provider: botpress
+  endpoint: /bots/{bot_id}/flows/{flow_id}
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for getting a flow
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      flow_id:
+        type: string
+        description: "ID of the flow"
+    required:
+      - bot_id
+      - flow_id
+
+- slug: botpress_create_flow
+  name: Create Flow
+  description: |
+    Create a new flow in a Botpress bot.
+    Flows automate conversations based on user inputs and logic.
+  provider: botpress
+  endpoint: /bots/{bot_id}/flows
+  method: POST
+  scopes:
+    - flows:write
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for creating a flow
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      name:
+        type: string
+        description: "Name of the flow"
+      nodes:
+        type: array
+        description: "Array of flow nodes"
+      transitions:
+        type: array
+        description: "Array of transitions between nodes"
+    required:
+      - bot_id
+      - name
+
+- slug: botpress_list_intents
+  name: List Intents
+  description: |
+    Retrieve all intents in a Botpress bot.
+    Intents represent user intentions or goals.
+  provider: botpress
+  endpoint: /bots/{bot_id}/intents
+  method: GET
+  scopes:
+    - intents:read
+  tags:
+    - intents
+  input_schema:
+    type: object
+    description: Parameters for listing intents
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - bot_id
+
+- slug: botpress_get_intent
+  name: Get Intent
+  description: |
+    Get details of a specific intent including utterances and slots.
+    Intents are trained with example phrases to recognize user goals.
+  provider: botpress
+  endpoint: /bots/{bot_id}/intents/{intent_id}
+  method: GET
+  scopes:
+    - intents:read
+  tags:
+    - intents
+  input_schema:
+    type: object
+    description: Parameters for getting an intent
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      intent_id:
+        type: string
+        description: "ID of the intent"
+    required:
+      - bot_id
+      - intent_id
+
+- slug: botpress_list_entities
+  name: List Entities
+  description: |
+    Retrieve all entities in a Botpress bot.
+    Entities extract specific data types from user input.
+  provider: botpress
+  endpoint: /bots/{bot_id}/entities
+  method: GET
+  scopes:
+    - entities:read
+  tags:
+    - entities
+  input_schema:
+    type: object
+    description: Parameters for listing entities
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      type:
+        type: string
+        description: "Filter by entity type (system, custom)"
+    required:
+      - bot_id
+
+- slug: botpress_get_entity
+  name: Get Entity
+  description: |
+    Get details of a specific entity including synonyms and patterns.
+    Entities extract structured information like dates, names, or locations.
+  provider: botpress
+  endpoint: /bots/{bot_id}/entities/{entity_id}
+  method: GET
+  scopes:
+    - entities:read
+  tags:
+    - entities
+  input_schema:
+    type: object
+    description: Parameters for getting an entity
+    properties:
+      bot_id:
+        type: string
+        description: "ID of the bot"
+      entity_id:
+        type: string
+        description: "ID of the entity"
+    required:
+      - bot_id
+      - entity_id

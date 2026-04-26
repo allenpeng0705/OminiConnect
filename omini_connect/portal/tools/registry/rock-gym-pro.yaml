@@ -1,0 +1,283 @@
+# Rock-gym-pro Tools - Allowlist
+# Curated subset of Rock Gym Pro API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rock-gym-pro_list_members          - List all members
+# 2. rock-gym-pro_get_member            - Get member details
+# 3. rock-gym-pro_create_member         - Create a member
+# 4. rock-gym-pro_list_memberships      - List memberships
+# 5. rock-gym-pro_create_membership      - Create a membership
+# 6. rock-gym-pro_list_visits           - List member visits
+# 7. rock-gym-pro_list_classes          - List classes
+# 8. rock-gym-pro_create_booking        - Create a class booking
+# 9. rock-gym-pro_list_staff            - List staff members
+# 10. rock-gym-pro_get_revenue_report   - Get revenue report
+
+- slug: rock-gym-pro_list_members
+  name: List Members
+  description: |
+    Retrieve a list of all gym members.
+  provider: rock-gym-pro
+  endpoint: /v1/members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - gym
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      limit:
+        type: integer
+        description: "Number of members"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: active, inactive, paused"
+    required: []
+
+- slug: rock-gym-pro_get_member
+  name: Get Member
+  description: |
+    Get details of a specific member.
+  provider: rock-gym-pro
+  endpoint: /v1/members/{memberId}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - gym
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      memberId:
+        type: string
+        description: "The member ID"
+    required:
+      - memberId
+
+- slug: rock-gym-pro_create_member
+  name: Create Member
+  description: |
+    Create a new gym member.
+  provider: rock-gym-pro
+  endpoint: /v1/members
+  method: POST
+  scopes:
+    - members:write
+  tags:
+    - members
+    - gym
+    - fitness
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a member
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - firstName
+      - lastName
+      - email
+
+- slug: rock-gym-pro_list_memberships
+  name: List Memberships
+  description: |
+    Retrieve a list of all membership plans.
+  provider: rock-gym-pro
+  endpoint: /v1/memberships
+  method: GET
+  scopes:
+    - memberships:read
+  tags:
+    - memberships
+    - gym
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing memberships
+    properties:
+      limit:
+        type: integer
+        description: "Number of memberships"
+        default: 50
+    required: []
+
+- slug: rock-gym-pro_create_membership
+  name: Create Membership
+  description: |
+    Create a new membership for a member.
+  provider: rock-gym-pro
+  endpoint: /v1/memberships
+  method: POST
+  scopes:
+    - memberships:write
+  tags:
+    - memberships
+    - gym
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a membership
+    properties:
+      memberId:
+        type: string
+        description: "Member ID"
+      planId:
+        type: string
+        description: "Membership plan ID"
+      startDate:
+        type: string
+        description: "Start date (ISO 8601)"
+    required:
+      - memberId
+      - planId
+
+- slug: rock-gym-pro_list_visits
+  name: List Visits
+  description: |
+    Retrieve a list of member visits.
+  provider: rock-gym-pro
+  endpoint: /v1/visits
+  method: GET
+  scopes:
+    - visits:read
+  tags:
+    - visits
+    - gym
+    - check-in
+  input_schema:
+    type: object
+    description: Parameters for listing visits
+    properties:
+      memberId:
+        type: string
+        description: "Filter by member ID"
+      limit:
+        type: integer
+        description: "Number of visits"
+        default: 50
+    required: []
+
+- slug: rock-gym-pro_list_classes
+  name: List Classes
+  description: |
+    Retrieve a list of available classes.
+  provider: rock-gym-pro
+  endpoint: /v1/classes
+  method: GET
+  scopes:
+    - classes:read
+  tags:
+    - classes
+    - gym
+    - fitness
+  input_schema:
+    type: object
+    description: Parameters for listing classes
+    properties:
+      limit:
+        type: integer
+        description: "Number of classes"
+        default: 50
+      date:
+        type: string
+        description: "Filter by date"
+    required: []
+
+- slug: rock-gym-pro_create_booking
+  name: Create Booking
+  description: |
+    Book a member into a class.
+  provider: rock-gym-pro
+  endpoint: /v1/bookings
+  method: POST
+  scopes:
+    - bookings:write
+  tags:
+    - bookings
+    - classes
+    - gym
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a booking
+    properties:
+      memberId:
+        type: string
+        description: "Member ID"
+      classId:
+        type: string
+        description: "Class ID"
+    required:
+      - memberId
+      - classId
+
+- slug: rock-gym-pro_list_staff
+  name: List Staff
+  description: |
+    Retrieve a list of all staff members.
+  provider: rock-gym-pro
+  endpoint: /v1/staff
+  method: GET
+  scopes:
+    - staff:read
+  tags:
+    - staff
+    - gym
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for listing staff
+    properties:
+      limit:
+        type: integer
+        description: "Number of staff"
+        default: 50
+    required: []
+
+- slug: rock-gym-pro_get_revenue_report
+  name: Get Revenue Report
+  description: |
+    Get revenue and financial report.
+  provider: rock-gym-pro
+  endpoint: /v1/reports/revenue
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - revenue
+    - finance
+    - gym
+  input_schema:
+    type: object
+    description: Parameters for getting revenue report
+    properties:
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required: []

@@ -1,0 +1,187 @@
+# TLDV Tools - Allowlist
+# Curated subset of TLDV API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. tldv_list_meetings           - List all recorded meetings
+# # 2. tldv_get_meeting           - Get meeting details with transcript
+# # 3. tldv_list_transcripts           - List meeting transcripts
+# # 4. tldv_get_transcript           - Get transcript for a meeting
+# # 5. tldv_list_summaries           - List AI-generated summaries
+# # 6. tldv_get_summary           - Get summary for a meeting
+# # 7. tldv_create_action_item           - Create an action item from meeting
+# # 8. tldv_list_action_items           - List all action items
+# # 9. tldv_share_meeting           - Share a meeting recording
+# # 10. tldv_delete_meeting           - Delete a meeting recording
+
+- slug: tldv_list_meetings
+  name: List Meetings
+  description: |
+    List all recorded meetings
+  provider: tldv
+  endpoint: /api/v1/meetings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for list meetings
+    properties: {}
+    required: []
+
+- slug: tldv_get_meeting
+  name: Get Meeting
+  description: |
+    Get meeting details with transcript
+  provider: tldv
+  endpoint: /api/v1/meetings/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for get meeting
+    properties: {}
+    required: []
+
+- slug: tldv_list_transcripts
+  name: List Transcripts
+  description: |
+    List meeting transcripts
+  provider: tldv
+  endpoint: /api/v1/transcripts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for list transcripts
+    properties: {}
+    required: []
+
+- slug: tldv_get_transcript
+  name: Get Transcript
+  description: |
+    Get transcript for a meeting
+  provider: tldv
+  endpoint: /api/v1/meetings/{id}/transcript
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for get transcript
+    properties: {}
+    required: []
+
+- slug: tldv_list_summaries
+  name: List Summaries
+  description: |
+    List AI-generated summaries
+  provider: tldv
+  endpoint: /api/v1/summaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for list summaries
+    properties: {}
+    required: []
+
+- slug: tldv_get_summary
+  name: Get Summary
+  description: |
+    Get summary for a meeting
+  provider: tldv
+  endpoint: /api/v1/meetings/{id}/summary
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for get summary
+    properties: {}
+    required: []
+
+- slug: tldv_create_action_item
+  name: Create Action Item
+  description: |
+    Create an action item from meeting
+  provider: tldv
+  endpoint: /api/v1/action-items
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for create action item
+    properties: {}
+    required: []
+
+- slug: tldv_list_action_items
+  name: List Action Items
+  description: |
+    List all action items
+  provider: tldv
+  endpoint: /api/v1/action-items
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for list action items
+    properties: {}
+    required: []
+
+- slug: tldv_share_meeting
+  name: Share Meeting
+  description: |
+    Share a meeting recording
+  provider: tldv
+  endpoint: /api/v1/meetings/{id}/share
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for share meeting
+    properties: {}
+    required: []
+
+- slug: tldv_delete_meeting
+  name: Delete Meeting
+  description: |
+    Delete a meeting recording
+  provider: tldv
+  endpoint: /api/v1/meetings/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - tldv
+  input_schema:
+    type: object
+    description: Parameters for delete meeting
+    properties: {}
+    required: []
+

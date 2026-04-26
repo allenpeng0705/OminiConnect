@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconCircleCheckFilled, IconCircleXFilled } from '@tabler/icons-react';
 import { Link, Navigate } from '@tanstack/react-router';
 import { ChevronDown, ChevronUp, ExternalLink, Info, TriangleAlert } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMount } from 'react-use';
 import * as z from 'zod';
@@ -96,6 +96,10 @@ export const Go: React.FC = () => {
     const { isPreview, provider, integration, session, isSingleIntegration, detectClosedAuthWindow, setIsDirty, isAuthLink } = useGlobal();
     const nango = useNango();
     const { t } = useI18n();
+
+    // Keep a ref to the latest nango instance so callbacks always use the current value.
+    const nangoRef = useRef(nango);
+    nangoRef.current = nango;
 
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<AuthResult>();
@@ -313,7 +317,9 @@ export const Go: React.FC = () => {
 
     const onSubmit = useCallback(
         async (v: Record<string, unknown>) => {
-            if (isPreview || !integration || loading || !provider || !nango) {
+            // Use nangoRef.current to always get the latest nango instance (avoids stale closure bug).
+            const currentNango = nangoRef.current;
+            if (isPreview || !integration || loading || !provider || !currentNango) {
                 return;
             }
 
@@ -323,13 +329,13 @@ export const Go: React.FC = () => {
             setLoading(true);
             setError(null);
             // we don't care if it was already opened
-            nango.clear();
+            currentNango.clear();
 
             try {
                 let res: AuthResult;
                 // Legacy stuff because types were mixed together inappropriately
                 if (provider.auth_mode === 'NONE') {
-                    res = await nango.create(integration.unique_key, { ...values });
+                    res = await currentNango.create(integration.unique_key, { ...values });
                 } else if (
                     (provider.auth_mode === 'OAUTH2' && !provider.installation) ||
                     provider.auth_mode === 'OAUTH1' ||
@@ -339,12 +345,12 @@ export const Go: React.FC = () => {
                     provider.auth_mode === 'MCP_OAUTH2_GENERIC' ||
                     provider.auth_mode === 'INSTALL_PLUGIN'
                 ) {
-                    res = await nango.auth(integration.unique_key, {
+                    res = await currentNango.auth(integration.unique_key, {
                         ...values,
                         detectClosedAuthWindow
                     });
                 } else {
-                    res = await nango.auth(integration.unique_key, {
+                    res = await currentNango.auth(integration.unique_key, {
                         params: values['params'] || {},
                         credentials: { ...values['credentials'], type: provider.auth_mode } as Record<string, string>,
                         detectClosedAuthWindow,
@@ -396,7 +402,7 @@ export const Go: React.FC = () => {
                 setLoading(false);
             }
         },
-        [provider, integration, loading, nango, t, detectClosedAuthWindow, displayName]
+        [provider, integration, loading, t, detectClosedAuthWindow, displayName]
     );
 
     if (!provider || !integration) {

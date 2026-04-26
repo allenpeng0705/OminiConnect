@@ -1,0 +1,288 @@
+# Momentum.io Tools - Allowlist
+# Curated subset of Momentum.io API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. momentum_list_meetings        - List all meetings
+# 2. momentum_get_meeting          - Get meeting details
+# 3. momentum_create_meeting     - Create a meeting
+# 4. momentum_update_meeting     - Update a meeting
+# 5. momentum_delete_meeting     - Delete a meeting
+# 6. momentum_list_participants  - List participants
+# 7. momentum_add_participant    - Add a participant
+# 8. momentum_remove_participant - Remove a participant
+# 9. momentum_list_recordings    - List recordings
+# 10. momentum_get_recording    - Get recording details
+
+- slug: momentum_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings in Momentum.io.
+    Filter by date, status, or host.
+  provider: momentum-io
+  endpoint: /v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      from_date:
+        type: string
+        description: "From date (ISO 8601)"
+      to_date:
+        type: string
+        description: "To date (ISO 8601)"
+      status:
+        type: string
+        description: "Filter by status (scheduled, started, ended)"
+      host_id:
+        type: string
+        description: "Filter by host ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: momentum_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: momentum_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new meeting in Momentum.io.
+  provider: momentum-io
+  endpoint: /v1/meetings
+  method: POST
+  scopes: []
+  tags:
+    - meetings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      title:
+        type: string
+        description: "Meeting title"
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      host_id:
+        type: string
+        description: "Host user ID"
+    required:
+      - title
+      - start_time
+
+- slug: momentum_update_meeting
+  name: Update Meeting
+  description: |
+    Update an existing meeting.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}
+  method: PUT
+  scopes: []
+  tags:
+    - meetings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+      title:
+        type: string
+        description: "Meeting title"
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+    required:
+      - meetingId
+
+- slug: momentum_delete_meeting
+  name: Delete Meeting
+  description: |
+    Delete a meeting from Momentum.io.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}
+  method: DELETE
+  scopes: []
+  tags:
+    - meetings
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: momentum_list_participants
+  name: List Participants
+  description: |
+    List all participants in a meeting.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}/participants
+  method: GET
+  scopes: []
+  tags:
+    - participants
+    - meetings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: momentum_add_participant
+  name: Add Participant
+  description: |
+    Add a participant to a meeting.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}/participants
+  method: POST
+  scopes: []
+  tags:
+    - participants
+    - meetings
+    - add
+  input_schema:
+    type: object
+    description: Parameters for adding a participant
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+      user_id:
+        type: string
+        description: "User ID to add"
+      role:
+        type: string
+        description: "Participant role (host, attendee)"
+        default: attendee
+    required:
+      - meetingId
+      - user_id
+
+- slug: momentum_remove_participant
+  name: Remove Participant
+  description: |
+    Remove a participant from a meeting.
+  provider: momentum-io
+  endpoint: /v1/meetings/{meetingId}/participants/{participantId}
+  method: DELETE
+  scopes: []
+  tags:
+    - participants
+    - meetings
+    - remove
+  input_schema:
+    type: object
+    description: Parameters for removing a participant
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+      participantId:
+        type: string
+        description: "Participant ID"
+    required:
+      - meetingId
+      - participantId
+
+- slug: momentum_list_recordings
+  name: List Recordings
+  description: |
+    List all meeting recordings.
+  provider: momentum-io
+  endpoint: /v1/recordings
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+      from_date:
+        type: string
+        description: "From date"
+      to_date:
+        type: string
+        description: "To date"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: momentum_get_recording
+  name: Get Recording
+  description: |
+    Get details of a specific recording.
+  provider: momentum-io
+  endpoint: /v1/recordings/{recordingId}
+  method: GET
+  scopes: []
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      recordingId:
+        type: string
+        description: "Recording ID"
+    required:
+      - recordingId

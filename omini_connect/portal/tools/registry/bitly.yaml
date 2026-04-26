@@ -1,0 +1,256 @@
+# Bitly Tools - Allowlist
+# Curated subset of Bitly API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bitly_get_user             - Get user info
+# 2. bitly_list_groups         - List groups
+# 3. bitly_get_group          - Get group details
+# 4. bitly_list_links         - List links
+# 5. bitly_get_link           - Get link details
+# 6. bitly_create_link        - Create a short link
+# 7. bitly_update_link        - Update a link
+# 8. bitly_delete_link        - Delete a link
+# 9. bitly_list_bitlinks      - List bitlinks
+# 10. bitly_get_metrics        - Get link metrics
+
+- slug: bitly_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: bitly
+  endpoint: /v4/user
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: bitly_list_groups
+  name: List Groups
+  description: |
+    List all groups in the Bitly account.
+  provider: bitly
+  endpoint: /v4/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: bitly_get_group
+  name: Get Group
+  description: |
+    Get details for a specific group.
+  provider: bitly
+  endpoint: /v4/groups/{groupGuid}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupGuid:
+        type: string
+        description: "Group GUID"
+    required:
+      - groupGuid
+
+- slug: bitly_list_links
+  name: List Links
+  description: |
+    List all links for the authenticated user or group.
+  provider: bitly
+  endpoint: /v4/links
+  method: GET
+  scopes: []
+  tags:
+    - links
+    - url
+  input_schema:
+    type: object
+    description: Parameters for listing links
+    properties:
+      groupGuid:
+        type: string
+        description: "Filter by group"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      size:
+        type: integer
+        description: "Links per page"
+        default: 20
+    required: []
+
+- slug: bitly_get_link
+  name: Get Link
+  description: |
+    Get details for a specific link.
+  provider: bitly
+  endpoint: /v4/links/{linkGuid}
+  method: GET
+  scopes: []
+  tags:
+    - links
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a link
+    properties:
+      linkGuid:
+        type: string
+        description: "Link GUID or short URL"
+    required:
+      - linkGuid
+
+- slug: bitly_create_link
+  name: Create Link
+  description: |
+    Create a new short link.
+  provider: bitly
+  endpoint: /v4/links
+  method: POST
+  scopes: []
+  tags:
+    - links
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a link
+    properties:
+      longUrl:
+        type: string
+        description: "URL to shorten"
+      groupGuid:
+        type: string
+        description: "Group to create link in"
+      title:
+        type: string
+        description: "Link title"
+    required:
+      - longUrl
+
+- slug: bitly_update_link
+  name: Update Link
+  description: |
+    Update a link's properties.
+  provider: bitly
+  endpoint: /v4/links/{linkGuid}
+  method: PATCH
+  scopes: []
+  tags:
+    - links
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a link
+    properties:
+      linkGuid:
+        type: string
+        description: "Link GUID"
+      title:
+        type: string
+        description: "New title"
+      archived:
+        type: boolean
+        description: "Archive status"
+    required:
+      - linkGuid
+
+- slug: bitly_delete_link
+  name: Delete Link
+  description: |
+    Delete a link from Bitly.
+  provider: bitly
+  endpoint: /v4/links/{linkGuid}
+  method: DELETE
+  scopes: []
+  tags:
+    - links
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a link
+    properties:
+      linkGuid:
+        type: string
+        description: "Link GUID"
+    required:
+      - linkGuid
+
+- slug: bitly_list_bitlinks
+  name: List Bitlinks
+  description: |
+    Search for bitlinks by query.
+  provider: bitly
+  endpoint: /v4/search
+  method: GET
+  scopes: []
+  tags:
+    - links
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching bitlinks
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      groupGuid:
+        type: string
+        description: "Filter by group"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - query
+
+- slug: bitly_get_metrics
+  name: Get Metrics
+  description: |
+    Get click metrics for a link.
+  provider: bitly
+  endpoint: /v4/links/{linkGuid}/clicks
+  method: GET
+  scopes: []
+  tags:
+    - metrics
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting metrics
+    properties:
+      linkGuid:
+        type: string
+        description: "Link GUID or short URL"
+      unit:
+        type: string
+        description: "Time unit: day, week, month"
+        default: day
+      units:
+        type: integer
+        description: "Number of units"
+        default: 7
+    required:
+      - linkGuid

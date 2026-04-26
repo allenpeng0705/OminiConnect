@@ -1,0 +1,351 @@
+# GitLab Tools - Allowlist
+# Curated subset of the GitLab REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gitlab_list_projects       - List projects for the authenticated user
+# 2. gitlab_get_project         - Get details of a specific project
+# 3. gitlab_list_issues         - List issues in a project
+# 4. gitlab_get_issue           - Get a specific issue
+# 5. gitlab_create_issue        - Create a new issue
+# 6. gitlab_list_merge_requests - List merge requests in a project
+# 7. gitlab_get_merge_request   - Get a specific merge request
+# 8. gitlab_list_branches       - List branches in a project
+# 9. gitlab_get_branch         - Get a specific branch
+# 10. gitlab_list_commits       - List commits in a project
+
+- slug: gitlab_list_projects
+  name: List Projects
+  description: |
+    List projects the authenticated user has access to.
+    Returns a list of public and private projects, including project stats and metadata.
+  provider: gitlab
+  endpoint: /api/v4/projects
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - projects
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      membership:
+        type: boolean
+        description: "Limit to projects where user is a member (default true)"
+        default: true
+      owned:
+        type: boolean
+        description: "Limit to projects owned by user"
+        default: false
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      order_by:
+        type: string
+        description: "Order by: id, name, created_at, updated_at"
+        enum: [id, name, created_at, updated_at]
+        default: created_at
+      sort:
+        type: string
+        description: "Sort order: desc, asc"
+        enum: [desc, asc]
+        default: desc
+    required: []
+
+- slug: gitlab_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including description, visibility, default branch, and stats.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID, path, or namespace/project format"
+    required:
+      - id
+
+- slug: gitlab_list_issues
+  name: List Issues
+  description: |
+    List issues in a project. Filter by state (opened/closed), labels, or assignees.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/issues
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - issues
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      state:
+        type: string
+        description: "Filter by state: opened, closed, all (default opened)"
+        enum: [opened, closed, all]
+        default: opened
+      labels:
+        type: string
+        description: "Comma-separated list of labels to filter by"
+      assignee_id:
+        type: integer
+        description: "Filter by assignee user ID"
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - id
+
+- slug: gitlab_get_issue
+  name: Get Issue
+  description: |
+    Get details of a specific issue including title, description, labels, assignees, and state.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/issues/{issue_iid}
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      issue_iid:
+        type: integer
+        description: "Issue internal ID (IID)"
+    required:
+      - id
+      - issue_iid
+
+- slug: gitlab_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue in a project. Include a clear title and optional description.
+    Optionally assign labels and assignees.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/issues
+  method: POST
+  scopes:
+    - api
+  tags:
+    - issues
+    - create
+  input_schema:
+    type: object
+    description: Issue creation parameters
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      title:
+        type: string
+        description: "Issue title (required)"
+      description:
+        type: string
+        description: "Issue description (optional)"
+      labels:
+        type: string
+        description: "Comma-separated label names"
+      assignee_ids:
+        type: array
+        items:
+          type: integer
+        description: "Array of user IDs to assign"
+    required:
+      - id
+      - title
+
+- slug: gitlab_list_merge_requests
+  name: List Merge Requests
+  description: |
+    List merge requests in a project. Filter by state (opened/closed/merged), author, or target branch.
+    Use for code review and merge tracking.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/merge_requests
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - merge requests
+    - code review
+  input_schema:
+    type: object
+    description: Parameters for listing merge requests
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      state:
+        type: string
+        description: "MR state: opened, closed, merged, all (default opened)"
+        enum: [opened, closed, merged, all]
+        default: opened
+      source_branch:
+        type: string
+        description: "Filter by source branch"
+      target_branch:
+        type: string
+        description: "Filter by target branch"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - id
+
+- slug: gitlab_get_merge_request
+  name: Get Merge Request
+  description: |
+    Get details of a specific merge request: title, description, state, reviewers, and merge status.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/merge_requests/{mr_iid}
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - merge requests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a merge request
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      mr_iid:
+        type: integer
+        description: "Merge request internal ID (IID)"
+    required:
+      - id
+      - mr_iid
+
+- slug: gitlab_list_branches
+  name: List Branches
+  description: |
+    List all branches in a project including protected branch info.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/repository/branches
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - branches
+    - repository
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - id
+
+- slug: gitlab_get_branch
+  name: Get Branch
+  description: |
+    Get details of a specific branch including the commit SHA, protected status, and branch name.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/repository/branches/{branch}
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - branches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a branch
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      branch:
+        type: string
+        description: "Branch name"
+    required:
+      - id
+      - branch
+
+- slug: gitlab_list_commits
+  name: List Commits
+  description: |
+    List commits in a project. Filter by branch, author, or date range.
+    Useful for viewing change history and authorship.
+  provider: gitlab
+  endpoint: /api/v4/projects/{id}/repository/commits
+  method: GET
+  scopes:
+    - read_api
+  tags:
+    - commits
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing commits
+    properties:
+      id:
+        type: string
+        description: "Project ID or path"
+      ref_name:
+        type: string
+        description: "Branch name or tag to list commits from"
+      since:
+        type: string
+        description: "ISO 8601 date - only commits after this date"
+      until:
+        type: string
+        description: "ISO 8601 date - only commits before this date"
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - id

@@ -1,0 +1,242 @@
+# Axiom Tools - Allowlist
+# Curated subset of Axiom API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. axiom_list_datasets        - List available datasets
+# 2. axiom_get_dataset         - Get dataset details
+# 3. axiom_query_dataset       - Query a dataset with APL
+# 4. axiom_list_views          - List saved views
+# 5. axiom_get_view            - Get view details
+# 6. axiom_list_alerts        - List alerting rules
+# 7. axiom_get_alert          - Get alert details
+# 8. axiom_list_monitors      - List monitors
+# 9. axiom_get_monitor        - Get monitor details
+# 10. axiom_get_usage          - Get usage statistics
+
+- slug: axiom_list_datasets
+  name: List Datasets
+  description: |
+    List all available datasets in Axiom.
+  provider: axiom
+  endpoint: /v1/datasets
+  method: GET
+  scopes: []
+  tags:
+    - datasets
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for listing datasets
+    properties:
+      limit:
+        type: integer
+        description: "Max datasets to return"
+        default: 20
+    required: []
+
+- slug: axiom_get_dataset
+  name: Get Dataset
+  description: |
+    Get details for a specific dataset including schema.
+  provider: axiom
+  endpoint: /v1/datasets/{name}
+  method: GET
+  scopes: []
+  tags:
+    - datasets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dataset
+    properties:
+      name:
+        type: string
+        description: "Dataset name"
+    required:
+      - name
+
+- slug: axiom_query_dataset
+  name: Query Dataset
+  description: |
+    Query a dataset using APL (Axiom Processing Language).
+  provider: axiom
+  endpoint: /v1/datasets/{name}/query
+  method: POST
+  scopes: []
+  tags:
+    - query
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for querying a dataset
+    properties:
+      name:
+        type: string
+        description: "Dataset name"
+      apl:
+        type: string
+        description: "APL query expression"
+      startTime:
+        type: string
+        description: "Query start time (ISO 8601)"
+      endTime:
+        type: string
+        description: "Query end time (ISO 8601)"
+      limit:
+        type: integer
+        description: "Max rows to return"
+        default: 1000
+    required:
+      - name
+      - apl
+
+- slug: axiom_list_views
+  name: List Views
+  description: |
+    List all saved views in Axiom.
+  provider: axiom
+  endpoint: /v1/views
+  method: GET
+  scopes: []
+  tags:
+    - views
+    - saved
+  input_schema:
+    type: object
+    description: Parameters for listing views
+    properties:
+      limit:
+        type: integer
+        description: "Max views to return"
+        default: 20
+    required: []
+
+- slug: axiom_get_view
+  name: Get View
+  description: |
+    Get details of a specific saved view.
+  provider: axiom
+  endpoint: /v1/views/{name}
+  method: GET
+  scopes: []
+  tags:
+    - views
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a view
+    properties:
+      name:
+        type: string
+        description: "View name"
+    required:
+      - name
+
+- slug: axiom_list_alerts
+  name: List Alerts
+  description: |
+    List all alerting rules in Axiom.
+  provider: axiom
+  endpoint: /v1/alerts
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      limit:
+        type: integer
+        description: "Max alerts to return"
+        default: 20
+    required: []
+
+- slug: axiom_get_alert
+  name: Get Alert
+  description: |
+    Get details of a specific alerting rule.
+  provider: axiom
+  endpoint: /v1/alerts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an alert
+    properties:
+      id:
+        type: string
+        description: "Alert ID"
+    required:
+      - id
+
+- slug: axiom_list_monitors
+  name: List Monitors
+  description: |
+    List all monitors in Axiom.
+  provider: axiom
+  endpoint: /v1/monitors
+  method: GET
+  scopes: []
+  tags:
+    - monitors
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing monitors
+    properties:
+      limit:
+        type: integer
+        description: "Max monitors to return"
+        default: 20
+    required: []
+
+- slug: axiom_get_monitor
+  name: Get Monitor
+  description: |
+    Get details of a specific monitor.
+  provider: axiom
+  endpoint: /v1/monitors/{id}
+  method: GET
+  scopes: []
+  tags:
+    - monitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a monitor
+    properties:
+      id:
+        type: string
+        description: "Monitor ID"
+    required:
+      - id
+
+- slug: axiom_get_usage
+  name: Get Usage
+  description: |
+    Get usage statistics for the Axiom account.
+  provider: axiom
+  endpoint: /v1/usage
+  method: GET
+  scopes: []
+  tags:
+    - usage
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties:
+      startTime:
+        type: string
+        description: "Usage start time (ISO 8601)"
+      endTime:
+        type: string
+        description: "Usage end time (ISO 8601)"
+    required: []

@@ -1,0 +1,254 @@
+# Guidaki Tools - Allowlist
+# Curated subset of Guidaki REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. guidaki_list_tours       - List all tours
+# 2. guidaki_get_tour         - Get tour details
+# 3. guidaki_create_tour      - Create a new tour
+# 4. guidaki_list_checklists  - List checklists
+# 5. guidaki_get_checklist    - Get checklist details
+# 6. guidaki_list_users       - List users
+# 7. guidaki_get_user         - Get user details
+# 8. guidaki_get_analytics    - Get analytics data
+# 9. guidaki_list_flows       - List flows
+# 10. guidaki_get_flow        - Get flow details
+
+- slug: guidaki_list_tours
+  name: List Tours
+  description: |
+    List all onboarding tours in your Guidaki account.
+  provider: guidaki
+  endpoint: /api/v1/tours
+  method: GET
+  scopes:
+    - tours:read
+  tags:
+    - tours
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tours
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, archived, draft)"
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: guidaki_get_tour
+  name: Get Tour
+  description: |
+    Get detailed information about a specific tour.
+  provider: guidaki
+  endpoint: /api/v1/tours/{tourId}
+  method: GET
+  scopes:
+    - tours:read
+  tags:
+    - tours
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tour
+    properties:
+      tourId:
+        type: string
+        description: "Tour ID"
+    required:
+      - tourId
+
+- slug: guidaki_create_tour
+  name: Create Tour
+  description: |
+    Create a new onboarding tour in Guidaki.
+  provider: guidaki
+  endpoint: /api/v1/tours
+  method: POST
+  scopes:
+    - tours:write
+  tags:
+    - tours
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a tour
+    properties:
+      name:
+        type: string
+        description: "Tour name"
+      description:
+        type: string
+        description: "Tour description"
+      steps:
+        type: array
+        items:
+          type: object
+        description: "Array of step objects"
+      status:
+        type: string
+        description: "Tour status (draft, published)"
+    required:
+      - name
+
+- slug: guidaki_list_checklists
+  name: List Checklists
+  description: |
+    List all checklists in your Guidaki account.
+  provider: guidaki
+  endpoint: /api/v1/checklists
+  method: GET
+  scopes:
+    - checklists:read
+  tags:
+    - checklists
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing checklists
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: guidaki_get_checklist
+  name: Get Checklist
+  description: |
+    Get detailed information about a specific checklist.
+  provider: guidaki
+  endpoint: /api/v1/checklists/{checklistId}
+  method: GET
+  scopes:
+    - checklists:read
+  tags:
+    - checklists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a checklist
+    properties:
+      checklistId:
+        type: string
+        description: "Checklist ID"
+    required:
+      - checklistId
+
+- slug: guidaki_list_users
+  name: List Users
+  description: |
+    List all users in your Guidaki account.
+  provider: guidaki
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: guidaki_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: guidaki
+  endpoint: /api/v1/users/{userId}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: guidaki_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics data for tours and user onboarding progress.
+  provider: guidaki
+  endpoint: /api/v1/analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      tour_id:
+        type: string
+        description: "Filter by tour ID"
+    required: []
+
+- slug: guidaki_list_flows
+  name: List Flows
+  description: |
+    List all flows in your Guidaki account.
+  provider: guidaki
+  endpoint: /api/v1/flows
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing flows
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: guidaki_get_flow
+  name: Get Flow
+  description: |
+    Get detailed information about a specific flow.
+  provider: guidaki
+  endpoint: /api/v1/flows/{flowId}
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a flow
+    properties:
+      flowId:
+        type: string
+        description: "Flow ID"
+    required:
+      - flowId

@@ -1,0 +1,246 @@
+- slug: printful_list_products
+  name: List Products
+  description: |
+    Retrieve a paginated list of all products in your Printful catalog.
+  provider: printful
+  endpoint: /v2/products
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Number of products to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of products to skip for pagination"
+      status:
+        type: string
+        description: "Filter by product status: active, archived"
+    required: []
+
+- slug: printful_get_product
+  name: Get Product
+  description: |
+    Retrieve detailed information about a specific product by ID.
+  provider: printful
+  endpoint: /v2/products/{id}
+  method: GET
+  scopes:
+    - products
+  tags:
+    - products
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      id:
+        type: string
+        description: "Product ID"
+    required:
+      - id
+
+- slug: printful_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of orders with optional filtering by status and date range.
+  provider: printful
+  endpoint: /v2/orders
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Number of orders to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of orders to skip for pagination"
+      status:
+        type: string
+        description: "Filter by status: pending, processing, on_hold, shipped, canceled"
+      from:
+        type: string
+        description: "Start date filter (ISO 8601 format)"
+      to:
+        type: string
+        description: "End date filter (ISO 8601 format)"
+    required: []
+
+- slug: printful_get_order
+  name: Get Order
+  description: |
+    Retrieve detailed information about a specific order by ID.
+  provider: printful
+  endpoint: /v2/orders/{id}
+  method: GET
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: printful_create_order
+  name: Create Order
+  description: |
+    Create a new order with recipient info, items, and shipping option.
+  provider: printful
+  endpoint: /v2/orders
+  method: POST
+  scopes:
+    - orders
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      recipient:
+        type: object
+        description: "Recipient information (name, address, email, phone)"
+      items:
+        type: array
+        description: "Array of items to order with variant ID and quantity"
+      shipping:
+        type: string
+        description: "Shipping method identifier"
+      external_id:
+        type: string
+        description: "External order reference ID"
+    required:
+      - recipient
+      - items
+
+- slug: printful_list_files
+  name: List Files
+  description: |
+    Retrieve a list of all uploaded files (designs, images) in your account.
+  provider: printful
+  endpoint: /v2/files
+  method: GET
+  scopes:
+    - files
+  tags:
+    - files
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      limit:
+        type: integer
+        description: "Number of files to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of files to skip for pagination"
+    required: []
+
+- slug: printful_get_file
+  name: Get File
+  description: |
+    Retrieve detailed information about a specific file by ID.
+  provider: printful
+  endpoint: /v2/files/{id}
+  method: GET
+  scopes:
+    - files
+  tags:
+    - files
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      id:
+        type: string
+        description: "File ID"
+    required:
+      - id
+
+- slug: printful_list_shipping_rates
+  name: List Shipping Rates
+  description: |
+    Calculate available shipping options for a given address and items.
+  provider: printful
+  endpoint: /v2/shipping_rates
+  method: GET
+  scopes:
+    - shipping
+  tags:
+    - shipping
+  input_schema:
+    type: object
+    description: Parameters for listing shipping rates
+    properties:
+      address:
+        type: object
+        description: "Recipient address (name, address1, city, state_code, country_code, zip)"
+      items:
+        type: array
+        description: "Array of items with variant_id and quantity"
+    required:
+      - address
+      - items
+
+- slug: printful_get_shipping_rate
+  name: Get Shipping Rate
+  description: |
+    Get specific shipping rate details for a particular shipping option.
+  provider: printful
+  endpoint: /v2/shipping_rates/{id}
+  method: GET
+  scopes:
+    - shipping
+  tags:
+    - shipping
+  input_schema:
+    type: object
+    description: Parameters for getting a shipping rate
+    properties:
+      id:
+        type: string
+        description: "Shipping rate ID"
+    required:
+      - id
+
+- slug: printful_list_inventory
+  name: List Inventory
+  description: |
+    Retrieve inventory levels for all products and variants.
+  provider: printful
+  endpoint: /v2/inventory
+  method: GET
+  scopes:
+    - inventory
+  tags:
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing inventory
+    properties:
+      limit:
+        type: integer
+        description: "Number of inventory records to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      product_id:
+        type: string
+        description: "Filter by specific product ID"
+    required: []

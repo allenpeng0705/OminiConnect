@@ -1,0 +1,240 @@
+# Listrak Tools - Allowlist
+# Curated subset of Listrak API for AI agent use.
+# OAUTH2_CC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. listrak_list_contacts         - List contacts
+# 2. listrak_get_contact           - Get contact details
+# 3. listrak_add_contact           - Add a contact
+# 4. listrak_update_contact        - Update a contact
+# 5. listrak_list_schemas         - List schemas
+# 6. listrak_get_schema          - Get schema details
+# 7. listrak_list_segments       - List segments
+# 8. listrak_get_segment         - Get segment details
+# 9. listrak_list_email_campaigns - List email campaigns
+# 10. listrak_get_email_campaign  - Get email campaign details
+
+- slug: listrak_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: listrak
+  endpoint: /email/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: listrak_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: listrak
+  endpoint: /email/contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: listrak_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact.
+  provider: listrak
+  endpoint: /email/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email
+
+- slug: listrak_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: listrak
+  endpoint: /email/contacts/{contact_id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - contact_id
+
+- slug: listrak_list_schemas
+  name: List Schemas
+  description: |
+    List all schemas.
+  provider: listrak
+  endpoint: /email/schemas
+  method: GET
+  scopes: []
+  tags:
+    - schemas
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing schemas
+    properties: {}
+    required: []
+
+- slug: listrak_get_schema
+  name: Get Schema
+  description: |
+    Get details for a specific schema.
+  provider: listrak
+  endpoint: /email/schemas/{schema_id}
+  method: GET
+  scopes: []
+  tags:
+    - schemas
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schema
+    properties:
+      schema_id:
+        type: integer
+        description: "Schema ID"
+    required:
+      - schema_id
+
+- slug: listrak_list_segments
+  name: List Segments
+  description: |
+    List all segments.
+  provider: listrak
+  endpoint: /email/segments
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties: {}
+    required: []
+
+- slug: listrak_get_segment
+  name: Get Segment
+  description: |
+    Get details for a specific segment.
+  provider: listrak
+  endpoint: /email/segments/{segment_id}
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: integer
+        description: "Segment ID"
+    required:
+      - segment_id
+
+- slug: listrak_list_email_campaigns
+  name: List Email Campaigns
+  description: |
+    List all email campaigns.
+  provider: listrak
+  endpoint: /email/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing email campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: listrak_get_email_campaign
+  name: Get Email Campaign
+  description: |
+    Get details for a specific email campaign.
+  provider: listrak
+  endpoint: /email/campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an email campaign
+    properties:
+      campaign_id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - campaign_id

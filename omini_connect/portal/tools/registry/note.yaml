@@ -1,0 +1,282 @@
+# Note Tools - Allowlist
+# Curated subset of generic Note API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. note_list_notes         - List notes/pages
+# 2. note_get_note           - Get note/page details
+# 3. note_create_note        - Create a note/page
+# 4. note_update_note        - Update a note/page
+# 5. note_delete_note        - Delete a note/page
+# 6. note_list_notebooks     - List databases (notebooks)
+# 7. note_get_notebook       - Get database (notebook) details
+# 8. note_list_tags          - List tags/labels
+# 9. note_search_notes       - Search notes
+# 10. note_share_note        - Share a note
+
+- slug: note_list_notes
+  name: List Notes
+  description: |
+    List notes with optional filters for notebook, tag, or status.
+  provider: note
+  endpoint: /notes
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      notebook_id:
+        type: string
+        description: "Filter by notebook ID"
+      tag_id:
+        type: string
+        description: "Filter by tag ID"
+      status:
+        type: string
+        description: "Filter by status (active, archived)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: note_get_note
+  name: Get Note
+  description: |
+    Get detailed information about a specific note.
+  provider: note
+  endpoint: /notes/{note_id}
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a note
+    properties:
+      note_id:
+        type: string
+        description: "Note ID"
+    required:
+      - note_id
+
+- slug: note_create_note
+  name: Create Note
+  description: |
+    Create a new note with title, content, and metadata.
+  provider: note
+  endpoint: /notes
+  method: POST
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      title:
+        type: string
+        description: "Note title"
+      content:
+        type: string
+        description: "Note content"
+      notebook_id:
+        type: string
+        description: "Notebook ID to create note in"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tag IDs or names"
+    required:
+      - title
+      - content
+
+- slug: note_update_note
+  name: Update Note
+  description: |
+    Update an existing note's title, content, or metadata.
+  provider: note
+  endpoint: /notes/{note_id}
+  method: PUT
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a note
+    properties:
+      note_id:
+        type: string
+        description: "Note ID"
+      title:
+        type: string
+        description: "New note title"
+      content:
+        type: string
+        description: "New note content"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tag IDs or names"
+    required:
+      - note_id
+
+- slug: note_delete_note
+  name: Delete Note
+  description: |
+    Delete a note permanently.
+  provider: note
+  endpoint: /notes/{note_id}
+  method: DELETE
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a note
+    properties:
+      note_id:
+        type: string
+        description: "Note ID"
+    required:
+      - note_id
+
+- slug: note_list_notebooks
+  name: List Notebooks
+  description: |
+    List all notebooks in the account.
+  provider: note
+  endpoint: /notebooks
+  method: GET
+  scopes:
+    - notebooks:read
+  tags:
+    - notebooks
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: note_get_notebook
+  name: Get Notebook
+  description: |
+    Get details about a specific notebook.
+  provider: note
+  endpoint: /notebooks/{notebook_id}
+  method: GET
+  scopes:
+    - notebooks:read
+  tags:
+    - notebooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a notebook
+    properties:
+      notebook_id:
+        type: string
+        description: "Notebook ID"
+    required:
+      - notebook_id
+
+- slug: note_list_tags
+  name: List Tags
+  description: |
+    List all tags available in the account.
+  provider: note
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: note_search_notes
+  name: Search Notes
+  description: |
+    Search notes by keyword across title and content.
+  provider: note
+  endpoint: /notes/search
+  method: GET
+  scopes:
+    - notes:read
+  tags:
+    - notes
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching notes
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      notebook_id:
+        type: string
+        description: "Limit search to notebook"
+      tag:
+        type: string
+        description: "Limit search to tag"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - query
+
+- slug: note_share_note
+  name: Share Note
+  description: |
+    Share a note by creating a public link or sharing with specific users.
+  provider: note
+  endpoint: /notes/{note_id}/share
+  method: POST
+  scopes:
+    - notes:write
+  tags:
+    - notes
+    - sharing
+  input_schema:
+    type: object
+    description: Parameters for sharing a note
+    properties:
+      note_id:
+        type: string
+        description: "Note ID"
+      share_type:
+        type: string
+        description: "Type of share ('public', 'user', 'email')"
+      user_ids:
+        type: array
+        items:
+          type: string
+        description: "User IDs to share with"
+      emails:
+        type: array
+        items:
+          type: string
+        description: "Emails to share with"
+    required:
+      - note_id

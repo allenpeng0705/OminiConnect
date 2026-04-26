@@ -1,0 +1,259 @@
+# Lokalise Tools - Allowlist
+# Curated subset of Lokalise API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lokalise_list_projects       - List projects
+# 2. lokalise_get_project        - Get project details
+# 3. lokalise_list_keys          - List keys
+# 4. lokalise_get_key           - Get key details
+# 5. lokalise_create_key        - Create a key
+# 6. lokalise_list_translations - List translations
+# 7. lokalise_list_languages    - List languages
+# 8. lokalise_get_language      - Get language details
+# 9. lokalise_list_tasks        - List tasks
+# 10. lokalise_get_task         - Get task details
+
+- slug: lokalise_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: lokalise
+  endpoint: /api2/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lokalise_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: lokalise_list_keys
+  name: List Keys
+  description: |
+    List all keys in a project.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/keys
+  method: GET
+  scopes: []
+  tags:
+    - keys
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing keys
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - project_id
+
+- slug: lokalise_get_key
+  name: Get Key
+  description: |
+    Get details for a specific key.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/keys/{key_id}
+  method: GET
+  scopes: []
+  tags:
+    - keys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a key
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      key_id:
+        type: integer
+        description: "Key ID"
+    required:
+      - project_id
+      - key_id
+
+- slug: lokalise_create_key
+  name: Create Key
+  description: |
+    Create a new key.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/keys
+  method: POST
+  scopes: []
+  tags:
+    - keys
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a key
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      key_name:
+        type: string
+        description: "Key name"
+      description:
+        type: string
+        description: "Key description"
+    required:
+      - project_id
+      - key_name
+
+- slug: lokalise_list_translations
+  name: List Translations
+  description: |
+    List all translations for a key.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/keys/{key_id}/translations
+  method: GET
+  scopes: []
+  tags:
+    - translations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing translations
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      key_id:
+        type: integer
+        description: "Key ID"
+    required:
+      - project_id
+      - key_id
+
+- slug: lokalise_list_languages
+  name: List Languages
+  description: |
+    List all project languages.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/languages
+  method: GET
+  scopes: []
+  tags:
+    - languages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing languages
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: lokalise_get_language
+  name: Get Language
+  description: |
+    Get details for a specific language.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/languages/{language_id}
+  method: GET
+  scopes: []
+  tags:
+    - languages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a language
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      language_id:
+        type: integer
+        description: "Language ID"
+    required:
+      - project_id
+      - language_id
+
+- slug: lokalise_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in a project.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: lokalise_get_task
+  name: Get Task
+  description: |
+    Get details for a specific task.
+  provider: lokalise
+  endpoint: /api2/projects/{project_id}/tasks/{task_id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+      task_id:
+        type: integer
+        description: "Task ID"
+    required:
+      - project_id
+      - task_id

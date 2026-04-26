@@ -1,0 +1,267 @@
+- slug: fireberry_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve all marketing campaigns in your account.
+  provider: fireberry
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Optional campaign filters
+    properties:
+      status:
+        type: string
+        description: "Filter by status (draft, active, paused, completed)"
+      type:
+        type: string
+        description: "Filter by campaign type (email, sms, social)"
+      limit:
+        type: integer
+        description: "Maximum number of campaigns to return"
+    required: []
+
+- slug: fireberry_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a specific campaign.
+  provider: fireberry
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Campaign ID parameter
+    properties:
+      campaign_id:
+        type: string
+        description: "Unique identifier of the campaign"
+    required:
+      - campaign_id
+
+- slug: fireberry_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new marketing campaign with targeting and content.
+  provider: fireberry
+  endpoint: /campaigns
+  method: POST
+  scopes:
+    - campaigns:write
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Campaign creation parameters
+    properties:
+      name:
+        type: string
+        description: "Campaign name"
+      type:
+        type: string
+        description: "Campaign type (email, sms, social)"
+      target_segment:
+        type: string
+        description: "Target segment identifier"
+      start_date:
+        type: string
+        description: "Campaign start date (ISO 8601)"
+    required:
+      - name
+      - type
+
+- slug: fireberry_list_leads
+  name: List Leads
+  description: |
+    Retrieve all leads in your pipeline.
+  provider: fireberry
+  endpoint: /leads
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+  input_schema:
+    type: object
+    description: Lead filter options
+    properties:
+      status:
+        type: string
+        description: "Filter by lead status (new, contacted, qualified, lost)"
+      source:
+        type: string
+        description: "Filter by lead source"
+      limit:
+        type: integer
+        description: "Maximum number of leads to return"
+    required: []
+
+- slug: fireberry_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead.
+  provider: fireberry
+  endpoint: /leads/{lead_id}
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+  input_schema:
+    type: object
+    description: Lead ID parameter
+    properties:
+      lead_id:
+        type: string
+        description: "Unique identifier of the lead"
+    required:
+      - lead_id
+
+- slug: fireberry_create_lead
+  name: Create Lead
+  description: |
+    Create a new lead in the marketing pipeline.
+  provider: fireberry
+  endpoint: /leads
+  method: POST
+  scopes:
+    - leads:write
+  tags:
+    - leads
+  input_schema:
+    type: object
+    description: Lead creation parameters
+    properties:
+      name:
+        type: string
+        description: "Lead name"
+      email:
+        type: string
+        description: "Lead email address"
+      phone:
+        type: string
+        description: "Lead phone number"
+      source:
+        type: string
+        description: "Lead source (web, referral, event)"
+      score:
+        type: integer
+        description: "Lead score (1-100)"
+    required:
+      - name
+      - email
+
+- slug: fireberry_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve all contacts in your marketing database.
+  provider: fireberry
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Contact filter options
+    properties:
+      segment:
+        type: string
+        description: "Filter by segment name"
+      tag:
+        type: string
+        description: "Filter by tag"
+      limit:
+        type: integer
+        description: "Maximum number of contacts to return"
+    required: []
+
+- slug: fireberry_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: fireberry
+  endpoint: /contacts/{contact_id}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Contact ID parameter
+    properties:
+      contact_id:
+        type: string
+        description: "Unique identifier of the contact"
+    required:
+      - contact_id
+
+- slug: fireberry_send_email
+  name: Send Email
+  description: |
+    Send a transactional or marketing email to contacts.
+  provider: fireberry
+  endpoint: /emails/send
+  method: POST
+  scopes:
+    - emails:write
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Email sending parameters
+    properties:
+      to:
+        type: array
+        items:
+          type: string
+        description: "Recipient email addresses"
+      subject:
+        type: string
+        description: "Email subject line"
+      body:
+        type: string
+        description: "Email body content (HTML supported)"
+      campaign_id:
+        type: string
+        description: "Associated campaign ID"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: fireberry_get_campaign_report
+  name: Get Campaign Report
+  description: |
+    Get performance metrics and analytics for a campaign.
+  provider: fireberry
+  endpoint: /campaigns/{campaign_id}/report
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - campaigns
+  input_schema:
+    type: object
+    description: Report parameters
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign identifier"
+      date_from:
+        type: string
+        description: "Start date for report period"
+      date_to:
+        type: string
+        description: "End date for report period"
+    required:
+      - campaign_id

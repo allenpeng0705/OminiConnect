@@ -1,0 +1,261 @@
+- slug: freshdesk_list_tickets
+  name: List Tickets
+  description: |
+    Retrieves a list of support tickets from Freshdesk.
+  provider: freshdesk
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page (default 30)"
+      status:
+        type: integer
+        description: "Filter by status (2=open, 3=pending, 4=resolved, 5=closed)"
+      priority:
+        type: integer
+        description: "Filter by priority (1=low, 2=medium, 3=high, 4=urgent)"
+    required: []
+
+- slug: freshdesk_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieves a single support ticket by its ID.
+  provider: freshdesk
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+    required:
+      - id
+
+- slug: freshdesk_create_ticket
+  name: Create Ticket
+  description: |
+    Creates a new support ticket in Freshdesk.
+  provider: freshdesk
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "The ticket subject line"
+      description:
+        type: string
+        description: "The ticket description"
+      email:
+        type: string
+        description: "Requester email address"
+      priority:
+        type: integer
+        description: "Priority (1=low, 2=medium, 3=high, 4=urgent)"
+      status:
+        type: integer
+        description: "Status (2=open, 3=pending, 4=resolved, 5=closed)"
+    required:
+      - subject
+      - description
+      - email
+
+- slug: freshdesk_update_ticket
+  name: Update Ticket
+  description: |
+    Updates an existing support ticket.
+  provider: freshdesk
+  endpoint: /tickets/{id}
+  method: PUT
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for updating a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+      subject:
+        type: string
+        description: "Updated ticket subject"
+      description:
+        type: string
+        description: "Updated ticket description"
+      status:
+        type: integer
+        description: "Updated status"
+      priority:
+        type: integer
+        description: "Updated priority"
+    required:
+      - id
+
+- slug: freshdesk_list_contacts
+  name: List Contacts
+  description: |
+    Retrieves a list of contacts from Freshdesk.
+  provider: freshdesk
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - base
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      email:
+        type: string
+        description: "Filter by email address"
+      state:
+        type: string
+        description: "Filter by state (active, pending, blocked)"
+    required: []
+
+- slug: freshdesk_get_contact
+  name: Get Contact
+  description: |
+    Retrieves a single contact by their ID.
+  provider: freshdesk
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "The unique contact ID"
+    required:
+      - id
+
+- slug: freshdesk_list_agents
+  name: List Agents
+  description: |
+    Retrieves a list of agents in Freshdesk.
+  provider: freshdesk
+  endpoint: /agents
+  method: GET
+  scopes:
+    - base
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      email:
+        type: string
+        description: "Filter by agent email"
+    required: []
+
+- slug: freshdesk_get_agent
+  name: Get Agent
+  description: |
+    Retrieves a single agent by their ID.
+  provider: freshdesk
+  endpoint: /agents/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: integer
+        description: "The unique agent ID"
+    required:
+      - id
+
+- slug: freshdesk_list_forums
+  name: List Forums
+  description: |
+    Retrieves a list of forums from Freshdesk.
+  provider: freshdesk
+  endpoint: /forums
+  method: GET
+  scopes:
+    - base
+  tags:
+    - forums
+  input_schema:
+    type: object
+    description: Parameters for listing forums
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      category_id:
+        type: integer
+        description: "Filter by category ID"
+    required: []
+
+- slug: freshdesk_get_forum
+  name: Get Forum
+  description: |
+    Retrieves a single forum by its ID.
+  provider: freshdesk
+  endpoint: /forums/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - forums
+  input_schema:
+    type: object
+    description: Parameters for getting a forum
+    properties:
+      id:
+        type: integer
+        description: "The unique forum ID"
+    required:
+      - id

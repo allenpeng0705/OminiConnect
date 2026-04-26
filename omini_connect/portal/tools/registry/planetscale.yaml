@@ -1,0 +1,292 @@
+# PlanetScale Tools - Allowlist
+# Curated subset of PlanetScale API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. planetscale_list_databases    - List databases
+# 2. planetscale_get_database     - Get database details
+# 3. planetscale_create_database  - Create a new database
+# 4. planetscale_list_branches     - List database branches
+# 5. planetscale_get_branch       - Get branch details
+# 6. planetscale_create_branch    - Create a new branch
+# 7. planetscale_list_tables      - List tables in a branch
+# 8. planetscale_get_table        - Get table schema
+# 9. planetscale_execute_query    - Execute a query
+# 10. planetscale_get_query_result - Get query result
+
+- slug: planetscale_list_databases
+  name: List Databases
+  description: |
+    List all PlanetScale databases in the organization.
+    Databases are MySQL-compatible schemas managed by PlanetScale.
+  provider: planetscale
+  endpoint: /v1/databases
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - databases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      org:
+        type: string
+        description: "Organization name"
+    required:
+      - org
+
+- slug: planetscale_get_database
+  name: Get Database
+  description: |
+    Get details about a specific PlanetScale database including region, schema, and branch info.
+  provider: planetscale
+  endpoint: /v1/databases/{database}
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - databases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database:
+        type: string
+        description: "Database name"
+    required:
+      - database
+
+- slug: planetscale_create_database
+  name: Create Database
+  description: |
+    Create a new PlanetScale database with an initial main branch.
+    Specify the region for optimal latency.
+  provider: planetscale
+  endpoint: /v1/databases
+  method: POST
+  scopes:
+    - database:write
+  tags:
+    - databases
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a database
+    properties:
+      name:
+        type: string
+        description: "Desired database name (lowercase, alphanumeric, hyphens)"
+      region:
+        type: string
+        description: "Region slug (e.g., us-east-1, eu-central-1)"
+      notes:
+        type: string
+        description: "Optional notes about the database"
+    required:
+      - name
+      - region
+
+- slug: planetscale_list_branches
+  name: List Branches
+  description: |
+    List all branches for a PlanetScale database.
+    Branches are isolated copies of the database schema for development and testing.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - branches
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      database:
+        type: string
+        description: "Database name"
+    required:
+      - database
+
+- slug: planetscale_get_branch
+  name: Get Branch
+  description: |
+    Get details about a specific database branch including schema, row count, and status.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches/{branch}
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - branches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a branch
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      branch:
+        type: string
+        description: "Branch name"
+    required:
+      - database
+      - branch
+
+- slug: planetscale_create_branch
+  name: Create Branch
+  description: |
+    Create a new branch from the main database or an existing branch.
+    Branches can be used for development, testing, or creating schema changes.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches
+  method: POST
+  scopes:
+    - database:write
+  tags:
+    - branches
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a branch
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      name:
+        type: string
+        description: "New branch name"
+      from_branch:
+        type: string
+        description: "Source branch to create from (default: main)"
+        default: main
+    required:
+      - database
+      - name
+
+- slug: planetscale_list_tables
+  name: List Tables
+  description: |
+    List all tables in a specific branch's schema.
+    Returns table names, row counts, and column information.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches/{branch}/tables
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      branch:
+        type: string
+        description: "Branch name"
+    required:
+      - database
+      - branch
+
+- slug: planetscale_get_table
+  name: Get Table
+  description: |
+    Get the schema and column definitions of a specific table in a branch.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches/{branch}/tables/{table}
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table schema
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      branch:
+        type: string
+        description: "Branch name"
+      table:
+        type: string
+        description: "Table name"
+    required:
+      - database
+      - branch
+      - table
+
+- slug: planetscale_execute_query
+  name: Execute Query
+  description: |
+    Execute a SQL query against a database branch using the query API.
+    Supports SELECT, INSERT, UPDATE, and DELETE statements.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/branches/{branch}/queries
+  method: POST
+  scopes:
+    - database:read
+  tags:
+    - query
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for executing a query
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      branch:
+        type: string
+        description: "Branch name"
+      query:
+        type: string
+        description: "SQL query to execute"
+      options:
+        type: object
+        description: "Query options"
+        properties:
+          timeout:
+            type: integer
+            description: "Query timeout in seconds"
+    required:
+      - database
+      - branch
+      - query
+
+- slug: planetscale_get_query_result
+  name: Get Query Result
+  description: |
+    Retrieve the results of a previously executed query by its ID.
+    Use after Execute Query to get the actual data returned.
+  provider: planetscale
+  endpoint: /v1/databases/{database}/queries/{queryId}
+  method: GET
+  scopes:
+    - database:read
+  tags:
+    - query
+    - results
+  input_schema:
+    type: object
+    description: Parameters for getting query results
+    properties:
+      database:
+        type: string
+        description: "Database name"
+      queryId:
+        type: string
+        description: "Query ID returned from execute query"
+    required:
+      - database
+      - queryId

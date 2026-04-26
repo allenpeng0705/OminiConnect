@@ -1,0 +1,258 @@
+# Exact Online Tools - Allowlist
+# Curated subset of Exact Online API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. exact_online_list_accounts           - List accounts
+# 2. exact_online_get_account             - Get account details
+# 3. exact_online_list_invoices           - List sales invoices
+# 4. exact_online_get_invoice             - Get invoice details
+# 5. exact_online_list_contacts           - List contacts
+# 6. exact_online_get_contact             - Get contact details
+# 7. exact_online_list_items              - List items
+# 8. exact_online_get_item                - Get item details
+# 9. exact_online_list_journals          - List journals
+# 10. exact_online_get_financial_balance - Get financial balance
+
+- slug: exact_online_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts (customers and suppliers).
+  provider: exact-online
+  endpoint: /api/v1/{division}/crm/Accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      top:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: exact_online_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: exact-online
+  endpoint: /api/v1/{division}/crm/Accounts({id})
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: exact_online_list_invoices
+  name: List Invoices
+  description: |
+    List all sales invoices.
+  provider: exact-online
+  endpoint: /api/v1/{division}/salesinvoice/Invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      top:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: exact_online_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: exact-online
+  endpoint: /api/v1/{division}/salesinvoice/Invoices({id})
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting invoice
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: exact_online_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: exact-online
+  endpoint: /api/v1/{division}/crm/Contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      top:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: exact_online_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: exact-online
+  endpoint: /api/v1/{division}/crm/Contacts({id})
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting contact
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: exact_online_list_items
+  name: List Items
+  description: |
+    List all items (products and services).
+  provider: exact-online
+  endpoint: /api/v1/{division}/logistics/Items
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - inventory
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      top:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: exact_online_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item.
+  provider: exact-online
+  endpoint: /api/v1/{division}/logistics/Items({id})
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - inventory
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting item
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+      id:
+        type: string
+        description: "Item ID"
+    required:
+      - id
+
+- slug: exact_online_list_journals
+  name: List Journals
+  description: |
+    List all journals.
+  provider: exact-online
+  endpoint: /api/v1/{division}/financial/Journals
+  method: GET
+  scopes: []
+  tags:
+    - journals
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing journals
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+    required: []
+
+- slug: exact_online_get_financial_balance
+  name: Get Financial Balance
+  description: |
+    Get financial balance information.
+  provider: exact-online
+  endpoint: /api/v1/{division}/financial/FinancialBalance
+  method: GET
+  scopes: []
+  tags:
+    - finance
+    - balance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties:
+      division:
+        type: integer
+        description: "Division ID"
+    required: []

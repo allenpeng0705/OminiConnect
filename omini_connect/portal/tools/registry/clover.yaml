@@ -1,0 +1,230 @@
+- slug: clover_list_merchants
+  name: List Merchants
+  description: |
+    Retrieve a list of all merchants associated with the Clover account.
+  provider: clover
+  endpoint: /merchants
+  method: GET
+  scopes:
+    - merchant
+  tags:
+    - merchants
+  input_schema:
+    type: object
+    description: Parameters for listing merchants
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of merchants to return"
+    required: []
+- slug: clover_get_merchant
+  name: Get Merchant
+  description: |
+    Retrieve details of a specific merchant by ID.
+  provider: clover
+  endpoint: /merchants/{merchant_id}
+  method: GET
+  scopes:
+    - merchant
+  tags:
+    - merchants
+  input_schema:
+    type: object
+    description: Parameters for getting a merchant
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+    required:
+      - merchant_id
+- slug: clover_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of all orders for a merchant.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      limit:
+        type: integer
+        description: "Maximum number of orders to return"
+      offset:
+        type: integer
+        description: "Number of orders to skip for pagination"
+    required:
+      - merchant_id
+- slug: clover_get_order
+  name: Get Order
+  description: |
+    Retrieve details of a specific order by ID.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/orders/{order_id}
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      order_id:
+        type: string
+        description: "The unique identifier of the order"
+    required:
+      - merchant_id
+      - order_id
+- slug: clover_list_items
+  name: List Items
+  description: |
+    Retrieve a list of all items (products) for a merchant.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/items
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      limit:
+        type: integer
+        description: "Maximum number of items to return"
+    required:
+      - merchant_id
+- slug: clover_get_item
+  name: Get Item
+  description: |
+    Retrieve details of a specific item by ID.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/items/{item_id}
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      item_id:
+        type: string
+        description: "The unique identifier of the item"
+    required:
+      - merchant_id
+      - item_id
+- slug: clover_list_employees
+  name: List Employees
+  description: |
+    Retrieve a list of all employees for a merchant.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      limit:
+        type: integer
+        description: "Maximum number of employees to return"
+    required:
+      - merchant_id
+- slug: clover_get_employee
+  name: Get Employee
+  description: |
+    Retrieve details of a specific employee by ID.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      employee_id:
+        type: string
+        description: "The unique identifier of the employee"
+    required:
+      - merchant_id
+      - employee_id
+- slug: clover_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers for a merchant.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      limit:
+        type: integer
+        description: "Maximum number of customers to return"
+    required:
+      - merchant_id
+- slug: clover_get_customer
+  name: Get Customer
+  description: |
+    Retrieve details of a specific customer by ID.
+  provider: clover
+  endpoint: /merchants/{merchant_id}/customers/{customer_id}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      merchant_id:
+        type: string
+        description: "The unique identifier of the merchant"
+      customer_id:
+        type: string
+        description: "The unique identifier of the customer"
+    required:
+      - merchant_id
+      - customer_id

@@ -1,0 +1,277 @@
+# Google Tools - Allowlist
+# Curated subset of Google API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_list_emails            - List emails (Gmail)
+# 2. google_get_email              - Get email details
+# 3. google_send_email             - Send an email
+# 4. google_list_calendars         - List calendars
+# 5. google_list_events            - List calendar events
+# 6. google_create_event           - Create calendar event
+# 7. google_list_contacts          - List contacts
+# 8. google_get_contact            - Get contact details
+# 9. google_list_files             - List Drive files
+# 10. google_get_file              - Get Drive file details
+
+- slug: google_list_emails
+  name: List Emails
+  description: |
+    List emails in the user's Gmail mailbox.
+  provider: google
+  endpoint: /gmail/v1/users/me/messages
+  method: GET
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing emails
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      maxResults:
+        type: integer
+        description: "Maximum results"
+        default: 20
+    required: []
+
+- slug: google_get_email
+  name: Get Email
+  description: |
+    Get detailed information about a specific email.
+  provider: google
+  endpoint: /gmail/v1/users/me/messages/{id}
+  method: GET
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.readonly
+  tags:
+    - email
+    - gmail
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an email
+    properties:
+      id:
+        type: string
+        description: "Email ID"
+    required:
+      - id
+
+- slug: google_send_email
+  name: Send Email
+  description: |
+    Send an email from the user's Gmail account.
+  provider: google
+  endpoint: /gmail/v1/users/me/messages/send
+  method: POST
+  scopes:
+    - https://mail.google.com/
+    - https://www.googleapis.com/auth/gmail.send
+  tags:
+    - email
+    - gmail
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      to:
+        type: string
+        description: "Recipient email address"
+      subject:
+        type: string
+        description: "Email subject"
+      body:
+        type: string
+        description: "Email body content"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: google_list_calendars
+  name: List Calendars
+  description: |
+    List all calendars in the user's Google Calendar.
+  provider: google
+  endpoint: /calendar/v3/users/me/calendarList
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/calendar
+  tags:
+    - calendar
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calendars
+    properties: {}
+
+- slug: google_list_events
+  name: List Events
+  description: |
+    List events from Google Calendar.
+  provider: google
+  endpoint: /calendar/v3/calendars/{calendarId}/events
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/calendar
+  tags:
+    - calendar
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      calendarId:
+        type: string
+        description: "Calendar ID"
+        default: primary
+      timeMin:
+        type: string
+        description: "Start time (ISO 8601)"
+      timeMax:
+        type: string
+        description: "End time (ISO 8601)"
+      maxResults:
+        type: integer
+        description: "Maximum results"
+        default: 20
+    required: []
+
+- slug: google_create_event
+  name: Create Event
+  description: |
+    Create a new event in Google Calendar.
+  provider: google
+  endpoint: /calendar/v3/calendars/{calendarId}/events
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/calendar
+  tags:
+    - calendar
+    - events
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      calendarId:
+        type: string
+        description: "Calendar ID"
+        default: primary
+      summary:
+        type: string
+        description: "Event title"
+      start:
+        type: string
+        description: "Start time (ISO 8601)"
+      end:
+        type: string
+        description: "End time (ISO 8601)"
+    required:
+      - summary
+      - start
+      - end
+
+- slug: google_list_contacts
+  name: List Contacts
+  description: |
+    List contacts from Google Contacts.
+  provider: google
+  endpoint: /v1/people/me/connections
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts.readonly
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: google_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a contact.
+  provider: google
+  endpoint: /v1/people/{resourceName}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/contacts.readonly
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      resourceName:
+        type: string
+        description: "Contact resource name"
+    required:
+      - resourceName
+
+- slug: google_list_files
+  name: List Files
+  description: |
+    List files in Google Drive.
+  provider: google
+  endpoint: /drive/v3/files
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      pageSize:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: google_get_file
+  name: Get File
+  description: |
+    Get detailed information about a Drive file.
+  provider: google
+  endpoint: /drive/v3/files/{fileId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/drive
+  tags:
+    - drive
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      fileId:
+        type: string
+        description: "File ID"
+    required:
+      - fileId

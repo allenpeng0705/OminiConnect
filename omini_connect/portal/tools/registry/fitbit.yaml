@@ -1,0 +1,241 @@
+# Fitbit Tools - Allowlist
+# Curated subset of Fitbit API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fitbit_get_user             - Get current user
+# 2. fitbit_list_activities    - List activities
+# 3. fitbit_get_activity       - Get activity details
+# 4. fitbit_list_sleep         - List sleep records
+# 5. fitbit_get_sleep          - Get sleep details
+# 6. fitbit_list_body          - List body measurements
+# 7. fitbit_get_body           - Get body details
+# 8. fitbit_list_heart         - List heart rate data
+# 9. fitbit_list_food         - List food logs
+# 10. fitbit_get_goals        - Get user goals
+
+- slug: fitbit_get_user
+  name: Get User
+  description: |
+    Get current authenticated user profile.
+  provider: fitbit
+  endpoint: /1/user/-/profile.json
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: fitbit_list_activities
+  name: List Activities
+  description: |
+    List activities for the user.
+  provider: fitbit
+  endpoint: /1/user/-/activities.json
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - fitness
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+      period:
+        type: string
+        description: "Period (1d, 7d, 30d)"
+    required: []
+
+- slug: fitbit_get_activity
+  name: Get Activity
+  description: |
+    Get details of a specific activity.
+  provider: fitbit
+  endpoint: /1/user/-/activities/{id}.json
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - fitness
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting activity
+    properties:
+      id:
+        type: string
+        description: "Activity ID"
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+    required:
+      - id
+
+- slug: fitbit_list_sleep
+  name: List Sleep
+  description: |
+    List sleep records.
+  provider: fitbit
+  endpoint: /1/user/-/sleep.json
+  method: GET
+  scopes: []
+  tags:
+    - sleep
+    - health
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sleep
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+      period:
+        type: string
+        description: "Period (1d, 7d, 30d)"
+    required: []
+
+- slug: fitbit_get_sleep
+  name: Get Sleep
+  description: |
+    Get sleep details for a specific date.
+  provider: fitbit
+  endpoint: /1/user/-/sleep/date/{date}.json
+  method: GET
+  scopes: []
+  tags:
+    - sleep
+    - health
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting sleep
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+    required:
+      - date
+
+- slug: fitbit_list_body
+  name: List Body
+  description: |
+    List body measurements.
+  provider: fitbit
+  endpoint: /1/user/-/body.json
+  method: GET
+  scopes: []
+  tags:
+    - body
+    - health
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing body
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+      period:
+        type: string
+        description: "Period (1d, 7d, 30d)"
+    required: []
+
+- slug: fitbit_get_body
+  name: Get Body
+  description: |
+    Get body measurements for a specific date.
+  provider: fitbit
+  endpoint: /1/user/-/body/date/{date}.json
+  method: GET
+  scopes: []
+  tags:
+    - body
+    - health
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting body
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+    required:
+      - date
+
+- slug: fitbit_list_heart
+  name: List Heart
+  description: |
+    List heart rate data.
+  provider: fitbit
+  endpoint: /1/user/-/heart.json
+  method: GET
+  scopes: []
+  tags:
+    - heart
+    - health
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing heart rate
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+      period:
+        type: string
+        description: "Period (1d, 7d, 30d)"
+    required: []
+
+- slug: fitbit_list_food
+  name: List Food
+  description: |
+    List food logs.
+  provider: fitbit
+  endpoint: /1/user/-/foods/log.json
+  method: GET
+  scopes: []
+  tags:
+    - food
+    - nutrition
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing food
+    properties:
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+    required: []
+
+- slug: fitbit_get_goals
+  name: Get Goals
+  description: |
+    Get user goals.
+  provider: fitbit
+  endpoint: /1/user/-/goals.json
+  method: GET
+  scopes: []
+  tags:
+    - goals
+    - fitness
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting goals
+    properties:
+      period:
+        type: string
+        description: "Period (daily, weekly)"
+    required: []

@@ -1,0 +1,259 @@
+# Battle.net Tools - Allowlist
+# Curated subset of Battle.net API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. battlenet_get_account    - Get Battle.net account info
+# 2. battlenet_list_games     - List available games
+# 3. battlenet_get_game_stats - Get game statistics
+# 4. battlenet_get_profile    - Get user profile
+# 5. battlenet_list_sc2_profile - Get StarCraft 2 profile
+# 6. battlenet_get_wow_character - Get WoW character
+# 7. battlenet_list_wow_achievements - List WoW achievements
+# 8. battlenet_get_d3_profile - Get Diablo 3 profile
+# 9. battlenet_get_overwatch_profile - Get Overwatch profile
+# 10. battlenet_list_news     - List game news
+
+- slug: battlenet_get_account
+  name: Get Account
+  description: |
+    Get Battle.net account information.
+  provider: battlenet
+  endpoint: /account/user
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - user
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: battlenet_list_games
+  name: List Games
+  description: |
+    List available games linked to the Battle.net account.
+  provider: battlenet
+  endpoint: /account/user/games
+  method: GET
+  scopes: []
+  tags:
+    - games
+    - account
+  input_schema:
+    type: object
+    description: Parameters for listing games
+    properties:
+      highlightCategory:
+        type: string
+        description: "Filter by category"
+    required: []
+
+- slug: battlenet_get_game_stats
+  name: Get Game Stats
+  description: |
+    Get statistics for a specific game.
+  provider: battlenet
+  endpoint: /profile/{region}/games/{gameId}"
+  method: GET
+  scopes: []
+  tags:
+    - games
+    - stats
+  input_schema:
+    type: object
+    description: Parameters for getting game stats
+    properties:
+      region:
+        type: string
+        description: "Region: us, eu, kr, tw, cn"
+      gameId:
+        type: string
+        description: "Game ID"
+    required:
+      - region
+      - gameId
+
+- slug: battlenet_get_profile
+  name: Get Profile
+  description: |
+    Get Battle.net user profile.
+  provider: battlenet
+  endpoint: /profile/{region}/player/{battletag}"
+  method: GET
+  scopes: []
+  tags:
+    - profile
+    - user
+  input_schema:
+    type: object
+    description: Parameters for getting profile
+    properties:
+      region:
+        type: string
+        description: "Region: us, eu, kr, tw, cn"
+      battletag:
+        type: string
+        description: "BattleTag (e.g., User#1234)"
+    required:
+      - region
+      - battletag
+
+- slug: battlenet_list_sc2_profile
+  name: Get SC2 Profile
+  description: |
+    Get StarCraft 2 profile and statistics.
+  provider: battlenet
+  endpoint: /sc2/profile/{region}/{realm}/{profileId}"
+  method: GET
+  scopes: []
+  tags:
+    - sc2
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting SC2 profile
+    properties:
+      region:
+        type: integer
+        description: "Region ID (1=US, 2=EU, 3=KR)"
+      realm:
+        type: integer
+        description: "Realm ID"
+      profileId:
+        type: integer
+        description: "Profile ID"
+    required:
+      - region
+      - realm
+      - profileId
+
+- slug: battlenet_get_wow_character
+  name: Get WoW Character
+  description: |
+    Get World of Warcraft character details.
+  provider: battlenet
+  endpoint: /wow/character/{realm}/{name}"
+  method: GET
+  scopes: []
+  tags:
+    - wow
+    - character
+  input_schema:
+    type: object
+    description: Parameters for getting WoW character
+    properties:
+      realm:
+        type: string
+        description: "Realm slug"
+      name:
+        type: string
+        description: "Character name"
+      fields:
+        type: string
+        description: "Additional fields: stats, items, achievements, etc."
+    required:
+      - realm
+      - name
+
+- slug: battlenet_list_wow_achievements
+  name: List WoW Achievements
+  description: |
+    List achievements for a WoW character.
+  provider: battlenet
+  endpoint: /wow/character/{realm}/{name}/achievements"
+  method: GET
+  scopes: []
+  tags:
+    - wow
+    - achievements
+  input_schema:
+    type: object
+    description: Parameters for listing achievements
+    properties:
+      realm:
+        type: string
+        description: "Realm slug"
+      name:
+        type: string
+        description: "Character name"
+    required:
+      - realm
+      - name
+
+- slug: battlenet_get_d3_profile
+  name: Get D3 Profile
+  description: |
+    Get Diablo 3 hero and seasonal data.
+  provider: battlenet
+  endpoint: /d3/profile/{account}/"
+  method: GET
+  scopes: []
+  tags:
+    - d3
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting D3 profile
+    properties:
+      account:
+        type: string
+        description: "BattleTag (without #)"
+    required:
+      - account
+
+- slug: battlenet_get_overwatch_profile
+  name: Get Overwatch Profile
+  description: |
+    Get Overwatch player profile and stats.
+  provider: battlenet
+  endpoint: /overwatch/profile/{region}/{platform}/{tag}"
+  method: GET
+  scopes: []
+  tags:
+    - overwatch
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting Overwatch profile
+    properties:
+      region:
+        type: string
+        description: "Region: us, eu, kr, global"
+      platform:
+        type: string
+        description: "Platform: pc, console, console"
+      tag:
+        type: string
+        description: "BattleTag (without #)"
+    required:
+      - region
+      - platform
+      - tag
+
+- slug: battlenet_list_news
+  name: List News
+  description: |
+    List latest game news and announcements.
+  provider: battlenet
+  endpoint: /data/wow/news"
+  method: GET
+  scopes: []
+  tags:
+    - news
+    - games
+  input_schema:
+    type: object
+    description: Parameters for listing news
+    properties:
+      region:
+        type: string
+        description: "Region: us, eu, kr, tw, cn"
+      locale:
+        type: string
+        description: "Locale for news"
+        default: en_US
+    required: []

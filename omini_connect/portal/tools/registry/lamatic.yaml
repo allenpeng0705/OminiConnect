@@ -1,0 +1,232 @@
+# Lamatic Tools - AI Platform
+
+# === TOOL LIST ===
+# 1. lamatic_list_models         - List available AI models
+# 2. lamatic_get_model           - Get model details
+# 3. lamatic_deploy_model        - Deploy a model
+# 4. lamatic_create_endpoint     - Create an API endpoint
+# 5. lamatic_list_endpoints      - List endpoints
+# 6. lamatic_get_endpoint        - Get endpoint details
+# 7. lamatic_invoke_endpoint     - Invoke endpoint for inference
+# 8. lamatic_list_deployments    - List deployments
+# 9. lamatic_get_deployment      - Get deployment details
+# 10. lamatic_get_inference_log  - Get inference log
+
+- slug: lamatic_list_models
+  name: List Models
+  description: |
+    Retrieve a list of all available AI models in the Lamatic platform.
+  provider: lamatic
+  endpoint: /models
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties: {}
+    required: []
+
+- slug: lamatic_get_model
+  name: Get Model
+  description: |
+    Get details for a specific model by ID.
+  provider: lamatic
+  endpoint: /models/{model_id}
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      model_id:
+        type: string
+        description: "The unique identifier of the model"
+    required:
+      - model_id
+
+- slug: lamatic_deploy_model
+  name: Deploy Model
+  description: |
+    Deploy a model to make it available for inference.
+  provider: lamatic
+  endpoint: /deployments
+  method: POST
+  scopes:
+    - deployments:write
+  tags:
+    - deployments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for deploying a model
+    properties:
+      model_id:
+        type: string
+        description: "The model ID to deploy"
+      instance_type:
+        type: string
+        description: "The instance type for deployment"
+    required:
+      - model_id
+
+- slug: lamatic_create_endpoint
+  name: Create Endpoint
+  description: |
+    Create a new API endpoint for accessing deployed models.
+  provider: lamatic
+  endpoint: /endpoints
+  method: POST
+  scopes:
+    - endpoints:write
+  tags:
+    - endpoints
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an endpoint
+    properties:
+      name:
+        type: string
+        description: "Name for the endpoint"
+      deployment_id:
+        type: string
+        description: "The deployment ID to attach"
+    required:
+      - name
+      - deployment_id
+
+- slug: lamatic_list_endpoints
+  name: List Endpoints
+  description: |
+    Retrieve a list of all API endpoints.
+  provider: lamatic
+  endpoint: /endpoints
+  method: GET
+  scopes:
+    - endpoints:read
+  tags:
+    - endpoints
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing endpoints
+    properties: {}
+    required: []
+
+- slug: lamatic_get_endpoint
+  name: Get Endpoint
+  description: |
+    Get details for a specific endpoint by ID.
+  provider: lamatic
+  endpoint: /endpoints/{endpoint_id}
+  method: GET
+  scopes:
+    - endpoints:read
+  tags:
+    - endpoints
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an endpoint
+    properties:
+      endpoint_id:
+        type: string
+        description: "The unique identifier of the endpoint"
+    required:
+      - endpoint_id
+
+- slug: lamatic_invoke_endpoint
+  name: Invoke Endpoint
+  description: |
+    Send an inference request to a deployed endpoint.
+  provider: lamatic
+  endpoint: /endpoints/{endpoint_id}/invoke
+  method: POST
+  scopes:
+    - inference:write
+  tags:
+    - inference
+    - invoke
+  input_schema:
+    type: object
+    description: Parameters for invoking an endpoint
+    properties:
+      endpoint_id:
+        type: string
+        description: "The endpoint ID to invoke"
+      input:
+        type: string
+        description: "The input prompt or data for inference"
+    required:
+      - endpoint_id
+      - input
+
+- slug: lamatic_list_deployments
+  name: List Deployments
+  description: |
+    Retrieve a list of all model deployments.
+  provider: lamatic
+  endpoint: /deployments
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing deployments
+    properties: {}
+    required: []
+
+- slug: lamatic_get_deployment
+  name: Get Deployment
+  description: |
+    Get details for a specific deployment by ID.
+  provider: lamatic
+  endpoint: /deployments/{deployment_id}
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deployment
+    properties:
+      deployment_id:
+        type: string
+        description: "The unique identifier of the deployment"
+    required:
+      - deployment_id
+
+- slug: lamatic_get_inference_log
+  name: Get Inference Log
+  description: |
+    Retrieve the inference log for a specific deployment or endpoint.
+  provider: lamatic
+  endpoint: /inference-logs/{log_id}
+  method: GET
+  scopes:
+    - logs:read
+  tags:
+    - logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an inference log
+    properties:
+      log_id:
+        type: string
+        description: "The unique identifier of the inference log"
+    required:
+      - log_id

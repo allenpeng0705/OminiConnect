@@ -1,0 +1,317 @@
+# SugarCRM Tools - Allowlist
+# Curated subset of SugarCRM REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sugarcrm_list_accounts      - List all accounts
+# 2. sugarcrm_get_account       - Get account details
+# 3. sugarcrm_create_account    - Create a new account
+# 4. sugarcrm_list_contacts     - List all contacts
+# 5. sugarcrm_get_contact       - Get contact details
+# 6. sugarcrm_create_contact    - Create a new contact
+# 7. sugarcrm_list_leads        - List all leads
+# 8. sugarcrm_get_lead          - Get lead details
+# 9. sugarcrm_list_opportunities - List all opportunities
+# 10. sugarcrm_get_opportunity  - Get opportunity details
+
+- slug: sugarcrm_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts/companies in SugarCRM. Filter by industry, territory, or account type.
+  provider: sugarcrm
+  endpoint: /Accounts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      filter:
+        type: array
+        description: "Filter expressions"
+      fields:
+        type: string
+        description: "Fields to include (comma-separated)"
+      max_results:
+        type: integer
+        description: "Max results (default 20, max 1000)"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: sugarcrm_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific account including contacts, opportunities, and activities.
+  provider: sugarcrm
+  endpoint: /Accounts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: sugarcrm_create_account
+  name: Create Account
+  description: |
+    Create a new account/company. Set name, industry, phone, website, and address.
+  provider: sugarcrm
+  endpoint: /Accounts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - accounts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an account
+    properties:
+      name:
+        type: string
+        description: "Account name"
+      industry:
+        type: string
+        description: "Industry type"
+      phone:
+        type: string
+        description: "Phone number"
+      website:
+        type: string
+        description: "Website URL"
+      billing_address_street:
+        type: string
+        description: "Billing street address"
+      billing_address_city:
+        type: string
+        description: "Billing city"
+      billing_address_state:
+        type: string
+        description: "Billing state"
+      billing_address_postalcode:
+        type: string
+        description: "Billing postal code"
+      billing_address_country:
+        type: string
+        description: "Billing country"
+    required:
+      - name
+
+- slug: sugarcrm_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in SugarCRM. Filter by account, status, or search term.
+  provider: sugarcrm
+  endpoint: /Contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      filter:
+        type: array
+        description: "Filter expressions"
+      fields:
+        type: string
+        description: "Fields to include (comma-separated)"
+      max_results:
+        type: integer
+        description: "Max results (default 20, max 1000)"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: sugarcrm_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact including email, phone, account, and tasks.
+  provider: sugarcrm
+  endpoint: /Contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: sugarcrm_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact. Set first name, last name, email, phone, and account association.
+  provider: sugarcrm
+  endpoint: /Contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone_work:
+        type: string
+        description: "Work phone"
+      phone_mobile:
+        type: string
+        description: "Mobile phone"
+      account_id:
+        type: string
+        description: "Associated account ID"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - last_name
+
+- slug: sugarcrm_list_leads
+  name: List Leads
+  description: |
+    List all leads in SugarCRM. Filter by status, source, or assignment.
+  provider: sugarcrm
+  endpoint: /Leads
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      filter:
+        type: array
+        description: "Filter expressions"
+      fields:
+        type: string
+        description: "Fields to include (comma-separated)"
+      max_results:
+        type: integer
+        description: "Max results (default 20, max 1000)"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: sugarcrm_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead including status, source, and conversion details.
+  provider: sugarcrm
+  endpoint: /Leads/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - leads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      id:
+        type: string
+        description: "Lead ID"
+    required:
+      - id
+
+- slug: sugarcrm_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities in SugarCRM. Filter by sales stage, amount, or account.
+  provider: sugarcrm
+  endpoint: /Opportunities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      filter:
+        type: array
+        description: "Filter expressions"
+      fields:
+        type: string
+        description: "Fields to include (comma-separated)"
+      max_results:
+        type: integer
+        description: "Max results (default 20, max 1000)"
+        default: 20
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: sugarcrm_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity including amount, stage, account, and expected close date.
+  provider: sugarcrm
+  endpoint: /Opportunities/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - id

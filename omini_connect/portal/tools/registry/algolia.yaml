@@ -1,0 +1,338 @@
+# Algolia Tools - Allowlist
+# Curated subset of the Algolia API v1 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. algolia_list_indices              - List all search indices
+# 2. algolia_get_index                 - Get details for a specific index
+# 3. algolia_search_index              - Search records in an index
+# 4. algolia_add_objects               - Add multiple objects to an index
+# 5. algolia_delete_objects            - Delete objects from an index
+# 6. algolia_list_api_keys             - List API keys
+# 7. algolia_get_settings              - Get index settings
+# 8. algolia_update_settings           - Update index settings
+# 9. algolia_list_logs                 - List operation logs
+# 10. algolia_get_log                   - Get a specific log entry
+
+- slug: algolia_list_indices
+  name: List Indices
+  description: |
+    List all search indices in your Algolia application.
+    Returns index names, sizes, and configuration status.
+  provider: algolia
+  endpoint: /1/indexes
+  method: GET
+  scopes:
+    - search
+  tags:
+    - indices
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing indices
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 0
+      hits_per_page:
+        type: integer
+        description: "Results per page (max 1000, default 20)"
+        default: 20
+    required: []
+
+- slug: algolia_get_index
+  name: Get Index
+  description: |
+    Get detailed configuration and statistics for a specific index.
+    Includes record count, size, and search statistics.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}
+  method: GET
+  scopes:
+    - search
+  tags:
+    - indices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an index
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+    required:
+      - index_name
+
+- slug: algolia_search_index
+  name: Search Index
+  description: |
+    Search for records in an index using full-text search.
+    Supports filtering, faceting, highlighting, and ranking customization.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}/search
+  method: POST
+  scopes:
+    - search
+  tags:
+    - search
+    - query
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      query:
+        type: string
+        description: "Search query string"
+        default: ""
+      filters:
+        type: string
+        description: "Filter expression (e.g., price > 100)"
+      facet_filters:
+        type: array
+        items:
+          type: string
+        description: "Array of facet filters"
+      facets:
+        type: array
+        items:
+          type: string
+        description: "Attributes to facet on"
+      attributes_to_retrieve:
+        type: array
+        items:
+          type: string
+        description: "Attributes to return in results"
+      attributes_to_highlight:
+        type: array
+        items:
+          type: string
+        description: "Attributes to highlight matches for"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 0
+      hits_per_page:
+        type: integer
+        description: "Results per page (max 1000, default 20)"
+        default: 20
+    required:
+      - index_name
+
+- slug: algolia_add_objects
+  name: Add Objects
+  description: |
+    Add multiple objects to an index in a single batch.
+    Objects become searchable immediately after indexing.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}/batch
+  method: POST
+  scopes:
+    - addObject
+  tags:
+    - indices
+    - objects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding objects
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      requests:
+        type: array
+        items:
+          type: object
+        description: "Array of objects to add (required)"
+    required:
+      - index_name
+      - requests
+
+- slug: algolia_delete_objects
+  name: Delete Objects
+  description: |
+    Delete multiple objects from an index by their objectIDs.
+    Objects will no longer appear in search results.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}/batch
+  method: POST
+  scopes:
+    - deleteObject
+  tags:
+    - indices
+    - objects
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting objects
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      requests:
+        type: array
+        items:
+          type: object
+        description: "Array of delete requests with objectIDs (required)"
+    required:
+      - index_name
+      - requests
+
+- slug: algolia_list_api_keys
+  name: List API Keys
+  description: |
+    List all API keys in your Algolia application.
+    Returns key descriptions, permissions, and validity.
+  provider: algolia
+  endpoint: /1/keys
+  method: GET
+  scopes:
+    - manage
+  tags:
+    - api-keys
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing API keys
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 0
+      hits_per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: algolia_get_settings
+  name: Get Settings
+  description: |
+    Get all index settings including searchable attributes,
+    ranking rules, faceting, and synonyms configuration.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}/settings
+  method: GET
+  scopes:
+    - settings
+  tags:
+    - indices
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+    required:
+      - index_name
+
+- slug: algolia_update_settings
+  name: Update Settings
+  description: |
+    Update index settings including searchable attributes,
+    ranking rules, faceting, and highlighting configuration.
+  provider: algolia
+  endpoint: /1/indexes/{index_name}/settings
+  method: PUT
+  scopes:
+    - settings
+  tags:
+    - indices
+    - settings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating settings
+    properties:
+      index_name:
+        type: string
+        description: "Index name (required)"
+      searchable_attributes:
+        type: array
+        items:
+          type: string
+        description: "Attributes to search in"
+      attributes_for_faceting:
+        type: array
+        items:
+          type: string
+        description: "Attributes to use for faceting"
+      ranking:
+        type: array
+        items:
+          type: string
+        description: "Ranking rules"
+      custom_ranking:
+        type: array
+        items:
+          type: string
+        description: "Custom ranking attributes"
+      highlights:
+        type: object
+        description: "Highlighting configuration"
+    required:
+      - index_name
+
+- slug: algolia_list_logs
+  name: List Logs
+  description: |
+    List recent API operation logs for your Algolia application.
+    Returns timestamp, operation type, and response status.
+  provider: algolia
+  endpoint: /1/logs
+  method: GET
+  scopes:
+    - api
+  tags:
+    - logs
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing logs
+    properties:
+      offset:
+        type: integer
+        description: "Log offset for pagination"
+        default: 0
+      length:
+        type: integer
+        description: "Number of logs to return (max 1000)"
+        default: 20
+      index_name:
+        type: string
+        description: "Filter logs by index name"
+    required: []
+
+- slug: algolia_get_log
+  name: Get Log
+  description: |
+    Get details for a specific log entry including the full
+    request and response for debugging.
+  provider: algolia
+  endpoint: /1/logs/{log_id}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - logs
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a log entry
+    properties:
+      log_id:
+        type: string
+        description: "Log ID (required)"
+    required:
+      - log_id

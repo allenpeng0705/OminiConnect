@@ -1,0 +1,261 @@
+# Emarsys Tools - Allowlist
+# Curated subset of Emarsys API for AI agent use.
+# SIGNATURE (WSSE) via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. emarsys_get_settings        - Get account settings
+# 2. emarsys_list_contacts       - List contacts
+# 3. emarsys_get_contact         - Get contact details
+# 4. emarsys_create_contact      - Create a new contact
+# 5. emarsys_update_contact      - Update contact details
+# 6. emarsys_list_campaigns      - List campaigns
+# 7. emarsys_get_campaign        - Get campaign details
+# 8. emarsys_trigger_event       - Trigger a contact event
+# 9. emarsys_get_aggregate_report - Get campaign aggregate report
+# 10. emarsys_list_segments      - List segments
+
+- slug: emarsys_get_settings
+  name: Get Settings
+  description: |
+    Get account settings and configuration.
+  provider: emarsys
+  endpoint: /api/v2/settings
+  method: GET
+  scopes: []
+  tags:
+    - settings
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: emarsys_list_contacts
+  name: List Contacts
+  description: |
+    List contacts in the account with optional filtering.
+  provider: emarsys
+  endpoint: /api/v2/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: emarsys_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by email or ID.
+  provider: emarsys
+  endpoint: /api/v2/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting contact
+    properties:
+      id:
+        type: string
+        description: "Contact email or ID"
+    required:
+      - id
+
+- slug: emarsys_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in the account.
+  provider: emarsys
+  endpoint: /api/v2/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating contact
+    properties:
+      email:
+        type: string
+        description: "Contact email (required)"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - email
+
+- slug: emarsys_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact's details.
+  provider: emarsys
+  endpoint: /api/v2/contacts/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating contact
+    properties:
+      id:
+        type: string
+        description: "Contact email or ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - id
+
+- slug: emarsys_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in the account.
+  provider: emarsys
+  endpoint: /api/v2/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 100
+    required: []
+
+- slug: emarsys_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: emarsys
+  endpoint: /api/v2/campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: emarsys_trigger_event
+  name: Trigger Event
+  description: |
+    Trigger an event for a specific contact.
+  provider: emarsys
+  endpoint: /api/v2/events
+  method: POST
+  scopes: []
+  tags:
+    - events
+    - automation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for triggering event
+    properties:
+      event_id:
+        type: string
+        description: "Event ID"
+      contact:
+        type: string
+        description: "Contact email or ID"
+      data:
+        type: object
+        description: "Event payload data"
+    required:
+      - event_id
+      - contact
+
+- slug: emarsys_get_aggregate_report
+  name: Get Aggregate Report
+  description: |
+    Get aggregate report for a campaign.
+  provider: emarsys
+  endpoint: /api/v2/reports/campaigns/{id}/aggregate
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting report
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: emarsys_list_segments
+  name: List Segments
+  description: |
+    List all segments in the account.
+  provider: emarsys
+  endpoint: /api/v2/segments
+  method: GET
+  scopes: []
+  tags:
+    - segments
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 100
+    required: []

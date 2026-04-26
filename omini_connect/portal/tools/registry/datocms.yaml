@@ -1,0 +1,325 @@
+# DatoCMS Tools - Allowlist
+# Curated subset of the DatoCMS Content Delivery API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. datocms_list_sites   - List all sites (accounts)
+# 2. datocms_get_site     - Get site details and configuration
+# 3. datocms_list_items   - List content items
+# 4. datocms_get_item     - Get a specific item by ID
+# 5. datocms_create_item  - Create a new content item
+# 6. datocms_update_item  - Update an existing item
+# 7. datocms_list_models  - List all content models
+# 8. datocms_get_model    - Get a specific model schema
+# 9. datocms_list_assets  - List media assets
+# 10. datocms_get_asset   - Get asset details
+
+- slug: datocms_list_sites
+  name: List Sites
+  description: |
+    List all DatoCMS sites (accounts) the authenticated user has access to.
+    Returns site names, subdomains, and plan information.
+  provider: datocms
+  endpoint: /sites
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: datocms_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a DatoCMS site including timezone, locale settings, and subscription.
+  provider: datocms
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (environment API key prefix)"
+    required:
+      - site_id
+
+- slug: datocms_list_items
+  name: List Items
+  description: |
+    List all content items in a DatoCMS site. Filter by model type, tags, or search query.
+    Returns items with all field values and metadata.
+  provider: datocms
+  endpoint: /items
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      filter[type]:
+        type: string
+        description: "Filter by model ID"
+      filter[tags]:
+        type: array
+        items:
+          type: string
+        description: "Filter by tags"
+      q:
+        type: string
+        description: "Full-text search query"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+      sort:
+        type: string
+        description: "Sort field and direction (e.g., createdAt:desc)"
+    required:
+      - site_id
+
+- slug: datocms_get_item
+  name: Get Item
+  description: |
+    Get a specific content item by its ID. Returns all field values and metadata.
+  provider: datocms
+  endpoint: /items/{item_id}
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      item_id:
+        type: integer
+        description: "Item ID"
+      version:
+        type: string
+        description: "Version: published or draft (default published)"
+        enum: [published, draft]
+    required:
+      - site_id
+      - item_id
+
+- slug: datocms_create_item
+  name: Create Item
+  description: |
+    Create a new content item in DatoCMS. Specify the model type and field values.
+  provider: datocms
+  endpoint: /items
+  method: POST
+  scopes:
+    - items:cud
+  tags:
+    - items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      item_type:
+        type: object
+        description: "Model type reference (required)"
+      fields:
+        type: object
+        description: "Item field values as JSON object"
+      locale:
+        type: string
+        description: "Locale code (default: en)"
+        default: en
+    required:
+      - site_id
+      - item_type
+      - fields
+
+- slug: datocms_update_item
+  name: Update Item
+  description: |
+    Update an existing content item. Can modify field values or update metadata.
+  provider: datocms
+  endpoint: /items/{item_id}
+  method: PUT
+  scopes:
+    - items:cud
+  tags:
+    - items
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an item
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      item_id:
+        type: integer
+        description: "Item ID"
+      fields:
+        type: object
+        description: "Updated field values"
+      locale:
+        type: string
+        description: "Locale code"
+    required:
+      - site_id
+      - item_id
+      - fields
+
+- slug: datocms_list_models
+  name: List Models
+  description: |
+    List all content models in a DatoCMS site. Returns model names, IDs, and field counts.
+  provider: datocms
+  endpoint: /models
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (default 20)"
+        default: 20
+    required:
+      - site_id
+
+- slug: datocms_get_model
+  name: Get Model
+  description: |
+    Get the complete schema definition of a content model including all fields and their types.
+  provider: datocms
+  endpoint: /models/{model_id}
+  method: GET
+  scopes:
+    - models:read
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      model_id:
+        type: string
+        description: "Model ID"
+    required:
+      - site_id
+      - model_id
+
+- slug: datocms_list_assets
+  name: List Assets
+  description: |
+    List all media assets in a DatoCMS site. Filter by type (image, file, video) or folder.
+  provider: datocms
+  endpoint: /assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      filter[type]:
+        type: string
+        description: "Asset type: image, file, or video"
+        enum: [image, file, video]
+      filter[folder_id]:
+        type: string
+        description: "Filter by folder ID"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+    required:
+      - site_id
+
+- slug: datocms_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information about a media asset including dimensions, file size, and URLs.
+  provider: datocms
+  endpoint: /assets/{asset_id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      site_id:
+        type: string
+        description: "Site ID (required)"
+      asset_id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - site_id
+      - asset_id

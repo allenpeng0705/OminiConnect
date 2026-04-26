@@ -1,0 +1,247 @@
+# Tableau Tools - Allowlist
+# Curated subset of the Tableau REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. tableau_list_workbooks      - List workbooks
+# 2. tableau_get_workbook         - Get workbook details
+# 3. tableau_list_datasources    - List datasources
+# 4. tableau_get_datasource      - Get datasource details
+# 5. tableau_list_projects       - List projects
+# 6. tableau_get_project         - Get project details
+# 7. tableau_list_views          - List views
+# 8. tableau_get_view            - Get view details
+# 9. tableau_list_users          - List users
+# 10. tableau_get_user           - Get user details
+
+- slug: tableau_list_workbooks
+  name: List Workbooks
+  description: |
+    List all workbooks the user has access to.
+    Filter by site, project, or owner.
+  provider: tableau
+  endpoint: /api/api-version/workbooks
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - workbooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workbooks
+    properties:
+      siteId:
+        type: string
+        description: "Filter by site ID"
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      ownerId:
+        type: string
+        description: "Filter by owner ID"
+    required: []
+
+- slug: tableau_get_workbook
+  name: Get Workbook
+  description: |
+    Get detailed information about a specific workbook.
+  provider: tableau
+  endpoint: /api/api-version/workbooks/{workbookId}
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - workbooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workbook
+    properties:
+      workbookId:
+        type: string
+        description: "Workbook ID"
+    required:
+      - workbookId
+
+- slug: tableau_list_datasources
+  name: List Datasources
+  description: |
+    List all datasources the user has access to.
+  provider: tableau
+  endpoint: /api/api-version/datasources
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - datasources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing datasources
+    properties:
+      siteId:
+        type: string
+        description: "Filter by site ID"
+    required: []
+
+- slug: tableau_get_datasource
+  name: Get Datasource
+  description: |
+    Get detailed information about a specific datasource.
+  provider: tableau
+  endpoint: /api/api-version/datasources/{datasourceId}
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - datasources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a datasource
+    properties:
+      datasourceId:
+        type: string
+        description: "Datasource ID"
+    required:
+      - datasourceId
+
+- slug: tableau_list_projects
+  name: List Projects
+  description: |
+    List all projects the user has access to.
+  provider: tableau
+  endpoint: /api/api-version/projects
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      siteId:
+        type: string
+        description: "Filter by site ID"
+      parentProjectId:
+        type: string
+        description: "Filter by parent project ID"
+    required: []
+
+- slug: tableau_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: tableau
+  endpoint: /api/api-version/projects/{projectId}
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: tableau_list_views
+  name: List Views
+  description: |
+    List all views in a workbook or site.
+  provider: tableau
+  endpoint: /api/api-version/views
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - views
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing views
+    properties:
+      workbookId:
+        type: string
+        description: "Filter by workbook ID"
+      siteId:
+        type: string
+        description: "Filter by site ID"
+    required: []
+
+- slug: tableau_get_view
+  name: Get View
+  description: |
+    Get detailed information about a specific view.
+  provider: tableau
+  endpoint: /api/api-version/views/{viewId}
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - views
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a view
+    properties:
+      viewId:
+        type: string
+        description: "View ID"
+    required:
+      - viewId
+
+- slug: tableau_list_users
+  name: List Users
+  description: |
+    List all users the user has access to.
+    Filter by site or role.
+  provider: tableau
+  endpoint: /api/api-version/users
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      siteId:
+        type: string
+        description: "Filter by site ID"
+      role:
+        type: string
+        description: "Filter by site role (Viewer, Editor, SiteAdmin, etc.)"
+    required: []
+
+- slug: tableau_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: tableau
+  endpoint: /api/api-version/users/{userId}
+  method: GET
+  scopes:
+    - TableauOAuth
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId

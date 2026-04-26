@@ -1,0 +1,243 @@
+# Ghost Admin Tools - Allowlist
+# Curated subset of Ghost Admin API for AI agent use.
+# JWT via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ghost_admin_list_posts          - List posts
+# 2. ghost_admin_get_post           - Get post details
+# 3. ghost_admin_create_post        - Create a post
+# 4. ghost_admin_update_post        - Update a post
+# 5. ghost_admin_delete_post        - Delete a post
+# 6. ghost_admin_list_pages         - List pages
+# 7. ghost_admin_get_page           - Get page details
+# 8. ghost_admin_list_tags          - List tags
+# 9. ghost_admin_list_users         - List users
+# 10. ghost_admin_get_settings     - Get site settings
+
+- slug: ghost_admin_list_posts
+  name: List Posts
+  description: |
+    List all posts in Ghost with optional filters.
+  provider: ghost-admin
+  endpoint: /posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - list
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      status:
+        type: string
+        description: "Filter by status (draft, published, scheduled)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: ghost_admin_get_post
+  name: Get Post
+  description: |
+    Get detailed information about a specific post.
+  provider: ghost-admin
+  endpoint: /posts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      id:
+        type: string
+        description: "Post ID"
+    required:
+      - id
+
+- slug: ghost_admin_create_post
+  name: Create Post
+  description: |
+    Create a new post in Ghost.
+  provider: ghost-admin
+  endpoint: /posts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      title:
+        type: string
+        description: "Post title"
+      html:
+        type: string
+        description: "Post content in HTML"
+      status:
+        type: string
+        description: "Post status (draft, published)"
+        default: draft
+      tags:
+        type: array
+        description: "Tag names to assign"
+    required:
+      - title
+
+- slug: ghost_admin_update_post
+  name: Update Post
+  description: |
+    Update an existing post.
+  provider: ghost-admin
+  endpoint: /posts/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - posts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a post
+    properties:
+      id:
+        type: string
+        description: "Post ID"
+      title:
+        type: string
+        description: "New title"
+      html:
+        type: string
+        description: "New content"
+      status:
+        type: string
+        description: "New status"
+    required:
+      - id
+
+- slug: ghost_admin_delete_post
+  name: Delete Post
+  description: |
+    Delete a post from Ghost.
+  provider: ghost-admin
+  endpoint: /posts/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - posts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a post
+    properties:
+      id:
+        type: string
+        description: "Post ID"
+    required:
+      - id
+
+- slug: ghost_admin_list_pages
+  name: List Pages
+  description: |
+    List all pages in Ghost.
+  provider: ghost-admin
+  endpoint: /pages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: ghost_admin_get_page
+  name: Get Page
+  description: |
+    Get detailed information about a specific page.
+  provider: ghost-admin
+  endpoint: /pages/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      id:
+        type: string
+        description: "Page ID"
+    required:
+      - id
+
+- slug: ghost_admin_list_tags
+  name: List Tags
+  description: |
+    List all tags in Ghost.
+  provider: ghost-admin
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+
+- slug: ghost_admin_list_users
+  name: List Users
+  description: |
+    List all users in Ghost.
+  provider: ghost-admin
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+
+- slug: ghost_admin_get_settings
+  name: Get Settings
+  description: |
+    Get Ghost site settings.
+  provider: ghost-admin
+  endpoint: /settings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties: {}

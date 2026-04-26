@@ -1,0 +1,187 @@
+# Vimeo (Basic) Tools - Allowlist
+# Curated subset of Vimeo (Basic) API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. vimeo_get_user           - Get authenticated user info
+# # 2. vimeo_list_videos           - List all videos
+# # 3. vimeo_get_video           - Get video details
+# # 4. vimeo_upload_video           - Upload a new video
+# # 5. vimeo_update_video           - Update video metadata
+# # 6. vimeo_delete_video           - Delete a video
+# # 7. vimeo_list_albums           - List all albums
+# # 8. vimeo_get_album           - Get album details
+# # 9. vimeo_create_album           - Create a new album
+# # 10. vimeo_get_likes           - Get liked videos
+
+- slug: vimeo_get_user
+  name: Get User
+  description: |
+    Get authenticated user info
+  provider: vimeo-basic
+  endpoint: /users/me
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for get user
+    properties: {}
+    required: []
+
+- slug: vimeo_list_videos
+  name: List Videos
+  description: |
+    List all videos
+  provider: vimeo-basic
+  endpoint: /users/me/videos
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for list videos
+    properties: {}
+    required: []
+
+- slug: vimeo_get_video
+  name: Get Video
+  description: |
+    Get video details
+  provider: vimeo-basic
+  endpoint: /videos/{video_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for get video
+    properties: {}
+    required: []
+
+- slug: vimeo_upload_video
+  name: Upload Video
+  description: |
+    Upload a new video
+  provider: vimeo-basic
+  endpoint: /me/videos
+  method: POST
+  scopes:
+    - write
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for upload video
+    properties: {}
+    required: []
+
+- slug: vimeo_update_video
+  name: Update Video
+  description: |
+    Update video metadata
+  provider: vimeo-basic
+  endpoint: /videos/{video_id}
+  method: PATCH
+  scopes:
+    - write
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for update video
+    properties: {}
+    required: []
+
+- slug: vimeo_delete_video
+  name: Delete Video
+  description: |
+    Delete a video
+  provider: vimeo-basic
+  endpoint: /videos/{video_id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for delete video
+    properties: {}
+    required: []
+
+- slug: vimeo_list_albums
+  name: List Albums
+  description: |
+    List all albums
+  provider: vimeo-basic
+  endpoint: /users/me/albums
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for list albums
+    properties: {}
+    required: []
+
+- slug: vimeo_get_album
+  name: Get Album
+  description: |
+    Get album details
+  provider: vimeo-basic
+  endpoint: /albums/{album_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for get album
+    properties: {}
+    required: []
+
+- slug: vimeo_create_album
+  name: Create Album
+  description: |
+    Create a new album
+  provider: vimeo-basic
+  endpoint: /me/albums
+  method: POST
+  scopes:
+    - write
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for create album
+    properties: {}
+    required: []
+
+- slug: vimeo_get_likes
+  name: Get Likes
+  description: |
+    Get liked videos
+  provider: vimeo-basic
+  endpoint: /users/me/likes
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vimeo-basic
+  input_schema:
+    type: object
+    description: Parameters for get likes
+    properties: {}
+    required: []
+

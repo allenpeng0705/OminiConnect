@@ -1,0 +1,222 @@
+# Fellow Tools - Allowlist
+# Curated subset of Fellow API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fellow_get_user             - Get current user
+# 2. fellow_list_meetings        - List meetings
+# 3. fellow_get_meeting          - Get meeting details
+# 4. fellow_list_notes           - List notes
+# 5. fellow_get_note             - Get note details
+# 6. fellow_list_agenda_items    - List agenda items
+# 7. fellow_list_actions         - List action items
+# 8. fellow_get_action           - Get action item details
+# 9. fellow_list_reflections     - List reflections
+# 10. fellow_get_workspace      - Get workspace info
+
+- slug: fellow_get_user
+  name: Get User
+  description: |
+    Get current authenticated user profile.
+  provider: fellow
+  endpoint: /v1/me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: fellow_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings in the workspace.
+  provider: fellow
+  endpoint: /v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - productivity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: fellow_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: fellow
+  endpoint: /v1/meetings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - productivity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting meeting
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: fellow_list_notes
+  name: List Notes
+  description: |
+    List all notes in the workspace.
+  provider: fellow
+  endpoint: /v1/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - productivity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: fellow_get_note
+  name: Get Note
+  description: |
+    Get details of a specific note.
+  provider: fellow
+  endpoint: /v1/notes/{id}
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - productivity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting note
+    properties:
+      id:
+        type: string
+        description: "Note ID"
+    required:
+      - id
+
+- slug: fellow_list_agenda_items
+  name: List Agenda Items
+  description: |
+    List agenda items for a meeting.
+  provider: fellow
+  endpoint: /v1/meetings/{meetingId}/agenda_items
+  method: GET
+  scopes: []
+  tags:
+    - agenda
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agenda items
+    properties:
+      meetingId:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meetingId
+
+- slug: fellow_list_actions
+  name: List Actions
+  description: |
+    List all action items.
+  provider: fellow
+  endpoint: /v1/action_items
+  method: GET
+  scopes: []
+  tags:
+    - actions
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing actions
+    properties:
+      meeting_id:
+        type: string
+        description: "Filter by meeting ID"
+    required: []
+
+- slug: fellow_get_action
+  name: Get Action
+  description: |
+    Get details of a specific action item.
+  provider: fellow
+  endpoint: /v1/action_items/{id}
+  method: GET
+  scopes: []
+  tags:
+    - actions
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting action
+    properties:
+      id:
+        type: string
+        description: "Action item ID"
+    required:
+      - id
+
+- slug: fellow_list_reflections
+  name: List Reflections
+  description: |
+    List all reflections.
+  provider: fellow
+  endpoint: /v1/reflections
+  method: GET
+  scopes: []
+  tags:
+    - reflections
+    - productivity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing reflections
+    properties: {}
+    required: []
+
+- slug: fellow_get_workspace
+  name: Get Workspace
+  description: |
+    Get workspace information.
+  provider: fellow
+  endpoint: /v1/workspace
+  method: GET
+  scopes: []
+  tags:
+    - workspace
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

@@ -1,0 +1,290 @@
+# Microsoft Teams Tools - Allowlist
+# Curated subset of Microsoft Graph API for Teams functionality.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. teams_list_channels       - List channels in a team
+# 2. teams_get_channel         - Get channel info
+# 3. teams_list_messages       - List messages in a channel
+# 4. teams_get_message          - Get a message
+# 5. teams_send_message         - Send a message to a channel
+# 6. teams_list_members         - List team members
+# 7. teams_get_member          - Get member info
+# 8. teams_list_meetings       - List meetings
+# 9. teams_get_meeting         - Get meeting details
+# 10. teams_list_files          - List files in a team
+
+- slug: teams_list_channels
+  name: List Channels
+  description: |
+    List all channels in a team. Returns channel IDs, names, description, and membership type.
+  provider: teams
+  endpoint: /teams/{team_id}/channels
+  method: GET
+  scopes:
+    - Channel.ReadBasic.All
+    - Channel.Read.All
+  tags:
+    - channels
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id
+
+- slug: teams_get_channel
+  name: Get Channel
+  description: |
+    Get detailed information about a specific channel including description and membership settings.
+  provider: teams
+  endpoint: /teams/{team_id}/channels/{channel_id}
+  method: GET
+  scopes:
+    - Channel.Read.All
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting channel info
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      channel_id:
+        type: string
+        description: "Channel ID"
+    required:
+      - team_id
+      - channel_id
+
+- slug: teams_list_messages
+  name: List Messages
+  description: |
+    List messages in a channel. Returns recent messages with author info and timestamps.
+  provider: teams
+  endpoint: /teams/{team_id}/channels/{channel_id}/messages
+  method: GET
+  scopes:
+    - ChannelMessage.Read.All
+  tags:
+    - messages
+    - read
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      channel_id:
+        type: string
+        description: "Channel ID"
+      top:
+        type: integer
+        description: "Number of messages (default 50, max 50)"
+        default: 50
+    required:
+      - team_id
+      - channel_id
+
+- slug: teams_get_message
+  name: Get Message
+  description: |
+    Get a specific message by its ID including full content and metadata.
+  provider: teams
+  endpoint: /teams/{team_id}/channels/{channel_id}/messages/{message_id}
+  method: GET
+  scopes:
+    - ChannelMessage.Read.All
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      channel_id:
+        type: string
+        description: "Channel ID"
+      message_id:
+        type: string
+        description: "Message ID"
+    required:
+      - team_id
+      - channel_id
+      - message_id
+
+- slug: teams_send_message
+  name: Send Message
+  description: |
+    Send a message to a Teams channel. Include text content and optional mentions.
+  provider: teams
+  endpoint: /teams/{team_id}/channels/{channel_id}/messages
+  method: POST
+  scopes:
+    - ChannelMessage.Send
+  tags:
+    - messages
+    - send
+    - create
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      channel_id:
+        type: string
+        description: "Channel ID"
+      body:
+        type: object
+        description: "Message body with content property"
+    required:
+      - team_id
+      - channel_id
+      - body
+
+- slug: teams_list_members
+  name: List Members
+  description: |
+    List all members of a team. Returns user IDs, names, emails, and roles.
+  provider: teams
+  endpoint: /teams/{team_id}/members
+  method: GET
+  scopes:
+    - Team.ReadBasic.All
+    - TeamMember.Read.All
+  tags:
+    - members
+    - team
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing team members
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+    required:
+      - team_id
+
+- slug: teams_get_member
+  name: Get Member
+  description: |
+    Get information about a specific team member including their roles and display name.
+  provider: teams
+  endpoint: /teams/{team_id}/members/{member_id}
+  method: GET
+  scopes:
+    - TeamMember.Read.All
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting member info
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      member_id:
+        type: string
+        description: "Member ID (user ID)"
+    required:
+      - team_id
+      - member_id
+
+- slug: teams_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings for a team. Includes upcoming and past meetings with join links.
+  provider: teams
+  endpoint: /teams/{team_id}/schedule/meetings
+  method: GET
+  scopes:
+    - OnlineMeeting.Read.All
+  tags:
+    - meetings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      start_time:
+        type: string
+        description: "Start time for range query (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time for range query (ISO 8601)"
+    required:
+      - team_id
+
+- slug: teams_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting including join URL, attendees, and recording links.
+  provider: teams
+  endpoint: /teams/{team_id}/schedule/meetings/{meeting_id}
+  method: GET
+  scopes:
+    - OnlineMeeting.Read.All
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting meeting info
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - team_id
+      - meeting_id
+
+- slug: teams_list_files
+  name: List Files
+  description: |
+    List files shared in a team channel. Returns file metadata including name, size, and modified time.
+  provider: teams
+  endpoint: /teams/{team_id}/channels/{channel_id}/files
+  method: GET
+  scopes:
+    - Files.Read
+    - Sites.Read.All
+  tags:
+    - files
+    - list
+    - drive
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      team_id:
+        type: string
+        description: "Team ID"
+      channel_id:
+        type: string
+        description: "Channel ID"
+    required:
+      - team_id
+      - channel_id

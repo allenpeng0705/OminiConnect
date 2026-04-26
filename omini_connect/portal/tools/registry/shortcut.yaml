@@ -1,0 +1,257 @@
+- slug: shortcut_list_stories
+  name: List Stories
+  description: |
+    Retrieve a list of stories, optionally filtered by project or epic.
+  provider: shortcut
+  endpoint: /stories
+  method: GET
+  scopes:
+    - stories:read
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Query parameters for listing stories
+    properties:
+      projectId:
+        type: string
+        description: "Filter stories by project ID"
+      epicId:
+        type: string
+        description: "Filter stories by epic ID"
+      state:
+        type: string
+        description: "Filter by story state"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of stories per page"
+    required: []
+
+- slug: shortcut_get_story
+  name: Get Story
+  description: |
+    Retrieve details of a specific story by ID.
+  provider: shortcut
+  endpoint: /stories/{storyId}
+  method: GET
+  scopes:
+    - stories:read
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Path parameters for getting a story
+    properties:
+      storyId:
+        type: string
+        description: "The unique ID of the story"
+    required:
+      - storyId
+
+- slug: shortcut_create_story
+  name: Create Story
+  description: |
+    Create a new story in a project.
+  provider: shortcut
+  endpoint: /stories
+  method: POST
+  scopes:
+    - stories:write
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Body parameters for creating a story
+    properties:
+      projectId:
+        type: string
+        description: "Project ID to create the story in"
+      name:
+        type: string
+        description: "Story name"
+      description:
+        type: string
+        description: "Story description"
+      storyType:
+        type: string
+        description: "Story type (feature, chore, bug)"
+      epicId:
+        type: string
+        description: "Epic ID to associate the story with"
+      state:
+        type: string
+        description: "Initial story state"
+    required:
+      - projectId
+      - name
+
+- slug: shortcut_update_story
+  name: Update Story
+  description: |
+    Update an existing story with new values.
+  provider: shortcut
+  endpoint: /stories/{storyId}
+  method: PUT
+  scopes:
+    - stories:write
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Parameters for updating a story
+    properties:
+      storyId:
+        type: string
+        description: "The unique ID of the story"
+      name:
+        type: string
+        description: "New story name"
+      description:
+        type: string
+        description: "New story description"
+      state:
+        type: string
+        description: "New story state"
+      epicId:
+        type: string
+        description: "New epic ID"
+    required:
+      - storyId
+
+- slug: shortcut_list_epics
+  name: List Epics
+  description: |
+    Retrieve a list of all epics.
+  provider: shortcut
+  endpoint: /epics
+  method: GET
+  scopes:
+    - epics:read
+  tags:
+    - epics
+  input_schema:
+    type: object
+    description: Query parameters for listing epics
+    properties:
+      projectId:
+        type: string
+        description: "Filter epics by project ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of epics per page"
+    required: []
+
+- slug: shortcut_get_epic
+  name: Get Epic
+  description: |
+    Retrieve details of a specific epic by ID.
+  provider: shortcut
+  endpoint: /epics/{epicId}
+  method: GET
+  scopes:
+    - epics:read
+  tags:
+    - epics
+  input_schema:
+    type: object
+    description: Path parameters for getting an epic
+    properties:
+      epicId:
+        type: string
+        description: "The unique ID of the epic"
+    required:
+      - epicId
+
+- slug: shortcut_list_members
+  name: List Members
+  description: |
+    Retrieve a list of all members in the workspace.
+  provider: shortcut
+  endpoint: /members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+  input_schema:
+    type: object
+    description: Query parameters for listing members
+    properties:
+      projectId:
+        type: string
+        description: "Filter members by project ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: shortcut_get_member
+  name: Get Member
+  description: |
+    Retrieve details of a specific member by ID.
+  provider: shortcut
+  endpoint: /members/{memberId}
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+  input_schema:
+    type: object
+    description: Path parameters for getting a member
+    properties:
+      memberId:
+        type: string
+        description: "The unique ID of the member"
+    required:
+      - memberId
+
+- slug: shortcut_list_groups
+  name: List Groups
+  description: |
+    Retrieve a list of all groups in the workspace.
+  provider: shortcut
+  endpoint: /groups
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - groups
+  input_schema:
+    type: object
+    description: Query parameters for listing groups
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      pageSize:
+        type: integer
+        description: "Number of groups per page"
+    required: []
+
+- slug: shortcut_get_group
+  name: Get Group
+  description: |
+    Retrieve details of a specific group by ID.
+  provider: shortcut
+  endpoint: /groups/{groupId}
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - groups
+  input_schema:
+    type: object
+    description: Path parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "The unique ID of the group"
+    required:
+      - groupId

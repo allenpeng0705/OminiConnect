@@ -1,0 +1,228 @@
+# Prive Tools - Allowlist
+# Curated subset of Prive API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. prive_list_subscriptions         - List subscriptions
+# 2. prive_get_subscription          - Get subscription details
+# 3. prive_list_customers            - List customers
+# 4. prive_get_customer             - Get customer details
+# 5. prive_list_orders              - List orders
+# 6. prive_get_order               - Get order details
+# 7. prive_list_products            - List products
+# 8. prive_get_product             - Get product details
+# 9. prive_list_invoices           - List invoices
+# 10. prive_get_invoice            - Get invoice details
+
+- slug: prive_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions.
+  provider: prive
+  endpoint: /subscriptions
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - billing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: prive_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific subscription.
+  provider: prive
+  endpoint: /subscriptions/{subscriptionId}
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      subscriptionId:
+        type: string
+        description: "Subscription ID"
+    required:
+      - subscriptionId
+
+- slug: prive_list_customers
+  name: List Customers
+  description: |
+    List all customers.
+  provider: prive
+  endpoint: /customers
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties: {}
+    required: []
+
+- slug: prive_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+  provider: prive
+  endpoint: /customers/{customerId}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: prive_list_orders
+  name: List Orders
+  description: |
+    List all orders.
+  provider: prive
+  endpoint: /orders
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - e-commerce
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      customerId:
+        type: string
+        description: "Filter by customer ID"
+    required: []
+
+- slug: prive_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order.
+  provider: prive
+  endpoint: /orders/{orderId}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - e-commerce
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      orderId:
+        type: string
+        description: "Order ID"
+    required:
+      - orderId
+
+- slug: prive_list_products
+  name: List Products
+  description: |
+    List all products.
+  provider: prive
+  endpoint: /products
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - catalog
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties: {}
+    required: []
+
+- slug: prive_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product.
+  provider: prive
+  endpoint: /products/{productId}
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - catalog
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      productId:
+        type: string
+        description: "Product ID"
+    required:
+      - productId
+
+- slug: prive_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: prive
+  endpoint: /invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: prive_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice.
+  provider: prive
+  endpoint: /invoices/{invoiceId}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "Invoice ID"
+    required:
+      - invoiceId

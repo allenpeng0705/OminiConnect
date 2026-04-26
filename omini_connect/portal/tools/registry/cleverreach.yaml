@@ -1,0 +1,252 @@
+# CleverReach Tools - Allowlist
+# Curated subset of the CleverReach API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cleverreach_list_receivers            - List receivers
+# 2. cleverreach_get_receiver             - Get receiver details
+# 3. cleverreach_create_receiver          - Create a receiver
+# 4. cleverreach_list_groups              - List groups
+# 5. cleverreach_get_group                - Get group details
+# 6. cleverreach_create_group             - Create a group
+# 7. cleverreach_list_campaigns           - List campaigns
+# 8. cleverreach_get_campaign             - Get campaign details
+# 9. cleverreach_list_emails             - List emails
+# 10. cleverreach_create_email           - Create an email
+
+- slug: cleverreach_list_receivers
+  name: List Receivers
+  description: |
+    List all receivers (subscribers) in your account.
+  provider: cleverreach
+  endpoint: /receivers
+  method: GET
+  scopes: []
+  tags:
+    - receivers
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing receivers
+    properties:
+      group_id:
+        type: integer
+        description: "Filter by group ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cleverreach_get_receiver
+  name: Get Receiver
+  description: |
+    Get details of a specific receiver.
+  provider: cleverreach
+  endpoint: /receivers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - receivers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a receiver
+    properties:
+      id:
+        type: integer
+        description: "Receiver ID"
+    required:
+      - id
+
+- slug: cleverreach_create_receiver
+  name: Create Receiver
+  description: |
+    Create a new receiver (subscriber).
+  provider: cleverreach
+  endpoint: /receivers
+  method: POST
+  scopes: []
+  tags:
+    - receivers
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a receiver
+    properties:
+      email:
+        type: string
+        description: "Email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      groups:
+        type: array
+        items:
+          type: integer
+        description: "Group IDs to add to"
+    required:
+      - email
+
+- slug: cleverreach_list_groups
+  name: List Groups
+  description: |
+    List all groups (lists) in your account.
+  provider: cleverreach
+  endpoint: /groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cleverreach_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: cleverreach
+  endpoint: /groups/{id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      id:
+        type: integer
+        description: "Group ID"
+    required:
+      - id
+
+- slug: cleverreach_create_group
+  name: Create Group
+  description: |
+    Create a new group (list).
+  provider: cleverreach
+  endpoint: /groups
+  method: POST
+  scopes: []
+  tags:
+    - groups
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a group
+    properties:
+      name:
+        type: string
+        description: "Group name"
+      description:
+        type: string
+        description: "Group description"
+    required:
+      - name
+
+- slug: cleverreach_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns.
+  provider: cleverreach
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: cleverreach_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: cleverreach
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: integer
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: cleverreach_list_emails
+  name: List Emails
+  description: |
+    List all emails in your account.
+  provider: cleverreach
+  endpoint: /emails
+  method: GET
+  scopes: []
+  tags:
+    - emails
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing emails
+    properties:
+      campaign_id:
+        type: integer
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: cleverreach_create_email
+  name: Create Email
+  description: |
+    Create a new email.
+  provider: cleverreach
+  endpoint: /emails
+  method: POST
+  scopes: []
+  tags:
+    - emails
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an email
+    properties:
+      subject:
+        type: string
+        description: "Email subject"
+      body:
+        type: string
+        description: "Email body HTML"
+      group_id:
+        type: integer
+        description: "Group ID to send to"
+    required:
+      - subject
+      - body

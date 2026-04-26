@@ -1,0 +1,283 @@
+# Webflow Tools - Allowlist
+# Curated subset of the Webflow API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. webflow_list_sites       - List all sites
+# 2. webflow_get_site         - Get site details
+# 3. webflow_list_collections - List CMS collections in a site
+# 4. webflow_get_collection   - Get collection schema and fields
+# 5. webflow_list_items       - List items in a collection
+# 6. webflow_get_item         - Get a specific item
+# 7. webflow_create_item      - Create a new item in a collection
+# 8. webflow_update_item      - Update an existing item
+# 9. webflow_list_assets      - List assets in a site
+# 10. webflow_get_asset       - Get asset details
+
+- slug: webflow_list_sites
+  name: List Sites
+  description: |
+    List all Webflow sites accessible to the authenticated account.
+    Returns site names, domains, publish status, and IDs.
+  provider: webflow
+  endpoint: /sites
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - webflow
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties: {}
+    required: []
+
+- slug: webflow_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a specific site.
+    Includes domains, publish status, and general settings.
+  provider: webflow
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes:
+    - sites:read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+    required:
+      - site_id
+
+- slug: webflow_list_collections
+  name: List Collections
+  description: |
+    List all CMS collections in a site.
+    Returns collection names, slugs, and field schemas.
+  provider: webflow
+  endpoint: /sites/{site_id}/collections
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - collections
+    - cms
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+    required:
+      - site_id
+
+- slug: webflow_get_collection
+  name: Get Collection
+  description: |
+    Get the schema and field definitions for a specific collection.
+    Includes all custom fields, types, and display settings.
+  provider: webflow
+  endpoint: /collections/{collection_id}
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - collections
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for getting a collection
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID"
+    required:
+      - collection_id
+
+- slug: webflow_list_items
+  name: List Items
+  description: |
+    List items in a CMS collection with optional filtering and pagination.
+    Returns item fields, IDs, and status.
+  provider: webflow
+  endpoint: /collections/{collection_id}/items
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - items
+    - cms
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID"
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      order:
+        type: string
+        description: "Field to order by"
+    required:
+      - collection_id
+
+- slug: webflow_get_item
+  name: Get Item
+  description: |
+    Get a specific item from a CMS collection by ID.
+    Returns all fields and metadata.
+  provider: webflow
+  endpoint: /collections/{collection_id}/items/{item_id}
+  method: GET
+  scopes:
+    - collections:read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID"
+      item_id:
+        type: string
+        description: "Item ID"
+    required:
+      - collection_id
+      - item_id
+
+- slug: webflow_create_item
+  name: Create Item
+  description: |
+    Create a new item in a CMS collection.
+    Provide field values as key-value pairs.
+  provider: webflow
+  endpoint: /collections/{collection_id}/items
+  method: POST
+  scopes:
+    - collections:write
+  tags:
+    - items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID"
+      fields:
+        type: object
+        description: "Item field values as key-value pairs"
+      live:
+        type: boolean
+        description: "Publish immediately (default false)"
+        default: false
+    required:
+      - collection_id
+      - fields
+
+- slug: webflow_update_item
+  name: Update Item
+  description: |
+    Update an existing item in a CMS collection.
+    Provide partial field values to update specific fields.
+  provider: webflow
+  endpoint: /collections/{collection_id}/items/{item_id}
+  method: PATCH
+  scopes:
+    - collections:write
+  tags:
+    - items
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an item
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID"
+      item_id:
+        type: string
+        description: "Item ID"
+      fields:
+        type: object
+        description: "Updated field values"
+      live:
+        type: boolean
+        description: "Publish immediately"
+        default: false
+    required:
+      - collection_id
+      - item_id
+      - fields
+
+- slug: webflow_list_assets
+  name: List Assets
+  description: |
+    List all assets (images, documents, etc.) in a site.
+    Returns asset URLs, file types, and metadata.
+  provider: webflow
+  endpoint: /sites/{site_id}/assets
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - media
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - site_id
+
+- slug: webflow_get_asset
+  name: Get Asset
+  description: |
+    Get details of a specific asset including URL, file size, and type.
+  provider: webflow
+  endpoint: /assets/{asset_id}
+  method: GET
+  scopes:
+    - assets:read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      asset_id:
+        type: string
+        description: "Asset ID"
+    required:
+      - asset_id

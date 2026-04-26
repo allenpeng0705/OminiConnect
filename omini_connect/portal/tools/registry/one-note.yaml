@@ -1,0 +1,253 @@
+# OneNote Tools - Allowlist
+# Curated subset of OneNote API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. onenote_list_notebooks           - List notebooks
+# 2. onenote_get_notebook            - Get notebook details
+# 3. onenote_list_sections           - List sections
+# 4. onenote_get_section             - Get section details
+# 5. onenote_list_pages              - List pages
+# 6. onenote_get_page                - Get page details
+# 7. onenote_create_page             - Create page
+# 8. onenote_update_page             - Update page content
+# 9. onenote_search                  - Search notes
+# 10. onenote_get_recent_pages       - Get recent pages
+
+- slug: onenote_list_notebooks
+  name: List Notebooks
+  description: |
+    List all OneNote notebooks.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/notebooks
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - notebooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing notebooks
+    properties: {}
+    required: []
+
+- slug: onenote_get_notebook
+  name: Get Notebook
+  description: |
+    Get detailed information for a specific notebook.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/notebooks/{id}
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - notebooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a notebook
+    properties:
+      id:
+        type: string
+        description: "Notebook ID"
+    required:
+      - id
+
+- slug: onenote_list_sections
+  name: List Sections
+  description: |
+    List all sections in a notebook.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/notebooks/{notebookId}/sections
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - sections
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sections
+    properties:
+      notebookId:
+        type: string
+        description: "Notebook ID"
+    required:
+      - notebookId
+
+- slug: onenote_get_section
+  name: Get Section
+  description: |
+    Get detailed information for a specific section.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/sections/{id}
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - sections
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a section
+    properties:
+      id:
+        type: string
+        description: "Section ID"
+    required:
+      - id
+
+- slug: onenote_list_pages
+  name: List Pages
+  description: |
+    List all pages in a section or notebook.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/sections/{sectionId}/pages
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      sectionId:
+        type: string
+        description: "Section ID"
+    required:
+      - sectionId
+
+- slug: onenote_get_page
+  name: Get Page
+  description: |
+    Get detailed information for a specific page.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/pages/{id}
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      id:
+        type: string
+        description: "Page ID"
+    required:
+      - id
+
+- slug: onenote_create_page
+  name: Create Page
+  description: |
+    Create a new page in a section.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/sections/{sectionId}/pages
+  method: POST
+  scopes:
+    - Notes.ReadWrite
+  tags:
+    - notes
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      sectionId:
+        type: string
+        description: "Section ID"
+      title:
+        type: string
+        description: "Page title"
+      content:
+        type: string
+        description: "Page HTML content"
+    required:
+      - sectionId
+      - title
+
+- slug: onenote_update_page
+  name: Update Page
+  description: |
+    Update page content.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/pages/{id}/content
+  method: PATCH
+  scopes:
+    - Notes.ReadWrite
+  tags:
+    - notes
+    - pages
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a page
+    properties:
+      id:
+        type: string
+        description: "Page ID"
+      content:
+        type: string
+        description: "Updated HTML content"
+    required:
+      - id
+      - content
+
+- slug: onenote_search
+  name: Search
+  description: |
+    Search OneNote pages and notes.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/search
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - search
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+    required:
+      - query
+
+- slug: onenote_get_recent_pages
+  name: Get Recent Pages
+  description: |
+    Get recently modified pages.
+  provider: one-note
+  endpoint: /v1.0/me/onenote/pages
+  method: GET
+  scopes:
+    - Notes.Read
+  tags:
+    - notes
+    - pages
+    - recent
+  input_schema:
+    type: object
+    description: Parameters for getting recent pages
+    properties:
+      top:
+        type: integer
+        description: "Number of pages (default 20)"
+        default: 20
+    required: []

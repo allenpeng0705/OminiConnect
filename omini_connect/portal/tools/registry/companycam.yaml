@@ -1,0 +1,240 @@
+# CompanyCam Tools - Allowlist
+# Curated subset of the CompanyCam API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. companycam_list_projects              - List projects
+# 2. companycam_get_project               - Get project details
+# 3. companycam_create_project            - Create a project
+# 4. companycam_list_photos              - List photos
+# 5. companycam_get_photo                - Get photo details
+# 6. companycam_upload_photo             - Upload a photo
+# 7. companycam_list_notes               - List notes
+# 8. companycam_create_note             - Create a note
+# 9. companycam_list_members            - List project members
+# 10. companycam_get_company            - Get company info
+
+- slug: companycam_list_projects
+  name: List Projects
+  description: |
+    List all projects in your CompanyCam account.
+  provider: companycam
+  endpoint: /v2/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - productivity
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: companycam_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project.
+  provider: companycam
+  endpoint: /v2/projects/{id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: companycam_create_project
+  name: Create Project
+  description: |
+    Create a new project.
+  provider: companycam
+  endpoint: /v2/projects
+  method: POST
+  scopes: []
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      description:
+        type: string
+        description: "Project description"
+    required:
+      - name
+
+- slug: companycam_list_photos
+  name: List Photos
+  description: |
+    List all photos in a project.
+  provider: companycam
+  endpoint: /v2/projects/{projectId}/photos
+  method: GET
+  scopes: []
+  tags:
+    - photos
+    - media
+  input_schema:
+    type: object
+    description: Parameters for listing photos
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required:
+      - projectId
+
+- slug: companycam_get_photo
+  name: Get Photo
+  description: |
+    Get details of a specific photo.
+  provider: companycam
+  endpoint: /v2/photos/{id}
+  method: GET
+  scopes: []
+  tags:
+    - photos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a photo
+    properties:
+      id:
+        type: string
+        description: "Photo ID"
+    required:
+      - id
+
+- slug: companycam_upload_photo
+  name: Upload Photo
+  description: |
+    Upload a photo to a project.
+  provider: companycam
+  endpoint: /v2/projects/{projectId}/photos
+  method: POST
+  scopes: []
+  tags:
+    - photos
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a photo
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      url:
+        type: string
+        description: "Photo URL"
+      name:
+        type: string
+        description: "Photo name"
+    required:
+      - projectId
+      - url
+
+- slug: companycam_list_notes
+  name: List Notes
+  description: |
+    List all notes in a project.
+  provider: companycam
+  endpoint: /v2/projects/{projectId}/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: companycam_create_note
+  name: Create Note
+  description: |
+    Create a new note in a project.
+  provider: companycam
+  endpoint: /v2/projects/{projectId}/notes
+  method: POST
+  scopes: []
+  tags:
+    - notes
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      content:
+        type: string
+        description: "Note content"
+    required:
+      - projectId
+      - content
+
+- slug: companycam_list_members
+  name: List Project Members
+  description: |
+    List all members of a project.
+  provider: companycam
+  endpoint: /v2/projects/{projectId}/members
+  method: GET
+  scopes: []
+  tags:
+    - members
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: companycam_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: companycam
+  endpoint: /v2/company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - read
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []

@@ -1,0 +1,245 @@
+# FullEnrich Tools - Allowlist
+# Curated subset of FullEnrich API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fullenrich_get_account        - Get account info
+# 2. fullenrich_get_credits       - Get account credits
+# 3. fullenrich_enrich_person     - Enrich person data
+# 4. fullenrich_enrich_company    - Enrich company data
+# 5. fullenrich_lookup_domain     - Look up company by domain
+# 6. fullenrich_list_enrichments  - List enrichment history
+# 7. fullenrich_get_enrichment   - Get enrichment result
+# 8. fullenrich_list_webhooks     - List webhooks
+# 9. fullenrich_create_webhook    - Create webhook
+# 10. fullenrich_delete_webhook   - Delete webhook
+
+- slug: fullenrich_get_account
+  name: Get Account
+  description: |
+    Get FullEnrich account information.
+  provider: fullenrich
+  endpoint: /v2/account
+  method: GET
+  scopes:
+    - read
+  tags:
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account info
+    properties: {}
+
+- slug: fullenrich_get_credits
+  name: Get Credits
+  description: |
+    Get account credit balance and usage.
+  provider: fullenrich
+  endpoint: /v2/account/credits
+  method: GET
+  scopes:
+    - read
+  tags:
+    - account
+    - credits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting credits
+    properties: {}
+
+- slug: fullenrich_enrich_person
+  name: Enrich Person
+  description: |
+    Enrich person data with email or name/company.
+  provider: fullenrich
+  endpoint: /v2/person/enrich
+  method: POST
+  scopes:
+    - write
+  tags:
+    - enrichment
+    - person
+    - write
+  input_schema:
+    type: object
+    description: Parameters for enriching person data
+    properties:
+      email:
+        type: string
+        description: "Person's email address"
+      first_name:
+        type: string
+        description: "Person's first name"
+      last_name:
+        type: string
+        description: "Person's last name"
+      domain:
+        type: string
+        description: "Company domain"
+    required: []
+
+- slug: fullenrich_enrich_company
+  name: Enrich Company
+  description: |
+    Enrich company data with domain or company name.
+  provider: fullenrich
+  endpoint: /v2/company/enrich
+  method: POST
+  scopes:
+    - write
+  tags:
+    - enrichment
+    - company
+    - write
+  input_schema:
+    type: object
+    description: Parameters for enriching company data
+    properties:
+      domain:
+        type: string
+        description: "Company domain"
+      name:
+        type: string
+        description: "Company name"
+    required: []
+
+- slug: fullenrich_lookup_domain
+  name: Lookup Domain
+  description: |
+    Look up company information by domain.
+  provider: fullenrich
+  endpoint: /v2/company/lookup
+  method: GET
+  scopes:
+    - read
+  tags:
+    - company
+    - lookup
+    - read
+  input_schema:
+    type: object
+    description: Parameters for domain lookup
+    properties:
+      domain:
+        type: string
+        description: "Company domain"
+    required:
+      - domain
+
+- slug: fullenrich_list_enrichments
+  name: List Enrichments
+  description: |
+    List recent enrichment requests and results.
+  provider: fullenrich
+  endpoint: /v2/enrichments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - enrichment
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing enrichments
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: fullenrich_get_enrichment
+  name: Get Enrichment
+  description: |
+    Get a specific enrichment result by ID.
+  provider: fullenrich
+  endpoint: /v2/enrichments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - enrichment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting enrichment result
+    properties:
+      id:
+        type: string
+        description: "Enrichment ID"
+    required:
+      - id
+
+- slug: fullenrich_list_webhooks
+  name: List Webhooks
+  description: |
+    List all configured webhooks.
+  provider: fullenrich
+  endpoint: /v2/webhooks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - webhooks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}
+
+- slug: fullenrich_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook for enrichment events.
+  provider: fullenrich
+  endpoint: /v2/webhooks
+  method: POST
+  scopes:
+    - write
+  tags:
+    - webhooks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      url:
+        type: string
+        description: "Webhook URL"
+      events:
+        type: array
+        description: "Event types to subscribe"
+    required:
+      - url
+      - events
+
+- slug: fullenrich_delete_webhook
+  name: Delete Webhook
+  description: |
+    Delete a webhook by ID.
+  provider: fullenrich
+  endpoint: /v2/webhooks/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - webhooks
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a webhook
+    properties:
+      id:
+        type: string
+        description: "Webhook ID"
+    required:
+      - id

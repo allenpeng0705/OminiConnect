@@ -1,0 +1,330 @@
+# Bullhorn CRM Tools - Allowlist
+# Curated subset of the Bullhorn REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bullhorn_list_candidates       - List candidates in the recruiting CRM
+# 2. bullhorn_get_candidate          - Get details of a specific candidate
+# 3. bullhorn_create_candidate       - Create a new candidate
+# 4. bullhorn_list_jobs             - List job orders
+# 5. bullhorn_get_job               - Get details of a specific job
+# 6. bullhorn_create_job            - Create a new job order
+# 7. bullhorn_list_placements       - List placements (hires)
+# 8. bullhorn_get_placement         - Get details of a specific placement
+# 9. bullhorn_list_opportunities    - List sales opportunities
+# 10. bullhorn_get_opportunity      - Get details of a specific opportunity
+
+- slug: bullhorn_list_candidates
+  name: List Candidates
+  description: |
+    Returns a paginated list of candidates in the Bullhorn recruiting CRM.
+    Filter by status, skills, or date added.
+  provider: bullhorn
+  endpoint: /candidate
+  method: GET
+  scopes:
+    - Candidates
+  tags:
+    - candidates
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      count:
+        type: integer
+        description: "Number of results to return (default 20, max 200)"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      where:
+        type: string
+        description: "Bullhorn WHERE clause for filtering"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+        default: id,firstName,lastName,email,phone,status,dateAdded
+    required: []
+
+- slug: bullhorn_get_candidate
+  name: Get Candidate
+  description: |
+    Get full details of a specific candidate including contact info, work history, and skills.
+  provider: bullhorn
+  endpoint: /candidate/{id}
+  method: GET
+  scopes:
+    - Candidates
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: integer
+        description: "Candidate ID"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required:
+      - id
+
+- slug: bullhorn_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate record in Bullhorn CRM with contact info and initial details.
+  provider: bullhorn
+  endpoint: /candidate
+  method: POST
+  scopes:
+    - Candidates
+  tags:
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      status:
+        type: string
+        description: "Candidate status"
+        default: New
+      notes:
+        type: string
+        description: "Initial notes about the candidate"
+    required:
+      - firstName
+      - lastName
+
+- slug: bullhorn_list_jobs
+  name: List Jobs
+  description: |
+    Returns a paginated list of job orders (open positions). Filter by status, title, or client.
+  provider: bullhorn
+  endpoint: /jobOrder
+  method: GET
+  scopes:
+    - JobOrders
+  tags:
+    - jobs
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      count:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      where:
+        type: string
+        description: "Bullhorn WHERE clause for filtering"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+        default: id,title,clientCorporation,status,dateCreated
+    required: []
+
+- slug: bullhorn_get_job
+  name: Get Job
+  description: |
+    Get full details of a specific job order including description, requirements, and client info.
+  provider: bullhorn
+  endpoint: /jobOrder/{id}
+  method: GET
+  scopes:
+    - JobOrders
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      id:
+        type: integer
+        description: "Job order ID"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required:
+      - id
+
+- slug: bullhorn_create_job
+  name: Create Job
+  description: |
+    Create a new job order (open position) in Bullhorn for a client.
+  provider: bullhorn
+  endpoint: /jobOrder
+  method: POST
+  scopes:
+    - JobOrders
+  tags:
+    - jobs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a job
+    properties:
+      title:
+        type: string
+        description: "Job title"
+      clientCorporation:
+        type: integer
+        description: "Client corporation ID"
+      description:
+        type: string
+        description: "Job description and requirements"
+      status:
+        type: string
+        description: "Job status"
+        default: Open
+      address:
+        type: object
+        description: "Job location address"
+        properties:
+          city:
+            type: string
+          state:
+            type: string
+          countryID:
+            type: integer
+    required:
+      - title
+      - clientCorporation
+
+- slug: bullhorn_list_placements
+  name: List Placements
+  description: |
+    Returns a paginated list of placements (hired candidates). Filter by job, candidate, or date.
+  provider: bullhorn
+  endpoint: /placement
+  method: GET
+  scopes:
+    - Placements
+  tags:
+    - placements
+    - hiring
+  input_schema:
+    type: object
+    description: Parameters for listing placements
+    properties:
+      count:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      where:
+        type: string
+        description: "Bullhorn WHERE clause for filtering"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+        default: id,candidate,jobOrder,startDate,status
+    required: []
+
+- slug: bullhorn_get_placement
+  name: Get Placement
+  description: |
+    Get full details of a specific placement including candidate, job, start date, and status.
+  provider: bullhorn
+  endpoint: /placement/{id}
+  method: GET
+  scopes:
+    - Placements
+  tags:
+    - placements
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a placement
+    properties:
+      id:
+        type: integer
+        description: "Placement ID"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required:
+      - id
+
+- slug: bullhorn_list_opportunities
+  name: List Opportunities
+  description: |
+    Returns a paginated list of sales opportunities (pipeline deals). Filter by status, owner, or value.
+  provider: bullhorn
+  endpoint: /opportunity
+  method: GET
+  scopes:
+    - Opportunities
+  tags:
+    - opportunities
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      count:
+        type: integer
+        description: "Number of results to return"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      where:
+        type: string
+        description: "Bullhorn WHERE clause for filtering"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+        default: id,name,primaryCompany,status,estimatedValue,owner
+    required: []
+
+- slug: bullhorn_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get full details of a specific sales opportunity including company, value, stage, and notes.
+  provider: bullhorn
+  endpoint: /opportunity/{id}
+  method: GET
+  scopes:
+    - Opportunities
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: integer
+        description: "Opportunity ID"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to return"
+    required:
+      - id

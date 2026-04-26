@@ -1,0 +1,225 @@
+# Freepik Tools - Allowlist
+# Curated subset of Freepik API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freepik_list_resources       - List resources
+# 2. freepik_get_resource        - Get resource details
+# 3. freepik_list_collections    - List collections
+# 4. freepik_get_collection     - Get collection details
+# 5. freepik_list_ai_styles     - List AI styles
+# 6. freepik_generate_ai        - Generate AI image
+# 7. freepik_list_categories   - List categories
+# 8. freepik_get_user          - Get user info
+# 9. freepik_search           - Search resources
+# 10. freepik_get_editorial   - Get editorial content
+
+- slug: freepik_list_resources
+  name: List Resources
+  description: |
+    List all available resources.
+  provider: freepik
+  endpoint: /v1/resources
+  method: GET
+  scopes: []
+  tags:
+    - resources
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing resources
+    properties:
+      type:
+        type: string
+        description: "Filter by type (photo, vector, video)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freepik_get_resource
+  name: Get Resource
+  description: |
+    Get details of a specific resource.
+  provider: freepik
+  endpoint: /v1/resources/{id}
+  method: GET
+  scopes: []
+  tags:
+    - resources
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting resource
+    properties:
+      id:
+        type: string
+        description: "Resource ID"
+    required:
+      - id
+
+- slug: freepik_list_collections
+  name: List Collections
+  description: |
+    List all user collections.
+  provider: freepik
+  endpoint: /v1/collections
+  method: GET
+  scopes: []
+  tags:
+    - collections
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties: {}
+    required: []
+
+- slug: freepik_get_collection
+  name: Get Collection
+  description: |
+    Get details of a specific collection.
+  provider: freepik
+  endpoint: /v1/collections/{id}
+  method: GET
+  scopes: []
+  tags:
+    - collections
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting collection
+    properties:
+      id:
+        type: string
+        description: "Collection ID"
+    required:
+      - id
+
+- slug: freepik_list_ai_styles
+  name: List AI Styles
+  description: |
+    List available AI generation styles.
+  provider: freepik
+  endpoint: /v1/ai/styles
+  method: GET
+  scopes: []
+  tags:
+    - ai
+    - generation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing AI styles
+    properties: {}
+    required: []
+
+- slug: freepik_generate_ai
+  name: Generate AI
+  description: |
+    Generate an image using AI.
+  provider: freepik
+  endpoint: /v1/ai/generate
+  method: POST
+  scopes: []
+  tags:
+    - ai
+    - generation
+    - create
+  input_schema:
+    type: object
+    description: Parameters for AI generation
+    properties:
+      prompt:
+        type: string
+        description: "Text prompt for generation"
+      style:
+        type: string
+        description: "AI style to use"
+    required:
+      - prompt
+
+- slug: freepik_list_categories
+  name: List Categories
+  description: |
+    List all content categories.
+  provider: freepik
+  endpoint: /v1/categories
+  method: GET
+  scopes: []
+  tags:
+    - categories
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: freepik_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: freepik
+  endpoint: /v1/user
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: freepik_search
+  name: Search
+  description: |
+    Search for resources.
+  provider: freepik
+  endpoint: /v1/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - creative
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      type:
+        type: string
+        description: "Filter by type"
+    required:
+      - q
+
+- slug: freepik_get_editorial
+  name: Get Editorial
+  description: |
+    Get editorial content.
+  provider: freepik
+  endpoint: /v1/editorial
+  method: GET
+  scopes: []
+  tags:
+    - editorial
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting editorial
+    properties: {}
+    required: []

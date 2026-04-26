@@ -1,0 +1,246 @@
+# Procore Tools - Allowlist
+# Curated subset of Procore API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. procore_list_projects           - List projects
+# 2. procore_get_project             - Get project details
+# 3. procore_list_drawings           - List drawings
+# 4. procore_get_drawing             - Get drawing details
+# 5. procore_list_rfis               - List RFIs
+# 6. procore_get_rfi                 - Get RFI details
+# 7. procore_list_submittals         - List submittals
+# 8. procore_get_submittal          - Get submittal details
+# 9. procore_list_observations      - List observations
+# 10. procore_get_company           - Get company info
+
+- slug: procore_list_projects
+  name: List Projects
+  description: |
+    List all projects in the organization.
+  provider: procore
+  endpoint: /v1/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - construction
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: procore_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: procore
+  endpoint: /v1/projects/{projectId}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - construction
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: procore_list_drawings
+  name: List Drawings
+  description: |
+    List all drawings in a project.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/drawings
+  method: GET
+  scopes: []
+  tags:
+    - drawings
+    - construction
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing drawings
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: procore_get_drawing
+  name: Get Drawing
+  description: |
+    Get detailed information about a specific drawing.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/drawings/{drawingId}
+  method: GET
+  scopes: []
+  tags:
+    - drawings
+    - construction
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a drawing
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      drawingId:
+        type: string
+        description: "Drawing ID"
+    required:
+      - projectId
+      - drawingId
+
+- slug: procore_list_rfis
+  name: List RFIs
+  description: |
+    List all RFIs (Requests for Information) in a project.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/rfis
+  method: GET
+  scopes: []
+  tags:
+    - rfis
+    - construction
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing RFIs
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required:
+      - projectId
+
+- slug: procore_get_rfi
+  name: Get RFI
+  description: |
+    Get detailed information about a specific RFI.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/rfis/{rfiId}
+  method: GET
+  scopes: []
+  tags:
+    - rfis
+    - construction
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an RFI
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      rfiId:
+        type: string
+        description: "RFI ID"
+    required:
+      - projectId
+      - rfiId
+
+- slug: procore_list_submittals
+  name: List Submittals
+  description: |
+    List all submittals in a project.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/submittals
+  method: GET
+  scopes: []
+  tags:
+    - submittals
+    - construction
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing submittals
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: procore_get_submittal
+  name: Get Submittal
+  description: |
+    Get detailed information about a specific submittal.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/submittals/{submittalId}
+  method: GET
+  scopes: []
+  tags:
+    - submittals
+    - construction
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a submittal
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      submittalId:
+        type: string
+        description: "Submittal ID"
+    required:
+      - projectId
+      - submittalId
+
+- slug: procore_list_observations
+  name: List Observations
+  description: |
+    List all observations in a project.
+  provider: procore
+  endpoint: /v1/projects/{projectId}/observations
+  method: GET
+  scopes: []
+  tags:
+    - observations
+    - construction
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing observations
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: procore_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: procore
+  endpoint: /v1/company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

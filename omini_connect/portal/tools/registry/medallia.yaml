@@ -1,0 +1,292 @@
+# Medallia Tools - Allowlist
+# Curated subset of Medallia API for AI agent use.
+# OAUTH2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. medallia_list_surveys        - List all surveys
+# 2. medallia_get_survey          - Get survey details
+# 3. medallia_list_responses      - List survey responses
+# 4. medallia_get_response         - Get response details
+# 5. medallia_list_employees      - List employees
+# 6. medallia_get_employee        - Get employee details
+# 7. medallia_list_teams          - List teams
+# 8. medallia_get_team            - Get team details
+# 9. medallia_list_analytics      - Get analytics data
+# 10. medallia_list_invites       - List invitations
+
+- slug: medallia_list_surveys
+  name: List Surveys
+  description: |
+    List all surveys in Medallia.
+    Filter by status, type, or date.
+  provider: medallia
+  endpoint: /surveys
+  method: GET
+  scopes: []
+  tags:
+    - surveys
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing surveys
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, closed, draft)"
+      survey_type:
+        type: string
+        description: "Filter by type"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: medallia_get_survey
+  name: Get Survey
+  description: |
+    Get detailed information about a specific survey.
+  provider: medallia
+  endpoint: /surveys/{surveyId}
+  method: GET
+  scopes: []
+  tags:
+    - surveys
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a survey
+    properties:
+      surveyId:
+        type: string
+        description: "Survey ID"
+    required:
+      - surveyId
+
+- slug: medallia_list_responses
+  name: List Responses
+  description: |
+    List all survey responses in Medallia.
+    Filter by survey, date, or status.
+  provider: medallia
+  endpoint: /responses
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      survey_id:
+        type: string
+        description: "Filter by survey ID"
+      from_date:
+        type: string
+        description: "From date (ISO 8601)"
+      to_date:
+        type: string
+        description: "To date (ISO 8601)"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: medallia_get_response
+  name: Get Response
+  description: |
+    Get details of a specific survey response.
+  provider: medallia
+  endpoint: /responses/{responseId}
+  method: GET
+  scopes: []
+  tags:
+    - responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a response
+    properties:
+      responseId:
+        type: string
+        description: "Response ID"
+    required:
+      - responseId
+
+- slug: medallia_list_employees
+  name: List Employees
+  description: |
+    List all employees in Medallia.
+  provider: medallia
+  endpoint: /employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      search:
+        type: string
+        description: "Search query"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: medallia_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: medallia
+  endpoint: /employees/{employeeId}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID"
+    required:
+      - employeeId
+
+- slug: medallia_list_teams
+  name: List Teams
+  description: |
+    List all teams in Medallia.
+  provider: medallia
+  endpoint: /teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: medallia_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team.
+  provider: medallia
+  endpoint: /teams/{teamId}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: medallia_list_analytics
+  name: List Analytics
+  description: |
+    Get analytics data from Medallia.
+    Filter by survey, date range, or metric.
+  provider: medallia
+  endpoint: /analytics
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties:
+      survey_id:
+        type: string
+        description: "Survey ID"
+      from_date:
+        type: string
+        description: "From date"
+      to_date:
+        type: string
+        description: "To date"
+      metric:
+        type: string
+        description: "Specific metric to retrieve"
+    required: []
+
+- slug: medallia_list_invites
+  name: List Invites
+  description: |
+    List all survey invitations.
+  provider: medallia
+  endpoint: /invites
+  method: GET
+  scopes: []
+  tags:
+    - invites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invites
+    properties:
+      survey_id:
+        type: string
+        description: "Filter by survey ID"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []

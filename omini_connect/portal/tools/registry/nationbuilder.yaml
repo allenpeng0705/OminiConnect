@@ -1,0 +1,240 @@
+# NationBuilder Tools - Allowlist
+# Curated subset of NationBuilder CRM API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nationbuilder_list_people         - List people/contacts
+# 2. nationbuilder_get_person           - Get person details
+# 3. nationbuilder_list_donations        - List donations
+# 4. nationbuilder_list_events          - List events
+# 5. nationbuilder_list_petitions       - List petitions
+# 6. nationbuilder_list_surveys         - List surveys
+# 7. nationbuilder_list_pages          - List website pages
+# 8. nationbuilder_list_tags            - List tags
+# 9. nationbuilder_list_lists           - List saved lists
+# 10. nationbuilder_list_broadcasts      - List broadcasts
+
+- slug: nationbuilder_list_people
+  name: List People
+  description: |
+    List all people and contacts in the CRM.
+  provider: nationbuilder
+  endpoint: /people
+  method: GET
+  scopes:
+    - people:read
+  tags:
+    - crm
+    - people
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Items per page (default 25, max 100)"
+        default: 25
+      tag:
+        type: string
+        description: "Filter by tag slug"
+    required: []
+
+- slug: nationbuilder_get_person
+  name: Get Person
+  description: |
+    Get detailed information for a specific person.
+  provider: nationbuilder
+  endpoint: /people/{id}
+  method: GET
+  scopes:
+    - people:read
+  tags:
+    - crm
+    - people
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      id:
+        type: integer
+        description: "Person ID"
+    required:
+      - id
+
+- slug: nationbuilder_list_donations
+  name: List Donations
+  description: |
+    List all donations in the system.
+  provider: nationbuilder
+  endpoint: /donations
+  method: GET
+  scopes:
+    - donations:read
+  tags:
+    - crm
+    - donations
+    - fundraising
+  input_schema:
+    type: object
+    description: Parameters for listing donations
+    properties:
+      person_id:
+        type: integer
+        description: "Filter by person ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: nationbuilder_list_events
+  name: List Events
+  description: |
+    List all events and gatherings.
+  provider: nationbuilder
+  endpoint: /events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - crm
+    - events
+    - activism
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      slug:
+        type: string
+        description: "Filter by event slug"
+    required: []
+
+- slug: nationbuilder_list_petitions
+  name: List Petitions
+  description: |
+    List all petitions in the system.
+  provider: nationbuilder
+  endpoint: /petitions
+  method: GET
+  scopes:
+    - petitions:read
+  tags:
+    - crm
+    - petitions
+    - activism
+  input_schema:
+    type: object
+    description: Parameters for listing petitions
+    properties: {}
+    required: []
+
+- slug: nationbuilder_list_surveys
+  name: List Surveys
+  description: |
+    List all surveys and their responses.
+  provider: nationbuilder
+  endpoint: /surveys
+  method: GET
+  scopes:
+    - surveys:read
+  tags:
+    - crm
+    - surveys
+    - data-collection
+  input_schema:
+    type: object
+    description: Parameters for listing surveys
+    properties: {}
+    required: []
+
+- slug: nationbuilder_list_pages
+  name: List Pages
+  description: |
+    List all website pages and content.
+  provider: nationbuilder
+  endpoint: /pages
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - crm
+    - pages
+    - website
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      type:
+        type: string
+        description: "Filter by page type"
+    required: []
+
+- slug: nationbuilder_list_tags
+  name: List Tags
+  description: |
+    List all tags used to categorize people.
+  provider: nationbuilder
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - crm
+    - tags
+    - segmentation
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: nationbuilder_list_lists
+  name: List Lists
+  description: |
+    List all saved lists of people.
+  provider: nationbuilder
+  endpoint: /lists
+  method: GET
+  scopes:
+    - lists:read
+  tags:
+    - crm
+    - lists
+    - segmentation
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties: {}
+    required: []
+
+- slug: nationbuilder_list_broadcasts
+  name: List Broadcasts
+  description: |
+    List all email broadcasts and campaigns.
+  provider: nationbuilder
+  endpoint: /broadcasts
+  method: GET
+  scopes:
+    - broadcasts:read
+  tags:
+    - crm
+    - broadcasts
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing broadcasts
+    properties:
+      status:
+        type: string
+        description: "Filter by status (draft, scheduled, sent)"
+    required: []

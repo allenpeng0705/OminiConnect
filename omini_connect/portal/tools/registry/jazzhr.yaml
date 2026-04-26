@@ -1,0 +1,244 @@
+# JazzHR Tools - Allowlist
+# Curated subset of JazzHR API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jazzhr_list_candidates         - List candidates
+# 2. jazzhr_get_candidate           - Get candidate details
+# 3. jazzhr_list_jobs               - List job postings
+# 4. jazzhr_get_job                 - Get job details
+# 5. jazzhr_list_users              - List users
+# 6. jazzhr_get_user                - Get user details
+# 7. jazzhr_list_notes              - List notes
+# 8. jazzhr_create_note             - Create a note
+# 9. jazzhr_list_activities         - List activities
+# 10. jazzhr_list_questionnaires    - List questionnaires
+
+- slug: jazzhr_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in JazzHR.
+  provider: jazzhr
+  endpoint: /v1/candidates
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: jazzhr_get_candidate
+  name: Get Candidate
+  description: |
+    Get details for a specific candidate.
+  provider: jazzhr
+  endpoint: /v1/candidates/{candidate_id}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidate_id
+
+- slug: jazzhr_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: jazzhr
+  endpoint: /v1/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status (open, closed, all)"
+        default: open
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jazzhr_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job posting.
+  provider: jazzhr
+  endpoint: /v1/jobs/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: jazzhr_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: jazzhr
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: jazzhr_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: jazzhr
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: jazzhr_list_notes
+  name: List Notes
+  description: |
+    List notes for candidates or jobs.
+  provider: jazzhr
+  endpoint: /v1/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      candidate_id:
+        type: string
+        description: "Filter by candidate ID"
+      job_id:
+        type: string
+        description: "Filter by job ID"
+    required: []
+
+- slug: jazzhr_create_note
+  name: Create Note
+  description: |
+    Create a note on a candidate or job.
+  provider: jazzhr
+  endpoint: /v1/notes
+  method: POST
+  scopes: []
+  tags:
+    - notes
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      candidate_id:
+        type: string
+        description: "Candidate ID"
+      job_id:
+        type: string
+        description: "Job ID"
+      body:
+        type: string
+        description: "Note content"
+    required:
+      - candidate_id
+      - body
+
+- slug: jazzhr_list_activities
+  name: List Activities
+  description: |
+    List activities for candidates or jobs.
+  provider: jazzhr
+  endpoint: /v1/activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      candidate_id:
+        type: string
+        description: "Filter by candidate ID"
+      job_id:
+        type: string
+        description: "Filter by job ID"
+    required: []
+
+- slug: jazzhr_list_questionnaires
+  name: List Questionnaires
+  description: |
+    List all questionnaires.
+  provider: jazzhr
+  endpoint: /v1/questionnaires
+  method: GET
+  scopes: []
+  tags:
+    - questionnaires
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing questionnaires
+    properties: {}
+    required: []

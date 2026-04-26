@@ -1,0 +1,235 @@
+# Jobadder Tools - Allowlist
+# Curated subset of Jobadder API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jobadder_list_candidates    - List candidates
+# 2. jobadder_get_candidate      - Get candidate details
+# 3. jobadder_list_jobs         - List job postings
+# 4. jobadder_get_job           - Get job details
+# 5. jobadder_list_users        - List users
+# 6. jobadder_get_user          - Get user details
+# 7. jobadder_list_contacts     - List contacts
+# 8. jobadder_get_contact       - Get contact details
+# 9. jobadder_list_placements   - List placements
+# 10. jobadder_get_placement    - Get placement details
+
+- slug: jobadder_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Jobadder.
+  provider: jobadder
+  endpoint: /v2/candidates
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: jobadder_get_candidate
+  name: Get Candidate
+  description: |
+    Get details for a specific candidate.
+  provider: jobadder
+  endpoint: /v2/candidates/{candidate_id}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidate_id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - candidate_id
+
+- slug: jobadder_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: jobadder
+  endpoint: /v2/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status (active, closed, all)"
+        default: active
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobadder_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job posting.
+  provider: jobadder
+  endpoint: /v2/jobs/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: integer
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: jobadder_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: jobadder
+  endpoint: /v2/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: jobadder_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: jobadder
+  endpoint: /v2/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: integer
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: jobadder_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: jobadder
+  endpoint: /v2/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobadder_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: jobadder
+  endpoint: /v2/contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: jobadder_list_placements
+  name: List Placements
+  description: |
+    List all placements.
+  provider: jobadder
+  endpoint: /v2/placements
+  method: GET
+  scopes: []
+  tags:
+    - placements
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing placements
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobadder_get_placement
+  name: Get Placement
+  description: |
+    Get details for a specific placement.
+  provider: jobadder
+  endpoint: /v2/placements/{placement_id}
+  method: GET
+  scopes: []
+  tags:
+    - placements
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a placement
+    properties:
+      placement_id:
+        type: integer
+        description: "Placement ID"
+    required:
+      - placement_id

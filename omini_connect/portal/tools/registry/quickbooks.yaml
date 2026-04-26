@@ -1,0 +1,340 @@
+# QuickBooks Tools - Allowlist
+# Curated subset of the QuickBooks Online API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. quickbooks_list_customers       - List customers in the account
+# 2. quickbooks_get_customer         - Get a specific customer
+# 3. quickbooks_create_customer      - Create a new customer
+# 4. quickbooks_list_invoices        - List invoices
+# 5. quickbooks_get_invoice          - Get a specific invoice
+# 6. quickbooks_create_invoice       - Create a new invoice
+# 7. quickbooks_list_payments        - List payments
+# 8. quickbooks_get_payment          - Get a specific payment
+# 9. quickbooks_list_accounts        - List accounts
+# 10. quickbooks_get_account         - Get a specific account
+
+- slug: quickbooks_list_customers
+  name: List Customers
+  description: |
+    List all customers in the QuickBooks Online company.
+    Returns customer details including name, email, phone, and billing address.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID (path parameter)"
+      query:
+        type: string
+        description: "SQL-like query (e.g., SELECT * FROM Customer MAXRESULTS 100)"
+        default: "SELECT * FROM Customer MAXRESULTS 100"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+
+- slug: quickbooks_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer by their ID.
+    Returns full customer information including contact details and metadata.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/customer/{customer_id}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      customer_id:
+        type: string
+        description: "Customer ID"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+      - customer_id
+
+- slug: quickbooks_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in QuickBooks Online.
+    Include name and optional email, phone, and billing/shipping addresses.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/customer
+  method: POST
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - customers
+    - create
+  input_schema:
+    type: object
+    description: Customer creation parameters
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      DisplayName:
+        type: string
+        description: "Customer display name (required)"
+      PrimaryEmailAddr:
+        type: object
+        description: "Email address object {Address: 'email@example.com'}"
+      PrimaryPhone:
+        type: object
+        description: "Phone object {FreeFormNumber: '555-1234'}"
+      BillAddr:
+        type: object
+        description: "Billing address object"
+      ShipAddr:
+        type: object
+        description: "Shipping address object"
+      GivenName:
+        type: string
+        description: "First name"
+      FamilyName:
+        type: string
+        description: "Last name"
+    required:
+      - company_id
+      - DisplayName
+
+- slug: quickbooks_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the QuickBooks Online company.
+    Returns invoice details including invoice number, customer, date, and total.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      query:
+        type: string
+        description: "SQL-like query (e.g., SELECT * FROM Invoice MAXRESULTS 100)"
+        default: "SELECT * FROM Invoice MAXRESULTS 100"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+
+- slug: quickbooks_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice by its ID.
+    Returns full invoice information including line items, totals, and status.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/invoice/{invoice_id}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+      - invoice_id
+
+- slug: quickbooks_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in QuickBooks Online.
+    Include customer, line items, and optional due date and terms.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/invoice
+  method: POST
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Invoice creation parameters
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      Line:
+        type: array
+        description: "Array of line items objects"
+      CustomerRef:
+        type: object
+        description: "Customer reference {value: 'customer_id', name: 'Customer Name'}"
+      DocNumber:
+        type: string
+        description: "Invoice number"
+      TxnDate:
+        type: string
+        description: "Transaction date (YYYY-MM-DD)"
+      DueDate:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+    required:
+      - company_id
+      - Line
+      - CustomerRef
+
+- slug: quickbooks_list_payments
+  name: List Payments
+  description: |
+    List all payments received in QuickBooks Online.
+    Returns payment details including customer, amount, date, and payment method.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - payments
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      query:
+        type: string
+        description: "SQL-like query (e.g., SELECT * FROM Payment MAXRESULTS 100)"
+        default: "SELECT * FROM Payment MAXRESULTS 100"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+
+- slug: quickbooks_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment by its ID.
+    Returns full payment information including amount, date, and associated invoice.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/payment/{payment_id}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      payment_id:
+        type: string
+        description: "Payment ID"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+      - payment_id
+
+- slug: quickbooks_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the QuickBooks Online company.
+    Returns account details including name, type, and balance.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/query
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - accounts
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      query:
+        type: string
+        description: "SQL-like query (e.g., SELECT * FROM Account MAXRESULTS 100)"
+        default: "SELECT * FROM Account MAXRESULTS 100"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+
+- slug: quickbooks_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account by its ID.
+    Returns full account information including type, balance, and metadata.
+  provider: quickbooks
+  endpoint: /v3/company/{company_id}/account/{account_id}
+  method: GET
+  scopes:
+    - com.intuit.quickbooks.accounting
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      company_id:
+        type: string
+        description: "QuickBooks Company ID"
+      account_id:
+        type: string
+        description: "Account ID"
+      minorversion:
+        type: string
+        description: "API minor version"
+    required:
+      - company_id
+      - account_id

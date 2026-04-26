@@ -1,0 +1,243 @@
+# Gainsight CC Tools - Allowlist
+# Curated subset of Gainsight Customer Success API for AI agent use.
+# OAUTH2_CC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gainsight_list_companies      - List companies
+# 2. gainsight_get_company         - Get company details
+# 3. gainsight_list_users          - List users
+# 4. gainsight_get_user            - Get user details
+# 5. gainsight_list_csr_tasks      - List CSR tasks
+# 6. gainsight_list_health_scores  - List health scores
+# 7. gainsight_list_activities     - List activities
+# 8. gainsight_list_nps_scores     - List NPS scores
+# 9. gainsight_list_survey_responses - List survey responses
+# 10. gainsight_list_playbooks     - List playbooks
+
+- slug: gainsight_list_companies
+  name: List Companies
+  description: |
+    List all companies in Gainsight.
+  provider: gainsight-cc
+  endpoint: /v1/companies
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: gainsight_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific company.
+  provider: gainsight-cc
+  endpoint: /v1/companies/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: gainsight_list_users
+  name: List Users
+  description: |
+    List all users in Gainsight.
+  provider: gainsight-cc
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gainsight_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: gainsight-cc
+  endpoint: /v1/users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: gainsight_list_csr_tasks
+  name: List CSR Tasks
+  description: |
+    List customer success tasks and action items.
+  provider: gainsight-cc
+  endpoint: /v1/csrtasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - csr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing CSR tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: gainsight_list_health_scores
+  name: List Health Scores
+  description: |
+    List health scores for companies.
+  provider: gainsight-cc
+  endpoint: /v1/healthscores
+  method: GET
+  scopes:
+    - read
+  tags:
+    - health
+    - scores
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing health scores
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: gainsight_list_activities
+  name: List Activities
+  description: |
+    List activities and interactions.
+  provider: gainsight-cc
+  endpoint: /v1/activities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+      type:
+        type: string
+        description: "Activity type filter"
+    required: []
+
+- slug: gainsight_list_nps_scores
+  name: List NPS Scores
+  description: |
+    List NPS survey scores and responses.
+  provider: gainsight-cc
+  endpoint: /v1/nps
+  method: GET
+  scopes:
+    - read
+  tags:
+    - nps
+    - scores
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing NPS scores
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: gainsight_list_survey_responses
+  name: List Survey Responses
+  description: |
+    List survey responses and results.
+  provider: gainsight-cc
+  endpoint: /v1/surveyresponses
+  method: GET
+  scopes:
+    - read
+  tags:
+    - surveys
+    - responses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing survey responses
+    properties:
+      company_id:
+        type: string
+        description: "Filter by company ID"
+    required: []
+
+- slug: gainsight_list_playbooks
+  name: List Playbooks
+  description: |
+    List available playbooks and templates.
+  provider: gainsight-cc
+  endpoint: /v1/playbooks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - playbooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing playbooks
+    properties: {}

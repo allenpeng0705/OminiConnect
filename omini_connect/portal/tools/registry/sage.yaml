@@ -1,0 +1,271 @@
+# Sage Tools - Allowlist
+# Curated subset of Sage Accounting API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sage_list_contacts           - List all contacts
+# 2. sage_get_contact             - Get contact details
+# 3. sage_create_contact          - Create a contact
+# 4. sage_list_invoices           - List all invoices
+# 5. sage_get_invoice            - Get invoice details
+# 6. sage_create_invoice         - Create an invoice
+# 7. sage_list_payments          - List all payments
+# 8. sage_create_payment          - Record a payment
+# 9. sage_list_products          - List all products
+# 10. sage_get_balance           - Get account balance
+
+- slug: sage_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in Sage.
+  provider: sage
+  endpoint: /v3/contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - accounting
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 50
+      type:
+        type: string
+        description: "Contact type: customer, supplier"
+    required: []
+
+- slug: sage_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: sage
+  endpoint: /v3/contacts/{contactId}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - accounting
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "The contact ID"
+    required:
+      - contactId
+
+- slug: sage_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Sage.
+  provider: sage
+  endpoint: /v3/contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - accounting
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      name:
+        type: string
+        description: "Contact name"
+      contactType:
+        type: string
+        description: "Type: customer or supplier"
+        default: customer
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - name
+
+- slug: sage_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices.
+  provider: sage
+  endpoint: /v3/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Number of invoices"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: draft, sent, paid"
+    required: []
+
+- slug: sage_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: sage
+  endpoint: /v3/invoices/{invoiceId}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "The invoice ID"
+    required:
+      - invoiceId
+
+- slug: sage_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice.
+  provider: sage
+  endpoint: /v3/invoices
+  method: POST
+  scopes:
+    - invoices:write
+  tags:
+    - invoices
+    - accounting
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+      reference:
+        type: string
+        description: "Invoice reference"
+      lineItems:
+        type: array
+        description: "Invoice line items"
+    required:
+      - contactId
+
+- slug: sage_list_payments
+  name: List Payments
+  description: |
+    Retrieve a list of all payments.
+  provider: sage
+  endpoint: /v3/payments
+  method: GET
+  scopes:
+    - payments:read
+  tags:
+    - payments
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      limit:
+        type: integer
+        description: "Number of payments"
+        default: 50
+    required: []
+
+- slug: sage_create_payment
+  name: Create Payment
+  description: |
+    Record a payment received.
+  provider: sage
+  endpoint: /v3/payments
+  method: POST
+  scopes:
+    - payments:write
+  tags:
+    - payments
+    - accounting
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment
+    properties:
+      invoiceId:
+        type: string
+        description: "Invoice ID"
+      amount:
+        type: number
+        description: "Payment amount"
+      date:
+        type: string
+        description: "Payment date"
+    required:
+      - invoiceId
+      - amount
+
+- slug: sage_list_products
+  name: List Products
+  description: |
+    Retrieve a list of all products.
+  provider: sage
+  endpoint: /v3/products
+  method: GET
+  scopes:
+    - products:read
+  tags:
+    - products
+    - accounting
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      limit:
+        type: integer
+        description: "Number of products"
+        default: 50
+    required: []
+
+- slug: sage_get_balance
+  name: Get Balance
+  description: |
+    Get account balance information.
+  provider: sage
+  endpoint: /v3/account-balance
+  method: GET
+  scopes:
+    - balance:read
+  tags:
+    - balance
+    - accounting
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties: {}
+    required: []

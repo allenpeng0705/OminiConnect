@@ -1,0 +1,280 @@
+# Microsoft Word Tools - Allowlist
+# Curated subset of Microsoft Word API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. word_list_documents            - List documents
+# 2. word_get_document             - Get document details
+# 3. word_list_content            - List document content
+# 4. word_get_paragraph           - Get paragraph content
+# 5. word_update_paragraph        - Update paragraph
+# 6. word_list_tables             - List tables in document
+# 7. word_get_table               - Get table content
+# 8. word_insert_paragraph        - Insert paragraph
+# 9. word_list_styles            - List document styles
+# 10. word_apply_style           - Apply style to text
+
+- slug: word_list_documents
+  name: List Documents
+  description: |
+    List all Word documents accessible to the user.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - documents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: word_get_document
+  name: Get Document
+  description: |
+    Get details of a specific Word document.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+    required:
+      - itemId
+
+- slug: word_list_content
+  name: List Content
+  description: |
+    List all paragraphs in a Word document.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/paragraphs
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - content
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing content
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+    required:
+      - itemId
+
+- slug: word_get_paragraph
+  name: Get Paragraph
+  description: |
+    Get content of a specific paragraph.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/paragraphs/{paragraphId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - paragraphs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a paragraph
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+      paragraphId:
+        type: string
+        description: "Paragraph ID"
+    required:
+      - itemId
+      - paragraphId
+
+- slug: word_update_paragraph
+  name: Update Paragraph
+  description: |
+    Update content of a specific paragraph.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/paragraphs/{paragraphId}
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - word
+    - paragraphs
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a paragraph
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+      paragraphId:
+        type: string
+        description: "Paragraph ID"
+      text:
+        type: string
+        description: "New paragraph text"
+    required:
+      - itemId
+      - paragraphId
+      - text
+
+- slug: word_list_tables
+  name: List Tables
+  description: |
+    List all tables in a Word document.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/tables
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+    required:
+      - itemId
+
+- slug: word_get_table
+  name: Get Table
+  description: |
+    Get content of a specific table.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/tables/{tableId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+      tableId:
+        type: string
+        description: "Table ID"
+    required:
+      - itemId
+      - tableId
+
+- slug: word_insert_paragraph
+  name: Insert Paragraph
+  description: |
+    Insert a new paragraph into the document.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/paragraphs
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - word
+    - paragraphs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for inserting a paragraph
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+      text:
+        type: string
+        description: "Paragraph text"
+      position:
+        type: integer
+        description: "Position to insert (after paragraph ID)"
+    required:
+      - itemId
+      - text
+
+- slug: word_list_styles
+  name: List Styles
+  description: |
+    List all available styles in a document.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/styles
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - word
+    - styles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing styles
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+    required:
+      - itemId
+
+- slug: word_apply_style
+  name: Apply Style
+  description: |
+    Apply a style to a paragraph or range.
+  provider: microsoft-word
+  endpoint: /v1.0/me/drive/items/{itemId}/word/document/paragraphs/{paragraphId}/formatting
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - word
+    - styles
+    - update
+  input_schema:
+    type: object
+    description: Parameters for applying a style
+    properties:
+      itemId:
+        type: string
+        description: "Document item ID"
+      paragraphId:
+        type: string
+        description: "Paragraph ID"
+      styleName:
+        type: string
+        description: "Name of the style to apply"
+    required:
+      - itemId
+      - paragraphId
+      - styleName

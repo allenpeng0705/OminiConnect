@@ -1,0 +1,228 @@
+# Float Tools - Allowlist
+# Curated subset of Float API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. float_list_projects         - List projects
+# 2. float_get_project          - Get project details
+# 3. float_list_tasks           - List tasks
+# 4. float_get_task             - Get task details
+# 5. float_list_people          - List team members
+# 6. float_get_person           - Get person details
+# 7. float_list_clients         - List clients
+# 8. float_get_client          - Get client details
+# 9. float_list_holidays       - List holidays
+# 10. float_get_schedule       - Get project schedule
+
+- slug: float_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: float
+  endpoint: /api/v3/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - resource
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: float_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project.
+  provider: float
+  endpoint: /api/v3/projects/{id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - resource
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: float_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks.
+  provider: float
+  endpoint: /api/v3/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - project
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+    required: []
+
+- slug: float_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task.
+  provider: float
+  endpoint: /api/v3/tasks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - project
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: float_list_people
+  name: List People
+  description: |
+    List all team members.
+  provider: float
+  endpoint: /api/v3/people
+  method: GET
+  scopes: []
+  tags:
+    - people
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties: {}
+    required: []
+
+- slug: float_get_person
+  name: Get Person
+  description: |
+    Get details of a specific person.
+  provider: float
+  endpoint: /api/v3/people/{id}
+  method: GET
+  scopes: []
+  tags:
+    - people
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting person
+    properties:
+      id:
+        type: string
+        description: "Person ID"
+    required:
+      - id
+
+- slug: float_list_clients
+  name: List Clients
+  description: |
+    List all clients.
+  provider: float
+  endpoint: /api/v3/clients
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - business
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties: {}
+    required: []
+
+- slug: float_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client.
+  provider: float
+  endpoint: /api/v3/clients/{id}
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - business
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting client
+    properties:
+      id:
+        type: string
+        description: "Client ID"
+    required:
+      - id
+
+- slug: float_list_holidays
+  name: List Holidays
+  description: |
+    List all holidays.
+  provider: float
+  endpoint: /api/v3/holidays
+  method: GET
+  scopes: []
+  tags:
+    - holidays
+    - calendar
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing holidays
+    properties:
+      year:
+        type: integer
+        description: "Year"
+    required: []
+
+- slug: float_get_schedule
+  name: Get Schedule
+  description: |
+    Get project schedule with allocations.
+  provider: float
+  endpoint: /api/v3/schedule
+  method: GET
+  scopes: []
+  tags:
+    - schedule
+    - resource
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting schedule
+    properties:
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

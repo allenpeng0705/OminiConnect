@@ -5,6 +5,9 @@ use serde::{Deserialize, Serialize};
 /// Configuration for a connector (stored in-portal).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConnectorConfig {
+    /// Portal account that owns this row (server-side; not set by clients).
+    #[serde(default, skip_serializing)]
+    pub owner_username: String,
     pub platform: String,
     pub client_id: String,
     pub client_secret: String,

@@ -1,0 +1,301 @@
+# Monday Tools - Allowlist
+# Curated subset of Monday.com API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. monday_list_boards         - List all boards
+# 2. monday_get_board           - Get board details
+# 3. monday_create_board        - Create a new board
+# 4. monday_list_items         - List items in a board
+# 5. monday_get_item            - Get item details
+# 6. monday_create_item         - Create a new item
+# 7. monday_update_item        - Update an item
+# 8. monday_list_updates        - List updates on an item
+# 9. monday_get_update          - Get update details
+# 10. monday_list_users         - List workspace users
+
+- slug: monday_list_boards
+  name: List Boards
+  description: |
+    List all boards the user has access to.
+    Returns board details including name, state, views, activity.
+  provider: monday
+  endpoint: /boards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      limit:
+        type: integer
+        description: "Max boards (default 100)"
+        default: 100
+      state:
+        type: string
+        description: "Filter by state: all, active, archived, deleted"
+    required: []
+
+- slug: monday_get_board
+  name: Get Board
+  description: |
+    Get detailed information about a specific board.
+    Includes columns, views, groups, and activity log.
+  provider: monday
+  endpoint: /boards/{board_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+    required:
+      - board_id
+
+- slug: monday_create_board
+  name: Create Board
+  description: |
+    Create a new board in a workspace.
+    Set name, board type, and workspace.
+  provider: monday
+  endpoint: /boards
+  method: POST
+  scopes:
+    - write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      board_name:
+        type: string
+        description: "Board name"
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+      board_kind:
+        type: string
+        description: "Board kind (public, private, shareable)"
+    required:
+      - board_name
+      - workspace_id
+
+- slug: monday_list_items
+  name: List Items
+  description: |
+    List all items (tasks) in a board.
+    Can filter by group, column values, or item name.
+  provider: monday
+  endpoint: /boards/{board_id}/items
+  method: GET
+  scopes:
+    - read
+  tags:
+    - items
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      group_id:
+        type: string
+        description: "Filter by group ID"
+      limit:
+        type: integer
+        description: "Max items (default 100)"
+        default: 100
+    required:
+      - board_id
+
+- slug: monday_get_item
+  name: Get Item
+  description: |
+    Get detailed information about a specific item.
+    Includes all column values, assignees, and subitems.
+  provider: monday
+  endpoint: /boards/{board_id}/items/{item_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - items
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      item_id:
+        type: string
+        description: "Item ID"
+    required:
+      - board_id
+      - item_id
+
+- slug: monday_create_item
+  name: Create Item
+  description: |
+    Create a new item (task) in a board.
+    Set name, column values, assignees, and group.
+  provider: monday
+  endpoint: /boards/{board_id}/items
+  method: POST
+  scopes:
+    - write
+  tags:
+    - items
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      group_id:
+        type: string
+        description: "Group ID (optional)"
+      item_name:
+        type: string
+        description: "Item name/title"
+      column_values:
+        type: string
+        description: "JSON string of column values"
+    required:
+      - board_id
+      - item_name
+
+- slug: monday_update_item
+  name: Update Item
+  description: |
+    Update an existing item. Can change name, column values, or move to different group.
+  provider: monday
+  endpoint: /boards/{board_id}/items/{item_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - items
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an item
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      item_id:
+        type: string
+        description: "Item ID"
+      item_name:
+        type: string
+        description: "New item name"
+      column_values:
+        type: string
+        description: "JSON string of column values"
+      group_id:
+        type: string
+        description: "Move to group ID"
+    required:
+      - board_id
+      - item_id
+
+- slug: monday_list_updates
+  name: List Updates
+  description: |
+    List all updates on an item. Includes text, author, and timestamp.
+  provider: monday
+  endpoint: /boards/{board_id}/items/{item_id}/updates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - updates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing updates
+    properties:
+      board_id:
+        type: string
+        description: "Board ID"
+      item_id:
+        type: string
+        description: "Item ID"
+      limit:
+        type: integer
+        description: "Max updates (default 25)"
+        default: 25
+    required:
+      - board_id
+      - item_id
+
+- slug: monday_get_update
+  name: Get Update
+  description: |
+    Get detailed information about a specific update.
+  provider: monday
+  endpoint: /updates/{update_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - updates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an update
+    properties:
+      update_id:
+        type: string
+        description: "Update ID"
+    required:
+      - update_id
+
+- slug: monday_list_users
+  name: List Users
+  description: |
+    List all users in a workspace.
+  provider: monday
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+      limit:
+        type: integer
+        description: "Max users (default 100)"
+        default: 100
+    required:
+      - workspace_id

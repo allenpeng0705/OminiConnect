@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Nango from '@nangohq/frontend';
 
@@ -9,20 +9,30 @@ export function useNango() {
     const setNango = useGlobal((state) => state.setNango);
     const nango = useGlobal((state) => state.nango);
     const apiURL = useGlobal((state) => state.apiURL);
+    const websocketsPath = useGlobal((state) => state.websocketsPath);
 
-    // Create a singleton
+    // Keep a ref to the latest nango instance so callbacks always use the current value.
+    const nangoRef = useRef(nango);
+    nangoRef.current = nango;
+
+    // Create a singleton; must react to apiURL / websocketsPath (Home may set apiURL after sessionToken).
     useEffect(() => {
         if (!sessionToken) {
             return;
         }
 
-        setNango(
-            new Nango({
-                connectSessionToken: sessionToken,
-                host: apiURL
-            })
-        );
-    }, [sessionToken]);
+        const opts: ConstructorParameters<typeof Nango>[0] = {
+            connectSessionToken: sessionToken,
+            host: apiURL
+        };
+        if (websocketsPath) {
+            opts.websocketsPath = websocketsPath;
+        }
 
-    return nango;
+        const newNango = new Nango(opts);
+        setNango(newNango);
+        nangoRef.current = newNango;
+    }, [sessionToken, apiURL, websocketsPath, setNango]);
+
+    return nangoRef.current;
 }

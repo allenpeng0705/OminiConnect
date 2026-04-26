@@ -1,0 +1,239 @@
+- slug: ibm_list_watson_assistants
+  name: List Watson Assistants
+  description: |
+    Retrieve a list of all Watson Assistant instances in the IBM Cloud account.
+  provider: ibm
+  endpoint: /v2/assistants
+  method: GET
+  scopes:
+    - watson.assistant.read
+  tags:
+    - watson
+  input_schema:
+    type: object
+    description: Parameters for listing Watson assistants
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of assistants to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+    required: []
+
+- slug: ibm_get_watson_assistant
+  name: Get Watson Assistant
+  description: |
+    Retrieve detailed information for a specific Watson Assistant by ID.
+  provider: ibm
+  endpoint: /v2/assistants/{assistant_id}
+  method: GET
+  scopes:
+    - watson.assistant.read
+  tags:
+    - watson
+  input_schema:
+    type: object
+    description: Parameters for getting a Watson assistant
+    properties:
+      assistant_id:
+        type: string
+        description: "Unique identifier of the Watson Assistant"
+    required:
+      - assistant_id
+
+- slug: ibm_create_watson_assistant
+  name: Create Watson Assistant
+  description: |
+    Create a new Watson Assistant instance in the IBM Cloud account.
+  provider: ibm
+  endpoint: /v2/assistants
+  method: POST
+  scopes:
+    - watson.assistant.write
+  tags:
+    - watson
+  input_schema:
+    type: object
+    description: Parameters for creating a Watson assistant
+    properties:
+      name:
+        type: string
+        description: "Name for the new assistant"
+      description:
+        type: string
+        description: "Optional description for the assistant"
+      language:
+        type: string
+        description: "Language code (e.g., en, es, fr, de)"
+    required:
+      - name
+      - language
+
+- slug: ibm_list_cloud_functions
+  name: List Cloud Functions
+  description: |
+    Retrieve a list of all Cloud Functions (actions) in the IBM Cloud account.
+  provider: ibm
+  endpoint: /api/v1/namespaces/_/actions
+  method: GET
+  scopes:
+    - functions.read
+  tags:
+    - cloud_functions
+  input_schema:
+    type: object
+    description: Parameters for listing cloud functions
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of functions to return (default 50, max 200)"
+      skip:
+        type: integer
+        description: "Number of records to skip for pagination"
+    required: []
+
+- slug: ibm_invoke_cloud_function
+  name: Invoke Cloud Function
+  description: |
+    Invoke a specific Cloud Function (action) with optional parameters.
+  provider: ibm
+  endpoint: /api/v1/namespaces/_/actions/{action_name}
+  method: POST
+  scopes:
+    - functions.write
+  tags:
+    - cloud_functions
+  input_schema:
+    type: object
+    description: Parameters for invoking a cloud function
+    properties:
+      action_name:
+        type: string
+        description: "Name of the action to invoke"
+      params:
+        type: object
+        description: "JSON object of parameters to pass to the action"
+      blocking:
+        type: boolean
+        description: "Wait for result (default true)"
+    required:
+      - action_name
+
+- slug: ibm_list_containers
+  name: List Containers
+  description: |
+    Retrieve a list of all container clusters in IBM Kubernetes Service.
+  provider: ibm
+  endpoint: /v2/vpc/getContainers
+  method: GET
+  scopes:
+    - containers.read
+  tags:
+    - containers
+  input_schema:
+    type: object
+    description: Parameters for listing containers
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of containers to return (default 50, max 200)"
+      resource_group:
+        type: string
+        description: "Filter by resource group ID"
+    required: []
+
+- slug: ibm_get_container
+  name: Get Container
+  description: |
+    Retrieve detailed information for a specific container by ID.
+  provider: ibm
+  endpoint: /v2/vpc/getContainers/{container_id}
+  method: GET
+  scopes:
+    - containers.read
+  tags:
+    - containers
+  input_schema:
+    type: object
+    description: Parameters for getting a container
+    properties:
+      container_id:
+        type: string
+        description: "Unique identifier of the container"
+    required:
+      - container_id
+
+- slug: ibm_list_databases
+  name: List Databases
+  description: |
+    Retrieve a list of all databases in the IBM Cloud Databases service.
+  provider: ibm
+  endpoint: /v4/ibm/databases
+  method: GET
+  scopes:
+    - databases.read
+  tags:
+    - databases
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of databases to return (default 50, max 200)"
+      resource_group:
+        type: string
+        description: "Filter by resource group ID"
+      type:
+        type: string
+        description: "Filter by database type (e.g., postgresql, redis, mongodb)"
+    required: []
+
+- slug: ibm_get_database
+  name: Get Database
+  description: |
+    Retrieve detailed information for a specific database by ID.
+  provider: ibm
+  endpoint: /v4/ibm/databases/{database_id}
+  method: GET
+  scopes:
+    - databases.read
+  tags:
+    - databases
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database_id:
+        type: string
+        description: "Unique identifier of the database"
+    required:
+      - database_id
+
+- slug: ibm_list_objects
+  name: List Objects
+  description: |
+    Retrieve a list of all objects in IBM Cloud Object Storage bucket.
+  provider: ibm
+  endpoint: /api/v1/buckets/{bucket}/objects
+  method: GET
+  scopes:
+    - cos.object.read
+  tags:
+    - objects
+  input_schema:
+    type: object
+    description: Parameters for listing objects
+    properties:
+      bucket:
+        type: string
+        description: "Name of the COS bucket"
+      limit:
+        type: integer
+        description: "Maximum number of objects to return (default 50, max 200)"
+      prefix:
+        type: string
+        description: "Filter objects by name prefix"
+    required:
+      - bucket

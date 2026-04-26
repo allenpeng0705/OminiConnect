@@ -1,0 +1,301 @@
+# SoundCloud Tools - Allowlist
+# Curated subset of SoundCloud API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. soundcloud_list_tracks       - List tracks
+# 2. soundcloud_get_track        - Get track details
+# 3. soundcloud_upload_track     - Upload a track
+# 4. soundcloud_list_users       - List users
+# 5. soundcloud_get_user         - Get user profile
+# 6. soundcloud_list_playlists   - List playlists
+# 7. soundcloud_get_playlist     - Get playlist details
+# 8. soundcloud_list_comments    - List track comments
+# 9. soundcloud_get_comment      - Get comment details
+# 10. soundcloud_search_tracks   - Search for tracks
+
+- slug: soundcloud_list_tracks
+  name: List Tracks
+  description: |
+    List tracks for the authenticated user or filter by user.
+    Returns track details including title, duration, and play count.
+  provider: soundcloud
+  endpoint: /tracks
+  method: GET
+  scopes:
+    - tracks-read
+  tags:
+    - tracks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tracks
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max tracks (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: soundcloud_get_track
+  name: Get Track
+  description: |
+    Get detailed information about a specific track.
+    Returns title, description, duration, waveform, and stats.
+  provider: soundcloud
+  endpoint: /tracks/{track_id}
+  method: GET
+  scopes:
+    - tracks-read
+  tags:
+    - tracks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a track
+    properties:
+      track_id:
+        type: string
+        description: "Track ID (required)"
+    required:
+      - track_id
+
+- slug: soundcloud_upload_track
+  name: Upload Track
+  description: |
+    Upload a new track to SoundCloud.
+    Requires title and returns track ID upon success.
+  provider: soundcloud
+  endpoint: /tracks
+  method: POST
+  scopes:
+    - tracks-write
+  tags:
+    - tracks
+    - create
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a track
+    properties:
+      title:
+        type: string
+        description: "Track title (required)"
+      description:
+        type: string
+        description: "Track description"
+      tag_list:
+        type: string
+        description: "Comma-separated tags"
+      genre:
+        type: string
+        description: "Track genre"
+      sharing:
+        type: string
+        description: "Sharing mode: public or private"
+        default: public
+    required:
+      - title
+
+- slug: soundcloud_list_users
+  name: List Users
+  description: |
+    List users by search or browse.
+    Returns user profiles with follower counts.
+  provider: soundcloud
+  endpoint: /users
+  method: GET
+  scopes:
+    - users-read
+  tags:
+    - users
+    - list
+    - search
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      limit:
+        type: integer
+        description: "Max users (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: soundcloud_get_user
+  name: Get User
+  description: |
+    Get detailed user profile.
+    Returns username, avatar, bio, and social stats.
+  provider: soundcloud
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - users-read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - user_id
+
+- slug: soundcloud_list_playlists
+  name: List Playlists
+  description: |
+    List playlists for the authenticated user.
+    Returns playlist details with track counts.
+  provider: soundcloud
+  endpoint: /playlists
+  method: GET
+  scopes:
+    - playlist-read
+  tags:
+    - playlists
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing playlists
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max playlists (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: soundcloud_get_playlist
+  name: Get Playlist
+  description: |
+    Get detailed information about a playlist.
+    Returns playlist title, description, and track list.
+  provider: soundcloud
+  endpoint: /playlists/{playlist_id}
+  method: GET
+  scopes:
+    - playlist-read
+  tags:
+    - playlists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a playlist
+    properties:
+      playlist_id:
+        type: string
+        description: "Playlist ID (required)"
+    required:
+      - playlist_id
+
+- slug: soundcloud_list_comments
+  name: List Comments
+  description: |
+    List comments on a track.
+    Returns comment text, timestamps, and user info.
+  provider: soundcloud
+  endpoint: /tracks/{track_id}/comments
+  method: GET
+  scopes:
+    - tracks-read
+  tags:
+    - comments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      track_id:
+        type: string
+        description: "Track ID (required)"
+      limit:
+        type: integer
+        description: "Max comments (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - track_id
+
+- slug: soundcloud_get_comment
+  name: Get Comment
+  description: |
+    Get detailed information about a specific comment.
+    Returns comment text, timestamp, and user.
+  provider: soundcloud
+  endpoint: /comments/{comment_id}
+  method: GET
+  scopes:
+    - tracks-read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID (required)"
+    required:
+      - comment_id
+
+- slug: soundcloud_search_tracks
+  name: Search Tracks
+  description: |
+    Search for tracks by keyword query.
+    Returns matching tracks with title, artist, and stats.
+  provider: soundcloud
+  endpoint: /tracks
+  method: GET
+  scopes:
+    - tracks-read
+  tags:
+    - search
+    - tracks
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for searching tracks
+    properties:
+      q:
+        type: string
+        description: "Search query (required)"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - q

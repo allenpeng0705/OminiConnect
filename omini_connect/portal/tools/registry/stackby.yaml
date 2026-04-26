@@ -1,0 +1,273 @@
+- slug: stackby_list_databases
+  name: List Databases
+  description: |
+    Returns a list of all databases available in the Stackby account.
+  provider: stackby
+  endpoint: /v1/databases
+  method: GET
+  scopes:
+    - databases:read
+  tags:
+    - database
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of databases to return (default: 50)"
+      offset:
+        type: integer
+        description: "Number of databases to skip for pagination"
+    required: []
+
+- slug: stackby_get_database
+  name: Get Database
+  description: |
+    Get details and metadata for a specific database by ID.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}
+  method: GET
+  scopes:
+    - databases:read
+  tags:
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting database details
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+    required:
+      - databaseId
+
+- slug: stackby_create_database
+  name: Create Database
+  description: |
+    Create a new database with specified name and schema.
+  provider: stackby
+  endpoint: /v1/databases
+  method: POST
+  scopes:
+    - databases:write
+  tags:
+    - database
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a database
+    properties:
+      name:
+        type: string
+        description: "Name of the new database"
+      schema:
+        type: object
+        description: "Schema definition for tables in the database"
+    required:
+      - name
+
+- slug: stackby_list_tables
+  name: List Tables
+  description: |
+    List all tables within a specific database.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+    required:
+      - databaseId
+
+- slug: stackby_get_table
+  name: Get Table
+  description: |
+    Get details, schema, and structure of a specific table.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting table details
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - databaseId
+      - tableId
+
+- slug: stackby_list_rows
+  name: List Rows
+  description: |
+    Retrieve all rows from a specific table with optional filtering and pagination.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - row
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rows
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      limit:
+        type: integer
+        description: "Maximum number of rows to return (default: 100)"
+      offset:
+        type: integer
+        description: "Number of rows to skip for pagination"
+      filter:
+        type: string
+        description: "Filter expression for rows"
+    required:
+      - databaseId
+      - tableId
+
+- slug: stackby_get_row
+  name: Get Row
+  description: |
+    Get a single row by its unique identifier.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows/{rowId}
+  method: GET
+  scopes:
+    - rows:read
+  tags:
+    - row
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a row
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+    required:
+      - databaseId
+      - tableId
+      - rowId
+
+- slug: stackby_create_row
+  name: Create Row
+  description: |
+    Insert a new row into a specified table.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows
+  method: POST
+  scopes:
+    - rows:write
+  tags:
+    - row
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a row
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      data:
+        type: object
+        description: "Row data as key-value pairs"
+    required:
+      - databaseId
+      - tableId
+      - data
+
+- slug: stackby_update_row
+  name: Update Row
+  description: |
+    Update an existing row with new data in a specified table.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}/rows/{rowId}
+  method: PUT
+  scopes:
+    - rows:write
+  tags:
+    - row
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a row
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+      rowId:
+        type: string
+        description: "The unique identifier of the row"
+      data:
+        type: object
+        description: "Updated row data as key-value pairs"
+    required:
+      - databaseId
+      - tableId
+      - rowId
+      - data
+
+- slug: stackby_list_views
+  name: List Views
+  description: |
+    List all views available for a specific table.
+  provider: stackby
+  endpoint: /v1/databases/{databaseId}/tables/{tableId}/views
+  method: GET
+  scopes:
+    - views:read
+  tags:
+    - view
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing views
+    properties:
+      databaseId:
+        type: string
+        description: "The unique identifier of the database"
+      tableId:
+        type: string
+        description: "The unique identifier of the table"
+    required:
+      - databaseId
+      - tableId

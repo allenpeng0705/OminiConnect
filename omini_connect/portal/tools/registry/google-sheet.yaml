@@ -1,0 +1,273 @@
+# Google Sheets Tools - Allowlist
+# Curated subset of Google Sheets API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_sheet_list_spreadsheets   - List spreadsheets
+# 2. google_sheet_get_spreadsheet    - Get spreadsheet details
+# 3. google_sheet_create_spreadsheet - Create spreadsheet
+# 4. google_sheet_get_values         - Get cell values
+# 5. google_sheet_update_values      - Update cell values
+# 6. google_sheet_append_values      - Append values
+# 7. google_sheet_list_sheets       - List sheets
+# 8. google_sheet_batch_update      - Batch update
+# 9. google_sheet_get_dimension     - Get dimension info
+# 10. google_sheet_create_sheet     - Create new sheet
+
+- slug: google_sheet_list_spreadsheets
+  name: List Spreadsheets
+  description: |
+    List spreadsheets in Google Drive.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - spreadsheets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spreadsheets
+    properties: {}
+
+- slug: google_sheet_get_spreadsheet
+  name: Get Spreadsheet
+  description: |
+    Get spreadsheet details.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - spreadsheets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a spreadsheet
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+    required:
+      - spreadsheet_id
+
+- slug: google_sheet_create_spreadsheet
+  name: Create Spreadsheet
+  description: |
+    Create a new spreadsheet.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - spreadsheets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a spreadsheet
+    properties:
+      title:
+        type: string
+        description: "Spreadsheet title"
+      sheets:
+        type: array
+        description: "Sheet titles"
+    required:
+      - title
+
+- slug: google_sheet_get_values
+  name: Get Values
+  description: |
+    Get values from a range.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}/values/{range}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - values
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting values
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      range:
+        type: string
+        description: "Cell range (e.g., Sheet1!A1:B10)"
+    required:
+      - spreadsheet_id
+      - range
+
+- slug: google_sheet_update_values
+  name: Update Values
+  description: |
+    Update cell values.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}/values/{range}
+  method: PUT
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - values
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating values
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      range:
+        type: string
+        description: "Cell range"
+      values:
+        type: array
+        description: "2D array of values"
+    required:
+      - spreadsheet_id
+      - range
+      - values
+
+- slug: google_sheet_append_values
+  name: Append Values
+  description: |
+    Append values to a sheet.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}/values/{range}:append
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - values
+    - append
+  input_schema:
+    type: object
+    description: Parameters for appending values
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      range:
+        type: string
+        description: "Cell range"
+      values:
+        type: array
+        description: "2D array of values"
+    required:
+      - spreadsheet_id
+      - range
+      - values
+
+- slug: google_sheet_list_sheets
+  name: List Sheets
+  description: |
+    List sheets in a spreadsheet.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}?ranges={range}&includeGridData=false
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sheets
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+    required:
+      - spreadsheet_id
+
+- slug: google_sheet_batch_update
+  name: Batch Update
+  description: |
+    Perform batch updates on a spreadsheet.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - update
+  input_schema:
+    type: object
+    description: Parameters for batch update
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      requests:
+        type: array
+        description: "Array of requests"
+    required:
+      - spreadsheet_id
+      - requests
+
+- slug: google_sheet_get_dimension
+  name: Get Dimension
+  description: |
+    Get dimension information.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}/values/{range}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - dimension
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting dimension
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      sheet_id:
+        type: integer
+        description: "Sheet ID"
+    required:
+      - spreadsheet_id
+      - sheet_id
+
+- slug: google_sheet_create_sheet
+  name: Create Sheet
+  description: |
+    Create a new sheet in a spreadsheet.
+  provider: google-sheet
+  endpoint: /v4/spreadsheets/{spreadsheet_id}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/spreadsheets
+  tags:
+    - sheets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a sheet
+    properties:
+      spreadsheet_id:
+        type: string
+        description: "Spreadsheet ID"
+      title:
+        type: string
+        description: "Sheet title"
+    required:
+      - spreadsheet_id
+      - title

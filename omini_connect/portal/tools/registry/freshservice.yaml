@@ -1,0 +1,261 @@
+- slug: freshservice_list_tickets
+  name: List Tickets
+  description: |
+    Retrieve a list of all tickets in the Freshservice system.
+  provider: freshservice
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing tickets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of tickets per page (default: 30, max: 100)"
+      status:
+        type: integer
+        description: "Filter by status: 2=Open, 3=Pending, 4=Resolved, 5=Closed"
+    required: []
+
+- slug: freshservice_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieve details of a specific ticket by ID.
+  provider: freshservice
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a specific ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - id
+
+- slug: freshservice_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new ticket in the Freshservice system.
+  provider: freshservice
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - create
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Ticket creation parameters
+    properties:
+      subject:
+        type: string
+        description: "Ticket subject"
+      description:
+        type: string
+        description: "Ticket description"
+      email:
+        type: string
+        description: "Requester email"
+      priority:
+        type: integer
+        description: "Priority: 1=Low, 2=Medium, 3=High, 4=Urgent"
+      status:
+        type: integer
+        description: "Status: 2=Open, 3=Pending, 4=Resolved, 5=Closed"
+      type:
+        type: string
+        description: "Ticket type: Incident, Service Request, Problem, Change"
+    required:
+      - subject
+
+- slug: freshservice_list_agents
+  name: List Agents
+  description: |
+    Retrieve a list of all agents in the Freshservice system.
+  provider: freshservice
+  endpoint: /agents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing agents
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of agents per page (default: 30, max: 100)"
+      active:
+        type: boolean
+        description: "Filter by active status (default: true)"
+    required: []
+
+- slug: freshservice_get_agent
+  name: Get Agent
+  description: |
+    Retrieve details of a specific agent by ID.
+  provider: freshservice
+  endpoint: /agents/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+  input_schema:
+    type: object
+    description: Parameters for getting a specific agent
+    properties:
+      id:
+        type: integer
+        description: "Agent ID"
+    required:
+      - id
+
+- slug: freshservice_list_assets
+  name: List Assets
+  description: |
+    Retrieve a list of all assets in the Freshservice system.
+  provider: freshservice
+  endpoint: /assets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing assets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of assets per page (default: 30, max: 100)"
+    required: []
+
+- slug: freshservice_get_asset
+  name: Get Asset
+  description: |
+    Retrieve details of a specific asset by ID.
+  provider: freshservice
+  endpoint: /assets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - assets
+  input_schema:
+    type: object
+    description: Parameters for getting a specific asset
+    properties:
+      id:
+        type: integer
+        description: "Asset ID"
+    required:
+      - id
+
+- slug: freshservice_list_problems
+  name: List Problems
+  description: |
+    Retrieve a list of all problems in the Freshservice system.
+  provider: freshservice
+  endpoint: /problems
+  method: GET
+  scopes:
+    - read
+  tags:
+    - problems
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing problems
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of problems per page (default: 30, max: 100)"
+    required: []
+
+- slug: freshservice_get_problem
+  name: Get Problem
+  description: |
+    Retrieve details of a specific problem by ID.
+  provider: freshservice
+  endpoint: /problems/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - problems
+  input_schema:
+    type: object
+    description: Parameters for getting a specific problem
+    properties:
+      id:
+        type: integer
+        description: "Problem ID"
+    required:
+      - id
+
+- slug: freshservice_list_changes
+  name: List Changes
+  description: |
+    Retrieve a list of all changes in the Freshservice system.
+  provider: freshservice
+  endpoint: /changes
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing changes
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      per_page:
+        type: integer
+        description: "Number of changes per page (default: 30, max: 100)"
+    required: []
+
+- slug: freshservice_get_change
+  name: Get Change
+  description: |
+    Retrieve details of a specific change by ID.
+  provider: freshservice
+  endpoint: /changes/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - changes
+  input_schema:
+    type: object
+    description: Parameters for getting a specific change
+    properties:
+      id:
+        type: integer
+        description: "Change ID"
+    required:
+      - id

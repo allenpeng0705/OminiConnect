@@ -1,0 +1,242 @@
+- slug: coscreen_list_rooms
+  name: List Rooms
+  description: |
+    Retrieve all screen sharing rooms in your account.
+  provider: coscreen
+  endpoint: /rooms
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+  input_schema:
+    type: object
+    description: Optional room filters
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive, archived)"
+      limit:
+        type: integer
+        description: "Maximum number of rooms to return"
+    required: []
+
+- slug: coscreen_get_room
+  name: Get Room
+  description: |
+    Get details of a specific screen sharing room.
+  provider: coscreen
+  endpoint: /rooms/{room_id}
+  method: GET
+  scopes:
+    - rooms:read
+  tags:
+    - rooms
+  input_schema:
+    type: object
+    description: Room ID parameter
+    properties:
+      room_id:
+        type: string
+        description: "Unique identifier of the room"
+    required:
+      - room_id
+
+- slug: coscreen_create_room
+  name: Create Room
+  description: |
+    Create a new screen sharing room.
+  provider: coscreen
+  endpoint: /rooms
+  method: POST
+  scopes:
+    - rooms:write
+  tags:
+    - rooms
+  input_schema:
+    type: object
+    description: Room creation parameters
+    properties:
+      name:
+        type: string
+        description: "Name of the room"
+      description:
+        type: string
+        description: "Room description"
+      max_participants:
+        type: integer
+        description: "Maximum number of participants"
+      access_type:
+        type: string
+        description: "Access type (public, private, password)"
+    required:
+      - name
+
+- slug: coscreen_list_participants
+  name: List Participants
+  description: |
+    Retrieve all participants in a specific room.
+  provider: coscreen
+  endpoint: /rooms/{room_id}/participants
+  method: GET
+  scopes:
+    - participants:read
+  tags:
+    - participants
+    - rooms
+  input_schema:
+    type: object
+    description: Room participants parameters
+    properties:
+      room_id:
+        type: string
+        description: "Room identifier"
+      limit:
+        type: integer
+        description: "Maximum number of participants to return"
+    required:
+      - room_id
+
+- slug: coscreen_get_participant
+  name: Get Participant
+  description: |
+    Get details about a specific participant.
+  provider: coscreen
+  endpoint: /participants/{participant_id}
+  method: GET
+  scopes:
+    - participants:read
+  tags:
+    - participants
+  input_schema:
+    type: object
+    description: Participant ID parameter
+    properties:
+      participant_id:
+        type: string
+        description: "Unique identifier of the participant"
+    required:
+      - participant_id
+
+- slug: coscreen_list_recordings
+  name: List Recordings
+  description: |
+    Retrieve all screen recordings in your account.
+  provider: coscreen
+  endpoint: /recordings
+  method: GET
+  scopes:
+    - recordings:read
+  tags:
+    - recordings
+  input_schema:
+    type: object
+    description: Recording filter options
+    properties:
+      room_id:
+        type: string
+        description: "Filter by room ID"
+      limit:
+        type: integer
+        description: "Maximum number of recordings to return"
+    required: []
+
+- slug: coscreen_get_recording
+  name: Get Recording
+  description: |
+    Get metadata and details of a specific recording.
+  provider: coscreen
+  endpoint: /recordings/{recording_id}
+  method: GET
+  scopes:
+    - recordings:read
+  tags:
+    - recordings
+  input_schema:
+    type: object
+    description: Recording ID parameter
+    properties:
+      recording_id:
+        type: string
+        description: "Unique identifier of the recording"
+    required:
+      - recording_id
+
+- slug: coscreen_send_chat_message
+  name: Send Chat Message
+  description: |
+    Send a chat message to a room or participant.
+  provider: coscreen
+  endpoint: /chat/messages
+  method: POST
+  scopes:
+    - chat:write
+  tags:
+    - chat
+  input_schema:
+    type: object
+    description: Chat message parameters
+    properties:
+      room_id:
+        type: string
+        description: "Target room ID"
+      recipient_id:
+        type: string
+        description: "Direct message recipient ID"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - content
+
+- slug: coscreen_list_shares
+  name: List Shares
+  description: |
+    Retrieve all screen shares in a room.
+  provider: coscreen
+  endpoint: /rooms/{room_id}/shares
+  method: GET
+  scopes:
+    - shares:read
+  tags:
+    - shares
+    - rooms
+  input_schema:
+    type: object
+    description: Share listing parameters
+    properties:
+      room_id:
+        type: string
+        description: "Room identifier"
+      limit:
+        type: integer
+        description: "Maximum number of shares to return"
+    required:
+      - room_id
+
+- slug: coscreen_create_share
+  name: Create Share
+  description: |
+    Initiate a screen sharing session in a room.
+  provider: coscreen
+  endpoint: /shares
+  method: POST
+  scopes:
+    - shares:write
+  tags:
+    - shares
+  input_schema:
+    type: object
+    description: Share creation parameters
+    properties:
+      room_id:
+        type: string
+        description: "Room to share in"
+      share_type:
+        type: string
+        description: "Type of share (screen, window, application)"
+      title:
+        type: string
+        description: "Share title or description"
+    required:
+      - room_id

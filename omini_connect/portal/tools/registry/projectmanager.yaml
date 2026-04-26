@@ -1,0 +1,251 @@
+# ProjectManager Tools - Allowlist
+# Curated subset of ProjectManager REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. projectmanager_list_projects       - List projects
+# 2. projectmanager_get_project         - Get project details
+# 3. projectmanager_create_project      - Create a project
+# 4. projectmanager_list_tasks          - List tasks
+# 5. projectmanager_get_task            - Get task details
+# 6. projectmanager_list_teams          - List teams
+# 7. projectmanager_get_team            - Get team details
+# 8. projectmanager_list_timesheets     - List timesheets
+# 9. projectmanager_get_timesheet       - Get timesheet details
+# 10. projectmanager_list_milestones     - List milestones
+
+- slug: projectmanager_list_projects
+  name: List Projects
+  description: |
+    List all projects available.
+  provider: projectmanager
+  endpoint: /api/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Active, Archived, Draft)"
+    required: []
+
+- slug: projectmanager_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: projectmanager
+  endpoint: /api/projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: projectmanager_create_project
+  name: Create Project
+  description: |
+    Create a new project.
+  provider: projectmanager
+  endpoint: /api/projects
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      description:
+        type: string
+        description: "Project description"
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - name
+
+- slug: projectmanager_list_tasks
+  name: List Tasks
+  description: |
+    List tasks in a project or across all tasks.
+  provider: projectmanager
+  endpoint: /api/tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: projectmanager_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a task.
+  provider: projectmanager
+  endpoint: /api/tasks/{taskId}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      taskId:
+        type: string
+        description: "Task ID"
+    required:
+      - taskId
+
+- slug: projectmanager_list_teams
+  name: List Teams
+  description: |
+    List all teams in the account.
+  provider: projectmanager
+  endpoint: /api/teams
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: projectmanager_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a team.
+  provider: projectmanager
+  endpoint: /api/teams/{teamId}
+  method: GET
+  scopes:
+    - teams:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: projectmanager_list_timesheets
+  name: List Timesheets
+  description: |
+    List timesheets for tracking work hours.
+  provider: projectmanager
+  endpoint: /api/timesheets
+  method: GET
+  scopes:
+    - timesheets:read
+  tags:
+    - time-tracking
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing timesheets
+    properties:
+      userId:
+        type: string
+        description: "Filter by user ID"
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: projectmanager_get_timesheet
+  name: Get Timesheet
+  description: |
+    Get detailed information about a timesheet.
+  provider: projectmanager
+  endpoint: /api/timesheets/{timesheetId}
+  method: GET
+  scopes:
+    - timesheets:read
+  tags:
+    - time-tracking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a timesheet
+    properties:
+      timesheetId:
+        type: string
+        description: "Timesheet ID"
+    required:
+      - timesheetId
+
+- slug: projectmanager_list_milestones
+  name: List Milestones
+  description: |
+    List milestones in a project or across all milestones.
+  provider: projectmanager
+  endpoint: /api/milestones
+  method: GET
+  scopes:
+    - milestones:read
+  tags:
+    - milestones
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing milestones
+    properties:
+      projectId:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []

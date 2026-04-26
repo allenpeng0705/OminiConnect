@@ -1,0 +1,274 @@
+# Lob Tools - Allowlist
+# Curated subset of Lob API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lob_list_addresses         - List addresses
+# 2. lob_get_address            - Get address details
+# 3. lob_create_address         - Create an address
+# 4. lob_delete_address         - Delete an address
+# 5. lob_list_letters           - List letters
+# 6. lob_get_letter             - Get letter details
+# 7. lob_create_letter          - Create a letter
+# 8. lob_list_postcards         - List postcards
+# 9. lob_get_postcard           - Get postcard details
+# 10. lob_create_postcard      - Create a postcard
+
+- slug: lob_list_addresses
+  name: List Addresses
+  description: |
+    List all addresses.
+  provider: lob
+  endpoint: /v1/addresses
+  method: GET
+  scopes: []
+  tags:
+    - addresses
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing addresses
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: lob_get_address
+  name: Get Address
+  description: |
+    Get details for a specific address.
+  provider: lob
+  endpoint: /v1/addresses/{address_id}
+  method: GET
+  scopes: []
+  tags:
+    - addresses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an address
+    properties:
+      address_id:
+        type: string
+        description: "Address ID"
+    required:
+      - address_id
+
+- slug: lob_create_address
+  name: Create Address
+  description: |
+    Create a new address.
+  provider: lob
+  endpoint: /v1/addresses
+  method: POST
+  scopes: []
+  tags:
+    - addresses
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an address
+    properties:
+      name:
+        type: string
+        description: "Recipient name"
+      address_line1:
+        type: string
+        description: "Street address"
+      address_city:
+        type: string
+        description: "City"
+      address_state:
+        type: string
+        description: "State"
+      address_zip:
+        type: string
+        description: "ZIP code"
+      address_country:
+        type: string
+        description: "Country"
+    required:
+      - address_line1
+      - address_city
+      - address_state
+      - address_zip
+
+- slug: lob_delete_address
+  name: Delete Address
+  description: |
+    Delete an address.
+  provider: lob
+  endpoint: /v1/addresses/{address_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - addresses
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an address
+    properties:
+      address_id:
+        type: string
+        description: "Address ID"
+    required:
+      - address_id
+
+- slug: lob_list_letters
+  name: List Letters
+  description: |
+    List all letters.
+  provider: lob
+  endpoint: /v1/letters
+  method: GET
+  scopes: []
+  tags:
+    - letters
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing letters
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: lob_get_letter
+  name: Get Letter
+  description: |
+    Get details for a specific letter.
+  provider: lob
+  endpoint: /v1/letters/{letter_id}
+  method: GET
+  scopes: []
+  tags:
+    - letters
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a letter
+    properties:
+      letter_id:
+        type: string
+        description: "Letter ID"
+    required:
+      - letter_id
+
+- slug: lob_create_letter
+  name: Create Letter
+  description: |
+    Create a new letter.
+  provider: lob
+  endpoint: /v1/letters
+  method: POST
+  scopes: []
+  tags:
+    - letters
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a letter
+    properties:
+      to_address:
+        type: object
+        description: "To address object"
+      from_address:
+        type: object
+        description: "From address object"
+      file:
+        type: string
+        description: "HTML or PDF file content"
+    required:
+      - to_address
+      - from_address
+      - file
+
+- slug: lob_list_postcards
+  name: List Postcards
+  description: |
+    List all postcards.
+  provider: lob
+  endpoint: /v1/postcards
+  method: GET
+  scopes: []
+  tags:
+    - postcards
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing postcards
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: lob_get_postcard
+  name: Get Postcard
+  description: |
+    Get details for a specific postcard.
+  provider: lob
+  endpoint: /v1/postcards/{postcard_id}
+  method: GET
+  scopes: []
+  tags:
+    - postcards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a postcard
+    properties:
+      postcard_id:
+        type: string
+        description: "Postcard ID"
+    required:
+      - postcard_id
+
+- slug: lob_create_postcard
+  name: Create Postcard
+  description: |
+    Create a new postcard.
+  provider: lob
+  endpoint: /v1/postcards
+  method: POST
+  scopes: []
+  tags:
+    - postcards
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a postcard
+    properties:
+      to_address:
+        type: object
+        description: "To address object"
+      from_address:
+        type: object
+        description: "From address object"
+      front:
+        type: string
+        description: "Front HTML or image URL"
+      back:
+        type: string
+        description: "Back HTML or image URL"
+    required:
+      - to_address
+      - from_address
+      - front
+      - back

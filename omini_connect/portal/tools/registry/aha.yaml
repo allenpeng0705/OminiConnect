@@ -1,0 +1,310 @@
+# Aha Tools - Allowlist
+# Curated subset of Aha! API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. aha_list_ideas             - List ideas
+# 2. aha_get_idea               - Get idea details
+# 3. aha_create_idea            - Create a new idea
+# 4. aha_list_features           - List features
+# 5. aha_get_feature             - Get feature details
+# 6. aha_create_feature          - Create a new feature
+# 7. aha_list_releases           - List releases
+# 8. aha_get_release             - Get release details
+# 9. aha_list_users              - List users
+# 10. aha_get_user               - Get user details
+
+- slug: aha_list_ideas
+  name: List Ideas
+  description: |
+    List all ideas in Aha!. Filter by product, status, or keyword.
+  provider: aha
+  endpoint: /api/v1/ideas
+  method: GET
+  scopes:
+    - ideas:read
+  tags:
+    - ideas
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing ideas
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      status:
+        type: string
+        description: "Filter by status"
+      keyword:
+        type: string
+        description: "Search keyword"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: aha_get_idea
+  name: Get Idea
+  description: |
+    Get detailed information about a specific idea including title, description, status, and votes.
+  provider: aha
+  endpoint: /api/v1/ideas/{id}
+  method: GET
+  scopes:
+    - ideas:read
+  tags:
+    - ideas
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an idea
+    properties:
+      id:
+        type: string
+        description: "Idea ID"
+    required:
+      - id
+
+- slug: aha_create_idea
+  name: Create Idea
+  description: |
+    Create a new idea in Aha!. Set title, description, product, and initial status.
+  provider: aha
+  endpoint: /api/v1/ideas
+  method: POST
+  scopes:
+    - ideas:write
+  tags:
+    - ideas
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an idea
+    properties:
+      title:
+        type: string
+        description: "Idea title"
+      description:
+        type: string
+        description: "Idea description"
+      product_id:
+        type: string
+        description: "Product ID"
+      status:
+        type: string
+        description: "Initial status"
+    required:
+      - title
+      - product_id
+
+- slug: aha_list_features
+  name: List Features
+  description: |
+    List all features in Aha!. Filter by product, release, status, or keyword.
+  provider: aha
+  endpoint: /api/v1/features
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing features
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      release_id:
+        type: string
+        description: "Filter by release ID"
+      status:
+        type: string
+        description: "Filter by status"
+      keyword:
+        type: string
+        description: "Search keyword"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: aha_get_feature
+  name: Get Feature
+  description: |
+    Get detailed information about a specific feature including name, description, status, and requirements.
+  provider: aha
+  endpoint: /api/v1/features/{id}
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature
+    properties:
+      id:
+        type: string
+        description: "Feature ID"
+    required:
+      - id
+
+- slug: aha_create_feature
+  name: Create Feature
+  description: |
+    Create a new feature in Aha!. Set name, product, release, and description.
+  provider: aha
+  endpoint: /api/v1/features
+  method: POST
+  scopes:
+    - features:write
+  tags:
+    - features
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a feature
+    properties:
+      name:
+        type: string
+        description: "Feature name"
+      product_id:
+        type: string
+        description: "Product ID"
+      release_id:
+        type: string
+        description: "Associated release ID"
+      description:
+        type: string
+        description: "Feature description"
+      status:
+        type: string
+        description: "Initial status"
+    required:
+      - name
+      - product_id
+
+- slug: aha_list_releases
+  name: List Releases
+  description: |
+    List all releases in Aha!. Filter by product, status, or date range.
+  provider: aha
+  endpoint: /api/v1/releases
+  method: GET
+  scopes:
+    - releases:read
+  tags:
+    - releases
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing releases
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      status:
+        type: string
+        description: "Filter by status"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: aha_get_release
+  name: Get Release
+  description: |
+    Get detailed information about a specific release including name, status, dates, and features.
+  provider: aha
+  endpoint: /api/v1/releases/{id}
+  method: GET
+  scopes:
+    - releases:read
+  tags:
+    - releases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a release
+    properties:
+      id:
+        type: string
+        description: "Release ID"
+    required:
+      - id
+
+- slug: aha_list_users
+  name: List Users
+  description: |
+    List all users in Aha!. Filter by product, role, or activity status.
+  provider: aha
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      role:
+        type: string
+        description: "Filter by role"
+      active:
+        type: boolean
+        description: "Filter by active status"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: aha_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including name, email, role, and permissions.
+  provider: aha
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id

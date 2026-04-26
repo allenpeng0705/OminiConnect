@@ -1,0 +1,299 @@
+# Loom Tools - Allowlist
+# Curated subset of Loom API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. loom_list_videos         - List all videos
+# 2. loom_get_video           - Get video details
+# 3. loom_create_video        - Create a new video
+# 4. loom_delete_video        - Delete a video
+# 5. loom_list_workspaces     - List workspaces
+# 6. loom_get_workspace      - Get workspace details
+# 7. loom_list_folders        - List folders
+# 8. loom_get_folder          - Get folder details
+# 9. loom_add_comment         - Add comment to video
+# 10. loom_update_thumbnail   - Update video thumbnail
+
+- slug: loom_list_videos
+  name: List Videos
+  description: |
+    List all videos for the authenticated user.
+    Filter by workspace, folder, or search term.
+  provider: loom
+  endpoint: /videos
+  method: GET
+  scopes:
+    - videos:r
+  tags:
+    - videos
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      workspace_id:
+        type: string
+        description: "Filter by workspace ID"
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      search:
+        type: string
+        description: "Search by title or description"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loom_get_video
+  name: Get Video
+  description: |
+    Get detailed information about a specific video including
+    duration, view count, thumbnail, and sharing settings.
+  provider: loom
+  endpoint: /videos/{videoId}
+  method: GET
+  scopes:
+    - videos:r
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      videoId:
+        type: string
+        description: "Video ID"
+    required:
+      - videoId
+
+- slug: loom_create_video
+  name: Create Video
+  description: |
+    Create a new video entry with title and metadata.
+    For actual video upload, use the upload endpoint.
+  provider: loom
+  endpoint: /videos
+  method: POST
+  scopes:
+    - videos:w
+  tags:
+    - videos
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a video
+    properties:
+      title:
+        type: string
+        description: "Video title"
+      description:
+        type: string
+        description: "Video description"
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+      folder_id:
+        type: string
+        description: "Folder ID"
+      url:
+        type: string
+        description: "Video URL"
+    required:
+      - title
+
+- slug: loom_delete_video
+  name: Delete Video
+  description: |
+    Delete a video permanently. This action cannot be undone.
+  provider: loom
+  endpoint: /videos/{videoId}
+  method: DELETE
+  scopes:
+    - videos:d
+  tags:
+    - videos
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a video
+    properties:
+      videoId:
+        type: string
+        description: "Video ID"
+    required:
+      - videoId
+
+- slug: loom_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces available to the authenticated user.
+    Workspaces contain folders and videos.
+  provider: loom
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - workspaces:r
+  tags:
+    - workspaces
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loom_get_workspace
+  name: Get Workspace
+  description: |
+    Get detailed information about a specific workspace
+    including member list and settings.
+  provider: loom
+  endpoint: /workspaces/{workspaceId}
+  method: GET
+  scopes:
+    - workspaces:r
+  tags:
+    - workspaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      workspaceId:
+        type: string
+        description: "Workspace ID"
+    required:
+      - workspaceId
+
+- slug: loom_list_folders
+  name: List Folders
+  description: |
+    List all folders in a workspace or parent folder.
+    Folders organize videos within a workspace.
+  provider: loom
+  endpoint: /folders
+  method: GET
+  scopes:
+    - folders:r
+  tags:
+    - folders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties:
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+      parent_folder_id:
+        type: string
+        description: "Parent folder ID for nested folders"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loom_get_folder
+  name: Get Folder
+  description: |
+    Get detailed information about a specific folder
+    including contents and subfolder listing.
+  provider: loom
+  endpoint: /folders/{folderId}
+  method: GET
+  scopes:
+    - folders:r
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      folderId:
+        type: string
+        description: "Folder ID"
+    required:
+      - folderId
+
+- slug: loom_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to a video at a specific timestamp.
+    Comments can be text or time-linked.
+  provider: loom
+  endpoint: /videos/{videoId}/comments
+  method: POST
+  scopes:
+    - comments:w
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a comment
+    properties:
+      videoId:
+        type: string
+        description: "Video ID"
+      text:
+        type: string
+        description: "Comment text"
+      timestamp:
+        type: number
+        description: "Video timestamp in seconds for time-linked comments"
+    required:
+      - videoId
+      - text
+
+- slug: loom_update_thumbnail
+  name: Update Thumbnail
+  description: |
+    Update the thumbnail image for a video.
+    Can specify a timestamp to capture frame or upload custom image.
+  provider: loom
+  endpoint: /videos/{videoId}/thumbnail
+  method: PATCH
+  scopes:
+    - videos:w
+  tags:
+    - videos
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating thumbnail
+    properties:
+      videoId:
+        type: string
+        description: "Video ID"
+      timestamp:
+        type: number
+        description: "Capture frame at this timestamp (seconds)"
+      image_url:
+        type: string
+        description: "URL of custom thumbnail image"
+    required:
+      - videoId

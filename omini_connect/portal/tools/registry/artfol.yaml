@@ -1,0 +1,311 @@
+# Artfol Tools - Allowlist
+# Curated subset of the Artfol API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. artfol_list_posts          - List posts from followed users or global feed
+# 2. artfol_get_post           - Get details of a specific post
+# 3. artfol_create_post        - Create a new post with image and description
+# 4. artfol_like_post          - Like a post
+# 5. artfol_comment_on_post    - Add a comment to a post
+# 6. artfol_list_users         - List users (followers, following, or search)
+# 7. artfol_get_user           - Get user profile details
+# 8. artfol_follow_user        - Follow a user
+# 9. artfol_unfollow_user      - Unfollow a user
+# 10. artfol_list_notifications - List notifications for the authenticated user
+
+- slug: artfol_list_posts
+  name: List Posts
+  description: |
+    List posts from the authenticated user's feed or from a specific user.
+    Returns posts with metadata including images, descriptions, likes, and comments count.
+  provider: artfol
+  endpoint: /v1/posts
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - feed
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      user_id:
+        type: string
+        description: "Filter posts by user ID (optional)"
+      feed_type:
+        type: string
+        description: "Feed type: following or global"
+        enum: [following, global]
+        default: following
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 50)"
+        default: 20
+    required: []
+
+- slug: artfol_get_post
+  name: Get Post
+  description: |
+    Get details of a specific post including images, description, like count, and comments.
+    Use this to read the full content of a post before interacting with it.
+  provider: artfol
+  endpoint: /v1/posts/{post_id}
+  method: GET
+  scopes:
+    - posts:read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "Post ID"
+    required:
+      - post_id
+
+- slug: artfol_create_post
+  name: Create Post
+  description: |
+    Create a new post with one or more images and an optional description.
+    Use this to publish artwork or photos to the authenticated user's profile.
+  provider: artfol
+  endpoint: /v1/posts
+  method: POST
+  scopes:
+    - posts:write
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      images:
+        type: array
+        items:
+          type: string
+        description: "Array of image URLs or base64 encoded images (required, max 5)"
+      description:
+        type: string
+        description: "Post description (optional, max 2000 characters)"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tags to add to the post"
+      sensitivity:
+        type: string
+        description: "Content sensitivity: none, mature, or explicit"
+        enum: [none, mature, explicit]
+        default: none
+    required:
+      - images
+
+- slug: artfol_like_post
+  name: Like Post
+  description: |
+    Like a specific post. Liking a post increases its visibility and shows appreciation to the creator.
+    Use this to engage with content and support other artists.
+  provider: artfol
+  endpoint: /v1/posts/{post_id}/like
+  method: POST
+  scopes:
+    - posts:write
+  tags:
+    - posts
+    - like
+    - engagement
+  input_schema:
+    type: object
+    description: Parameters for liking a post
+    properties:
+      post_id:
+        type: string
+        description: "Post ID to like"
+    required:
+      - post_id
+
+- slug: artfol_comment_on_post
+  name: Comment on Post
+  description: |
+    Add a comment to a post. Comments can include text and are visible to all users.
+    Use this to engage in discussions or give feedback on artwork.
+  provider: artfol
+  endpoint: /v1/posts/{post_id}/comments
+  method: POST
+  scopes:
+    - comments:write
+  tags:
+    - posts
+    - comments
+    - engagement
+  input_schema:
+    type: object
+    description: Parameters for commenting on a post
+    properties:
+      post_id:
+        type: string
+        description: "Post ID to comment on"
+      content:
+        type: string
+        description: "Comment text (required, max 500 characters)"
+      parent_id:
+        type: string
+        description: "Parent comment ID for replies (optional)"
+    required:
+      - post_id
+      - content
+
+- slug: artfol_list_users
+  name: List Users
+  description: |
+    List users by relationship (followers, following) or search by username.
+    Use this to find artists, view followers, or discover new accounts.
+  provider: artfol
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - search
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      user_id:
+        type: string
+        description: "Get followers/following for a specific user"
+      relation:
+        type: string
+        description: "User relation type: followers or following"
+        enum: [followers, following]
+      search:
+        type: string
+        description: "Search users by username or display name"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: artfol_get_user
+  name: Get User
+  description: |
+    Get a user's profile including bio, avatar, post count, follower count, and following count.
+    Use this to learn more about an artist before following or interacting.
+  provider: artfol
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (use 'me' for authenticated user)"
+    required:
+      - user_id
+
+- slug: artfol_follow_user
+  name: Follow User
+  description: |
+    Follow a user. Following a user adds their posts to your feed.
+    Use this to stay updated on an artist's new work.
+  provider: artfol
+  endpoint: /v1/users/{user_id}/follow
+  method: POST
+  scopes:
+    - users:write
+  tags:
+    - users
+    - social
+    - follow
+  input_schema:
+    type: object
+    description: Parameters for following a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID to follow"
+    required:
+      - user_id
+
+- slug: artfol_unfollow_user
+  name: Unfollow User
+  description: |
+    Unfollow a user. Their posts will no longer appear in your feed.
+    Use this to stop receiving updates from an artist.
+  provider: artfol
+  endpoint: /v1/users/{user_id}/follow
+  method: DELETE
+  scopes:
+    - users:write
+  tags:
+    - users
+    - social
+  input_schema:
+    type: object
+    description: Parameters for unfollowing a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID to unfollow"
+    required:
+      - user_id
+
+- slug: artfol_list_notifications
+  name: List Notifications
+  description: |
+    List notifications for the authenticated user including likes, comments, follows, and mentions.
+    Use this to stay updated on interactions with your posts and profile.
+  provider: artfol
+  endpoint: /v1/notifications
+  method: GET
+  scopes:
+    - notifications:read
+  tags:
+    - notifications
+    - engagement
+  input_schema:
+    type: object
+    description: Parameters for listing notifications
+    properties:
+      type:
+        type: string
+        description: "Filter by notification type"
+        enum: [like, comment, follow, mention, all]
+        default: all
+      unread_only:
+        type: boolean
+        description: "Only show unread notifications"
+        default: false
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []

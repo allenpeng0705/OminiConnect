@@ -1,0 +1,248 @@
+# Kintone User API Tools - Allowlist
+# Curated subset of Kintone User API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. kintone_user_api_list_users      - List users
+# 2. kintone_user_api_get_user       - Get user details
+# 3. kintone_user_api_list_departments - List departments
+# 4. kintone_user_api_get_department - Get department details
+# 5. kintone_user_api_list_groups    - List groups
+# 6. kintone_user_api_get_group     - Get group details
+# 7. kintone_user_api_get_organizations - Get organization
+# 8. kintone_user_api_list_employees  - List employees
+# 9. kintone_user_api_get_user_organizations - Get user organizations
+# 10. kintone_user_api_get_user_groups - Get user groups
+
+- slug: kintone_user_api_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: kintone-user-api
+  endpoint: /v1/users.json
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      size:
+        type: integer
+        description: "Number of results (default 100)"
+        default: 100
+    required: []
+
+- slug: kintone_user_api_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: kintone-user-api
+  endpoint: /v1/users/{user_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: kintone_user_api_list_departments
+  name: List Departments
+  description: |
+    List all departments.
+  provider: kintone-user-api
+  endpoint: /v1/departments.json
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      size:
+        type: integer
+        description: "Number of results"
+        default: 100
+    required: []
+
+- slug: kintone_user_api_get_department
+  name: Get Department
+  description: |
+    Get details for a specific department.
+  provider: kintone-user-api
+  endpoint: /v1/departments/{department_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      department_id:
+        type: string
+        description: "Department ID"
+    required:
+      - department_id
+
+- slug: kintone_user_api_list_groups
+  name: List Groups
+  description: |
+    List all groups.
+  provider: kintone-user-api
+  endpoint: /v1/groups.json
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      size:
+        type: integer
+        description: "Number of results"
+        default: 100
+    required: []
+
+- slug: kintone_user_api_get_group
+  name: Get Group
+  description: |
+    Get details for a specific group.
+  provider: kintone-user-api
+  endpoint: /v1/groups/{group_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: kintone_user_api_get_organizations
+  name: Get Organizations
+  description: |
+    Get organization information.
+  provider: kintone-user-api
+  endpoint: /v1/organizations.json
+  method: GET
+  scopes: []
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting organizations
+    properties:
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: kintone_user_api_list_employees
+  name: List Employees
+  description: |
+    List all employees.
+  provider: kintone-user-api
+  endpoint: /v1/employees.json
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      size:
+        type: integer
+        description: "Number of results"
+        default: 100
+    required: []
+
+- slug: kintone_user_api_get_user_organizations
+  name: Get User Organizations
+  description: |
+    Get organizations for a user.
+  provider: kintone-user-api
+  endpoint: /v1/userOrganizations.json
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user organizations
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: kintone_user_api_get_user_groups
+  name: Get User Groups
+  description: |
+    Get groups for a user.
+  provider: kintone-user-api
+  endpoint: /v1/userGroups.json
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user groups
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id

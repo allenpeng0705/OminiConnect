@@ -1,0 +1,245 @@
+# Checkout.com Tools - Allowlist
+# Curated subset of the Checkout.com API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. checkout_com_list_payments          - List payments
+# 2. checkout_com_get_payment           - Get payment details
+# 3. checkout_com_create_payment        - Create a payment
+# 4. checkout_com_capture_payment       - Capture a payment
+# 5. checkout_com_void_payment          - Void a payment
+# 6. checkout_com_list_refunds          - List refunds
+# 7. checkout_com_get_refund           - Get refund details
+# 8. checkout_com_list_chargebacks      - List chargebacks
+# 9. checkout_com_get_chargeback       - Get chargeback details
+# 10. checkout_com_list_transactions   - List transactions
+
+- slug: checkout_com_list_payments
+  name: List Payments
+  description: |
+    List all payments.
+  provider: checkout-com
+  endpoint: /payments
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []
+
+- slug: checkout_com_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment.
+  provider: checkout-com
+  endpoint: /payments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: checkout_com_create_payment
+  name: Create Payment
+  description: |
+    Create a new payment.
+  provider: checkout-com
+  endpoint: /payments
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a payment
+    properties:
+      amount:
+        type: integer
+        description: "Amount in minor currency units"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD, EUR)"
+      reference:
+        type: string
+        description: "Payment reference"
+      payment_type:
+        type: string
+        description: "Payment type"
+    required:
+      - amount
+      - currency
+
+- slug: checkout_com_capture_payment
+  name: Capture Payment
+  description: |
+    Capture an authorized payment.
+  provider: checkout-com
+  endpoint: /payments/{id}/captures
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for capturing a payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+      amount:
+        type: integer
+        description: "Amount to capture"
+    required:
+      - id
+
+- slug: checkout_com_void_payment
+  name: Void Payment
+  description: |
+    Void an authorized payment.
+  provider: checkout-com
+  endpoint: /payments/{id}/voids
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for voiding a payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: checkout_com_list_refunds
+  name: List Refunds
+  description: |
+    List all refunds.
+  provider: checkout-com
+  endpoint: /payments/{paymentId}/refunds
+  method: GET
+  scopes: []
+  tags:
+    - refunds
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing refunds
+    properties:
+      paymentId:
+        type: string
+        description: "Payment ID"
+    required:
+      - paymentId
+
+- slug: checkout_com_get_refund
+  name: Get Refund
+  description: |
+    Get details of a specific refund.
+  provider: checkout-com
+  endpoint: /refunds/{id}
+  method: GET
+  scopes: []
+  tags:
+    - refunds
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a refund
+    properties:
+      id:
+        type: string
+        description: "Refund ID"
+    required:
+      - id
+
+- slug: checkout_com_list_chargebacks
+  name: List Chargebacks
+  description: |
+    List all chargebacks.
+  provider: checkout-com
+  endpoint: /chargebacks
+  method: GET
+  scopes: []
+  tags:
+    - chargebacks
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing chargebacks
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: checkout_com_get_chargeback
+  name: Get Chargeback
+  description: |
+    Get details of a specific chargeback.
+  provider: checkout-com
+  endpoint: /chargebacks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - chargebacks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a chargeback
+    properties:
+      id:
+        type: string
+        description: "Chargeback ID"
+    required:
+      - id
+
+- slug: checkout_com_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: checkout-com
+  endpoint: /transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      cursor:
+        type: string
+        description: "Pagination cursor"
+    required: []

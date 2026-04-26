@@ -1,0 +1,236 @@
+# Databricks Account Level Tools - Allowlist
+# Curated subset of the Databricks Account API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. databricks_account_list_workspaces    - List workspaces
+# 2. databricks_account_get_workspace     - Get workspace details
+# 3. databricks_account_list_users         - List account users
+# 4. databricks_account_get_user           - Get user details
+# 5. databricks_account_list_groups         - List account groups
+# 6. databricks_account_get_group           - Get group details
+# 7. databricks_account_list_clusters       - List clusters
+# 8. databricks_account_get_cluster         - Get cluster details
+# 9. databricks_account_list_jobs           - List jobs
+# 10. databricks_account_get_job           - Get job details
+
+- slug: databricks_account_list_workspaces
+  name: List Workspaces
+  description: |
+    List all Databricks workspaces in the account.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/workspaces
+  method: GET
+  scopes: []
+  tags:
+    - workspaces
+    - infrastructure
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_account_get_workspace
+  name: Get Workspace
+  description: |
+    Get details of a specific Databricks workspace.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/workspaces/{workspaceId}
+  method: GET
+  scopes: []
+  tags:
+    - workspaces
+    - infrastructure
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      workspace_id:
+        type: string
+        description: "Workspace ID"
+    required:
+      - workspace_id
+
+- slug: databricks_account_list_users
+  name: List Users
+  description: |
+    List all users in the Databricks account.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - iam
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_account_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including groups and permissions.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - iam
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: databricks_account_list_groups
+  name: List Groups
+  description: |
+    List all groups in the Databricks account.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - iam
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_account_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including members.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/groups/{groupId}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - iam
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Group ID"
+    required:
+      - group_id
+
+- slug: databricks_account_list_clusters
+  name: List Clusters
+  description: |
+    List all clusters in the account.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/clusters
+  method: GET
+  scopes: []
+  tags:
+    - clusters
+    - compute
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clusters
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_account_get_cluster
+  name: Get Cluster
+  description: |
+    Get details of a specific cluster including configuration and status.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/clusters/{clusterId}
+  method: GET
+  scopes: []
+  tags:
+    - clusters
+    - compute
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cluster
+    properties:
+      cluster_id:
+        type: string
+        description: "Cluster ID"
+    required:
+      - cluster_id
+
+- slug: databricks_account_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in the account.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - workflows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: databricks_account_get_job
+  name: Get Job
+  description: |
+    Get details of a specific job including schedule and tasks.
+  provider: databricks-account
+  endpoint: /2.0/accounts/{accountId}/jobs/{jobId}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - workflows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id

@@ -1,0 +1,236 @@
+- slug: upsun_list_projects
+  name: List Projects
+  description: |
+    List all projects in your Upsun account.
+  provider: upsun
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: upsun_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project by ID.
+  provider: upsun
+  endpoint: /projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The ID of the project"
+    required:
+      - projectId
+
+- slug: upsun_create_project
+  name: Create Project
+  description: |
+    Create a new project on Upsun.
+  provider: upsun
+  endpoint: /projects
+  method: POST
+  scopes:
+    - projects:write
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      region:
+        type: string
+        description: "Region (e.g., us-2.platform.sh, eu-2.platform.sh)"
+      title:
+        type: string
+        description: "Project title"
+      repository:
+        type: string
+        description: "Git repository URL"
+      plan:
+        type: string
+        description: "Plan tier (development, standard, performance)"
+    required:
+      - region
+      - title
+
+- slug: upsun_list_apps
+  name: List Apps
+  description: |
+    List all applications in a project.
+  provider: upsun
+  endpoint: /projects/{projectId}/apps
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - apps
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: upsun_get_app
+  name: Get App
+  description: |
+    Get details for a specific application.
+  provider: upsun
+  endpoint: /projects/{projectId}/apps/{appId}
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - apps
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      appId:
+        type: string
+        description: "Application ID"
+    required:
+      - projectId
+      - appId
+
+- slug: upsun_list_services
+  name: List Services
+  description: |
+    List all services (databases, caches, search) in a project.
+  provider: upsun
+  endpoint: /projects/{projectId}/services
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId
+
+- slug: upsun_get_service
+  name: Get Service
+  description: |
+    Get details for a specific service.
+  provider: upsun
+  endpoint: /projects/{projectId}/services/{serviceId}
+  method: GET
+  scopes:
+    - services:read
+  tags:
+    - services
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      serviceId:
+        type: string
+        description: "Service ID"
+    required:
+      - projectId
+      - serviceId
+
+- slug: upsun_list_deployments
+  name: List Deployments
+  description: |
+    List all deployments for an environment.
+  provider: upsun
+  endpoint: /projects/{projectId}/environments/{environmentId}/deployments
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+  input_schema:
+    type: object
+    description: Parameters for listing deployments
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+      environmentId:
+        type: string
+        description: "Environment ID"
+      limit:
+        type: integer
+        description: "Maximum number of deployments to return"
+    required:
+      - projectId
+      - environmentId
+
+- slug: upsun_get_deployment
+  name: Get Deployment
+  description: |
+    Get details for a specific deployment.
+  provider: upsun
+  endpoint: /deployments/{deploymentId}
+  method: GET
+  scopes:
+    - deployments:read
+  tags:
+    - deployments
+  input_schema:
+    type: object
+    description: Parameters for getting a deployment
+    properties:
+      deploymentId:
+        type: string
+        description: "The ID of the deployment"
+    required:
+      - deploymentId
+
+- slug: upsun_list_domains
+  name: List Domains
+  description: |
+    List all domains for a project.
+  provider: upsun
+  endpoint: /projects/{projectId}/domains
+  method: GET
+  scopes:
+    - domains:read
+  tags:
+    - domains
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      projectId:
+        type: string
+        description: "Project ID"
+    required:
+      - projectId

@@ -1,0 +1,227 @@
+# PreciseFP Tools - Allowlist
+# Curated subset of PreciseFP API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. precisefp_list_clients            - List clients
+# 2. precisefp_get_client             - Get client details
+# 3. precisefp_list_assets            - List assets
+# 4. precisefp_get_asset              - Get asset details
+# 5. precisefp_list_liabilities       - List liabilities
+# 6. precisefp_get_liability          - Get liability details
+# 7. precisefp_list_goals             - List financial goals
+# 8. precisefp_get_goal               - Get goal details
+# 9. precisefp_list_documents         - List documents
+# 10. precisefp_get_user              - Get user info
+
+- slug: precisefp_list_clients
+  name: List Clients
+  description: |
+    List all clients in the organization.
+  provider: precisefp
+  endpoint: /api/clients
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: precisefp_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific client.
+  provider: precisefp
+  endpoint: /api/clients/{clientId}
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      clientId:
+        type: string
+        description: "Client ID"
+    required:
+      - clientId
+
+- slug: precisefp_list_assets
+  name: List Assets
+  description: |
+    List all assets in the organization.
+  provider: precisefp
+  endpoint: /api/assets
+  method: GET
+  scopes: []
+  tags:
+    - assets
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      clientId:
+        type: string
+        description: "Filter by client ID"
+    required: []
+
+- slug: precisefp_get_asset
+  name: Get Asset
+  description: |
+    Get detailed information about a specific asset.
+  provider: precisefp
+  endpoint: /api/assets/{assetId}
+  method: GET
+  scopes: []
+  tags:
+    - assets
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      assetId:
+        type: string
+        description: "Asset ID"
+    required:
+      - assetId
+
+- slug: precisefp_list_liabilities
+  name: List Liabilities
+  description: |
+    List all liabilities in the organization.
+  provider: precisefp
+  endpoint: /api/liabilities
+  method: GET
+  scopes: []
+  tags:
+    - liabilities
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing liabilities
+    properties:
+      clientId:
+        type: string
+        description: "Filter by client ID"
+    required: []
+
+- slug: precisefp_get_liability
+  name: Get Liability
+  description: |
+    Get detailed information about a specific liability.
+  provider: precisefp
+  endpoint: /api/liabilities/{liabilityId}
+  method: GET
+  scopes: []
+  tags:
+    - liabilities
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a liability
+    properties:
+      liabilityId:
+        type: string
+        description: "Liability ID"
+    required:
+      - liabilityId
+
+- slug: precisefp_list_goals
+  name: List Goals
+  description: |
+    List all financial goals.
+  provider: precisefp
+  endpoint: /api/goals
+  method: GET
+  scopes: []
+  tags:
+    - goals
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing goals
+    properties:
+      clientId:
+        type: string
+        description: "Filter by client ID"
+    required: []
+
+- slug: precisefp_get_goal
+  name: Get Goal
+  description: |
+    Get detailed information about a specific goal.
+  provider: precisefp
+  endpoint: /api/goals/{goalId}
+  method: GET
+  scopes: []
+  tags:
+    - goals
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a goal
+    properties:
+      goalId:
+        type: string
+        description: "Goal ID"
+    required:
+      - goalId
+
+- slug: precisefp_list_documents
+  name: List Documents
+  description: |
+    List all documents.
+  provider: precisefp
+  endpoint: /api/documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      clientId:
+        type: string
+        description: "Filter by client ID"
+    required: []
+
+- slug: precisefp_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: precisefp
+  endpoint: /api/user
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []

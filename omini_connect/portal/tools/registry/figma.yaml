@@ -1,0 +1,288 @@
+# Figma Tools - Allowlist
+# Curated subset of the Figma API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. figma_list_files         - List files in a project
+# 2. figma_get_file          - Get file details
+# 3. figma_get_file_nodes    - Get specific nodes from a file
+# 4. figma_list_comments     - List comments on a file
+# 5. figma_get_comment      - Get comment details
+# 6. figma_post_comment      - Post a comment on a file
+# 7. figma_list_components   - List components in a team
+# 8. figma_get_component     - Get component details
+# 9. figma_list_styles       - List styles in a team
+# 10. figma_get_style        - Get style details
+
+- slug: figma_list_files
+  name: List Files
+  description: |
+    List all files in a Figma project. Returns file names, keys, and thumbnails.
+  provider: figma
+  endpoint: /projects/{project_id}/files
+  method: GET
+  scopes:
+    - file_comments:read
+  tags:
+    - files
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      project_id:
+        type: string
+        description: "Figma project ID (required)"
+    required:
+      - project_id
+
+- slug: figma_get_file
+  name: Get File
+  description: |
+    Get full details of a Figma file including pages, frames, and components.
+  provider: figma
+  endpoint: /files/{file_key}
+  method: GET
+  scopes:
+    - file_comments:read
+  tags:
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_key:
+        type: string
+        description: "Figma file key (required)"
+      version:
+        type: string
+        description: "Specific version to retrieve"
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Node IDs to retrieve specific elements"
+      depth:
+        type: integer
+        description: "Depth of the node tree to retrieve"
+    required:
+      - file_key
+
+- slug: figma_get_file_nodes
+  name: Get File Nodes
+  description: |
+    Get specific nodes from a Figma file by their IDs.
+  provider: figma
+  endpoint: /files/{file_key}/nodes
+  method: GET
+  scopes:
+    - file_comments:read
+  tags:
+    - files
+    - nodes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting file nodes
+    properties:
+      file_key:
+        type: string
+        description: "Figma file key (required)"
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Node IDs to retrieve (required)"
+    required:
+      - file_key
+      - ids
+
+- slug: figma_list_comments
+  name: List Comments
+  description: |
+    List all comments on a Figma file. Returns comment text, author, and timestamp.
+  provider: figma
+  endpoint: /files/{file_key}/comments
+  method: GET
+  scopes:
+    - file_comments:read
+  tags:
+    - comments
+    - files
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      file_key:
+        type: string
+        description: "Figma file key (required)"
+    required:
+      - file_key
+
+- slug: figma_get_comment
+  name: Get Comment
+  description: |
+    Get details about a specific comment on a Figma file.
+  provider: figma
+  endpoint: /comments/{comment_id}
+  method: GET
+  scopes:
+    - file_comments:read
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID (required)"
+    required:
+      - comment_id
+
+- slug: figma_post_comment
+  name: Post Comment
+  description: |
+    Post a comment on a Figma file. Include message text and optional position.
+  provider: figma
+  endpoint: /files/{file_key}/comments
+  method: POST
+  scopes:
+    - file_comments:write
+  tags:
+    - comments
+    - files
+    - write
+  input_schema:
+    type: object
+    description: Parameters for posting a comment
+    properties:
+      file_key:
+        type: string
+        description: "Figma file key (required)"
+      message:
+        type: string
+        description: "Comment message (required)"
+      client_meta:
+        type: object
+        description: "Optional position or region for the comment"
+    required:
+      - file_key
+      - message
+
+- slug: figma_list_components
+  name: List Components
+  description: |
+    List all components in a Figma team library. Returns component names, keys, and descriptions.
+  provider: figma
+  endpoint: /teams/{team_id}/components
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - components
+    - library
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing components
+    properties:
+      team_id:
+        type: string
+        description: "Figma team ID (required)"
+      page_size:
+        type: integer
+        description: "Number of components to return"
+        default: 50
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required:
+      - team_id
+
+- slug: figma_get_component
+  name: Get Component
+  description: |
+    Get details about a specific Figma component including its properties and variants.
+  provider: figma
+  endpoint: /components/{key}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - components
+    - library
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a component
+    properties:
+      key:
+        type: string
+        description: "Component key (required)"
+      team_id:
+        type: string
+        description: "Figma team ID"
+    required:
+      - key
+
+- slug: figma_list_styles
+  name: List Styles
+  description: |
+    List all styles in a Figma team library. Returns style names, keys, and types.
+  provider: figma
+  endpoint: /teams/{team_id}/styles
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - styles
+    - library
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing styles
+    properties:
+      team_id:
+        type: string
+        description: "Figma team ID (required)"
+      page_size:
+        type: integer
+        description: "Number of styles to return"
+        default: 50
+    required:
+      - team_id
+
+- slug: figma_get_style
+  name: Get Style
+  description: |
+    Get details about a specific Figma style including its properties and metadata.
+  provider: figma
+  endpoint: /styles/{key}
+  method: GET
+  scopes:
+    - library:read
+  tags:
+    - styles
+    - library
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a style
+    properties:
+      key:
+        type: string
+        description: "Style key (required)"
+      team_id:
+        type: string
+        description: "Figma team ID"
+    required:
+      - key

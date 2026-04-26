@@ -1,0 +1,243 @@
+- slug: engage_list_customers
+  name: List Customers
+  description: |
+    Retrieve a paginated list of all customers in the engagement platform.
+  provider: engage
+  endpoint: /customers
+  method: GET
+  scopes:
+    - customers_read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of records per page"
+    required: []
+
+- slug: engage_get_customer
+  name: Get Customer
+  description: |
+    Retrieve detailed information for a specific customer by ID.
+  provider: engage
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - customers_read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: engage_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in the engagement platform.
+  provider: engage
+  endpoint: /customers
+  method: POST
+  scopes:
+    - customers_write
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      name:
+        type: string
+        description: "Name of the customer"
+      email:
+        type: string
+        description: "Email address of the customer"
+      phone:
+        type: string
+        description: "Phone number of the customer"
+    required:
+      - name
+      - email
+
+- slug: engage_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve a list of all customer conversations.
+  provider: engage
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversations_read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by conversation status (open, closed)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: engage_get_conversation
+  name: Get Conversation
+  description: |
+    Retrieve detailed information for a specific conversation by ID.
+  provider: engage
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversations_read
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: engage_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation for a customer.
+  provider: engage
+  endpoint: /conversations
+  method: POST
+  scopes:
+    - conversations_write
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      customer_id:
+        type: string
+        description: "ID of the customer"
+      subject:
+        type: string
+        description: "Subject of the conversation"
+      message:
+        type: string
+        description: "Initial message content"
+    required:
+      - customer_id
+      - subject
+      - message
+
+- slug: engage_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve a list of all customer engagement campaigns.
+  provider: engage
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaigns_read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by campaign status (active, paused, completed)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: engage_get_campaign
+  name: Get Campaign
+  description: |
+    Retrieve detailed information for a specific campaign by ID.
+  provider: engage
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - campaigns_read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - id
+
+- slug: engage_send_email
+  name: Send Email
+  description: |
+    Send an email to a customer using a template.
+  provider: engage
+  endpoint: /emails/send
+  method: POST
+  scopes:
+    - emails_write
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Parameters for sending an email
+    properties:
+      customer_id:
+        type: string
+        description: "ID of the customer to send to"
+      template_id:
+        type: string
+        description: "ID of the email template to use"
+      subject:
+        type: string
+        description: "Email subject line"
+      body:
+        type: string
+        description: "Email body content"
+    required:
+      - customer_id
+      - template_id
+
+- slug: engage_get_email_status
+  name: Get Email Status
+  description: |
+    Retrieve the delivery status of a sent email.
+  provider: engage
+  endpoint: /emails/{id}/status
+  method: GET
+  scopes:
+    - emails_read
+  tags:
+    - emails
+  input_schema:
+    type: object
+    description: Parameters for getting email status
+    properties:
+      id:
+        type: string
+        description: "Email message ID"
+    required:
+      - id

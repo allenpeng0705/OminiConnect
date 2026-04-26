@@ -1,0 +1,258 @@
+# DocuWare Tools - Allowlist
+# Curated subset of the DocuWare API for AI agent use.
+# Two-Step auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. docuware_list_cabinets              - List cabinets
+# 2. docuware_get_cabinet              - Get cabinet details
+# 3. docuware_list_documents            - List documents
+# 4. docuware_get_document              - Get document details
+# 5. docuware_search_documents          - Search documents
+# 6. docuware_list_folders              - List folders
+# 7. docuware_get_folder                - Get folder details
+# 8. docuware_list_indexes              - List index fields
+# 9. docuware_create_document           - Upload a document
+# 10. docuware_get_user                - Get user details
+
+- slug: docuware_list_cabinets
+  name: List Cabinets
+  description: |
+    List all DocuWare cabinets (document repositories).
+  provider: docuware
+  endpoint: /Cabinets
+  method: GET
+  scopes: []
+  tags:
+    - cabinets
+    - document-management
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing cabinets
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: docuware_get_cabinet
+  name: Get Cabinet
+  description: |
+    Get details of a specific cabinet.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}
+  method: GET
+  scopes: []
+  tags:
+    - cabinets
+    - document-management
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a cabinet
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+    required:
+      - cabinet_id
+
+- slug: docuware_list_documents
+  name: List Documents
+  description: |
+    List all documents in a cabinet.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - document-management
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - cabinet_id
+
+- slug: docuware_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Documents/{document_id}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - document-management
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - cabinet_id
+      - document_id
+
+- slug: docuware_search_documents
+  name: Search Documents
+  description: |
+    Search documents using query expressions.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Documents/Search
+  method: POST
+  scopes: []
+  tags:
+    - search
+    - document-management
+    - find
+  input_schema:
+    type: object
+    description: Parameters for searching documents
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+      query:
+        type: string
+        description: "Search query expression"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+    required:
+      - cabinet_id
+      - query
+
+- slug: docuware_list_folders
+  name: List Folders
+  description: |
+    List all folders in a cabinet.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Folders
+  method: GET
+  scopes: []
+  tags:
+    - folders
+    - document-management
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+    required:
+      - cabinet_id
+
+- slug: docuware_get_folder
+  name: Get Folder
+  description: |
+    Get details of a specific folder.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Folders/{folder_id}
+  method: GET
+  scopes: []
+  tags:
+    - folders
+    - document-management
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+      folder_id:
+        type: string
+        description: "Folder ID"
+    required:
+      - cabinet_id
+      - folder_id
+
+- slug: docuware_list_indexes
+  name: List Indexes
+  description: |
+    List all index fields for a cabinet.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Indexes
+  method: GET
+  scopes: []
+  tags:
+    - indexes
+    - document-management
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing indexes
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+    required:
+      - cabinet_id
+
+- slug: docuware_create_document
+  name: Create Document
+  description: |
+    Upload a new document to a cabinet.
+  provider: docuware
+  endpoint: /Cabinets/{cabinet_id}/Documents
+  method: POST
+  scopes: []
+  tags:
+    - documents
+    - document-management
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      cabinet_id:
+        type: string
+        description: "Cabinet ID"
+      file_name:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "Document content (base64)"
+    required:
+      - cabinet_id
+      - file_name
+
+- slug: docuware_get_user
+  name: Get User
+  description: |
+    Get details of the current user.
+  provider: docuware
+  endpoint: /UserInfo
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}

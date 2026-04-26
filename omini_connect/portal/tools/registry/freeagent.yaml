@@ -1,0 +1,222 @@
+# Freeagent Tools - Allowlist
+# Curated subset of Freeagent API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freeagent_list_users           - List users
+# 2. freeagent_get_user            - Get user details
+# 3. freeagent_list_contacts       - List contacts
+# 4. freeagent_get_contact        - Get contact details
+# 5. freeagent_list_invoices       - List invoices
+# 6. freeagent_get_invoice        - Get invoice details
+# 7. freeagent_list_bank_accounts - List bank accounts
+# 8. freeagent_get_bank_account   - Get bank account details
+# 9. freeagent_list_projects      - List projects
+# 10. freeagent_get_project      - Get project details
+
+- slug: freeagent_list_users
+  name: List Users
+  description: |
+    List all users in the account.
+  provider: freeagent
+  endpoint: /v2/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: freeagent_get_user
+  name: Get User
+  description: |
+    Get details of the authenticated user.
+  provider: freeagent
+  endpoint: /v2/me
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: freeagent_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: freeagent
+  endpoint: /v2/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freeagent_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: freeagent
+  endpoint: /v2/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: freeagent_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: freeagent
+  endpoint: /v2/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: freeagent_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: freeagent
+  endpoint: /v2/invoices/{id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting invoice
+    properties:
+      id:
+        type: integer
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: freeagent_list_bank_accounts
+  name: List Bank Accounts
+  description: |
+    List all bank accounts.
+  provider: freeagent
+  endpoint: /v2/bank_accounts
+  method: GET
+  scopes: []
+  tags:
+    - bank
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing bank accounts
+    properties: {}
+    required: []
+
+- slug: freeagent_get_bank_account
+  name: Get Bank Account
+  description: |
+    Get details of a specific bank account.
+  provider: freeagent
+  endpoint: /v2/bank_accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - bank
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting bank account
+    properties:
+      id:
+        type: integer
+        description: "Bank account ID"
+    required:
+      - id
+
+- slug: freeagent_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: freeagent
+  endpoint: /v2/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (Active, Archived)"
+    required: []
+
+- slug: freeagent_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project.
+  provider: freeagent
+  endpoint: /v2/projects/{id}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id

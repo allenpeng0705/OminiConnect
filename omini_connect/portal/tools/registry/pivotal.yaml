@@ -1,0 +1,277 @@
+# Pivotal Tracker Tools - Allowlist
+# Curated subset of Pivotal Tracker REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pivotal_list_projects       - List projects
+# 2. pivotal_get_project         - Get project details
+# 3. pivotal_list_stories        - List stories
+# 4. pivotal_get_story           - Get story details
+# 5. pivotal_create_story        - Create a story
+# 6. pivotal_update_story        - Update a story
+# 7. pivotal_list_iterations     - List iterations
+# 8. pivotal_get_iteration       - Get iteration details
+# 9. pivotal_list_memberships    - List memberships
+# 10. pivotal_get_membership     - Get membership details
+
+- slug: pivotal_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects the user has access to.
+  provider: pivotal
+  endpoint: /my/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of projects to return (default: 20)"
+    required: []
+
+- slug: pivotal_get_project
+  name: Get Project
+  description: |
+    Retrieve details for a specific project by its ID.
+  provider: pivotal
+  endpoint: /projects/{project_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: pivotal_list_stories
+  name: List Stories
+  description: |
+    Retrieve a list of stories in a project.
+  provider: pivotal
+  endpoint: /projects/{project_id}/stories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Parameters for listing stories
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      story_type:
+        type: string
+        description: "Filter by story type (feature, bug, chore, release)"
+      state:
+        type: string
+        description: "Filter by story state"
+      limit:
+        type: integer
+        description: "Maximum number of stories to return (default: 20)"
+    required:
+      - project_id
+
+- slug: pivotal_get_story
+  name: Get Story
+  description: |
+    Retrieve details for a specific story by its ID.
+  provider: pivotal
+  endpoint: /projects/{project_id}/stories/{story_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Parameters for getting a story
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      story_id:
+        type: integer
+        description: "The story ID"
+    required:
+      - project_id
+      - story_id
+
+- slug: pivotal_create_story
+  name: Create Story
+  description: |
+    Create a new story in a project.
+  provider: pivotal
+  endpoint: /projects/{project_id}/stories
+  method: POST
+  scopes:
+    - write
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Parameters for creating a story
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      name:
+        type: string
+        description: "Story title"
+      description:
+        type: string
+        description: "Story description"
+      story_type:
+        type: string
+        description: "Story type (feature, bug, chore, release)"
+      estimate:
+        type: integer
+        description: "Story point estimate"
+    required:
+      - project_id
+      - name
+
+- slug: pivotal_update_story
+  name: Update Story
+  description: |
+    Update an existing story in a project.
+  provider: pivotal
+  endpoint: /projects/{project_id}/stories/{story_id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - stories
+  input_schema:
+    type: object
+    description: Parameters for updating a story
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      story_id:
+        type: integer
+        description: "The story ID"
+      name:
+        type: string
+        description: "Updated story title"
+      description:
+        type: string
+        description: "Updated story description"
+      state:
+        type: string
+        description: "Updated story state"
+      estimate:
+        type: integer
+        description: "Updated story point estimate"
+    required:
+      - project_id
+      - story_id
+
+- slug: pivotal_list_iterations
+  name: List Iterations
+  description: |
+    Retrieve a list of iterations in a project.
+  provider: pivotal
+  endpoint: /projects/{project_id}/iterations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - iterations
+  input_schema:
+    type: object
+    description: Parameters for listing iterations
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of iterations to return (default: 20)"
+    required:
+      - project_id
+
+- slug: pivotal_get_iteration
+  name: Get Iteration
+  description: |
+    Retrieve details for a specific iteration by its number.
+  provider: pivotal
+  endpoint: /projects/{project_id}/iterations/{iteration_number}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - iterations
+  input_schema:
+    type: object
+    description: Parameters for getting an iteration
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      iteration_number:
+        type: integer
+        description: "The iteration number"
+    required:
+      - project_id
+      - iteration_number
+
+- slug: pivotal_list_memberships
+  name: List Memberships
+  description: |
+    Retrieve a list of memberships in a project.
+  provider: pivotal
+  endpoint: /projects/{project_id}/memberships
+  method: GET
+  scopes:
+    - read
+  tags:
+    - memberships
+  input_schema:
+    type: object
+    description: Parameters for listing memberships
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: pivotal_get_membership
+  name: Get Membership
+  description: |
+    Retrieve details for a specific project membership.
+  provider: pivotal
+  endpoint: /projects/{project_id}/memberships/{member_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - memberships
+  input_schema:
+    type: object
+    description: Parameters for getting a membership
+    properties:
+      project_id:
+        type: integer
+        description: "The project ID"
+      member_id:
+        type: integer
+        description: "The membership ID"
+    required:
+      - project_id
+      - member_id

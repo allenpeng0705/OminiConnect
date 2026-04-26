@@ -1,0 +1,287 @@
+# Google Drive Tools - Allowlist
+# Curated subset of Google Drive API for AI agent use.
+# OAuth2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. googledrive_list_files        - List files in folder
+# 2. googledrive_get_file         - Get file metadata
+# 3. googledrive_create_file     - Create a file
+# 4. googledrive_upload_file     - Upload file content
+# 5. googledrive_create_folder   - Create a folder
+# 6. googledrive_share_file      - Share a file
+# 7. googledrive_list_permissions - List file permissions
+# 8. googledrive_get_permission  - Get permission details
+# 9. googledrive_list_comments   - List comments on file
+# 10. googledrive_get_comment     - Get comment details
+
+- slug: googledrive_list_files
+  name: List Files
+  description: |
+    List files and folders in Google Drive.
+  provider: googledrive
+  endpoint: /drive/v3/files
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - files
+    - folders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      folder_id:
+        type: string
+        description: "Folder ID (use 'root' for My Drive)"
+        default: root
+      page_size:
+        type: integer
+        description: "Max results (default 100, max 1000)"
+        default: 100
+      page_token:
+        type: string
+        description: "Token for next page"
+    required: []
+
+- slug: googledrive_get_file
+  name: Get File
+  description: |
+    Get metadata for a Google Drive file.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - files
+    - read
+    - metadata
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: googledrive_create_file
+  name: Create File
+  description: |
+    Create a new file in Google Drive.
+  provider: googledrive
+  endpoint: /drive/v3/files
+  method: POST
+  scopes:
+    - drive.file
+  tags:
+    - files
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a file
+    properties:
+      name:
+        type: string
+        description: "File name"
+      mime_type:
+        type: string
+        description: "MIME type (e.g., text/plain, application/json)"
+      parent_id:
+        type: string
+        description: "Parent folder ID"
+    required:
+      - name
+
+- slug: googledrive_upload_file
+  name: Upload File
+  description: |
+    Upload content to a Google Drive file.
+  provider: googledrive
+  endpoint: /upload/drive/v3/files/{file_id}
+  method: PATCH
+  scopes:
+    - drive.file
+  tags:
+    - files
+    - upload
+    - write
+  input_schema:
+    type: object
+    description: Parameters for uploading file content
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      content:
+        type: string
+        description: "File content (base64-encoded)"
+    required:
+      - file_id
+      - content
+
+- slug: googledrive_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in Google Drive.
+  provider: googledrive
+  endpoint: /drive/v3/files
+  method: POST
+  scopes:
+    - drive.file
+  tags:
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parent_id:
+        type: string
+        description: "Parent folder ID"
+        default: root
+    required:
+      - name
+
+- slug: googledrive_share_file
+  name: Share File
+  description: |
+    Share a Google Drive file with a user or group.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}/permissions
+  method: POST
+  scopes:
+    - drive.file
+  tags:
+    - sharing
+    - permissions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for sharing a file
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      type:
+        type: string
+        description: "Type: user, group, domain, anyone"
+      role:
+        type: string
+        description: "Role: reader, writer, commenter, owner"
+      email:
+        type: string
+        description: "Email address (for user or group)"
+    required:
+      - file_id
+      - type
+      - role
+
+- slug: googledrive_list_permissions
+  name: List Permissions
+  description: |
+    List all permissions on a file.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}/permissions
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - sharing
+    - permissions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing permissions
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+    required:
+      - file_id
+
+- slug: googledrive_get_permission
+  name: Get Permission
+  description: |
+    Get details of a specific permission on a file.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}/permissions/{permission_id}
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - sharing
+    - permissions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a permission
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      permission_id:
+        type: string
+        description: "Permission ID"
+    required:
+      - file_id
+      - permission_id
+
+- slug: googledrive_list_comments
+  name: List Comments
+  description: |
+    List comments on a Google Drive file.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}/comments
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - comments
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      page_size:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required:
+      - file_id
+
+- slug: googledrive_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment.
+  provider: googledrive
+  endpoint: /drive/v3/files/{file_id}/comments/{comment_id}
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      file_id:
+        type: string
+        description: "File ID"
+      comment_id:
+        type: string
+        description: "Comment ID"
+    required:
+      - file_id
+      - comment_id

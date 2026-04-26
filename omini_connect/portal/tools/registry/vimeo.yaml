@@ -1,0 +1,292 @@
+# Vimeo Tools - Allowlist
+# Curated subset of the Vimeo API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. vimeo_list_videos          - List videos for the authenticated user
+# 2. vimeo_get_video            - Get details of a specific video
+# 3. vimeo_upload_video         - Upload a new video
+# 4. vimeo_delete_video         - Delete a video
+# 5. vimeo_list_users          - List users (following or followers)
+# 6. vimeo_get_user            - Get user profile information
+# 7. vimeo_list_albums         - List user's albums
+# 8. vimeo_get_album           - Get album details and videos
+# 9. vimeo_list_groups         - List user's groups
+# 10. vimeo_get_group          - Get group details and members
+
+- slug: vimeo_list_videos
+  name: List Videos
+  description: |
+    List videos for the authenticated user. Returns video metadata including title,
+    description, duration, and thumbnail URLs. Filter by user or workspace.
+  provider: vimeo
+  endpoint: /me/videos
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - videos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      user_id:
+        type: string
+        description: "User ID (use 'me' for authenticated user)"
+        default: me
+      sort:
+        type: string
+        description: "Sort by: date, alphabetical, modified"
+        enum: [date, alphabetical, modified]
+      direction:
+        type: string
+        description: "Sort direction: asc or desc"
+        enum: [asc, desc]
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: vimeo_get_video
+  name: Get Video
+  description: |
+    Get details of a specific video including title, description, duration, and embed code.
+    Use this to retrieve video metadata or generate embed links.
+  provider: vimeo
+  endpoint: /videos/{video_id}
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      video_id:
+        type: string
+        description: "Vimeo video ID"
+    required:
+      - video_id
+
+- slug: vimeo_upload_video
+  name: Upload Video
+  description: |
+    Get an upload ticket and URL for uploading a video to Vimeo.
+    Use this to programmatically upload video content.
+  provider: vimeo
+  endpoint: /me/videos
+  method: POST
+  scopes:
+    - videos:write
+  tags:
+    - videos
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading a video
+    properties:
+      name:
+        type: string
+        description: "Video title"
+      description:
+        type: string
+        description: "Video description"
+      privacy:
+        type: string
+        description: "Privacy setting: anybody, nobody, contacts"
+        default: anybody
+      locale:
+        type: string
+        description: "Video locale/language code"
+    required: []
+
+- slug: vimeo_delete_video
+  name: Delete Video
+  description: |
+    Delete a video from Vimeo. This action is irreversible.
+    Use this to remove unwanted video content.
+  provider: vimeo
+  endpoint: /videos/{video_id}
+  method: DELETE
+  scopes:
+    - videos:write
+  tags:
+    - videos
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a video
+    properties:
+      video_id:
+        type: string
+        description: "Vimeo video ID to delete"
+    required:
+      - video_id
+
+- slug: vimeo_list_users
+  name: List Users
+  description: |
+    List users that the authenticated user follows or who follow them.
+    Use this to see connections and social network.
+  provider: vimeo
+  endpoint: /me/following
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      filter:
+        type: string
+        description: "Filter: following or followers"
+        enum: [following, followers]
+        default: following
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: vimeo_get_user
+  name: Get User
+  description: |
+    Get profile information for a specific user including name, bio, location, and stats.
+    Use this to get context about a user before interacting.
+  provider: vimeo
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "Vimeo user ID or 'me' for authenticated user"
+        default: me
+    required: []
+
+- slug: vimeo_list_albums
+  name: List Albums
+  description: |
+    List albums (collections) for the authenticated user or a specific user.
+    Albums group videos together for organization and sharing.
+  provider: vimeo
+  endpoint: /me/albums
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - albums
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing albums
+    properties:
+      user_id:
+        type: string
+        description: "User ID (use 'me' for authenticated user)"
+        default: me
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: vimeo_get_album
+  name: Get Album
+  description: |
+    Get details of a specific album including name, description, and video count.
+    Use this to retrieve album metadata or get videos within an album.
+  provider: vimeo
+  endpoint: /albums/{album_id}
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - albums
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an album
+    properties:
+      album_id:
+        type: string
+        description: "Vimeo album ID"
+    required:
+      - album_id
+
+- slug: vimeo_list_groups
+  name: List Groups
+  description: |
+    List groups that the authenticated user belongs to.
+    Groups are communities around shared interests or topics.
+  provider: vimeo
+  endpoint: /me/groups
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: vimeo_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including name, description, member count, and video count.
+    Use this to learn about a group before joining or browsing content.
+  provider: vimeo
+  endpoint: /groups/{group_id}
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: string
+        description: "Vimeo group ID"
+    required:
+      - group_id

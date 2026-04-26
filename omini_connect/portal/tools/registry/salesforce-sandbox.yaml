@@ -1,0 +1,267 @@
+# Salesforce-sandbox Tools - Allowlist
+# Curated subset of Salesforce API for AI agent use.
+# Sandbox environment for testing.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesforce-sandbox_list_contacts         - List all contacts
+# 2. salesforce-sandbox_get_contact           - Get contact details
+# 3. salesforce-sandbox_create_contact         - Create a contact
+# 4. salesforce-sandbox_list_leads            - List all leads
+# 5. salesforce-sandbox_get_lead             - Get lead details
+# 6. salesforce-sandbox_create_lead          - Create a lead
+# 7. salesforce-sandbox_list_opportunities   - List opportunities
+# 8. salesforce-sandbox_get_opportunity      - Get opportunity details
+# 9. salesforce-sandbox_list_accounts        - List all accounts
+# 10. salesforce-sandbox_get_account         - Get account details
+
+- slug: salesforce-sandbox_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts"
+        default: 50
+    required: []
+
+- slug: salesforce-sandbox_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: salesforce-sandbox
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "The contact ID"
+    required:
+      - contactId
+
+- slug: salesforce-sandbox_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - crm
+    - sandbox
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+    required:
+      - firstName
+      - lastName
+
+- slug: salesforce-sandbox_list_leads
+  name: List Leads
+  description: |
+    Retrieve a list of all leads in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/leads
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      limit:
+        type: integer
+        description: "Number of leads"
+        default: 50
+    required: []
+
+- slug: salesforce-sandbox_get_lead
+  name: Get Lead
+  description: |
+    Get details of a specific lead.
+  provider: salesforce-sandbox
+  endpoint: /v1/leads/{leadId}
+  method: GET
+  scopes:
+    - leads:read
+  tags:
+    - leads
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      leadId:
+        type: string
+        description: "The lead ID"
+    required:
+      - leadId
+
+- slug: salesforce-sandbox_create_lead
+  name: Create Lead
+  description: |
+    Create a new lead in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/leads
+  method: POST
+  scopes:
+    - leads:write
+  tags:
+    - leads
+    - crm
+    - sandbox
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a lead
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - firstName
+      - lastName
+      - company
+
+- slug: salesforce-sandbox_list_opportunities
+  name: List Opportunities
+  description: |
+    Retrieve a list of all opportunities in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/opportunities
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      limit:
+        type: integer
+        description: "Number of opportunities"
+        default: 50
+    required: []
+
+- slug: salesforce-sandbox_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get details of a specific opportunity.
+  provider: salesforce-sandbox
+  endpoint: /v1/opportunities/{opportunityId}
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunityId:
+        type: string
+        description: "The opportunity ID"
+    required:
+      - opportunityId
+
+- slug: salesforce-sandbox_list_accounts
+  name: List Accounts
+  description: |
+    Retrieve a list of all accounts in sandbox.
+  provider: salesforce-sandbox
+  endpoint: /v1/accounts
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      limit:
+        type: integer
+        description: "Number of accounts"
+        default: 50
+    required: []
+
+- slug: salesforce-sandbox_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: salesforce-sandbox
+  endpoint: /v1/accounts/{accountId}
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - crm
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "The account ID"
+    required:
+      - accountId

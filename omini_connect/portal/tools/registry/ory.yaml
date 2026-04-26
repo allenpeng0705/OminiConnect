@@ -1,0 +1,250 @@
+# Ory Tools - Allowlist
+# Curated subset of Ory API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ory_list_identities              - List identities
+# 2. ory_get_identity                - Get identity details
+# 3. ory_create_identity             - Create identity
+# 4. ory_update_identity             - Update identity
+# 5. ory_delete_identity             - Delete identity
+# 6. ory_list_sessions               - List sessions
+# 7. ory_revoke_session             - Revoke session
+# 8. ory_list_oauth2_clients        - List OAuth2 clients
+# 9. ory_create_oauth2_client       - Create OAuth2 client
+# 10. ory_get_metrics               - Get metrics
+
+- slug: ory_list_identities
+  name: List Identities
+  description: |
+    List all identities in Ory.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - identity
+    - iam
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing identities
+    properties:
+      limit:
+        type: integer
+        description: "Number of identities"
+        default: 50
+    required: []
+
+- slug: ory_get_identity
+  name: Get Identity
+  description: |
+    Get detailed information for a specific identity.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients/{id}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - identity
+    - iam
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an identity
+    properties:
+      id:
+        type: string
+        description: "Identity ID"
+    required:
+      - id
+
+- slug: ory_create_identity
+  name: Create Identity
+  description: |
+    Create a new identity in Ory.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients
+  method: POST
+  scopes:
+    - clients:write
+  tags:
+    - identity
+    - iam
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an identity
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      client_name:
+        type: string
+        description: "Client name"
+    required:
+      - client_id
+
+- slug: ory_update_identity
+  name: Update Identity
+  description: |
+    Update an existing identity.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients/{id}
+  method: PUT
+  scopes:
+    - clients:write
+  tags:
+    - identity
+    - iam
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an identity
+    properties:
+      id:
+        type: string
+        description: "Identity ID"
+      client_name:
+        type: string
+        description: "Client name"
+    required:
+      - id
+
+- slug: ory_delete_identity
+  name: Delete Identity
+  description: |
+    Delete an identity from Ory.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients/{id}
+  method: DELETE
+  scopes:
+    - clients:write
+  tags:
+    - identity
+    - iam
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting an identity
+    properties:
+      id:
+        type: string
+        description: "Identity ID"
+    required:
+      - id
+
+- slug: ory_list_sessions
+  name: List Sessions
+  description: |
+    List all active sessions.
+  provider: ory
+  endpoint: /hydra/admin/v1/sessions
+  method: GET
+  scopes:
+    - sessions:read
+  tags:
+    - identity
+    - sessions
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing sessions
+    properties:
+      limit:
+        type: integer
+        description: "Number of sessions"
+        default: 50
+    required: []
+
+- slug: ory_revoke_session
+  name: Revoke Session
+  description: |
+    Revoke a specific session.
+  provider: ory
+  endpoint: /hydra/admin/v1/sessions/{id}/revoke
+  method: DELETE
+  scopes:
+    - sessions:write
+  tags:
+    - identity
+    - sessions
+    - revoke
+  input_schema:
+    type: object
+    description: Parameters for revoking a session
+    properties:
+      id:
+        type: string
+        description: "Session ID"
+    required:
+      - id
+
+- slug: ory_list_oauth2_clients
+  name: List OAuth2 Clients
+  description: |
+    List all OAuth2 clients.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - oauth
+    - clients
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing OAuth2 clients
+    properties: {}
+    required: []
+
+- slug: ory_create_oauth2_client
+  name: Create OAuth2 Client
+  description: |
+    Create a new OAuth2 client.
+  provider: ory
+  endpoint: /hydra/admin/v1/clients
+  method: POST
+  scopes:
+    - clients:write
+  tags:
+    - oauth
+    - clients
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an OAuth2 client
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      client_name:
+        type: string
+        description: "Client name"
+      grant_types:
+        type: array
+        description: "Grant types"
+    required:
+      - client_id
+
+- slug: ory_get_metrics
+  name: Get Metrics
+  description: |
+    Get Ory platform metrics.
+  provider: ory
+  endpoint: /hydra/admin/v1/metrics
+  method: GET
+  scopes:
+    - metrics:read
+  tags:
+    - platform
+    - metrics
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting metrics
+    properties: {}
+    required: []

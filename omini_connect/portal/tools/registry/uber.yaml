@@ -1,0 +1,187 @@
+# Uber Tools - Allowlist
+# Curated subset of Uber API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. uber_get_user_profile           - Get user profile information
+# # 2. uber_get_user_history           - Get user trip history
+# # 3. uber_list_products           - List available Uber products
+# # 4. uber_get_product           - Get product details
+# # 5. uber_get_price_estimate           - Get price estimate for a trip
+# # 6. uber_get_time_estimate           - Get time estimate for pickup
+# # 7. uber_request_ride           - Request a ride
+# # 8. uber_get_request           - Get request details
+# # 9. uber_cancel_request           - Cancel a ride request
+# # 10. uber_list_places           - List saved places
+
+- slug: uber_get_user_profile
+  name: Get User Profile
+  description: |
+    Get user profile information
+  provider: uber
+  endpoint: /v1/me
+  method: GET
+  scopes:
+    - profile
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get user profile
+    properties: {}
+    required: []
+
+- slug: uber_get_user_history
+  name: Get User History
+  description: |
+    Get user trip history
+  provider: uber
+  endpoint: /v1.2/history
+  method: GET
+  scopes:
+    - history
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get user history
+    properties: {}
+    required: []
+
+- slug: uber_list_products
+  name: List Products
+  description: |
+    List available Uber products
+  provider: uber
+  endpoint: /v1/products
+  method: GET
+  scopes:
+    - 
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for list products
+    properties: {}
+    required: []
+
+- slug: uber_get_product
+  name: Get Product
+  description: |
+    Get product details
+  provider: uber
+  endpoint: /v1/products/{product_id}
+  method: GET
+  scopes:
+    - 
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get product
+    properties: {}
+    required: []
+
+- slug: uber_get_price_estimate
+  name: Get Price Estimate
+  description: |
+    Get price estimate for a trip
+  provider: uber
+  endpoint: /v1.2/price
+  method: GET
+  scopes:
+    - 
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get price estimate
+    properties: {}
+    required: []
+
+- slug: uber_get_time_estimate
+  name: Get Time Estimate
+  description: |
+    Get time estimate for pickup
+  provider: uber
+  endpoint: /v1.2/time
+  method: GET
+  scopes:
+    - 
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get time estimate
+    properties: {}
+    required: []
+
+- slug: uber_request_ride
+  name: Request Ride
+  description: |
+    Request a ride
+  provider: uber
+  endpoint: /v1/requests
+  method: POST
+  scopes:
+    - request
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for request ride
+    properties: {}
+    required: []
+
+- slug: uber_get_request
+  name: Get Request
+  description: |
+    Get request details
+  provider: uber
+  endpoint: /v1/requests/{request_id}
+  method: GET
+  scopes:
+    - request
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for get request
+    properties: {}
+    required: []
+
+- slug: uber_cancel_request
+  name: Cancel Request
+  description: |
+    Cancel a ride request
+  provider: uber
+  endpoint: /v1/requests/{request_id}
+  method: DELETE
+  scopes:
+    - request
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for cancel request
+    properties: {}
+    required: []
+
+- slug: uber_list_places
+  name: List Places
+  description: |
+    List saved places
+  provider: uber
+  endpoint: /v1/places/{user_id}
+  method: GET
+  scopes:
+    - places
+  tags:
+    - uber
+  input_schema:
+    type: object
+    description: Parameters for list places
+    properties: {}
+    required: []
+

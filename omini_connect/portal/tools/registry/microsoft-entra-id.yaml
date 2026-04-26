@@ -1,0 +1,258 @@
+# Microsoft Entra ID Tools - Allowlist
+# Curated subset of Microsoft Entra ID API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. entra_list_users              - List all users
+# 2. entra_get_user                - Get user details
+# 3. entra_list_groups             - List groups
+# 4. entra_get_group               - Get group details
+# 5. entra_list_applications       - List applications
+# 6. entra_get_application         - Get application details
+# 7. entra_list_service_principals - List service principals
+# 8. entra_get_service_principal   - Get service principal details
+# 9. entra_list_directory_roles   - List directory roles
+# 10. entra_assign_user_to_role   - Assign user to directory role
+
+- slug: entra_list_users
+  name: List Users
+  description: |
+    List all users in Entra ID.
+    Filter by department, title, or search.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/users
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $search:
+        type: string
+        description: "Search query"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: entra_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: entra_list_groups
+  name: List Groups
+  description: |
+    List all groups in Entra ID.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: entra_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group including members.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: entra_list_applications
+  name: List Applications
+  description: |
+    List all registered applications in Entra ID.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/applications
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - applications
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: entra_get_application
+  name: Get Application
+  description: |
+    Get details of a specific application registration.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/applications/{applicationId}
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - applications
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an application
+    properties:
+      applicationId:
+        type: string
+        description: "Application ID"
+    required:
+      - applicationId
+
+- slug: entra_list_service_principals
+  name: List Service Principals
+  description: |
+    List all service principals in the directory.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/servicePrincipals
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - serviceprincipals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing service principals
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: entra_get_service_principal
+  name: Get Service Principal
+  description: |
+    Get details of a specific service principal.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/servicePrincipals/{servicePrincipalId}
+  method: GET
+  scopes:
+    - Application.Read.All
+  tags:
+    - serviceprincipals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service principal
+    properties:
+      servicePrincipalId:
+        type: string
+        description: "Service Principal ID"
+    required:
+      - servicePrincipalId
+
+- slug: entra_list_directory_roles
+  name: List Directory Roles
+  description: |
+    List all available directory roles in Entra ID.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/directoryRoles
+  method: GET
+  scopes:
+    - RoleManagement.Read.Directory
+  tags:
+    - roles
+    - directory
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing directory roles
+    properties: {}
+    required: []
+
+- slug: entra_assign_user_to_role
+  name: Assign User to Role
+  description: |
+    Assign a user to a directory role.
+  provider: microsoft-entra-id
+  endpoint: /v1.0/directoryRoles/{roleId}/members/$ref
+  method: POST
+  scopes:
+    - RoleManagement.ReadWrite.Directory
+  tags:
+    - roles
+    - users
+    - assign
+  input_schema:
+    type: object
+    description: Parameters for assigning a user to a role
+    properties:
+      roleId:
+        type: string
+        description: "Directory Role ID"
+      userId:
+        type: string
+        description: "User ID to assign"
+    required:
+      - roleId
+      - userId

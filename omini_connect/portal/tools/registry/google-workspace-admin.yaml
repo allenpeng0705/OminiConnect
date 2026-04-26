@@ -1,0 +1,260 @@
+# Google Workspace Admin Tools - Allowlist
+# Curated subset of Google Workspace Admin API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_workspace_admin_list_users         - List users
+# 2. google_workspace_admin_get_user       - Get user details
+# 3. google_workspace_admin_create_user     - Create user
+# 4. google_workspace_admin_update_user     - Update user
+# 5. google_workspace_admin_delete_user     - Delete user
+# 6. google_workspace_admin_list_groups      - List groups
+# 7. google_workspace_admin_get_group       - Get group details
+# 8. google_workspace_admin_list_org_units   - List org units
+# 9. google_workspace_admin_get_org_unit    - Get org unit details
+# 10. google_workspace_admin_list_domains   - List domains
+
+- slug: google_workspace_admin_list_users
+  name: List Users
+  description: |
+    List users in the organization.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/users
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.user
+  tags:
+    - admin
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      domain:
+        type: string
+        description: "Domain filter"
+      maxResults:
+        type: integer
+        description: "Max results"
+        default: 100
+    required: []
+
+- slug: google_workspace_admin_get_user
+  name: Get User
+  description: |
+    Get user details.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/users/{user_key}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.user
+  tags:
+    - admin
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_key:
+        type: string
+        description: "User email or ID"
+    required:
+      - user_key
+
+- slug: google_workspace_admin_create_user
+  name: Create User
+  description: |
+    Create a new user.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/users
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.user
+  tags:
+    - admin
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      primaryEmail:
+        type: string
+        description: "Primary email"
+      name:
+        type: object
+        description: "Name object"
+      password:
+        type: string
+        description: "Password"
+    required:
+      - primaryEmail
+      - name
+      - password
+
+- slug: google_workspace_admin_update_user
+  name: Update User
+  description: |
+    Update a user.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/users/{user_key}
+  method: PATCH
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.user
+  tags:
+    - admin
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      user_key:
+        type: string
+        description: "User email or ID"
+      name:
+        type: object
+        description: "New name object"
+    required:
+      - user_key
+
+- slug: google_workspace_admin_delete_user
+  name: Delete User
+  description: |
+    Delete a user.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/users/{user_key}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.user
+  tags:
+    - admin
+    - users
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a user
+    properties:
+      user_key:
+        type: string
+        description: "User email or ID"
+    required:
+      - user_key
+
+- slug: google_workspace_admin_list_groups
+  name: List Groups
+  description: |
+    List groups in the organization.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/groups
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.group
+  tags:
+    - admin
+    - groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      domain:
+        type: string
+        description: "Domain filter"
+    required: []
+
+- slug: google_workspace_admin_get_group
+  name: Get Group
+  description: |
+    Get group details.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/groups/{group_key}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.group
+  tags:
+    - admin
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_key:
+        type: string
+        description: "Group email or ID"
+    required:
+      - group_key
+
+- slug: google_workspace_admin_list_org_units
+  name: List Org Units
+  description: |
+    List organizational units.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/orgunits
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.orgunit
+  tags:
+    - admin
+    - orgunits
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing org units
+    properties:
+      customer:
+        type: string
+        description: "Customer ID"
+    required: []
+
+- slug: google_workspace_admin_get_org_unit
+  name: Get Org Unit
+  description: |
+    Get organizational unit details.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/orgunits/{org_unit_path}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.orgunit
+  tags:
+    - admin
+    - orgunits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an org unit
+    properties:
+      customer:
+        type: string
+        description: "Customer ID"
+      org_unit_path:
+        type: string
+        description: "Org unit path"
+    required:
+      - org_unit_path
+
+- slug: google_workspace_admin_list_domains
+  name: List Domains
+  description: |
+    List domains in the organization.
+  provider: google-workspace-admin
+  endpoint: /admin/directory/v1/domains
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/admin.directory.domain
+  tags:
+    - admin
+    - domains
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      customer:
+        type: string
+        description: "Customer ID"
+    required: []

@@ -1,0 +1,296 @@
+# Facebook Pages Tools - Allowlist
+# Curated subset of Facebook Graph API for AI agent use.
+# Requires page management permissions.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. facebook_list_pages          - List pages managed by the user
+# 2. facebook_get_page            - Get page info
+# 3. facebook_list_posts          - List page posts
+# 4. facebook_get_post            - Get a specific post
+# 5. facebook_create_post         - Create a post on the page
+# 6. facebook_list_comments      - List comments on a post
+# 7. facebook_get_comment         - Get a specific comment
+# 8. facebook_get_page_insights   - Get page insights/metrics
+# 9. facebook_send_message       - Send a message via page
+# 10. facebook_list_page_events  - List page events
+
+- slug: facebook_list_pages
+  name: List Pages
+  description: |
+    List all Facebook pages managed by the authenticated user.
+    Returns page IDs, names, and access status.
+  provider: facebook
+  endpoint: /me/accounts
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - pages
+    - list
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      limit:
+        type: integer
+        description: "Max pages to return (default 10, max 100)"
+        default: 10
+    required: []
+
+- slug: facebook_get_page
+  name: Get Page
+  description: |
+    Get Facebook page information including name, description, follower count, and cover photo.
+  provider: facebook
+  endpoint: /{page-id}
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - pages
+    - read
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting page info
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      fields:
+        type: string
+        description: "Fields to include (default: id,name,about,followers_count)"
+    required:
+      - page_id
+
+- slug: facebook_list_posts
+  name: List Posts
+  description: |
+    List posts from a Facebook page. Returns post content, metrics, and timestamps.
+  provider: facebook
+  endpoint: /{page-id}/posts
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - posts
+    - read
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      limit:
+        type: integer
+        description: "Max posts (default 10, max 100)"
+        default: 10
+      fields:
+        type: string
+        description: "Fields to include (default: id,message,created_time,shares,likes)"
+    required:
+      - page_id
+
+- slug: facebook_get_post
+  name: Get Post
+  description: |
+    Get a specific Facebook post by ID with full details including message, metrics, and media.
+  provider: facebook
+  endpoint: /{post-id}
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      post_id:
+        type: string
+        description: "Post ID"
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - post_id
+
+- slug: facebook_create_post
+  name: Create Post
+  description: |
+    Create a post on a Facebook page. Supports text, links, and media.
+  provider: facebook
+  endpoint: /{page-id}/feed
+  method: POST
+  scopes:
+    - pages_write_user_access
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a post
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      message:
+        type: string
+        description: "Post content text"
+      link:
+        type: string
+        description: "URL to attach"
+    required:
+      - page_id
+      - message
+
+- slug: facebook_list_comments
+  name: List Comments
+  description: |
+    List comments on a Facebook post. Returns comment text, author, and timestamp.
+  provider: facebook
+  endpoint: /{post-id}/comments
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - comments
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      post_id:
+        type: string
+        description: "Post ID"
+      limit:
+        type: integer
+        description: "Max comments (default 10, max 100)"
+        default: 10
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - post_id
+
+- slug: facebook_get_comment
+  name: Get Comment
+  description: |
+    Get a specific Facebook comment by ID including text, author, and likes.
+  provider: facebook
+  endpoint: /{comment-id}
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID"
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - comment_id
+
+- slug: facebook_get_page_insights
+  name: Get Page Insights
+  description: |
+    Get insights and metrics for a Facebook page including page views, reach, and engagement.
+  provider: facebook
+  endpoint: /{page-id}/insights
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - insights
+    - analytics
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting page insights
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      metric:
+        type: string
+        description: "Metric name (e.g., page_views, page_impressions)"
+      period:
+        type: string
+        description: "Period: day, week, days_28"
+        default: week
+    required:
+      - page_id
+
+- slug: facebook_send_message
+  name: Send Message
+  description: |
+    Send a direct message to a user via the Facebook page messaging.
+  provider: facebook
+  endpoint: /{page-id}/messages
+  method: POST
+  scopes:
+    - pages_write_user_access
+  tags:
+    - messages
+    - messaging
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      recipient:
+        type: string
+        description: "Recipient user ID or PSID"
+      message:
+        type: string
+        description: "Message text content"
+    required:
+      - page_id
+      - recipient
+      - message
+
+- slug: facebook_list_page_events
+  name: List Page Events
+  description: |
+    List events associated with a Facebook page including event name, date, and attendance.
+  provider: facebook
+  endpoint: /{page-id}/events
+  method: GET
+  scopes:
+    - pages_read_user_access
+  tags:
+    - events
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing page events
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      limit:
+        type: integer
+        description: "Max events (default 10, max 100)"
+        default: 10
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - page_id

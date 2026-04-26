@@ -1,0 +1,301 @@
+- slug: tito_list_events
+  name: List Events
+  description: |
+    Retrieve all events (ticketed experiences) for the authenticated account.
+  provider: tito
+  endpoint: /v2/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug (e.g., my-company)"
+      state:
+        type: string
+        description: "Filter by state (live, finished, draft)"
+    required:
+      - account
+
+- slug: tito_get_event
+  name: Get Event
+  description: |
+    Retrieve detailed information about a specific event including dates and settings.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+    required:
+      - account
+      - event_slug
+
+- slug: tito_create_event
+  name: Create Event
+  description: |
+    Create a new ticketed event with title, date, and ticket release settings.
+  provider: tito
+  endpoint: /v2/events
+  method: POST
+  scopes:
+    - events:write
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      title:
+        type: string
+        description: "The title of the event"
+      slug:
+        type: string
+        description: "URL slug for the event (auto-generated if not provided)"
+      date:
+        type: string
+        description: "Start date and time in ISO 8601 format"
+      end_date:
+        type: string
+        description: "End date and time in ISO 8601 format"
+      timezone:
+        type: string
+        description: "Timezone (e.g., America/New_York)"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD, GBP)"
+    required:
+      - account
+      - title
+
+- slug: tito_list_orders
+  name: List Orders
+  description: |
+    Retrieve all orders for a specific event with payment and fulfillment status.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      state:
+        type: string
+        description: "Filter by state (complete, incomplete, refunded, canceled)"
+    required:
+      - account
+      - event_slug
+
+- slug: tito_get_order
+  name: Get Order
+  description: |
+    Retrieve complete details of a specific order including all tickets and buyer info.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/orders/{order_id}
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      order_id:
+        type: string
+        description: "The unique identifier of the order"
+    required:
+      - account
+      - event_slug
+      - order_id
+
+- slug: tito_list_attendees
+  name: List Attendees
+  description: |
+    Retrieve all attendees (ticket holders) for a specific event.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/attendees
+  method: GET
+  scopes:
+    - attendees:read
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for listing attendees
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      checked_in:
+        type: boolean
+        description: "Filter by check-in status"
+    required:
+      - account
+      - event_slug
+
+- slug: tito_get_attendee
+  name: Get Attendee
+  description: |
+    Retrieve detailed information about a specific attendee including their tickets.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/attendees/{attendee_id}
+  method: GET
+  scopes:
+    - attendees:read
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for getting an attendee
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      attendee_id:
+        type: string
+        description: "The unique identifier of the attendee"
+    required:
+      - account
+      - event_slug
+      - attendee_id
+
+- slug: tito_check_in_attendee
+  name: Check In Attendee
+  description: |
+    Check in an attendee to an event, marking their ticket as used.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/attendees/{attendee_id}/check_ins
+  method: POST
+  scopes:
+    - attendees:write
+  tags:
+    - attendees
+  input_schema:
+    type: object
+    description: Parameters for checking in an attendee
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      attendee_id:
+        type: string
+        description: "The unique identifier of the attendee"
+    required:
+      - account
+      - event_slug
+      - attendee_id
+
+- slug: tito_list_promo_codes
+  name: List Promo Codes
+  description: |
+    Retrieve all discount/promotional codes for a specific event.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/discounts
+  method: GET
+  scopes:
+    - discounts:read
+  tags:
+    - promo_codes
+  input_schema:
+    type: object
+    description: Parameters for listing promo codes
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+    required:
+      - account
+      - event_slug
+
+- slug: tito_create_promo_code
+  name: Create Promo Code
+  description: |
+    Create a new promotional discount code for an event with percentage or fixed amount.
+  provider: tito
+  endpoint: /v2/{account}/{event_slug}/discounts
+  method: POST
+  scopes:
+    - discounts:write
+  tags:
+    - promo_codes
+  input_schema:
+    type: object
+    description: Parameters for creating a promo code
+    properties:
+      account:
+        type: string
+        description: "The Tito account slug"
+      event_slug:
+        type: string
+        description: "The URL slug of the event"
+      code:
+        type: string
+        description: "The promotional code (e.g., EARLYBIRD)"
+      discount_type:
+        type: string
+        description: "Type of discount (percentage, fixed_amount)"
+      discount_value:
+        type: number
+        description: "Value of the discount (e.g., 20 for 20% or 20.00 for fixed amount)"
+      max_uses:
+        type: integer
+        description: "Maximum number of times the code can be used"
+      tickets:
+        type: array
+        items:
+          type: string
+        description: "Array of ticket IDs this code applies to (omit for all tickets)"
+    required:
+      - account
+      - event_slug
+      - code
+      - discount_type
+      - discount_value

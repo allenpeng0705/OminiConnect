@@ -1,0 +1,187 @@
+# Timely Tools - Allowlist
+# Curated subset of Timely API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. timely_list_bookings           - List all bookings/appointments
+# # 2. timely_get_booking           - Get booking details
+# # 3. timely_create_booking           - Create a new booking
+# # 4. timely_update_booking           - Update a booking
+# # 5. timely_delete_booking           - Delete a booking
+# # 6. timely_list_clients           - List all clients
+# # 7. timely_get_client           - Get client details
+# # 8. timely_create_client           - Create a new client
+# # 9. timely_list_services           - List all services
+# # 10. timely_list_staff           - List all staff members
+
+- slug: timely_list_bookings
+  name: List Bookings
+  description: |
+    List all bookings/appointments
+  provider: timely
+  endpoint: /1.1/bookings
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for list bookings
+    properties: {}
+    required: []
+
+- slug: timely_get_booking
+  name: Get Booking
+  description: |
+    Get booking details
+  provider: timely
+  endpoint: /1.1/bookings/{id}
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for get booking
+    properties: {}
+    required: []
+
+- slug: timely_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking
+  provider: timely
+  endpoint: /1.1/bookings
+  method: POST
+  scopes:
+    - bookings:write
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for create booking
+    properties: {}
+    required: []
+
+- slug: timely_update_booking
+  name: Update Booking
+  description: |
+    Update a booking
+  provider: timely
+  endpoint: /1.1/bookings/{id}
+  method: PUT
+  scopes:
+    - bookings:write
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for update booking
+    properties: {}
+    required: []
+
+- slug: timely_delete_booking
+  name: Delete Booking
+  description: |
+    Delete a booking
+  provider: timely
+  endpoint: /1.1/bookings/{id}
+  method: DELETE
+  scopes:
+    - bookings:write
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for delete booking
+    properties: {}
+    required: []
+
+- slug: timely_list_clients
+  name: List Clients
+  description: |
+    List all clients
+  provider: timely
+  endpoint: /1.1/clients
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for list clients
+    properties: {}
+    required: []
+
+- slug: timely_get_client
+  name: Get Client
+  description: |
+    Get client details
+  provider: timely
+  endpoint: /1.1/clients/{id}
+  method: GET
+  scopes:
+    - clients:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for get client
+    properties: {}
+    required: []
+
+- slug: timely_create_client
+  name: Create Client
+  description: |
+    Create a new client
+  provider: timely
+  endpoint: /1.1/clients
+  method: POST
+  scopes:
+    - clients:write
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for create client
+    properties: {}
+    required: []
+
+- slug: timely_list_services
+  name: List Services
+  description: |
+    List all services
+  provider: timely
+  endpoint: /1.1/services
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for list services
+    properties: {}
+    required: []
+
+- slug: timely_list_staff
+  name: List Staff
+  description: |
+    List all staff members
+  provider: timely
+  endpoint: /1.1/staff
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - timely
+  input_schema:
+    type: object
+    description: Parameters for list staff
+    properties: {}
+    required: []
+

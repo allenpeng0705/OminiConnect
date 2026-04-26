@@ -1,0 +1,257 @@
+# Google Search Console Tools - Allowlist
+# Curated subset of Google Search Console API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_search_console_list_sites          - List sites
+# 2. google_search_console_add_site         - Add site
+# 3. google_search_console_delete_site        - Remove site
+# 4. google_search_console_get_site          - Get site details
+# 5. google_search_console_list_sitemaps      - List sitemaps
+# 6. google_search_console_submit_sitemap     - Submit sitemap
+# 7. google_search_console_search_analytics   - Search analytics
+# 8. google_search_console_url_inspection    - URL inspection
+# 9. google_search_console_list_urlanan       - List URL annotations
+# 10. google_search_console_create_urlanan    - Create URL annotation
+
+- slug: google_search_console_list_sites
+  name: List Sites
+  description: |
+    List sites in Search Console.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sites
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties: {}
+
+- slug: google_search_console_add_site
+  name: Add Site
+  description: |
+    Add a site to Search Console.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}
+  method: PUT
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sites
+    - add
+  input_schema:
+    type: object
+    description: Parameters for adding a site
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+    required:
+      - site_url
+
+- slug: google_search_console_delete_site
+  name: Remove Site
+  description: |
+    Remove a site from Search Console.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}
+  method: DELETE
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sites
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for removing a site
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+    required:
+      - site_url
+
+- slug: google_search_console_get_site
+  name: Get Site
+  description: |
+    Get site details.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+    required:
+      - site_url
+
+- slug: google_search_console_list_sitemaps
+  name: List Sitemaps
+  description: |
+    List sitemaps for a site.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}/sitemaps
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sitemaps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sitemaps
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+    required:
+      - site_url
+
+- slug: google_search_console_submit_sitemap
+  name: Submit Sitemap
+  description: |
+    Submit a sitemap to Search Console.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}/sitemaps
+  method: PUT
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - sitemaps
+    - submit
+  input_schema:
+    type: object
+    description: Parameters for submitting a sitemap
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+      feedpath:
+        type: string
+        description: "Sitemap path"
+    required:
+      - site_url
+      - feedpath
+
+- slug: google_search_console_search_analytics
+  name: Search Analytics
+  description: |
+    Get search analytics data.
+  provider: google-search-console
+  endpoint: /webmasters/v3/sites/{site_url}/searchAnalytics/query
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for search analytics
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      dimensions:
+        type: array
+        description: "Dimensions (query, page, country, device)"
+    required:
+      - site_url
+      - start_date
+      - end_date
+
+- slug: google_search_console_url_inspection
+  name: URL Inspection
+  description: |
+    Inspect a URL in Search Console.
+  provider: google-search-console
+  endpoint: /v1/urlInspection/index
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - inspection
+  input_schema:
+    type: object
+    description: Parameters for URL inspection
+    properties:
+      site_url:
+        type: string
+        description: "Site URL"
+      inspection_url:
+        type: string
+        description: "URL to inspect"
+    required:
+      - site_url
+      - inspection_url
+
+- slug: google_search_console_list_urlanan
+  name: List URL Annotations
+  description: |
+    List URL annotations.
+  provider: google-search-console
+  endpoint: /v1/urlAnnotations
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - annotations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing URL annotations
+    properties: {}
+
+- slug: google_search_console_create_urlanan
+  name: Create URL Annotation
+  description: |
+    Create a URL annotation.
+  provider: google-search-console
+  endpoint: /v1/urlAnnotations
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/webmasters
+  tags:
+    - search-console
+    - annotations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating URL annotation
+    properties:
+      url:
+        type: string
+        description: "URL"
+      annotation:
+        type: object
+        description: "Annotation data"
+    required:
+      - url
+      - annotation

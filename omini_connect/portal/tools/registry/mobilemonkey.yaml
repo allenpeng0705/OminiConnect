@@ -1,0 +1,277 @@
+# mobilemonkey Tools - Allowlist
+# Curated subset of the Mobilemonkey API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mobilemonkey_list_keywords    - List all keywords
+# 2. mobilemonkey_get_keyword      - Get a specific keyword
+# 3. mobilemonkey_create_keyword   - Create a new keyword
+# 4. mobilemonkey_list_flows       - List all flows
+# 5. mobilemonkey_get_flow          - Get a specific flow
+# 6. mobilemonkey_create_flow      - Create a new flow
+# 7. mobilemonkey_list_subscribers - List all subscribers
+# 8. mobilemonkey_get_subscriber   - Get a specific subscriber
+# 9. mobilemonkey_send_message     - Send a message to a subscriber
+# 10. mobilemonkey_create_broadcast - Create a broadcast campaign
+
+- slug: mobilemonkey_list_keywords
+  name: List Keywords
+  description: |
+    Retrieve all keywords configured in your Mobilemonkey account.
+    Keywords are triggers that initiate automated responses.
+  provider: mobilemonkey
+  endpoint: /keywords
+  method: GET
+  scopes:
+    - keywords:read
+  tags:
+    - keywords
+  input_schema:
+    type: object
+    description: Parameters for listing keywords
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: mobilemonkey_get_keyword
+  name: Get Keyword
+  description: |
+    Get details of a specific keyword by ID including its response configuration.
+  provider: mobilemonkey
+  endpoint: /keywords/{id}
+  method: GET
+  scopes:
+    - keywords:read
+  tags:
+    - keywords
+  input_schema:
+    type: object
+    description: Parameters for getting a keyword
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the keyword"
+    required:
+      - id
+
+- slug: mobilemonkey_create_keyword
+  name: Create Keyword
+  description: |
+    Create a new keyword for automated responses.
+    Keywords trigger specific flows or messages when subscribers send matching text.
+  provider: mobilemonkey
+  endpoint: /keywords
+  method: POST
+  scopes:
+    - keywords:write
+  tags:
+    - keywords
+  input_schema:
+    type: object
+    description: Parameters for creating a keyword
+    properties:
+      keyword:
+        type: string
+        description: "The keyword text that triggers the response"
+      response:
+        type: string
+        description: "The automated response message"
+      flow_id:
+        type: string
+        description: "Optional flow ID to attach to this keyword"
+    required:
+      - keyword
+      - response
+
+- slug: mobilemonkey_list_flows
+  name: List Flows
+  description: |
+    Retrieve all chat flows in your Mobilemonkey account.
+    Flows define the conversation logic and automated responses.
+  provider: mobilemonkey
+  endpoint: /flows
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for listing flows
+    properties:
+      status:
+        type: string
+        description: "Filter by flow status (active, paused, archived)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: mobilemonkey_get_flow
+  name: Get Flow
+  description: |
+    Get details of a specific flow including steps and configuration.
+    Use this to understand the conversation logic of a flow.
+  provider: mobilemonkey
+  endpoint: /flows/{id}
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for getting a flow
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the flow"
+    required:
+      - id
+
+- slug: mobilemonkey_create_flow
+  name: Create Flow
+  description: |
+    Create a new chat flow with specified steps and logic.
+    Flows automate conversations based on user interactions.
+  provider: mobilemonkey
+  endpoint: /flows
+  method: POST
+  scopes:
+    - flows:write
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for creating a flow
+    properties:
+      name:
+        type: string
+        description: "Name of the flow"
+      steps:
+        type: array
+        description: "Array of flow steps"
+      trigger:
+        type: string
+        description: "What triggers this flow (keyword, event, etc.)"
+    required:
+      - name
+      - trigger
+
+- slug: mobilemonkey_list_subscribers
+  name: List Subscribers
+  description: |
+    Retrieve all subscribers in your Mobilemonkey account.
+    Subscribers are users who have opted in to receive messages.
+  provider: mobilemonkey
+  endpoint: /subscribers
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      status:
+        type: string
+        description: "Filter by subscriber status (active, unsubscribed)"
+      tag:
+        type: string
+        description: "Filter by subscriber tag"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: mobilemonkey_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get details of a specific subscriber including conversation history.
+    Useful for understanding subscriber interactions and preferences.
+  provider: mobilemonkey
+  endpoint: /subscribers/{id}
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the subscriber"
+    required:
+      - id
+
+- slug: mobilemonkey_send_message
+  name: Send Message
+  description: |
+    Send a message to a specific subscriber.
+    Use this for direct, one-to-one messaging outside of flows.
+  provider: mobilemonkey
+  endpoint: /messages/send
+  method: POST
+  scopes:
+    - messages:send
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      subscriber_id:
+        type: string
+        description: "ID of the subscriber to send the message to"
+      message:
+        type: string
+        description: "The message content to send"
+      media_url:
+        type: string
+        description: "Optional URL of media to attach"
+    required:
+      - subscriber_id
+      - message
+
+- slug: mobilemonkey_create_broadcast
+  name: Create Broadcast
+  description: |
+    Create a new broadcast message to send to multiple subscribers.
+    Broadcasts allow mass messaging to selected audiences.
+  provider: mobilemonkey
+  endpoint: /broadcasts
+  method: POST
+  scopes:
+    - broadcasts:write
+  tags:
+    - broadcasts
+  input_schema:
+    type: object
+    description: Parameters for creating a broadcast
+    properties:
+      name:
+        type: string
+        description: "Name for this broadcast campaign"
+      message:
+        type: string
+        description: "The broadcast message content"
+      recipient_filter:
+        type: object
+        description: "Filter criteria for recipients"
+      scheduled_at:
+        type: string
+        description: "ISO 8601 timestamp to schedule the broadcast"
+    required:
+      - name
+      - message

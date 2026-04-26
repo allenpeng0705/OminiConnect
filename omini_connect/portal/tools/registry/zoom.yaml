@@ -1,0 +1,303 @@
+# Zoom Tools - Allowlist
+# Curated subset of Zoom API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zoom_list_meetings       - List meetings
+# 2. zoom_get_meeting         - Get meeting details
+# 3. zoom_create_meeting      - Create a meeting
+# 4. zoom_update_meeting      - Update a meeting
+# 5. zoom_delete_meeting      - Delete a meeting
+# 6. zoom_list_participants   - List meeting participants
+# 7. zoom_get_participant     - Get participant details
+# 8. zoom_list_recordings     - List cloud recordings
+# 9. zoom_get_recording      - Get recording details
+# 10. zoom_list_users         - List users
+
+- slug: zoom_list_meetings
+  name: List Meetings
+  description: |
+    List meetings for a user. Shows upcoming and past meetings.
+  provider: zoom
+  endpoint: /users/{user_id}/meetings
+  method: GET
+  scopes:
+    - zoom_meeting:read:list_meetings
+  tags:
+    - meetings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      user_id:
+        type: string
+        description: "User ID (or 'me' for current user)"
+      type:
+        type: string
+        description: "Meeting type: upcoming, live, past"
+      page_size:
+        type: integer
+        description: "Max meetings (default 30)"
+        default: 30
+    required:
+      - user_id
+
+- slug: zoom_get_meeting
+  name: Get Meeting
+  description: |
+    Get detailed information about a specific meeting.
+    Includes join URL, password, settings, and recurrence.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}
+  method: GET
+  scopes:
+    - zoom_meeting:read:list_meetings
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID (numeric)"
+    required:
+      - meeting_id
+
+- slug: zoom_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new meeting for a user.
+    Set topic, start time, duration, timezone, and settings.
+  provider: zoom
+  endpoint: /users/{user_id}/meetings
+  method: POST
+  scopes:
+    - zoom_meeting:write:create
+  tags:
+    - meetings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      user_id:
+        type: string
+        description: "User ID (or 'me' for current user)"
+      topic:
+        type: string
+        description: "Meeting topic"
+      type:
+        type: integer
+        description: "Meeting type: 1=instant, 2=scheduled, 3=recurring no fixed time, 8=recurring fixed time"
+        default: 2
+      start_time:
+        type: string
+        description: "Start time (ISO 8601 format)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+      timezone:
+        type: string
+        description: "Timezone (e.g., America/New_York)"
+      agenda:
+        type: string
+        description: "Meeting agenda"
+      settings:
+        type: object
+        description: "Meeting settings (host_video, participant_video, etc.)"
+    required:
+      - user_id
+      - topic
+
+- slug: zoom_update_meeting
+  name: Update Meeting
+  description: |
+    Update an existing meeting. Can change topic, time, duration, settings.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}
+  method: PUT
+  scopes:
+    - zoom_meeting:write:update
+  tags:
+    - meetings
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a meeting
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+      topic:
+        type: string
+        description: "New topic"
+      start_time:
+        type: string
+        description: "New start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "New duration in minutes"
+      agenda:
+        type: string
+        description: "New agenda"
+      settings:
+        type: object
+        description: "New meeting settings"
+    required:
+      - meeting_id
+
+- slug: zoom_delete_meeting
+  name: Delete Meeting
+  description: |
+    Delete a meeting. This removes it from the calendar and invalidates the join link.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}
+  method: DELETE
+  scopes:
+    - zoom_meeting:write:delete
+  tags:
+    - meetings
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a meeting
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meeting_id
+
+- slug: zoom_list_participants
+  name: List Participants
+  description: |
+    List all participants who have joined a specific meeting.
+    Returns join/leave times, duration, and participant details.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}/participants
+  method: GET
+  scopes:
+    - zoom_meeting:read:list_meetings
+  tags:
+    - meetings
+    - participants
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meeting_id
+
+- slug: zoom_get_participant
+  name: Get Participant
+  description: |
+    Get details about a specific participant in a meeting.
+    Includes their connection quality, device info, and participation duration.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}/participants/{participant_id}
+  method: GET
+  scopes:
+    - zoom_meeting:read:list_meetings
+  tags:
+    - meetings
+    - participants
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting participant info
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+      participant_id:
+        type: string
+        description: "Participant ID"
+    required:
+      - meeting_id
+      - participant_id
+
+- slug: zoom_list_recordings
+  name: List Recordings
+  description: |
+    List all cloud recordings for a user.
+    Includes meeting recordings with download/view links.
+  provider: zoom
+  endpoint: /users/{user_id}/recordings
+  method: GET
+  scopes:
+    - zoom_recording:read:list_recordings
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      user_id:
+        type: string
+        description: "User ID (or 'me' for current user)"
+      page_size:
+        type: integer
+        description: "Max results (default 30)"
+        default: 30
+    required:
+      - user_id
+
+- slug: zoom_get_recording
+  name: Get Recording
+  description: |
+    Get details about a specific cloud recording.
+    Includes download URLs, file sizes, and recording date/time.
+  provider: zoom
+  endpoint: /meetings/{meeting_id}/recordings
+  method: GET
+  scopes:
+    - zoom_recording:read:list_recordings
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting recording info
+    properties:
+      meeting_id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - meeting_id
+
+- slug: zoom_list_users
+  name: List Users
+  description: |
+    List all users in a Zoom account.
+    Returns user details including email, name, status, type.
+  provider: zoom
+  endpoint: /users
+  method: GET
+  scopes:
+    - zoom_user:read:list_users
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive, pending"
+      page_size:
+        type: integer
+        description: "Max users (default 30, max 300)"
+        default: 30
+    required: []

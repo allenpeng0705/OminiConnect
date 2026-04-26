@@ -1,0 +1,277 @@
+# Supportbee Tools - Allowlist
+# Curated subset of Supportbee API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. supportbee_list_tickets       - List tickets
+# 2. supportbee_get_ticket        - Get ticket by ID
+# 3. supportbee_create_ticket     - Create a new ticket
+# 4. supportbee_list_customers     - List customers
+# 5. supportbee_get_customer       - Get customer by ID
+# 6. supportbee_list_agents        - List agents
+# 7. supportbee_get_agent          - Get agent by ID
+# 8. supportbee_list_labels        - List labels
+# 9. supportbee_get_label          - Get label by ID
+# 10. supportbee_get_team_settings  - Get team settings
+
+- slug: supportbee_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets with optional filtering.
+    Returns ticket details including subject, status, and assignee.
+  provider: supportbee
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, pending, resolved, all"
+      assignee_id:
+        type: integer
+        description: "Filter by assignee agent ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: supportbee_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a specific ticket.
+    Includes messages, comments, and metadata.
+  provider: supportbee
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - id
+
+- slug: supportbee_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new ticket with subject, customer, and content.
+    Set priority and assignee.
+  provider: supportbee
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - tickets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "Ticket subject"
+      requester_email:
+        type: string
+        description: "Requester email address"
+      requester_name:
+        type: string
+        description: "Requester name"
+      content:
+        type: string
+        description: "Ticket content/message body"
+      priority:
+        type: integer
+        description: "Priority: 1=low, 2=normal, 3=high"
+        default: 2
+      assignee_id:
+        type: integer
+        description: "Assignee agent ID"
+    required:
+      - subject
+      - requester_email
+
+- slug: supportbee_list_customers
+  name: List Customers
+  description: |
+    List all customers in your Supportbee account.
+    Returns customer details including name, email, and company.
+  provider: supportbee
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: supportbee_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+    Includes contact info, company, and ticket history.
+  provider: supportbee
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: supportbee_list_agents
+  name: List Agents
+  description: |
+    List all agents in your Supportbee account.
+    Returns agent details including name, email, and role.
+  provider: supportbee
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: supportbee_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific agent.
+    Includes name, email, role, and availability settings.
+  provider: supportbee
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: integer
+        description: "Agent ID"
+    required:
+      - id
+
+- slug: supportbee_list_labels
+  name: List Labels
+  description: |
+    List all labels in your Supportbee account.
+    Returns label details including name and color.
+  provider: supportbee
+  endpoint: /labels
+  method: GET
+  scopes:
+    - read
+  tags:
+    - labels
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing labels
+    properties: {}
+    required: []
+
+- slug: supportbee_get_label
+  name: Get Label
+  description: |
+    Get detailed information about a specific label.
+    Includes name, color, and ticket count.
+  provider: supportbee
+  endpoint: /labels/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - labels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a label
+    properties:
+      id:
+        type: integer
+        description: "Label ID"
+    required:
+      - id
+
+- slug: supportbee_get_team_settings
+  name: Get Team Settings
+  description: |
+    Get the team settings for your Supportbee account.
+    Returns timezone, notification settings, and team configuration.
+  provider: supportbee
+  endpoint: /team_settings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - settings
+    - team
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

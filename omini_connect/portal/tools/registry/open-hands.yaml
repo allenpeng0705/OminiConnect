@@ -1,0 +1,247 @@
+# Open Hands Tools - Allowlist
+# Curated subset of Open Hands API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. open_hands_list_conversations    - List conversations
+# 2. open_hands_get_conversation     - Get conversation details
+# 3. open_hands_send_message         - Send message
+# 4. open_hands_create_task          - Create task
+# 5. open_hands_list_tasks            - List tasks
+# 6. open_hands_get_task             - Get task details
+# 7. open_hands_update_task          - Update task
+# 8. open_hands_list_agents         - List agents
+# 9. open_hands_get_status           - Get system status
+# 10. open_hands_get_workflow       - Get workflow
+
+- slug: open_hands_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Open Hands.
+  provider: open-hands
+  endpoint: /api/conversations
+  method: GET
+  scopes:
+    - conversations:read
+  tags:
+    - ai
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      limit:
+        type: integer
+        description: "Number of conversations"
+        default: 20
+    required: []
+
+- slug: open_hands_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information for a specific conversation.
+  provider: open-hands
+  endpoint: /api/conversations/{id}
+  method: GET
+  scopes:
+    - conversations:read
+  tags:
+    - ai
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: open_hands_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation.
+  provider: open-hands
+  endpoint: /api/conversations/{id}/messages
+  method: POST
+  scopes:
+    - conversations:write
+  tags:
+    - ai
+    - conversations
+    - messaging
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - id
+      - content
+
+- slug: open_hands_create_task
+  name: Create Task
+  description: |
+    Create a new task in Open Hands.
+  provider: open-hands
+  endpoint: /api/tasks
+  method: POST
+  scopes:
+    - tasks:write
+  tags:
+    - ai
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      description:
+        type: string
+        description: "Task description"
+    required:
+      - title
+
+- slug: open_hands_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Open Hands.
+  provider: open-hands
+  endpoint: /api/tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - ai
+    - tasks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: open_hands_get_task
+  name: Get Task
+  description: |
+    Get detailed information for a specific task.
+  provider: open-hands
+  endpoint: /api/tasks/{id}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - ai
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: open_hands_update_task
+  name: Update Task
+  description: |
+    Update an existing task.
+  provider: open-hands
+  endpoint: /api/tasks/{id}
+  method: PUT
+  scopes:
+    - tasks:write
+  tags:
+    - ai
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+      status:
+        type: string
+        description: "Task status"
+    required:
+      - id
+
+- slug: open_hands_list_agents
+  name: List Agents
+  description: |
+    List all available agents.
+  provider: open-hands
+  endpoint: /api/agents
+  method: GET
+  scopes:
+    - agents:read
+  tags:
+    - ai
+    - agents
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties: {}
+    required: []
+
+- slug: open_hands_get_status
+  name: Get Status
+  description: |
+    Get system status and health.
+  provider: open-hands
+  endpoint: /api/status
+  method: GET
+  scopes:
+    - status:read
+  tags:
+    - ai
+    - status
+    - health
+  input_schema:
+    type: object
+    description: Parameters for getting status
+    properties: {}
+    required: []
+
+- slug: open_hands_get_workflow
+  name: Get Workflow
+  description: |
+    Get workflow configuration.
+  provider: open-hands
+  endpoint: /api/workflows/{id}
+  method: GET
+  scopes:
+    - workflows:read
+  tags:
+    - ai
+    - workflows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workflow
+    properties:
+      id:
+        type: string
+        description: "Workflow ID"
+    required:
+      - id

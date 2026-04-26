@@ -1,0 +1,322 @@
+# Mailchimp Tools - Email Marketing API
+# List management, members, campaigns, automations, and templates.
+
+# === TOOL LIST ===
+# 1. mailchimp_list_lists         - List all audiences
+# 2. mailchimp_get_list          - Get audience details
+# 3. mailchimp_create_list        - Create a new audience
+# 4. mailchimp_list_members       - List members in an audience
+# 5. mailchimp_get_member         - Get member details
+# 6. mailchimp_add_member         - Add a member to an audience
+# 7. mailchimp_list_campaigns     - List all campaigns
+# 8. mailchimp_get_campaign       - Get campaign details
+# 9. mailchimp_create_campaign    - Create a new campaign
+# 10. mailchimp_list_automations - List automations
+
+- slug: mailchimp_list_lists
+  name: List Audiences
+  description: |
+    Get all audiences (formerly lists) in your Mailchimp account.
+    Audiences contain your subscribers and are used for sending campaigns.
+  provider: mailchimp
+  endpoint: /3.0/lists
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - lists
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for listing audiences
+    properties:
+      count:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      offset:
+        type: integer
+        description: "Index offset for pagination"
+        default: 0
+      before_date_created:
+        type: string
+        description: "Filter: lists created before this date"
+      after_date_created:
+        type: string
+        description: "Filter: lists created after this date"
+    required: []
+
+- slug: mailchimp_get_list
+  name: Get Audience
+  description: |
+    Get details about a specific audience including stats and settings.
+    Returns member count, unsubscribe rate, and campaign activity.
+  provider: mailchimp
+  endpoint: /3.0/lists/{list_id}
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - lists
+    - audiences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting audience details
+    properties:
+      list_id:
+        type: string
+        description: "Audience ID"
+    required:
+      - list_id
+
+- slug: mailchimp_create_list
+  name: Create Audience
+  description: |
+    Create a new audience in your Mailchimp account.
+    Configure contact details, campaign defaults, and permissions.
+  provider: mailchimp
+  endpoint: /3.0/lists
+  method: POST
+  scopes:
+    - lists
+  tags:
+    - lists
+    - audiences
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an audience
+    properties:
+      name:
+        type: string
+        description: "Audience name (required)"
+      contact:
+        type: object
+        description: "Company contact info: company, address1, city, state, zip, country"
+      permission_reminder:
+        type: string
+        description: "How contacts gave permission"
+      campaign_defaults:
+        type: object
+        description: "Default values for campaigns: from_name, from_email, subject, language"
+    required:
+      - name
+
+- slug: mailchimp_list_members
+  name: List Members
+  description: |
+    Get all members of a specific audience.
+    Includes subscriber status, engagement metrics, and tags.
+  provider: mailchimp
+  endpoint: /3.0/lists/{list_id}/members
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - members
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      list_id:
+        type: string
+        description: "Audience ID"
+      status:
+        type: string
+        description: "Filter by status: subscribed, unsubscribed, cleaned, pending, transactional"
+        enum: [subscribed, unsubscribed, cleaned, pending, transactional]
+      count:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      offset:
+        type: integer
+        description: "Index offset for pagination"
+        default: 0
+    required:
+      - list_id
+
+- slug: mailchimp_get_member
+  name: Get Member
+  description: |
+    Get details about a specific audience member.
+    Returns contact info, status, tags, and activity history.
+  provider: mailchimp
+  endpoint: /3.0/lists/{list_id}/members/{subscriber_hash}
+  method: GET
+  scopes:
+    - lists
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting member details
+    properties:
+      list_id:
+        type: string
+        description: "Audience ID"
+      subscriber_hash:
+        type: string
+        description: "MD5 hash of lowercase email address (subscriber hash)"
+    required:
+      - list_id
+      - subscriber_hash
+
+- slug: mailchimp_add_member
+  name: Add Member
+  description: |
+    Add a new member to an audience.
+    Can optionally send a confirmation email for double opt-in.
+  provider: mailchimp
+  endpoint: /3.0/lists/{list_id}/members
+  method: POST
+  scopes:
+    - lists
+  tags:
+    - members
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a member
+    properties:
+      list_id:
+        type: string
+        description: "Audience ID"
+      email_address:
+        type: string
+        description: "Member email address (required)"
+      status:
+        type: string
+        description: "Subscription status: subscribed, pending, unsubscribed"
+        enum: [subscribed, pending, unsubscribed]
+        default: pending
+      merge_fields:
+        type: object
+        description: "Additional merge field data"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to apply to the member"
+    required:
+      - list_id
+      - email_address
+
+- slug: mailchimp_list_campaigns
+  name: List Campaigns
+  description: |
+    Get all campaigns in your Mailchimp account.
+    Includes sent, scheduled, and draft campaigns.
+  provider: mailchimp
+  endpoint: /3.0/campaigns
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status: save, paused, schedule, sending, sent"
+        enum: [save, paused, schedule, sending, sent]
+      count:
+        type: integer
+        description: "Number of results per page (default 10)"
+        default: 10
+      offset:
+        type: integer
+        description: "Index offset for pagination"
+        default: 0
+    required: []
+
+- slug: mailchimp_get_campaign
+  name: Get Campaign
+  description: |
+    Get details about a specific campaign including content and settings.
+    Returns recipients, send time, and tracking metrics.
+  provider: mailchimp
+  endpoint: /3.0/campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting campaign details
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: mailchimp_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new campaign in Mailchimp.
+    Set recipients, subject, from info, and content.
+  provider: mailchimp
+  endpoint: /3.0/campaigns
+  method: POST
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      type:
+        type: string
+        description: "Campaign type: regular, plaintext, absplit, rss, variate"
+        enum: [regular, plaintext, absplit, rss, variate]
+        default: regular
+      recipients:
+        type: object
+        description: "Recipient settings: list_id, segment_opts"
+      settings:
+        type: object
+        description: "Campaign settings: subject_line, preview_text, title, from_name, reply_to"
+    required:
+      - type
+
+- slug: mailchimp_list_automations
+  name: List Automations
+  description: |
+    Get all automations in your Mailchimp account.
+    Automations are triggered email sequences like welcome series.
+  provider: mailchimp
+  endpoint: /3.0/automations
+  method: GET
+  scopes:
+    - automation
+  tags:
+    - automation
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing automations
+    properties:
+      count:
+        type: integer
+        description: "Number of results per page (default 10)"
+        default: 10
+      offset:
+        type: integer
+        description: "Index offset for pagination"
+        default: 0
+      status:
+        type: string
+        description: "Filter by status: paused, unpaused, send"
+        enum: [paused, unpaused, send]
+    required: []

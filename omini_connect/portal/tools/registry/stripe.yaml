@@ -1,0 +1,304 @@
+# Stripe Tools - Allowlist
+# Curated subset of the Stripe API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. stripe_list_charges         - List charges for the account
+# 2. stripe_get_charge           - Get details of a specific charge
+# 3. stripe_create_charge        - Create a new charge
+# 4. stripe_list_customers       - List customers
+# 5. stripe_get_customer         - Get details of a specific customer
+# 6. stripe_create_customer      - Create a new customer
+# 7. stripe_list_subscriptions   - List subscriptions
+# 8. stripe_get_subscription     - Get details of a specific subscription
+# 9. stripe_list_invoices        - List invoices
+# 10. stripe_get_invoice         - Get details of a specific invoice
+
+- slug: stripe_list_charges
+  name: List Charges
+  description: |
+    List charges (payments) for the account. Returns a paginated list of charges with details like amount, currency, status, and customer.
+  provider: stripe
+  endpoint: /v1/charges
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - charges
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing charges
+    properties:
+      customer:
+        type: string
+        description: "Filter by customer ID"
+      created:
+        type: object
+        description: "Filter by creation date (gte, lte, gt, lt)"
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      starting_after:
+        type: string
+        description: "Cursor for pagination (object ID)"
+    required: []
+
+- slug: stripe_get_charge
+  name: Get Charge
+  description: |
+    Get details of a specific charge including amount, currency, payment method, and status.
+  provider: stripe
+  endpoint: /v1/charges/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - charges
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a charge
+    properties:
+      id:
+        type: string
+        description: "Charge ID"
+    required:
+      - id
+
+- slug: stripe_create_charge
+  name: Create Charge
+  description: |
+    Create a new charge for a customer. Specify amount, currency, and optional payment method details.
+  provider: stripe
+  endpoint: /v1/charges
+  method: POST
+  scopes:
+    - write
+  tags:
+    - charges
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a charge
+    properties:
+      amount:
+        type: integer
+        description: "Amount in smallest currency unit (e.g., cents for USD)"
+      currency:
+        type: string
+        description: "Three-letter ISO currency code"
+        default: usd
+      customer:
+        type: string
+        description: "Customer ID to charge"
+      description:
+        type: string
+        description: "Description of the charge"
+      payment_method:
+        type: string
+        description: "Payment method ID to use"
+    required:
+      - amount
+      - currency
+
+- slug: stripe_list_customers
+  name: List Customers
+  description: |
+    List all customers for the account. Returns a paginated list with email, name, and metadata.
+  provider: stripe
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      email:
+        type: string
+        description: "Filter by email address"
+      created:
+        type: object
+        description: "Filter by creation date"
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer including email, name, address, and default payment method.
+  provider: stripe
+  endpoint: /v1/customers/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - customers
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: stripe_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer with email, name, and optional metadata. Required before recurring billing.
+  provider: stripe
+  endpoint: /v1/customers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - customers
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      email:
+        type: string
+        description: "Customer email address"
+      name:
+        type: string
+        description: "Customer full name"
+      phone:
+        type: string
+        description: "Customer phone number"
+      description:
+        type: string
+        description: "Customer description"
+      metadata:
+        type: object
+        description: "Key-value pairs for custom data"
+    required: []
+
+- slug: stripe_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List subscriptions for the account. Filter by customer, status, or plan to find active or past subscriptions.
+  provider: stripe
+  endpoint: /v1/subscriptions
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - subscriptions
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      customer:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: active, past_due, canceled, all"
+        enum: [active, past_due, canceled, all]
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_get_subscription
+  name: Get Subscription
+  description: |
+    Get details of a specific subscription including plan, status, current period, and cancel date.
+  provider: stripe
+  endpoint: /v1/subscriptions/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - subscriptions
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - id
+
+- slug: stripe_list_invoices
+  name: List Invoices
+  description: |
+    List invoices for the account or a specific customer. Returns pending, open, and paid invoices.
+  provider: stripe
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - invoices
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      customer:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status: draft, open, paid, uncollectible, void"
+        enum: [draft, open, paid, uncollectible, void]
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 10)"
+        default: 10
+      starting_after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: stripe_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice including line items, amount due, tax, and payment status.
+  provider: stripe
+  endpoint: /v1/invoices/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - invoices
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id

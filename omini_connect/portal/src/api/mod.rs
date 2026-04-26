@@ -1,9 +1,13 @@
 //! REST API routes.
 
 pub mod connectors;
+pub mod nango_connection;
+pub mod nango_hq_proxy;
 pub mod nango_catalog;
 pub mod proxy;
 pub mod status;
+pub mod tools;
+pub mod mcp;
 
 use std::sync::Arc;
 
@@ -23,5 +27,9 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/nango/integrations", axum::routing::get(nango_catalog::list_integrations))
         .route("/nango/providers", axum::routing::get(nango_catalog::list_providers))
         .route("/nango/connect-session", axum::routing::post(nango_catalog::post_connect_session))
-        .route("/proxy/:platform/*path", axum::routing::get(proxy::forward).post(proxy::forward))
+        .route("/nango/connections", axum::routing::post(nango_catalog::post_nango_connection))
+        .route("/nango/connections", axum::routing::get(nango_catalog::list_nango_connections))
+        .route("/ominiconnect/proxy/:platform/*path", axum::routing::get(proxy::forward).post(proxy::forward))
+        .merge(tools::router())
+        .merge(mcp::router())
 }

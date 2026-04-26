@@ -1,0 +1,243 @@
+# Greenhouse Onboarding Tools - Allowlist
+# Curated subset of Greenhouse Onboarding API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. greenhouse_onboarding_list_employees  - List onboarding employees
+# 2. greenhouse_onboarding_get_employee    - Get onboarding employee
+# 3. greenhouse_onboarding_list_tasks      - List onboarding tasks
+# 4. greenhouse_onboarding_get_task        - Get task details
+# 5. greenhouse_onboarding_list_forms      - List onboarding forms
+# 6. greenhouse_onboarding_get_form        - Get form details
+# 7. greenhouse_onboarding_list_groups     - List onboarding groups
+# 8. greenhouse_onboarding_get_group       - Get group details
+# 9. greenhouse_onboarding_list_documents  - List documents
+# 10. greenhouse_onboarding_get_document    - Get document details
+
+- slug: greenhouse_onboarding_list_employees
+  name: List Onboarding Employees
+  description: |
+    List all employees in the onboarding process.
+    Returns employee details including name and onboarding status.
+  provider: greenhouse-onboarding
+  endpoint: /employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - list
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for listing onboarding employees
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: greenhouse_onboarding_get_employee
+  name: Get Onboarding Employee
+  description: |
+    Get detailed information about an onboarding employee.
+    Includes onboarding tasks, forms, and progress.
+  provider: greenhouse-onboarding
+  endpoint: /employees/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - read
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for getting an onboarding employee
+    properties:
+      id:
+        type: integer
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: greenhouse_onboarding_list_tasks
+  name: List Onboarding Tasks
+  description: |
+    List all onboarding tasks.
+    Returns task details including name, assignee, and status.
+  provider: greenhouse-onboarding
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for listing onboarding tasks
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+    required: []
+
+- slug: greenhouse_onboarding_get_task
+  name: Get Onboarding Task
+  description: |
+    Get detailed information about an onboarding task.
+    Includes task details, assignee, and due date.
+  provider: greenhouse-onboarding
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - read
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for getting an onboarding task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id
+
+- slug: greenhouse_onboarding_list_forms
+  name: List Onboarding Forms
+  description: |
+    List all onboarding forms.
+    Returns form details including name and type.
+  provider: greenhouse-onboarding
+  endpoint: /forms
+  method: GET
+  scopes:
+    - read
+  tags:
+    - forms
+    - list
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for listing onboarding forms
+    properties: {}
+    required: []
+
+- slug: greenhouse_onboarding_get_form
+  name: Get Onboarding Form
+  description: |
+    Get detailed information about an onboarding form.
+    Includes form fields and requirements.
+  provider: greenhouse-onboarding
+  endpoint: /forms/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - forms
+    - read
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for getting an onboarding form
+    properties:
+      id:
+        type: integer
+        description: "Form ID"
+    required:
+      - id
+
+- slug: greenhouse_onboarding_list_groups
+  name: List Onboarding Groups
+  description: |
+    List all onboarding groups.
+    Returns group details including name and members.
+  provider: greenhouse-onboarding
+  endpoint: /groups
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+    - list
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for listing onboarding groups
+    properties: {}
+    required: []
+
+- slug: greenhouse_onboarding_get_group
+  name: Get Onboarding Group
+  description: |
+    Get detailed information about an onboarding group.
+    Includes group members and assigned tasks.
+  provider: greenhouse-onboarding
+  endpoint: /groups/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - groups
+    - read
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for getting an onboarding group
+    properties:
+      id:
+        type: integer
+        description: "Group ID"
+    required:
+      - id
+
+- slug: greenhouse_onboarding_list_documents
+  name: List Documents
+  description: |
+    List all onboarding documents.
+    Returns document details including name and type.
+  provider: greenhouse-onboarding
+  endpoint: /documents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - documents
+    - list
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for listing onboarding documents
+    properties: {}
+    required: []
+
+- slug: greenhouse_onboarding_get_document
+  name: Get Document
+  description: |
+    Get detailed information about an onboarding document.
+    Includes document content and metadata.
+  provider: greenhouse-onboarding
+  endpoint: /documents/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - documents
+    - read
+    - onboarding
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      id:
+        type: integer
+        description: "Document ID"
+    required:
+      - id

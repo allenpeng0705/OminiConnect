@@ -1,0 +1,286 @@
+# Squarespace Tools - Allowlist
+# Curated subset of Squarespace API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. squarespace_list_sites       - List all sites
+# 2. squarespace_get_site         - Get site details
+# 3. squarespace_list_pages       - List pages in a site
+# 4. squarespace_get_page         - Get page details
+# 5. squarespace_list_products    - List products
+# 6. squarespace_get_product      - Get product details
+# 7. squarespace_list_orders       - List orders
+# 8. squarespace_get_order        - Get order details
+# 9. squarespace_update_inventory - Update inventory
+# 10. squarespace_list_inventory  - List inventory
+
+- slug: squarespace_list_sites
+  name: List Sites
+  description: |
+    List all Squarespace websites associated with your account.
+  provider: squarespace
+  endpoint: /sites
+  method: GET
+  scopes:
+    - website:read
+  tags:
+    - sites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of sites to return (default 20, max 100)"
+      cursor:
+        type: string
+        description: "Pagination cursor for retrieving next page of results"
+    required: []
+
+- slug: squarespace_get_site
+  name: Get Site
+  description: |
+    Get detailed information about a specific Squarespace website.
+  provider: squarespace
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes:
+    - website:read
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+    required:
+      - site_id
+
+- slug: squarespace_list_pages
+  name: List Pages
+  description: |
+    List all pages within a Squarespace website including main pages and subpages.
+  provider: squarespace
+  endpoint: /sites/{site_id}/pages
+  method: GET
+  scopes:
+    - website:read
+  tags:
+    - pages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      folder_id:
+        type: string
+        description: "Filter by folder ID (optional)"
+    required:
+      - site_id
+
+- slug: squarespace_get_page
+  name: Get Page
+  description: |
+    Get detailed content and settings of a specific page including SEO data.
+  provider: squarespace
+  endpoint: /sites/{site_id}/pages/{page_id}
+  method: GET
+  scopes:
+    - website:read
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      page_id:
+        type: string
+        description: "Unique identifier of the page"
+    required:
+      - site_id
+      - page_id
+
+- slug: squarespace_list_products
+  name: List Products
+  description: |
+    List all products in a Squarespace online store including variants and inventory.
+  provider: squarespace
+  endpoint: /sites/{site_id}/products
+  method: GET
+  scopes:
+    - commerce:read
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      limit:
+        type: integer
+        description: "Maximum number of products to return (default 20)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - site_id
+
+- slug: squarespace_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product including variants, pricing, and media.
+  provider: squarespace
+  endpoint: /sites/{site_id}/products/{product_id}
+  method: GET
+  scopes:
+    - commerce:read
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      product_id:
+        type: string
+        description: "Unique identifier of the product"
+    required:
+      - site_id
+      - product_id
+
+- slug: squarespace_list_orders
+  name: List Orders
+  description: |
+    List all orders from a Squarespace commerce store with status filtering.
+  provider: squarespace
+  endpoint: /sites/{site_id}/orders
+  method: GET
+  scopes:
+    - commerce:read
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      status:
+        type: string
+        description: "Filter by status (pending, fulfilled, cancelled)"
+      limit:
+        type: integer
+        description: "Maximum number of orders to return (default 20)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - site_id
+
+- slug: squarespace_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order including line items and shipping.
+  provider: squarespace
+  endpoint: /sites/{site_id}/orders/{order_id}
+  method: GET
+  scopes:
+    - commerce:read
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      order_id:
+        type: string
+        description: "Unique identifier of the order"
+    required:
+      - site_id
+      - order_id
+
+- slug: squarespace_update_inventory
+  name: Update Inventory
+  description: |
+    Update inventory levels for a specific product or variant.
+  provider: squarespace
+  endpoint: /sites/{site_id}/products/{product_id}/inventory
+  method: PATCH
+  scopes:
+    - commerce:write
+  tags:
+    - inventory
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating inventory
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      product_id:
+        type: string
+        description: "Unique identifier of the product"
+      variant_id:
+        type: string
+        description: "Variant ID for variant-specific inventory (optional)"
+      quantity:
+        type: integer
+        description: "New inventory quantity"
+    required:
+      - site_id
+      - product_id
+      - quantity
+
+- slug: squarespace_list_inventory
+  name: List Inventory
+  description: |
+    List inventory status for all products including low stock alerts.
+  provider: squarespace
+  endpoint: /sites/{site_id}/inventory
+  method: GET
+  scopes:
+    - commerce:read
+  tags:
+    - inventory
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing inventory
+    properties:
+      site_id:
+        type: string
+        description: "Unique identifier of the site"
+      low_stock_threshold:
+        type: integer
+        description: "Filter to show only products below this stock level"
+    required:
+      - site_id

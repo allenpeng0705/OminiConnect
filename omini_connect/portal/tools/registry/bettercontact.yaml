@@ -1,0 +1,253 @@
+# BetterContact Tools - Allowlist
+# Curated subset of BetterContact API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bettercontact_get_account     - Get account info
+# 2. bettercontact_list_contacts  - List contacts
+# 3. bettercontact_get_contact    - Get contact details
+# 4. bettercontact_create_contact - Create new contact
+# 5. bettercontact_update_contact - Update contact
+# 6. bettercontact_delete_contact - Delete contact
+# 7. bettercontact_search_contacts - Search contacts
+# 8. bettercontact_list_lists    - List contact lists
+# 9. bettercontact_get_company    - Get company info
+# 10. bettercontact_list_webhooks - List webhooks
+
+- slug: bettercontact_get_account
+  name: Get Account
+  description: |
+    Get account information and settings.
+  provider: bettercontact
+  endpoint: /api/v2/account
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - info
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: bettercontact_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in the account.
+  provider: bettercontact
+  endpoint: /api/v2/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Contacts per page"
+        default: 20
+    required: []
+
+- slug: bettercontact_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: bettercontact
+  endpoint: /api/v2/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: bettercontact_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in BetterContact.
+  provider: bettercontact
+  endpoint: /api/v2/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - email
+
+- slug: bettercontact_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: bettercontact
+  endpoint: /api/v2/contacts/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+      email:
+        type: string
+        description: "Contact email"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - id
+
+- slug: bettercontact_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact from BetterContact.
+  provider: bettercontact
+  endpoint: /api/v2/contacts/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - contacts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: bettercontact_search_contacts
+  name: Search Contacts
+  description: |
+    Search contacts by name, email, or other fields.
+  provider: bettercontact
+  endpoint: /api/v2/contacts/search
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching contacts
+    properties:
+      q:
+        type: string
+        description: "Search query"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - q
+
+- slug: bettercontact_list_lists
+  name: List Lists
+  description: |
+    List all contact lists in the account.
+  provider: bettercontact
+  endpoint: /api/v2/lists
+  method: GET
+  scopes: []
+  tags:
+    - lists
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing lists
+    properties: {}
+    required: []
+
+- slug: bettercontact_get_company
+  name: Get Company
+  description: |
+    Get company information linked to a contact.
+  provider: bettercontact
+  endpoint: /api/v2/companies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: bettercontact_list_webhooks
+  name: List Webhooks
+  description: |
+    List all configured webhooks.
+  provider: bettercontact
+  endpoint: /api/v2/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - integration
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}
+    required: []

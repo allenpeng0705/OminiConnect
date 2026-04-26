@@ -1,0 +1,267 @@
+# Google Analytics Tools - Allowlist
+# Curated subset of Google Analytics Data API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_analytics_list_reports      - Run Analytics reports
+# 2. google_analytics_get_property     - Get property details
+# 3. google_analytics_list_properties  - List Analytics properties
+# 4. google_analytics_list_dimensions  - List available dimensions
+# 5. google_analytics_list_metrics     - List available metrics
+# 6. google_analytics_run_realtime_report - Run realtime report
+# 7. google_analytics_list_goals      - List conversion goals
+# 8. google_analytics_list_user_link  - List user links
+# 9. google_analytics_get_audience     - Get audience insights
+# 10. google_analytics_list_event     - List events
+
+- slug: google_analytics_list_reports
+  name: Run Analytics Reports
+  description: |
+    Run a report query on Google Analytics data.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}:runReport
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - reports
+    - list
+  input_schema:
+    type: object
+    description: Parameters for running reports
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      metrics:
+        type: array
+        description: "Metrics to retrieve"
+      dimensions:
+        type: array
+        description: "Dimensions to group by"
+    required:
+      - property_id
+      - start_date
+      - end_date
+
+- slug: google_analytics_get_property
+  name: Get Property
+  description: |
+    Get detailed information about an Analytics property.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - property
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+    required:
+      - property_id
+
+- slug: google_analytics_list_properties
+  name: List Properties
+  description: |
+    List all Analytics properties.
+  provider: google-analytics
+  endpoint: /v1beta/accountSummaries
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - properties
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties: {}
+
+- slug: google_analytics_list_dimensions
+  name: List Dimensions
+  description: |
+    List available dimensions in Analytics.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}/dimensions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - dimensions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dimensions
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+    required:
+      - property_id
+
+- slug: google_analytics_list_metrics
+  name: List Metrics
+  description: |
+    List available metrics in Analytics.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}/metrics
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - metrics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing metrics
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+    required:
+      - property_id
+
+- slug: google_analytics_run_realtime_report
+  name: Run Realtime Report
+  description: |
+    Run a realtime report on current activity.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}:runRealtimeReport
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - realtime
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for realtime reports
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+      metrics:
+        type: array
+        description: "Metrics to retrieve"
+      dimensions:
+        type: array
+        description: "Dimensions to group by"
+    required:
+      - property_id
+
+- slug: google_analytics_list_goals
+  name: List Goals
+  description: |
+    List conversion goals for a property.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}/conversionGoals
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - goals
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing goals
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+    required:
+      - property_id
+
+- slug: google_analytics_list_user_link
+  name: List User Links
+  description: |
+    List user links for a property.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}/userLinks
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.manage.users
+  tags:
+    - analytics
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing user links
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+    required:
+      - property_id
+
+- slug: google_analytics_get_audience
+  name: Get Audience
+  description: |
+    Get audience insights for a property.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}:runReport
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - audience
+    - read
+  input_schema:
+    type: object
+    description: Parameters for audience insights
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+      audience_id:
+        type: string
+        description: "Audience ID"
+    required:
+      - property_id
+
+- slug: google_analytics_list_event
+  name: List Events
+  description: |
+    List events for a property.
+  provider: google-analytics
+  endpoint: /v1beta/properties/{property_id}/events
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/analytics.readonly
+  tags:
+    - analytics
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      property_id:
+        type: string
+        description: "Analytics property ID"
+      date:
+        type: string
+        description: "Date (YYYY-MM-DD)"
+    required:
+      - property_id

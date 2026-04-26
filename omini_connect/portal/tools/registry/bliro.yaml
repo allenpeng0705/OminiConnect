@@ -1,0 +1,245 @@
+# Bliro Tools - Allowlist
+# Curated subset of Bliro API for AI agent use.
+# OAuth2_CC via Nango (Client Credentials).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bliro_list_messages         - List messages
+# 2. bliro_get_message          - Get message details
+# 3. bliro_send_message         - Send a message
+# 4. bliro_list_contacts       - List contacts
+# 5. bliro_get_contact          - Get contact details
+# 6. bliro_list_conversations  - List conversations
+# 7. bliro_get_conversation    - Get conversation details
+# 8. bliro_list_teams         - List teams
+# 9. bliro_get_team            - Get team details
+# 10. bliro_get_webhooks       - Get webhook logs
+
+- slug: bliro_list_messages
+  name: List Messages
+  description: |
+    List all messages in Bliro.
+  provider: bliro
+  endpoint: /v1/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Messages per page"
+        default: 20
+    required: []
+
+- slug: bliro_get_message
+  name: Get Message
+  description: |
+    Get details for a specific message.
+  provider: bliro
+  endpoint: /v1/messages/{messageId}
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: bliro_send_message
+  name: Send Message
+  description: |
+    Send a message through Bliro.
+  provider: bliro
+  endpoint: /v1/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      recipientId:
+        type: string
+        description: "Recipient contact ID"
+      content:
+        type: string
+        description: "Message content"
+      channel:
+        type: string
+        description: "Channel to send through"
+    required:
+      - recipientId
+      - content
+
+- slug: bliro_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Bliro.
+  provider: bliro
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Contacts per page"
+        default: 20
+    required: []
+
+- slug: bliro_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: bliro
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: bliro_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Bliro.
+  provider: bliro
+  endpoint: /v1/conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - messaging
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Conversations per page"
+        default: 20
+    required: []
+
+- slug: bliro_get_conversation
+  name: Get Conversation
+  description: |
+    Get details for a specific conversation.
+  provider: bliro
+  endpoint: /v1/conversations/{conversationId}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversationId
+
+- slug: bliro_list_teams
+  name: List Teams
+  description: |
+    List all teams in Bliro.
+  provider: bliro
+  endpoint: /v1/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: bliro_get_team
+  name: Get Team
+  description: |
+    Get details for a specific team.
+  provider: bliro
+  endpoint: /v1/teams/{teamId}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: bliro_get_webhooks
+  name: Get Webhooks
+  description: |
+    Get webhook event logs.
+  provider: bliro
+  endpoint: /v1/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting webhooks
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Events per page"
+        default: 20
+    required: []

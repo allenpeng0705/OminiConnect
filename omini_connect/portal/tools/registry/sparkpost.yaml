@@ -1,0 +1,273 @@
+- slug: sparkpost_list_messages
+  name: List Messages
+  description: |
+    Retrieve all transmission messages from your SparkPost account.
+  provider: sparkpost
+  endpoint: /v1/transmissions
+  method: GET
+  scopes:
+    - transmissions
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of transmissions to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+      campaign_id:
+        type: string
+        description: "Filter by campaign ID"
+    required: []
+
+- slug: sparkpost_get_message
+  name: Get Message
+  description: |
+    Retrieve details of a specific transmission message.
+  provider: sparkpost
+  endpoint: /v1/transmissions/{id}
+  method: GET
+  scopes:
+    - transmissions
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      id:
+        type: string
+        description: "Transmission ID to retrieve"
+    required:
+      - id
+
+- slug: sparkpost_send_message
+  name: Send Message
+  description: |
+    Send an email message via SparkPost transmission API.
+  provider: sparkpost
+  endpoint: /v1/transmissions
+  method: POST
+  scopes:
+    - transmissions
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      recipients:
+        type: array
+        description: "List of recipient email addresses"
+      from:
+        type: string
+        description: "Sender email address"
+      subject:
+        type: string
+        description: "Email subject line"
+      html:
+        type: string
+        description: "HTML email body"
+      text:
+        type: string
+        description: "Plain text email body"
+      campaign_id:
+        type: string
+        description: "Campaign ID for tracking"
+      metadata:
+        type: object
+        description: "Custom metadata key-value pairs"
+    required:
+      - recipients
+      - from
+      - subject
+
+- slug: sparkpost_list_templates
+  name: List Templates
+  description: |
+    Retrieve all email templates from your SparkPost account.
+  provider: sparkpost
+  endpoint: /v1/templates
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of templates to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: sparkpost_get_template
+  name: Get Template
+  description: |
+    Retrieve a specific email template by ID.
+  provider: sparkpost
+  endpoint: /v1/templates/{id}
+  method: GET
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      id:
+        type: string
+        description: "Template ID to retrieve"
+    required:
+      - id
+
+- slug: sparkpost_create_template
+  name: Create Template
+  description: |
+    Create a new email template in SparkPost.
+  provider: sparkpost
+  endpoint: /v1/templates
+  method: POST
+  scopes:
+    - templates
+  tags:
+    - templates
+  input_schema:
+    type: object
+    description: Parameters for creating a template
+    properties:
+      id:
+        type: string
+        description: "Unique ID for the template"
+      name:
+        type: string
+        description: "Template name"
+      description:
+        type: string
+        description: "Template description"
+      html:
+        type: string
+        description: "HTML body with handlebar syntax"
+      text:
+        type: string
+        description: "Plain text body"
+      subject:
+        type: string
+        description: "Default subject line"
+    required:
+      - id
+      - name
+      - html
+
+- slug: sparkpost_list_webhooks
+  name: List Webhooks
+  description: |
+    Retrieve all configured webhooks for event streaming.
+  provider: sparkpost
+  endpoint: /v1/webhooks
+  method: GET
+  scopes:
+    - webhooks
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of webhooks to return"
+    required: []
+
+- slug: sparkpost_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook for receiving SparkPost event notifications.
+  provider: sparkpost
+  endpoint: /v1/webhooks
+  method: POST
+  scopes:
+    - webhooks
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      name:
+        type: string
+        description: "Webhook name"
+      target:
+        type: string
+        description: "URL to receive webhook events"
+      events:
+        type: array
+        description: "List of event types to subscribe to"
+      auth_token:
+        type: string
+        description: "Bearer token for webhook verification"
+    required:
+      - name
+      - target
+      - events
+
+- slug: sparkpost_get_metrics
+  name: Get Metrics
+  description: |
+    Retrieve aggregate metrics for your SparkPost transmissions.
+  provider: sparkpost
+  endpoint: /v1/metrics
+  method: GET
+  scopes:
+    - metrics
+  tags:
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting metrics
+    properties:
+      metrics:
+        type: array
+        description: "List of metric types to retrieve"
+      from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      timezone:
+        type: string
+        description: "Timezone for results (e.g., America/New_York)"
+    required: []
+
+- slug: sparkpost_list_domains
+  name: List Domains
+  description: |
+    Retrieve all verified sending domains in your SparkPost account.
+  provider: sparkpost
+  endpoint: /v1/sending-domains
+  method: GET
+  scopes:
+    - sending-domains
+  tags:
+    - domains
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of domains to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []

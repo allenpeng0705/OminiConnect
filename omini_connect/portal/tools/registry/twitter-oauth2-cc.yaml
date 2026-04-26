@@ -1,0 +1,187 @@
+# Twitter (OAuth2 CC) Tools - Allowlist
+# Curated subset of Twitter (OAuth2 CC) API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. twitter_list_tweets           - List tweets from timeline
+# # 2. twitter_get_tweet           - Get tweet details
+# # 3. twitter_create_tweet           - Post a new tweet
+# # 4. twitter_delete_tweet           - Delete a tweet
+# # 5. twitter_list_users           - List Twitter users
+# # 6. twitter_get_user           - Get user profile
+# # 7. twitter_search_tweets           - Search for tweets
+# # 8. twitter_get_likes           - Get tweets liked by a user
+# # 9. twitter_like_tweet           - Like a tweet
+# # 10. twitter_unlike_tweet           - Unlike a tweet
+
+- slug: twitter_list_tweets
+  name: List Tweets
+  description: |
+    List tweets from timeline
+  provider: twitter-oauth2-cc
+  endpoint: /2/tweets
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list tweets
+    properties: {}
+    required: []
+
+- slug: twitter_get_tweet
+  name: Get Tweet
+  description: |
+    Get tweet details
+  provider: twitter-oauth2-cc
+  endpoint: /2/tweets/{id}
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for get tweet
+    properties: {}
+    required: []
+
+- slug: twitter_create_tweet
+  name: Create Tweet
+  description: |
+    Post a new tweet
+  provider: twitter-oauth2-cc
+  endpoint: /2/tweets
+  method: POST
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for create tweet
+    properties: {}
+    required: []
+
+- slug: twitter_delete_tweet
+  name: Delete Tweet
+  description: |
+    Delete a tweet
+  provider: twitter-oauth2-cc
+  endpoint: /2/tweets/{id}
+  method: DELETE
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for delete tweet
+    properties: {}
+    required: []
+
+- slug: twitter_list_users
+  name: List Users
+  description: |
+    List Twitter users
+  provider: twitter-oauth2-cc
+  endpoint: /2/users
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for list users
+    properties: {}
+    required: []
+
+- slug: twitter_get_user
+  name: Get User
+  description: |
+    Get user profile
+  provider: twitter-oauth2-cc
+  endpoint: /2/users/{id}
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for get user
+    properties: {}
+    required: []
+
+- slug: twitter_search_tweets
+  name: Search Tweets
+  description: |
+    Search for tweets
+  provider: twitter-oauth2-cc
+  endpoint: /2/tweets/search/recent
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for search tweets
+    properties: {}
+    required: []
+
+- slug: twitter_get_likes
+  name: Get Likes
+  description: |
+    Get tweets liked by a user
+  provider: twitter-oauth2-cc
+  endpoint: /2/users/{id}/liked_tweets
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for get likes
+    properties: {}
+    required: []
+
+- slug: twitter_like_tweet
+  name: Like Tweet
+  description: |
+    Like a tweet
+  provider: twitter-oauth2-cc
+  endpoint: /2/users/{id}/likes
+  method: POST
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for like tweet
+    properties: {}
+    required: []
+
+- slug: twitter_unlike_tweet
+  name: Unlike Tweet
+  description: |
+    Unlike a tweet
+  provider: twitter-oauth2-cc
+  endpoint: /2/users/{id}/likes/{tweet_id}
+  method: DELETE
+  scopes:
+    - tweet.write
+  tags:
+    - twitter-oauth2-cc
+  input_schema:
+    type: object
+    description: Parameters for unlike tweet
+    properties: {}
+    required: []
+

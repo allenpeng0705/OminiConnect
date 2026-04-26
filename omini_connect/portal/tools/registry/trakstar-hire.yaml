@@ -1,0 +1,187 @@
+# Trakstar Hire Tools - Allowlist
+# Curated subset of Trakstar Hire API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. trakstar_list_jobs           - List all job openings
+# # 2. trakstar_get_job           - Get job details
+# # 3. trakstar_list_candidates           - List all candidates
+# # 4. trakstar_get_candidate           - Get candidate details
+# # 5. trakstar_create_candidate           - Add a new candidate
+# # 6. trakstar_list_interviews           - List scheduled interviews
+# # 7. trakstar_create_interview           - Schedule an interview
+# # 8. trakstar_list_offices           - List all offices
+# # 9. trakstar_list_departments           - List all departments
+# # 10. trakstar_add_note           - Add a note to a candidate
+
+- slug: trakstar_list_jobs
+  name: List Jobs
+  description: |
+    List all job openings
+  provider: trakstar-hire
+  endpoint: /api/v1/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for list jobs
+    properties: {}
+    required: []
+
+- slug: trakstar_get_job
+  name: Get Job
+  description: |
+    Get job details
+  provider: trakstar-hire
+  endpoint: /api/v1/jobs/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for get job
+    properties: {}
+    required: []
+
+- slug: trakstar_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates
+  provider: trakstar-hire
+  endpoint: /api/v1/candidates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for list candidates
+    properties: {}
+    required: []
+
+- slug: trakstar_get_candidate
+  name: Get Candidate
+  description: |
+    Get candidate details
+  provider: trakstar-hire
+  endpoint: /api/v1/candidates/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for get candidate
+    properties: {}
+    required: []
+
+- slug: trakstar_create_candidate
+  name: Create Candidate
+  description: |
+    Add a new candidate
+  provider: trakstar-hire
+  endpoint: /api/v1/candidates
+  method: POST
+  scopes:
+    - write
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for create candidate
+    properties: {}
+    required: []
+
+- slug: trakstar_list_interviews
+  name: List Interviews
+  description: |
+    List scheduled interviews
+  provider: trakstar-hire
+  endpoint: /api/v1/interviews
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for list interviews
+    properties: {}
+    required: []
+
+- slug: trakstar_create_interview
+  name: Create Interview
+  description: |
+    Schedule an interview
+  provider: trakstar-hire
+  endpoint: /api/v1/interviews
+  method: POST
+  scopes:
+    - write
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for create interview
+    properties: {}
+    required: []
+
+- slug: trakstar_list_offices
+  name: List Offices
+  description: |
+    List all offices
+  provider: trakstar-hire
+  endpoint: /api/v1/offices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for list offices
+    properties: {}
+    required: []
+
+- slug: trakstar_list_departments
+  name: List Departments
+  description: |
+    List all departments
+  provider: trakstar-hire
+  endpoint: /api/v1/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for list departments
+    properties: {}
+    required: []
+
+- slug: trakstar_add_note
+  name: Add Note
+  description: |
+    Add a note to a candidate
+  provider: trakstar-hire
+  endpoint: /api/v1/notes
+  method: POST
+  scopes:
+    - write
+  tags:
+    - trakstar-hire
+  input_schema:
+    type: object
+    description: Parameters for add note
+    properties: {}
+    required: []
+

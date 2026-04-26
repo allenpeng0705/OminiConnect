@@ -1,0 +1,282 @@
+# Twilio Tools - Allowlist
+# Curated subset of Twilio API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. twilio_list_messages       - List SMS/MMS messages
+# 2. twilio_get_message         - Get message details
+# 3. twilio_send_sms            - Send SMS message
+# 4. twilio_list_calls          - List phone calls
+# 5. twilio_get_call            - Get call details
+# 6. twilio_create_call         - Initiate a call
+# 7. twilio_list_recordings     - List call recordings
+# 8. twilio_get_recording       - Get recording details
+# 9. twilio_list_conferences    - List conferences
+# 10. twilio_get_conference     - Get conference details
+
+- slug: twilio_list_messages
+  name: List Messages
+  description: |
+    List all SMS and MMS messages sent or received through Twilio.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Messages.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      to:
+        type: string
+        description: "Filter by recipient phone number"
+      from:
+        type: string
+        description: "Filter by sender phone number"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: twilio_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a specific Twilio message.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      MessageSid:
+        type: string
+        description: "Message SID"
+    required:
+      - MessageSid
+
+- slug: twilio_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message via Twilio.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Messages.json
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending an SMS
+    properties:
+      to:
+        type: string
+        description: "Recipient phone number"
+      from:
+        type: string
+        description: "Twilio phone number to send from"
+      body:
+        type: string
+        description: "Message text"
+    required:
+      - to
+      - from
+      - body
+
+- slug: twilio_list_calls
+  name: List Calls
+  description: |
+    List all phone calls made through Twilio.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Calls.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      to:
+        type: string
+        description: "Filter by recipient phone number"
+      from:
+        type: string
+        description: "Filter by caller phone number"
+      status:
+        type: string
+        description: "Filter by status (queued, ringing, in-progress, completed, busy, failed)"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: twilio_get_call
+  name: Get Call
+  description: |
+    Get detailed information about a specific Twilio call.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Calls/{CallSid}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      CallSid:
+        type: string
+        description: "Call SID"
+    required:
+      - CallSid
+
+- slug: twilio_create_call
+  name: Create Call
+  description: |
+    Initiate a new outbound phone call via Twilio.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Calls.json
+  method: POST
+  scopes:
+    - write
+  tags:
+    - calls
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a call
+    properties:
+      to:
+        type: string
+        description: "Recipient phone number"
+      from:
+        type: string
+        description: "Twilio phone number to call from"
+      url:
+        type: string
+        description: "TwiML URL for call handling"
+      method:
+        type: string
+        description: "HTTP method for TwiML URL (GET or POST)"
+      statusCallback:
+        type: string
+        description: "URL for call status callbacks"
+    required:
+      - to
+      - from
+      - url
+
+- slug: twilio_list_recordings
+  name: List Recordings
+  description: |
+    List all call recordings stored in Twilio.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Recordings.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties:
+      callSid:
+        type: string
+        description: "Filter by call SID"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: twilio_get_recording
+  name: Get Recording
+  description: |
+    Get details about a specific call recording.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Recordings/{RecordingSid}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - recordings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a recording
+    properties:
+      RecordingSid:
+        type: string
+        description: "Recording SID"
+    required:
+      - RecordingSid
+
+- slug: twilio_list_conferences
+  name: List Conferences
+  description: |
+    List all conferences in your Twilio account.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Conferences.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conferences
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conferences
+    properties:
+      status:
+        type: string
+        description: "Filter by status (initiated, in-progress, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 100)"
+        default: 100
+    required: []
+
+- slug: twilio_get_conference
+  name: Get Conference
+  description: |
+    Get detailed information about a specific conference.
+  provider: twilio
+  endpoint: /2010-04-01/Accounts/{AccountSid}/Conferences/{ConferenceSid}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conferences
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conference
+    properties:
+      ConferenceSid:
+        type: string
+        description: "Conference SID"
+    required:
+      - ConferenceSid

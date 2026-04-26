@@ -1,0 +1,291 @@
+# Shopify Tools - Allowlist
+# Curated subset of Shopify REST Admin API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. shopify_list_orders        - List orders
+# 2. shopify_get_order         - Get order details
+# 3. shopify_create_order      - Create an order
+# 4. shopify_list_products     - List products
+# 5. shopify_get_product       - Get product details
+# 6. shopify_create_product    - Create a product
+# 7. shopify_list_customers    - List customers
+# 8. shopify_get_customer      - Get customer details
+# 9. shopify_list_fulfillments - List fulfillments
+# 10. shopify_get_fulfillment  - Get fulfillment details
+
+- slug: shopify_list_orders
+  name: List Orders
+  description: |
+    List all orders in a Shopify store with optional status and date filtering.
+  provider: shopify
+  endpoint: /admin/api/2024-01/orders.json
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, cancelled, any"
+      created_at_min:
+        type: string
+        description: "ISO 8601 date-time to filter orders created after this time"
+      limit:
+        type: integer
+        description: "Maximum number of orders to return (default 50, max 250)"
+    required: []
+
+- slug: shopify_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order including line items, customer, and shipping.
+  provider: shopify
+  endpoint: /admin/api/2024-01/orders/{order_id}.json
+  method: GET
+  scopes:
+    - read_orders
+  tags:
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      order_id:
+        type: integer
+        description: "Unique identifier of the order"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to include in response"
+    required:
+      - order_id
+
+- slug: shopify_create_order
+  name: Create Order
+  description: |
+    Create a new order in the Shopify store with line items and shipping details.
+  provider: shopify
+  endpoint: /admin/api/2024-01/orders.json
+  method: POST
+  scopes:
+    - write_orders
+  tags:
+    - orders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      line_items:
+        type: array
+        description: "Array of line item objects with variant_id and quantity"
+      customer_id:
+        type: integer
+        description: "ID of the customer placing the order"
+      shipping_address:
+        type: object
+        description: "Shipping address object with address fields"
+      financial_status:
+        type: string
+        description: "pending, authorized, paid"
+    required:
+      - line_items
+
+- slug: shopify_list_products
+  name: List Products
+  description: |
+    List all products in a Shopify store with filtering by status, type, or collection.
+  provider: shopify
+  endpoint: /admin/api/2024-01/products.json
+  method: GET
+  scopes:
+    - read_products
+  tags:
+    - products
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, archived, draft"
+      product_type:
+        type: string
+        description: "Filter by product type"
+      collection_id:
+        type: integer
+        description: "Filter by collection ID"
+      limit:
+        type: integer
+        description: "Maximum number of products to return (default 50, max 250)"
+    required: []
+
+- slug: shopify_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product including variants, images, and SEO.
+  provider: shopify
+  endpoint: /admin/api/2024-01/products/{product_id}.json
+  method: GET
+  scopes:
+    - read_products
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: integer
+        description: "Unique identifier of the product"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to include in response"
+    required:
+      - product_id
+
+- slug: shopify_create_product
+  name: Create Product
+  description: |
+    Create a new product in the Shopify store with variants, pricing, and media.
+  provider: shopify
+  endpoint: /admin/api/2024-01/products.json
+  method: POST
+  scopes:
+    - write_products
+  tags:
+    - products
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a product
+    properties:
+      title:
+        type: string
+        description: "Product title"
+      body_html:
+        type: string
+        description: "Product description in HTML format"
+      vendor:
+        type: string
+        description: "Vendor name"
+      product_type:
+        type: string
+        description: "Product type category"
+      variants:
+        type: array
+        description: "Array of variant objects with price and inventory"
+    required:
+      - title
+
+- slug: shopify_list_customers
+  name: List Customers
+  description: |
+    List all customers in a Shopify store with filtering by tags or email.
+  provider: shopify
+  endpoint: /admin/api/2024-01/customers.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      email:
+        type: string
+        description: "Filter by customer email address"
+      tags:
+        type: string
+        description: "Filter by customer tags (comma-separated)"
+      limit:
+        type: integer
+        description: "Maximum number of customers to return (default 50, max 250)"
+    required: []
+
+- slug: shopify_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer including orders and addresses.
+  provider: shopify
+  endpoint: /admin/api/2024-01/customers/{customer_id}.json
+  method: GET
+  scopes:
+    - read_customers
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: integer
+        description: "Unique identifier of the customer"
+      fields:
+        type: string
+        description: "Comma-separated list of fields to include in response"
+    required:
+      - customer_id
+
+- slug: shopify_list_fulfillments
+  name: List Fulfillments
+  description: |
+    List all fulfillment orders for an order, showing shipment tracking information.
+  provider: shopify
+  endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments.json
+  method: GET
+  scopes:
+    - read_fulfillments
+  tags:
+    - fulfillment
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing fulfillments
+    properties:
+      order_id:
+        type: integer
+        description: "Unique identifier of the order"
+    required:
+      - order_id
+
+- slug: shopify_get_fulfillment
+  name: Get Fulfillment
+  description: |
+    Get detailed information about a specific fulfillment including tracking events.
+  provider: shopify
+  endpoint: /admin/api/2024-01/orders/{order_id}/fulfillments/{fulfillment_id}.json
+  method: GET
+  scopes:
+    - read_fulfillments
+  tags:
+    - fulfillment
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a fulfillment
+    properties:
+      order_id:
+        type: integer
+        description: "Unique identifier of the order"
+      fulfillment_id:
+        type: integer
+        description: "Unique identifier of the fulfillment"
+    required:
+      - order_id
+      - fulfillment_id

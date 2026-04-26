@@ -1,0 +1,348 @@
+# Papaya Global Tools - Allowlist
+# Curated subset of the Papaya Global API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. papaya_list_employees      - List employees
+# 2. papaya_get_employee       - Get a specific employee
+# 3. papaya_create_employee    - Create a new employee
+# 4. papaya_list_payrolls       - List payroll runs
+# 5. papaya_get_payroll        - Get a specific payroll run
+# 6. papaya_run_payroll        - Execute a payroll run
+# 7. papaya_list_benefits      - List benefits
+# 8. papaya_get_benefit        - Get a specific benefit
+# 9. papaya_list_time_off      - List time off policies
+# 10. papaya_get_time_off_policy - Get a specific time off policy
+
+- slug: papaya_list_employees
+  name: List Employees
+  description: |
+    List all employees in the Papaya Global payroll platform. Returns employee profiles, employment status, and location info.
+    Use this to manage a global workforce and track employee records across countries.
+  provider: papaya_global
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - payroll
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive, onboarding"
+        enum: [active, inactive, onboarding]
+      country:
+        type: string
+        description: "Filter by country code"
+      department:
+        type: string
+        description: "Filter by department"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: papaya_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by ID. Returns full employee profile, employment terms, payroll info, and benefits enrollment.
+  provider: papaya_global
+  endpoint: /v1/employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: papaya_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee record in Papaya Global. Include personal details, employment terms, location, and payroll configuration.
+    Supports onboarding across multiple countries.
+  provider: papaya_global
+  endpoint: /v1/employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - create
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      first_name:
+        type: string
+        description: "Employee first name"
+      last_name:
+        type: string
+        description: "Employee last name"
+      email:
+        type: string
+        description: "Employee email address"
+      country:
+        type: string
+        description: "Country code (e.g., US, GB, DE)"
+      employment_type:
+        type: string
+        description: "Employment type: full_time, part_time, contractor"
+        enum: [full_time, part_time, contractor]
+      start_date:
+        type: string
+        description: "Employment start date in YYYY-MM-DD format"
+      department:
+        type: string
+        description: "Department name"
+    required:
+      - first_name
+      - last_name
+      - email
+      - country
+
+- slug: papaya_list_payrolls
+  name: List Payrolls
+  description: |
+    List all payroll runs in the Papaya Global platform. Returns payroll periods, status, total amounts, and worker counts.
+    Use this to track payroll cycles and manage global payroll operations.
+  provider: papaya_global
+  endpoint: /v1/payrolls
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing payrolls
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, processing, completed"
+        enum: [draft, processing, completed]
+      period_start:
+        type: string
+        description: "Payroll period start date in YYYY-MM-DD format"
+      period_end:
+        type: string
+        description: "Payroll period end date in YYYY-MM-DD format"
+      country:
+        type: string
+        description: "Filter by country code"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: papaya_get_payroll
+  name: Get Payroll
+  description: |
+    Get details of a specific payroll run by ID. Returns payroll period, total amounts, worker breakdown, and processing status.
+  provider: papaya_global
+  endpoint: /v1/payrolls/{payroll_id}
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payroll run
+    properties:
+      payroll_id:
+        type: string
+        description: "Payroll run ID"
+    required:
+      - payroll_id
+
+- slug: papaya_run_payroll
+  name: Run Payroll
+  description: |
+    Initiate or process a payroll run for a specific period. Specify the pay period, employees, and processing options.
+  provider: papaya_global
+  endpoint: /v1/payrolls/run
+  method: POST
+  scopes:
+    - payrolls:write
+  tags:
+    - payrolls
+    - payroll
+    - process
+  input_schema:
+    type: object
+    description: Parameters for running payroll
+    properties:
+      period_start:
+        type: string
+        description: "Pay period start date in YYYY-MM-DD format"
+      period_end:
+        type: string
+        description: "Pay period end date in YYYY-MM-DD format"
+      country:
+        type: string
+        description: "Country code for payroll processing"
+      employee_ids:
+        type: array
+        items:
+          type: string
+        description: "List of employee IDs to include (optional, omit for all)"
+      execute:
+        type: boolean
+        description: "Execute the payroll run (default false for preview)"
+        default: false
+    required:
+      - period_start
+      - period_end
+      - country
+
+- slug: papaya_list_benefits
+  name: List Benefits
+  description: |
+    List all benefits and benefits plans available in the Papaya Global platform. Returns benefit types, coverage details, and enrollment info.
+    Use this to manage employee benefits across global operations.
+  provider: papaya_global
+  endpoint: /v1/benefits
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - benefits
+    - hr
+    - insurance
+  input_schema:
+    type: object
+    description: Parameters for listing benefits
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID to see enrolled benefits"
+      benefit_type:
+        type: string
+        description: "Filter by benefit type: health, dental, vision, life"
+        enum: [health, dental, vision, life]
+      country:
+        type: string
+        description: "Filter by country code"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: papaya_get_benefit
+  name: Get Benefit
+  description: |
+    Get details of a specific benefit plan by ID. Returns coverage details, costs, enrollment rules, and associated employees.
+  provider: papaya_global
+  endpoint: /v1/benefits/{benefit_id}
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - benefits
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a benefit
+    properties:
+      benefit_id:
+        type: string
+        description: "Benefit plan ID"
+    required:
+      - benefit_id
+
+- slug: papaya_list_time_off
+  name: List Time Off
+  description: |
+    List all time off policies configured in the Papaya Global platform. Returns policy details, leave types, accrual rules, and entitlements.
+    Use this to understand time off accruals and manage leave policies.
+  provider: papaya_global
+  endpoint: /v1/time_off
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - leave
+  input_schema:
+    type: object
+    description: Parameters for listing time off policies
+    properties:
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      leave_type:
+        type: string
+        description: "Filter by leave type: vacation, sick, personal"
+        enum: [vacation, sick, personal]
+      country:
+        type: string
+        description: "Filter by country code"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: papaya_get_time_off_policy
+  name: Get Time Off Policy
+  description: |
+    Get details of a specific time off policy by ID. Returns policy rules, accrual rates, carryover limits, and entitlements.
+  provider: papaya_global
+  endpoint: /v1/time_off/{policy_id}
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time off policy
+    properties:
+      policy_id:
+        type: string
+        description: "Time off policy ID"
+    required:
+      - policy_id

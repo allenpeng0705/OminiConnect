@@ -1,0 +1,235 @@
+# AWS IAM Tools - Allowlist
+# Curated subset of AWS IAM API for AI agent use.
+# BASIC auth via Nango (Access Key ID + Secret Access Key).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. aws_iam_list_users             - List IAM users
+# 2. aws_iam_get_user               - Get user details
+# 3. aws_iam_list_groups            - List IAM groups
+# 4. aws_iam_list_attached_policies - List attached policies
+# 5. aws_iam_list_roles             - List IAM roles
+# 6. aws_iam_get_role               - Get role details
+# 7. aws_iam_list_access_keys       - List access keys
+# 8. aws_iam_list_policies          - List managed policies
+# 9. aws_iam_get_policy             - Get policy details
+# 10. aws_iam_list_account_aliases  - List account aliases
+
+- slug: aws_iam_list_users
+  name: List Users
+  description: |
+    List all IAM users in the AWS account.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - iam
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      PathPrefix:
+        type: string
+        description: "Filter by path prefix"
+      MaxItems:
+        type: integer
+        description: "Max items to return"
+        default: 20
+    required: []
+
+- slug: aws_iam_get_user
+  name: Get User
+  description: |
+    Get details for a specific IAM user including attached policies.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      UserName:
+        type: string
+        description: "IAM user name"
+    required:
+      - UserName
+
+- slug: aws_iam_list_groups
+  name: List Groups
+  description: |
+    List all IAM groups in the account.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - iam
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      MaxItems:
+        type: integer
+        description: "Max items to return"
+        default: 20
+    required: []
+
+- slug: aws_iam_list_attached_policies
+  name: List Attached Policies
+  description: |
+    List all managed policies attached to a user, group, or role.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - iam
+  input_schema:
+    type: object
+    description: Parameters for listing attached policies
+    properties:
+      EntityName:
+        type: string
+        description: "User, group, or role name"
+      EntityPath:
+        type: string
+        description: "Path to filter by"
+    required:
+      - EntityName
+
+- slug: aws_iam_list_roles
+  name: List Roles
+  description: |
+    List all IAM roles in the account.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - roles
+    - iam
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties:
+      PathPrefix:
+        type: string
+        description: "Filter by path prefix"
+      MaxItems:
+        type: integer
+        description: "Max items to return"
+        default: 20
+    required: []
+
+- slug: aws_iam_get_role
+  name: Get Role
+  description: |
+    Get details for a specific IAM role including trust policy.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - roles
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a role
+    properties:
+      RoleName:
+        type: string
+        description: "IAM role name"
+    required:
+      - RoleName
+
+- slug: aws_iam_list_access_keys
+  name: List Access Keys
+  description: |
+    List access keys for a specific IAM user.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - access-keys
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing access keys
+    properties:
+      UserName:
+        type: string
+        description: "IAM user name"
+    required:
+      - UserName
+
+- slug: aws_iam_list_policies
+  name: List Policies
+  description: |
+    List all managed policies in the account.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - iam
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      Scope:
+        type: string
+        description: "Policy scope: Local, AWS, or All"
+        default: Local
+      MaxItems:
+        type: integer
+        description: "Max items to return"
+        default: 20
+    required: []
+
+- slug: aws_iam_get_policy
+  name: Get Policy
+  description: |
+    Get details of a managed policy including default version.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      PolicyArn:
+        type: string
+        description: "Policy ARN"
+    required:
+      - PolicyArn
+
+- slug: aws_iam_list_account_aliases
+  name: List Account Aliases
+  description: |
+    List account aliases associated with the AWS account.
+  provider: aws-iam
+  endpoint: /
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - alias
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

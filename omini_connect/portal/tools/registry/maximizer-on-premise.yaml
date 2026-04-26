@@ -1,0 +1,319 @@
+# Maximizer On-Premise Tools - Allowlist
+# Curated subset of Maximizer On-Premise API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. maximizer_on_premise_list_contacts      - List all contacts
+# 2. maximizer_on_premise_get_contact        - Get contact details
+# 3. maximizer_on_premise_create_contact     - Create a contact
+# 4. maximizer_on_premise_update_contact     - Update a contact
+# 5. maximizer_on_premise_list_companies     - List all companies
+# 6. maximizer_on_premise_get_company        - Get company details
+# 7. maximizer_on_premise_list_opportunities - List opportunities
+# 8. maximizer_on_premise_get_opportunity    - Get opportunity details
+# 9. maximizer_on_premise_list_activities     - List activities
+# 10. maximizer_on_premise_create_activity   - Create an activity
+
+- slug: maximizer_on_premise_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Maximizer On-Premise CRM.
+    Filter by status, company, or search.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+      company_id:
+        type: integer
+        description: "Filter by company ID"
+      search:
+        type: string
+        description: "Search query"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: maximizer_on_premise_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: maximizer_on_premise_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Maximizer On-Premise.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: integer
+        description: "Company ID"
+    required:
+      - first_name
+      - last_name
+
+- slug: maximizer_on_premise_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/contacts/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - id
+
+- slug: maximizer_on_premise_list_companies
+  name: List Companies
+  description: |
+    List all companies in Maximizer On-Premise CRM.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      search:
+        type: string
+        description: "Search query"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: maximizer_on_premise_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/companies/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: integer
+        description: "Company ID"
+    required:
+      - id
+
+- slug: maximizer_on_premise_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities in Maximizer On-Premise CRM.
+    Filter by stage, owner, or company.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/opportunities
+  method: GET
+  scopes: []
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage:
+        type: string
+        description: "Filter by stage"
+      owner_id:
+        type: integer
+        description: "Filter by owner ID"
+      company_id:
+        type: integer
+        description: "Filter by company ID"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: maximizer_on_premise_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get details of a specific opportunity.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/opportunities/{id}
+  method: GET
+  scopes: []
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: integer
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: maximizer_on_premise_list_activities
+  name: List Activities
+  description: |
+    List all activities in Maximizer On-Premise CRM.
+    Filter by type, contact, or date.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/activities
+  method: GET
+  scopes: []
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      type:
+        type: string
+        description: "Filter by activity type"
+      contact_id:
+        type: integer
+        description: "Filter by contact ID"
+      from_date:
+        type: string
+        description: "From date (ISO 8601)"
+      to_date:
+        type: string
+        description: "To date (ISO 8601)"
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: maximizer_on_premise_create_activity
+  name: Create Activity
+  description: |
+    Create a new activity in Maximizer On-Premise.
+  provider: maximizer-on-premise
+  endpoint: /api/v1/activities
+  method: POST
+  scopes: []
+  tags:
+    - activities
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an activity
+    properties:
+      type:
+        type: string
+        description: "Activity type"
+      subject:
+        type: string
+        description: "Activity subject"
+      contact_id:
+        type: integer
+        description: "Related contact ID"
+      date:
+        type: string
+        description: "Activity date (ISO 8601)"
+      description:
+        type: string
+        description: "Activity description"
+    required:
+      - type
+      - subject

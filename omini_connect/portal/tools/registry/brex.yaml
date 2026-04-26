@@ -1,0 +1,319 @@
+# Brex Tools - Allowlist
+# Curated subset of the Brex API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. brex_list_transactions     - List transactions
+# 2. brex_get_transaction       - Get a specific transaction
+# 3. brex_list_accounts         - List all accounts
+# 4. brex_get_account           - Get a specific account
+# 5. brex_list_cards            - List all cards
+# 6. brex_get_card             - Get a specific card
+# 7. brex_list_employees       - List employees
+# 8. brex_get_employee         - Get a specific employee
+# 9. brex_create_card          - Create a new card
+# 10. brex_set_spending_limit  - Set spending limit on a card
+
+- slug: brex_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions across accounts. Returns transactions with amounts, descriptions, dates, and status.
+    Use this to monitor spending, reconcile accounts, or track expenses.
+  provider: brex
+  endpoint: /v2/transactions
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - banking
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      status:
+        type: string
+        description: "Filter by status: posted, pending, settled"
+        enum: [posted, pending, settled]
+      start_date:
+        type: string
+        description: "Start date in YYYY-MM-DD format"
+      end_date:
+        type: string
+        description: "End date in YYYY-MM-DD format"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: brex_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction by ID. Returns the full transaction record including amounts, dates, merchant info, and status.
+  provider: brex
+  endpoint: /v2/transactions/{transaction_id}
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - banking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transaction_id:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transaction_id
+
+- slug: brex_list_accounts
+  name: List Accounts
+  description: |
+    List all Brex accounts including checking, savings, and credit accounts.
+    Returns account balances, types, and status. Use this to understand available funds.
+  provider: brex
+  endpoint: /v2/accounts
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - banking
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      type:
+        type: string
+        description: "Filter by account type: checking, savings, credit"
+        enum: [checking, savings, credit]
+      limit:
+        type: integer
+        description: "Maximum results"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: brex_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account by ID. Returns balance, account type, currency, and status.
+  provider: brex
+  endpoint: /v2/accounts/{account_id}
+  method: GET
+  scopes:
+    - accounts:read
+  tags:
+    - accounts
+    - banking
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      account_id:
+        type: string
+        description: "Account ID"
+    required:
+      - account_id
+
+- slug: brex_list_cards
+  name: List Cards
+  description: |
+    List all Brex cards including virtual and physical cards. Returns card details, spending limits, and status.
+    Use this to manage corporate cards or see all issued cards.
+  provider: brex
+  endpoint: /v2/cards
+  method: GET
+  scopes:
+    - cards:read
+  tags:
+    - cards
+    - spending
+    - corporate
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      status:
+        type: string
+        description: "Filter by status: active, paused, cancelled"
+        enum: [active, paused, cancelled]
+      limit:
+        type: integer
+        description: "Maximum results"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: brex_get_card
+  name: Get Card
+  description: |
+    Get details of a specific card by ID. Returns card number (masked), spending limit, status, and linked account.
+  provider: brex
+  endpoint: /v2/cards/{card_id}
+  method: GET
+  scopes:
+    - cards:read
+  tags:
+    - cards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+    required:
+      - card_id
+
+- slug: brex_list_employees
+  name: List Employees
+  description: |
+    List all employees in the Brex account. Returns employee details, roles, and spending permissions.
+    Use this to manage corporate spenders and their access levels.
+  provider: brex
+  endpoint: /v2/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - company
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      role:
+        type: string
+        description: "Filter by role: admin, member, viewer"
+        enum: [admin, member, viewer]
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      limit:
+        type: integer
+        description: "Maximum results"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: brex_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by ID. Returns employee profile, spending limits, and card associations.
+  provider: brex
+  endpoint: /v2/employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: brex_create_card
+  name: Create Card
+  description: |
+    Create a new Brex card for an employee. Set spending limits, card type (virtual/physical), and linked account.
+  provider: brex
+  endpoint: /v2/cards
+  method: POST
+  scopes:
+    - cards:write
+  tags:
+    - cards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a card
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID to associate with the card"
+      account_id:
+        type: string
+        description: "Account ID to link the card to"
+      card_type:
+        type: string
+        description: "Card type: virtual, physical"
+        enum: [virtual, physical]
+        default: virtual
+      spending_limit:
+        type: number
+        description: "Spending limit amount"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD)"
+        default: USD
+    required:
+      - employee_id
+
+- slug: brex_set_spending_limit
+  name: Set Spending Limit
+  description: |
+    Update the spending limit on an existing Brex card. Specify the limit amount and optionally the interval.
+  provider: brex
+  endpoint: /v2/cards/{card_id}/spending_limit
+  method: PUT
+  scopes:
+    - cards:write
+  tags:
+    - cards
+    - spending
+    - update
+  input_schema:
+    type: object
+    description: Parameters for setting spending limit
+    properties:
+      card_id:
+        type: string
+        description: "Card ID"
+      limit:
+        type: number
+        description: "Spending limit amount"
+      interval:
+        type: string
+        description: "Limit interval: per_transaction, daily, monthly"
+        enum: [per_transaction, daily, monthly]
+        default: monthly
+    required:
+      - card_id
+      - limit

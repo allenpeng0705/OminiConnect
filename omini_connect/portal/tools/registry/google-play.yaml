@@ -1,0 +1,258 @@
+# Google Play Tools - Allowlist
+# Curated subset of Google Play Developer API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_play_list_apps           - List apps
+# 2. google_play_get_app            - Get app details
+# 3. google_play_list_reviews       - List reviews
+# 4. google_play_get_review          - Get review details
+# 5. google_play_list_subscriptions - List subscriptions
+# 6. google_play_get_subscription    - Get subscription details
+# 7. google_play_list_orders         - List orders
+# 8. google_play_get_order          - Get order details
+# 9. google_play_list_refunds       - List refunds
+# 10. google_play_list_reviews_response - List review responses
+
+- slug: google_play_list_apps
+  name: List Apps
+  description: |
+    List apps in Google Play Console.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - apps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties: {}
+
+- slug: google_play_get_app
+  name: Get App
+  description: |
+    Get details about an app.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - apps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+    required:
+      - package_name
+
+- slug: google_play_list_reviews
+  name: List Reviews
+  description: |
+    List reviews for an app.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/reviews
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - reviews
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reviews
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+    required:
+      - package_name
+
+- slug: google_play_get_review
+  name: Get Review
+  description: |
+    Get details about a review.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/reviews/{review_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - reviews
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a review
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+      review_id:
+        type: string
+        description: "Review ID"
+    required:
+      - package_name
+      - review_id
+
+- slug: google_play_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List subscriptions for an app.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/subscriptions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - subscriptions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+    required:
+      - package_name
+
+- slug: google_play_get_subscription
+  name: Get Subscription
+  description: |
+    Get subscription details.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/subscriptions/{subscription_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+      subscription_id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - package_name
+      - subscription_id
+
+- slug: google_play_list_orders
+  name: List Orders
+  description: |
+    List orders for an app.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/orders
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+    required:
+      - package_name
+
+- slug: google_play_get_order
+  name: Get Order
+  description: |
+    Get order details.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/orders/{order_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+      order_id:
+        type: string
+        description: "Order ID"
+    required:
+      - package_name
+      - order_id
+
+- slug: google_play_list_refunds
+  name: List Refunds
+  description: |
+    List refunds for an app.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/refunds
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - refunds
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing refunds
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+    required:
+      - package_name
+
+- slug: google_play_list_reviews_response
+  name: List Review Responses
+  description: |
+    List responses to reviews.
+  provider: google-play
+  endpoint: /androidpublisher/v3/applications/{package_name}/reviews/{review_id}/responses
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/androidpublisher
+  tags:
+    - play
+    - reviews
+    - responses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing review responses
+    properties:
+      package_name:
+        type: string
+        description: "App package name"
+      review_id:
+        type: string
+        description: "Review ID"
+    required:
+      - package_name
+      - review_id

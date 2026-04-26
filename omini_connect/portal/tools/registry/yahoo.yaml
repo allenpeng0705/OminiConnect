@@ -1,0 +1,187 @@
+# Yahoo Tools - Allowlist
+# Curated subset of Yahoo API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. yahoo_get_user           - Get current user info
+# # 2. yahoo_list_emails           - List emails in inbox
+# # 3. yahoo_get_email           - Get email details
+# # 4. yahoo_send_email           - Send an email
+# # 5. yahoo_delete_email           - Delete an email
+# # 6. yahoo_list_folders           - List all folders
+# # 7. yahoo_list_contacts           - List all contacts
+# # 8. yahoo_get_contact           - Get contact details
+# # 9. yahoo_create_contact           - Create a new contact
+# # 10. yahoo_list_calendars           - List all calendars
+
+- slug: yahoo_get_user
+  name: Get User
+  description: |
+    Get current user info
+  provider: yahoo
+  endpoint: /profile
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for get user
+    properties: {}
+    required: []
+
+- slug: yahoo_list_emails
+  name: List Emails
+  description: |
+    List emails in inbox
+  provider: yahoo
+  endpoint: /messages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for list emails
+    properties: {}
+    required: []
+
+- slug: yahoo_get_email
+  name: Get Email
+  description: |
+    Get email details
+  provider: yahoo
+  endpoint: /messages/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for get email
+    properties: {}
+    required: []
+
+- slug: yahoo_send_email
+  name: Send Email
+  description: |
+    Send an email
+  provider: yahoo
+  endpoint: /messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for send email
+    properties: {}
+    required: []
+
+- slug: yahoo_delete_email
+  name: Delete Email
+  description: |
+    Delete an email
+  provider: yahoo
+  endpoint: /messages/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for delete email
+    properties: {}
+    required: []
+
+- slug: yahoo_list_folders
+  name: List Folders
+  description: |
+    List all folders
+  provider: yahoo
+  endpoint: /folders
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for list folders
+    properties: {}
+    required: []
+
+- slug: yahoo_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts
+  provider: yahoo
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for list contacts
+    properties: {}
+    required: []
+
+- slug: yahoo_get_contact
+  name: Get Contact
+  description: |
+    Get contact details
+  provider: yahoo
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for get contact
+    properties: {}
+    required: []
+
+- slug: yahoo_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact
+  provider: yahoo
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for create contact
+    properties: {}
+    required: []
+
+- slug: yahoo_list_calendars
+  name: List Calendars
+  description: |
+    List all calendars
+  provider: yahoo
+  endpoint: /calendars
+  method: GET
+  scopes:
+    - read
+  tags:
+    - yahoo
+  input_schema:
+    type: object
+    description: Parameters for list calendars
+    properties: {}
+    required: []
+

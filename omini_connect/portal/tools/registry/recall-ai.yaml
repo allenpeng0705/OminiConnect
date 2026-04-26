@@ -1,0 +1,263 @@
+# Recallai Tools - Allowlist
+# Curated subset of Recall.ai API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. recall-ai_list_meetings        - List all meetings
+# 2. recall-ai_get_meeting          - Get meeting details
+# 3. recall-ai_list_transcripts     - List meeting transcripts
+# 4. recall-ai_get_transcript        - Get transcript details
+# 5. recall-ai_list_summaries        - List AI summaries
+# 6. recall-ai_get_summary           - Get summary details
+# 7. recall-ai_list_action_items     - List action items
+# 8. recall-ai_create_meeting        - Create a meeting
+# 9. recall-ai_delete_meeting        - Delete a meeting
+# 10. recall-ai_list_participants   - List meeting participants
+
+- slug: recall-ai_list_meetings
+  name: List Meetings
+  description: |
+    Retrieve a list of all meetings processed by Recall.ai.
+  provider: recall-ai
+  endpoint: /v1/meetings
+  method: GET
+  scopes:
+    - meetings:read
+  tags:
+    - meetings
+    - recall
+    - intelligence
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      limit:
+        type: integer
+        description: "Number of meetings to return"
+        default: 50
+      cursor:
+        type: string
+        description: "Pagination cursor"
+      startDate:
+        type: string
+        description: "Filter from date (ISO 8601)"
+      endDate:
+        type: string
+        description: "Filter to date (ISO 8601)"
+    required: []
+
+- slug: recall-ai_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}
+  method: GET
+  scopes:
+    - meetings:read
+  tags:
+    - meetings
+    - recall
+    - intelligence
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID"
+    required:
+      - meetingId
+
+- slug: recall-ai_list_transcripts
+  name: List Transcripts
+  description: |
+    List all transcripts for a meeting.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}/transcripts
+  method: GET
+  scopes:
+    - transcripts:read
+  tags:
+    - transcripts
+    - meetings
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for listing transcripts
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID"
+    required:
+      - meetingId
+
+- slug: recall-ai_get_transcript
+  name: Get Transcript
+  description: |
+    Get a specific transcript with speaker segments.
+  provider: recall-ai
+  endpoint: /v1/transcripts/{transcriptId}
+  method: GET
+  scopes:
+    - transcripts:read
+  tags:
+    - transcripts
+    - meetings
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for getting a transcript
+    properties:
+      transcriptId:
+        type: string
+        description: "The transcript ID"
+    required:
+      - transcriptId
+
+- slug: recall-ai_list_summaries
+  name: List Summaries
+  description: |
+    List all AI summaries for a meeting.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}/summaries
+  method: GET
+  scopes:
+    - summaries:read
+  tags:
+    - summaries
+    - ai
+    - meetings
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for listing summaries
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID"
+    required:
+      - meetingId
+
+- slug: recall-ai_get_summary
+  name: Get Summary
+  description: |
+    Get AI-generated summary details.
+  provider: recall-ai
+  endpoint: /v1/summaries/{summaryId}
+  method: GET
+  scopes:
+    - summaries:read
+  tags:
+    - summaries
+    - ai
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for getting a summary
+    properties:
+      summaryId:
+        type: string
+        description: "The summary ID"
+    required:
+      - summaryId
+
+- slug: recall-ai_list_action_items
+  name: List Action Items
+  description: |
+    List all action items extracted from meetings.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}/action-items
+  method: GET
+  scopes:
+    - action-items:read
+  tags:
+    - action-items
+    - tasks
+    - meetings
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for listing action items
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID"
+    required:
+      - meetingId
+
+- slug: recall-ai_create_meeting
+  name: Create Meeting
+  description: |
+    Create a new meeting for processing.
+  provider: recall-ai
+  endpoint: /v1/meetings
+  method: POST
+  scopes:
+    - meetings:write
+  tags:
+    - meetings
+    - recall
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a meeting
+    properties:
+      title:
+        type: string
+        description: "Meeting title"
+      scheduledTime:
+        type: string
+        description: "Scheduled start time (ISO 8601)"
+      duration:
+        type: integer
+        description: "Duration in minutes"
+    required:
+      - title
+
+- slug: recall-ai_delete_meeting
+  name: Delete Meeting
+  description: |
+    Delete a meeting and its associated data.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}
+  method: DELETE
+  scopes:
+    - meetings:write
+  tags:
+    - meetings
+    - recall
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a meeting
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID to delete"
+    required:
+      - meetingId
+
+- slug: recall-ai_list_participants
+  name: List Participants
+  description: |
+    List all participants in a meeting.
+  provider: recall-ai
+  endpoint: /v1/meetings/{meetingId}/participants
+  method: GET
+  scopes:
+    - participants:read
+  tags:
+    - participants
+    - meetings
+    - recall
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      meetingId:
+        type: string
+        description: "The meeting ID"
+    required:
+      - meetingId

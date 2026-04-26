@@ -1,0 +1,187 @@
+# WordPress Tools - Allowlist
+# Curated subset of WordPress API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. wordpress_get_current_user           - Get current authenticated user
+# # 2. wordpress_list_sites           - List all sites for the user
+# # 3. wordpress_get_site           - Get site details
+# # 4. wordpress_list_posts           - List posts on a site
+# # 5. wordpress_get_post           - Get post details
+# # 6. wordpress_create_post           - Create a new post
+# # 7. wordpress_update_post           - Update an existing post
+# # 8. wordpress_delete_post           - Delete a post
+# # 9. wordpress_list_comments           - List comments on a site
+# # 10. wordpress_list_media           - List media library items
+
+- slug: wordpress_get_current_user
+  name: Get Current User
+  description: |
+    Get current authenticated user
+  provider: wordpress
+  endpoint: /me
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for get current user
+    properties: {}
+    required: []
+
+- slug: wordpress_list_sites
+  name: List Sites
+  description: |
+    List all sites for the user
+  provider: wordpress
+  endpoint: /me/sites
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for list sites
+    properties: {}
+    required: []
+
+- slug: wordpress_get_site
+  name: Get Site
+  description: |
+    Get site details
+  provider: wordpress
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for get site
+    properties: {}
+    required: []
+
+- slug: wordpress_list_posts
+  name: List Posts
+  description: |
+    List posts on a site
+  provider: wordpress
+  endpoint: /sites/{site_id}/posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for list posts
+    properties: {}
+    required: []
+
+- slug: wordpress_get_post
+  name: Get Post
+  description: |
+    Get post details
+  provider: wordpress
+  endpoint: /sites/{site_id}/posts/{post_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for get post
+    properties: {}
+    required: []
+
+- slug: wordpress_create_post
+  name: Create Post
+  description: |
+    Create a new post
+  provider: wordpress
+  endpoint: /sites/{site_id}/posts/new
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for create post
+    properties: {}
+    required: []
+
+- slug: wordpress_update_post
+  name: Update Post
+  description: |
+    Update an existing post
+  provider: wordpress
+  endpoint: /sites/{site_id}/posts/{post_id}
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for update post
+    properties: {}
+    required: []
+
+- slug: wordpress_delete_post
+  name: Delete Post
+  description: |
+    Delete a post
+  provider: wordpress
+  endpoint: /sites/{site_id}/posts/{post_id}/delete
+  method: POST
+  scopes:
+    - write
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for delete post
+    properties: {}
+    required: []
+
+- slug: wordpress_list_comments
+  name: List Comments
+  description: |
+    List comments on a site
+  provider: wordpress
+  endpoint: /sites/{site_id}/comments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for list comments
+    properties: {}
+    required: []
+
+- slug: wordpress_list_media
+  name: List Media
+  description: |
+    List media library items
+  provider: wordpress
+  endpoint: /sites/{site_id}/media
+  method: GET
+  scopes:
+    - read
+  tags:
+    - wordpress
+  input_schema:
+    type: object
+    description: Parameters for list media
+    properties: {}
+    required: []
+

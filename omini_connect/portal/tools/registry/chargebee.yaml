@@ -1,0 +1,313 @@
+# Chargebee Tools - Allowlist
+# Curated subset of Chargebee subscription billing API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. chargebee_list_subscriptions    - List all subscriptions
+# 2. chargebee_get_subscription      - Get subscription details
+# 3. chargebee_create_subscription   - Create a new subscription
+# 4. chargebee_cancel_subscription  - Cancel a subscription
+# 5. chargebee_list_customers        - List all customers
+# 6. chargebee_get_customer         - Get customer details
+# 7. chargebee_list_invoices         - List all invoices
+# 8. chargebee_get_invoice          - Get invoice details
+# 9. chargebee_list_plans           - List all plans
+# 10. chargebee_get_plan            - Get plan details
+
+- slug: chargebee_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in Chargebee. Filter by status, customer, or plan.
+  provider: chargebee
+  endpoint: /subscriptions
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, cancelled, paused, future, etc)"
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      plan_id:
+        type: string
+        description: "Filter by plan ID"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: chargebee_get_subscription
+  name: Get Subscription
+  description: |
+    Get detailed information about a specific Chargebee subscription.
+  provider: chargebee
+  endpoint: /subscriptions/{id}
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - id
+
+- slug: chargebee_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new subscription in Chargebee with customer and plan details.
+  provider: chargebee
+  endpoint: /subscriptions
+  method: POST
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+      plan_id:
+        type: string
+        description: "Plan ID"
+      billing_cycles:
+        type: integer
+        description: "Number of billing cycles"
+      start_date:
+        type: integer
+        description: "Start date as Unix timestamp"
+      trial_end:
+        type: integer
+        description: "Trial end as Unix timestamp"
+      auto_collection:
+        type: string
+        description: "Auto collection (on, off)"
+        default: on
+    required:
+      - customer_id
+      - plan_id
+
+- slug: chargebee_cancel_subscription
+  name: Cancel Subscription
+  description: |
+    Cancel an existing Chargebee subscription with optional end date.
+  provider: chargebee
+  endpoint: /subscriptions/{id}/cancel
+  method: POST
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - cancel
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for cancelling a subscription
+    properties:
+      id:
+        type: string
+        description: "Subscription ID"
+      end_of_term:
+        type: boolean
+        description: "Cancel at end of current term"
+        default: false
+      cancellation_reason:
+        type: string
+        description: "Reason for cancellation"
+      cancel_at:
+        type: integer
+        description: "Cancel at specific Unix timestamp"
+    required:
+      - id
+
+- slug: chargebee_list_customers
+  name: List Customers
+  description: |
+    List all customers in Chargebee. Filter by email, company, or status.
+  provider: chargebee
+  endpoint: /customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      email:
+        type: string
+        description: "Filter by email address"
+      company:
+        type: string
+        description: "Filter by company name"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: chargebee_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific Chargebee customer.
+  provider: chargebee
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: string
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: chargebee_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Chargebee. Filter by customer, status, or date range.
+  provider: chargebee
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      status:
+        type: string
+        description: "Filter by status (paid, pending, voided, etc)"
+      from_date:
+        type: integer
+        description: "From date as Unix timestamp"
+      to_date:
+        type: integer
+        description: "To date as Unix timestamp"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: chargebee_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific Chargebee invoice.
+  provider: chargebee
+  endpoint: /invoices/{id}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: chargebee_list_plans
+  name: List Plans
+  description: |
+    List all plans in Chargebee. Filter by status or recurring addons.
+  provider: chargebee
+  endpoint: /plans
+  method: GET
+  scopes:
+    - plans:read
+  tags:
+    - plans
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing plans
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, archived)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: chargebee_get_plan
+  name: Get Plan
+  description: |
+    Get detailed information about a specific Chargebee plan.
+  provider: chargebee
+  endpoint: /plans/{id}
+  method: GET
+  scopes:
+    - plans:read
+  tags:
+    - plans
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a plan
+    properties:
+      id:
+        type: string
+        description: "Plan ID"
+    required:
+      - id

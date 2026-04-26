@@ -1,0 +1,277 @@
+# Refiner Tools - Allowlist
+# Curated subset of Refiner API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. refiner_list_surveys            - List all surveys
+# 2. refiner_get_survey              - Get survey details
+# 3. refiner_list_responses          - List survey responses
+# 4. refiner_get_response            - Get response details
+# 5. refiner_create_survey           - Create a survey
+# 6. refiner_list_segments          - List all segments
+# 7. refiner_get_segment            - Get segment details
+# 8. refiner_list_nps_scores        - List NPS scores
+# 9. refiner_create_target           - Create a target profile
+# 10. refiner_list_analytics        - Get survey analytics
+
+- slug: refiner_list_surveys
+  name: List Surveys
+  description: |
+    Retrieve a list of all surveys in your Refiner account.
+  provider: refiner
+  endpoint: /surveys
+  method: GET
+  scopes:
+    - surveys:read
+  tags:
+    - surveys
+    - feedback
+    - research
+  input_schema:
+    type: object
+    description: Parameters for listing surveys
+    properties:
+      limit:
+        type: integer
+        description: "Number of surveys to return"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: active, paused, closed"
+    required: []
+
+- slug: refiner_get_survey
+  name: Get Survey
+  description: |
+    Get details of a specific survey.
+  provider: refiner
+  endpoint: /surveys/{surveyId}
+  method: GET
+  scopes:
+    - surveys:read
+  tags:
+    - surveys
+    - feedback
+    - research
+  input_schema:
+    type: object
+    description: Parameters for getting a survey
+    properties:
+      surveyId:
+        type: string
+        description: "The survey ID"
+    required:
+      - surveyId
+
+- slug: refiner_list_responses
+  name: List Responses
+  description: |
+    Retrieve a list of all survey responses.
+  provider: refiner
+  endpoint: /surveys/{surveyId}/responses
+  method: GET
+  scopes:
+    - responses:read
+  tags:
+    - responses
+    - surveys
+    - feedback
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      surveyId:
+        type: string
+        description: "The survey ID"
+      limit:
+        type: integer
+        description: "Number of responses"
+        default: 100
+    required:
+      - surveyId
+
+- slug: refiner_get_response
+  name: Get Response
+  description: |
+    Get details of a specific survey response.
+  provider: refiner
+  endpoint: /responses/{responseId}
+  method: GET
+  scopes:
+    - responses:read
+  tags:
+    - responses
+    - surveys
+    - feedback
+  input_schema:
+    type: object
+    description: Parameters for getting a response
+    properties:
+      responseId:
+        type: string
+        description: "The response ID"
+    required:
+      - responseId
+
+- slug: refiner_create_survey
+  name: Create Survey
+  description: |
+    Create a new customer feedback survey.
+  provider: refiner
+  endpoint: /surveys
+  method: POST
+  scopes:
+    - surveys:write
+  tags:
+    - surveys
+    - feedback
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a survey
+    properties:
+      name:
+        type: string
+        description: "Survey name"
+      type:
+        type: string
+        description: "Survey type: nps, csat, ces"
+      questions:
+        type: array
+        description: "Survey questions"
+    required:
+      - name
+      - type
+
+- slug: refiner_list_segments
+  name: List Segments
+  description: |
+    Retrieve a list of all audience segments.
+  provider: refiner
+  endpoint: /segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - audience
+    - targeting
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Number of segments"
+        default: 50
+    required: []
+
+- slug: refiner_get_segment
+  name: Get Segment
+  description: |
+    Get details of a specific segment.
+  provider: refiner
+  endpoint: /segments/{segmentId}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - audience
+    - targeting
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segmentId:
+        type: string
+        description: "The segment ID"
+    required:
+      - segmentId
+
+- slug: refiner_list_nps_scores
+  name: List NPS Scores
+  description: |
+    Retrieve a list of NPS scores and trends.
+  provider: refiner
+  endpoint: /analytics/nps
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - nps
+    - analytics
+    - feedback
+  input_schema:
+    type: object
+    description: Parameters for listing NPS scores
+    properties:
+      surveyId:
+        type: string
+        description: "Survey ID"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: refiner_create_target
+  name: Create Target
+  description: |
+    Create a target profile for survey targeting.
+  provider: refiner
+  endpoint: /targets
+  method: POST
+  scopes:
+    - targets:write
+  tags:
+    - targets
+    - audience
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a target
+    properties:
+      name:
+        type: string
+        description: "Target name"
+      segmentId:
+        type: string
+        description: "Segment ID"
+      surveyId:
+        type: string
+        description: "Survey ID"
+    required:
+      - name
+      - segmentId
+
+- slug: refiner_list_analytics
+  name: List Analytics
+  description: |
+    Get survey analytics and metrics.
+  provider: refiner
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - metrics
+    - surveys
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      surveyId:
+        type: string
+        description: "Survey ID"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required: []

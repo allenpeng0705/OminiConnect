@@ -1,0 +1,240 @@
+# Circleback MCP Tools - Allowlist
+# Curated subset of the Circleback MCP API for AI agent use.
+# MCP OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. circleback_list_actions             - List actions
+# 2. circleback_get_action              - Get action details
+# 3. circleback_create_action           - Create an action
+# 4. circleback_update_action           - Update an action
+# 5. circleback_list_workflows          - List workflows
+# 6. circleback_get_workflow           - Get workflow details
+# 7. circleback_list_tasks             - List tasks
+# 8. circleback_get_task               - Get task details
+# 9. circleback_create_task            - Create a task
+# 10. circleback_list_team_members     - List team members
+
+- slug: circleback_list_actions
+  name: List Actions
+  description: |
+    List all actions in the workspace.
+  provider: circleback-mcp
+  endpoint: /api/v1/actions
+  method: GET
+  scopes: []
+  tags:
+    - actions
+    - productivity
+  input_schema:
+    type: object
+    description: Parameters for listing actions
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: circleback_get_action
+  name: Get Action
+  description: |
+    Get details of a specific action.
+  provider: circleback-mcp
+  endpoint: /api/v1/actions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - actions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an action
+    properties:
+      id:
+        type: string
+        description: "Action ID"
+    required:
+      - id
+
+- slug: circleback_create_action
+  name: Create Action
+  description: |
+    Create a new action.
+  provider: circleback-mcp
+  endpoint: /api/v1/actions
+  method: POST
+  scopes: []
+  tags:
+    - actions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an action
+    properties:
+      title:
+        type: string
+        description: "Action title"
+      description:
+        type: string
+        description: "Action description"
+      due_date:
+        type: string
+        description: "Due date"
+    required:
+      - title
+
+- slug: circleback_update_action
+  name: Update Action
+  description: |
+    Update an existing action.
+  provider: circleback-mcp
+  endpoint: /api/v1/actions/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - actions
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an action
+    properties:
+      id:
+        type: string
+        description: "Action ID"
+      title:
+        type: string
+        description: "New title"
+      completed:
+        type: boolean
+        description: "Mark as completed"
+    required:
+      - id
+
+- slug: circleback_list_workflows
+  name: List Workflows
+  description: |
+    List all workflows in the workspace.
+  provider: circleback-mcp
+  endpoint: /api/v1/workflows
+  method: GET
+  scopes: []
+  tags:
+    - workflows
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing workflows
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: circleback_get_workflow
+  name: Get Workflow
+  description: |
+    Get details of a specific workflow.
+  provider: circleback-mcp
+  endpoint: /api/v1/workflows/{id}
+  method: GET
+  scopes: []
+  tags:
+    - workflows
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workflow
+    properties:
+      id:
+        type: string
+        description: "Workflow ID"
+    required:
+      - id
+
+- slug: circleback_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in the workspace.
+  provider: circleback-mcp
+  endpoint: /api/v1/tasks
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - productivity
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: circleback_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task.
+  provider: circleback-mcp
+  endpoint: /api/v1/tasks/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: circleback_create_task
+  name: Create Task
+  description: |
+    Create a new task.
+  provider: circleback-mcp
+  endpoint: /api/v1/tasks
+  method: POST
+  scopes: []
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title"
+      assignee:
+        type: string
+        description: "Assignee ID"
+    required:
+      - title
+
+- slug: circleback_list_team_members
+  name: List Team Members
+  description: |
+    List all members in the team.
+  provider: circleback-mcp
+  endpoint: /api/v1/team/members
+  method: GET
+  scopes: []
+  tags:
+    - team
+    - members
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []

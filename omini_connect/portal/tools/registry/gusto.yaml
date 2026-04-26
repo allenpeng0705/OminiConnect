@@ -1,0 +1,344 @@
+# Gusto Tools - Allowlist
+# Curated subset of the Gusto API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gusto_list_employees      - List all employees
+# 2. gusto_get_employee        - Get employee details
+# 3. gusto_create_employee    - Create new employee
+# 4. gusto_list_contractors   - List contractors
+# 5. gusto_get_contractor     - Get contractor details
+# 6. gusto_list_payrolls      - List payroll runs
+# 7. gusto_get_payroll        - Get payroll details
+# 8. gusto_run_payroll        - Execute payroll run
+# 9. gusto_list_time_off      - List time off policies/requests
+# 10. gusto_get_time_off_request - Get time off request details
+
+- slug: gusto_list_employees
+  name: List Employees
+  description: |
+    List all employees with optional filters for status, department, or location.
+    Returns names, titles, departments, employment status, and compensation info.
+  provider: gusto
+  endpoint: /employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - payroll
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive, all"
+        enum: [active, inactive, all]
+        default: active
+      department:
+        type: string
+        description: "Filter by department ID"
+      location:
+        type: string
+        description: "Filter by location/region"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gusto_get_employee
+  name: Get Employee
+  description: |
+    Get detailed employee information including personal details, job profile,
+    compensation, tax withholdings, direct deposit info, and employment history.
+  provider: gusto
+  endpoint: /employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - payroll
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: integer
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: gusto_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee record with personal info, compensation, and tax forms.
+    New employees can be onboarded with direct deposit and tax withholding setup.
+  provider: gusto
+  endpoint: /employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - create
+    - payroll
+    - onboarding
+  input_schema:
+    type: object
+    description: Employee creation parameters
+    properties:
+      first_name:
+        type: string
+        description: "First name (required)"
+      last_name:
+        type: string
+        description: "Last name (required)"
+      email:
+        type: string
+        description: "Email address (required)"
+      hire_date:
+        type: string
+        description: "Hire date YYYY-MM-DD (required)"
+      pay_type:
+        type: string
+        description: "Pay type: salary, hourly"
+        enum: [salary, hourly]
+      pay_amount:
+        type: number
+        description: "Pay amount based on pay_type"
+      department:
+        type: string
+        description: "Department name"
+      job_title:
+        type: string
+        description: "Job title"
+    required:
+      - first_name
+      - last_name
+      - email
+      - hire_date
+
+- slug: gusto_list_contractors
+  name: List Contractors
+  description: |
+    List all contractors with optional filters for status or company.
+    Returns contractor names, companies, rates, and payment status.
+  provider: gusto
+  endpoint: /contractors
+  method: GET
+  scopes:
+    - contractors:read
+  tags:
+    - contractors
+    - payroll
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing contractors
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive, all"
+        enum: [active, inactive, all]
+        default: active
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gusto_get_contractor
+  name: Get Contractor
+  description: |
+    Get detailed contractor information including company, contact details,
+    payment rates, tax status, and recent payment history.
+  provider: gusto
+  endpoint: /contractors/{contractor_id}
+  method: GET
+  scopes:
+    - contractors:read
+  tags:
+    - contractors
+    - payroll
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting a contractor
+    properties:
+      contractor_id:
+        type: integer
+        description: "Contractor ID"
+    required:
+      - contractor_id
+
+- slug: gusto_list_payrolls
+  name: List Payrolls
+  description: |
+    List all payroll runs with optional filters for status, employee, or date range.
+    Returns payroll totals, status, approval info, and payment dates.
+  provider: gusto
+  endpoint: /payrolls
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing payrolls
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, pending, running, processed, failed"
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      start_date:
+        type: string
+        description: "Start date YYYY-MM-DD"
+      end_date:
+        type: string
+        description: "End date YYYY-MM-DD"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gusto_get_payroll
+  name: Get Payroll
+  description: |
+    Get detailed information about a specific payroll run including
+    employee breakdown, tax withholdings, deductions, and payment totals.
+  provider: gusto
+  endpoint: /payrolls/{payroll_id}
+  method: GET
+  scopes:
+    - payrolls:read
+  tags:
+    - payrolls
+    - payroll
+    - details
+  input_schema:
+    type: object
+    description: Parameters for getting a payroll
+    properties:
+      payroll_id:
+        type: integer
+        description: "Payroll ID"
+    required:
+      - payroll_id
+
+- slug: gusto_run_payroll
+  name: Run Payroll
+  description: |
+    Execute a payroll run for the specified pay period. This processes employee
+    compensation, taxes, deductions, and sets up direct deposits.
+    Must be used after reviewing and approving the payroll preview.
+  provider: gusto
+  endpoint: /payrolls
+  method: POST
+  scopes:
+    - payrolls:write
+  tags:
+    - payrolls
+    - payroll
+    - execute
+    - payments
+  input_schema:
+    type: object
+    description: Payroll run parameters
+    properties:
+      pay_period_start:
+        type: string
+        description: "Pay period start date YYYY-MM-DD (required)"
+      pay_period_end:
+        type: string
+        description: "Pay period end date YYYY-MM-DD (required)"
+      employees:
+        type: array
+        items:
+          type: integer
+        description: "Array of employee IDs to include (default all active)"
+    required:
+      - pay_period_start
+      - pay_period_end
+
+- slug: gusto_list_time_off
+  name: List Time Off
+  description: |
+    List time off policies and/or requests with optional filters.
+    Returns time off types, accrual rates, balances, and pending requests.
+  provider: gusto
+  endpoint: /time_off
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - policies
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for listing time off
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      status:
+        type: string
+        description: "Filter by request status: pending, approved, denied"
+      policy_type:
+        type: string
+        description: "Filter by policy type: vacation, sick, personal"
+      start_date:
+        type: string
+        description: "Filter requests from this date"
+      end_date:
+        type: string
+        description: "Filter requests until this date"
+    required: []
+
+- slug: gusto_get_time_off_request
+  name: Get Time Off Request
+  description: |
+    Get detailed information about a specific time off request including
+    dates, hours, type, approval status, and notes.
+  provider: gusto
+  endpoint: /time_off/{request_id}
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for getting a time off request
+    properties:
+      request_id:
+        type: integer
+        description: "Time off request ID"
+    required:
+      - request_id

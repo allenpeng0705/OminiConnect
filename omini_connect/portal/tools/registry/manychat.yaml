@@ -1,0 +1,284 @@
+# manychat Tools - Allowlist
+# Curated subset of the Manychat API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. manychat_list_subscribers  - List all subscribers
+# 2. manychat_get_subscriber     - Get a specific subscriber
+# 3. manychat_create_subscriber  - Create a new subscriber
+# 4. manychat_list_flows         - List all flows
+# 5. manychat_get_flow           - Get a specific flow
+# 6. manychat_start_flow         - Start a flow for a subscriber
+# 7. manychat_create_broadcast   - Create a broadcast campaign
+# 8. manychat_send_broadcast     - Send a broadcast immediately
+# 9. manychat_list_tags         - List all tags
+# 10. manychat_add_tag          - Add tags to a subscriber
+
+- slug: manychat_list_subscribers
+  name: List Subscribers
+  description: |
+    Retrieve all subscribers in your Manychat account.
+    Subscribers are users who have connected with your Facebook Messenger bot.
+  provider: manychat
+  endpoint: /subscribers
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+      tag_id:
+        type: string
+        description: "Filter by tag ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: manychat_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get detailed information about a specific subscriber.
+    Includes contact info, tags, and conversation data.
+  provider: manychat
+  endpoint: /subscribers/{id}
+  method: GET
+  scopes:
+    - subscribers:read
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the subscriber"
+    required:
+      - id
+
+- slug: manychat_create_subscriber
+  name: Create Subscriber
+  description: |
+    Create a new subscriber in your Manychat account.
+    Used to add users programmatically to your Messenger audience.
+  provider: manychat
+  endpoint: /subscribers
+  method: POST
+  scopes:
+    - subscribers:write
+  tags:
+    - subscribers
+  input_schema:
+    type: object
+    description: Parameters for creating a subscriber
+    properties:
+      first_name:
+        type: string
+        description: "First name of the subscriber"
+      last_name:
+        type: string
+        description: "Last name of the subscriber"
+      phone:
+        type: string
+        description: "Phone number of the subscriber"
+      email:
+        type: string
+        description: "Email address of the subscriber"
+      tags:
+        type: array
+        description: "Array of tag IDs to apply"
+    required:
+      - first_name
+
+- slug: manychat_list_flows
+  name: List Flows
+  description: |
+    Retrieve all flows in your Manychat account.
+    Flows define automated conversation sequences.
+  provider: manychat
+  endpoint: /flows
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for listing flows
+    properties:
+      status:
+        type: string
+        description: "Filter by flow status"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: manychat_get_flow
+  name: Get Flow
+  description: |
+    Get detailed information about a specific flow.
+    Use this to understand the flow logic and steps.
+  provider: manychat
+  endpoint: /flows/{id}
+  method: GET
+  scopes:
+    - flows:read
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for getting a flow
+    properties:
+      id:
+        type: string
+        description: "Unique identifier of the flow"
+    required:
+      - id
+
+- slug: manychat_start_flow
+  name: Start Flow
+  description: |
+    Trigger a flow for a specific subscriber.
+    Use this to programmatically start an automated sequence.
+  provider: manychat
+  endpoint: /flows/{id}/start
+  method: POST
+  scopes:
+    - flows:write
+  tags:
+    - flows
+  input_schema:
+    type: object
+    description: Parameters for starting a flow
+    properties:
+      flow_id:
+        type: string
+        description: "ID of the flow to start"
+      subscriber_id:
+        type: string
+        description: "ID of the subscriber to start the flow for"
+      tags:
+        type: array
+        description: "Optional tags to apply when starting flow"
+    required:
+      - flow_id
+      - subscriber_id
+
+- slug: manychat_create_broadcast
+  name: Create Broadcast
+  description: |
+    Create a new broadcast campaign.
+    Broadcasts can be scheduled or sent immediately to filtered audiences.
+  provider: manychat
+  endpoint: /broadcasts
+  method: POST
+  scopes:
+    - broadcasts:write
+  tags:
+    - broadcasts
+  input_schema:
+    type: object
+    description: Parameters for creating a broadcast
+    properties:
+      title:
+        type: string
+        description: "Title of the broadcast campaign"
+      message:
+        type: string
+        description: "Message content to broadcast"
+      filter:
+        type: object
+        description: "Filter criteria for recipients"
+      scheduled_at:
+        type: string
+        description: "ISO 8601 timestamp for scheduled sending"
+    required:
+      - title
+      - message
+
+- slug: manychat_send_broadcast
+  name: Send Broadcast
+  description: |
+    Immediately send a broadcast to specified recipients.
+    Use this for time-sensitive mass messaging.
+  provider: manychat
+  endpoint: /broadcasts/send
+  method: POST
+  scopes:
+    - broadcasts:write
+  tags:
+    - broadcasts
+  input_schema:
+    type: object
+    description: Parameters for sending a broadcast
+    properties:
+      message:
+        type: string
+        description: "Message content to broadcast"
+      subscriber_ids:
+        type: array
+        description: "Array of subscriber IDs to send to"
+    required:
+      - message
+      - subscriber_ids
+
+- slug: manychat_list_tags
+  name: List Tags
+  description: |
+    Retrieve all tags in your Manychat account.
+    Tags are used to categorize and segment subscribers.
+  provider: manychat
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: manychat_add_tag
+  name: Add Tag
+  description: |
+    Add one or more tags to a subscriber.
+    Use tags to segment and categorize your audience.
+  provider: manychat
+  endpoint: /subscribers/{id}/tags
+  method: POST
+  scopes:
+    - tags:write
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for adding tags
+    properties:
+      subscriber_id:
+        type: string
+        description: "ID of the subscriber to add tags to"
+      tags:
+        type: array
+        description: "Array of tag IDs to add"
+    required:
+      - subscriber_id
+      - tags

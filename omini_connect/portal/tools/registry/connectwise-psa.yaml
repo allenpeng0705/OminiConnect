@@ -1,0 +1,254 @@
+# ConnectWise PSA Tools - Allowlist
+# Curated subset of the ConnectWise PSA API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. connectwise_psa_list_companies           - List companies
+# 2. connectwise_psa_get_company            - Get company details
+# 3. connectwise_psa_list_contacts          - List contacts
+# 4. connectwise_psa_get_contact            - Get contact details
+# 5. connectwise_psa_list_tickets           - List tickets
+# 6. connectwise_psa_get_ticket             - Get ticket details
+# 7. connectwise_psa_create_ticket           - Create a ticket
+# 8. connectwise_psa_update_ticket          - Update a ticket
+# 9. connectwise_psa_list_time_entries     - List time entries
+# 10. connectwise_psa_list_projects       - List projects
+
+- slug: connectwise_psa_list_companies
+  name: List Companies
+  description: |
+    List all companies in ConnectWise PSA.
+  provider: connectwise-psa
+  endpoint: /company
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: connectwise_psa_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: connectwise-psa
+  endpoint: /company/{id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: integer
+        description: "Company ID"
+    required:
+      - id
+
+- slug: connectwise_psa_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: connectwise-psa
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      companyId:
+        type: integer
+        description: "Filter by company ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: connectwise_psa_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: connectwise-psa
+  endpoint: /contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: connectwise_psa_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets.
+  provider: connectwise-psa
+  endpoint: /service/tickets
+  method: GET
+  scopes: []
+  tags:
+    - tickets
+    - support
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      companyId:
+        type: integer
+        description: "Filter by company ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: connectwise_psa_get_ticket
+  name: Get Ticket
+  description: |
+    Get details of a specific ticket.
+  provider: connectwise-psa
+  endpoint: /service/tickets/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tickets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+    required:
+      - id
+
+- slug: connectwise_psa_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new ticket.
+  provider: connectwise-psa
+  endpoint: /service/tickets
+  method: POST
+  scopes: []
+  tags:
+    - tickets
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      summary:
+        type: string
+        description: "Ticket summary"
+      companyId:
+        type: integer
+        description: "Company ID"
+      priority:
+        type: integer
+        description: "Priority (1-5)"
+    required:
+      - summary
+      - companyId
+
+- slug: connectwise_psa_update_ticket
+  name: Update Ticket
+  description: |
+    Update an existing ticket.
+  provider: connectwise-psa
+  endpoint: /service/tickets/{id}
+  method: PATCH
+  scopes: []
+  tags:
+    - tickets
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a ticket
+    properties:
+      id:
+        type: integer
+        description: "Ticket ID"
+      status:
+        type: string
+        description: "New status"
+      priority:
+        type: integer
+        description: "New priority"
+    required:
+      - id
+
+- slug: connectwise_psa_list_time_entries
+  name: List Time Entries
+  description: |
+    List all time entries.
+  provider: connectwise-psa
+  endpoint: /time/entries
+  method: GET
+  scopes: []
+  tags:
+    - time
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      ticketId:
+        type: integer
+        description: "Filter by ticket ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: connectwise_psa_list_projects
+  name: List Projects
+  description: |
+    List all projects.
+  provider: connectwise-psa
+  endpoint: /project/projects
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

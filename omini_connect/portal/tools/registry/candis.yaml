@@ -1,0 +1,250 @@
+# Candis Tools - Allowlist
+# Curated subset of the Candis API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. candis_list_accounts               - List accounts
+# 2. candis_get_account                 - Get account details
+# 3. candis_list_transactions           - List transactions
+# 4. candis_get_transaction             - Get transaction details
+# 5. candis_list_invoices               - List invoices
+# 6. candis_get_invoice                 - Get invoice details
+# 7. candis_create_invoice              - Create an invoice
+# 8. candis_list_contacts               - List contacts
+# 9. candis_get_contact                 - Get contact details
+# 10. candis_list_bills                 - List bills
+
+- slug: candis_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the workspace.
+  provider: candis
+  endpoint: /api/v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: candis_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: candis
+  endpoint: /api/v1/accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: candis_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: candis
+  endpoint: /api/v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      account_id:
+        type: string
+        description: "Filter by account ID"
+      from_date:
+        type: string
+        description: "Start date"
+      to_date:
+        type: string
+        description: "End date"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: candis_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction.
+  provider: candis
+  endpoint: /api/v1/transactions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      id:
+        type: string
+        description: "Transaction ID"
+    required:
+      - id
+
+- slug: candis_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: candis
+  endpoint: /api/v1/invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: candis_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: candis
+  endpoint: /api/v1/invoices/{id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: candis_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice.
+  provider: candis
+  endpoint: /api/v1/invoices
+  method: POST
+  scopes: []
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an invoice
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+      items:
+        type: array
+        items:
+          type: object
+        description: "Invoice line items"
+      due_date:
+        type: string
+        description: "Due date"
+    required:
+      - contact_id
+      - items
+
+- slug: candis_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: candis
+  endpoint: /api/v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: candis_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: candis
+  endpoint: /api/v1/contacts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: candis_list_bills
+  name: List Bills
+  description: |
+    List all bills.
+  provider: candis
+  endpoint: /api/v1/bills
+  method: GET
+  scopes: []
+  tags:
+    - bills
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing bills
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []

@@ -1,0 +1,187 @@
+# UKG Pro WFM Tools - Allowlist
+# Curated subset of UKG Pro WFM API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. ukg_list_shifts           - List scheduled shifts
+# # 2. ukg_create_shift           - Create a new shift
+# # 3. ukg_list_time_entries           - List time entries
+# # 4. ukg_create_time_entry           - Create a time entry
+# # 5. ukg_list_schedules           - List work schedules
+# # 6. ukg_get_schedule           - Get schedule details
+# # 7. ukg_list_availability           - List employee availability
+# # 8. ukg_list_approvals           - List pending approvals
+# # 9. ukg_approve_request           - Approve a request
+# # 10. ukg_reject_request           - Reject a request
+
+- slug: ukg_list_shifts
+  name: List Shifts
+  description: |
+    List scheduled shifts
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/shifts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for list shifts
+    properties: {}
+    required: []
+
+- slug: ukg_create_shift
+  name: Create Shift
+  description: |
+    Create a new shift
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/shifts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for create shift
+    properties: {}
+    required: []
+
+- slug: ukg_list_time_entries
+  name: List Time Entries
+  description: |
+    List time entries
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/time-entries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for list time entries
+    properties: {}
+    required: []
+
+- slug: ukg_create_time_entry
+  name: Create Time Entry
+  description: |
+    Create a time entry
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/time-entries
+  method: POST
+  scopes:
+    - write
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for create time entry
+    properties: {}
+    required: []
+
+- slug: ukg_list_schedules
+  name: List Schedules
+  description: |
+    List work schedules
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/schedules
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for list schedules
+    properties: {}
+    required: []
+
+- slug: ukg_get_schedule
+  name: Get Schedule
+  description: |
+    Get schedule details
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/schedules/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for get schedule
+    properties: {}
+    required: []
+
+- slug: ukg_list_availability
+  name: List Availability
+  description: |
+    List employee availability
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/availability
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for list availability
+    properties: {}
+    required: []
+
+- slug: ukg_list_approvals
+  name: List Approvals
+  description: |
+    List pending approvals
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/approvals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for list approvals
+    properties: {}
+    required: []
+
+- slug: ukg_approve_request
+  name: Approve Request
+  description: |
+    Approve a request
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/approvals/{id}/approve
+  method: POST
+  scopes:
+    - write
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for approve request
+    properties: {}
+    required: []
+
+- slug: ukg_reject_request
+  name: Reject Request
+  description: |
+    Reject a request
+  provider: ukg-pro-wfm
+  endpoint: /wfm/v1/approvals/{id}/reject
+  method: POST
+  scopes:
+    - write
+  tags:
+    - ukg-pro-wfm
+  input_schema:
+    type: object
+    description: Parameters for reject request
+    properties: {}
+    required: []
+

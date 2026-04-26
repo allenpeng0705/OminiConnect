@@ -1,0 +1,239 @@
+- slug: auth0_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users in your Auth0 tenant.
+  provider: auth0
+  endpoint: /users
+  method: GET
+  scopes:
+    - read:users
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      q:
+        type: string
+        description: "Search query string"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of users per page"
+    required: []
+
+- slug: auth0_get_user
+  name: Get User
+  description: |
+    Get details of a specific user by ID.
+  provider: auth0
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - read:users
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "The user ID"
+    required:
+      - id
+
+- slug: auth0_create_user
+  name: Create User
+  description: |
+    Create a new user in your Auth0 tenant.
+  provider: auth0
+  endpoint: /users
+  method: POST
+  scopes:
+    - create:users
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      email:
+        type: string
+        description: "User email address"
+      password:
+        type: string
+        description: "User password"
+      connection:
+        type: string
+        description: "Database connection name"
+      name:
+        type: string
+        description: "User display name"
+    required:
+      - email
+      - password
+      - connection
+
+- slug: auth0_update_user
+  name: Update User
+  description: |
+    Update an existing user's information.
+  provider: auth0
+  endpoint: /users/{id}
+  method: PATCH
+  scopes:
+    - update:users
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      id:
+        type: string
+        description: "The user ID"
+      email:
+        type: string
+        description: "Updated email address"
+      name:
+        type: string
+        description: "Updated display name"
+    required:
+      - id
+
+- slug: auth0_list_clients
+  name: List Clients
+  description: |
+    Retrieve a list of all clients (applications) in your Auth0 tenant.
+  provider: auth0
+  endpoint: /clients
+  method: GET
+  scopes:
+    - read:clients
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of clients per page"
+    required: []
+
+- slug: auth0_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client by ID.
+  provider: auth0
+  endpoint: /clients/{id}
+  method: GET
+  scopes:
+    - read:clients
+  tags:
+    - clients
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: string
+        description: "The client ID"
+    required:
+      - id
+
+- slug: auth0_list_connections
+  name: List Connections
+  description: |
+    Retrieve a list of all database and social connections in your Auth0 tenant.
+  provider: auth0
+  endpoint: /connections
+  method: GET
+  scopes:
+    - read:connections
+  tags:
+    - connections
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of connections per page"
+    required: []
+
+- slug: auth0_get_connection
+  name: Get Connection
+  description: |
+    Get details of a specific connection by ID.
+  provider: auth0
+  endpoint: /connections/{id}
+  method: GET
+  scopes:
+    - read:connections
+  tags:
+    - connections
+  input_schema:
+    type: object
+    description: Parameters for getting a connection
+    properties:
+      id:
+        type: string
+        description: "The connection ID"
+    required:
+      - id
+
+- slug: auth0_get_logs
+  name: Get Logs
+  description: |
+    Retrieve log entries for your Auth0 tenant.
+  provider: auth0
+  endpoint: /logs
+  method: GET
+  scopes:
+    - read:logs
+  tags:
+    - logs
+  input_schema:
+    type: object
+    description: Parameters for retrieving logs
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of log entries per page"
+      type:
+        type: string
+        description: "Filter by log type (e.g., failed_login)"
+    required: []
+
+- slug: auth0_get_rules
+  name: Get Rules
+  description: |
+    Retrieve all rules configured in your Auth0 tenant.
+  provider: auth0
+  endpoint: /rules
+  method: GET
+  scopes:
+    - read:rules
+  tags:
+    - rules
+  input_schema:
+    type: object
+    description: Parameters for getting rules
+    properties:
+      stage:
+        type: string
+        description: "Filter rules by stage (login_success, login_failure, etc)"
+    required: []

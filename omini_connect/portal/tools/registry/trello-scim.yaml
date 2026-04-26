@@ -1,0 +1,187 @@
+# Trello (SCIM) Tools - Allowlist
+# Curated subset of Trello (SCIM) API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. trello_list_users           - List all users in the organization
+# # 2. trello_get_user           - Get user details
+# # 3. trello_create_user           - Create a new user
+# # 4. trello_update_user           - Update user attributes
+# # 5. trello_delete_user           - Deactivate a user
+# # 6. trello_list_groups           - List all groups/organizations
+# # 7. trello_get_group           - Get group details
+# # 8. trello_list_org_members           - List members in an organization
+# # 9. trello_add_user_to_group           - Add a user to a group
+# # 10. trello_remove_user_from_group           - Remove a user from a group
+
+- slug: trello_list_users
+  name: List Users
+  description: |
+    List all users in the organization
+  provider: trello-scim
+  endpoint: /Users
+  method: GET
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for list users
+    properties: {}
+    required: []
+
+- slug: trello_get_user
+  name: Get User
+  description: |
+    Get user details
+  provider: trello-scim
+  endpoint: /Users/{id}
+  method: GET
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for get user
+    properties: {}
+    required: []
+
+- slug: trello_create_user
+  name: Create User
+  description: |
+    Create a new user
+  provider: trello-scim
+  endpoint: /Users
+  method: POST
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for create user
+    properties: {}
+    required: []
+
+- slug: trello_update_user
+  name: Update User
+  description: |
+    Update user attributes
+  provider: trello-scim
+  endpoint: /Users/{id}
+  method: PUT
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for update user
+    properties: {}
+    required: []
+
+- slug: trello_delete_user
+  name: Delete User
+  description: |
+    Deactivate a user
+  provider: trello-scim
+  endpoint: /Users/{id}
+  method: DELETE
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for delete user
+    properties: {}
+    required: []
+
+- slug: trello_list_groups
+  name: List Groups
+  description: |
+    List all groups/organizations
+  provider: trello-scim
+  endpoint: /Groups
+  method: GET
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for list groups
+    properties: {}
+    required: []
+
+- slug: trello_get_group
+  name: Get Group
+  description: |
+    Get group details
+  provider: trello-scim
+  endpoint: /Groups/{id}
+  method: GET
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for get group
+    properties: {}
+    required: []
+
+- slug: trello_list_org_members
+  name: List Org Members
+  description: |
+    List members in an organization
+  provider: trello-scim
+  endpoint: /Organizations/{id}/Members
+  method: GET
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for list org members
+    properties: {}
+    required: []
+
+- slug: trello_add_user_to_group
+  name: Add User to Group
+  description: |
+    Add a user to a group
+  provider: trello-scim
+  endpoint: /Groups/{id}/Users
+  method: POST
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for add user to group
+    properties: {}
+    required: []
+
+- slug: trello_remove_user_from_group
+  name: Remove User from Group
+  description: |
+    Remove a user from a group
+  provider: trello-scim
+  endpoint: /Groups/{id}/Users/{user_id}
+  method: DELETE
+  scopes:
+    - 
+  tags:
+    - trello-scim
+  input_schema:
+    type: object
+    description: Parameters for remove user from group
+    properties: {}
+    required: []
+

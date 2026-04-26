@@ -1,0 +1,313 @@
+# Envoy Tools - Allowlist
+# Curated subset of the Envoy API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. envoy_list_visitors        - List all visitors
+# 2. envoy_get_visitor          - Get details of a specific visitor
+# 3. envoy_create_visitor        - Create a new visitor
+# 4. envoy_list_employees       - List all employees
+# 5. envoy_get_employee          - Get details of a specific employee
+# 6. envoy_list_devices         - List all devices
+# 7. envoy_get_device           - Get details of a specific device
+# 8. envoy_list_places          - List all places
+# 9. envoy_get_place            - Get details of a specific place
+# 10. envoy_list_events         - List all events
+
+- slug: envoy_list_visitors
+  name: List Visitors
+  description: |
+    List all visitors in the workplace system.
+    Returns visitor records including name, email, host, and check-in status.
+  provider: envoy
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - visitors:read
+  tags:
+    - visitors
+    - workplace
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      date_from:
+        type: string
+        description: "Filter by start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "Filter by end date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status: expected, checked_in, checked_out"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: envoy_get_visitor
+  name: Get Visitor
+  description: |
+    Get details of a specific visitor including contact info, host, and visit history.
+  provider: envoy
+  endpoint: /visitors/{id}
+  method: GET
+  scopes:
+    - visitors:read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      id:
+        type: string
+        description: "Visitor ID"
+    required:
+      - id
+
+- slug: envoy_create_visitor
+  name: Create Visitor
+  description: |
+    Create a new visitor record and optionally send an invitation email.
+  provider: envoy
+  endpoint: /visitors
+  method: POST
+  scopes:
+    - visitors:write
+  tags:
+    - visitors
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a visitor
+    properties:
+      first_name:
+        type: string
+        description: "Visitor first name"
+      last_name:
+        type: string
+        description: "Visitor last name"
+      email:
+        type: string
+        description: "Visitor email address"
+      host_id:
+        type: string
+        description: "Employee ID of the host"
+      scheduled_at:
+        type: string
+        description: "Expected arrival time (ISO 8601)"
+      send_email:
+        type: boolean
+        description: "Send invitation email to visitor (default true)"
+        default: true
+    required:
+      - first_name
+      - last_name
+      - email
+      - host_id
+
+- slug: envoy_list_employees
+  name: List Employees
+  description: |
+    List all employees in the workplace directory.
+    Returns employee records including name, email, department, and role.
+  provider: envoy
+  endpoint: /employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - workplace
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      department:
+        type: string
+        description: "Filter by department"
+      role:
+        type: string
+        description: "Filter by role"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: envoy_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee including contact info, department, and role.
+  provider: envoy
+  endpoint: /employees/{id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      id:
+        type: string
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: envoy_list_devices
+  name: List Devices
+  description: |
+    List all devices in the workplace including badges, tablets, and kiosks.
+  provider: envoy
+  endpoint: /devices
+  method: GET
+  scopes:
+    - devices:read
+  tags:
+    - devices
+    - workplace
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      type:
+        type: string
+        description: "Filter by device type: badge, tablet, kiosk"
+      status:
+        type: string
+        description: "Filter by status: online, offline"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: envoy_get_device
+  name: Get Device
+  description: |
+    Get details of a specific device including type, status, location, and configuration.
+  provider: envoy
+  endpoint: /devices/{id}
+  method: GET
+  scopes:
+    - devices:read
+  tags:
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      id:
+        type: string
+        description: "Device ID"
+    required:
+      - id
+
+- slug: envoy_list_places
+  name: List Places
+  description: |
+    List all places in the workplace such as offices, floors, desks, and rooms.
+  provider: envoy
+  endpoint: /places
+  method: GET
+  scopes:
+    - places:read
+  tags:
+    - places
+    - workplace
+  input_schema:
+    type: object
+    description: Parameters for listing places
+    properties:
+      type:
+        type: string
+        description: "Filter by place type: office, floor, desk, room"
+      building:
+        type: string
+        description: "Filter by building name"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: envoy_get_place
+  name: Get Place
+  description: |
+    Get details of a specific place including address, capacity, amenities, and availability.
+  provider: envoy
+  endpoint: /places/{id}
+  method: GET
+  scopes:
+    - places:read
+  tags:
+    - places
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a place
+    properties:
+      id:
+        type: string
+        description: "Place ID"
+    required:
+      - id
+
+- slug: envoy_list_events
+  name: List Events
+  description: |
+    List all events in the workplace calendar.
+    Returns event details including title, time, location, and attendee count.
+  provider: envoy
+  endpoint: /events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+    - calendar
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      date_from:
+        type: string
+        description: "Filter by start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "Filter by end date (YYYY-MM-DD)"
+      place_id:
+        type: string
+        description: "Filter by place ID"
+      per_page:
+        type: integer
+        description: "Results per page (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []

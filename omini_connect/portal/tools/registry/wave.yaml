@@ -1,0 +1,327 @@
+# Wave Tools - Allowlist
+# Curated subset of the Wave API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. wave_list_invoices             - List invoices
+# 2. wave_get_invoice               - Get a specific invoice
+# 3. wave_create_invoice             - Create a new invoice
+# 4. wave_send_invoice               - Send an invoice to customer
+# 5. wave_list_customers             - List customers
+# 6. wave_get_customer               - Get a specific customer
+# 7. wave_list_receipts              - List receipts
+# 8. wave_get_receipt                - Get a specific receipt
+# 9. wave_list_employees             - List employees
+# 10. wave_get_employee              - Get a specific employee
+
+- slug: wave_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the Wave business.
+    Returns invoice details including invoice number, customer, status, and total.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/invoices
+  method: GET
+  scopes:
+    - BUSINESS_INVOICE_READ
+  tags:
+    - invoices
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required:
+      - business_id
+
+- slug: wave_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice by its ID.
+    Returns full invoice information including line items, totals, status, and customer.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/invoices/{invoice_id}
+  method: GET
+  scopes:
+    - BUSINESS_INVOICE_READ
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - business_id
+      - invoice_id
+
+- slug: wave_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in Wave.
+    Include customer, line items, and optional due date and terms.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/invoices
+  method: POST
+  scopes:
+    - BUSINESS_INVOICE_CREATE
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Invoice creation parameters
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      customer_id:
+        type: string
+        description: "Customer ID"
+      items:
+        type: array
+        description: "Array of line item objects"
+      invoice_number:
+        type: string
+        description: "Invoice number"
+      due_date:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+      notes:
+        type: string
+        description: "Invoice notes"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD, CAD)"
+        default: USD
+    required:
+      - business_id
+      - customer_id
+      - items
+
+- slug: wave_send_invoice
+  name: Send Invoice
+  description: |
+    Send an existing invoice to the customer via email.
+    Use this to deliver the invoice to the customer for payment.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/invoices/{invoice_id}/send
+  method: POST
+  scopes:
+    - BUSINESS_INVOICE_SEND
+  tags:
+    - invoices
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for sending an invoice
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+      recipient_email:
+        type: string
+        description: "Override recipient email (optional)"
+      subject:
+        type: string
+        description: "Email subject (optional)"
+      message:
+        type: string
+        description: "Custom message to include in email (optional)"
+    required:
+      - business_id
+      - invoice_id
+
+- slug: wave_list_customers
+  name: List Customers
+  description: |
+    List all customers in the Wave business.
+    Returns customer details including name, email, phone, and address.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/customers
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - customers
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required:
+      - business_id
+
+- slug: wave_get_customer
+  name: Get Customer
+  description: |
+    Get details of a specific customer by their ID.
+    Returns full customer information including contact details and metadata.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/customers/{customer_id}
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - business_id
+      - customer_id
+
+- slug: wave_list_receipts
+  name: List Receipts
+  description: |
+    List all receipts in the Wave business.
+    Returns receipt details including vendor, amount, date, and category.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/receipts
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - receipts
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing receipts
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required:
+      - business_id
+
+- slug: wave_get_receipt
+  name: Get Receipt
+  description: |
+    Get details of a specific receipt by its ID.
+    Returns full receipt information including vendor, amount, and attachments.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/receipts/{receipt_id}
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - receipts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a receipt
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      receipt_id:
+        type: string
+        description: "Receipt ID"
+    required:
+      - business_id
+      - receipt_id
+
+- slug: wave_list_employees
+  name: List Employees
+  description: |
+    List all employees in the Wave business.
+    Returns employee details including name, email, and role.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/employees
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - employees
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required:
+      - business_id
+
+- slug: wave_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by their ID.
+    Returns full employee information including contact details and role.
+  provider: wave
+  endpoint: /v1/businesses/{business_id}/employees/{employee_id}
+  method: GET
+  scopes:
+    - BUSINESS_READ
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      business_id:
+        type: string
+        description: "Wave Business ID"
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - business_id
+      - employee_id

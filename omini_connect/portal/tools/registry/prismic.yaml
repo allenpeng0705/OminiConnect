@@ -1,0 +1,292 @@
+# Prismic Tools - Allowlist
+# Curated subset of the Prismic CMS API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. prismic_list_repositories - List all repositories accessible to the user
+# 2. prismic_get_repository    - Get details of a specific repository
+# 3. prismic_list_documents    - List documents in a repository
+# 4. prismic_get_document     - Get a specific document by ID
+# 5. prismic_create_document  - Create a new document
+# 6. prismic_update_document  - Update an existing document
+# 7. prismic_list_types      - List all custom types in a repository
+# 8. prismic_get_type         - Get a specific custom type definition
+# 9. prismic_list_tags       - List all tags in a repository
+# 10. prismic_get_tag         - Get a specific tag and its usage count
+
+- slug: prismic_list_repositories
+  name: List Repositories
+  description: |
+    List all Prismic repositories accessible to the authenticated user.
+    Returns a paginated list of repositories with their names, domains, and plan info.
+  provider: prismic
+  endpoint: /v2/repositories
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - repositories
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Number of results per page (max 20, default 20)"
+        default: 20
+    required: []
+
+- slug: prismic_get_repository
+  name: Get Repository
+  description: |
+    Get details of a specific Prismic repository including its domain, plan, and custom types.
+  provider: prismic
+  endpoint: /v2/repositories/{repository}
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - repositories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      repository:
+        type: string
+        description: "Repository name (subdomain)"
+    required:
+      - repository
+
+- slug: prismic_list_documents
+  name: List Documents
+  description: |
+    List all documents in a Prismic repository. Filter by type, tags, or search query.
+    Returns paginated results sorted by last modification date.
+  provider: prismic
+  endpoint: /v2/documents/search
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - documents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      q:
+        type: string
+        description: "Search query (document content search)"
+      type:
+        type: string
+        description: "Filter by custom type ID"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Filter by tags (AND filter)"
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+      order:
+        type: string
+        description: "Sort order: first Publication date, last Publication date, first scheduled date, last scheduled date, or last update"
+        enum: [first_publication_date, last_publication_date, first_schedule_date, last_schedule_date, last_update]
+    required: []
+
+- slug: prismic_get_document
+  name: Get Document
+  description: |
+    Get a specific document by its unique ID. Returns document data, metadata, and all fields.
+  provider: prismic
+  endpoint: /v2/documents/{document_id}
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      document_id:
+        type: string
+        description: "Document unique identifier"
+    required:
+      - document_id
+
+- slug: prismic_create_document
+  name: Create Document
+  description: |
+    Create a new document in a Prismic repository. Requires specifying the custom type and initial field values.
+  provider: prismic
+  endpoint: /v2/documents
+  method: POST
+  scopes:
+    - masters
+  tags:
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      repository:
+        type: string
+        description: "Repository name"
+      type:
+        type: string
+        description: "Custom type ID (required)"
+      data:
+        type: object
+        description: "Document data as JSON object with field name/value pairs"
+      lang:
+        type: string
+        description: "Language code for the document (default: en-us)"
+        default: en-us
+    required:
+      - repository
+      - type
+      - data
+
+- slug: prismic_update_document
+  name: Update Document
+  description: |
+    Update an existing document in a Prismic repository. Can update fields, tags, or scheduling.
+  provider: prismic
+  endpoint: /v2/documents/{document_id}
+  method: PUT
+  scopes:
+    - masters
+  tags:
+    - documents
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a document
+    properties:
+      document_id:
+        type: string
+        description: "Document unique identifier"
+      data:
+        type: object
+        description: "Updated document data as JSON"
+      lang:
+        type: string
+        description: "Language code for the document"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Updated tags array"
+    required:
+      - document_id
+      - data
+
+- slug: prismic_list_types
+  name: List Types
+  description: |
+    List all custom types defined in a Prismic repository. Returns type IDs, labels, and Repeatable status.
+  provider: prismic
+  endpoint: /v2/types
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - types
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing custom types
+    properties:
+      repository:
+        type: string
+        description: "Repository name"
+    required:
+      - repository
+
+- slug: prismic_get_type
+  name: Get Type
+  description: |
+    Get the complete definition of a specific custom type including all fields and their schemas.
+  provider: prismic
+  endpoint: /v2/types/{type_id}
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - types
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a custom type
+    properties:
+      repository:
+        type: string
+        description: "Repository name"
+      type_id:
+        type: string
+        description: "Custom type ID"
+    required:
+      - repository
+      - type_id
+
+- slug: prismic_list_tags
+  name: List Tags
+  description: |
+    List all tags defined in a Prismic repository. Returns tag names and document counts.
+  provider: prismic
+  endpoint: /v2/tags
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      repository:
+        type: string
+        description: "Repository name"
+    required:
+      - repository
+
+- slug: prismic_get_tag
+  name: Get Tag
+  description: |
+    Get details of a specific tag including its name and how many documents use it.
+  provider: prismic
+  endpoint: /v2/tags/{tag}
+  method: GET
+  scopes:
+    - masters
+  tags:
+    - tags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      repository:
+        type: string
+        description: "Repository name"
+      tag:
+        type: string
+        description: "Tag name (URL-encoded)"
+    required:
+      - repository
+      - tag

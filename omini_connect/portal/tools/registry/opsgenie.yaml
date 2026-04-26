@@ -1,0 +1,300 @@
+# OpsGenie Tools - Allowlist
+# Curated subset of OpsGenie REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. opsgenie_list_alerts      - List alerts
+# 2. opsgenie_get_alert        - Get a specific alert
+# 3. opsgenie_create_alert     - Create a new alert
+# 4. opsgenie_close_alert      - Close an alert
+# 5. opsgenie_list_users       - List users
+# 6. opsgenie_get_user         - Get a specific user
+# 7. opsgenie_list_schedules    - List on-call schedules
+# 8. opsgenie_get_schedule     - Get a specific schedule
+# 9. opsgenie_list_policies    - List escalation policies
+# 10. opsgenie_get_policy      - Get a specific policy
+
+- slug: opsgenie_list_alerts
+  name: List Alerts
+  description: |
+    List alerts in your OpsGenie account. Alerts are notifications
+    that can be assigned, acknowledged, and closed. Filter by status or priority.
+  provider: opsgenie
+  endpoint: /v2/alerts
+  method: GET
+  scopes:
+    - alerts:read
+  tags:
+    - alerts
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      query:
+        type: string
+        description: "Search query to filter alerts"
+      status:
+        type: string
+        description: "Filter by status: open, acknowledged, closed"
+        enum: [open, acknowledged, closed]
+      priority:
+        type: string
+        description: "Filter by priority: P1, P2, P3, P4, P5"
+        enum: [P1, P2, P3, P4, P5]
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: opsgenie_get_alert
+  name: Get Alert
+  description: |
+    Get details of a specific alert by ID. Returns title, description,
+    priority, status, and timeline of events and actions taken.
+  provider: opsgenie
+  endpoint: /v2/alerts/{id}
+  method: GET
+  scopes:
+    - alerts:read
+  tags:
+    - alerts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an alert
+    properties:
+      alert_id:
+        type: string
+        description: "Alert ID (required)"
+    required:
+      - alert_id
+
+- slug: opsgenie_create_alert
+  name: Create Alert
+  description: |
+    Create a new alert in OpsGenie. Alerts notify designated responders
+    based on escalation rules. You can specify priority and add details.
+  provider: opsgenie
+  endpoint: /v2/alerts
+  method: POST
+  scopes:
+    - alerts:write
+  tags:
+    - alerts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an alert
+    properties:
+      message:
+        type: string
+        description: "Alert message/title (required)"
+      description:
+        type: string
+        description: "Detailed description of the alert"
+      priority:
+        type: string
+        description: "Priority: P1 (highest) to P5 (lowest)"
+        enum: [P1, P2, P3, P4, P5]
+        default: P3
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to categorize the alert"
+      entity:
+        type: string
+        description: "Entity/source that caused the alert"
+    required:
+      - message
+
+- slug: opsgenie_close_alert
+  name: Close Alert
+  description: |
+    Close an existing alert. Closed alerts are resolved and no longer
+    require attention. You can add a note explaining the resolution.
+  provider: opsgenie
+  endpoint: /v2/alerts/{id}/close
+  method: POST
+  scopes:
+    - alerts:write
+  tags:
+    - alerts
+    - close
+  input_schema:
+    type: object
+    description: Parameters for closing an alert
+    properties:
+      alert_id:
+        type: string
+        description: "Alert ID (required)"
+      note:
+        type: string
+        description: "Optional note explaining why the alert is being closed"
+    required:
+      - alert_id
+
+- slug: opsgenie_list_users
+  name: List Users
+  description: |
+    List all users in your OpsGenie account. Users are people who can
+    be assigned to alerts and are part of escalation policies.
+  provider: opsgenie
+  endpoint: /v2/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      query:
+        type: string
+        description: "Search users by name or email"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: opsgenie_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including their contact information,
+    role, and current on-call responsibilities.
+  provider: opsgenie
+  endpoint: /v2/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - user_id
+
+- slug: opsgenie_list_schedules
+  name: List Schedules
+  description: |
+    List all on-call schedules in OpsGenie. Schedules define rotation
+    of on-call responders and are used for alert routing.
+  provider: opsgenie
+  endpoint: /v2/schedules
+  method: GET
+  scopes:
+    - schedules:read
+  tags:
+    - schedules
+    - on-call
+  input_schema:
+    type: object
+    description: Parameters for listing schedules
+    properties:
+      query:
+        type: string
+        description: "Search schedules by name"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: opsgenie_get_schedule
+  name: Get Schedule
+  description: |
+    Get details of a specific schedule including participants, rotation type,
+    and upcoming on-call shifts. Useful for finding who is currently on-call.
+  provider: opsgenie
+  endpoint: /v2/schedules/{id}
+  method: GET
+  scopes:
+    - schedules:read
+  tags:
+    - schedules
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schedule
+    properties:
+      schedule_id:
+        type: string
+        description: "Schedule ID (required)"
+      timeline:
+        type: object
+        description: "Timeline parameters for upcoming shifts"
+    required:
+      - schedule_id
+
+- slug: opsgenie_list_policies
+  name: List Policies
+  description: |
+    List all escalation policies in OpsGenie. Policies define the chain
+    of notification steps when alerts are created or escalated.
+  provider: opsgenie
+  endpoint: /v2/policies
+  method: GET
+  scopes:
+    - policies:read
+  tags:
+    - policies
+    - escalation
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: opsgenie_get_policy
+  name: Get Policy
+  description: |
+    Get details of a specific escalation policy including the rules,
+    recipients, and notification steps for each escalation level.
+  provider: opsgenie
+  endpoint: /v2/policies/{id}
+  method: GET
+  scopes:
+    - policies:read
+  tags:
+    - policies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policy_id:
+        type: string
+        description: "Policy ID (required)"
+    required:
+      - policy_id

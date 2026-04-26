@@ -1,0 +1,331 @@
+# Zoho More Tools - Allowlist
+# Curated subset of additional Zoho services for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zoho_list_invoices          - List invoices from Zoho Books
+# 2. zoho_get_invoice           - Get invoice details
+# 3. zoho_create_invoice        - Create a new invoice
+# 4. zoho_list_contacts         - List contacts from Zoho People
+# 5. zoho_get_contact           - Get contact details
+# 6. zoho_list_items            - List items from Zoho Inventory
+# 7. zoho_get_item              - Get item details
+# 8. zoho_list_purchase_orders  - List purchase orders
+# 9. zoho_get_purchase_order    - Get purchase order details
+# 10. zoho_list_employees       - List employees from Zoho People
+
+- slug: zoho_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices from Zoho Books. Filter by status, date range, or customer to find specific invoices.
+    Returns invoice numbers, amounts, statuses, and customer info.
+  provider: zoho_more
+  endpoint: /books/v3/invoices
+  method: GET
+  scopes:
+    - zoho_books.invoices.read
+  tags:
+    - invoices
+    - billing
+    - books
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, sent, paid, overdue, void"
+        enum: [draft, sent, paid, overdue, void]
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      date_after:
+        type: string
+        description: "Filter by date (YYYY-MM-DD)"
+      date_before:
+        type: string
+        description: "Filter by date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: zoho_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific invoice including line items, taxes, and payment details.
+  provider: zoho_more
+  endpoint: /books/v3/invoices/{invoice_id}
+  method: GET
+  scopes:
+    - zoho_books.invoices.read
+  tags:
+    - invoices
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID (path parameter)"
+    required:
+      - invoice_id
+
+- slug: zoho_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in Zoho Books. Set customer, line items, tax, and payment terms.
+  provider: zoho_more
+  endpoint: /books/v3/invoices
+  method: POST
+  scopes:
+    - zoho_books.invoices.create
+  tags:
+    - invoices
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Invoice creation parameters
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID (required)"
+      invoice_number:
+        type: string
+        description: "Invoice number (auto-generated if not provided)"
+      date:
+        type: string
+        description: "Invoice date (YYYY-MM-DD)"
+      due_date:
+        type: string
+        description: "Payment due date (YYYY-MM-DD)"
+      line_items:
+        type: array
+        items:
+          type: object
+        description: "Array of line items: {item_id, quantity, rate}"
+      notes:
+        type: string
+        description: "Additional notes or terms"
+    required:
+      - customer_id
+
+- slug: zoho_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts from Zoho People. Filter by department, designation, or search term to find employees.
+  provider: zoho_more
+  endpoint: /people/v3/contacts
+  method: GET
+  scopes:
+    - zoho_people.contacts.read
+  tags:
+    - contacts
+    - employees
+    - people
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      department:
+        type: string
+        description: "Filter by department"
+      designation:
+        type: string
+        description: "Filter by job title"
+      search:
+        type: string
+        description: "Search by name or email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: zoho_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact including employment details, reporting structure, and contact info.
+  provider: zoho_more
+  endpoint: /people/v3/contacts/{contact_id}
+  method: GET
+  scopes:
+    - zoho_people.contacts.read
+  tags:
+    - contacts
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID (path parameter)"
+    required:
+      - contact_id
+
+- slug: zoho_list_items
+  name: List Items
+  description: |
+    List all items (products/services) from Zoho Inventory. Filter by category, status, or search term.
+  provider: zoho_more
+  endpoint: /inventory/v3/items
+  method: GET
+  scopes:
+    - zoho_inventory.items.read
+  tags:
+    - items
+    - products
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      name:
+        type: string
+        description: "Filter by item name"
+      category:
+        type: string
+        description: "Filter by category"
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: zoho_get_item
+  name: Get Item
+  description: |
+    Get detailed information about a specific item including pricing, stock levels, and custom fields.
+  provider: zoho_more
+  endpoint: /inventory/v3/items/{item_id}
+  method: GET
+  scopes:
+    - zoho_inventory.items.read
+  tags:
+    - items
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      item_id:
+        type: string
+        description: "Item ID (path parameter)"
+    required:
+      - item_id
+
+- slug: zoho_list_purchase_orders
+  name: List Purchase Orders
+  description: |
+    List all purchase orders from Zoho Inventory. Filter by status, vendor, or date range.
+  provider: zoho_more
+  endpoint: /inventory/v3/purchaseorders
+  method: GET
+  scopes:
+    - zoho_inventory.purchaseorders.read
+  tags:
+    - purchaseorders
+    - procurement
+    - inventory
+  input_schema:
+    type: object
+    description: Parameters for listing purchase orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, confirmed, partially_received, received, cancelled"
+      vendor_id:
+        type: string
+        description: "Filter by vendor ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []
+
+- slug: zoho_get_purchase_order
+  name: Get Purchase Order
+  description: |
+    Get detailed information about a specific purchase order including line items, vendor info, and delivery status.
+  provider: zoho_more
+  endpoint: /inventory/v3/purchaseorders/{purchase_order_id}
+  method: GET
+  scopes:
+    - zoho_inventory.purchaseorders.read
+  tags:
+    - purchaseorders
+    - procurement
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a purchase order
+    properties:
+      purchase_order_id:
+        type: string
+        description: "Purchase Order ID (path parameter)"
+    required:
+      - purchase_order_id
+
+- slug: zoho_list_employees
+  name: List Employees
+  description: |
+    List all employees from Zoho People. Filter by department, status, or search term to find specific employees.
+  provider: zoho_more
+  endpoint: /people/v3/employees
+  method: GET
+  scopes:
+    - zoho_people.employees.read
+  tags:
+    - employees
+    - hr
+    - people
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      department:
+        type: string
+        description: "Filter by department"
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      search:
+        type: string
+        description: "Search by name or email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 25
+    required: []

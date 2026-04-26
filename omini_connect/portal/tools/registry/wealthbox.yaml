@@ -1,0 +1,329 @@
+# Wealthbox Tools - Allowlist
+# Curated subset of Wealthbox CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. wealthbox_list_contacts    - List all contacts
+# 2. wealthbox_get_contact      - Get contact details
+# 3. wealthbox_create_contact   - Create a new contact
+# 4. wealthbox_list_activities  - List all activities
+# 5. wealthbox_get_activity    - Get activity details
+# 6. wealthbox_list_projects   - List all projects
+# 7. wealthbox_get_project     - Get project details
+# 8. wealthbox_list_tasks      - List all tasks
+# 9. wealthbox_get_task        - Get task details
+# 10. wealthbox_list_events    - List all events
+
+- slug: wealthbox_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Wealthbox CRM.
+    Filter by name, email, tag, or company.
+  provider: wealthbox
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contacts:r
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      search:
+        type: string
+        description: "Search by name, email, or company"
+      tag:
+        type: string
+        description: "Filter by tag"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: wealthbox_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific Wealthbox contact.
+  provider: wealthbox
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contacts:r
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: wealthbox_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Wealthbox CRM.
+    Set name, email, phone, company, and tags.
+  provider: wealthbox
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contacts:w
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to assign"
+    required:
+      - first_name
+      - last_name
+
+- slug: wealthbox_list_activities
+  name: List Activities
+  description: |
+    List all activities in Wealthbox CRM.
+    Filter by type, contact, or date range.
+  provider: wealthbox
+  endpoint: /activities
+  method: GET
+  scopes:
+    - activities:r
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      type:
+        type: string
+        description: "Filter by activity type (call, email, meeting, task)"
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: wealthbox_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information about a specific Wealthbox activity.
+  provider: wealthbox
+  endpoint: /activities/{id}
+  method: GET
+  scopes:
+    - activities:r
+  tags:
+    - activities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: string
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: wealthbox_list_projects
+  name: List Projects
+  description: |
+    List all projects in Wealthbox CRM.
+    Filter by status, client, or category.
+  provider: wealthbox
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:r
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed, on-hold)"
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: wealthbox_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific Wealthbox project.
+  provider: wealthbox
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:r
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: wealthbox_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Wealthbox CRM.
+    Filter by status, assignee, or due date.
+  provider: wealthbox
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, completed)"
+      assignee_id:
+        type: string
+        description: "Filter by assignee ID"
+      due_date_from:
+        type: string
+        description: "Due date from (YYYY-MM-DD)"
+      due_date_to:
+        type: string
+        description: "Due date to (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: wealthbox_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific Wealthbox task.
+  provider: wealthbox
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: wealthbox_list_events
+  name: List Events
+  description: |
+    List all events in Wealthbox CRM.
+    Filter by calendar, date range, or attendees.
+  provider: wealthbox
+  endpoint: /events
+  method: GET
+  scopes:
+    - events:r
+  tags:
+    - events
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      calendar_id:
+        type: string
+        description: "Filter by calendar ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []

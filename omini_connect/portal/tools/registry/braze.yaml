@@ -1,0 +1,277 @@
+# Braze Tools - Allowlist
+# Curated subset of the Braze REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. braze_list_users           - List users in Braze
+# 2. braze_get_user              - Get details of a specific user
+# 3. braze_track_event           - Track a custom event for a user
+# 4. braze_list_campaigns         - List campaigns in Braze
+# 5. braze_get_campaign          - Get details of a specific campaign
+# 6. braze_create_campaign       - Create a new campaign
+# 7. braze_list_content_cards    - List content cards
+# 8. braze_get_content_card      - Get details of a specific content card
+# 9. braze_list_segments        - List segments in Braze
+# 10. braze_get_segment          - Get details of a specific segment
+
+- slug: braze_list_users
+  name: List Users
+  description: |
+    List users in Braze. Returns user details including external ID, email, and device information.
+  provider: braze
+  endpoint: /users/list
+  method: GET
+  scopes:
+    - users
+  tags:
+    - users
+    - audience
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: braze_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including attributes, events, and purchase history.
+  provider: braze
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - users
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (external_id or braze_id)"
+    required:
+      - user_id
+
+- slug: braze_track_event
+  name: Track Event
+  description: |
+    Track a custom event for a user. Used to record user actions for segmentation and analytics.
+  provider: braze
+  endpoint: /events/track
+  method: POST
+  scopes:
+    - events
+  tags:
+    - events
+    - tracking
+    - create
+  input_schema:
+    type: object
+    description: Parameters for tracking an event
+    properties:
+      external_id:
+        type: string
+        description: "User external ID"
+      event_name:
+        type: string
+        description: "Name of the event"
+      time:
+        type: string
+        description: "Event timestamp (ISO 8601)"
+      properties:
+        type: object
+        description: "Event properties"
+    required:
+      - external_id
+      - event_name
+
+- slug: braze_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Braze. Returns campaign details including name, status, and performance metrics.
+  provider: braze
+  endpoint: /campaigns/list
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: braze_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign including settings, audience, and performance statistics.
+  provider: braze
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: braze_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new campaign in Braze. Set audience, content, and delivery schedule.
+  provider: braze
+  endpoint: /campaigns
+  method: POST
+  scopes:
+    - campaigns
+  tags:
+    - campaigns
+    - create
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      name:
+        type: string
+        description: "Campaign name"
+      description:
+        type: string
+        description: "Campaign description"
+      channel:
+        type: string
+        description: "Channel: email, push, in_app_message"
+        enum: [email, push, in_app_message]
+      segment_id:
+        type: string
+        description: "Target segment ID"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - name
+      - channel
+
+- slug: braze_list_content_cards
+  name: List Content Cards
+  description: |
+    List all content cards in Braze. Returns card details including title, message, and status.
+  provider: braze
+  endpoint: /content_cards/list
+  method: GET
+  scopes:
+    - content_cards
+  tags:
+    - content_cards
+    - messaging
+  input_schema:
+    type: object
+    description: Parameters for listing content cards
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: braze_get_content_card
+  name: Get Content Card
+  description: |
+    Get details of a specific content card including message, images, and performance data.
+  provider: braze
+  endpoint: /content_cards/{card_id}
+  method: GET
+  scopes:
+    - content_cards
+  tags:
+    - content_cards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a content card
+    properties:
+      card_id:
+        type: string
+        description: "Content card ID"
+    required:
+      - card_id
+
+- slug: braze_list_segments
+  name: List Segments
+  description: |
+    List all segments in Braze. Returns segment details including name, size, and filters.
+  provider: braze
+  endpoint: /segments/list
+  method: GET
+  scopes:
+    - segments
+  tags:
+    - segments
+    - audience
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: braze_get_segment
+  name: Get Segment
+  description: |
+    Get details of a specific segment including name, user count, and filter criteria.
+  provider: braze
+  endpoint: /segments/{segment_id}
+  method: GET
+  scopes:
+    - segments
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: string
+        description: "Segment ID"
+    required:
+      - segment_id

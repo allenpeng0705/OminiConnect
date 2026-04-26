@@ -1,0 +1,237 @@
+# HeyGen Tools - Allowlist
+# Curated subset of HeyGen API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. heygen_list_videos           - List videos
+# 2. heygen_get_video             - Get video details
+# 3. heygen_create_video          - Create a video
+# 4. heygen_list_avatars          - List avatars
+# 5. heygen_get_avatar            - Get avatar details
+# 6. heygen_list_voices           - List voices
+# 7. heygen_get_voice             - Get voice details
+# 8. heygen_list_templates        - List templates
+# 9. heygen_get_template          - Get template details
+# 10. heygen_list_teams           - List teams
+
+- slug: heygen_list_videos
+  name: List Videos
+  description: |
+    List all videos in your HeyGen account.
+    Returns video details including title, status, and duration.
+  provider: heygen
+  endpoint: /v1/videos
+  method: GET
+  scopes:
+    - read
+  tags:
+    - videos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: heygen_get_video
+  name: Get Video
+  description: |
+    Get detailed information about a specific video.
+    Includes video URL, thumbnail, and metadata.
+  provider: heygen
+  endpoint: /v1/videos/{video_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      video_id:
+        type: string
+        description: "Video ID"
+    required:
+      - video_id
+
+- slug: heygen_create_video
+  name: Create Video
+  description: |
+    Create a new video using HeyGen.
+    Set template, avatar, and script.
+  provider: heygen
+  endpoint: /v1/video
+  method: POST
+  scopes:
+    - write
+  tags:
+    - videos
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a video
+    properties:
+      template_id:
+        type: string
+        description: "Template ID"
+      script:
+        type: object
+        description: "Video script"
+    required:
+      - template_id
+
+- slug: heygen_list_avatars
+  name: List Avatars
+  description: |
+    List all available avatars in HeyGen.
+    Returns avatar details including name and preview.
+  provider: heygen
+  endpoint: /v1/avatars
+  method: GET
+  scopes:
+    - read
+  tags:
+    - avatars
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing avatars
+    properties: {}
+    required: []
+
+- slug: heygen_get_avatar
+  name: Get Avatar
+  description: |
+    Get detailed information about a specific avatar.
+    Includes avatar preview and settings.
+  provider: heygen
+  endpoint: /v1/avatars/{avatar_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - avatars
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an avatar
+    properties:
+      avatar_id:
+        type: string
+        description: "Avatar ID"
+    required:
+      - avatar_id
+
+- slug: heygen_list_voices
+  name: List Voices
+  description: |
+    List all available voices in HeyGen.
+    Returns voice details including name and language.
+  provider: heygen
+  endpoint: /v1/voices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - voices
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing voices
+    properties: {}
+    required: []
+
+- slug: heygen_get_voice
+  name: Get Voice
+  description: |
+    Get detailed information about a specific voice.
+    Includes voice preview and settings.
+  provider: heygen
+  endpoint: /v1/voices/{voice_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - voices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a voice
+    properties:
+      voice_id:
+        type: string
+        description: "Voice ID"
+    required:
+      - voice_id
+
+- slug: heygen_list_templates
+  name: List Templates
+  description: |
+    List all video templates in HeyGen.
+    Returns template details including name and preview.
+  provider: heygen
+  endpoint: /v1/templates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties: {}
+    required: []
+
+- slug: heygen_get_template
+  name: Get Template
+  description: |
+    Get detailed information about a specific template.
+    Includes template structure and settings.
+  provider: heygen
+  endpoint: /v1/templates/{template_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - templates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a template
+    properties:
+      template_id:
+        type: string
+        description: "Template ID"
+    required:
+      - template_id
+
+- slug: heygen_list_teams
+  name: List Teams
+  description: |
+    List all teams in your HeyGen account.
+    Returns team details including name and members.
+  provider: heygen
+  endpoint: /v1/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - teams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []

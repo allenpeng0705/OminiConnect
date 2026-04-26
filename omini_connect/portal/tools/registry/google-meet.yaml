@@ -1,0 +1,246 @@
+# Google Meet Tools - Allowlist
+# Curated subset of Google Meet API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_meet_list_spaces          - List meeting spaces
+# 2. google_meet_create_space        - Create meeting space
+# 3. google_meet_get_space          - Get space details
+# 4. google_meet_list_recordings     - List recordings
+# 5. google_meet_list_participants   - List participants
+# 6. google_meet_create_access_rule  - Create access rule
+# 7. google_meet_list_access_rules   - List access rules
+# 8. google_meet_get_participant     - Get participant details
+# 9. google_meet_list_codecs        - List codecs
+# 10. google_meet_update_space      - Update space
+
+- slug: google_meet_list_spaces
+  name: List Spaces
+  description: |
+    List meeting spaces in Google Meet.
+  provider: google-meet
+  endpoint: /v2/spaces
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - spaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spaces
+    properties: {}
+
+- slug: google_meet_create_space
+  name: Create Space
+  description: |
+    Create a new meeting space.
+  provider: google-meet
+  endpoint: /v2/spaces
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.created
+  tags:
+    - meet
+    - spaces
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a space
+    properties:
+      meetingTitle:
+        type: string
+        description: "Meeting title"
+    required:
+      - meetingTitle
+
+- slug: google_meet_get_space
+  name: Get Space
+  description: |
+    Get details about a meeting space.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - spaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a space
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_meet_list_recordings
+  name: List Recordings
+  description: |
+    List recordings from Meet.
+  provider: google-meet
+  endpoint: /v2/recordings
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - recordings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing recordings
+    properties: {}
+
+- slug: google_meet_list_participants
+  name: List Participants
+  description: |
+    List participants in a space.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}/participants
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - participants
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing participants
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_meet_create_access_rule
+  name: Create Access Rule
+  description: |
+    Create an access rule for a space.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}/accessRules
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.created
+  tags:
+    - meet
+    - access-rules
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating access rule
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      principal:
+        type: string
+        description: "Principal (email or group)"
+      role:
+        type: string
+        description: "Role (creator, moderator, attendee)"
+    required:
+      - space_id
+      - principal
+      - role
+
+- slug: google_meet_list_access_rules
+  name: List Access Rules
+  description: |
+    List access rules for a space.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}/accessRules
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - access-rules
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing access rules
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+    required:
+      - space_id
+
+- slug: google_meet_get_participant
+  name: Get Participant
+  description: |
+    Get details about a participant.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}/participants/{participant_id}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - participants
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a participant
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      participant_id:
+        type: string
+        description: "Participant ID"
+    required:
+      - space_id
+      - participant_id
+
+- slug: google_meet_list_codecs
+  name: List Codecs
+  description: |
+    List available codecs for Meet.
+  provider: google-meet
+  endpoint: /v2/codecs
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.readonly
+  tags:
+    - meet
+    - codecs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing codecs
+    properties: {}
+
+- slug: google_meet_update_space
+  name: Update Space
+  description: |
+    Update a meeting space.
+  provider: google-meet
+  endpoint: /v2/spaces/{space_id}
+  method: PATCH
+  scopes:
+    - https://www.googleapis.com/auth/meetings.space.created
+  tags:
+    - meet
+    - spaces
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a space
+    properties:
+      space_id:
+        type: string
+        description: "Space ID"
+      meetingTitle:
+        type: string
+        description: "New meeting title"
+    required:
+      - space_id

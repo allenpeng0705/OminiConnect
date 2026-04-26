@@ -1,0 +1,314 @@
+# Microsoft 365 Tools - Allowlist
+# Curated subset of Microsoft Graph API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. microsoft_365_list_groups          - List Microsoft 365 groups
+# 2. microsoft_365_get_group            - Get group details
+# 3. microsoft_365_list_group_members   - List group members
+# 4. microsoft_365_get_user             - Get user details
+# 5. microsoft_365_list_files           - List files in SharePoint/OneDrive
+# 6. microsoft_365_get_file             - Get file metadata
+# 7. microsoft_365_upload_file          - Upload a file
+# 8. microsoft_365_list_calendar_events - List calendar events
+# 9. microsoft_365_get_calendar_event  - Get event details
+# 10. microsoft_365_send_mail_message   - Send an email
+
+- slug: microsoft_365_list_groups
+  name: List Groups
+  description: |
+    List Microsoft 365 groups in the organization.
+    Filter by group type, membership, and other properties.
+  provider: microsoft_365
+  endpoint: /groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      filter:
+        type: string
+        description: "OData filter expression"
+      top:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: microsoft_365_get_group
+  name: Get Group
+  description: |
+    Get detailed information about a specific Microsoft 365 group including settings and owners.
+  provider: microsoft_365
+  endpoint: /groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: microsoft_365_list_group_members
+  name: List Group Members
+  description: |
+    List all members of a specific Microsoft 365 group.
+  provider: microsoft_365
+  endpoint: /groups/{groupId}/members
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing group members
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: microsoft_365_get_user
+  name: Get User
+  description: |
+    Get detailed information about a Microsoft 365 user including profile and manager.
+  provider: microsoft_365
+  endpoint: /users/{userId}
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: microsoft_365_list_files
+  name: List Files
+  description: |
+    List files in SharePoint Online or OneDrive for Business.
+    Filter by folder, type, and modified date.
+  provider: microsoft_365
+  endpoint: /sites/{siteId}/drives/{driveId}/items/{itemId}/children
+  method: GET
+  scopes:
+    - Files.Read.All
+  tags:
+    - files
+    - sharepoint
+    - onedrive
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      siteId:
+        type: string
+        description: "SharePoint site ID"
+      driveId:
+        type: string
+        description: "Drive ID (use 'root' for default)"
+      itemId:
+        type: string
+        description: "Folder item ID (use 'root' for root)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - siteId
+
+- slug: microsoft_365_get_file
+  name: Get File
+  description: |
+    Get metadata for a specific file in SharePoint or OneDrive.
+  provider: microsoft_365
+  endpoint: /sites/{siteId}/drives/{driveId}/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read.All
+  tags:
+    - files
+    - sharepoint
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      siteId:
+        type: string
+        description: "SharePoint site ID"
+      driveId:
+        type: string
+        description: "Drive ID"
+      itemId:
+        type: string
+        description: "File or folder item ID"
+    required:
+      - siteId
+      - itemId
+
+- slug: microsoft_365_upload_file
+  name: Upload File
+  description: |
+    Upload a file to SharePoint Online or OneDrive for Business.
+  provider: microsoft_365
+  endpoint: /sites/{siteId}/drives/{driveId}/items/{parentId}:/{fileName}:/content
+  method: PUT
+  scopes:
+    - Files.ReadWrite.All
+  tags:
+    - files
+    - sharepoint
+    - upload
+    - create
+  input_schema:
+    type: object
+    description: Parameters for uploading a file
+    properties:
+      siteId:
+        type: string
+        description: "SharePoint site ID"
+      driveId:
+        type: string
+        description: "Drive ID"
+      parentId:
+        type: string
+        description: "Parent folder ID"
+      fileName:
+        type: string
+        description: "File name"
+      content:
+        type: string
+        description: "File content (base64 encoded)"
+    required:
+      - siteId
+      - fileName
+
+- slug: microsoft_365_list_calendar_events
+  name: List Calendar Events
+  description: |
+    List calendar events for a user or group calendar.
+    Filter by time range, attendee, and more.
+  provider: microsoft_365
+  endpoint: /users/{userId}/calendar/events
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calendar events
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+      startDateTime:
+        type: string
+        description: "Start date/time (ISO 8601)"
+      endDateTime:
+        type: string
+        description: "End date/time (ISO 8601)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required:
+      - userId
+
+- slug: microsoft_365_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get detailed information about a specific calendar event including attendees and attachments.
+  provider: microsoft_365
+  endpoint: /users/{userId}/calendar/events/{eventId}
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a calendar event
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - userId
+      - eventId
+
+- slug: microsoft_365_send_mail_message
+  name: Send Mail Message
+  description: |
+    Send an email message using Microsoft Graph API.
+    Can send to internal or external recipients.
+  provider: microsoft_365
+  endpoint: /users/{userId}/sendMail
+  method: POST
+  scopes:
+    - Mail.Send
+  tags:
+    - mail
+    - email
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending mail
+    properties:
+      userId:
+        type: string
+        description: "Sender user ID or email"
+      toRecipients:
+        type: array
+        items:
+          type: string
+        description: "Recipient email addresses"
+      subject:
+        type: string
+        description: "Email subject"
+      body:
+        type: string
+        description: "Email body (plain text or HTML)"
+      importance:
+        type: string
+        description: "Importance (low, normal, high)"
+        default: normal
+    required:
+      - userId
+      - toRecipients
+      - subject
+      - body

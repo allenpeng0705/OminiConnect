@@ -1,0 +1,265 @@
+# Insightly Tools - Allowlist
+# Curated subset of Insightly CRM REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. insightly_list_contacts        - List contacts
+# 2. insightly_get_contact          - Get contact details
+# 3. insightly_create_contact       - Create a new contact
+# 4. insightly_list_organizations   - List organizations
+# 5. insightly_get_organization     - Get organization details
+# 6. insightly_list_opportunities   - List opportunities
+# 7. insightly_get_opportunity      - Get opportunity details
+# 8. insightly_list_projects         - List projects
+# 9. insightly_get_project          - Get project details
+# 10. insightly_list_tasks           - List tasks
+
+- slug: insightly_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in the Insightly CRM account.
+  provider: insightly
+  endpoint: /api/Contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      email:
+        type: string
+        description: "Filter by email address"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: insightly_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: insightly
+  endpoint: /api/Contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: insightly_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Insightly CRM.
+  provider: insightly
+  endpoint: /api/Contacts
+  method: POST
+  scopes:
+    - write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      organization_id:
+        type: integer
+        description: "Associated organization ID"
+    required:
+      - first_name
+      - last_name
+
+- slug: insightly_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations (companies) in Insightly CRM.
+  provider: insightly
+  endpoint: /api/Organizations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - organizations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing organizations
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: insightly_get_organization
+  name: Get Organization
+  description: |
+    Get detailed information about a specific organization.
+  provider: insightly
+  endpoint: /api/Organizations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - organizations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an organization
+    properties:
+      id:
+        type: integer
+        description: "Organization ID"
+    required:
+      - id
+
+- slug: insightly_list_opportunities
+  name: List Opportunities
+  description: |
+    List all opportunities (deals) in Insightly CRM.
+  provider: insightly
+  endpoint: /api/Opportunities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage_id:
+        type: integer
+        description: "Filter by pipeline stage ID"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: insightly_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity.
+  provider: insightly
+  endpoint: /api/Opportunities/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - opportunities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      id:
+        type: integer
+        description: "Opportunity ID"
+    required:
+      - id
+
+- slug: insightly_list_projects
+  name: List Projects
+  description: |
+    List all projects in Insightly CRM.
+  provider: insightly
+  endpoint: /api/Projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: insightly_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific project.
+  provider: insightly
+  endpoint: /api/Projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id
+
+- slug: insightly_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Insightly CRM.
+  provider: insightly
+  endpoint: /api/Tasks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status (not started, in progress, completed)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []

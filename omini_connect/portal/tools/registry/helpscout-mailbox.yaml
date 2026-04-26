@@ -1,0 +1,248 @@
+# Help Scout Mailbox Tools - Allowlist
+# Curated subset of Help Scout Mailbox API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. helpscout_list_conversations  - List conversations
+# 2. helpscout_get_conversation    - Get conversation details
+# 3. helpscout_create_conversation  - Create a conversation
+# 4. helpscout_list_mailboxes      - List mailboxes
+# 5. helpscout_get_mailbox         - Get mailbox details
+# 6. helpscout_list_customers      - List customers
+# 7. helpscout_get_customer        - Get customer details
+# 8. helpscout_list_tags           - List tags
+# 9. helpscout_list_workflows      - List workflows
+# 10. helpscout_list_reports        - List reports
+
+- slug: helpscout_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Help Scout Mailbox.
+    Returns conversation details including subject, status, and assignee.
+  provider: helpscout-mailbox
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      mailbox_id:
+        type: integer
+        description: "Filter by mailbox ID"
+      status:
+        type: string
+        description: "Filter by status: active, all, archived, spam, trash"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: helpscout_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a specific conversation.
+    Includes messages, threads, and customer info.
+  provider: helpscout-mailbox
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: integer
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: helpscout_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation in Help Scout Mailbox.
+    Set subject, customer, mailbox, and initial message.
+  provider: helpscout-mailbox
+  endpoint: /conversations
+  method: POST
+  scopes:
+    - write
+  tags:
+    - conversations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      subject:
+        type: string
+        description: "Conversation subject"
+      customer_id:
+        type: integer
+        description: "Customer ID"
+      mailbox_id:
+        type: integer
+        description: "Mailbox ID"
+      status:
+        type: string
+        description: "Status: active, pending, snoozed"
+        default: active
+    required:
+      - subject
+      - customer_id
+      - mailbox_id
+
+- slug: helpscout_list_mailboxes
+  name: List Mailboxes
+  description: |
+    List all mailboxes in Help Scout Mailbox.
+    Returns mailbox details including name and email.
+  provider: helpscout-mailbox
+  endpoint: /mailboxes
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mailboxes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing mailboxes
+    properties: {}
+    required: []
+
+- slug: helpscout_get_mailbox
+  name: Get Mailbox
+  description: |
+    Get detailed information about a specific mailbox.
+    Includes mailbox settings and folders.
+  provider: helpscout-mailbox
+  endpoint: /mailboxes/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - mailboxes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a mailbox
+    properties:
+      id:
+        type: integer
+        description: "Mailbox ID"
+    required:
+      - id
+
+- slug: helpscout_list_customers
+  name: List Customers
+  description: |
+    List all customers in Help Scout Mailbox.
+    Returns customer details including name and email.
+  provider: helpscout-mailbox
+  endpoint: /customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: helpscout_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+    Includes contact info and conversation history.
+  provider: helpscout-mailbox
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "Customer ID"
+    required:
+      - id
+
+- slug: helpscout_list_tags
+  name: List Tags
+  description: |
+    List all tags in Help Scout Mailbox.
+    Returns tag details including name and usage count.
+  provider: helpscout-mailbox
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties: {}
+    required: []
+
+- slug: helpscout_list_workflows
+  name: List Workflows
+  description: |
+    List all workflows in Help Scout Mailbox.
+    Returns workflow details including name and status.
+  provider: helpscout-mailbox
+  endpoint: /workflows
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workflows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workflows
+    properties: {}
+    required: []
+
+- slug: helpscout_list_reports
+  name: List Reports
+  description: |
+    List all reports in Help Scout Mailbox.
+    Returns report details including type and metrics.
+  provider: helpscout-mailbox
+  endpoint: /reports
+  method: GET
+  scopes:
+    - read
+  tags:
+    - reports
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties: {}
+    required: []

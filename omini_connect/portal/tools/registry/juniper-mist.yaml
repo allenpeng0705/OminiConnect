@@ -1,0 +1,223 @@
+# Juniper Mist Tools - Allowlist
+# Curated subset of Juniper Mist API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. juniper_mist_get_self       - Get current user
+# 2. juniper_mist_list_sites     - List sites
+# 3. juniper_mist_get_site      - Get site details
+# 4. juniper_mist_list_devices  - List devices
+# 5. juniper_mist_get_device   - Get device details
+# 6. juniper_mist_list_networks - List networks
+# 7. juniper_mist_get_network  - Get network details
+# 8. juniper_mist_list_alerts   - List alerts
+# 9. juniper_mist_list_clients  - List clients
+# 10. juniper_mist_get_client   - Get client details
+
+- slug: juniper_mist_get_self
+  name: Get Current User
+  description: |
+    Get the current authenticated user.
+  provider: juniper-mist
+  endpoint: /api/v1/self
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for getting current user
+    properties: {}
+    required: []
+
+- slug: juniper_mist_list_sites
+  name: List Sites
+  description: |
+    List all sites in the organization.
+  provider: juniper-mist
+  endpoint: /api/v1/sites
+  method: GET
+  scopes: []
+  tags:
+    - sites
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing sites
+    properties: {}
+    required: []
+
+- slug: juniper_mist_get_site
+  name: Get Site
+  description: |
+    Get details for a specific site.
+  provider: juniper-mist
+  endpoint: /api/v1/sites/{site_id}
+  method: GET
+  scopes: []
+  tags:
+    - sites
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a site
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+    required:
+      - site_id
+
+- slug: juniper_mist_list_devices
+  name: List Devices
+  description: |
+    List all devices in a site or organization.
+  provider: juniper-mist
+  endpoint: /api/v1/devices
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      site_id:
+        type: string
+        description: "Site ID filter"
+    required: []
+
+- slug: juniper_mist_get_device
+  name: Get Device
+  description: |
+    Get details for a specific device.
+  provider: juniper-mist
+  endpoint: /api/v1/devices/{device_id}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id
+
+- slug: juniper_mist_list_networks
+  name: List Networks
+  description: |
+    List all networks in a site.
+  provider: juniper-mist
+  endpoint: /api/v1/networks
+  method: GET
+  scopes: []
+  tags:
+    - networks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing networks
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+    required: []
+
+- slug: juniper_mist_get_network
+  name: Get Network
+  description: |
+    Get details for a specific network.
+  provider: juniper-mist
+  endpoint: /api/v1/networks/{network_id}
+  method: GET
+  scopes: []
+  tags:
+    - networks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a network
+    properties:
+      network_id:
+        type: string
+        description: "Network ID"
+    required:
+      - network_id
+
+- slug: juniper_mist_list_alerts
+  name: List Alerts
+  description: |
+    List all alerts in a site or organization.
+  provider: juniper-mist
+  endpoint: /api/v1/alerts
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      site_id:
+        type: string
+        description: "Site ID filter"
+    required: []
+
+- slug: juniper_mist_list_clients
+  name: List Clients
+  description: |
+    List all clients connected to the network.
+  provider: juniper-mist
+  endpoint: /api/v1/clients
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      site_id:
+        type: string
+        description: "Site ID"
+      network_id:
+        type: string
+        description: "Network ID"
+    required: []
+
+- slug: juniper_mist_get_client
+  name: Get Client
+  description: |
+    Get details for a specific client.
+  provider: juniper-mist
+  endpoint: /api/v1/clients/{client_id}
+  method: GET
+  scopes: []
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      client_id:
+        type: string
+        description: "Client ID (MAC address)"
+    required:
+      - client_id

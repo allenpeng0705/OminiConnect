@@ -1,0 +1,249 @@
+# Looker Tools - Allowlist
+# Curated subset of the Looker API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. looker_list_looks           - List looks
+# 2. looker_get_look             - Get look details
+# 3. looker_list_dashboards      - List dashboards
+# 4. looker_get_dashboard       - Get dashboard details
+# 5. looker_list_models         - List models
+# 6. looker_get_model           - Get model details
+# 7. looker_list_users          - List users
+# 8. looker_get_user            - Get user details
+# 9. looker_run_look            - Run a look and get results
+# 10. looker_get_query          - Get query details
+
+- slug: looker_list_looks
+  name: List Looks
+  description: |
+    List all looks the user has access to.
+  provider: looker
+  endpoint: /looks
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - looks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing looks
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: looker_get_look
+  name: Get Look
+  description: |
+    Get detailed information about a specific look.
+  provider: looker
+  endpoint: /looks/{lookId}
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - looks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a look
+    properties:
+      lookId:
+        type: string
+        description: "Look ID"
+    required:
+      - lookId
+
+- slug: looker_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards the user has access to.
+  provider: looker
+  endpoint: /dashboards
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - dashboards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: looker_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get detailed information about a specific dashboard.
+  provider: looker
+  endpoint: /dashboards/{dashboardId}
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - dashboards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboardId:
+        type: string
+        description: "Dashboard ID or slug"
+    required:
+      - dashboardId
+
+- slug: looker_list_models
+  name: List Models
+  description: |
+    List all Looker models (containing views/explores).
+  provider: looker
+  endpoint: /models
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - models
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+    required: []
+
+- slug: looker_get_model
+  name: Get Model
+  description: |
+    Get detailed information about a specific model including available views and explores.
+  provider: looker
+  endpoint: /models/{modelName}
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - models
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a model
+    properties:
+      modelName:
+        type: string
+        description: "Model name"
+    required:
+      - modelName
+
+- slug: looker_list_users
+  name: List Users
+  description: |
+    List all users in the Looker instance.
+  provider: looker
+  endpoint: /users
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+    required: []
+
+- slug: looker_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including roles and permissions.
+  provider: looker
+  endpoint: /users/{userId}
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID"
+    required:
+      - userId
+
+- slug: looker_run_look
+  name: Run Look
+  description: |
+    Run a Look look and get results.
+  provider: looker
+  endpoint: /looks/{lookId}/run
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - looks
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for running a look
+    properties:
+      lookId:
+        type: string
+        description: "Look ID"
+      format:
+        type: string
+        description: "Output format: json, csv, html (default json)"
+        enum: [json, csv, html]
+        default: json
+    required:
+      - lookId
+
+- slug: looker_get_query
+  name: Get Query
+  description: |
+    Get details about a specific saved query.
+  provider: looker
+  endpoint: /queries/{queryId}
+  method: GET
+  scopes:
+    - LookerOAuth
+  tags:
+    - queries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a query
+    properties:
+      queryId:
+        type: string
+        description: "Query ID"
+    required:
+      - queryId

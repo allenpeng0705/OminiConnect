@@ -1,0 +1,285 @@
+- slug: posthog_list_events
+  name: List Events
+  description: |
+    List events from PostHog with optional filtering and pagination.
+  provider: posthog
+  endpoint: /api/events
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      start_date:
+        type: string
+        description: "Start date for the query (ISO format)"
+      end_date:
+        type: string
+        description: "End date for the query (ISO format)"
+      limit:
+        type: integer
+        description: "Maximum number of events to return"
+    required:
+      - project_id
+
+- slug: posthog_get_event
+  name: Get Event
+  description: |
+    Get details for a specific event by its ID.
+  provider: posthog
+  endpoint: /api/events/{event_id}
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      event_id:
+        type: string
+        description: "The unique identifier of the event"
+    required:
+      - project_id
+      - event_id
+
+- slug: posthog_track_event
+  name: Track Event
+  description: |
+    Track a custom event.
+  provider: posthog
+  endpoint: /api/track
+  method: POST
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - events
+  input_schema:
+    type: object
+    description: Parameters for tracking an event
+    properties:
+      event:
+        type: string
+        description: "The event name"
+      properties:
+        type: object
+        description: "Event properties"
+      timestamp:
+        type: string
+        description: "ISO timestamp of the event"
+    required:
+      - event
+
+- slug: posthog_list_persons
+  name: List Persons
+  description: |
+    List all persons in PostHog.
+  provider: posthog
+  endpoint: /api/persons
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - users
+    - persons
+  input_schema:
+    type: object
+    description: Parameters for listing persons
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of persons to return"
+    required:
+      - project_id
+
+- slug: posthog_get_person
+  name: Get Person
+  description: |
+    Get details for a specific person by their ID.
+  provider: posthog
+  endpoint: /api/persons/{person_id}
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - users
+    - persons
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      person_id:
+        type: string
+        description: "The unique identifier of the person"
+    required:
+      - project_id
+      - person_id
+
+- slug: posthog_list_trends
+  name: List Trends
+  description: |
+    List trend calculations.
+  provider: posthog
+  endpoint: /api/trends
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - trends
+  input_schema:
+    type: object
+    description: Parameters for listing trends
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      date_range:
+        type: string
+        description: "Date range for the trends"
+    required:
+      - project_id
+
+- slug: posthog_get_trend
+  name: Get Trend
+  description: |
+    Get details for a specific trend by its ID.
+  provider: posthog
+  endpoint: /api/trends/{trend_id}
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - trends
+  input_schema:
+    type: object
+    description: Parameters for getting a trend
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      trend_id:
+        type: string
+        description: "The unique identifier of the trend"
+    required:
+      - project_id
+      - trend_id
+
+- slug: posthog_list_funnels
+  name: List Funnels
+  description: |
+    List funnel analyses.
+  provider: posthog
+  endpoint: /api/funnels
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - funnels
+  input_schema:
+    type: object
+    description: Parameters for listing funnels
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+    required:
+      - project_id
+
+- slug: posthog_get_funnel
+  name: Get Funnel
+  description: |
+    Get details for a specific funnel by its ID.
+  provider: posthog
+  endpoint: /api/funnels/{funnel_id}
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - analytics
+    - funnels
+  input_schema:
+    type: object
+    description: Parameters for getting a funnel
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      funnel_id:
+        type: string
+        description: "The unique identifier of the funnel"
+    required:
+      - project_id
+      - funnel_id
+
+- slug: posthog_list_cohorts
+  name: List Cohorts
+  description: |
+    List all cohorts.
+  provider: posthog
+  endpoint: /api/cohorts
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - users
+    - cohorts
+  input_schema:
+    type: object
+    description: Parameters for listing cohorts
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      limit:
+        type: integer
+        description: "Maximum number of cohorts to return"
+    required:
+      - project_id
+
+- slug: posthog_get_cohort
+  name: Get Cohort
+  description: |
+    Get details for a specific cohort by its ID.
+  provider: posthog
+  endpoint: /api/cohorts/{cohort_id}
+  method: GET
+  scopes:
+    - ph_api_full_access
+  tags:
+    - users
+    - cohorts
+  input_schema:
+    type: object
+    description: Parameters for getting a cohort
+    properties:
+      project_id:
+        type: string
+        description: "The project ID"
+      cohort_id:
+        type: string
+        description: "The unique identifier of the cohort"
+    required:
+      - project_id
+      - cohort_id

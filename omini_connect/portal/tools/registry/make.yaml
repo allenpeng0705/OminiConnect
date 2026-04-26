@@ -1,0 +1,246 @@
+- slug: make_list_scenarios
+  name: List Scenarios
+  description: |
+    Retrieve a list of all scenarios in a workspace.
+  provider: make
+  endpoint: /scenarios
+  method: GET
+  scopes:
+    - scenarios:read
+  tags:
+    - scenarios
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing scenarios
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID to list scenarios from"
+      limit:
+        type: integer
+        description: "Maximum number of scenarios to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required:
+      - workspace_id
+
+- slug: make_get_scenario
+  name: Get Scenario
+  description: |
+    Retrieve details of a specific scenario by its ID.
+  provider: make
+  endpoint: /scenarios/{scenario_id}
+  method: GET
+  scopes:
+    - scenarios:read
+  tags:
+    - scenarios
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+    required:
+      - scenario_id
+
+- slug: make_create_scenario
+  name: Create Scenario
+  description: |
+    Create a new scenario with specified modules and connections.
+  provider: make
+  endpoint: /scenarios
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a scenario
+    properties:
+      name:
+        type: string
+        description: "Name of the scenario"
+      workspace_id:
+        type: string
+        description: "Workspace ID to create the scenario in"
+      flow:
+        type: array
+        description: "Array of module configurations"
+    required:
+      - name
+      - workspace_id
+
+- slug: make_update_scenario
+  name: Update Scenario
+  description: |
+    Update an existing scenario's configuration or modules.
+  provider: make
+  endpoint: /scenarios/{scenario_id}
+  method: PUT
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+      name:
+        type: string
+        description: "Updated name of the scenario"
+      flow:
+        type: array
+        description: "Updated array of module configurations"
+    required:
+      - scenario_id
+
+- slug: make_list_executions
+  name: List Executions
+  description: |
+    Retrieve a list of recent executions for a scenario.
+  provider: make
+  endpoint: /scenarios/{scenario_id}/executions
+  method: GET
+  scopes:
+    - executions:read
+  tags:
+    - executions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing executions
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario"
+      limit:
+        type: integer
+        description: "Maximum number of executions to return (default 50)"
+      status:
+        type: string
+        description: "Filter by execution status (success, error, queued)"
+    required:
+      - scenario_id
+
+- slug: make_get_execution
+  name: Get Execution
+  description: |
+    Retrieve details of a specific execution by its ID.
+  provider: make
+  endpoint: /executions/{execution_id}
+  method: GET
+  scopes:
+    - executions:read
+  tags:
+    - executions
+    - retrieve
+  input_schema:
+    type: object
+    description: Parameters for getting an execution
+    properties:
+      execution_id:
+        type: string
+        description: "The unique identifier of the execution"
+    required:
+      - execution_id
+
+- slug: make_run_scenario
+  name: Run Scenario
+  description: |
+    Trigger a manual run of a scenario with optional input data.
+  provider: make
+  endpoint: /scenarios/{scenario_id}/run
+  method: POST
+  scopes:
+    - scenarios:execute
+  tags:
+    - scenarios
+    - execute
+  input_schema:
+    type: object
+    description: Parameters for running a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to run"
+      data:
+        type: object
+        description: "Optional input data to pass to the scenario"
+    required:
+      - scenario_id
+
+- slug: make_activate_scenario
+  name: Activate Scenario
+  description: |
+    Activate a scenario to start processing triggers.
+  provider: make
+  endpoint: /scenarios/{scenario_id}/activate
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - activate
+  input_schema:
+    type: object
+    description: Parameters for activating a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to activate"
+    required:
+      - scenario_id
+
+- slug: make_deactivate_scenario
+  name: Deactivate Scenario
+  description: |
+    Deactivate a scenario to stop processing triggers.
+  provider: make
+  endpoint: /scenarios/{scenario_id}/deactivate
+  method: POST
+  scopes:
+    - scenarios:write
+  tags:
+    - scenarios
+    - deactivate
+  input_schema:
+    type: object
+    description: Parameters for deactivating a scenario
+    properties:
+      scenario_id:
+        type: string
+        description: "The unique identifier of the scenario to deactivate"
+    required:
+      - scenario_id
+
+- slug: make_list_workspaces
+  name: List Workspaces
+  description: |
+    Retrieve a list of all workspaces accessible to the user.
+  provider: make
+  endpoint: /workspaces
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of workspaces to return (default 50)"
+    required: []

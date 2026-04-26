@@ -1,0 +1,243 @@
+# EvaluAgent Tools - Allowlist
+# Curated subset of EvaluAgent API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. evaluagent_list_audits           - List audits
+# 2. evaluagent_get_audit            - Get audit details
+# 3. evaluagent_list_conversations   - List conversations
+# 4. evaluagent_get_conversation     - Get conversation details
+# 5. evaluagent_list_agents          - List agents
+# 6. evaluagent_get_agent            - Get agent details
+# 7. evaluagent_list_teams           - List teams
+# 8. evaluagent_get_quality_score    - Get quality score
+# 9. evaluagent_list_calibrations    - List calibrations
+# 10. evaluagent_get_calibration     - Get calibration details
+
+- slug: evaluagent_list_audits
+  name: List Audits
+  description: |
+    List all quality assurance audits.
+  provider: evaluagent
+  endpoint: /v1/audits
+  method: GET
+  scopes: []
+  tags:
+    - audits
+    - quality
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing audits
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: evaluagent_get_audit
+  name: Get Audit
+  description: |
+    Get details of a specific audit.
+  provider: evaluagent
+  endpoint: /v1/audits/{id}
+  method: GET
+  scopes: []
+  tags:
+    - audits
+    - quality
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting audit
+    properties:
+      id:
+        type: string
+        description: "Audit ID"
+    required:
+      - id
+
+- slug: evaluagent_list_conversations
+  name: List Conversations
+  description: |
+    List customer service conversations.
+  provider: evaluagent
+  endpoint: /v1/conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      agent_id:
+        type: string
+        description: "Filter by agent ID"
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: evaluagent_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation.
+  provider: evaluagent
+  endpoint: /v1/conversations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - id
+
+- slug: evaluagent_list_agents
+  name: List Agents
+  description: |
+    List all agents in the organization.
+  provider: evaluagent
+  endpoint: /v1/agents
+  method: GET
+  scopes: []
+  tags:
+    - agents
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+    required: []
+
+- slug: evaluagent_get_agent
+  name: Get Agent
+  description: |
+    Get details of a specific agent.
+  provider: evaluagent
+  endpoint: /v1/agents/{id}
+  method: GET
+  scopes: []
+  tags:
+    - agents
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting agent
+    properties:
+      id:
+        type: string
+        description: "Agent ID"
+    required:
+      - id
+
+- slug: evaluagent_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization.
+  provider: evaluagent
+  endpoint: /v1/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties: {}
+    required: []
+
+- slug: evaluagent_get_quality_score
+  name: Get Quality Score
+  description: |
+    Get quality score for an agent or team.
+  provider: evaluagent
+  endpoint: /v1/quality-scores
+  method: GET
+  scopes: []
+  tags:
+    - quality
+    - scores
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting quality score
+    properties:
+      agent_id:
+        type: string
+        description: "Agent ID"
+      team_id:
+        type: string
+        description: "Team ID"
+    required: []
+
+- slug: evaluagent_list_calibrations
+  name: List Calibrations
+  description: |
+    List calibration sessions.
+  provider: evaluagent
+  endpoint: /v1/calibrations
+  method: GET
+  scopes: []
+  tags:
+    - calibrations
+    - quality
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calibrations
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: evaluagent_get_calibration
+  name: Get Calibration
+  description: |
+    Get details of a specific calibration.
+  provider: evaluagent
+  endpoint: /v1/calibrations/{id}
+  method: GET
+  scopes: []
+  tags:
+    - calibrations
+    - quality
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting calibration
+    properties:
+      id:
+        type: string
+        description: "Calibration ID"
+    required:
+      - id

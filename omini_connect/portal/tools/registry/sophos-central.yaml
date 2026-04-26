@@ -1,0 +1,187 @@
+# Sophos Central Tools - Allowlist
+# Curated subset of Sophos Central API for AI agent use.
+# Auth mode: OAUTH2_CC.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. get_alerts                               - Get security alerts
+# 2. get_endpoints                            - List all endpoints
+# 3. get_endpoint                             - Get endpoint details
+# 4. get_tenant_info                          - Get tenant information
+# 5. list_users                               - List directory users
+# 6. list_groups                              - List directory groups
+# 7. get_web_logs                             - Get web filtering logs
+# 8. get_scan_results                         - Get scan results
+# 9. get_firewall_rules                       - List firewall rules
+# 10. get_lockdowns                            - List endpoint lockdowns
+
+- slug: get_alerts
+  name: Get Alerts
+  description: |
+    Get security alerts
+  provider: sophos-central
+  endpoint: /alerts
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_endpoints
+  name: Get Endpoints
+  description: |
+    List all endpoints
+  provider: sophos-central
+  endpoint: /endpoints
+  method: GET
+  scopes: []
+  tags:
+    - endpoints
+    - devices
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_endpoint
+  name: Get Endpoint
+  description: |
+    Get endpoint details
+  provider: sophos-central
+  endpoint: /endpoints/{id}
+  method: GET
+  scopes: []
+  tags:
+    - endpoints
+    - devices
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_tenant_info
+  name: Get Tenant Info
+  description: |
+    Get tenant information
+  provider: sophos-central
+  endpoint: /tenants
+  method: GET
+  scopes: []
+  tags:
+    - tenant
+    - config
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_users
+  name: List Users
+  description: |
+    List directory users
+  provider: sophos-central
+  endpoint: /directory/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_groups
+  name: List Groups
+  description: |
+    List directory groups
+  provider: sophos-central
+  endpoint: /directory/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_web_logs
+  name: Get Web Logs
+  description: |
+    Get web filtering logs
+  provider: sophos-central
+  endpoint: /weblogs
+  method: GET
+  scopes: []
+  tags:
+    - weblogs
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_scan_results
+  name: Get Scan Results
+  description: |
+    Get scan results
+  provider: sophos-central
+  endpoint: /scans/results
+  method: GET
+  scopes: []
+  tags:
+    - scans
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_firewall_rules
+  name: Get Firewall Rules
+  description: |
+    List firewall rules
+  provider: sophos-central
+  endpoint: /firewalls/rules
+  method: GET
+  scopes: []
+  tags:
+    - firewall
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_lockdowns
+  name: Get Lockdowns
+  description: |
+    List endpoint lockdowns
+  provider: sophos-central
+  endpoint: /lockdowns
+  method: GET
+  scopes: []
+  tags:
+    - lockdown
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

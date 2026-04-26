@@ -2,11 +2,14 @@
 
 use axum::Json;
 
+use crate::portal_env;
+
 pub async fn health() -> impl axum::response::IntoResponse {
     Json(serde_json::json!({
         "service": "omini-connect-portal",
         "status": "ok",
         "version": env!("CARGO_PKG_VERSION"),
+        "portal_base_url": portal_env::portal_base_url(),
     }))
 }
 

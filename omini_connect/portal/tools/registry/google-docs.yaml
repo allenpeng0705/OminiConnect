@@ -1,0 +1,247 @@
+# Google Docs Tools - Allowlist
+# Curated subset of Google Docs API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_docs_list_documents    - List documents
+# 2. google_docs_get_document     - Get document details
+# 3. google_docs_create_document  - Create document
+# 4. google_docs_batch_update     - Batch update document
+# 5. google_docs_get_content      - Get document content
+# 6. google_docs_create_comment   - Create comment
+# 7. google_docs_list_comments    - List comments
+# 8. google_docs_list_revisions   - List revisions
+# 9. google_docs_get_revision     - Get revision
+# 10. google_docs_list_styles    - List styles
+
+- slug: google_docs_list_documents
+  name: List Documents
+  description: |
+    List documents in Google Docs.
+  provider: google-docs
+  endpoint: /documents
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - documents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties: {}
+
+- slug: google_docs_get_document
+  name: Get Document
+  description: |
+    Get detailed information about a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: google_docs_create_document
+  name: Create Document
+  description: |
+    Create a new Google Doc.
+  provider: google-docs
+  endpoint: /documents
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - documents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      title:
+        type: string
+        description: "Document title"
+    required:
+      - title
+
+- slug: google_docs_batch_update
+  name: Batch Update
+  description: |
+    Apply batch updates to a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}:batchUpdate
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - documents
+    - update
+  input_schema:
+    type: object
+    description: Parameters for batch update
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+      requests:
+        type: array
+        description: "Array of update requests"
+    required:
+      - documentId
+      - requests
+
+- slug: google_docs_get_content
+  name: Get Content
+  description: |
+    Get full content of a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents.readonly
+  tags:
+    - documents
+    - content
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting content
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: google_docs_create_comment
+  name: Create Comment
+  description: |
+    Create a comment on a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}/comments
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+      content:
+        type: string
+        description: "Comment text"
+      anchor:
+        type: string
+        description: "Text anchor for comment location"
+    required:
+      - documentId
+      - content
+
+- slug: google_docs_list_comments
+  name: List Comments
+  description: |
+    List comments on a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}/comments
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents
+  tags:
+    - comments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: google_docs_list_revisions
+  name: List Revisions
+  description: |
+    List revision history of a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}/revisions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents.readonly
+  tags:
+    - revisions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing revisions
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: google_docs_get_revision
+  name: Get Revision
+  description: |
+    Get a specific revision of a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}/revisions/{revisionId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents.readonly
+  tags:
+    - revisions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a revision
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+      revisionId:
+        type: string
+        description: "Revision ID"
+    required:
+      - documentId
+      - revisionId
+
+- slug: google_docs_list_styles
+  name: List Styles
+  description: |
+    List defined styles in a document.
+  provider: google-docs
+  endpoint: /documents/{documentId}/styles
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/documents.readonly
+  tags:
+    - styles
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing styles
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId

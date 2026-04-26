@@ -146,3 +146,211 @@ index 028009c97..df91726db 100644
              setServerErrorMessage(res.json.error.message || 'Issue signing up. Please try again.');
              if (res.json.error.code === 'email_not_verified') {
                  setShowResendEmail(true);
+             }
+diff --git a/packages/connect-ui/src/components/Layout.tsx b/packages/connect-ui/src/components/Layout.tsx
+index 0dd6cf0..379f3a9 100644
+--- a/packages/connect-ui/src/components/Layout.tsx
++++ b/packages/connect-ui/src/components/Layout.tsx
+@@ -1,5 +1,5 @@
+ import { Outlet } from '@tanstack/react-router';
+-import { useRef } from 'react';
++import { useEffect, useRef } from 'react';
+ import { useClickAway, useKeyPressEvent } from 'react-use';
+ 
+ import { triggerClose } from '@/lib/events';
+@@ -9,7 +9,55 @@ import NangoLogoSVG from '@/svg/logo.svg?react';
+ export const Layout: React.FC = () => {
+     const ref = useRef<HTMLDivElement>(null);
+ 
+-    const { isEmbedded, showWatermark, isAuthLink } = useGlobal();
++    const {
++        isEmbedded,
++        showWatermark,
++        isAuthLink,
++        setSessionToken,
++        setApiURL,
++        setWebsocketsPath,
++        setDetectClosedAuthWindow,
++        setIsEmbedded,
++        setIsPreview,
++        setAuthLink
++    } = useGlobal();
++
++    /** `/go` and other routes skip `Home`; still need query hydration so `@nangohq/frontend` uses the right host + WS. */
++    useEffect(() => {
++        const search = new URLSearchParams(window.location.search);
++        const inUrl = search.get('session_token');
++        if (inUrl) {
++            setSessionToken(inUrl);
++        }
++        const apiU = search.get('apiURL');
++        if (apiU) {
++            setApiURL(apiU);
++        }
++        const wsPath = search.get('websocketsPath');
++        if (wsPath) {
++            setWebsocketsPath(wsPath);
++        }
++        const dc = search.get('detectClosedAuthWindow');
++        if (dc) {
++            setDetectClosedAuthWindow(dc === 'true');
++        }
++        const emb = search.get('embedded');
++        if (emb) {
++            setIsEmbedded(emb === 'true');
++        }
++        if (search.get('preview') === 'true') {
++            setIsPreview(true);
++        }
++        setAuthLink(window.self === window.top);
++    }, [
++        setSessionToken,
++        setApiURL,
++        setWebsocketsPath,
++        setDetectClosedAuthWindow,
++        setIsEmbedded,
++        setIsPreview,
++        setAuthLink
++    ]);
+     const isDarkTheme = document.documentElement.classList.contains('dark');
+ 
+     useClickAway(ref, () => {
+diff --git a/packages/connect-ui/src/lib/nango.ts b/packages/connect-ui/src/lib/nango.ts
+index 371907c..7e79047 100644
+--- a/packages/connect-ui/src/lib/nango.ts
++++ b/packages/connect-ui/src/lib/nango.ts
+@@ -1,4 +1,4 @@
+-import { useEffect } from 'react';
++import { useEffect, useRef } from 'react';
+ 
+ import Nango from '@nangohq/frontend';
+ 
+@@ -9,20 +9,30 @@ export function useNango() {
+     const setNango = useGlobal((state) => state.setNango);
+     const nango = useGlobal((state) => state.nango);
+     const apiURL = useGlobal((state) => state.apiURL);
++    const websocketsPath = useGlobal((state) => state.websocketsPath);
+ 
+-    // Create a singleton
++    // Keep a ref to the latest nango instance so callbacks always use the current value.
++    const nangoRef = useRef(nango);
++    nangoRef.current = nango;
++
++    // Create a singleton; must react to apiURL / websocketsPath (Home may set apiURL after sessionToken).
+     useEffect(() => {
+         if (!sessionToken) {
+             return;
+         }
+ 
+-        setNango(
+-            new Nango({
+-                connectSessionToken: sessionToken,
+-                host: apiURL
+-            })
+-        );
+-    }, [sessionToken]);
++        const opts: ConstructorParameters<typeof Nango>[0] = {
++            connectSessionToken: sessionToken,
++            host: apiURL
++        };
++        if (websocketsPath) {
++            opts.websocketsPath = websocketsPath;
++        }
++
++        const newNango = new Nango(opts);
++        setNango(newNango);
++        nangoRef.current = newNango;
++    }, [sessionToken, apiURL, websocketsPath, setNango]);
+ 
+-    return nango;
++    return nangoRef.current;
+ }
+diff --git a/packages/connect-ui/src/lib/store.ts b/packages/connect-ui/src/lib/store.ts
+index 0889a4e..dab2fa5 100644
+--- a/packages/connect-ui/src/lib/store.ts
++++ b/packages/connect-ui/src/lib/store.ts
+@@ -12,12 +12,14 @@ interface State {
+     session: ConnectSessionOutput | null;
+     nango: Nango | null;
+     apiURL: string;
++    websocketsPath: string | null;
+     detectClosedAuthWindow: boolean;
+     isEmbedded: boolean;
+     isAuthLink: boolean;
+     isPreview: boolean;
+     showWatermark: boolean;
+     setApiURL: (value: string) => void;
++    setWebsocketsPath: (value: string) => void;
+     setAuthLink: (value: boolean) => void;
+     setDetectClosedAuthWindow: (value: boolean) => void;
+     setIsEmbedded: (value: boolean) => void;
+@@ -41,12 +43,14 @@ export const useGlobal = create<State>((set) => ({
+     session: null,
+     nango: null,
+     apiURL: 'https://api.nango.dev',
++    websocketsPath: null,
+     isEmbedded: false,
+     isAuthLink: false,
+     detectClosedAuthWindow: false,
+     isPreview: false,
+     showWatermark: false,
+     setApiURL: (value) => set({ apiURL: value }),
++    setWebsocketsPath: (value) => set({ websocketsPath: value }),
+     setAuthLink: (value) => set({ isAuthLink: value }),
+     setIsEmbedded: (value) => set({ isEmbedded: value }),
+     setDetectClosedAuthWindow: (value) => set({ detectClosedAuthWindow: value }),
+diff --git a/packages/connect-ui/src/views/Home.tsx b/packages/connect-ui/src/views/Home.tsx
+index a272da6..a696c02 100644
+--- a/packages/connect-ui/src/views/Home.tsx
++++ b/packages/connect-ui/src/views/Home.tsx
+@@ -16,10 +16,21 @@ import type { ConnectUIEventSettingsChanged, ConnectUIEventToken } from '@nangoh
+ 
+ export const Home: React.FC = () => {
+     const navigate = useNavigate();
+-    const { sessionToken, setApiURL, setAuthLink, setSession, setSessionToken, setDetectClosedAuthWindow, setIsEmbedded, setIsPreview } = useGlobal();
++    const {
++        sessionToken,
++        setApiURL,
++        setWebsocketsPath,
++        setAuthLink,
++        setSession,
++        setSessionToken,
++        setDetectClosedAuthWindow,
++        setIsEmbedded,
++        setIsPreview
++    } = useGlobal();
+ 
+     const { data, error } = useQuery({ enabled: sessionToken !== null, queryKey: ['sessionToken'], queryFn: getConnectSession });
+     const apiURL = useSearchParam('apiURL');
++    const websocketsPath = useSearchParam('websocketsPath');
+     const theme = useSearchParam('theme');
+     const isEmbedded = useSearchParam('embedded');
+     const isPreview = useSearchParam('preview') === 'true';
+@@ -75,12 +86,26 @@ export const Home: React.FC = () => {
+ 
+     useEffect(() => {
+         if (apiURL) setApiURL(apiURL);
++        if (websocketsPath) setWebsocketsPath(websocketsPath);
+         if (detectClosedAuthWindow) setDetectClosedAuthWindow(detectClosedAuthWindow === 'true');
+         if (isEmbedded) setIsEmbedded(isEmbedded === 'true');
+         if (isPreview) setIsPreview(isPreview);
+         if (theme && isValidTheme(theme)) setTheme(theme);
+         setAuthLink(window.self === window.top);
+-    }, [apiURL, detectClosedAuthWindow, isEmbedded, isPreview, setApiURL, setDetectClosedAuthWindow, setAuthLink, setIsEmbedded, setIsPreview, theme]);
++    }, [
++        apiURL,
++        websocketsPath,
++        detectClosedAuthWindow,
++        isEmbedded,
++        isPreview,
++        setApiURL,
++        setWebsocketsPath,
++        setDetectClosedAuthWindow,
++        setAuthLink,
++        setIsEmbedded,
++        setIsPreview,
++        theme
++    ]);
+ 
+     useEffect(() => {
+         if (data) {

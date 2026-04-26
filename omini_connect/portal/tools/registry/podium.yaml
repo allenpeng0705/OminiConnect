@@ -1,0 +1,232 @@
+# Podium Tools - Allowlist
+# Curated subset of Podium API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. podium_list_leads              - List leads
+# 2. podium_get_lead                - Get lead details
+# 3. podium_list_contacts           - List contacts
+# 4. podium_get_contact             - Get contact details
+# 5. podium_list_messages           - List messages
+# 6. podium_get_message             - Get message details
+# 7. podium_list_reviews            - List reviews
+# 8. podium_get_review              - Get review details
+# 9. podium_list_campaigns          - List campaigns
+# 10. podium_get_location           - Get location info
+
+- slug: podium_list_leads
+  name: List Leads
+  description: |
+    List all leads in the organization.
+  provider: podium
+  endpoint: /api/leads
+  method: GET
+  scopes: []
+  tags:
+    - leads
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: podium_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a specific lead.
+  provider: podium
+  endpoint: /api/leads/{leadId}
+  method: GET
+  scopes: []
+  tags:
+    - leads
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      leadId:
+        type: string
+        description: "Lead ID"
+    required:
+      - leadId
+
+- slug: podium_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: podium
+  endpoint: /api/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: podium_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: podium
+  endpoint: /api/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: podium_list_messages
+  name: List Messages
+  description: |
+    List all messages.
+  provider: podium
+  endpoint: /api/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      contactId:
+        type: string
+        description: "Filter by contact ID"
+    required: []
+
+- slug: podium_get_message
+  name: Get Message
+  description: |
+    Get detailed information about a specific message.
+  provider: podium
+  endpoint: /api/messages/{messageId}
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: podium_list_reviews
+  name: List Reviews
+  description: |
+    List all reviews.
+  provider: podium
+  endpoint: /api/reviews
+  method: GET
+  scopes: []
+  tags:
+    - reviews
+    - reputation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing reviews
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: podium_get_review
+  name: Get Review
+  description: |
+    Get detailed information about a specific review.
+  provider: podium
+  endpoint: /api/reviews/{reviewId}
+  method: GET
+  scopes: []
+  tags:
+    - reviews
+    - reputation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a review
+    properties:
+      reviewId:
+        type: string
+        description: "Review ID"
+    required:
+      - reviewId
+
+- slug: podium_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns.
+  provider: podium
+  endpoint: /api/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: podium_get_location
+  name: Get Location
+  description: |
+    Get location information.
+  provider: podium
+  endpoint: /api/locations/{locationId}
+  method: GET
+  scopes: []
+  tags:
+    - locations
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting location info
+    properties:
+      locationId:
+        type: string
+        description: "Location ID"
+    required:
+      - locationId

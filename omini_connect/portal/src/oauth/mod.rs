@@ -2,6 +2,7 @@
 
 pub mod handlers;
 pub mod models;
+pub mod vault_namespaced;
 
 use std::sync::Arc;
 

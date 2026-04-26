@@ -1,0 +1,278 @@
+# Split Tools - Allowlist
+# Curated subset of Split REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. split_list_flags          - List all feature flags
+# 2. split_get_flag            - Get feature flag details
+# 3. split_create_flag         - Create a new feature flag
+# 4. split_update_flag         - Update a feature flag
+# 5. split_list_segments       - List user segments
+# 6. split_get_segment        - Get segment details
+# 7. split_create_segment      - Create a user segment
+# 8. split_list_workspaces     - List workspaces
+# 9. split_get_workspace      - Get workspace details
+# 10. split_list_traffic_types - List traffic types
+
+- slug: split_list_flags
+  name: List Feature Flags
+  description: |
+    List all feature flags in a Split workspace.
+    Filter by environment or search by name.
+  provider: split
+  endpoint: /v2/flags
+  method: GET
+  scopes:
+    - flags:read
+  tags:
+    - flags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing feature flags
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+      limit:
+        type: integer
+        description: "Maximum number of flags to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required:
+      - workspace_id
+
+- slug: split_get_flag
+  name: Get Feature Flag
+  description: |
+    Get detailed information about a specific feature flag including treatments and rules.
+  provider: split
+  endpoint: /v2/flags/{flag_name}
+  method: GET
+  scopes:
+    - flags:read
+  tags:
+    - flags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature flag
+    properties:
+      flag_name:
+        type: string
+        description: "The feature flag name"
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+    required:
+      - flag_name
+
+- slug: split_create_flag
+  name: Create Feature Flag
+  description: |
+    Create a new feature flag in a Split workspace.
+    Set name, description, traffic type, and initial environment settings.
+  provider: split
+  endpoint: /v2/flags
+  method: POST
+  scopes:
+    - flags:write
+  tags:
+    - flags
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a feature flag
+    properties:
+      name:
+        type: string
+        description: "The unique flag name"
+      description:
+        type: string
+        description: "Description of the flag"
+      traffic_type:
+        type: string
+        description: "The traffic type (user, account)"
+      environment:
+        type: string
+        description: "Initial environment settings"
+    required:
+      - name
+      - traffic_type
+
+- slug: split_update_flag
+  name: Update Feature Flag
+  description: |
+    Update an existing feature flag. Modify name, description, or settings.
+  provider: split
+  endpoint: /v2/flags/{flag_name}
+  method: PATCH
+  scopes:
+    - flags:write
+  tags:
+    - flags
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a feature flag
+    properties:
+      flag_name:
+        type: string
+        description: "The feature flag name"
+      description:
+        type: string
+        description: "Updated description"
+      name:
+        type: string
+        description: "Updated flag name"
+    required:
+      - flag_name
+
+- slug: split_list_segments
+  name: List Segments
+  description: |
+    List all user segments in a Split workspace.
+    Segments are used to group users for targeted feature rollouts.
+  provider: split
+  endpoint: /v2/segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+      limit:
+        type: integer
+        description: "Maximum number of segments to return"
+    required:
+      - workspace_id
+
+- slug: split_get_segment
+  name: Get Segment
+  description: |
+    Get details about a specific segment including rules and targeting configuration.
+  provider: split
+  endpoint: /v2/segments/{segment_name}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_name:
+        type: string
+        description: "The segment name"
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+    required:
+      - segment_name
+
+- slug: split_create_segment
+  name: Create Segment
+  description: |
+    Create a new user segment in a Split workspace.
+    Define segment rules, included users, and traffic allocation.
+  provider: split
+  endpoint: /v2/segments
+  method: POST
+  scopes:
+    - segments:write
+  tags:
+    - segments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a segment
+    properties:
+      name:
+        type: string
+        description: "The unique segment name"
+      description:
+        type: string
+        description: "Description of the segment"
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+    required:
+      - name
+      - workspace_id
+
+- slug: split_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces in the Split account.
+    Workspaces are top-level organizational units containing environments and features.
+  provider: split
+  endpoint: /v2/workspaces
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workspaces
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of workspaces to return"
+    required: []
+
+- slug: split_get_workspace
+  name: Get Workspace
+  description: |
+    Get details about a specific workspace including environments and settings.
+  provider: split
+  endpoint: /v2/workspaces/{workspace_id}
+  method: GET
+  scopes:
+    - workspaces:read
+  tags:
+    - workspaces
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workspace
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+    required:
+      - workspace_id
+
+- slug: split_list_traffic_types
+  name: List Traffic Types
+  description: |
+    List all traffic types in a Split workspace.
+    Traffic types define how treatments are distributed (e.g., user, session).
+  provider: split
+  endpoint: /v2/traffic-types
+  method: GET
+  scopes:
+    - traffic_types:read
+  tags:
+    - traffic_types
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing traffic types
+    properties:
+      workspace_id:
+        type: string
+        description: "The workspace ID"
+    required:
+      - workspace_id

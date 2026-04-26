@@ -1,0 +1,283 @@
+- slug: copper_more_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of projects from Copper CRM.
+  provider: copper_more
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+      search:
+        type: string
+        description: "Search term for project name"
+    required: []
+
+- slug: copper_more_get_project
+  name: Get Project
+  description: |
+    Retrieve detailed information for a specific project by ID.
+  provider: copper_more
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: integer
+        description: "Project ID"
+    required:
+      - id
+
+- slug: copper_more_list_tasks
+  name: List Tasks
+  description: |
+    Retrieve a list of tasks from Copper CRM.
+  provider: copper_more
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      project_id:
+        type: integer
+        description: "Filter by project ID"
+      assignee_id:
+        type: integer
+        description: "Filter by assignee user ID"
+      status:
+        type: string
+        description: "Filter by status: open, completed"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+    required: []
+
+- slug: copper_more_get_task
+  name: Get Task
+  description: |
+    Retrieve detailed information for a specific task by ID.
+  provider: copper_more
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - tasks:read
+  tags:
+    - tasks
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: integer
+        description: "Task ID"
+    required:
+      - id
+
+- slug: copper_more_list_milestones
+  name: List Milestones
+  description: |
+    Retrieve a list of milestones from Copper CRM.
+  provider: copper_more
+  endpoint: /milestones
+  method: GET
+  scopes:
+    - milestones:read
+  tags:
+    - milestones
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing milestones
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      project_id:
+        type: integer
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+    required: []
+
+- slug: copper_more_get_milestone
+  name: Get Milestone
+  description: |
+    Retrieve detailed information for a specific milestone by ID.
+  provider: copper_more
+  endpoint: /milestones/{id}
+  method: GET
+  scopes:
+    - milestones:read
+  tags:
+    - milestones
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a milestone
+    properties:
+      id:
+        type: integer
+        description: "Milestone ID"
+    required:
+      - id
+
+- slug: copper_more_list_time_entries
+  name: List Time Entries
+  description: |
+    Retrieve a list of time tracking entries from Copper CRM.
+  provider: copper_more
+  endpoint: /time_entries
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      project_id:
+        type: integer
+        description: "Filter by project ID"
+      task_id:
+        type: integer
+        description: "Filter by task ID"
+      user_id:
+        type: integer
+        description: "Filter by user ID"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+    required: []
+
+- slug: copper_more_get_time_entry
+  name: Get Time Entry
+  description: |
+    Retrieve detailed information for a specific time entry by ID.
+  provider: copper_more
+  endpoint: /time_entries/{id}
+  method: GET
+  scopes:
+    - time_entries:read
+  tags:
+    - time_entries
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      id:
+        type: integer
+        description: "Time entry ID"
+    required:
+      - id
+
+- slug: copper_more_list_tags
+  name: List Tags
+  description: |
+    Retrieve a list of all tags in Copper CRM.
+  provider: copper_more
+  endpoint: /tags
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      entity_type:
+        type: string
+        description: "Filter by entity type (project, task, etc.)"
+    required: []
+
+- slug: copper_more_get_tag
+  name: Get Tag
+  description: |
+    Retrieve detailed information for a specific tag by ID.
+  provider: copper_more
+  endpoint: /tags/{id}
+  method: GET
+  scopes:
+    - tags:read
+  tags:
+    - tags
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      id:
+        type: integer
+        description: "Tag ID"
+    required:
+      - id

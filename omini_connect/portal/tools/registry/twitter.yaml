@@ -1,0 +1,295 @@
+# Twitter/X Tools - Allowlist
+# Curated subset of Twitter API v2 for AI agent use.
+# Requires Elevated or Pro access.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. twitter_list_tweets          - List tweets from a user's timeline
+# 2. twitter_get_tweet            - Get a specific tweet by ID
+# 3. twitter_post_tweet           - Post a new tweet
+# 4. twitter_delete_tweet         - Delete a tweet
+# 5. twitter_list_timelines       - List home timeline tweets
+# 6. twitter_search_tweets        - Search recent tweets
+# 7. twitter_list_users           - List users by IDs
+# 8. twitter_get_user             - Get user profile
+# 9. twitter_get_followers        - Get user's followers
+# 10. twitter_get_following        - Get users this account follows
+
+- slug: twitter_list_tweets
+  name: List Tweets
+  description: |
+    List tweets from a specific user's timeline.
+    Returns recent tweets with engagement metrics.
+  provider: twitter
+  endpoint: /2/users/{id}/tweets
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - tweets
+    - timeline
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tweets
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      max_results:
+        type: integer
+        description: "Max tweets to return (default 10, max 100)"
+        default: 10
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time (ISO 8601)"
+    required:
+      - id
+
+- slug: twitter_get_tweet
+  name: Get Tweet
+  description: |
+    Get a specific tweet by ID including text, author info, metrics, and media.
+  provider: twitter
+  endpoint: /2/tweets/{id}
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - tweets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tweet
+    properties:
+      id:
+        type: string
+        description: "Tweet ID"
+      tweet_fields:
+        type: string
+        description: "Fields to include: created_at,public_metrics,etc."
+    required:
+      - id
+
+- slug: twitter_post_tweet
+  name: Post Tweet
+  description: |
+    Post a new tweet from the authenticated user.
+    Can include text, URLs, and media references.
+  provider: twitter
+  endpoint: /2/tweets
+  method: POST
+  scopes:
+    - tweet.write
+  tags:
+    - tweets
+    - create
+    - post
+  input_schema:
+    type: object
+    description: Parameters for posting a tweet
+    properties:
+      text:
+        type: string
+        description: "Tweet text (max 280 chars)"
+      reply_to:
+        type: string
+        description: "Tweet ID to reply to"
+    required:
+      - text
+
+- slug: twitter_delete_tweet
+  name: Delete Tweet
+  description: |
+    Delete a tweet by ID. Only the authenticated user's tweets can be deleted.
+  provider: twitter
+  endpoint: /2/tweets/{id}
+  method: DELETE
+  scopes:
+    - tweet.read
+    - tweet.write
+  tags:
+    - tweets
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a tweet
+    properties:
+      id:
+        type: string
+        description: "Tweet ID to delete"
+    required:
+      - id
+
+- slug: twitter_list_timelines
+  name: List Timelines
+  description: |
+    List tweets from the authenticated user's home timeline.
+    Returns tweets from followed accounts.
+  provider: twitter
+  endpoint: /2/timelines/reverse_chronological
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - tweets
+    - timeline
+    - home
+  input_schema:
+    type: object
+    description: Parameters for listing home timeline
+    properties:
+      max_results:
+        type: integer
+        description: "Max tweets to return (default 10, max 100)"
+        default: 10
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time (ISO 8601)"
+    required: []
+
+- slug: twitter_search_tweets
+  name: Search Tweets
+  description: |
+    Search for tweets matching a query. Only returns tweets from the last 7 days.
+    Supports Twitter's search operators (from:, @:, #:, etc.)
+  provider: twitter
+  endpoint: /2/tweets/search/recent
+  method: GET
+  scopes:
+    - tweet.read
+  tags:
+    - tweets
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching tweets
+    properties:
+      query:
+        type: string
+        description: "Search query with Twitter operators"
+      max_results:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+      start_time:
+        type: string
+        description: "Start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "End time (ISO 8601)"
+    required:
+      - query
+
+- slug: twitter_list_users
+  name: List Users
+  description: |
+    List Twitter users by their IDs. Returns user objects with profile info.
+  provider: twitter
+  endpoint: /2/users
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      ids:
+        type: string
+        description: "Comma-separated list of user IDs (max 100)"
+      usernames:
+        type: string
+        description: "Comma-separated list of usernames (max 100)"
+    required: []
+
+- slug: twitter_get_user
+  name: Get User
+  description: |
+    Get a Twitter user profile by user ID or username.
+    Returns user metadata including name, username, bio, follower count, etc.
+  provider: twitter
+  endpoint: /2/users/{id}
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - profile
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      username:
+        type: string
+        description: "Username (without @)"
+    required: []
+
+- slug: twitter_get_followers
+  name: Get Followers
+  description: |
+    Get a user's followers. Returns user objects with follower counts.
+  provider: twitter
+  endpoint: /2/users/{id}/followers
+  method: GET
+  scopes:
+    - users.read
+    - follows.read
+  tags:
+    - users
+    - followers
+    - social
+  input_schema:
+    type: object
+    description: Parameters for getting followers
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      max_results:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required:
+      - id
+
+- slug: twitter_get_following
+  name: Get Following
+  description: |
+    Get accounts a user is following. Returns user objects.
+  provider: twitter
+  endpoint: /2/users/{id}/following
+  method: GET
+  scopes:
+    - users.read
+    - follows.read
+  tags:
+    - users
+    - following
+    - social
+  input_schema:
+    type: object
+    description: Parameters for getting following
+    properties:
+      id:
+        type: string
+        description: "User ID"
+      max_results:
+        type: integer
+        description: "Max results (default 10, max 100)"
+        default: 10
+    required:
+      - id

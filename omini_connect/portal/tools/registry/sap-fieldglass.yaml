@@ -1,0 +1,266 @@
+# Sap-fieldglass Tools - Allowlist
+# Curated subset of SAP Fieldglass API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sap-fieldglass_list_engagements           - List all engagements
+# 2. sap-fieldglass_get_engagement            - Get engagement details
+# 3. sap-fieldglass_create_engagement         - Create an engagement
+# 4. sap-fieldglass_list_workers             - List all workers
+# 5. sap-fieldglass_get_worker                - Get worker details
+# 6. sap-fieldglass_list_invoices             - List all invoices
+# 7. sap-fieldglass_get_invoice               - Get invoice details
+# 8. sap-fieldglass_approve_invoice           - Approve an invoice
+# 9. sap-fieldglass_list_rate_cards           - List rate cards
+# 10. sap-fieldglass_get_rate_card            - Get rate card details
+
+- slug: sap-fieldglass_list_engagements
+  name: List Engagements
+  description: |
+    Retrieve a list of all engagements in SAP Fieldglass.
+  provider: sap-fieldglass
+  endpoint: /v1/engagements
+  method: GET
+  scopes:
+    - engagements:read
+  tags:
+    - engagements
+    - workforce
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing engagements
+    properties:
+      limit:
+        type: integer
+        description: "Number of engagements"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: sap-fieldglass_get_engagement
+  name: Get Engagement
+  description: |
+    Get details of a specific engagement.
+  provider: sap-fieldglass
+  endpoint: /v1/engagements/{engagementId}
+  method: GET
+  scopes:
+    - engagements:read
+  tags:
+    - engagements
+    - workforce
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting an engagement
+    properties:
+      engagementId:
+        type: string
+        description: "The engagement ID"
+    required:
+      - engagementId
+
+- slug: sap-fieldglass_create_engagement
+  name: Create Engagement
+  description: |
+    Create a new engagement in SAP Fieldglass.
+  provider: sap-fieldglass
+  endpoint: /v1/engagements
+  method: POST
+  scopes:
+    - engagements:write
+  tags:
+    - engagements
+    - workforce
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an engagement
+    properties:
+      title:
+        type: string
+        description: "Engagement title"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+      workerType:
+        type: string
+        description: "Worker type"
+    required:
+      - title
+
+- slug: sap-fieldglass_list_workers
+  name: List Workers
+  description: |
+    Retrieve a list of all workers.
+  provider: sap-fieldglass
+  endpoint: /v1/workers
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - workers
+    - workforce
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing workers
+    properties:
+      limit:
+        type: integer
+        description: "Number of workers"
+        default: 50
+      type:
+        type: string
+        description: "Filter by worker type"
+    required: []
+
+- slug: sap-fieldglass_get_worker
+  name: Get Worker
+  description: |
+    Get details of a specific worker.
+  provider: sap-fieldglass
+  endpoint: /v1/workers/{workerId}
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - workers
+    - workforce
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting a worker
+    properties:
+      workerId:
+        type: string
+        description: "The worker ID"
+    required:
+      - workerId
+
+- slug: sap-fieldglass_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices.
+  provider: sap-fieldglass
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - billing
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Number of invoices"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: sap-fieldglass_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice.
+  provider: sap-fieldglass
+  endpoint: /v1/invoices/{invoiceId}
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - billing
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "The invoice ID"
+    required:
+      - invoiceId
+
+- slug: sap-fieldglass_approve_invoice
+  name: Approve Invoice
+  description: |
+    Approve an invoice for payment.
+  provider: sap-fieldglass
+  endpoint: /v1/invoices/{invoiceId}/approve
+  method: POST
+  scopes:
+    - invoices:write
+  tags:
+    - invoices
+    - billing
+    - approval
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for approving an invoice
+    properties:
+      invoiceId:
+        type: string
+        description: "The invoice ID"
+    required:
+      - invoiceId
+
+- slug: sap-fieldglass_list_rate_cards
+  name: List Rate Cards
+  description: |
+    Retrieve a list of all rate cards.
+  provider: sap-fieldglass
+  endpoint: /v1/rateCards
+  method: GET
+  scopes:
+    - rateCards:read
+  tags:
+    - rate-cards
+    - pricing
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing rate cards
+    properties:
+      limit:
+        type: integer
+        description: "Number of rate cards"
+        default: 50
+    required: []
+
+- slug: sap-fieldglass_get_rate_card
+  name: Get Rate Card
+  description: |
+    Get details of a specific rate card.
+  provider: sap-fieldglass
+  endpoint: /v1/rateCards/{rateCardId}
+  method: GET
+  scopes:
+    - rateCards:read
+  tags:
+    - rate-cards
+    - pricing
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting a rate card
+    properties:
+      rateCardId:
+        type: string
+        description: "The rate card ID"
+    required:
+      - rateCardId

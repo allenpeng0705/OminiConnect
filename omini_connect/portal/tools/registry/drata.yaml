@@ -1,0 +1,245 @@
+# Drata Tools - Allowlist
+# Curated subset of the Drata API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. drata_list_devices                - List devices
+# 2. drata_get_device                - Get device details
+# 3. drata_list_users                 - List users
+# 4. drata_get_user                   - Get user details
+# 5. drata_list_evidence              - List evidence
+# 6. drata_get_evidence               - Get evidence details
+# 7. drata_list_controls              - List controls
+# 8. drata_get_control                - Get control details
+# 9. drata_list_policies              - List policies
+# 10. drata_get_policy                - Get policy details
+
+- slug: drata_list_devices
+  name: List Devices
+  description: |
+    List all devices in Drata.
+  provider: drata
+  endpoint: /v1/devices
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - compliance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: healthy, needs_attention, critical"
+    required: []
+
+- slug: drata_get_device
+  name: Get Device
+  description: |
+    Get details of a specific device.
+  provider: drata
+  endpoint: /v1/devices/{device_id}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - compliance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id
+
+- slug: drata_list_users
+  name: List Users
+  description: |
+    List all users in Drata.
+  provider: drata
+  endpoint: /v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - compliance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: drata_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: drata
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - compliance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: drata_list_evidence
+  name: List Evidence
+  description: |
+    List all evidence in Drata.
+  provider: drata
+  endpoint: /v1/evidence
+  method: GET
+  scopes: []
+  tags:
+    - evidence
+    - compliance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing evidence
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      control_id:
+        type: string
+        description: "Filter by control ID"
+    required: []
+
+- slug: drata_get_evidence
+  name: Get Evidence
+  description: |
+    Get details of a specific evidence item.
+  provider: drata
+  endpoint: /v1/evidence/{evidence_id}
+  method: GET
+  scopes: []
+  tags:
+    - evidence
+    - compliance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting evidence
+    properties:
+      evidence_id:
+        type: string
+        description: "Evidence ID"
+    required:
+      - evidence_id
+
+- slug: drata_list_controls
+  name: List Controls
+  description: |
+    List all controls in Drata.
+  provider: drata
+  endpoint: /v1/controls
+  method: GET
+  scopes: []
+  tags:
+    - controls
+    - compliance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing controls
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status: passing, failing, needs_attention"
+    required: []
+
+- slug: drata_get_control
+  name: Get Control
+  description: |
+    Get details of a specific control.
+  provider: drata
+  endpoint: /v1/controls/{control_id}
+  method: GET
+  scopes: []
+  tags:
+    - controls
+    - compliance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a control
+    properties:
+      control_id:
+        type: string
+        description: "Control ID"
+    required:
+      - control_id
+
+- slug: drata_list_policies
+  name: List Policies
+  description: |
+    List all policies in Drata.
+  provider: drata
+  endpoint: /v1/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - compliance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: drata_get_policy
+  name: Get Policy
+  description: |
+    Get details of a specific policy.
+  provider: drata
+  endpoint: /v1/policies/{policy_id}
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - compliance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policy_id:
+        type: string
+        description: "Policy ID"
+    required:
+      - policy_id

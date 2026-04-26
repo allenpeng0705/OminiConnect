@@ -1,0 +1,241 @@
+- slug: charcle_list_customers
+  name: List Customers
+  description: |
+    Retrieve a list of all customers in the engagement platform.
+  provider: charcle
+  endpoint: /customers
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      segment_id:
+        type: string
+        description: "Filter customers by segment ID"
+      status:
+        type: string
+        description: "Filter customers by status (e.g., active, inactive)"
+    required: []
+
+- slug: charcle_get_customer
+  name: Get Customer
+  description: |
+    Retrieve details of a specific customer by ID.
+  provider: charcle
+  endpoint: /customers/{customer_id}
+  method: GET
+  scopes:
+    - customers:read
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "The unique identifier of the customer"
+    required:
+      - customer_id
+
+- slug: charcle_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in the engagement platform.
+  provider: charcle
+  endpoint: /customers
+  method: POST
+  scopes:
+    - customers:write
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      name:
+        type: string
+        description: "The name of the customer"
+      email:
+        type: string
+        description: "The email address of the customer"
+      phone:
+        type: string
+        description: "The phone number of the customer"
+      segment_id:
+        type: string
+        description: "The segment ID to assign the customer to"
+    required:
+      - name
+      - email
+
+- slug: charcle_list_segments
+  name: List Segments
+  description: |
+    Retrieve a list of all customer segments.
+  provider: charcle
+  endpoint: /segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      status:
+        type: string
+        description: "Filter segments by status"
+    required: []
+
+- slug: charcle_get_segment
+  name: Get Segment
+  description: |
+    Retrieve details of a specific segment by ID.
+  provider: charcle
+  endpoint: /segments/{segment_id}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segment_id:
+        type: string
+        description: "The unique identifier of the segment"
+    required:
+      - segment_id
+
+- slug: charcle_create_segment
+  name: Create Segment
+  description: |
+    Create a new customer segment.
+  provider: charcle
+  endpoint: /segments
+  method: POST
+  scopes:
+    - segments:write
+  tags:
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for creating a segment
+    properties:
+      name:
+        type: string
+        description: "The name of the segment"
+      description:
+        type: string
+        description: "The description of the segment"
+      criteria:
+        type: object
+        description: "The segment criteria/filter rules"
+    required:
+      - name
+
+- slug: charcle_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve a list of all marketing campaigns.
+  provider: charcle
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter campaigns by status"
+      type:
+        type: string
+        description: "Filter campaigns by type (e.g., email, sms)"
+    required: []
+
+- slug: charcle_get_campaign
+  name: Get Campaign
+  description: |
+    Retrieve details of a specific campaign by ID.
+  provider: charcle
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "The unique identifier of the campaign"
+    required:
+      - campaign_id
+
+- slug: charcle_send_message
+  name: Send Message
+  description: |
+    Send a message to customers through a campaign.
+  provider: charcle
+  endpoint: /messages
+  method: POST
+  scopes:
+    - messages:write
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      campaign_id:
+        type: string
+        description: "The campaign ID to send the message through"
+      customer_ids:
+        type: array
+        items:
+          type: string
+        description: "Array of customer IDs to send the message to"
+      content:
+        type: string
+        description: "The message content"
+      channel:
+        type: string
+        description: "The channel to send through (e.g., email, sms)"
+    required:
+      - campaign_id
+      - customer_ids
+      - content
+
+- slug: charcle_get_message_status
+  name: Get Message Status
+  description: |
+    Retrieve the delivery status of a sent message.
+  provider: charcle
+  endpoint: /messages/{message_id}
+  method: GET
+  scopes:
+    - messages:read
+  tags:
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for getting message status
+    properties:
+      message_id:
+        type: string
+        description: "The unique identifier of the message"
+    required:
+      - message_id

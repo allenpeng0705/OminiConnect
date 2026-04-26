@@ -1,0 +1,298 @@
+# Microsoft Excel Tools - Allowlist
+# Curated subset of Microsoft Excel API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. excel_list_workbooks          - List workbooks
+# 2. excel_get_workbook            - Get workbook details
+# 3. excel_list_worksheets         - List worksheets
+# 4. excel_get_worksheet          - Get worksheet details
+# 5. excel_list_tables            - List tables
+# 6. excel_get_table              - Get table details
+# 7. excel_list_rows              - List table rows
+# 8. excel_update_row             - Update a row
+# 9. excel_add_row                - Add a row
+# 10. excel_get_range            - Get cell range
+
+- slug: excel_list_workbooks
+  name: List Workbooks
+  description: |
+    List all Excel workbooks accessible to the user.
+    Shows recently accessed files.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - workbooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workbooks
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: excel_get_workbook
+  name: Get Workbook
+  description: |
+    Get details of a specific workbook.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - workbooks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workbook
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+    required:
+      - itemId
+
+- slug: excel_list_worksheets
+  name: List Worksheets
+  description: |
+    List all worksheets in a workbook.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/worksheets
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - worksheets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing worksheets
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+    required:
+      - itemId
+
+- slug: excel_get_worksheet
+  name: Get Worksheet
+  description: |
+    Get details of a specific worksheet.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/worksheets/{worksheetId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - worksheets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a worksheet
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      worksheetId:
+        type: string
+        description: "Worksheet ID or name"
+    required:
+      - itemId
+      - worksheetId
+
+- slug: excel_list_tables
+  name: List Tables
+  description: |
+    List all tables in a worksheet.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/worksheets/{worksheetId}/tables
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - tables
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      worksheetId:
+        type: string
+        description: "Worksheet ID or name"
+    required:
+      - itemId
+      - worksheetId
+
+- slug: excel_get_table
+  name: Get Table
+  description: |
+    Get details of a specific table.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/tables/{tableId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - tables
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      tableId:
+        type: string
+        description: "Table ID"
+    required:
+      - itemId
+      - tableId
+
+- slug: excel_list_rows
+  name: List Rows
+  description: |
+    List rows from a table.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/tables/{tableId}/rows
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - rows
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing rows
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      tableId:
+        type: string
+        description: "Table ID"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required:
+      - itemId
+      - tableId
+
+- slug: excel_update_row
+  name: Update Row
+  description: |
+    Update a specific row in a table.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/tables/{tableId}/rows/{rowIndex}
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - excel
+    - rows
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a row
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      tableId:
+        type: string
+        description: "Table ID"
+      rowIndex:
+        type: integer
+        description: "Row index (0-based)"
+      values:
+        type: array
+        description: "Row values"
+    required:
+      - itemId
+      - tableId
+      - rowIndex
+      - values
+
+- slug: excel_add_row
+  name: Add Row
+  description: |
+    Add a new row to a table.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/tables/{tableId}/rows
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - excel
+    - rows
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a row
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      tableId:
+        type: string
+        description: "Table ID"
+      values:
+        type: array
+        description: "Row values"
+    required:
+      - itemId
+      - tableId
+      - values
+
+- slug: excel_get_range
+  name: Get Range
+  description: |
+    Get values from a specific range in a worksheet.
+  provider: microsoft-excel
+  endpoint: /v1.0/me/drive/items/{itemId}/workbook/worksheets/{worksheetId}/range
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - excel
+    - range
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a range
+    properties:
+      itemId:
+        type: string
+        description: "Workbook item ID"
+      worksheetId:
+        type: string
+        description: "Worksheet ID or name"
+      address:
+        type: string
+        description: "Range address (e.g., A1:D10)"
+        default: A1:Z100
+    required:
+      - itemId
+      - worksheetId

@@ -1,0 +1,187 @@
+# Timify Tools - Allowlist
+# Curated subset of Timify API for AI agent use.
+# Two-Step OAuth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. timify_list_events           - List all scheduled events
+# # 2. timify_get_event           - Get event details
+# # 3. timify_list_customers           - List all customers
+# # 4. timify_get_customer           - Get customer details
+# # 5. timify_create_booking           - Create a new booking
+# # 6. timify_cancel_booking           - Cancel a booking
+# # 7. timify_list_services           - List all services
+# # 8. timify_list_resources           - List all resources (staff/rooms)
+# # 9. timify_get_availability           - Get available time slots
+# # 10. timify_create_customer           - Create a new customer
+
+- slug: timify_list_events
+  name: List Events
+  description: |
+    List all scheduled events
+  provider: timify
+  endpoint: /api/v1/events
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for list events
+    properties: {}
+    required: []
+
+- slug: timify_get_event
+  name: Get Event
+  description: |
+    Get event details
+  provider: timify
+  endpoint: /api/v1/events/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for get event
+    properties: {}
+    required: []
+
+- slug: timify_list_customers
+  name: List Customers
+  description: |
+    List all customers
+  provider: timify
+  endpoint: /api/v1/customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for list customers
+    properties: {}
+    required: []
+
+- slug: timify_get_customer
+  name: Get Customer
+  description: |
+    Get customer details
+  provider: timify
+  endpoint: /api/v1/customers/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for get customer
+    properties: {}
+    required: []
+
+- slug: timify_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking
+  provider: timify
+  endpoint: /api/v1/bookings
+  method: POST
+  scopes:
+    - write
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for create booking
+    properties: {}
+    required: []
+
+- slug: timify_cancel_booking
+  name: Cancel Booking
+  description: |
+    Cancel a booking
+  provider: timify
+  endpoint: /api/v1/bookings/{id}/cancel
+  method: POST
+  scopes:
+    - write
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for cancel booking
+    properties: {}
+    required: []
+
+- slug: timify_list_services
+  name: List Services
+  description: |
+    List all services
+  provider: timify
+  endpoint: /api/v1/services
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for list services
+    properties: {}
+    required: []
+
+- slug: timify_list_resources
+  name: List Resources
+  description: |
+    List all resources (staff/rooms)
+  provider: timify
+  endpoint: /api/v1/resources
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for list resources
+    properties: {}
+    required: []
+
+- slug: timify_get_availability
+  name: Get Availability
+  description: |
+    Get available time slots
+  provider: timify
+  endpoint: /api/v1/availability
+  method: GET
+  scopes:
+    - read
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for get availability
+    properties: {}
+    required: []
+
+- slug: timify_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer
+  provider: timify
+  endpoint: /api/v1/customers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - timify
+  input_schema:
+    type: object
+    description: Parameters for create customer
+    properties: {}
+    required: []
+

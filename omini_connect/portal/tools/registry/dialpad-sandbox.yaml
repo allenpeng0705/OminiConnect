@@ -1,0 +1,245 @@
+# Dialpad Sandbox Tools - Allowlist
+# Curated subset of the Dialpad Sandbox API for AI agent use.
+# OAuth2 via Nango (Sandbox environment).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. dialpad_sandbox_list_users                - List users
+# 2. dialpad_sandbox_get_user                - Get user details
+# 3. dialpad_sandbox_list_calls               - List calls
+# 4. dialpad_sandbox_get_call                 - Get call details
+# 5. dialpad_sandbox_list_departments         - List departments
+# 6. dialpad_sandbox_get_department           - Get department details
+# 7. dialpad_sandbox_list_numbers             - List phone numbers
+# 8. dialpad_sandbox_get_number               - Get number details
+# 9. dialpad_sandbox_list_voicemails          - List voicemails
+# 10. dialpad_sandbox_get_voicemail          - Get voicemail details
+
+- slug: dialpad_sandbox_list_users
+  name: List Users
+  description: |
+    List all users in Dialpad sandbox.
+  provider: dialpad-sandbox
+  endpoint: /users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: dialpad_sandbox_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: dialpad-sandbox
+  endpoint: /users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: dialpad_sandbox_list_calls
+  name: List Calls
+  description: |
+    List all calls in Dialpad sandbox.
+  provider: dialpad-sandbox
+  endpoint: /calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - telephony
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      direction:
+        type: string
+        description: "Filter by direction: inbound, outbound"
+      status:
+        type: string
+        description: "Filter by status: started, ended, missed"
+    required: []
+
+- slug: dialpad_sandbox_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: dialpad-sandbox
+  endpoint: /calls/{call_id}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - telephony
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      call_id:
+        type: string
+        description: "Call ID"
+    required:
+      - call_id
+
+- slug: dialpad_sandbox_list_departments
+  name: List Departments
+  description: |
+    List all departments in Dialpad sandbox.
+  provider: dialpad-sandbox
+  endpoint: /departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: dialpad_sandbox_get_department
+  name: Get Department
+  description: |
+    Get details of a specific department.
+  provider: dialpad-sandbox
+  endpoint: /departments/{department_id}
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      department_id:
+        type: string
+        description: "Department ID"
+    required:
+      - department_id
+
+- slug: dialpad_sandbox_list_numbers
+  name: List Numbers
+  description: |
+    List all phone numbers in Dialpad sandbox.
+  provider: dialpad-sandbox
+  endpoint: /numbers
+  method: GET
+  scopes: []
+  tags:
+    - numbers
+    - telephony
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing numbers
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: dialpad_sandbox_get_number
+  name: Get Number
+  description: |
+    Get details of a specific phone number.
+  provider: dialpad-sandbox
+  endpoint: /numbers/{number_id}
+  method: GET
+  scopes: []
+  tags:
+    - numbers
+    - telephony
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a number
+    properties:
+      number_id:
+        type: string
+        description: "Number ID"
+    required:
+      - number_id
+
+- slug: dialpad_sandbox_list_voicemails
+  name: List Voicemails
+  description: |
+    List all voicemails in sandbox.
+  provider: dialpad-sandbox
+  endpoint: /voicemails
+  method: GET
+  scopes: []
+  tags:
+    - voicemails
+    - telephony
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing voicemails
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      user_id:
+        type: string
+        description: "Filter by user ID"
+    required: []
+
+- slug: dialpad_sandbox_get_voicemail
+  name: Get Voicemail
+  description: |
+    Get details of a specific voicemail.
+  provider: dialpad-sandbox
+  endpoint: /voicemails/{voicemail_id}
+  method: GET
+  scopes: []
+  tags:
+    - voicemails
+    - telephony
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a voicemail
+    properties:
+      voicemail_id:
+        type: string
+        description: "Voicemail ID"
+    required:
+      - voicemail_id

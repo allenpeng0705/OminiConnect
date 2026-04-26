@@ -1,0 +1,335 @@
+# Amplitude Tools - Allowlist
+# Curated subset of the Amplitude APIs for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. amplitude_list_events       - List events in your project
+# 2. amplitude_get_event          - Get event details and properties
+# 3. amplitude_track_event        - Track an event
+# 4. amplitude_list_users         - List users matching criteria
+# 5. amplitude_get_user           - Get user profile details
+# 6. amplitude_get_funnel        - Get funnel analysis data
+# 7. amplitude_get_retention      - Get retention analysis
+# 8. amplitude_get_session        - Get session data
+# 9. amplitude_list_cohorts      - List cohorts in your project
+# 10. amplitude_get_cohort        - Get cohort details
+
+- slug: amplitude_list_events
+  name: List Events
+  description: |
+    List events in your Amplitude project with pagination.
+    Returns event names, estimated volumes, and metadata.
+  provider: amplitude
+  endpoint: /api/events/list
+  method: POST
+  scopes:
+    - amplitude_api_key
+  tags:
+    - events
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      start:
+        type: integer
+        description: "Starting index for pagination"
+        default: 0
+      limit:
+        type: integer
+        description: "Max events to return (default 100)"
+        default: 100
+    required: []
+
+- slug: amplitude_get_event
+  name: Get Event
+  description: |
+    Get details about a specific event including its properties and daily counts.
+    Use this to understand event structure and popularity.
+  provider: amplitude
+  endpoint: /api/events/details
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - events
+    - properties
+  input_schema:
+    type: object
+    description: Parameters for getting event details
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      event_id:
+        type: string
+        description: "Event ID (required)"
+    required:
+      - event_id
+
+- slug: amplitude_track_event
+  name: Track Event
+  description: |
+    Track an event. Events are actions users take in your application.
+    Include user ID, device ID, and properties for rich analytics.
+  provider: amplitude
+  endpoint: /api/track
+  method: POST
+  scopes:
+    - amplitude_api_key
+  tags:
+    - events
+    - tracking
+  input_schema:
+    type: object
+    description: Parameters for tracking an event
+    properties:
+      event:
+        type: string
+        description: "Event name (required)"
+      user_id:
+        type: string
+        description: "User identifier"
+      device_id:
+        type: string
+        description: "Device identifier"
+      time:
+        type: string
+        description: "ISO 8601 timestamp of when the event occurred"
+      event_properties:
+        type: object
+        description: "Properties associated with the event"
+      user_properties:
+        type: object
+        description: "Properties to set on the user"
+    required:
+      - event
+
+- slug: amplitude_list_users
+  name: List Users
+  description: |
+    List users matching specific criteria or retrieve user profiles.
+    Use for audience segmentation and user research.
+  provider: amplitude
+  endpoint: /api/users/list
+  method: POST
+  scopes:
+    - amplitude_api_key
+  tags:
+    - users
+    - profiles
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      start:
+        type: integer
+        description: "Starting index"
+        default: 0
+      limit:
+        type: integer
+        description: "Max users to return (default 100)"
+        default: 100
+      user_id:
+        type: string
+        description: "Filter by specific user ID"
+    required: []
+
+- slug: amplitude_get_user
+  name: Get User
+  description: |
+    Get a user profile with all associated properties and event streams.
+    Use for user research and debugging user-specific issues.
+  provider: amplitude
+  endpoint: /api/users/details
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - users
+    - profiles
+  input_schema:
+    type: object
+    description: Parameters for getting user profile
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - user_id
+
+- slug: amplitude_get_funnel
+  name: Get Funnel
+  description: |
+    Get funnel analysis data. Funnels show conversion rates between sequential steps.
+    Define steps by event names and calculate drop-off.
+  provider: amplitude
+  endpoint: /api/funnels
+  method: POST
+  scopes:
+    - amplitude_api_key
+  tags:
+    - funnels
+    - conversion
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for funnel analysis
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      start:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      steps:
+        type: array
+        items:
+          type: object
+        description: "Array of funnel step objects with event names"
+    required:
+      - start
+      - end
+      - steps
+
+- slug: amplitude_get_retention
+  name: Get Retention
+  description: |
+    Get retention analysis. Shows how users return over time after performing an initial action.
+    Use to measure engagement and product stickiness.
+  provider: amplitude
+  endpoint: /api/retention
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - retention
+    - engagement
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for retention analysis
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      start:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      initial_event:
+        type: string
+        description: "Initial event to calculate retention from"
+      returning_event:
+        type: string
+        description: "Event to check for returning users"
+    required:
+      - start
+      - end
+      - initial_event
+
+- slug: amplitude_get_session
+  name: Get Session
+  description: |
+    Get session data including session length, events per session, and session counts.
+    Use to understand user engagement patterns.
+  provider: amplitude
+  endpoint: /api/sessions
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - sessions
+    - engagement
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for session analysis
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      start:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      user_id:
+        type: string
+        description: "Filter by specific user ID"
+    required:
+      - start
+      - end
+
+- slug: amplitude_list_cohorts
+  name: List Cohorts
+  description: |
+    List all cohorts in your Amplitude project.
+    Cohorts are groups of users sharing common characteristics or behaviors.
+  provider: amplitude
+  endpoint: /api/cohorts
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - cohorts
+    - users
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for listing cohorts
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      limit:
+        type: integer
+        description: "Max cohorts to return (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: amplitude_get_cohort
+  name: Get Cohort
+  description: |
+    Get details about a specific cohort including size, properties, and creation date.
+    Use this to understand cohort composition and behavior.
+  provider: amplitude
+  endpoint: /api/cohorts/{cohort_id}
+  method: GET
+  scopes:
+    - amplitude_api_key
+  tags:
+    - cohorts
+    - users
+    - segments
+  input_schema:
+    type: object
+    description: Parameters for getting cohort details
+    properties:
+      project_id:
+        type: string
+        description: "Amplitude project ID"
+      cohort_id:
+        type: integer
+        description: "Cohort ID (required)"
+    required:
+      - cohort_id

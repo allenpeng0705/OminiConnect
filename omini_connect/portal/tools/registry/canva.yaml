@@ -1,0 +1,289 @@
+# Canva Tools - Allowlist
+# Curated subset of the Canva Connect API for AI agent use.
+
+# === TOOL LIST ===
+# 1. canva_list_designs          - List designs
+# 2. canva_get_design            - Get a specific design
+# 3. canva_create_design         - Create a new design
+# 4. canva_list_folders         - List folders
+# 5. canva_get_folder            - Get a specific folder
+# 6. canva_create_folder         - Create a new folder
+# 7. canva_list_assets           - List assets
+# 8. canva_upload_asset          - Upload an asset
+# 9. canva_list_users            - List users in team
+# 10. canva_get_user             - Get a specific user
+
+- slug: canva_list_designs
+  name: List Designs
+  description: |
+    List all designs in the user's account or folder. Designs are visual content created in Canva.
+    Use this to browse designs or find a specific design to work with.
+  provider: canva
+  endpoint: /v1/designs
+  method: GET
+  scopes:
+    - design:content:read
+  tags:
+    - designs
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing designs
+    properties:
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      continuation:
+        type: string
+        description: "Pagination continuation token"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: canva_get_design
+  name: Get Design
+  description: |
+    Get details of a specific design including its title, thumbnail, creation date, and edit URL.
+    Use this to retrieve design metadata before exporting or modifying it.
+  provider: canva
+  endpoint: /v1/designs/{designId}
+  method: GET
+  scopes:
+    - design:content:read
+  tags:
+    - designs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a design
+    properties:
+      designId:
+        type: string
+        description: "Design ID (path parameter)"
+    required:
+      - designId
+
+- slug: canva_create_design
+  name: Create Design
+  description: |
+    Create a new design in Canva. Specify the design type (e.g., social media post, presentation, document)
+    and optional title. The design opens in the Canva editor where it can be customized.
+  provider: canva
+  endpoint: /v1/designs
+  method: POST
+  scopes:
+    - design:content:write
+  tags:
+    - designs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a design
+    properties:
+      title:
+        type: string
+        description: "Design title"
+      design_type:
+        type: object
+        description: "Design type specification (required)"
+        properties:
+          type:
+            type: string
+            description: "Design type name (e.g., social_media_post, presentation)"
+          name:
+            type: string
+            description: "Design type name"
+      folder_id:
+        type: string
+        description: "Folder ID to create the design in"
+    required:
+      - design_type
+
+- slug: canva_list_folders
+  name: List Folders
+  description: |
+    List all folders in the user's account or within a specific parent folder.
+    Use folders to organize designs by project, client, or category.
+  provider: canva
+  endpoint: /v1/folders
+  method: GET
+  scopes:
+    - folder:read
+  tags:
+    - folders
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties:
+      folder_id:
+        type: string
+        description: "Parent folder ID to list subfolders from"
+      continuation:
+        type: string
+        description: "Pagination continuation token"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: canva_get_folder
+  name: Get Folder
+  description: |
+    Get details of a specific folder including its name, parent folder, and creation date.
+    Use this to retrieve folder information before listing its contents.
+  provider: canva
+  endpoint: /v1/folders/{folderId}
+  method: GET
+  scopes:
+    - folder:read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      folderId:
+        type: string
+        description: "Folder ID (path parameter)"
+    required:
+      - folderId
+
+- slug: canva_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder to organize designs. Specify the folder name and optional parent folder
+    to create the folder within an existing folder structure.
+  provider: canva
+  endpoint: /v1/folders
+  method: POST
+  scopes:
+    - folder:write
+  tags:
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name (required)"
+      parent_folder_id:
+        type: string
+        description: "Parent folder ID to create folder within"
+    required:
+      - name
+
+- slug: canva_list_assets
+  name: List Assets
+  description: |
+    List all assets in the user's account. Assets include images, videos, and other files
+    uploaded to Canva for use in designs.
+  provider: canva
+  endpoint: /v1/assets
+  method: GET
+  scopes:
+    - asset:read
+  tags:
+    - assets
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      continuation:
+        type: string
+        description: "Pagination continuation token"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: canva_upload_asset
+  name: Upload Asset
+  description: |
+    Upload a new asset to Canva. The asset can be an image, video, or other supported file type.
+    Once uploaded, the asset can be used in designs.
+  provider: canva
+  endpoint: /v1/assets
+  method: POST
+  scopes:
+    - asset:write
+  tags:
+    - assets
+    - upload
+  input_schema:
+    type: object
+    description: Parameters for uploading an asset
+    properties:
+      name:
+        type: string
+        description: "Asset name (required)"
+      content:
+        type: string
+        description: "Base64 encoded file content or URL to asset"
+      mime_type:
+        type: string
+        description: "MIME type of the asset (e.g., image/png, video/mp4)"
+      folder_id:
+        type: string
+        description: "Folder ID to upload the asset to"
+    required:
+      - name
+      - content
+      - mime_type
+
+- slug: canva_list_users
+  name: List Users
+  description: |
+    List all users in a Canva team. Returns user information including name, email, and role.
+    Use this to see team members or find specific users.
+  provider: canva
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      continuation:
+        type: string
+        description: "Pagination continuation token"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: canva_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including their name, email, avatar, and team role.
+    Use this to retrieve user information for personalization or permissions.
+  provider: canva
+  endpoint: /v1/users/{userId}
+  method: GET
+  scopes:
+    - team:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID (path parameter)"
+    required:
+      - userId

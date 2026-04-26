@@ -1,0 +1,241 @@
+# ElevenLabs Tools - Allowlist
+# Curated subset of ElevenLabs API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. elevenlabs_get_user          - Get current user info
+# 2. elevenlabs_list_voices      - List available voices
+# 3. elevenlabs_get_voice         - Get voice details
+# 4. elevenlabs_list_models       - List available models
+# 5. elevenlabs_get_model         - Get model details
+# 6. elevenlabs_text_to_speech    - Convert text to speech
+# 7. elevenlabs_list_history      - List history entries
+# 8. elevenlabs_get_history_item  - Get history item details
+# 9. elevenlabs_delete_history    - Delete history entries
+# 10. elevenlabs_list_institutions - List institutions
+
+- slug: elevenlabs_get_user
+  name: Get User
+  description: |
+    Get information about the current authenticated user.
+  provider: elevenlabs
+  endpoint: /v1/user
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: elevenlabs_list_voices
+  name: List Voices
+  description: |
+    List all available voices in the user's library.
+  provider: elevenlabs
+  endpoint: /v1/voices
+  method: GET
+  scopes: []
+  tags:
+    - voices
+    - tts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing voices
+    properties:
+      page_size:
+        type: integer
+        description: "Number of voices to return (default 20)"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: elevenlabs_get_voice
+  name: Get Voice
+  description: |
+    Get details of a specific voice including settings and preview.
+  provider: elevenlabs
+  endpoint: /v1/voices/{voice_id}
+  method: GET
+  scopes: []
+  tags:
+    - voices
+    - tts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting voice details
+    properties:
+      voice_id:
+        type: string
+        description: "Voice ID"
+    required:
+      - voice_id
+
+- slug: elevenlabs_list_models
+  name: List Models
+  description: |
+    List all available text-to-speech models.
+  provider: elevenlabs
+  endpoint: /v1/models
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - tts
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: elevenlabs_get_model
+  name: Get Model
+  description: |
+    Get details of a specific model.
+  provider: elevenlabs
+  endpoint: /v1/models/{model_id}
+  method: GET
+  scopes: []
+  tags:
+    - models
+    - tts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting model details
+    properties:
+      model_id:
+        type: string
+        description: "Model ID"
+    required:
+      - model_id
+
+- slug: elevenlabs_text_to_speech
+  name: Text to Speech
+  description: |
+    Convert text to speech using a specific voice and model.
+  provider: elevenlabs
+  endpoint: /v1/text-to-speech/{voice_id}
+  method: POST
+  scopes: []
+  tags:
+    - tts
+    - audio
+    - create
+  input_schema:
+    type: object
+    description: Parameters for text to speech conversion
+    properties:
+      voice_id:
+        type: string
+        description: "Voice ID to use"
+      text:
+        type: string
+        description: "Text to convert to speech"
+      model_id:
+        type: string
+        description: "Model to use"
+        default: eleven_multilingual_v2
+      voice_settings:
+        type: object
+        description: "Voice settings (stability, similarity, etc.)"
+    required:
+      - voice_id
+      - text
+
+- slug: elevenlabs_list_history
+  name: List History
+  description: |
+    List all history entries for the authenticated user.
+  provider: elevenlabs
+  endpoint: /v1/history
+  method: GET
+  scopes: []
+  tags:
+    - history
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing history
+    properties:
+      page_size:
+        type: integer
+        description: "Number of entries to return"
+        default: 20
+      start:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: elevenlabs_get_history_item
+  name: Get History Item
+  description: |
+    Get details of a specific history item including audio.
+  provider: elevenlabs
+  endpoint: /v1/history/{history_id}
+  method: GET
+  scopes: []
+  tags:
+    - history
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting history item
+    properties:
+      history_id:
+        type: string
+        description: "History item ID"
+    required:
+      - history_id
+
+- slug: elevenlabs_delete_history
+  name: Delete History
+  description: |
+    Delete one or more history entries.
+  provider: elevenlabs
+  endpoint: /v1/history/delete
+  method: POST
+  scopes: []
+  tags:
+    - history
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting history entries
+    properties:
+      history_item_ids:
+        type: array
+        items:
+          type: string
+        description: "Array of history item IDs to delete"
+    required:
+      - history_item_ids
+
+- slug: elevenlabs_list_institutions
+  name: List Institutions
+  description: |
+    List all institutions the user has access to.
+  provider: elevenlabs
+  endpoint: /v1/institutions
+  method: GET
+  scopes: []
+  tags:
+    - institutions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing institutions
+    properties: {}
+    required: []

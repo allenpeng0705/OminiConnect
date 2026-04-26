@@ -1,0 +1,234 @@
+# HackerRank Work Tools - Allowlist
+# Curated subset of HackerRank for Work API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. hackerrank_list_candidates     - List candidates
+# 2. hackerrank_get_candidate      - Get candidate details
+# 3. hackerrank_list_tests         - List tests
+# 4. hackerrank_get_test           - Get test details
+# 5. hackerrank_list_jobs         - List jobs
+# 6. hackerrank_get_job            - Get job details
+# 7. hackerrank_list_interviews    - List interviews
+# 8. hackerrank_get_interview      - Get interview details
+# 9. hackerrank_list_users         - List users
+# 10. hackerrank_get_user          - Get user details
+
+- slug: hackerrank_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in HackerRank for Work.
+    Returns candidate details including name, email, and status.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset"
+        default: 0
+    required: []
+
+- slug: hackerrank_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+    Includes assessments, interviews, and history.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - id
+
+- slug: hackerrank_list_tests
+  name: List Tests
+  description: |
+    List all tests in HackerRank for Work.
+    Returns test details including name, duration, and questions.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/tests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tests
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tests
+    properties: {}
+    required: []
+
+- slug: hackerrank_get_test
+  name: Get Test
+  description: |
+    Get detailed information about a specific test.
+    Includes test structure and questions.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/tests/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a test
+    properties:
+      id:
+        type: integer
+        description: "Test ID"
+    required:
+      - id
+
+- slug: hackerrank_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in HackerRank for Work.
+    Returns job details including title and status.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties: {}
+    required: []
+
+- slug: hackerrank_get_job
+  name: Get Job
+  description: |
+    Get detailed information about a specific job.
+    Includes job details and associated tests.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/jobs/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      id:
+        type: integer
+        description: "Job ID"
+    required:
+      - id
+
+- slug: hackerrank_list_interviews
+  name: List Interviews
+  description: |
+    List all interviews in HackerRank for Work.
+    Returns interview details including candidate and time.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/interviews
+  method: GET
+  scopes:
+    - read
+  tags:
+    - interviews
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties: {}
+    required: []
+
+- slug: hackerrank_get_interview
+  name: Get Interview
+  description: |
+    Get detailed information about a specific interview.
+    Includes interview details and feedback.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/interviews/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - interviews
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an interview
+    properties:
+      id:
+        type: integer
+        description: "Interview ID"
+    required:
+      - id
+
+- slug: hackerrank_list_users
+  name: List Users
+  description: |
+    List all users in HackerRank for Work.
+    Returns user details including email and role.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties: {}
+    required: []
+
+- slug: hackerrank_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+    Includes user profile and permissions.
+  provider: hackerrank-work
+  endpoint: /x/api/v3/teams/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id

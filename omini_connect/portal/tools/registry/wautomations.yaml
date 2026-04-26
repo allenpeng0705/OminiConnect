@@ -1,0 +1,285 @@
+# Wautomations Tools - Allowlist
+# Curated subset of Wautomations REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. wautomations_list_campaigns     - List marketing campaigns
+# 2. wautomations_get_campaign       - Get campaign details
+# 3. wautomations_create_campaign    - Create a new campaign
+# 4. wautomations_list_contacts      - List contacts
+# 5. wautomations_get_contact        - Get contact details
+# 6. wautomations_add_contact        - Add a new contact
+# 7. wautomations_list_workflows     - List automation workflows
+# 8. wautomations_get_workflow       - Get workflow details
+# 9. wautomations_trigger_workflow   - Trigger a workflow for a contact
+# 10. wautomations_list_emails        - List email templates
+
+- slug: wautomations_list_campaigns
+  name: List Campaigns
+  description: |
+    List all marketing campaigns with status, stats, and targeting info.
+  provider: wautomations
+  endpoint: /api/campaigns
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - list
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, scheduled, active, paused, completed"
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []
+
+- slug: wautomations_get_campaign
+  name: Get Campaign
+  description: |
+    Get detailed information about a campaign including stats and settings.
+  provider: wautomations
+  endpoint: /api/campaigns/{campaign_id}
+  method: GET
+  scopes:
+    - campaigns:read
+  tags:
+    - campaigns
+    - read
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id
+
+- slug: wautomations_create_campaign
+  name: Create Campaign
+  description: |
+    Create a new marketing campaign with targeting and content settings.
+  provider: wautomations
+  endpoint: /api/campaigns
+  method: POST
+  scopes:
+    - campaigns:write
+  tags:
+    - campaigns
+    - create
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for creating a campaign
+    properties:
+      name:
+        type: string
+        description: "Campaign name"
+      subject:
+        type: string
+        description: "Email subject line"
+      list_id:
+        type: string
+        description: "Target contact list ID"
+      from_name:
+        type: string
+        description: "Sender name"
+      from_email:
+        type: string
+        description: "Sender email"
+    required:
+      - name
+      - subject
+
+- slug: wautomations_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts with filtering and pagination support.
+  provider: wautomations
+  endpoint: /api/contacts
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      list_id:
+        type: string
+        description: "Filter by contact list ID"
+      tag:
+        type: string
+        description: "Filter by tag"
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []
+
+- slug: wautomations_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a contact including tags and activity.
+  provider: wautomations
+  endpoint: /api/contacts/{contact_id}
+  method: GET
+  scopes:
+    - contacts:read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: wautomations_add_contact
+  name: Add Contact
+  description: |
+    Add a new contact to the system with optional list assignment and tags.
+  provider: wautomations
+  endpoint: /api/contacts
+  method: POST
+  scopes:
+    - contacts:write
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      list_id:
+        type: string
+        description: "List ID to add contact to"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to apply"
+    required:
+      - email
+
+- slug: wautomations_list_workflows
+  name: List Workflows
+  description: |
+    List all automation workflows with status and trigger info.
+  provider: wautomations
+  endpoint: /api/workflows
+  method: GET
+  scopes:
+    - workflows:read
+  tags:
+    - workflows
+    - list
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing workflows
+    properties:
+      status:
+        type: string
+        description: "Filter by status: inactive, active"
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []
+
+- slug: wautomations_get_workflow
+  name: Get Workflow
+  description: |
+    Get detailed workflow information including steps and trigger conditions.
+  provider: wautomations
+  endpoint: /api/workflows/{workflow_id}
+  method: GET
+  scopes:
+    - workflows:read
+  tags:
+    - workflows
+    - read
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for getting a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "Workflow ID"
+    required:
+      - workflow_id
+
+- slug: wautomations_trigger_workflow
+  name: Trigger Workflow
+  description: |
+    Trigger a workflow manually for a specific contact.
+  provider: wautomations
+  endpoint: /api/workflows/{workflow_id}/trigger
+  method: POST
+  scopes:
+    - workflows:write
+  tags:
+    - workflows
+    - automation
+    - trigger
+  input_schema:
+    type: object
+    description: Parameters for triggering a workflow
+    properties:
+      workflow_id:
+        type: string
+        description: "Workflow ID"
+      contact_id:
+        type: string
+        description: "Contact ID to trigger workflow for"
+    required:
+      - workflow_id
+      - contact_id
+
+- slug: wautomations_list_emails
+  name: List Emails
+  description: |
+    List all email templates with subject and status info.
+  provider: wautomations
+  endpoint: /api/emails
+  method: GET
+  scopes:
+    - emails:read
+  tags:
+    - emails
+    - templates
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing email templates
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 20)"
+        default: 20
+    required: []

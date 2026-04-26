@@ -1,0 +1,240 @@
+# Chorus Tools - Allowlist
+# Curated subset of the Chorus API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. chorus_list_users                   - List users
+# 2. chorus_get_user                     - Get user details
+# 3. chorus_list_calls                   - List calls
+# 4. chorus_get_call                     - Get call details
+# 5. chorus_list_meetings               - List meetings
+# 6. chorus_get_meeting                 - Get meeting details
+# 7. chorus_list_teams                   - List teams
+# 8. chorus_get_team                    - Get team details
+# 9. chorus_list_analytics              - List analytics
+# 10. chorus_get_call_recording         - Get call recording
+
+- slug: chorus_list_users
+  name: List Users
+  description: |
+    List all users in the organization.
+  provider: chorus
+  endpoint: /api/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: chorus_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: chorus
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: chorus_list_calls
+  name: List Calls
+  description: |
+    List all calls in the organization.
+  provider: chorus
+  endpoint: /api/v1/calls
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing calls
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      from_date:
+        type: string
+        description: "Start date"
+      to_date:
+        type: string
+        description: "End date"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: chorus_get_call
+  name: Get Call
+  description: |
+    Get details of a specific call.
+  provider: chorus
+  endpoint: /api/v1/calls/{id}
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call
+    properties:
+      id:
+        type: string
+        description: "Call ID"
+    required:
+      - id
+
+- slug: chorus_list_meetings
+  name: List Meetings
+  description: |
+    List all meetings in the organization.
+  provider: chorus
+  endpoint: /api/v1/meetings
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing meetings
+    properties:
+      user_id:
+        type: string
+        description: "Filter by user ID"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: chorus_get_meeting
+  name: Get Meeting
+  description: |
+    Get details of a specific meeting.
+  provider: chorus
+  endpoint: /api/v1/meetings/{id}
+  method: GET
+  scopes: []
+  tags:
+    - meetings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a meeting
+    properties:
+      id:
+        type: string
+        description: "Meeting ID"
+    required:
+      - id
+
+- slug: chorus_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization.
+  provider: chorus
+  endpoint: /api/v1/teams
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - management
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: chorus_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team.
+  provider: chorus
+  endpoint: /api/v1/teams/{id}
+  method: GET
+  scopes: []
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: string
+        description: "Team ID"
+    required:
+      - id
+
+- slug: chorus_list_analytics
+  name: List Analytics
+  description: |
+    List analytics data for calls and meetings.
+  provider: chorus
+  endpoint: /api/v1/analytics
+  method: GET
+  scopes: []
+  tags:
+    - analytics
+    - reporting
+  input_schema:
+    type: object
+    description: Parameters for listing analytics
+    properties:
+      from_date:
+        type: string
+        description: "Start date"
+      to_date:
+        type: string
+        description: "End date"
+    required: []
+
+- slug: chorus_get_call_recording
+  name: Get Call Recording
+  description: |
+    Get the recording for a specific call.
+  provider: chorus
+  endpoint: /api/v1/calls/{id}/recording
+  method: GET
+  scopes: []
+  tags:
+    - calls
+    - recording
+  input_schema:
+    type: object
+    description: Parameters for getting a call recording
+    properties:
+      id:
+        type: string
+        description: "Call ID"
+    required:
+      - id

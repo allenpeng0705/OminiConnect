@@ -1,0 +1,335 @@
+# Cloudflare Tools - Allowlist
+# Curated subset of the Cloudflare API v4 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. cloudflare_list_zones              - List all zones (domains)
+# 2. cloudflare_get_zone                - Get details for a specific zone
+# 3. cloudflare_list_dns_records        - List DNS records for a zone
+# 4. cloudflare_get_dns_record          - Get a specific DNS record
+# 5. cloudflare_create_dns_record       - Create a new DNS record
+# 6. cloudflare_list_pages_projects    - List Cloudflare Pages projects
+# 7. cloudflare_get_pages_project       - Get a Pages project details
+# 8. cloudflare_list_workers           - List Workers scripts
+# 9. cloudflare_get_worker              - Get Worker script details
+# 10. cloudflare_list_ssl_certificates - List SSL certificates
+
+- slug: cloudflare_list_zones
+  name: List Zones
+  description: |
+    List all zones (domains) in your Cloudflare account.
+    Returns zone names, status, and configuration.
+  provider: cloudflare
+  endpoint: /zones
+  method: GET
+  scopes:
+    - zone:read
+  tags:
+    - zones
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing zones
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+      order:
+        type: string
+        description: "Field to order by (name, status, zone_id)"
+        default: name
+      status:
+        type: string
+        description: "Filter by status (active, pending, initializing, deactivated)"
+    required: []
+
+- slug: cloudflare_get_zone
+  name: Get Zone
+  description: |
+    Get detailed information about a specific zone including DNS settings,
+    security configuration, and traffic statistics.
+  provider: cloudflare
+  endpoint: /zones/{zone_id}
+  method: GET
+  scopes:
+    - zone:read
+  tags:
+    - zones
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a zone
+    properties:
+      zone_id:
+        type: string
+        description: "Zone ID (required)"
+    required:
+      - zone_id
+
+- slug: cloudflare_list_dns_records
+  name: List DNS Records
+  description: |
+    List all DNS records for a zone. Returns record type, name, content, and TTL.
+    Supports filtering by record type.
+  provider: cloudflare
+  endpoint: /zones/{zone_id}/dns_records
+  method: GET
+  scopes:
+    - zone:read
+    - dns:read
+  tags:
+    - dns
+    - records
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing DNS records
+    properties:
+      zone_id:
+        type: string
+        description: "Zone ID (required)"
+      type:
+        type: string
+        description: "Filter by record type (A, AAAA, CNAME, MX, TXT, etc.)"
+      name:
+        type: string
+        description: "Filter by record name"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 20)"
+        default: 20
+    required:
+      - zone_id
+
+- slug: cloudflare_get_dns_record
+  name: Get DNS Record
+  description: |
+    Get detailed information about a specific DNS record including
+    proxied status, TTL, and creation/modification dates.
+  provider: cloudflare
+  endpoint: /zones/{zone_id}/dns_records/{dns_record_id}
+  method: GET
+  scopes:
+    - zone:read
+    - dns:read
+  tags:
+    - dns
+    - records
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a DNS record
+    properties:
+      zone_id:
+        type: string
+        description: "Zone ID (required)"
+      dns_record_id:
+        type: string
+        description: "DNS record ID (required)"
+    required:
+      - zone_id
+      - dns_record_id
+
+- slug: cloudflare_create_dns_record
+  name: Create DNS Record
+  description: |
+    Create a new DNS record for a zone. Supports all record types including
+    A, AAAA, CNAME, MX, TXT, and others.
+  provider: cloudflare
+  endpoint: /zones/{zone_id}/dns_records
+  method: POST
+  scopes:
+    - zone:edit
+    - dns:edit
+  tags:
+    - dns
+    - records
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a DNS record
+    properties:
+      zone_id:
+        type: string
+        description: "Zone ID (required)"
+      type:
+        type: string
+        description: "Record type: A, AAAA, CNAME, MX, TXT, etc. (required)"
+      name:
+        type: string
+        description: "Record name (required)"
+      content:
+        type: string
+        description: "Record content/value (required)"
+      ttl:
+        type: integer
+        description: "TTL in seconds (1 = auto, default 1)"
+        default: 1
+      priority:
+        type: integer
+        description: "Priority for MX records"
+      proxied:
+        type: boolean
+        description: "Enable Cloudflare proxying"
+        default: true
+    required:
+      - zone_id
+      - type
+      - name
+      - content
+
+- slug: cloudflare_list_pages_projects
+  name: List Pages Projects
+  description: |
+    List all Cloudflare Pages projects in your account.
+    Returns project names, subdomains, and deployment status.
+  provider: cloudflare
+  endpoint: /accounts/{account_id}/pages/projects
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - pages
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing Pages projects
+    properties:
+      account_id:
+        type: string
+        description: "Account ID (required)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - account_id
+
+- slug: cloudflare_get_pages_project
+  name: Get Pages Project
+  description: |
+    Get detailed information about a Cloudflare Pages project including
+    build configuration, deployments, and custom domains.
+  provider: cloudflare
+  endpoint: /accounts/{account_id}/pages/projects/{project_name}
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - pages
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a Pages project
+    properties:
+      account_id:
+        type: string
+        description: "Account ID (required)"
+      project_name:
+        type: string
+        description: "Project name (required)"
+    required:
+      - account_id
+      - project_name
+
+- slug: cloudflare_list_workers
+  name: List Workers
+  description: |
+    List all Workers scripts in your account.
+    Returns script names, etags, and deployment dates.
+  provider: cloudflare
+  endpoint: /accounts/{account_id}/workers/scripts
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - workers
+    - serverless
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing Workers scripts
+    properties:
+      account_id:
+        type: string
+        description: "Account ID (required)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required:
+      - account_id
+
+- slug: cloudflare_get_worker
+  name: Get Worker
+  description: |
+    Get details about a specific Workers script including the code,
+    deployment metadata, and usage statistics.
+  provider: cloudflare
+  endpoint: /accounts/{account_id}/workers/scripts/{script_name}
+  method: GET
+  scopes:
+    - workers:read
+  tags:
+    - workers
+    - serverless
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a Worker script
+    properties:
+      account_id:
+        type: string
+        description: "Account ID (required)"
+      script_name:
+        type: string
+        description: "Script name (required)"
+    required:
+      - account_id
+      - script_name
+
+- slug: cloudflare_list_ssl_certificates
+  name: List SSL Certificates
+  description: |
+    List all SSL certificates in your account including universal,
+    dedicated, and custom certificates.
+  provider: cloudflare
+  endpoint: /zones/{zone_id}/sslCertificates
+  method: GET
+  scopes:
+    - zone:read
+  tags:
+    - ssl
+    - certificates
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing SSL certificates
+    properties:
+      zone_id:
+        type: string
+        description: "Zone ID (required)"
+    required:
+      - zone_id

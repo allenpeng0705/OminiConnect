@@ -1,0 +1,218 @@
+# Lessonly Tools - Allowlist
+# Curated subset of Lessonly API for AI agent use.
+# BASIC via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lessonly_list_users          - List users
+# 2. lessonly_get_user           - Get user details
+# 3. lessonly_list_lessons       - List lessons
+# 4. lessonly_get_lesson         - Get lesson details
+# 5. lessonly_list_assignments   - List assignments
+# 6. lessonly_get_assignment     - Get assignment details
+# 7. lessonly_list_paths         - List learning paths
+# 8. lessonly_get_path           - Get learning path details
+# 9. lessonly_list_groups        - List groups
+# 10. lessonly_get_group         - Get group details
+
+- slug: lessonly_list_users
+  name: List Users
+  description: |
+    List all users in Lessonly.
+  provider: lessonly
+  endpoint: /api/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: lessonly_get_user
+  name: Get User
+  description: |
+    Get details for a specific user.
+  provider: lessonly
+  endpoint: /api/users/{user_id}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: integer
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: lessonly_list_lessons
+  name: List Lessons
+  description: |
+    List all lessons.
+  provider: lessonly
+  endpoint: /api/lessons
+  method: GET
+  scopes: []
+  tags:
+    - lessons
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lessons
+    properties: {}
+    required: []
+
+- slug: lessonly_get_lesson
+  name: Get Lesson
+  description: |
+    Get details for a specific lesson.
+  provider: lessonly
+  endpoint: /api/lessons/{lesson_id}
+  method: GET
+  scopes: []
+  tags:
+    - lessons
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lesson
+    properties:
+      lesson_id:
+        type: integer
+        description: "Lesson ID"
+    required:
+      - lesson_id
+
+- slug: lessonly_list_assignments
+  name: List Assignments
+  description: |
+    List all assignments.
+  provider: lessonly
+  endpoint: /api/assignments
+  method: GET
+  scopes: []
+  tags:
+    - assignments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing assignments
+    properties:
+      user_id:
+        type: integer
+        description: "Filter by user ID"
+    required: []
+
+- slug: lessonly_get_assignment
+  name: Get Assignment
+  description: |
+    Get details for a specific assignment.
+  provider: lessonly
+  endpoint: /api/assignments/{assignment_id}
+  method: GET
+  scopes: []
+  tags:
+    - assignments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an assignment
+    properties:
+      assignment_id:
+        type: integer
+        description: "Assignment ID"
+    required:
+      - assignment_id
+
+- slug: lessonly_list_paths
+  name: List Learning Paths
+  description: |
+    List all learning paths.
+  provider: lessonly
+  endpoint: /api/paths
+  method: GET
+  scopes: []
+  tags:
+    - paths
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing learning paths
+    properties: {}
+    required: []
+
+- slug: lessonly_get_path
+  name: Get Learning Path
+  description: |
+    Get details for a specific learning path.
+  provider: lessonly
+  endpoint: /api/paths/{path_id}
+  method: GET
+  scopes: []
+  tags:
+    - paths
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a learning path
+    properties:
+      path_id:
+        type: integer
+        description: "Path ID"
+    required:
+      - path_id
+
+- slug: lessonly_list_groups
+  name: List Groups
+  description: |
+    List all groups.
+  provider: lessonly
+  endpoint: /api/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: lessonly_get_group
+  name: Get Group
+  description: |
+    Get details for a specific group.
+  provider: lessonly
+  endpoint: /api/groups/{group_id}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      group_id:
+        type: integer
+        description: "Group ID"
+    required:
+      - group_id

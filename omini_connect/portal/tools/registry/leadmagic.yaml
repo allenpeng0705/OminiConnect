@@ -1,0 +1,220 @@
+# LeadMagic Tools - Allowlist
+# Curated subset of LeadMagic API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. leadmagic_list_enrichments   - List enrichments
+# 2. leadmagic_get_enrichment    - Get enrichment details
+# 3. leadmagic_list_credits      - Get credit balance
+# 4. leadmagic_list_lookups      - List lookups
+# 5. leadmagic_create_lookup     - Create a lookup
+# 6. leadmagic_list_domains     - List domains
+# 7. leadmagic_get_domain        - Get domain details
+# 8. leadmagic_list_companies    - List companies
+# 9. leadmagic_get_company      - Get company details
+# 10. leadmagic_list_webhooks   - List webhooks
+
+- slug: leadmagic_list_enrichments
+  name: List Enrichments
+  description: |
+    List all enrichments.
+  provider: leadmagic
+  endpoint: /v1/enrichments
+  method: GET
+  scopes: []
+  tags:
+    - enrichments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing enrichments
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: leadmagic_get_enrichment
+  name: Get Enrichment
+  description: |
+    Get details for a specific enrichment.
+  provider: leadmagic
+  endpoint: /v1/enrichments/{enrichment_id}
+  method: GET
+  scopes: []
+  tags:
+    - enrichments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an enrichment
+    properties:
+      enrichment_id:
+        type: string
+        description: "Enrichment ID"
+    required:
+      - enrichment_id
+
+- slug: leadmagic_list_credits
+  name: Get Credit Balance
+  description: |
+    Get the current credit balance.
+  provider: leadmagic
+  endpoint: /v1/credits
+  method: GET
+  scopes: []
+  tags:
+    - credits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting credits
+    properties: {}
+    required: []
+
+- slug: leadmagic_list_lookups
+  name: List Lookups
+  description: |
+    List all lookups.
+  provider: leadmagic
+  endpoint: /v1/lookups
+  method: GET
+  scopes: []
+  tags:
+    - lookups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing lookups
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: leadmagic_create_lookup
+  name: Create Lookup
+  description: |
+    Create a new lookup.
+  provider: leadmagic
+  endpoint: /v1/lookups
+  method: POST
+  scopes: []
+  tags:
+    - lookups
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a lookup
+    properties:
+      email:
+        type: string
+        description: "Email to look up"
+    required:
+      - email
+
+- slug: leadmagic_list_domains
+  name: List Domains
+  description: |
+    List all domains.
+  provider: leadmagic
+  endpoint: /v1/domains
+  method: GET
+  scopes: []
+  tags:
+    - domains
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties: {}
+    required: []
+
+- slug: leadmagic_get_domain
+  name: Get Domain
+  description: |
+    Get details for a specific domain.
+  provider: leadmagic
+  endpoint: /v1/domains/{domain_id}
+  method: GET
+  scopes: []
+  tags:
+    - domains
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a domain
+    properties:
+      domain_id:
+        type: string
+        description: "Domain ID"
+    required:
+      - domain_id
+
+- slug: leadmagic_list_companies
+  name: List Companies
+  description: |
+    List all companies.
+  provider: leadmagic
+  endpoint: /v1/companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: leadmagic_get_company
+  name: Get Company
+  description: |
+    Get details for a specific company.
+  provider: leadmagic
+  endpoint: /v1/companies/{company_id}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      company_id:
+        type: string
+        description: "Company ID"
+    required:
+      - company_id
+
+- slug: leadmagic_list_webhooks
+  name: List Webhooks
+  description: |
+    List all webhooks.
+  provider: leadmagic
+  endpoint: /v1/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}
+    required: []

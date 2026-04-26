@@ -1,0 +1,230 @@
+# Fiserv API Key Tools - Allowlist
+# Curated subset of Fiserv API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. fiserv_api_key_get_balance            - Get account balance
+# 2. fiserv_api_key_list_transactions     - List transactions
+# 3. fiserv_api_key_get_transaction      - Get transaction details
+# 4. fiserv_api_key_create_payment       - Create a payment
+# 5. fiserv_api_key_get_payment          - Get payment details
+# 6. fiserv_api_key_list_accounts        - List accounts
+# 7. fiserv_api_key_get_account          - Get account details
+# 8. fiserv_api_key_list_payments        - List payments
+# 9. fiserv_api_key_cancel_payment       - Cancel a payment
+# 10. fiserv_api_key_get_merchant_info  - Get merchant info
+
+- slug: fiserv_api_key_get_balance
+  name: Get Balance
+  description: |
+    Get account balance information.
+  provider: fiserv-api-key
+  endpoint: /api/v1/accounts/balance
+  method: GET
+  scopes: []
+  tags:
+    - balance
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties:
+      account_id:
+        type: string
+        description: "Account ID"
+    required: []
+
+- slug: fiserv_api_key_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: fiserv-api-key
+  endpoint: /api/v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      account_id:
+        type: string
+        description: "Account ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: fiserv_api_key_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction.
+  provider: fiserv-api-key
+  endpoint: /api/v1/transactions/{id}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting transaction
+    properties:
+      id:
+        type: string
+        description: "Transaction ID"
+    required:
+      - id
+
+- slug: fiserv_api_key_create_payment
+  name: Create Payment
+  description: |
+    Create a new payment.
+  provider: fiserv-api-key
+  endpoint: /api/v1/payments
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating payment
+    properties:
+      amount:
+        type: number
+        description: "Payment amount"
+      currency:
+        type: string
+        description: "Currency code"
+      recipient_id:
+        type: string
+        description: "Recipient ID"
+    required:
+      - amount
+
+- slug: fiserv_api_key_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific payment.
+  provider: fiserv-api-key
+  endpoint: /api/v1/payments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: fiserv_api_key_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts.
+  provider: fiserv-api-key
+  endpoint: /api/v1/accounts
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties: {}
+    required: []
+
+- slug: fiserv_api_key_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account.
+  provider: fiserv-api-key
+  endpoint: /api/v1/accounts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: fiserv_api_key_list_payments
+  name: List Payments
+  description: |
+    List all payments.
+  provider: fiserv-api-key
+  endpoint: /api/v1/payments
+  method: GET
+  scopes: []
+  tags:
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing payments
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: fiserv_api_key_cancel_payment
+  name: Cancel Payment
+  description: |
+    Cancel a pending payment.
+  provider: fiserv-api-key
+  endpoint: /api/v1/payments/{id}/cancel
+  method: POST
+  scopes: []
+  tags:
+    - payments
+    - cancel
+  input_schema:
+    type: object
+    description: Parameters for canceling payment
+    properties:
+      id:
+        type: string
+        description: "Payment ID"
+    required:
+      - id
+
+- slug: fiserv_api_key_get_merchant_info
+  name: Get Merchant Info
+  description: |
+    Get merchant information.
+  provider: fiserv-api-key
+  endpoint: /api/v1/merchant
+  method: GET
+  scopes: []
+  tags:
+    - merchant
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

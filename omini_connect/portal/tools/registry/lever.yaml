@@ -1,0 +1,340 @@
+# Lever Tools - Allowlist
+# Curated subset of the Lever API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. lever_list_opportunities      - List candidate opportunities
+# 2. lever_get_opportunity        - Get opportunity details
+# 3. lever_create_opportunity     - Create new opportunity
+# 4. lever_update_opportunity     - Update opportunity fields
+# 5. lever_list_offers            - List offers for opportunities
+# 6. lever_get_offer             - Get offer details
+# 7. lever_create_offer          - Create an offer
+# 8. lever_list_users            - List team members
+# 9. lever_get_user              - Get user profile
+# 10. lever_list_feedback        - List interview feedback
+
+- slug: lever_list_opportunities
+  name: List Opportunities
+  description: |
+    List all candidate opportunities with optional filters for stage, status, or tags.
+    Returns candidate info, current stage, owner, and timeline.
+  provider: lever
+  endpoint: /opportunities
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - candidates
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage:
+        type: string
+        description: "Filter by stage name"
+      status:
+        type: string
+        description: "Filter by status: active, archived, rejected"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Filter by tags"
+      limit:
+        type: integer
+        description: "Number of results (default 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: lever_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about a specific opportunity including candidate profile,
+    interview history, stage progression, offers, and all associated notes.
+  provider: lever
+  endpoint: /opportunities/{opportunity_id}
+  method: GET
+  scopes:
+    - opportunities:read
+  tags:
+    - opportunities
+    - candidates
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - opportunity_id
+
+- slug: lever_create_opportunity
+  name: Create Opportunity
+  description: |
+    Create a new opportunity for a candidate including name, email, stage, and owner.
+    This is the first step in tracking a candidate through the hiring process.
+  provider: lever
+  endpoint: /opportunities
+  method: POST
+  scopes:
+    - opportunities:write
+  tags:
+    - opportunities
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Opportunity creation parameters
+    properties:
+      name:
+        type: string
+        description: "Candidate name (required)"
+      emails:
+        type: array
+        items:
+          type: string
+        description: "Array of email addresses"
+      phone:
+        type: string
+        description: "Phone number"
+      stage:
+        type: string
+        description: "Initial stage name"
+        default: Applied
+      owner:
+        type: string
+        description: "Owner user ID"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Array of tag names"
+    required:
+      - name
+
+- slug: lever_update_opportunity
+  name: Update Opportunity
+  description: |
+    Update opportunity fields including stage, status, owner, or add notes and tags.
+    Use this to move candidates through hiring stages or archive rejected candidates.
+  provider: lever
+  endpoint: /opportunities/{opportunity_id}
+  method: PUT
+  scopes:
+    - opportunities:write
+  tags:
+    - opportunities
+    - update
+    - candidates
+  input_schema:
+    type: object
+    description: Opportunity update parameters
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID"
+      stage:
+        type: string
+        description: "Move to a different stage"
+      status:
+        type: string
+        description: "Update status: active, archived"
+      owner:
+        type: string
+        description: "Assign to a different owner"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Update tags"
+      notes:
+        type: string
+        description: "Add a note"
+    required:
+      - opportunity_id
+
+- slug: lever_list_offers
+  name: List Offers
+  description: |
+    List all offers with optional filters for status, candidate, or date range.
+    Returns offer amounts, statuses, conditions, and associated opportunities.
+  provider: lever
+  endpoint: /offers
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      opportunity_id:
+        type: string
+        description: "Filter by opportunity ID"
+      status:
+        type: string
+        description: "Filter by status: draft, pending, approved, declined, etc."
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: lever_get_offer
+  name: Get Offer
+  description: |
+    Get detailed information about a specific offer including compensation details,
+    start date, approval chain, and status history.
+  provider: lever
+  endpoint: /offers/{offer_id}
+  method: GET
+  scopes:
+    - offers:read
+  tags:
+    - offers
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offer_id:
+        type: string
+        description: "Offer ID"
+    required:
+      - offer_id
+
+- slug: lever_create_offer
+  name: Create Offer
+  description: |
+    Create an offer for an opportunity including salary, equity, start date, and details.
+    Offers go through an approval workflow before being sent to candidates.
+  provider: lever
+  endpoint: /offers
+  method: POST
+  scopes:
+    - offers:write
+  tags:
+    - offers
+    - create
+    - recruiting
+    - compensation
+  input_schema:
+    type: object
+    description: Offer creation parameters
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID (required)"
+      fields:
+        type: object
+        description: "Offer fields: compensation, start_date, etc. (required)"
+    required:
+      - opportunity_id
+      - fields
+
+- slug: lever_list_users
+  name: List Users
+  description: |
+    List all team members including recruiters, hiring managers, and interviewers.
+    Returns names, email addresses, titles, and team assignments.
+  provider: lever
+  endpoint: /users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      email:
+        type: string
+        description: "Filter by email"
+      name:
+        type: string
+        description: "Search by name"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: lever_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including profile, role,
+    teams they belong to, and their scheduling visibility.
+  provider: lever
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - team
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: lever_list_feedback
+  name: List Feedback
+  description: |
+    List interview feedback for an opportunity including scores, comments, and interviewer info.
+    Use this to review how candidates performed in their interviews.
+  provider: lever
+  endpoint: /feedback
+  method: GET
+  scopes:
+    - feedback:read
+  tags:
+    - feedback
+    - interviews
+    - candidates
+  input_schema:
+    type: object
+    description: Parameters for listing feedback
+    properties:
+      opportunity_id:
+        type: string
+        description: "Opportunity ID (required)"
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - opportunity_id

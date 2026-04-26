@@ -1,0 +1,261 @@
+- slug: hubspot_list_contacts
+  name: List Contacts
+  description: |
+    Retrieves a paginated list of contacts from HubSpot.
+  provider: hubspot
+  endpoint: /crm/v3/objects/contacts
+  method: GET
+  scopes:
+    - crm.objects.contacts.read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of results to return (default 100, max 200)"
+      after:
+        type: string
+        description: "Cursor for pagination (use after from previous response)"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required: []
+
+- slug: hubspot_get_contact
+  name: Get Contact
+  description: |
+    Retrieves a single contact by their ID.
+  provider: hubspot
+  endpoint: /crm/v3/objects/contacts/{id}
+  method: GET
+  scopes:
+    - crm.objects.contacts.read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "The unique contact ID"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required:
+      - id
+
+- slug: hubspot_create_contact
+  name: Create Contact
+  description: |
+    Creates a new contact in HubSpot.
+  provider: hubspot
+  endpoint: /crm/v3/objects/contacts
+  method: POST
+  scopes:
+    - crm.objects.contacts.write
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      properties:
+        type: object
+        description: "Contact properties"
+      email:
+        type: string
+        description: "Contact email"
+      firstname:
+        type: string
+        description: "Contact first name"
+      lastname:
+        type: string
+        description: "Contact last name"
+    required:
+      - properties
+
+- slug: hubspot_list_companies
+  name: List Companies
+  description: |
+    Retrieves a paginated list of companies from HubSpot.
+  provider: hubspot
+  endpoint: /crm/v3/objects/companies
+  method: GET
+  scopes:
+    - crm.objects.companies.read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      limit:
+        type: integer
+        description: "Number of results to return (default 100, max 200)"
+      after:
+        type: string
+        description: "Cursor for pagination"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required: []
+
+- slug: hubspot_get_company
+  name: Get Company
+  description: |
+    Retrieves a single company by its ID.
+  provider: hubspot
+  endpoint: /crm/v3/objects/companies/{id}
+  method: GET
+  scopes:
+    - crm.objects.companies.read
+  tags:
+    - companies
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "The unique company ID"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required:
+      - id
+
+- slug: hubspot_list_deals
+  name: List Deals
+  description: |
+    Retrieves a paginated list of deals from HubSpot.
+  provider: hubspot
+  endpoint: /crm/v3/objects/deals
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      limit:
+        type: integer
+        description: "Number of results to return (default 100, max 200)"
+      after:
+        type: string
+        description: "Cursor for pagination"
+      properties:
+        type: array
+        description: "Specific properties to return"
+      dealstage:
+        type: string
+        description: "Filter by deal stage"
+    required: []
+
+- slug: hubspot_get_deal
+  name: Get Deal
+  description: |
+    Retrieves a single deal by its ID.
+  provider: hubspot
+  endpoint: /crm/v3/objects/deals/{id}
+  method: GET
+  scopes:
+    - crm.objects.deals.read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: string
+        description: "The unique deal ID"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required:
+      - id
+
+- slug: hubspot_list_tickets
+  name: List Tickets
+  description: |
+    Retrieves a paginated list of support tickets from HubSpot.
+  provider: hubspot
+  endpoint: /crm/v3/objects/tickets
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      limit:
+        type: integer
+        description: "Number of results to return (default 100, max 200)"
+      after:
+        type: string
+        description: "Cursor for pagination"
+      properties:
+        type: array
+        description: "Specific properties to return"
+      pipeline:
+        type: string
+        description: "Filter by pipeline ID"
+    required: []
+
+- slug: hubspot_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieves a single ticket by its ID.
+  provider: hubspot
+  endpoint: /crm/v3/objects/tickets/{id}
+  method: GET
+  scopes:
+    - crm.objects.tickets.read
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: string
+        description: "The unique ticket ID"
+      properties:
+        type: array
+        description: "Specific properties to return"
+    required:
+      - id
+
+- slug: hubspot_list_conversations
+  name: List Conversations
+  description: |
+    Retrieves a list of conversations from HubSpot.
+  provider: hubspot
+  endpoint: /conversations/v3/conversations
+  method: GET
+  scopes:
+    - conversations
+  tags:
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      limit:
+        type: integer
+        description: "Number of results to return"
+      after:
+        type: string
+        description: "Cursor for pagination"
+      inbox_id:
+        type: string
+        description: "Filter by inbox ID"
+    required: []

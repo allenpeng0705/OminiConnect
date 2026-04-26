@@ -1,0 +1,308 @@
+# LaunchDarkly Tools - Allowlist
+# Curated subset of LaunchDarkly REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. launchdarkly_list_flags          - List all feature flags
+# 2. launchdarkly_get_flag            - Get feature flag details
+# 3. launchdarkly_create_flag         - Create a new feature flag
+# 4. launchdarkly_update_flag         - Update a feature flag
+# 5. launchdarkly_list_segments       - List user segments
+# 6. launchdarkly_get_segment         - Get segment details
+# 7. launchdarkly_create_segment      - Create a user segment
+# 8. launchdarkly_list_environments   - List environments
+# 9. launchdarkly_get_environment     - Get environment details
+# 10. launchdarkly_list_members       - List account members
+
+- slug: launchdarkly_list_flags
+  name: List Feature Flags
+  description: |
+    List all feature flags in a LaunchDarkly project.
+    Filter by environment, tag, or key pattern.
+  provider: launchdarkly
+  endpoint: /v2/flags
+  method: GET
+  scopes:
+    - flags:read
+  tags:
+    - flags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing feature flags
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      environment_key:
+        type: string
+        description: "The environment key"
+      limit:
+        type: integer
+        description: "Maximum number of flags to return"
+    required:
+      - project_key
+
+- slug: launchdarkly_get_flag
+  name: Get Feature Flag
+  description: |
+    Get detailed information about a specific feature flag including variations, rules, and targeting.
+  provider: launchdarkly
+  endpoint: /v2/flags/{project_key}/{flag_key}
+  method: GET
+  scopes:
+    - flags:read
+  tags:
+    - flags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature flag
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      flag_key:
+        type: string
+        description: "The feature flag key"
+      environment_key:
+        type: string
+        description: "The environment key"
+    required:
+      - project_key
+      - flag_key
+
+- slug: launchdarkly_create_flag
+  name: Create Feature Flag
+  description: |
+    Create a new feature flag in a LaunchDarkly project.
+    Set name, key, variations, targeting rules, and initial values.
+  provider: launchdarkly
+  endpoint: /v2/flags/{project_key}
+  method: POST
+  scopes:
+    - flags:write
+  tags:
+    - flags
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a feature flag
+    properties:
+      key:
+        type: string
+        description: "The unique flag key"
+      name:
+        type: string
+        description: "The flag name"
+      description:
+        type: string
+        description: "Description of the flag"
+      flag_type:
+        type: string
+        description: "Flag type (boolean, multivariate)"
+      variations:
+        type: array
+        description: "List of variations for the flag"
+    required:
+      - key
+      - name
+      - flag_type
+
+- slug: launchdarkly_update_flag
+  name: Update Feature Flag
+  description: |
+    Update an existing feature flag. Modify name, description, variations, rules, or targeting.
+  provider: launchdarkly
+  endpoint: /v2/flags/{project_key}/{flag_key}
+  method: PATCH
+  scopes:
+    - flags:write
+  tags:
+    - flags
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a feature flag
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      flag_key:
+        type: string
+        description: "The feature flag key"
+      name:
+        type: string
+        description: "The updated flag name"
+      description:
+        type: string
+        description: "Updated description"
+      variations:
+        type: array
+        description: "Updated variations"
+    required:
+      - project_key
+      - flag_key
+
+- slug: launchdarkly_list_segments
+  name: List Segments
+  description: |
+    List all user segments in a LaunchDarkly project.
+    Segments are used to target groups of users for feature flag rollout.
+  provider: launchdarkly
+  endpoint: /v2/segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      environment_key:
+        type: string
+        description: "The environment key"
+    required:
+      - project_key
+
+- slug: launchdarkly_get_segment
+  name: Get Segment
+  description: |
+    Get details about a specific segment including included/excluded users and rules.
+  provider: launchdarkly
+  endpoint: /v2/segments/{project_key}/{environment_key}/{segment_key}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      environment_key:
+        type: string
+        description: "The environment key"
+      segment_key:
+        type: string
+        description: "The segment key"
+    required:
+      - project_key
+      - environment_key
+      - segment_key
+
+- slug: launchdarkly_create_segment
+  name: Create Segment
+  description: |
+    Create a new segment in a LaunchDarkly project and environment.
+    Define included users, excluded users, and targeting rules.
+  provider: launchdarkly
+  endpoint: /v2/segments/{project_key}/{environment_key}
+  method: POST
+  scopes:
+    - segments:write
+  tags:
+    - segments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a segment
+    properties:
+      key:
+        type: string
+        description: "The unique segment key"
+      name:
+        type: string
+        description: "The segment name"
+      description:
+        type: string
+        description: "Description of the segment"
+      tags:
+        type: array
+        description: "Tags for the segment"
+    required:
+      - key
+      - name
+
+- slug: launchdarkly_list_environments
+  name: List Environments
+  description: |
+    List all environments in a LaunchDarkly project.
+    Environments are isolated spaces for development, staging, and production.
+  provider: launchdarkly
+  endpoint: /v2/projects/{project_key}/environments
+  method: GET
+  scopes:
+    - environments:read
+  tags:
+    - environments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing environments
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+    required:
+      - project_key
+
+- slug: launchdarkly_get_environment
+  name: Get Environment
+  description: |
+    Get details about a specific environment including its status and configuration.
+  provider: launchdarkly
+  endpoint: /v2/projects/{project_key}/environments/{environment_key}
+  method: GET
+  scopes:
+    - environments:read
+  tags:
+    - environments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an environment
+    properties:
+      project_key:
+        type: string
+        description: "The project key"
+      environment_key:
+        type: string
+        description: "The environment key"
+    required:
+      - project_key
+      - environment_key
+
+- slug: launchdarkly_list_members
+  name: List Members
+  description: |
+    List all members in the LaunchDarkly account.
+    Members are users who have access to the account.
+  provider: launchdarkly
+  endpoint: /v2/members
+  method: GET
+  scopes:
+    - members:read
+  tags:
+    - members
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of members to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []

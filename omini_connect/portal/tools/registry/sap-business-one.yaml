@@ -1,0 +1,277 @@
+# Sap-business-one Tools - Allowlist
+# Curated subset of SAP Business One API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sap-business-one_list_items             - List all items
+# 2. sap-business-one_get_item               - Get item details
+# 3. sap-business-one_create_item           - Create an item
+# 4. sap-business-one_list_business_partners - List business partners
+# 5. sap-business-one_get_business_partner    - Get partner details
+# 6. sap-business-one_create_business_partner - Create a partner
+# 7. sap-business-one_list_orders            - List sales orders
+# 8. sap-business-one_create_order          - Create a sales order
+# 9. sap-business-one_list_invoices         - List invoices
+# 10. sap-business-one_get_audit_log       - Get audit log
+
+- slug: sap-business-one_list_items
+  name: List Items
+  description: |
+    Retrieve a list of all items in SAP Business One.
+  provider: sap-business-one
+  endpoint: /v1/items
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - inventory
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      limit:
+        type: integer
+        description: "Number of items"
+        default: 50
+    required: []
+
+- slug: sap-business-one_get_item
+  name: Get Item
+  description: |
+    Get details of a specific item.
+  provider: sap-business-one
+  endpoint: /v1/items/{itemId}
+  method: GET
+  scopes:
+    - items:read
+  tags:
+    - items
+    - inventory
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting an item
+    properties:
+      itemId:
+        type: string
+        description: "The item ID"
+    required:
+      - itemId
+
+- slug: sap-business-one_create_item
+  name: Create Item
+  description: |
+    Create a new item in SAP Business One.
+  provider: sap-business-one
+  endpoint: /v1/items
+  method: POST
+  scopes:
+    - items:write
+  tags:
+    - items
+    - inventory
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an item
+    properties:
+      itemCode:
+        type: string
+        description: "Item code"
+      itemName:
+        type: string
+        description: "Item name"
+      itemType:
+        type: string
+        description: "Item type: items, labor, travel"
+      price:
+        type: number
+        description: "Item price"
+    required:
+      - itemCode
+      - itemName
+
+- slug: sap-business-one_list_business_partners
+  name: List Business Partners
+  description: |
+    Retrieve a list of all business partners.
+  provider: sap-business-one
+  endpoint: /v1/businessPartners
+  method: GET
+  scopes:
+    - businessPartners:read
+  tags:
+    - business-partners
+    - crm
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing business partners
+    properties:
+      limit:
+        type: integer
+        description: "Number of partners"
+        default: 50
+      type:
+        type: string
+        description: "Filter by type: customer, vendor"
+    required: []
+
+- slug: sap-business-one_get_business_partner
+  name: Get Business Partner
+  description: |
+    Get details of a specific business partner.
+  provider: sap-business-one
+  endpoint: /v1/businessPartners/{partnerId}
+  method: GET
+  scopes:
+    - businessPartners:read
+  tags:
+    - business-partners
+    - crm
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting a business partner
+    properties:
+      partnerId:
+        type: string
+        description: "The business partner ID"
+    required:
+      - partnerId
+
+- slug: sap-business-one_create_business_partner
+  name: Create Business Partner
+  description: |
+    Create a new business partner.
+  provider: sap-business-one
+  endpoint: /v1/businessPartners
+  method: POST
+  scopes:
+    - businessPartners:write
+  tags:
+    - business-partners
+    - crm
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a business partner
+    properties:
+      cardCode:
+        type: string
+        description: "Partner code"
+      cardName:
+        type: string
+        description: "Partner name"
+      cardType:
+        type: string
+        description: "Type: customer, vendor"
+        default: customer
+    required:
+      - cardCode
+      - cardName
+
+- slug: sap-business-one_list_orders
+  name: List Orders
+  description: |
+    Retrieve a list of all sales orders.
+  provider: sap-business-one
+  endpoint: /v1/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - orders
+    - sales
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      limit:
+        type: integer
+        description: "Number of orders"
+        default: 50
+    required: []
+
+- slug: sap-business-one_create_order
+  name: Create Order
+  description: |
+    Create a new sales order.
+  provider: sap-business-one
+  endpoint: /v1/orders
+  method: POST
+  scopes:
+    - orders:write
+  tags:
+    - orders
+    - sales
+    - sap
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      cardCode:
+        type: string
+        description: "Business partner code"
+      docDate:
+        type: string
+        description: "Document date"
+      lines:
+        type: array
+        description: "Order lines"
+    required:
+      - cardCode
+      - lines
+
+- slug: sap-business-one_list_invoices
+  name: List Invoices
+  description: |
+    Retrieve a list of all invoices.
+  provider: sap-business-one
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - billing
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      limit:
+        type: integer
+        description: "Number of invoices"
+        default: 50
+    required: []
+
+- slug: sap-business-one_get_audit_log
+  name: Get Audit Log
+  description: |
+    Get audit log entries.
+  provider: sap-business-one
+  endpoint: /v1/auditLog
+  method: GET
+  scopes:
+    - audit:read
+  tags:
+    - audit
+    - compliance
+    - sap
+  input_schema:
+    type: object
+    description: Parameters for getting audit log
+    properties:
+      limit:
+        type: integer
+        description: "Number of entries"
+        default: 50
+    required: []

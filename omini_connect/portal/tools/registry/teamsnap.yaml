@@ -1,0 +1,342 @@
+# TeamSnap Tools - Allowlist
+# Curated subset of TeamSnap API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. teamsnap_list_teams    - List all teams
+# 2. teamsnap_get_team      - Get team details
+# 3. teamsnap_create_team   - Create a new team
+# 4. teamsnap_list_events   - List all events
+# 5. teamsnap_get_event     - Get event details
+# 6. teamsnap_create_event  - Create a new event
+# 7. teamsnap_list_members  - List team members
+# 8. teamsnap_get_member    - Get member details
+# 9. teamsnap_list_schedules - List schedules
+# 10. teamsnap_get_schedule  - Get schedule details
+
+- slug: teamsnap_list_teams
+  name: List Teams
+  description: |
+    List all teams for the authenticated user.
+    Filter by sport, name, or member status.
+  provider: teamsnap
+  endpoint: /teams
+  method: GET
+  scopes:
+    - teams:r
+  tags:
+    - teams
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      sport:
+        type: string
+        description: "Filter by sport type"
+      name:
+        type: string
+        description: "Search by team name"
+      member_id:
+        type: integer
+        description: "Filter by member ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: teamsnap_get_team
+  name: Get Team
+  description: |
+    Get detailed information about a specific team including
+    members, events, and team settings.
+  provider: teamsnap
+  endpoint: /teams/{teamId}
+  method: GET
+  scopes:
+    - teams:r
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+    required:
+      - teamId
+
+- slug: teamsnap_create_team
+  name: Create Team
+  description: |
+    Create a new team with name, sport type, and settings.
+    Can optionally invite members during creation.
+  provider: teamsnap
+  endpoint: /teams
+  method: POST
+  scopes:
+    - teams:w
+  tags:
+    - teams
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a team
+    properties:
+      name:
+        type: string
+        description: "Team name"
+      sport:
+        type: string
+        description: "Sport type (soccer, basketball, baseball, etc.)"
+      location:
+        type: string
+        description: "Team location"
+      timezone:
+        type: string
+        description: "Team timezone"
+      division:
+        type: string
+        description: "Division or league"
+      is_public:
+        type: boolean
+        description: "Public team visibility"
+        default: false
+    required:
+      - name
+      - sport
+
+- slug: teamsnap_list_events
+  name: List Events
+  description: |
+    List all events for a team including games, practices,
+    and other team activities.
+  provider: teamsnap
+  endpoint: /teams/{teamId}/events
+  method: GET
+  scopes:
+    - events:r
+  tags:
+    - events
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      event_type:
+        type: string
+        description: "Filter by type (game, practice, other)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required:
+      - teamId
+
+- slug: teamsnap_get_event
+  name: Get Event
+  description: |
+    Get detailed information about a specific event including
+    location, time, and participant RSVPs.
+  provider: teamsnap
+  endpoint: /events/{eventId}
+  method: GET
+  scopes:
+    - events:r
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: integer
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: teamsnap_create_event
+  name: Create Event
+  description: |
+    Create a new event for a team such as a game, practice,
+    or team meeting.
+  provider: teamsnap
+  endpoint: /teams/{teamId}/events
+  method: POST
+  scopes:
+    - events:w
+  tags:
+    - events
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+      title:
+        type: string
+        description: "Event title"
+      event_type:
+        type: string
+        description: "Event type (game, practice, meeting)"
+      start_date:
+        type: string
+        description: "Start date and time (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date and time (ISO 8601)"
+      location:
+        type: string
+        description: "Event location"
+      opponent:
+        type: string
+        description: "Opponent team name"
+      notes:
+        type: string
+        description: "Event notes"
+    required:
+      - teamId
+      - title
+      - start_date
+
+- slug: teamsnap_list_members
+  name: List Members
+  description: |
+    List all members of a team including players, coaches,
+    and staff with their roles and contact info.
+  provider: teamsnap
+  endpoint: /teams/{teamId}/members
+  method: GET
+  scopes:
+    - members:r
+  tags:
+    - members
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing members
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+      role:
+        type: string
+        description: "Filter by role (player, coach, staff)"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required:
+      - teamId
+
+- slug: teamsnap_get_member
+  name: Get Member
+  description: |
+    Get detailed information about a specific team member
+    including contact info, role, and availability.
+  provider: teamsnap
+  endpoint: /members/{memberId}
+  method: GET
+  scopes:
+    - members:r
+  tags:
+    - members
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a member
+    properties:
+      memberId:
+        type: integer
+        description: "Member ID"
+    required:
+      - memberId
+
+- slug: teamsnap_list_schedules
+  name: List Schedules
+  description: |
+    List all schedules for a team including game schedules,
+    practice schedules, and event calendars.
+  provider: teamsnap
+  endpoint: /teams/{teamId}/schedules
+  method: GET
+  scopes:
+    - schedules:r
+  tags:
+    - schedules
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing schedules
+    properties:
+      teamId:
+        type: integer
+        description: "Team ID"
+      schedule_type:
+        type: string
+        description: "Filter by type (game, practice, all)"
+      from_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required:
+      - teamId
+
+- slug: teamsnap_get_schedule
+  name: Get Schedule
+  description: |
+    Get detailed information about a specific schedule
+    including all events and recurring schedule rules.
+  provider: teamsnap
+  endpoint: /schedules/{scheduleId}
+  method: GET
+  scopes:
+    - schedules:r
+  tags:
+    - schedules
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schedule
+    properties:
+      scheduleId:
+        type: integer
+        description: "Schedule ID"
+    required:
+      - scheduleId

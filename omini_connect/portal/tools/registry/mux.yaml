@@ -1,0 +1,286 @@
+# Mux Tools - Allowlist
+# Curated subset of the Mux API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. mux_list_videos           - List videos in your Mux account
+# 2. mux_get_video             - Get details of a specific video
+# 3. mux_create_video          - Create a new video asset
+# 4. mux_delete_video          - Delete a video
+# 5. mux_list_assets           - List all assets
+# 6. mux_get_asset             - Get details of a specific asset
+# 7. mux_list_livestreams      - List livestreams
+# 8. mux_get_livestream        - Get details of a specific livestream
+# 9. mux_create_upload         - Create a direct upload URL
+# 10. mux_get_upload            - Get status of an upload
+
+- slug: mux_list_videos
+  name: List Videos
+  description: |
+    List all videos in your Mux account. Returns video ID, title, status, and metadata.
+    Use this to browse available videos before playing or managing them.
+  provider: mux
+  endpoint: /videos
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - videos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: mux_get_video
+  name: Get Video
+  description: |
+    Get details of a specific video including title, duration, status, and playback URLs.
+    Use this to retrieve video metadata before playback or management operations.
+  provider: mux
+  endpoint: /videos/{video_id}
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      video_id:
+        type: string
+        description: "Mux video ID"
+    required:
+      - video_id
+
+- slug: mux_create_video
+  name: Create Video
+  description: |
+    Create a new video asset in Mux. Returns an upload URL for direct file upload.
+    Use this to programmatically create video content.
+  provider: mux
+  endpoint: /videos
+  method: POST
+  scopes:
+    - videos:write
+  tags:
+    - videos
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a video
+    properties:
+      title:
+        type: string
+        description: "Video title"
+      description:
+        type: string
+        description: "Video description"
+      playback_policy:
+        type: array
+        items:
+          type: string
+        description: "Playback policy: public or signed"
+        default: [public]
+      cors_origin:
+        type: string
+        description: "CORS origin domain for signed playback"
+    required: []
+
+- slug: mux_delete_video
+  name: Delete Video
+  description: |
+    Delete a video and all associated assets from Mux. This action is irreversible.
+    Use this to remove unwanted video content.
+  provider: mux
+  endpoint: /videos/{video_id}
+  method: DELETE
+  scopes:
+    - videos:write
+  tags:
+    - videos
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a video
+    properties:
+      video_id:
+        type: string
+        description: "Mux video ID to delete"
+    required:
+      - video_id
+
+- slug: mux_list_assets
+  name: List Assets
+  description: |
+    List all assets in your Mux account. Assets are the underlying media files
+    that power videos and livestreams.
+  provider: mux
+  endpoint: /assets
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - assets
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing assets
+    properties:
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: mux_get_asset
+  name: Get Asset
+  description: |
+    Get details of a specific asset including status, duration, and playback IDs.
+    Use this to check asset processing status or retrieve playback information.
+  provider: mux
+  endpoint: /assets/{asset_id}
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - assets
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an asset
+    properties:
+      asset_id:
+        type: string
+        description: "Mux asset ID"
+    required:
+      - asset_id
+
+- slug: mux_list_livestreams
+  name: List Livestreams
+  description: |
+    List all livestreams in your Mux account. Returns stream keys, status, and configuration.
+    Use this to monitor active streams or find streams to view.
+  provider: mux
+  endpoint: /livestreams
+  method: GET
+  scopes:
+    - livestreams:read
+  tags:
+    - livestreams
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing livestreams
+    properties:
+      limit:
+        type: integer
+        description: "Number of results per page (max 100, default 25)"
+        default: 25
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: mux_get_livestream
+  name: Get Livestream
+  description: |
+    Get details of a specific livestream including stream key, status, and playback URL.
+    Use this to monitor stream health or get embed URLs.
+  provider: mux
+  endpoint: /livestreams/{livestream_id}
+  method: GET
+  scopes:
+    - livestreams:read
+  tags:
+    - livestreams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a livestream
+    properties:
+      livestream_id:
+        type: string
+        description: "Mux livestream ID"
+    required:
+      - livestream_id
+
+- slug: mux_create_upload
+  name: Create Upload
+  description: |
+    Create a direct upload URL for Mux. Returns an upload URL and ID for tracking.
+    Use this to enable direct file uploads without going through Mux's UI.
+  provider: mux
+  endpoint: /uploads
+  method: POST
+  scopes:
+    - videos:write
+  tags:
+    - uploads
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an upload
+    properties:
+      title:
+        type: string
+        description: "Upload title"
+      description:
+        type: string
+        description: "Upload description"
+      cors_origin:
+        type: string
+        description: "CORS origin for the upload"
+      new_asset_settings:
+        type: object
+        description: "Asset settings for the uploaded video"
+        properties:
+          playback_policy:
+            type: array
+            items:
+              type: string
+            description: "Playback policy: public or signed"
+      test:
+        type: boolean
+        description: "Create a test upload (won't count against limits)"
+        default: false
+    required: []
+
+- slug: mux_get_upload
+  name: Get Upload
+  description: |
+    Get the status of an upload including progress, asset ID, and any errors.
+    Use this to track upload completion and get the resulting video ID.
+  provider: mux
+  endpoint: /uploads/{upload_id}
+  method: GET
+  scopes:
+    - videos:read
+  tags:
+    - uploads
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting upload status
+    properties:
+      upload_id:
+        type: string
+        description: "Mux upload ID"
+    required:
+      - upload_id

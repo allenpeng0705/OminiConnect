@@ -1,0 +1,266 @@
+# Garmin Tools - Allowlist
+# Curated subset of Garmin Connect API for AI agent use.
+# OAUTH1 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. garmin_list_activities       - List activities
+# 2. garmin_get_activity          - Get activity details
+# 3. garmin_list_sleep_data       - List sleep data
+# 4. garmin_list_body_composition - List body composition
+# 5. garmin_list_daily_summaries  - List daily summaries
+# 6. garmin_list_pulse_ox        - List pulse ox data
+# 7. garmin_list_stress          - List stress data
+# 8. garmin_list_heart_rate      - List heart rate data
+# 9. garmin_list_respiration      - List respiration data
+# 10. garmin_list_spO2           - List SpO2 data
+
+- slug: garmin_list_activities
+  name: List Activities
+  description: |
+    List user's fitness activities from Garmin Connect.
+  provider: garmin
+  endpoint: /activitylist-service/activities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - fitness
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      start:
+        type: integer
+        description: "Start index"
+        default: 0
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: garmin_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information about a specific activity.
+  provider: garmin
+  endpoint: /activitylist-service/activities/{activityId}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - fitness
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      activityId:
+        type: string
+        description: "Activity ID"
+    required:
+      - activityId
+
+- slug: garmin_list_sleep_data
+  name: List Sleep Data
+  description: |
+    List user's sleep data from Garmin Connect.
+  provider: garmin
+  endpoint: /sleep-data-service/sleep
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sleep
+    - health
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sleep data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_body_composition
+  name: List Body Composition
+  description: |
+    List user's body composition data (weight, BMI, etc).
+  provider: garmin
+  endpoint: /body-composition-service/users/{userId}/weights
+  method: GET
+  scopes:
+    - read
+  tags:
+    - body
+    - composition
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing body composition
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_daily_summaries
+  name: List Daily Summaries
+  description: |
+    List daily health summaries for the user.
+  provider: garmin
+  endpoint: /daily-summary-service/users/{userId}/dailySummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - daily
+    - summaries
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing daily summaries
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_pulse_ox
+  name: List Pulse Ox
+  description: |
+    List pulse oximetry data from Garmin Connect.
+  provider: garmin
+  endpoint: /pulse-ox-user-summary-service/users/{userId}/dailyPulseOxSummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pulse
+    - oxygen
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing pulse ox data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_stress
+  name: List Stress
+  description: |
+    List stress level data from Garmin Connect.
+  provider: garmin
+  endpoint: /stress-data-service/users/{userId}/stressDailySummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - stress
+    - health
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing stress data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_heart_rate
+  name: List Heart Rate
+  description: |
+    List heart rate data from Garmin Connect.
+  provider: garmin
+  endpoint: /heartrate-service/users/{userId}/dailyHeartSummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - heart
+    - rate
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing heart rate data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_respiration
+  name: List Respiration
+  description: |
+    List respiration data from Garmin Connect.
+  provider: garmin
+  endpoint: /respiration-service/users/{userId}/dailyRespirationSummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - respiration
+    - breathing
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing respiration data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []
+
+- slug: garmin_list_spO2
+  name: List SpO2
+  description: |
+    List blood oxygen saturation data from Garmin Connect.
+  provider: garmin
+  endpoint: /pulse-ox-user-summary-service/users/{userId}/dailyPulseOxSummaries
+  method: GET
+  scopes:
+    - read
+  tags:
+    - spo2
+    - oxygen
+    - health
+  input_schema:
+    type: object
+    description: Parameters for listing SpO2 data
+    properties:
+      startDate:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

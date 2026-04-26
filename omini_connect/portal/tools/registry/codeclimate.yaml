@@ -1,0 +1,229 @@
+# Code Climate Tools - Allowlist
+# Curated subset of the Code Climate API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. codeclimate_list_repos                - List repositories
+# 2. codeclimate_get_repo                 - Get repository details
+# 3. codeclimate_get_user                 - Get user details
+# 4. codeclimate_list_issues             - List issues
+# 5. codeclimate_get_issue               - Get issue details
+# 6. codeclimate_get_snapshot            - Get snapshot details
+# 7. codeclimate_list_comments           - List comments
+# 8. codeclimate_create_comment          - Create a comment
+# 9. codeclimate_list_badges            - List badges
+# 10. codeclimate_get_analysis          - Get analysis results
+
+- slug: codeclimate_list_repos
+  name: List Repositories
+  description: |
+    List all repositories in your organization.
+  provider: codeclimate
+  endpoint: /repos
+  method: GET
+  scopes: []
+  tags:
+    - repos
+    - dev-tools
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: codeclimate_get_repo
+  name: Get Repository
+  description: |
+    Get details of a specific repository.
+  provider: codeclimate
+  endpoint: /repos/{id}
+  method: GET
+  scopes: []
+  tags:
+    - repos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      id:
+        type: string
+        description: "Repository ID"
+    required:
+      - id
+
+- slug: codeclimate_get_user
+  name: Get User
+  description: |
+    Get details of a specific user.
+  provider: codeclimate
+  endpoint: /user
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: No parameters
+    properties: {}
+    required: []
+
+- slug: codeclimate_list_issues
+  name: List Issues
+  description: |
+    List all issues for a repository.
+  provider: codeclimate
+  endpoint: /repos/{repoId}/issues
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - quality
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      repoId:
+        type: string
+        description: "Repository ID"
+      filter:
+        type: string
+        description: "Filter by type (complexity, duplication, security)"
+    required:
+      - repoId
+
+- slug: codeclimate_get_issue
+  name: Get Issue
+  description: |
+    Get details of a specific issue.
+  provider: codeclimate
+  endpoint: /issues/{id}
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      id:
+        type: string
+        description: "Issue ID"
+    required:
+      - id
+
+- slug: codeclimate_get_snapshot
+  name: Get Snapshot
+  description: |
+    Get details of a specific snapshot.
+  provider: codeclimate
+  endpoint: /snapshots/{id}
+  method: GET
+  scopes: []
+  tags:
+    - snapshots
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a snapshot
+    properties:
+      id:
+        type: string
+        description: "Snapshot ID"
+    required:
+      - id
+
+- slug: codeclimate_list_comments
+  name: List Comments
+  description: |
+    List all comments for an issue.
+  provider: codeclimate
+  endpoint: /issues/{issueId}/comments
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      issueId:
+        type: string
+        description: "Issue ID"
+    required:
+      - issueId
+
+- slug: codeclimate_create_comment
+  name: Create Comment
+  description: |
+    Create a new comment on an issue.
+  provider: codeclimate
+  endpoint: /issues/{issueId}/comments
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      issueId:
+        type: string
+        description: "Issue ID"
+      body:
+        type: string
+        description: "Comment body"
+    required:
+      - issueId
+      - body
+
+- slug: codeclimate_list_badges
+  name: List Badges
+  description: |
+    List all badges for a repository.
+  provider: codeclimate
+  endpoint: /repos/{repoId}/badges
+  method: GET
+  scopes: []
+  tags:
+    - badges
+    - quality
+  input_schema:
+    type: object
+    description: Parameters for listing badges
+    properties:
+      repoId:
+        type: string
+        description: "Repository ID"
+    required:
+      - repoId
+
+- slug: codeclimate_get_analysis
+  name: Get Analysis
+  description: |
+    Get the latest analysis results for a repository.
+  provider: codeclimate
+  endpoint: /repos/{repoId}/analysis
+  method: GET
+  scopes: []
+  tags:
+    - analysis
+    - quality
+  input_schema:
+    type: object
+    description: Parameters for getting analysis
+    properties:
+      repoId:
+        type: string
+        description: "Repository ID"
+    required:
+      - repoId

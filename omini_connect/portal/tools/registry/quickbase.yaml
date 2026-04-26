@@ -1,0 +1,281 @@
+# Quickbase Tools - Allowlist
+# Curated subset of Quickbase REST API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. quickbase_list_tables        - List all tables
+# 2. quickbase_get_table          - Get table details
+# 3. quickbase_list_records       - List records in a table
+# 4. quickbase_get_record         - Get a specific record
+# 5. quickbase_create_record      - Create a new record
+# 6. quickbase_update_record      - Update an existing record
+# 7. quickbase_delete_record      - Delete a record
+# 8. quickbase_run_query          - Run a query on a table
+# 9. quickbase_list_fields        - List fields in a table
+# 10. quickbase_get_report        - Get a report
+
+- slug: quickbase_list_tables
+  name: List Tables
+  description: |
+    Retrieve a list of all tables in your Quickbase realm.
+  provider: quickbase
+  endpoint: /tables
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+    - database
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties: {}
+    required: []
+
+- slug: quickbase_get_table
+  name: Get Table
+  description: |
+    Get details of a specific table by ID.
+  provider: quickbase
+  endpoint: /tables/{tableId}
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+    - database
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - tableId
+
+- slug: quickbase_list_records
+  name: List Records
+  description: |
+    Retrieve a list of records from a specific table.
+  provider: quickbase
+  endpoint: /records
+  method: GET
+  scopes:
+    - records:read
+  tags:
+    - records
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing records
+    properties:
+      tableId:
+        type: string
+        description: "The table ID"
+      limit:
+        type: integer
+        description: "Number of records to return (default 100, max 1000)"
+        default: 100
+      skip:
+        type: integer
+        description: "Number of records to skip for pagination"
+        default: 0
+    required:
+      - tableId
+
+- slug: quickbase_get_record
+  name: Get Record
+  description: |
+    Get a specific record by ID from a table.
+  provider: quickbase
+  endpoint: /records/{recordId}
+  method: GET
+  scopes:
+    - records:read
+  tags:
+    - records
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a record
+    properties:
+      recordId:
+        type: string
+        description: "The record ID"
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - recordId
+      - tableId
+
+- slug: quickbase_create_record
+  name: Create Record
+  description: |
+    Create a new record in a specific table.
+  provider: quickbase
+  endpoint: /records
+  method: POST
+  scopes:
+    - records:write
+  tags:
+    - records
+    - database
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a record
+    properties:
+      tableId:
+        type: string
+        description: "The table ID"
+      fields:
+        type: object
+        description: "Record field values as key-value pairs"
+    required:
+      - tableId
+      - fields
+
+- slug: quickbase_update_record
+  name: Update Record
+  description: |
+    Update an existing record in a table.
+  provider: quickbase
+  endpoint: /records/{recordId}
+  method: PUT
+  scopes:
+    - records:write
+  tags:
+    - records
+    - database
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a record
+    properties:
+      recordId:
+        type: string
+        description: "The record ID"
+      tableId:
+        type: string
+        description: "The table ID"
+      fields:
+        type: object
+        description: "Updated field values"
+    required:
+      - recordId
+      - tableId
+      - fields
+
+- slug: quickbase_delete_record
+  name: Delete Record
+  description: |
+    Delete a record from a table.
+  provider: quickbase
+  endpoint: /records/{recordId}
+  method: DELETE
+  scopes:
+    - records:write
+  tags:
+    - records
+    - database
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a record
+    properties:
+      recordId:
+        type: string
+        description: "The record ID"
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - recordId
+      - tableId
+
+- slug: quickbase_run_query
+  name: Run Query
+  description: |
+    Run a query on a table to filter and retrieve records.
+  provider: quickbase
+  endpoint: /queries/run
+  method: POST
+  scopes:
+    - records:read
+  tags:
+    - records
+    - database
+    - search
+    - query
+  input_schema:
+    type: object
+    description: Parameters for running a query
+    properties:
+      tableId:
+        type: string
+        description: "The table ID"
+      query:
+        type: string
+        description: "Quickbase query string"
+      limit:
+        type: integer
+        description: "Max records to return"
+        default: 100
+    required:
+      - tableId
+      - query
+
+- slug: quickbase_list_fields
+  name: List Fields
+  description: |
+    List all fields (columns) in a specific table.
+  provider: quickbase
+  endpoint: /tables/{tableId}/fields
+  method: GET
+  scopes:
+    - tables:read
+  tags:
+    - tables
+    - fields
+    - database
+    - schema
+  input_schema:
+    type: object
+    description: Parameters for listing fields
+    properties:
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - tableId
+
+- slug: quickbase_get_report
+  name: Get Report
+  description: |
+    Get a specific report from a table.
+  provider: quickbase
+  endpoint: /reports/{reportId}
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - database
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "The report ID"
+      tableId:
+        type: string
+        description: "The table ID"
+    required:
+      - reportId
+      - tableId

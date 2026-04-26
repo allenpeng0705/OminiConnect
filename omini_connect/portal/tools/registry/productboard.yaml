@@ -1,0 +1,301 @@
+# Productboard Tools - Allowlist
+# Curated subset of Productboard API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. productboard_list_features       - List features
+# 2. productboard_get_feature          - Get feature details
+# 3. productboard_create_feature      - Create a new feature
+# 4. productboard_list_insights       - List insights
+# 5. productboard_get_insight         - Get insight details
+# 6. productboard_create_insight      - Create a new insight
+# 7. productboard_list_users          - List users
+# 8. productboard_get_user            - Get user details
+# 9. productboard_list_portals        - List portals
+# 10. productboard_get_portal          - Get portal details
+
+- slug: productboard_list_features
+  name: List Features
+  description: |
+    List all features in Productboard. Filter by product, status, or keyword.
+  provider: productboard
+  endpoint: /api/v1/features
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing features
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      status:
+        type: string
+        description: "Filter by status"
+      keyword:
+        type: string
+        description: "Search keyword"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: productboard_get_feature
+  name: Get Feature
+  description: |
+    Get detailed information about a specific feature including name, description, status, and associated insights.
+  provider: productboard
+  endpoint: /api/v1/features/{id}
+  method: GET
+  scopes:
+    - features:read
+  tags:
+    - features
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a feature
+    properties:
+      id:
+        type: string
+        description: "Feature ID"
+    required:
+      - id
+
+- slug: productboard_create_feature
+  name: Create Feature
+  description: |
+    Create a new feature in Productboard. Set name, product, description, and type.
+  provider: productboard
+  endpoint: /api/v1/features
+  method: POST
+  scopes:
+    - features:write
+  tags:
+    - features
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a feature
+    properties:
+      name:
+        type: string
+        description: "Feature name"
+      product_id:
+        type: string
+        description: "Product ID"
+      description:
+        type: string
+        description: "Feature description"
+      feature_type:
+        type: string
+        description: "Feature type (enhancement, bug, etc.)"
+      status:
+        type: string
+        description: "Initial status"
+    required:
+      - name
+      - product_id
+
+- slug: productboard_list_insights
+  name: List Insights
+  description: |
+    List all insights in Productboard. Filter by product, source, or status.
+  provider: productboard
+  endpoint: /api/v1/insights
+  method: GET
+  scopes:
+    - insights:read
+  tags:
+    - insights
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing insights
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      source:
+        type: string
+        description: "Filter by source (feedback, survey, etc.)"
+      status:
+        type: string
+        description: "Filter by status"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: productboard_get_insight
+  name: Get Insight
+  description: |
+    Get detailed information about a specific insight including title, description, source, and related features.
+  provider: productboard
+  endpoint: /api/v1/insights/{id}
+  method: GET
+  scopes:
+    - insights:read
+  tags:
+    - insights
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an insight
+    properties:
+      id:
+        type: string
+        description: "Insight ID"
+    required:
+      - id
+
+- slug: productboard_create_insight
+  name: Create Insight
+  description: |
+    Create a new insight in Productboard. Set title, description, source, and product.
+  provider: productboard
+  endpoint: /api/v1/insights
+  method: POST
+  scopes:
+    - insights:write
+  tags:
+    - insights
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an insight
+    properties:
+      title:
+        type: string
+        description: "Insight title"
+      description:
+        type: string
+        description: "Insight description"
+      product_id:
+        type: string
+        description: "Product ID"
+      source:
+        type: string
+        description: "Source of insight"
+    required:
+      - title
+      - product_id
+
+- slug: productboard_list_users
+  name: List Users
+  description: |
+    List all users in Productboard. Filter by product, role, or status.
+  provider: productboard
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      role:
+        type: string
+        description: "Filter by role"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: productboard_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including name, email, and role.
+  provider: productboard
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: productboard_list_portals
+  name: List Portals
+  description: |
+    List all portals in Productboard. Filter by product or status.
+  provider: productboard
+  endpoint: /api/v1/portals
+  method: GET
+  scopes:
+    - portals:read
+  tags:
+    - portals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing portals
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: productboard_get_portal
+  name: Get Portal
+  description: |
+    Get detailed information about a specific portal including name, settings, and visibility.
+  provider: productboard
+  endpoint: /api/v1/portals/{id}
+  method: GET
+  scopes:
+    - portals:read
+  tags:
+    - portals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a portal
+    properties:
+      id:
+        type: string
+        description: "Portal ID"
+    required:
+      - id

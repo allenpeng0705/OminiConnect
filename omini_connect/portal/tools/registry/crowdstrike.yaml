@@ -1,0 +1,265 @@
+# CrowdStrike Tools - Allowlist
+# Curated subset of the CrowdStrike API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. crowdstrike_list_hosts               - List hosts/devices
+# 2. crowdstrike_get_host                 - Get host details
+# 3. crowdstrike_list_vulnerabilities      - List vulnerabilities
+# 4. crowdstrike_get_vulnerability        - Get vulnerability details
+# 5. crowdstrike_list_incidents           - List incidents
+# 6. crowdstrike_get_incident             - Get incident details
+# 7. crowdstrike_list_detection_summaries  - List detection summaries
+# 8. crowdstrike_get_detection            - Get detection details
+# 9. crowdstrike_list_actors              - List threat actors
+# 10. crowdstrike_list_policies           - List prevention policies
+
+- slug: crowdstrike_list_hosts
+  name: List Hosts
+  description: |
+    List all hosts (devices) in the CrowdStrike environment.
+  provider: crowdstrike
+  endpoint: /devices/entities/devices/v1
+  method: GET
+  scopes: []
+  tags:
+    - hosts
+    - devices
+    - endpoint
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing hosts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 5000)"
+        default: 50
+      offset:
+        type: string
+        description: "Pagination offset"
+      filter:
+        type: string
+        description: "FQL filter string"
+    required: []
+
+- slug: crowdstrike_get_host
+  name: Get Host
+  description: |
+    Get detailed information for a specific host including security status.
+  provider: crowdstrike
+  endpoint: /devices/entities/devices/v1
+  method: GET
+  scopes: []
+  tags:
+    - hosts
+    - devices
+    - endpoint
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a host
+    properties:
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Host IDs"
+    required:
+      - ids
+
+- slug: crowdstrike_list_vulnerabilities
+  name: List Vulnerabilities
+  description: |
+    List vulnerabilities detected across endpoints.
+  provider: crowdstrike
+  endpoint: /vulnerabilities/entities/vulnerabilities/v2
+  method: GET
+  scopes: []
+  tags:
+    - vulnerabilities
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing vulnerabilities
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 500)"
+        default: 50
+      filter:
+        type: string
+        description: "FQL filter string"
+    required: []
+
+- slug: crowdstrike_get_vulnerability
+  name: Get Vulnerability
+  description: |
+    Get detailed vulnerability information including affected hosts.
+  provider: crowdstrike
+  endpoint: /vulnerabilities/entities/vulnerabilities/v2
+  method: GET
+  scopes: []
+  tags:
+    - vulnerabilities
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a vulnerability
+    properties:
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Vulnerability IDs"
+    required:
+      - ids
+
+- slug: crowdstrike_list_incidents
+  name: List Incidents
+  description: |
+    List all incidents. Filter by status, severity, or date.
+  provider: crowdstrike
+  endpoint: /incidents/entities/incidents/v1
+  method: GET
+  scopes: []
+  tags:
+    - incidents
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing incidents
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      filter:
+        type: string
+        description: "FQL filter string"
+    required: []
+
+- slug: crowdstrike_get_incident
+  name: Get Incident
+  description: |
+    Get detailed incident information including timeline and affected hosts.
+  provider: crowdstrike
+  endpoint: /incidents/entities/incidents/v1
+  method: GET
+  scopes: []
+  tags:
+    - incidents
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an incident
+    properties:
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Incident IDs"
+    required:
+      - ids
+
+- slug: crowdstrike_list_detection_summaries
+  name: List Detection Summaries
+  description: |
+    List detection summaries from the Falcon platform.
+  provider: crowdstrike
+  endpoint: /detects/entities/summaries/GET/v1
+  method: GET
+  scopes: []
+  tags:
+    - detections
+    - security
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing detections
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      filter:
+        type: string
+        description: "FQL filter string"
+    required: []
+
+- slug: crowdstrike_get_detection
+  name: Get Detection
+  description: |
+    Get detailed detection information including threat intelligence.
+  provider: crowdstrike
+  endpoint: /detects/entities/detects/v1
+  method: GET
+  scopes: []
+  tags:
+    - detections
+    - security
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a detection
+    properties:
+      ids:
+        type: array
+        items:
+          type: string
+        description: "Detection IDs"
+    required:
+      - ids
+
+- slug: crowdstrike_list_actors
+  name: List Threat Actors
+  description: |
+    List known threat actors and their associated indicators.
+  provider: crowdstrike
+  endpoint: /intel/entities/actors/v1
+  method: GET
+  scopes: []
+  tags:
+    - threat-intel
+    - actors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing actors
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+    required: []
+
+- slug: crowdstrike_list_policies
+  name: List Prevention Policies
+  description: |
+    List prevention policies for endpoint protection.
+  provider: crowdstrike
+  endpoint: /policy/entities/policies/v1
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - prevention
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 100)"
+        default: 50
+      policy_type:
+        type: string
+        description: "Policy type: prevention, sensor_update"
+        default: prevention
+    required: []

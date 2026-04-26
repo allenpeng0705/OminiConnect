@@ -1,0 +1,242 @@
+- slug: openai_list_models
+  name: List Models
+  description: |
+    Retrieve a list of all available OpenAI models.
+  provider: openai
+  endpoint: /v1/models
+  method: GET
+  scopes:
+    - model:read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: No parameters required.
+    properties: {}
+    required: []
+
+- slug: openai_get_model
+  name: Get Model
+  description: |
+    Retrieve details for a specific model by ID.
+  provider: openai
+  endpoint: /v1/models/{model}
+  method: GET
+  scopes:
+    - model:read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for retrieving a model
+    properties:
+      model:
+        type: string
+        description: "The model ID to retrieve"
+    required:
+      - model
+
+- slug: openai_create_completion
+  name: Create Completion
+  description: |
+    Create a text completion for a given prompt.
+  provider: openai
+  endpoint: /v1/completions
+  method: POST
+  scopes:
+    - completions:write
+  tags:
+    - completions
+  input_schema:
+    type: object
+    description: Parameters for creating a completion
+    properties:
+      model:
+        type: string
+        description: "The model to use for completion"
+      prompt:
+        type: string
+        description: "The prompt to complete"
+      max_tokens:
+        type: integer
+        description: "Maximum number of tokens to generate"
+      temperature:
+        type: number
+        description: "Sampling temperature (0-2)"
+    required:
+      - model
+      - prompt
+
+- slug: openai_create_chat_completion
+  name: Create Chat Completion
+  description: |
+    Create a chat completion for a conversation.
+  provider: openai
+  endpoint: /v1/chat/completions
+  method: POST
+  scopes:
+    - chat.completions:write
+  tags:
+    - chat
+  input_schema:
+    type: object
+    description: Parameters for creating a chat completion
+    properties:
+      model:
+        type: string
+        description: "The model to use for chat completion"
+      messages:
+        type: array
+        description: "Array of message objects with role and content"
+      max_tokens:
+        type: integer
+        description: "Maximum number of tokens to generate"
+      temperature:
+        type: number
+        description: "Sampling temperature (0-2)"
+    required:
+      - model
+      - messages
+
+- slug: openai_create_embedding
+  name: Create Embedding
+  description: |
+    Create an embedding vector for text input.
+  provider: openai
+  endpoint: /v1/embeddings
+  method: POST
+  scopes:
+    - embeddings:write
+  tags:
+    - embeddings
+  input_schema:
+    type: object
+    description: Parameters for creating an embedding
+    properties:
+      model:
+        type: string
+        description: "The model to use for embeddings"
+      input:
+        type: string
+        description: "The text to embed"
+    required:
+      - model
+      - input
+
+- slug: openai_create_image
+  name: Create Image
+  description: |
+    Generate an image from a text description.
+  provider: openai
+  endpoint: /v1/images/generations
+  method: POST
+  scopes:
+    - images:write
+  tags:
+    - images
+  input_schema:
+    type: object
+    description: Parameters for image generation
+    properties:
+      model:
+        type: string
+        description: "The model to use for image generation"
+      prompt:
+        type: string
+        description: "A text description of the desired image"
+      n:
+        type: integer
+        description: "Number of images to generate"
+      size:
+        type: string
+        description: "Size of the generated images (e.g., 1024x1024)"
+    required:
+      - prompt
+
+- slug: openai_list_fine_tuning_jobs
+  name: List Fine-tuning Jobs
+  description: |
+    Retrieve a list of fine-tuning jobs.
+  provider: openai
+  endpoint: /v1/fine_tuning/jobs
+  method: GET
+  scopes:
+    - fine_tuning:read
+  tags:
+    - fine-tuning
+  input_schema:
+    type: object
+    description: Parameters for listing fine-tuning jobs
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of jobs to return"
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: openai_get_fine_tuning_job
+  name: Get Fine-tuning Job
+  description: |
+    Retrieve a fine-tuning job by ID.
+  provider: openai
+  endpoint: /v1/fine_tuning/jobs/{job_id}
+  method: GET
+  scopes:
+    - fine_tuning:read
+  tags:
+    - fine-tuning
+  input_schema:
+    type: object
+    description: Parameters for retrieving a fine-tuning job
+    properties:
+      job_id:
+        type: string
+        description: "The fine-tuning job ID"
+    required:
+      - job_id
+
+- slug: openai_list_assistants
+  name: List Assistants
+  description: |
+    Retrieve a list of assistants.
+  provider: openai
+  endpoint: /v1/assistants
+  method: GET
+  scopes:
+    - assistants:read
+  tags:
+    - assistants
+  input_schema:
+    type: object
+    description: Parameters for listing assistants
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of assistants to return"
+      order:
+        type: string
+        description: "Sort order (asc or desc)"
+    required: []
+
+- slug: openai_get_assistant
+  name: Get Assistant
+  description: |
+    Retrieve an assistant by ID.
+  provider: openai
+  endpoint: /v1/assistants/{assistant_id}
+  method: GET
+  scopes:
+    - assistants:read
+  tags:
+    - assistants
+  input_schema:
+    type: object
+    description: Parameters for retrieving an assistant
+    properties:
+      assistant_id:
+        type: string
+        description: "The assistant ID"
+    required:
+      - assistant_id

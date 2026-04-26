@@ -1,0 +1,284 @@
+# Avalara (Sandbox) Tools - Allowlist
+# Curated subset of Avalara REST API v2 for AI agent use.
+# BASIC auth via Nango (Account ID + License Key).
+# Sandbox environment at https://sandbox-rest.avatax.com/api/v2
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. avalara_sandbox_ping              - Verify API connectivity
+# 2. avalara_sandbox_list_subscriptions - List available subscriptions
+# 3. avalara_sandbox_get_tax_rate      - Get tax rate for an address
+# 4. avalara_sandbox_calculate_tax     - Calculate tax for a transaction
+# 5. avalara_sandbox_create_transaction - Create a transaction
+# 6. avalara_sandbox_void_transaction  - Void a transaction
+# 7. avalara_sandbox_refund_transaction - Refund a transaction
+# 8. avalara_sandbox_list_companies    - List companies
+# 9. avalara_sandbox_get_company       - Get company details
+# 10. avalara_sandbox_list_items       - List items
+
+- slug: avalara_sandbox_ping
+  name: Ping
+  description: |
+    Verify API connectivity and authentication.
+  provider: avalara-sandbox
+  endpoint: /utilities/subscriptions
+  method: GET
+  scopes: []
+  tags:
+    - utility
+    - health
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: avalara_sandbox_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions available for the account.
+  provider: avalara-sandbox
+  endpoint: /utilities/subscriptions
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - account
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties: {}
+    required: []
+
+- slug: avalara_sandbox_get_tax_rate
+  name: Get Tax Rate
+  description: |
+    Get the tax rate for a specific address. Returns jurisdiction and rate info.
+  provider: avalara-sandbox
+  endpoint: /taxes/get
+  method: GET
+  scopes: []
+  tags:
+    - tax
+    - address
+    - rate
+  input_schema:
+    type: object
+    description: Parameters for getting tax rate by address
+    properties:
+      line1:
+        type: string
+        description: "Street address line 1"
+      line2:
+        type: string
+        description: "Street address line 2"
+      city:
+        type: string
+        description: "City name"
+      state:
+        type: string
+        description: "State or province code"
+      postalCode:
+        type: string
+        description: "Postal/ZIP code"
+      country:
+        type: string
+        description: "Country code (default US)"
+        default: USA
+    required:
+      - postalCode
+
+- slug: avalara_sandbox_calculate_tax
+  name: Calculate Tax
+  description: |
+    Calculate tax for a transaction without creating it. Use for estimates.
+  provider: avalara-sandbox
+  endpoint: /taxes/calculate
+  method: POST
+  scopes: []
+  tags:
+    - tax
+    - calculation
+  input_schema:
+    type: object
+    description: Parameters for tax calculation
+    properties:
+      addresses:
+        type: array
+        description: "Array of address objects"
+      lines:
+        type: array
+        description: "Array of line items"
+      type:
+        type: string
+        description: "Transaction type: SalesOrder, Invoice, etc."
+        default: SalesOrder
+    required:
+      - addresses
+      - lines
+
+- slug: avalara_sandbox_create_transaction
+  name: Create Transaction
+  description: |
+    Create or void a transaction (order, invoice) in Avalara.
+  provider: avalara-sandbox
+  endpoint: /transactions/create
+  method: POST
+  scopes: []
+  tags:
+    - transaction
+    - create
+    - sales
+  input_schema:
+    type: object
+    description: Parameters for creating a transaction
+    properties:
+      type:
+        type: string
+        description: "Transaction type: SalesOrder, SalesInvoice, etc."
+        default: SalesOrder
+      companyCode:
+        type: string
+        description: "Company code"
+      date:
+        type: string
+        description: "Transaction date (YYYY-MM-DD)"
+      customerCode:
+        type: string
+        description: "Customer identifier"
+      addresses:
+        type: object
+        description: "Address assignments (shipFrom, shipTo, etc.)"
+      lines:
+        type: array
+        description: "Line items"
+    required:
+      - type
+      - companyCode
+      - lines
+
+- slug: avalara_sandbox_void_transaction
+  name: Void Transaction
+  description: |
+    Void an existing transaction by its code.
+  provider: avalara-sandbox
+  endpoint: /transactions/{transactionCode}/void
+  method: POST
+  scopes: []
+  tags:
+    - transaction
+    - void
+  input_schema:
+    type: object
+    description: Parameters for voiding a transaction
+    properties:
+      transactionCode:
+        type: string
+        description: "Transaction code to void"
+      voidReasonCode:
+        type: string
+        description: "Reason code: PostFailed, DocDeleted, etc."
+        default: PostFailed
+    required:
+      - transactionCode
+
+- slug: avalara_sandbox_refund_transaction
+  name: Refund Transaction
+  description: |
+    Refund a previously posted transaction.
+  provider: avalara-sandbox
+  endpoint: /transactions/refund
+  method: POST
+  scopes: []
+  tags:
+    - transaction
+    - refund
+  input_schema:
+    type: object
+    description: Parameters for refunding a transaction
+    properties:
+      transactionCode:
+        type: string
+        description: "Original transaction code"
+      refundDate:
+        type: string
+        description: "Refund date (YYYY-MM-DD)"
+      referenceCode:
+        type: string
+        description: "Reference code"
+    required:
+      - transactionCode
+
+- slug: avalara_sandbox_list_companies
+  name: List Companies
+  description: |
+    List all companies in the account.
+  provider: avalara-sandbox
+  endpoint: /companies
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - account
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: avalara_sandbox_get_company
+  name: Get Company
+  description: |
+    Get details of a specific company.
+  provider: avalara-sandbox
+  endpoint: /companies/{companyId}
+  method: GET
+  scopes: []
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+    required:
+      - companyId
+
+- slug: avalara_sandbox_list_items
+  name: List Items
+  description: |
+    List all items (products/services) in a company.
+  provider: avalara-sandbox
+  endpoint: /items
+  method: GET
+  scopes: []
+  tags:
+    - items
+    - products
+  input_schema:
+    type: object
+    description: Parameters for listing items
+    properties:
+      companyId:
+        type: integer
+        description: "Company ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []

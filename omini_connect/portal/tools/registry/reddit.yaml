@@ -1,0 +1,304 @@
+# Reddit Tools - Allowlist
+# Curated subset of the Reddit API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. reddit_list_subreddits      - List popular subreddits
+# 2. reddit_get_subreddit        - Get subreddit details
+# 3. reddit_list_posts           - List posts in a subreddit
+# 4. reddit_get_post             - Get a specific post
+# 5. reddit_create_post          - Create a new post
+# 6. reddit_list_comments        - List comments on a post
+# 7. reddit_get_comment          - Get a specific comment
+# 8. reddit_create_comment        - Create a comment
+# 9. reddit_get_user_info        - Get user profile information
+# 10. reddit_search_posts        - Search posts by keyword
+
+- slug: reddit_list_subreddits
+  name: List Subreddits
+  description: |
+    List popular subreddits. Returns a list of trending communities on Reddit.
+    Use this to discover new communities or browse by interest.
+  provider: reddit
+  endpoint: /subreddits.json
+  method: GET
+  scopes: []
+  tags:
+    - subreddits
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for listing subreddits
+    properties:
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 25)"
+        default: 25
+      after:
+        type: string
+        description: "Fullname of the item after which to fetch results"
+    required: []
+
+- slug: reddit_get_subreddit
+  name: Get Subreddit
+  description: |
+    Get details about a specific subreddit including name, description, subscriber count, and rules.
+    Use this to learn about a community before participating.
+  provider: reddit
+  endpoint: /r/{subreddit}/about.json
+  method: GET
+  scopes: []
+  tags:
+    - subreddits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting subreddit info
+    properties:
+      subreddit:
+        type: string
+        description: "Subreddit name (without r/, e.g., 'technology')"
+    required:
+      - subreddit
+
+- slug: reddit_list_posts
+  name: List Posts
+  description: |
+    List posts in a subreddit. Returns the most recent or popular posts depending on the sort parameter.
+    Use this to browse content in a community.
+  provider: reddit
+  endpoint: /r/{subreddit}/{sort}.json
+  method: GET
+  scopes: []
+  tags:
+    - posts
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      subreddit:
+        type: string
+        description: "Subreddit name (required)"
+      sort:
+        type: string
+        description: "Sort order: hot, new, top, rising"
+        enum: [hot, new, top, rising]
+        default: hot
+      limit:
+        type: integer
+        description: "Number of posts to return (max 100, default 25)"
+        default: 25
+      after:
+        type: string
+        description: "Fullname of the item after which to fetch results"
+    required:
+      - subreddit
+
+- slug: reddit_get_post
+  name: Get Post
+  description: |
+    Get details of a specific post including title, body, author, score, and metadata.
+    Use this to read the full content before commenting or analyzing.
+  provider: reddit
+  endpoint: /r/{subreddit}/comments/{post_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      subreddit:
+        type: string
+        description: "Subreddit name"
+      post_id:
+        type: string
+        description: "Post ID (the alphanumeric code in the URL)"
+    required:
+      - subreddit
+      - post_id
+
+- slug: reddit_create_post
+  name: Create Post
+  description: |
+    Create a new post in a subreddit. Choose between a link post or a text post with a title.
+    Use this to share content, ask questions, or start discussions.
+  provider: reddit
+  endpoint: /api/submit.json
+  method: POST
+  scopes:
+    - submit
+  tags:
+    - posts
+    - create
+  input_schema:
+    type: object
+    description: Post creation parameters
+    properties:
+      subreddit:
+        type: string
+        description: "Subreddit name (required, without r/)"
+      title:
+        type: string
+        description: "Post title (required)"
+      kind:
+        type: string
+        description: "Post type: link or self"
+        enum: [link, self]
+        default: self
+      url:
+        type: string
+        description: "URL for link posts"
+      text:
+        type: string
+        description: "Text content for self posts"
+      resubmit:
+        type: boolean
+        description: "Allow resubmission if URL was posted before"
+        default: true
+    required:
+      - subreddit
+      - title
+
+- slug: reddit_list_comments
+  name: List Comments
+  description: |
+    List comments on a post. Returns the comment tree with nested replies.
+    Use this to read discussions and community feedback.
+  provider: reddit
+  endpoint: /r/{subreddit}/comments/{post_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      subreddit:
+        type: string
+        description: "Subreddit name"
+      post_id:
+        type: string
+        description: "Post ID"
+      limit:
+        type: integer
+        description: "Maximum number of comments to return (max 100, default 50)"
+        default: 50
+      depth:
+        type: integer
+        description: "Comment depth limit (1-8)"
+        default: 8
+    required:
+      - subreddit
+      - post_id
+
+- slug: reddit_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment including body, author, score, and parent information.
+    Use this to read a specific comment in a thread.
+  provider: reddit
+  endpoint: /comments/{comment_id}.json
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      comment_id:
+        type: string
+        description: "Comment ID"
+    required:
+      - comment_id
+
+- slug: reddit_create_comment
+  name: Create Comment
+  description: |
+    Create a new comment on a post or reply to an existing comment.
+    Use this to participate in discussions or respond to others.
+  provider: reddit
+  endpoint: /api/comment.json
+  method: POST
+  scopes:
+    - submit
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Comment creation parameters
+    properties:
+      parent:
+        type: string
+        description: "Fullname of the thing being replied to (post or comment, e.g., t3_abc123)"
+      text:
+        type: string
+        description: "Comment text (required)"
+    required:
+      - parent
+      - text
+
+- slug: reddit_get_user_info
+  name: Get User Info
+  description: |
+    Get a user's profile information including karma, cake day, and public stats.
+    Use this to learn about someone before trusting their content.
+  provider: reddit
+  endpoint: /user/{username}/about.json
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties:
+      username:
+        type: string
+        description: "Reddit username (without u/)"
+    required:
+      - username
+
+- slug: reddit_search_posts
+  name: Search Posts
+  description: |
+    Search for posts by keyword across Reddit. Returns matching posts sorted by relevance or recency.
+    Use this to find discussions, answers, or specific content.
+  provider: reddit
+  endpoint: /search.json
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - posts
+    - discovery
+  input_schema:
+    type: object
+    description: Search parameters
+    properties:
+      q:
+        type: string
+        description: "Search query (required)"
+      subreddit:
+        type: string
+        description: "Limit search to specific subreddit"
+      sort:
+        type: string
+        description: "Sort by: relevance, hot, new, top"
+        enum: [relevance, hot, new, top]
+        default: relevance
+      limit:
+        type: integer
+        description: "Number of results (max 100, default 25)"
+        default: 25
+    required:
+      - q

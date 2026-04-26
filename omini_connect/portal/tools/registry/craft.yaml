@@ -1,0 +1,296 @@
+# Craft Tools - Allowlist
+# Curated subset of Craft API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. craft_list_docs              - List documents
+# 2. craft_get_doc                 - Get document details
+# 3. craft_create_doc              - Create a new document
+# 4. craft_list_folders           - List folders
+# 5. craft_get_folder              - Get folder details
+# 6. craft_create_folder           - Create a new folder
+# 7. craft_list_users             - List users
+# 8. craft_get_user                - Get user details
+# 9. craft_export_doc              - Export a document
+# 10. craft_share_doc              - Share a document
+
+- slug: craft_list_docs
+  name: List Documents
+  description: |
+    List all documents in Craft. Filter by folder, status, or keyword.
+  provider: craft
+  endpoint: /api/v1/docs
+  method: GET
+  scopes:
+    - docs:read
+  tags:
+    - docs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      status:
+        type: string
+        description: "Filter by status (draft, published, archived)"
+      keyword:
+        type: string
+        description: "Search keyword in title or content"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: craft_get_doc
+  name: Get Document
+  description: |
+    Get detailed information about a specific document including title, content, author, and timestamps.
+  provider: craft
+  endpoint: /api/v1/docs/{id}
+  method: GET
+  scopes:
+    - docs:read
+  tags:
+    - docs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+    required:
+      - id
+
+- slug: craft_create_doc
+  name: Create Document
+  description: |
+    Create a new document in Craft. Set title, content, folder, and initial status.
+  provider: craft
+  endpoint: /api/v1/docs
+  method: POST
+  scopes:
+    - docs:write
+  tags:
+    - docs
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a document
+    properties:
+      title:
+        type: string
+        description: "Document title"
+      content:
+        type: string
+        description: "Document content (Markdown or HTML)"
+      folder_id:
+        type: string
+        description: "Parent folder ID"
+      status:
+        type: string
+        description: "Initial status (draft, published)"
+    required:
+      - title
+
+- slug: craft_list_folders
+  name: List Folders
+  description: |
+    List all folders in Craft. Filter by parent folder or name.
+  provider: craft
+  endpoint: /api/v1/folders
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing folders
+    properties:
+      parent_id:
+        type: string
+        description: "Filter by parent folder ID"
+      name:
+        type: string
+        description: "Filter by folder name"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: craft_get_folder
+  name: Get Folder
+  description: |
+    Get detailed information about a specific folder including name, parent, and document count.
+  provider: craft
+  endpoint: /api/v1/folders/{id}
+  method: GET
+  scopes:
+    - folders:read
+  tags:
+    - folders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a folder
+    properties:
+      id:
+        type: string
+        description: "Folder ID"
+    required:
+      - id
+
+- slug: craft_create_folder
+  name: Create Folder
+  description: |
+    Create a new folder in Craft. Set name and parent folder.
+  provider: craft
+  endpoint: /api/v1/folders
+  method: POST
+  scopes:
+    - folders:write
+  tags:
+    - folders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a folder
+    properties:
+      name:
+        type: string
+        description: "Folder name"
+      parent_id:
+        type: string
+        description: "Parent folder ID"
+    required:
+      - name
+
+- slug: craft_list_users
+  name: List Users
+  description: |
+    List all users in Craft. Filter by role or status.
+  provider: craft
+  endpoint: /api/v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      role:
+        type: string
+        description: "Filter by role"
+      start:
+        type: integer
+        description: "Pagination start"
+      limit:
+        type: integer
+        description: "Max results (default 25)"
+        default: 25
+    required: []
+
+- slug: craft_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user including name, email, and role.
+  provider: craft
+  endpoint: /api/v1/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: craft_export_doc
+  name: Export Document
+  description: |
+    Export a document from Craft in a specific format (PDF, Markdown, HTML).
+  provider: craft
+  endpoint: /api/v1/docs/{id}/export
+  method: POST
+  scopes:
+    - docs:read
+  tags:
+    - docs
+    - export
+  input_schema:
+    type: object
+    description: Parameters for exporting a document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+      format:
+        type: string
+        description: "Export format (pdf, markdown, html)"
+        enum:
+          - pdf
+          - markdown
+          - html
+    required:
+      - id
+      - format
+
+- slug: craft_share_doc
+  name: Share Document
+  description: |
+    Share a document with specific users or make it publicly accessible.
+  provider: craft
+  endpoint: /api/v1/docs/{id}/share
+  method: POST
+  scopes:
+    - docs:write
+  tags:
+    - docs
+    - share
+  input_schema:
+    type: object
+    description: Parameters for sharing a document
+    properties:
+      id:
+        type: string
+        description: "Document ID"
+      user_ids:
+        type: array
+        items:
+          type: string
+        description: "User IDs to share with"
+      public:
+        type: boolean
+        description: "Make document publicly accessible"
+      permissions:
+        type: string
+        description: "Permission level (view, edit)"
+    required:
+      - id

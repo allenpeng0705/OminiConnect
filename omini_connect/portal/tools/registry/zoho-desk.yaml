@@ -1,0 +1,187 @@
+# Zoho Desk Tools - Allowlist
+# Curated subset of Zoho Desk API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. zoho_desk_list_tickets           - List all tickets
+# # 2. zoho_desk_get_ticket           - Get ticket details
+# # 3. zoho_desk_create_ticket           - Create a new ticket
+# # 4. zoho_desk_update_ticket           - Update a ticket
+# # 5. zoho_desk_list_comments           - List all comments on a ticket
+# # 6. zoho_desk_add_comment           - Add a comment to a ticket
+# # 7. zoho_desk_list_contacts           - List all contacts
+# # 8. zoho_desk_get_contact           - Get contact details
+# # 9. zoho_desk_list_teams           - List all support teams
+# # 10. zoho_desk_list_agents           - List all agents
+
+- slug: zoho_desk_list_tickets
+  name: List Tickets
+  description: |
+    List all tickets
+  provider: zoho-desk
+  endpoint: /v1/tickets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for list tickets
+    properties: {}
+    required: []
+
+- slug: zoho_desk_get_ticket
+  name: Get Ticket
+  description: |
+    Get ticket details
+  provider: zoho-desk
+  endpoint: /v1/tickets/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for get ticket
+    properties: {}
+    required: []
+
+- slug: zoho_desk_create_ticket
+  name: Create Ticket
+  description: |
+    Create a new ticket
+  provider: zoho-desk
+  endpoint: /v1/tickets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for create ticket
+    properties: {}
+    required: []
+
+- slug: zoho_desk_update_ticket
+  name: Update Ticket
+  description: |
+    Update a ticket
+  provider: zoho-desk
+  endpoint: /v1/tickets/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for update ticket
+    properties: {}
+    required: []
+
+- slug: zoho_desk_list_comments
+  name: List Comments
+  description: |
+    List all comments on a ticket
+  provider: zoho-desk
+  endpoint: /v1/tickets/{id}/comments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for list comments
+    properties: {}
+    required: []
+
+- slug: zoho_desk_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to a ticket
+  provider: zoho-desk
+  endpoint: /v1/tickets/{id}/comments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for add comment
+    properties: {}
+    required: []
+
+- slug: zoho_desk_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts
+  provider: zoho-desk
+  endpoint: /v1/contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for list contacts
+    properties: {}
+    required: []
+
+- slug: zoho_desk_get_contact
+  name: Get Contact
+  description: |
+    Get contact details
+  provider: zoho-desk
+  endpoint: /v1/contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for get contact
+    properties: {}
+    required: []
+
+- slug: zoho_desk_list_teams
+  name: List Teams
+  description: |
+    List all support teams
+  provider: zoho-desk
+  endpoint: /v1/teams
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for list teams
+    properties: {}
+    required: []
+
+- slug: zoho_desk_list_agents
+  name: List Agents
+  description: |
+    List all agents
+  provider: zoho-desk
+  endpoint: /v1/agents
+  method: GET
+  scopes:
+    - read
+  tags:
+    - zoho-desk
+  input_schema:
+    type: object
+    description: Parameters for list agents
+    properties: {}
+    required: []
+

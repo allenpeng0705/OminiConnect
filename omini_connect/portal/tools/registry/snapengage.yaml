@@ -1,0 +1,281 @@
+# Snapengage Tools - Allowlist
+# Curated subset of Snapengage REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. snapengage_list_conversations - List conversations
+# 2. snapengage_get_conversation   - Get conversation details
+# 3. snapengage_send_message      - Send a message
+# 4. snapengage_list_operators    - List all operators
+# 5. snapengage_get_operator      - Get operator details
+# 6. snapengage_list_engagements  - List all engagements
+# 7. snapengage_get_engagement     - Get engagement details
+# 8. snapengage_send_proactive    - Send proactive message
+# 9. snapengage_list_chats        - List all chats
+# 10. snapengage_get_chat          - Get chat details
+
+- slug: snapengage_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations across all channels in Snapengage.
+    Snapengage unifies chats from multiple sources.
+  provider: snapengage
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+        default: open
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: snapengage_get_conversation
+  name: Get Conversation
+  description: |
+    Get detailed information about a specific conversation.
+    Includes all messages and conversation metadata.
+  provider: snapengage
+  endpoint: /conversations/{conversation_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversation_id
+
+- slug: snapengage_send_message
+  name: Send Message
+  description: |
+    Send a message in an active conversation.
+    Used to respond to customers across all channels.
+  provider: snapengage
+  endpoint: /conversations/{conversation_id}/messages
+  method: POST
+  scopes:
+    - write
+  tags:
+    - messages
+    - conversations
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID"
+      body:
+        type: string
+        description: "Message text"
+      author_id:
+        type: string
+        description: "Operator ID sending the message"
+    required:
+      - conversation_id
+      - body
+
+- slug: snapengage_list_operators
+  name: List Operators
+  description: |
+    List all operators in your Snapengage account.
+    Shows operator status, role, and availability.
+  provider: snapengage
+  endpoint: /operators
+  method: GET
+  scopes:
+    - read
+  tags:
+    - operators
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing operators
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status (available, busy, offline)"
+    required: []
+
+- slug: snapengage_get_operator
+  name: Get Operator
+  description: |
+    Get detailed information about a specific operator.
+    Includes role, status, and performance data.
+  provider: snapengage
+  endpoint: /operators/{operator_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - operators
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an operator
+    properties:
+      operator_id:
+        type: string
+        description: "Operator ID"
+    required:
+      - operator_id
+
+- slug: snapengage_list_engagements
+  name: List Engagements
+  description: |
+    List all engagements in Snapengage.
+    Engagements track proactive chat invitations and automated messages.
+  provider: snapengage
+  endpoint: /engagements
+  method: GET
+  scopes:
+    - read
+  tags:
+    - engagements
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing engagements
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, ended, all)"
+        default: all
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: snapengage_get_engagement
+  name: Get Engagement
+  description: |
+    Get detailed information about a specific engagement.
+    Shows engagement rules, triggers, and performance metrics.
+  provider: snapengage
+  endpoint: /engagements/{engagement_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - engagements
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an engagement
+    properties:
+      engagement_id:
+        type: string
+        description: "Engagement ID"
+    required:
+      - engagement_id
+
+- slug: snapengage_send_proactive
+  name: Send Proactive
+  description: |
+    Send a proactive chat invitation to a visitor.
+    Used to start conversations based on engagement rules.
+  provider: snapengage
+  endpoint: /proactive
+  method: POST
+  scopes:
+    - write
+  tags:
+    - proactive
+    - engagements
+  input_schema:
+    type: object
+    description: Parameters for sending proactive message
+    properties:
+      visitor_id:
+        type: string
+        description: "Visitor ID to target"
+      message:
+        type: string
+        description: "Proactive message text"
+      engagement_id:
+        type: string
+        description: "Engagement rule ID to use"
+    required:
+      - visitor_id
+      - message
+
+- slug: snapengage_list_chats
+  name: List Chats
+  description: |
+    List all chats in your Snapengage account.
+    Filter by status, operator, or time period.
+  provider: snapengage
+  endpoint: /chats
+  method: GET
+  scopes:
+    - read
+  tags:
+    - chats
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      status:
+        type: string
+        description: "Filter by status (active, ended, all)"
+        default: all
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      operator_id:
+        type: string
+        description: "Filter by operator ID"
+    required: []
+
+- slug: snapengage_get_chat
+  name: Get Chat
+  description: |
+    Get detailed information about a specific chat.
+    Includes transcript, participants, and metadata.
+  provider: snapengage
+  endpoint: /chats/{chat_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - chats
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a chat
+    properties:
+      chat_id:
+        type: string
+        description: "Chat ID"
+    required:
+      - chat_id

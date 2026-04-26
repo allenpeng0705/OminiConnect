@@ -1,0 +1,257 @@
+# Braintree (Sandbox) Tools - Allowlist
+# Curated subset of Braintree API for AI agent use.
+# OAuth2 via Nango.
+# Sandbox environment at https://api.sandbox.braintreegateway.com
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. braintree_sandbox_list_transactions  - List transactions
+# 2. braintree_sandbox_get_transaction  - Get transaction details
+# 3. braintree_sandbox_create_transaction - Create transaction
+# 4. braintree_sandbox_void_transaction - Void transaction
+# 5. braintree_sandbox_refund_transaction - Refund transaction
+# 6. braintree_sandbox_list_customers  - List customers
+# 7. braintree_sandbox_get_customer   - Get customer details
+# 8. braintree_sandbox_create_customer - Create customer
+# 9. braintree_sandbox_list_subscriptions - List subscriptions
+# 10. braintree_sandbox_get_subscription - Get subscription details
+
+- slug: braintree_sandbox_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions in sandbox.
+  provider: braintree-sandbox
+  endpoint: /v1/transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      merchantAccountId:
+        type: string
+        description: "Filter by merchant account"
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_sandbox_get_transaction
+  name: Get Transaction
+  description: |
+    Get details for a specific transaction.
+  provider: braintree-sandbox
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transactionId
+
+- slug: braintree_sandbox_create_transaction
+  name: Create Transaction
+  description: |
+    Create a new transaction (sale or authorization).
+  provider: braintree-sandbox
+  endpoint: /v1/transactions"
+  method: POST
+  scopes: []
+  tags:
+    - transactions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a transaction
+    properties:
+      amount:
+        type: number
+        description: "Transaction amount"
+      paymentMethodNonce:
+        type: string
+        description: "Nonce from client SDK"
+      merchantAccountId:
+        type: string
+        description: "Merchant account ID"
+      orderId:
+        type: string
+        description: "Order ID"
+    required:
+      - amount
+      - paymentMethodNonce
+
+- slug: braintree_sandbox_void_transaction
+  name: Void Transaction
+  description: |
+    Void an existing transaction.
+  provider: braintree-sandbox
+  endpoint: /v1/transactions/{transactionId}/void"
+  method: PUT
+  scopes: []
+  tags:
+    - transactions
+    - void
+  input_schema:
+    type: object
+    description: Parameters for voiding a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID to void"
+    required:
+      - transactionId
+
+- slug: braintree_sandbox_refund_transaction
+  name: Refund Transaction
+  description: |
+    Refund a transaction.
+  provider: braintree-sandbox
+  endpoint: /v1/transactions/{transactionId}/refund"
+  method: PUT
+  scopes: []
+  tags:
+    - transactions
+    - refund
+  input_schema:
+    type: object
+    description: Parameters for refunding a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID to refund"
+      amount:
+        type: number
+        description: "Refund amount (optional, full if not specified)"
+    required:
+      - transactionId
+
+- slug: braintree_sandbox_list_customers
+  name: List Customers
+  description: |
+    List all customers in sandbox.
+  provider: braintree-sandbox
+  endpoint: /v1/customers"
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_sandbox_get_customer
+  name: Get Customer
+  description: |
+    Get details for a specific customer.
+  provider: braintree-sandbox
+  endpoint: /v1/customers/{customerId}"
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customerId:
+        type: string
+        description: "Customer ID"
+    required:
+      - customerId
+
+- slug: braintree_sandbox_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer.
+  provider: braintree-sandbox
+  endpoint: /v1/customers"
+  method: POST
+  scopes: []
+  tags:
+    - customers
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required: []
+
+- slug: braintree_sandbox_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List all subscriptions in sandbox.
+  provider: braintree-sandbox
+  endpoint: /v1/subscriptions"
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: braintree_sandbox_get_subscription
+  name: Get Subscription
+  description: |
+    Get details for a specific subscription.
+  provider: braintree-sandbox
+  endpoint: /v1/subscriptions/{subscriptionId}"
+  method: GET
+  scopes: []
+  tags:
+    - subscriptions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      subscriptionId:
+        type: string
+        description: "Subscription ID"
+    required:
+      - subscriptionId

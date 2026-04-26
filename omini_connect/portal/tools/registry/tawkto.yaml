@@ -1,0 +1,289 @@
+# Tawkto Tools - Allowlist
+# Curated subset of the Tawk.to API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. tawkto_list_properties       - List chat properties (websites)
+# 2. tawkto_get_property         - Get property details
+# 3. tawkto_list_visitors        - List current website visitors
+# 4. tawkto_get_visitor          - Get visitor details
+# 5. tawkto_list_chats           - List chat sessions
+# 6. tawkto_get_chat            - Get chat transcript
+# 7. tawkto_list_agents          - List agents
+# 8. tawkto_get_agent           - Get agent details
+# 9. tawkto_list_departments    - List departments
+# 10. tawkto_list_triggers       - List automated triggers
+
+- slug: tawkto_list_properties
+  name: List Properties
+  description: |
+    List all properties (websites) connected to your Tawk.to account.
+    Each property represents a separate website where the chat widget is installed.
+  provider: tawkto
+  endpoint: /property
+  method: GET
+  scopes:
+    - property
+  tags:
+    - property
+    - website
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      limit:
+        type: integer
+        description: "Number of results per page"
+        default: 20
+    required: []
+
+- slug: tawkto_get_property
+  name: Get Property
+  description: |
+    Get detailed information about a specific property including widget settings, chat limits, and status.
+  provider: tawkto
+  endpoint: /property/{propertyId}
+  method: GET
+  scopes:
+    - property
+  tags:
+    - property
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      propertyId:
+        type: string
+        description: "Property ID (path parameter)"
+    required:
+      - propertyId
+
+- slug: tawkto_list_visitors
+  name: List Visitors
+  description: |
+    List currently active visitors on your website(s). Shows visitors currently browsing in real-time.
+    Useful for proactive chat invitations or monitoring live traffic.
+  provider: tawkto
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - visitor
+  tags:
+    - visitors
+    - livechat
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      propertyId:
+        type: string
+        description: "Filter by property ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: tawkto_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific visitor including current page, visit duration, and chat history.
+  provider: tawkto
+  endpoint: /visitors/{visitorId}
+  method: GET
+  scopes:
+    - visitor
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      visitorId:
+        type: string
+        description: "Visitor ID (path parameter)"
+    required:
+      - visitorId
+
+- slug: tawkto_list_chats
+  name: List Chats
+  description: |
+    List all chat sessions. Filter by status, agent, or date range to find specific conversations.
+    Includes both active and archived chats.
+  provider: tawkto
+  endpoint: /chats
+  method: GET
+  scopes:
+    - chat
+  tags:
+    - chats
+    - history
+  input_schema:
+    type: object
+    description: Parameters for listing chats
+    properties:
+      propertyId:
+        type: string
+        description: "Filter by property ID"
+      status:
+        type: string
+        description: "Filter by status: active, pending, archive"
+        enum: [active, pending, archive]
+      agentId:
+        type: string
+        description: "Filter by agent ID"
+      startDate:
+        type: string
+        description: "Filter by start date (ISO 8601)"
+      endDate:
+        type: string
+        description: "Filter by end date (ISO 8601)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: tawkto_get_chat
+  name: Get Chat
+  description: |
+    Get the full transcript and details of a specific chat session including all messages, agent, and visitor info.
+  provider: tawkto
+  endpoint: /chats/{chatId}
+  method: GET
+  scopes:
+    - chat
+  tags:
+    - chats
+    - transcript
+  input_schema:
+    type: object
+    description: Parameters for getting a chat
+    properties:
+      chatId:
+        type: string
+        description: "Chat ID (path parameter)"
+    required:
+      - chatId
+
+- slug: tawkto_list_agents
+  name: List Agents
+  description: |
+    List all agents in your Tawk.to account. Includes their status, role, and department assignments.
+  provider: tawkto
+  endpoint: /agents
+  method: GET
+  scopes:
+    - agents
+  tags:
+    - agents
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: tawkto_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific agent including their schedule, status, and performance metrics.
+  provider: tawkto
+  endpoint: /agents/{agentId}
+  method: GET
+  scopes:
+    - agents
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      agentId:
+        type: string
+        description: "Agent ID (path parameter)"
+    required:
+      - agentId
+
+- slug: tawkto_list_departments
+  name: List Departments
+  description: |
+    List all departments configured in your Tawk.to account.
+    Departments organize agents and route chats to the right team.
+  provider: tawkto
+  endpoint: /departments
+  method: GET
+  scopes:
+    - departments
+  tags:
+    - departments
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      propertyId:
+        type: string
+        description: "Filter by property ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: tawkto_list_triggers
+  name: List Triggers
+  description: |
+    List all automated triggers. Triggers fire based on conditions (time on page, visitor country, etc.)
+    to automatically start chats or send messages.
+  provider: tawkto
+  endpoint: /triggers
+  method: GET
+  scopes:
+    - triggers
+  tags:
+    - triggers
+    - automation
+  input_schema:
+    type: object
+    description: Parameters for listing triggers
+    properties:
+      propertyId:
+        type: string
+        description: "Filter by property ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []

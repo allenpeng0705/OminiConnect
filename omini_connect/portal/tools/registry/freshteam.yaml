@@ -1,0 +1,276 @@
+# Freshteam Tools - Allowlist
+# Curated subset of Freshteam HR API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freshteam_list_employees       - List employees
+# 2. freshteam_get_employee        - Get employee details
+# 3. freshteam_create_employee     - Create an employee
+# 4. freshteam_update_employee     - Update an employee
+# 5. freshteam_list_departments    - List departments
+# 6. freshteam_get_department      - Get department details
+# 7. freshteam_list_job_postings   - List job postings
+# 8. freshteam_get_job_posting     - Get job posting details
+# 9. freshteam_list_holidays       - List holidays
+# 10. freshteam_list_time_off_requests - List time off requests
+
+- slug: freshteam_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization with optional filters.
+  provider: freshteam
+  endpoint: /employees
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - list
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      department_id:
+        type: integer
+        description: "Filter by department ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive, all)"
+        default: active
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freshteam_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about a specific employee.
+  provider: freshteam
+  endpoint: /employees/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      id:
+        type: integer
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: freshteam_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee in Freshteam.
+  provider: freshteam
+  endpoint: /employees
+  method: POST
+  scopes:
+    - write
+  tags:
+    - employees
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Work email"
+      department_id:
+        type: integer
+        description: "Department ID"
+      designation:
+        type: string
+        description: "Job title"
+      date_of_joining:
+        type: string
+        description: "Join date (YYYY-MM-DD)"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: freshteam_update_employee
+  name: Update Employee
+  description: |
+    Update an existing employee's information.
+  provider: freshteam
+  endpoint: /employees/{id}
+  method: PUT
+  scopes:
+    - write
+  tags:
+    - employees
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an employee
+    properties:
+      id:
+        type: integer
+        description: "Employee ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      department_id:
+        type: integer
+        description: "Department ID"
+      designation:
+        type: string
+        description: "Job title"
+    required:
+      - id
+
+- slug: freshteam_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: freshteam
+  endpoint: /departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - list
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+
+- slug: freshteam_get_department
+  name: Get Department
+  description: |
+    Get detailed information about a specific department.
+  provider: freshteam
+  endpoint: /departments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      id:
+        type: integer
+        description: "Department ID"
+    required:
+      - id
+
+- slug: freshteam_list_job_postings
+  name: List Job Postings
+  description: |
+    List all job postings with optional status filter.
+  provider: freshteam
+  endpoint: /job_postings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - postings
+    - list
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing job postings
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, all)"
+        default: open
+    required: []
+
+- slug: freshteam_get_job_posting
+  name: Get Job Posting
+  description: |
+    Get detailed information about a specific job posting.
+  provider: freshteam
+  endpoint: /job_postings/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - jobs
+    - postings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job posting
+    properties:
+      id:
+        type: integer
+        description: "Job posting ID"
+    required:
+      - id
+
+- slug: freshteam_list_holidays
+  name: List Holidays
+  description: |
+    List all holidays configured in the organization.
+  provider: freshteam
+  endpoint: /holidays
+  method: GET
+  scopes:
+    - read
+  tags:
+    - holidays
+    - list
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing holidays
+    properties:
+      year:
+        type: integer
+        description: "Year (default: current year)"
+    required: []
+
+- slug: freshteam_list_time_off_requests
+  name: List Time Off Requests
+  description: |
+    List all time off requests with optional filters.
+  provider: freshteam
+  endpoint: /time_off_requests
+  method: GET
+  scopes:
+    - read
+  tags:
+    - time-off
+    - requests
+    - list
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, approved, rejected)"
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+    required: []

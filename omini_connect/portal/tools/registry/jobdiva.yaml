@@ -1,0 +1,248 @@
+# JobDiva Tools - Allowlist
+# Curated subset of JobDiva API for AI agent use.
+# TWO_STEP Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jobdiva_list_candidates    - List candidates
+# 2. jobdiva_get_candidate      - Get candidate details
+# 3. jobdiva_list_jobs         - List job postings
+# 4. jobdiva_get_job           - Get job details
+# 5. jobdiva_list_contacts     - List contacts
+# 6. jobdiva_get_contact       - Get contact details
+# 7. jobdiva_list_submissions  - List submissions
+# 8. jobdiva_get_submission    - Get submission details
+# 9. jobdiva_list_notes        - List notes
+# 10. jobdiva_create_note      - Create a note
+
+- slug: jobdiva_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in JobDiva.
+  provider: jobdiva
+  endpoint: /apiv2/candidates
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      page_size:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: jobdiva_get_candidate
+  name: Get Candidate
+  description: |
+    Get details for a specific candidate.
+  provider: jobdiva
+  endpoint: /apiv2/candidates/{candidate_id}
+  method: GET
+  scopes: []
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidate_id:
+        type: integer
+        description: "Candidate ID"
+    required:
+      - candidate_id
+
+- slug: jobdiva_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: jobdiva
+  endpoint: /apiv2/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status (open, closed, all)"
+        default: open
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobdiva_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job posting.
+  provider: jobdiva
+  endpoint: /apiv2/jobs/{job_id}
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: integer
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: jobdiva_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: jobdiva
+  endpoint: /apiv2/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobdiva_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: jobdiva
+  endpoint: /apiv2/contacts/{contact_id}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - contact_id
+
+- slug: jobdiva_list_submissions
+  name: List Submissions
+  description: |
+    List all candidate submissions.
+  provider: jobdiva
+  endpoint: /apiv2/submissions
+  method: GET
+  scopes: []
+  tags:
+    - submissions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing submissions
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: jobdiva_get_submission
+  name: Get Submission
+  description: |
+    Get details for a specific submission.
+  provider: jobdiva
+  endpoint: /apiv2/submissions/{submission_id}
+  method: GET
+  scopes: []
+  tags:
+    - submissions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a submission
+    properties:
+      submission_id:
+        type: integer
+        description: "Submission ID"
+    required:
+      - submission_id
+
+- slug: jobdiva_list_notes
+  name: List Notes
+  description: |
+    List notes for candidates or jobs.
+  provider: jobdiva
+  endpoint: /apiv2/notes
+  method: GET
+  scopes: []
+  tags:
+    - notes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing notes
+    properties:
+      candidate_id:
+        type: integer
+        description: "Filter by candidate ID"
+      job_id:
+        type: integer
+        description: "Filter by job ID"
+    required: []
+
+- slug: jobdiva_create_note
+  name: Create Note
+  description: |
+    Create a note on a candidate or job.
+  provider: jobdiva
+  endpoint: /apiv2/notes
+  method: POST
+  scopes: []
+  tags:
+    - notes
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating a note
+    properties:
+      candidate_id:
+        type: integer
+        description: "Candidate ID"
+      job_id:
+        type: integer
+        description: "Job ID"
+      content:
+        type: string
+        description: "Note content"
+    required:
+      - content

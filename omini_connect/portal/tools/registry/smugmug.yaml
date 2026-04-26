@@ -1,0 +1,187 @@
+# Smugmug Tools - Allowlist
+# Curated subset of Smugmug API for AI agent use.
+# Auth mode: OAUTH1.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_albums                              - List all albums
+# 2. get_album                                - Get album details
+# 3. list_images                              - List images in album
+# 4. get_image                                - Get image details
+# 5. upload_image                             - Upload an image
+# 6. get_user                                 - Get user profile
+# 7. list_folders                             - List folders
+# 8. create_album                             - Create an album
+# 9. update_album                             - Update album settings
+# 10. delete_image                             - Delete an image
+
+- slug: list_albums
+  name: List Albums
+  description: |
+    List all albums
+  provider: smugmug
+  endpoint: /albums
+  method: GET
+  scopes: []
+  tags:
+    - albums
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_album
+  name: Get Album
+  description: |
+    Get album details
+  provider: smugmug
+  endpoint: /albums/{id}
+  method: GET
+  scopes: []
+  tags:
+    - albums
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_images
+  name: List Images
+  description: |
+    List images in album
+  provider: smugmug
+  endpoint: /albums/{id}/images
+  method: GET
+  scopes: []
+  tags:
+    - images
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_image
+  name: Get Image
+  description: |
+    Get image details
+  provider: smugmug
+  endpoint: /images/{id}
+  method: GET
+  scopes: []
+  tags:
+    - images
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: upload_image
+  name: Upload Image
+  description: |
+    Upload an image
+  provider: smugmug
+  endpoint: /albums/{id}/images
+  method: POST
+  scopes: []
+  tags:
+    - images
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_user
+  name: Get User
+  description: |
+    Get user profile
+  provider: smugmug
+  endpoint: /user/{id}
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_folders
+  name: List Folders
+  description: |
+    List folders
+  provider: smugmug
+  endpoint: /folders/{id}
+  method: GET
+  scopes: []
+  tags:
+    - folders
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_album
+  name: Create Album
+  description: |
+    Create an album
+  provider: smugmug
+  endpoint: /albums
+  method: POST
+  scopes: []
+  tags:
+    - albums
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: update_album
+  name: Update Album
+  description: |
+    Update album settings
+  provider: smugmug
+  endpoint: /albums/{id}
+  method: PUT
+  scopes: []
+  tags:
+    - albums
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: delete_image
+  name: Delete Image
+  description: |
+    Delete an image
+  provider: smugmug
+  endpoint: /images/{id}
+  method: DELETE
+  scopes: []
+  tags:
+    - images
+    - photos
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

@@ -1,0 +1,187 @@
+# SharePoint Online (v2) Tools - Allowlist
+# Curated subset of SharePoint Online (v2) API for AI agent use.
+# Auth mode: OAUTH2.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. list_sites                               - List SharePoint sites
+# 2. get_site                                 - Get site details
+# 3. list_drives                              - List document libraries
+# 4. list_files                               - List files in drive
+# 5. get_file                                 - Get file metadata
+# 6. download_file                            - Download file content
+# 7. upload_file                              - Upload a file
+# 8. create_folder                            - Create a folder
+# 9. delete_file                              - Delete a file or folder
+# 10. list_permissions                         - List item permissions
+
+- slug: list_sites
+  name: List Sites
+  description: |
+    List SharePoint sites
+  provider: sharepoint-online
+  endpoint: /sites
+  method: GET
+  scopes: []
+  tags:
+    - sites
+    - sharepoint
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_site
+  name: Get Site
+  description: |
+    Get site details
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}
+  method: GET
+  scopes: []
+  tags:
+    - sites
+    - sharepoint
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_drives
+  name: List Drives
+  description: |
+    List document libraries
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives
+  method: GET
+  scopes: []
+  tags:
+    - drives
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_files
+  name: List Files
+  description: |
+    List files in drive
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/root/children
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: get_file
+  name: Get File
+  description: |
+    Get file metadata
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: download_file
+  name: Download File
+  description: |
+    Download file content
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}/content
+  method: GET
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: upload_file
+  name: Upload File
+  description: |
+    Upload a file
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/root/children
+  method: POST
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: create_folder
+  name: Create Folder
+  description: |
+    Create a folder
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/items/{parent_id}
+  method: POST
+  scopes: []
+  tags:
+    - folders
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: delete_file
+  name: Delete File
+  description: |
+    Delete a file or folder
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}
+  method: DELETE
+  scopes: []
+  tags:
+    - files
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+
+- slug: list_permissions
+  name: List Permissions
+  description: |
+    List item permissions
+  provider: sharepoint-online
+  endpoint: /sites/{site_id}/drives/{drive_id}/items/{file_id}/permissions
+  method: GET
+  scopes: []
+  tags:
+    - permissions
+    - security
+  input_schema:
+    type: object
+    description: Parameters for this tool
+    properties: {}
+    required: []
+

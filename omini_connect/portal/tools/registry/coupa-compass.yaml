@@ -1,0 +1,276 @@
+# Coupa Compass Tools - Allowlist
+# Curated subset of the Coupa Compass API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. coupa_compass_list_invoices      - List invoices
+# 2. coupa_compass_get_invoice        - Get invoice details
+# 3. coupa_compass_list_purchase_orders - List purchase orders
+# 4. coupa_compass_get_purchase_order - Get purchase order details
+# 5. coupa_compass_list_suppliers     - List suppliers
+# 6. coupa_compass_get_supplier       - Get supplier details
+# 7. coupa_compass_list_contracts     - List contracts
+# 8. coupa_compass_get_contract       - Get contract details
+# 9. coupa_compass_list_approvals     - List pending approvals
+# 10. coupa_compass_list_spend_data   - List spend data
+
+- slug: coupa_compass_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in Coupa Compass. Filter by status, supplier, or date range.
+  provider: coupa-compass
+  endpoint: /invoices
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - payments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status: submitted, approved, paid, rejected"
+      supplier_id:
+        type: string
+        description: "Filter by supplier ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: coupa_compass_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information for a specific invoice including line items and approval status.
+  provider: coupa-compass
+  endpoint: /invoices/{id}
+  method: GET
+  scopes: []
+  tags:
+    - invoices
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id
+
+- slug: coupa_compass_list_purchase_orders
+  name: List Purchase Orders
+  description: |
+    List all purchase orders. Filter by status, supplier, or department.
+  provider: coupa-compass
+  endpoint: /purchase_orders
+  method: GET
+  scopes: []
+  tags:
+    - purchasing
+    - orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing purchase orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, submitted, approved, ordered"
+      supplier_id:
+        type: string
+        description: "Filter by supplier ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: coupa_compass_get_purchase_order
+  name: Get Purchase Order
+  description: |
+    Get detailed purchase order including line items, pricing, and delivery info.
+  provider: coupa-compass
+  endpoint: /purchase_orders/{id}
+  method: GET
+  scopes: []
+  tags:
+    - purchasing
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a purchase order
+    properties:
+      id:
+        type: string
+        description: "Purchase Order ID"
+    required:
+      - id
+
+- slug: coupa_compass_list_suppliers
+  name: List Suppliers
+  description: |
+    List all suppliers in the Coupa system.
+  provider: coupa-compass
+  endpoint: /suppliers
+  method: GET
+  scopes: []
+  tags:
+    - suppliers
+    - vendors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing suppliers
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      name:
+        type: string
+        description: "Filter by supplier name"
+    required: []
+
+- slug: coupa_compass_get_supplier
+  name: Get Supplier
+  description: |
+    Get detailed supplier information including contact details and performance rating.
+  provider: coupa-compass
+  endpoint: /suppliers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - suppliers
+    - vendors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a supplier
+    properties:
+      id:
+        type: string
+        description: "Supplier ID"
+    required:
+      - id
+
+- slug: coupa_compass_list_contracts
+  name: List Contracts
+  description: |
+    List all contracts. Filter by status, type, or expiration date.
+  provider: coupa-compass
+  endpoint: /contracts
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - legal
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, active, expired"
+      contract_type:
+        type: string
+        description: "Filter by type"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: coupa_compass_get_contract
+  name: Get Contract
+  description: |
+    Get detailed contract information including terms, pricing, and associated documents.
+  provider: coupa-compass
+  endpoint: /contracts/{id}
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - legal
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contract
+    properties:
+      id:
+        type: string
+        description: "Contract ID"
+    required:
+      - id
+
+- slug: coupa_compass_list_approvals
+  name: List Approvals
+  description: |
+    List all pending approvals for the current user.
+  provider: coupa-compass
+  endpoint: /approvals
+  method: GET
+  scopes: []
+  tags:
+    - approvals
+    - workflow
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing approvals
+    properties:
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: coupa_compass_list_spend_data
+  name: List Spend Data
+  description: |
+    List spend data and analytics. View spending by department, supplier, or category.
+  provider: coupa-compass
+  endpoint: /spend
+  method: GET
+  scopes: []
+  tags:
+    - spend
+    - analytics
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spend data
+    properties:
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      group_by:
+        type: string
+        description: "Group by: supplier, department, category"
+        default: supplier
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []

@@ -1,0 +1,356 @@
+# FreshBooks Tools - Allowlist
+# Curated subset of the FreshBooks API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freshbooks_list_clients        - List clients
+# 2. freshbooks_get_client          - Get a specific client
+# 3. freshbooks_create_client      - Create a new client
+# 4. freshbooks_list_invoices       - List invoices
+# 5. freshbooks_get_invoice         - Get a specific invoice
+# 6. freshbooks_create_invoice      - Create a new invoice
+# 7. freshbooks_list_expenses       - List expenses
+# 8. freshbooks_get_expense         - Get a specific expense
+# 9. freshbooks_list_time_entries   - List time entries
+# 10. freshbooks_get_time_entry     - Get a specific time entry
+
+- slug: freshbooks_list_clients
+  name: List Clients
+  description: |
+    List all clients in the FreshBooks account.
+    Returns client details including name, email, phone, and billing information.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/clients
+  method: GET
+  scopes:
+    - self
+    - clients
+  tags:
+    - clients
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 25
+      search:
+        type: string
+        description: "Search by client name or email"
+    required:
+      - business_id
+
+- slug: freshbooks_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client by their ID.
+    Returns full client information including contact details and metadata.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/clients/{client_id}
+  method: GET
+  scopes:
+    - self
+    - clients
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      client_id:
+        type: string
+        description: "Client ID"
+    required:
+      - business_id
+      - client_id
+
+- slug: freshbooks_create_client
+  name: Create Client
+  description: |
+    Create a new client in FreshBooks.
+    Include name and optional email, phone, and billing address.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/clients
+  method: POST
+  scopes:
+    - self
+    - clients
+  tags:
+    - clients
+    - create
+  input_schema:
+    type: object
+    description: Client creation parameters
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      email:
+        type: string
+        description: "Client email address"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      organization:
+        type: string
+        description: "Company/organization name"
+      phone:
+        type: string
+        description: "Phone number"
+      billing_address:
+        type: object
+        description: "Billing address object"
+    required:
+      - business_id
+
+- slug: freshbooks_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the FreshBooks account.
+    Returns invoice details including invoice number, client, date, and total.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/invoices
+  method: GET
+  scopes:
+    - self
+    - invoices
+  tags:
+    - invoices
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 25
+      status:
+        type: string
+        description: "Filter by status: draft, sent, viewed, paid, overdue"
+    required:
+      - business_id
+
+- slug: freshbooks_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice by its ID.
+    Returns full invoice information including line items, totals, and status.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/invoices/{invoice_id}
+  method: GET
+  scopes:
+    - self
+    - invoices
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - business_id
+      - invoice_id
+
+- slug: freshbooks_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in FreshBooks.
+    Include client, line items, and optional due date and invoice number.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/invoices
+  method: POST
+  scopes:
+    - self
+    - invoices
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Invoice creation parameters
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      client_id:
+        type: string
+        description: "Client ID"
+      lines:
+        type: array
+        description: "Array of line item objects"
+      invoice_number:
+        type: string
+        description: "Invoice number"
+      date:
+        type: string
+        description: "Invoice date (YYYY-MM-DD)"
+      due_date:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+      notes:
+        type: string
+        description: "Invoice notes"
+    required:
+      - business_id
+      - client_id
+      - lines
+
+- slug: freshbooks_list_expenses
+  name: List Expenses
+  description: |
+    List all expenses in the FreshBooks account.
+    Returns expense details including vendor, amount, date, and category.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/expenses
+  method: GET
+  scopes:
+    - self
+    - expenses
+  tags:
+    - expenses
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing expenses
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 25
+      status:
+        type: string
+        description: "Filter by status: active, archived"
+    required:
+      - business_id
+
+- slug: freshbooks_get_expense
+  name: Get Expense
+  description: |
+    Get details of a specific expense by its ID.
+    Returns full expense information including vendor, amount, and category.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/expenses/{expense_id}
+  method: GET
+  scopes:
+    - self
+    - expenses
+  tags:
+    - expenses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an expense
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      expense_id:
+        type: string
+        description: "Expense ID"
+    required:
+      - business_id
+      - expense_id
+
+- slug: freshbooks_list_time_entries
+  name: List Time Entries
+  description: |
+    List all time entries in the FreshBooks account.
+    Returns time entry details including user, project, duration, and date.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/time_entries
+  method: GET
+  scopes:
+    - self
+    - projects
+  tags:
+    - time_entries
+    - projects
+  input_schema:
+    type: object
+    description: Parameters for listing time entries
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 25
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      user_id:
+        type: string
+        description: "Filter by user ID"
+    required:
+      - business_id
+
+- slug: freshbooks_get_time_entry
+  name: Get Time Entry
+  description: |
+    Get details of a specific time entry by its ID.
+    Returns full time entry information including duration, notes, and project.
+  provider: freshbooks
+  endpoint: /users/business/{business_id}/time_entries/{time_entry_id}
+  method: GET
+  scopes:
+    - self
+    - projects
+  tags:
+    - time_entries
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time entry
+    properties:
+      business_id:
+        type: string
+        description: "FreshBooks Business ID"
+      time_entry_id:
+        type: string
+        description: "Time Entry ID"
+    required:
+      - business_id
+      - time_entry_id

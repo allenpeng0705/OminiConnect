@@ -1,0 +1,340 @@
+# Phabricator Tools - Allowlist
+# Curated subset of Phabricator Conduit API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. phabricator_list_projects     - List projects
+# 2. phabricator_get_project      - Get a specific project
+# 3. phabricator_create_project   - Create a project
+# 4. phabricator_list_tasks       - List tasks (Maniphest)
+# 5. phabricator_get_task         - Get a specific task
+# 6. phabricator_create_task      - Create a task
+# 7. phabricator_list_repositories - List repositories
+# 8. phabricator_get_repository   - Get a specific repository
+# 9. phabricator_list_users       - List users
+# 10. phabricator_get_user        - Get a specific user
+
+- slug: phabricator_list_projects
+  name: List Projects
+  description: |
+    List projects in your Phabricator instance. Projects are containers
+    for tasks, repositories, and team members to organize work.
+  provider: phabricator
+  endpoint: /project.query
+  method: POST
+  scopes:
+    - project
+  tags:
+    - projects
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      query:
+        type: string
+        description: "Search projects by name"
+      status:
+        type: string
+        description: "Filter by status: active, archived"
+        enum: [active, archived]
+        default: active
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: phabricator_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including its name, description,
+    members, and associated repositories and tasks.
+  provider: phabricator
+  endpoint: /project.query
+  method: POST
+  scopes:
+    - project
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_ids:
+        type: array
+        items:
+          type: string
+        description: "Project ID(s) (required)"
+    required:
+      - project_ids
+
+- slug: phabricator_create_project
+  name: Create Project
+  description: |
+    Create a new project in Phabricator. Projects organize work,
+    track progress, and group team members together.
+  provider: phabricator
+  endpoint: /project.create
+  method: POST
+  scopes:
+    - project
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name (required)"
+      description:
+        type: string
+        description: "Project description"
+      icon:
+        type: string
+        description: "Project icon (default: project)"
+        default: project
+      members:
+        type: array
+        items:
+          type: string
+        description: "Array of user PHIDs to add as members"
+    required:
+      - name
+
+- slug: phabricator_list_tasks
+  name: List Tasks
+  description: |
+    List tasks (Maniphest tickets) in your Phabricator instance.
+    Tasks track work items, bugs, and features with status and priority.
+  provider: phabricator
+  endpoint: /maniphest.query
+  method: POST
+  scopes:
+    - maniphest
+  tags:
+    - tasks
+    - work items
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      query:
+        type: string
+        description: "Search tasks by title"
+      project_ids:
+        type: array
+        items:
+          type: string
+        description: "Filter by project PHIDs"
+      status:
+        type: string
+        description: "Filter by status: open, resolved, closed"
+        enum: [open, resolved, closed]
+      priority:
+        type: array
+        items:
+          type: string
+        description: "Filter by priority PHIDs"
+      assignees:
+        type: array
+        items:
+          type: string
+        description: "Filter by assignee PHIDs"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: phabricator_get_task
+  name: Get Task
+  description: |
+    Get details of a specific task including title, description,
+    status, priority, assignees, and comments.
+  provider: phabricator
+  endpoint: /maniphest.query
+  method: POST
+  scopes:
+    - maniphest
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_ids:
+        type: array
+        items:
+          type: string
+        description: "Task ID(s) (required)"
+    required:
+      - task_ids
+
+- slug: phabricator_create_task
+  name: Create Task
+  description: |
+    Create a new task (Maniphest ticket) in Phabricator. Tasks
+    represent work items that can be assigned, prioritized, and tracked.
+  provider: phabricator
+  endpoint: /maniphest.create
+  method: POST
+  scopes:
+    - maniphest
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      title:
+        type: string
+        description: "Task title (required)"
+      description:
+        type: string
+        description: "Task description/notes"
+      priority:
+        type: string
+        description: "Priority: unbreakable, needs Triage, high, normal, low, wishlist"
+        default: normal
+      project_ids:
+        type: array
+        items:
+          type: string
+        description: "Project PHIDs to assign the task to"
+      assignee:
+        type: string
+        description: "User PHID to assign the task to"
+    required:
+      - title
+
+- slug: phabricator_list_repositories
+  name: List Repositories
+  description: |
+    List repositories (Diffusion) in your Phabricator instance.
+    Repositories host version control for projects.
+  provider: phabricator
+  endpoint: /diffusion.repository.search
+  method: POST
+  scopes:
+    - diffusion
+  tags:
+    - repositories
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      query:
+        type: string
+        description: "Search repositories by name"
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: phabricator_get_repository
+  name: Get Repository
+  description: |
+    Get details of a specific repository including name, remote URL,
+    tracking configuration, and recent commits.
+  provider: phabricator
+  endpoint: /diffusion.repository.search
+  method: POST
+  scopes:
+    - diffusion
+  tags:
+    - repositories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      repository_phids:
+        type: array
+        items:
+          type: string
+        description: "Repository PHID(s) (required)"
+    required:
+      - repository_phids
+
+- slug: phabricator_list_users
+  name: List Users
+  description: |
+    List users in your Phabricator instance. Users are members
+    who can be assigned tasks, own repositories, and comment on work.
+  provider: phabricator
+  endpoint: /user.search
+  method: POST
+  scopes:
+    - user
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      query:
+        type: string
+        description: "Search users by name or username"
+      status:
+        type: string
+        description: "Filter by status: active, disabled"
+        enum: [active, disabled]
+      limit:
+        type: integer
+        description: "Max results (default 20, max 100)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: phabricator_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including their username, real name,
+    avatar, roles, and current activities.
+  provider: phabricator
+  endpoint: /user.search
+  method: POST
+  scopes:
+    - user
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_phids:
+        type: array
+        items:
+          type: string
+        description: "User PHID(s) (required)"
+    required:
+      - user_phids

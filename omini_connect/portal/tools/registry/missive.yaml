@@ -1,0 +1,265 @@
+# Missive Tools - Allowlist
+# Curated subset of Missive API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. missive_list_conversations   - List conversations
+# 2. missive_get_conversation     - Get conversation details
+# 3. missive_list_messages       - List messages
+# 4. missive_get_message         - Get message details
+# 5. missive_send_message        - Send a message
+# 6. missive_list_contacts       - List contacts
+# 7. missive_get_contact         - Get contact details
+# 8. missive_list_groups         - List groups
+# 9. missive_get_group           - Get group details
+# 10. missive_create_comment   - Create a comment
+
+- slug: missive_list_conversations
+  name: List Conversations
+  description: |
+    List all conversations in Missive.
+    Filter by status, assignee, or folder.
+  provider: missive
+  endpoint: /v1/conversations
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, archived)"
+      assignee_id:
+        type: string
+        description: "Filter by assignee ID"
+      folder_id:
+        type: string
+        description: "Filter by folder ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: missive_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation.
+  provider: missive
+  endpoint: /v1/conversations/{conversationId}
+  method: GET
+  scopes: []
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+    required:
+      - conversationId
+
+- slug: missive_list_messages
+  name: List Messages
+  description: |
+    List messages in a conversation.
+  provider: missive
+  endpoint: /v1/conversations/{conversationId}/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - conversationId
+
+- slug: missive_get_message
+  name: Get Message
+  description: |
+    Get details of a specific message.
+  provider: missive
+  endpoint: /v1/messages/{messageId}
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: missive_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation.
+  provider: missive
+  endpoint: /v1/conversations/{conversationId}/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Message content"
+      author_id:
+        type: string
+        description: "Author user ID"
+    required:
+      - conversationId
+      - content
+
+- slug: missive_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Missive.
+    Filter by search or organization.
+  provider: missive
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      search:
+        type: string
+        description: "Search query"
+      organization_id:
+        type: string
+        description: "Filter by organization ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: missive_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: missive
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: missive_list_groups
+  name: List Groups
+  description: |
+    List all groups in Missive.
+  provider: missive
+  endpoint: /v1/groups
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: missive_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: missive
+  endpoint: /v1/groups/{groupId}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: missive_create_comment
+  name: Create Comment
+  description: |
+    Create a comment on a conversation.
+  provider: missive
+  endpoint: /v1/conversations/{conversationId}/comments
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      conversationId:
+        type: string
+        description: "Conversation ID"
+      content:
+        type: string
+        description: "Comment content"
+      author_id:
+        type: string
+        description: "Author user ID"
+    required:
+      - conversationId
+      - content

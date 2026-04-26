@@ -1,0 +1,230 @@
+- slug: gong_list_calls
+  name: List Calls
+  description: |
+    Retrieve a list of all calls recorded in Gong.
+  provider: gong
+  endpoint: /calls
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing calls
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of calls per page (default: 30, max: 200)"
+      from_date_time:
+        type: string
+        format: date-time
+        description: "Filter calls from this date (ISO 8601)"
+      to_date_time:
+        type: string
+        format: date-time
+        description: "Filter calls until this date (ISO 8601)"
+    required: []
+
+- slug: gong_get_call
+  name: Get Call
+  description: |
+    Retrieve details of a specific call by ID including transcript and content.
+  provider: gong
+  endpoint: /calls/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - calls
+  input_schema:
+    type: object
+    description: Parameters for getting a specific call
+    properties:
+      id:
+        type: string
+        description: "Call ID"
+    required:
+      - id
+
+- slug: gong_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of all deals in Gong.
+  provider: gong
+  endpoint: /deals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing deals
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of deals per page (default: 30, max: 200)"
+      filter_date:
+        type: string
+        description: "Filter deals by date range"
+    required: []
+
+- slug: gong_get_deal
+  name: Get Deal
+  description: |
+    Retrieve details of a specific deal by ID.
+  provider: gong
+  endpoint: /deals/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for getting a specific deal
+    properties:
+      id:
+        type: string
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: gong_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a list of all contacts in Gong.
+  provider: gong
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of contacts per page (default: 30, max: 200)"
+    required: []
+
+- slug: gong_get_contact
+  name: Get Contact
+  description: |
+    Retrieve details of a specific contact by ID.
+  provider: gong
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a specific contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: gong_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users (team members) in Gong.
+  provider: gong
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Filter options for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of users per page (default: 30, max: 200)"
+    required: []
+
+- slug: gong_get_user
+  name: Get User
+  description: |
+    Retrieve details of a specific user by ID.
+  provider: gong
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a specific user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: gong_list_tracks
+  name: List Tracks
+  description: |
+    Retrieve a list of all tracks (deal tracking stages) in Gong.
+  provider: gong
+  endpoint: /tracks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tracks
+  input_schema:
+    type: object
+    description: Options for listing tracks
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of tracks per page (default: 30, max: 200)"
+    required: []
+
+- slug: gong_get_track
+  name: Get Track
+  description: |
+    Retrieve details of a specific track by ID.
+  provider: gong
+  endpoint: /tracks/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tracks
+  input_schema:
+    type: object
+    description: Parameters for getting a specific track
+    properties:
+      id:
+        type: string
+        description: "Track ID"
+    required:
+      - id

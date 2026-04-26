@@ -1,0 +1,187 @@
+# Vercel MCP Tools - Allowlist
+# Curated subset of Vercel MCP API for AI agent use.
+# MCP OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. vercel_list_projects           - List all projects
+# # 2. vercel_get_project           - Get project details
+# # 3. vercel_list_deployments           - List all deployments
+# # 4. vercel_get_deployment           - Get deployment details
+# # 5. vercel_create_deployment           - Create a new deployment
+# # 6. vercel_delete_deployment           - Delete a deployment
+# # 7. vercel_list_domains           - List all domains
+# # 8. vercel_add_domain           - Add a new domain
+# # 9. vercel_list_secrets           - List all environment secrets
+# # 10. vercel_create_secret           - Create an environment secret
+
+- slug: vercel_list_projects
+  name: List Projects
+  description: |
+    List all projects
+  provider: vercel-mcp
+  endpoint: /v1/projects
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for list projects
+    properties: {}
+    required: []
+
+- slug: vercel_get_project
+  name: Get Project
+  description: |
+    Get project details
+  provider: vercel-mcp
+  endpoint: /v1/projects/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for get project
+    properties: {}
+    required: []
+
+- slug: vercel_list_deployments
+  name: List Deployments
+  description: |
+    List all deployments
+  provider: vercel-mcp
+  endpoint: /v1/deployments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for list deployments
+    properties: {}
+    required: []
+
+- slug: vercel_get_deployment
+  name: Get Deployment
+  description: |
+    Get deployment details
+  provider: vercel-mcp
+  endpoint: /v1/deployments/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for get deployment
+    properties: {}
+    required: []
+
+- slug: vercel_create_deployment
+  name: Create Deployment
+  description: |
+    Create a new deployment
+  provider: vercel-mcp
+  endpoint: /v1/deployments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for create deployment
+    properties: {}
+    required: []
+
+- slug: vercel_delete_deployment
+  name: Delete Deployment
+  description: |
+    Delete a deployment
+  provider: vercel-mcp
+  endpoint: /v1/deployments/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for delete deployment
+    properties: {}
+    required: []
+
+- slug: vercel_list_domains
+  name: List Domains
+  description: |
+    List all domains
+  provider: vercel-mcp
+  endpoint: /v1/domains
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for list domains
+    properties: {}
+    required: []
+
+- slug: vercel_add_domain
+  name: Add Domain
+  description: |
+    Add a new domain
+  provider: vercel-mcp
+  endpoint: /v1/domains
+  method: POST
+  scopes:
+    - write
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for add domain
+    properties: {}
+    required: []
+
+- slug: vercel_list_secrets
+  name: List Secrets
+  description: |
+    List all environment secrets
+  provider: vercel-mcp
+  endpoint: /v1/secrets
+  method: GET
+  scopes:
+    - read
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for list secrets
+    properties: {}
+    required: []
+
+- slug: vercel_create_secret
+  name: Create Secret
+  description: |
+    Create an environment secret
+  provider: vercel-mcp
+  endpoint: /v1/secrets
+  method: POST
+  scopes:
+    - write
+  tags:
+    - vercel-mcp
+  input_schema:
+    type: object
+    description: Parameters for create secret
+    properties: {}
+    required: []
+

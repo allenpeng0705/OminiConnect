@@ -1,0 +1,321 @@
+# Method CRM Tools - Allowlist
+# Curated subset of Method CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. method_crm_list_people         - List all people
+# 2. method_crm_get_person         - Get person details
+# 3. method_crm_create_person      - Create a new person
+# 4. method_crm_list_companies      - List all companies
+# 5. method_crm_get_company         - Get company details
+# 6. method_crm_list_deals          - List all deals
+# 7. method_crm_get_deal           - Get deal details
+# 8. method_crm_list_tasks          - List all tasks
+# 9. method_crm_get_task           - Get task details
+# 10. method_crm_list_activities   - List all activities
+
+- slug: method_crm_list_people
+  name: List People
+  description: |
+    List all people in Method CRM.
+    Filter by name, email, or tags.
+  provider: method_crm
+  endpoint: /people
+  method: GET
+  scopes:
+    - people:r
+  tags:
+    - people
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing people
+    properties:
+      search:
+        type: string
+        description: "Search by name or email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: method_crm_get_person
+  name: Get Person
+  description: |
+    Get detailed information about a specific Method CRM person.
+  provider: method_crm
+  endpoint: /people/{id}
+  method: GET
+  scopes:
+    - people:r
+  tags:
+    - people
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      id:
+        type: string
+        description: "Person ID"
+    required:
+      - id
+
+- slug: method_crm_create_person
+  name: Create Person
+  description: |
+    Create a new person in Method CRM.
+    Set name, email, phone, and company details.
+  provider: method_crm
+  endpoint: /people
+  method: POST
+  scopes:
+    - people:w
+  tags:
+    - people
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a person
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company_id:
+        type: string
+        description: "Company ID"
+      title:
+        type: string
+        description: "Job title"
+    required:
+      - first_name
+      - last_name
+
+- slug: method_crm_list_companies
+  name: List Companies
+  description: |
+    List all companies in Method CRM.
+    Filter by name, industry, or tags.
+  provider: method_crm
+  endpoint: /companies
+  method: GET
+  scopes:
+    - companies:r
+  tags:
+    - companies
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing companies
+    properties:
+      search:
+        type: string
+        description: "Search by name or industry"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: method_crm_get_company
+  name: Get Company
+  description: |
+    Get detailed information about a specific Method CRM company.
+  provider: method_crm
+  endpoint: /companies/{id}
+  method: GET
+  scopes:
+    - companies:r
+  tags:
+    - companies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a company
+    properties:
+      id:
+        type: string
+        description: "Company ID"
+    required:
+      - id
+
+- slug: method_crm_list_deals
+  name: List Deals
+  description: |
+    List all deals in Method CRM.
+    Filter by status, stage, or assigned person.
+  provider: method_crm
+  endpoint: /deals
+  method: GET
+  scopes:
+    - deals:r
+  tags:
+    - deals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, won, lost)"
+      stage:
+        type: string
+        description: "Filter by deal stage"
+      assigned_to:
+        type: string
+        description: "Filter by assigned person ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: method_crm_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a specific Method CRM deal.
+  provider: method_crm
+  endpoint: /deals/{id}
+  method: GET
+  scopes:
+    - deals:r
+  tags:
+    - deals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: string
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: method_crm_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Method CRM.
+    Filter by status, assignee, or due date.
+  provider: method_crm
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, in-progress, completed)"
+      assignee_id:
+        type: string
+        description: "Filter by assignee ID"
+      due_date_from:
+        type: string
+        description: "Due date from (YYYY-MM-DD)"
+      due_date_to:
+        type: string
+        description: "Due date to (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: method_crm_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific Method CRM task.
+  provider: method_crm
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: method_crm_list_activities
+  name: List Activities
+  description: |
+    List all activities in Method CRM.
+    Filter by type, person, or date range.
+  provider: method_crm
+  endpoint: /activities
+  method: GET
+  scopes:
+    - activities:r
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      type:
+        type: string
+        description: "Filter by activity type (call, email, meeting, note)"
+      person_id:
+        type: string
+        description: "Filter by person ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []

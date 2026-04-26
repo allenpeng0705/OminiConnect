@@ -1,0 +1,279 @@
+# Microsoft Tools - Allowlist
+# Curated subset of Microsoft Graph API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. microsoft_list_users        - List all users
+# 2. microsoft_get_user          - Get user details
+# 3. microsoft_list_groups      - List groups
+# 4. microsoft_get_group        - Get group details
+# 5. microsoft_list_messages    - List messages (email)
+# 6. microsoft_get_message      - Get message details
+# 7. microsoft_list_calendars   - List calendars
+# 8. microsoft_get_calendar_event - Get calendar event
+# 9. microsoft_list_files        - List OneDrive files
+# 10. microsoft_get_file        - Get file details
+
+- slug: microsoft_list_users
+  name: List Users
+  description: |
+    List all users in the organization via Microsoft Graph.
+    Filter by department, role, or search query.
+  provider: microsoft
+  endpoint: /v1.0/users
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $search:
+        type: string
+        description: "Search query"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+      $select:
+        type: string
+        description: "Fields to select"
+    required: []
+
+- slug: microsoft_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+  provider: microsoft
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes:
+    - User.Read.All
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+      $select:
+        type: string
+        description: "Fields to select"
+    required:
+      - userId
+
+- slug: microsoft_list_groups
+  name: List Groups
+  description: |
+    List all groups in the organization.
+  provider: microsoft
+  endpoint: /v1.0/groups
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+      $select:
+        type: string
+        description: "Fields to select"
+    required: []
+
+- slug: microsoft_get_group
+  name: Get Group
+  description: |
+    Get details of a specific group.
+  provider: microsoft
+  endpoint: /v1.0/groups/{groupId}
+  method: GET
+  scopes:
+    - Group.Read.All
+  tags:
+    - groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+      $select:
+        type: string
+        description: "Fields to select"
+    required:
+      - groupId
+
+- slug: microsoft_list_messages
+  name: List Messages
+  description: |
+    List messages in the authenticated user's mailbox.
+    Filter by folder, sender, or date.
+  provider: microsoft
+  endpoint: /v1.0/me/messages
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - mail
+    - messages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+      $select:
+        type: string
+        description: "Fields to select"
+    required: []
+
+- slug: microsoft_get_message
+  name: Get Message
+  description: |
+    Get details of a specific email message.
+  provider: microsoft
+  endpoint: /v1.0/me/messages/{messageId}
+  method: GET
+  scopes:
+    - Mail.Read
+  tags:
+    - mail
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+      $select:
+        type: string
+        description: "Fields to select"
+    required:
+      - messageId
+
+- slug: microsoft_list_calendars
+  name: List Calendars
+  description: |
+    List calendars for the authenticated user.
+  provider: microsoft
+  endpoint: /v1.0/me/calendars
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing calendars
+    properties:
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: microsoft_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get details of a specific calendar event.
+  provider: microsoft
+  endpoint: /v1.0/me/events/{eventId}
+  method: GET
+  scopes:
+    - Calendars.Read
+  tags:
+    - calendar
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a calendar event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: microsoft_list_files
+  name: List Files
+  description: |
+    List files in the authenticated user's OneDrive.
+  provider: microsoft
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - files
+    - onedrive
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+      $select:
+        type: string
+        description: "Fields to select"
+    required: []
+
+- slug: microsoft_get_file
+  name: Get File
+  description: |
+    Get details of a specific file in OneDrive.
+  provider: microsoft
+  endpoint: /v1.0/me/drive/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - files
+    - onedrive
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a file
+    properties:
+      itemId:
+        type: string
+        description: "Item ID"
+    required:
+      - itemId

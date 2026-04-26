@@ -1,0 +1,239 @@
+# Avanan Tools - Allowlist
+# Curated subset of Avanan API for AI agent use.
+# TWO_STEP auth via Nango (custom signature-based auth).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. avanan_get_account_info       - Get account information
+# 2. avanan_list_users             - List users in account
+# 3. avanan_get_user               - Get user details
+# 4. avanan_list_policies          - List security policies
+# 5. avanan_get_policy             - Get policy details
+# 6. avanan_list_alerts            - List security alerts
+# 7. avanan_get_alert              - Get alert details
+# 8. avanan_list_domains            - List managed domains
+# 9. avanan_list_reports           - List available reports
+# 10. avanan_get_report             - Get report data
+
+- slug: avanan_get_account_info
+  name: Get Account Info
+  description: |
+    Get account information and configuration details.
+  provider: avanan
+  endpoint: /v1.0/account
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - info
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: avanan_list_users
+  name: List Users
+  description: |
+    List all users in the Avanan-protected account.
+  provider: avanan
+  endpoint: /v1.0/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Users per page"
+        default: 50
+    required: []
+
+- slug: avanan_get_user
+  name: Get User
+  description: |
+    Get details for a specific user including security status.
+  provider: avanan
+  endpoint: /v1.0/users/{userId}
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      userId:
+        type: string
+        description: "User ID or email"
+    required:
+      - userId
+
+- slug: avanan_list_policies
+  name: List Policies
+  description: |
+    List all security policies configured in Avanan.
+  provider: avanan
+  endpoint: /v1.0/policies
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing policies
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: avanan_get_policy
+  name: Get Policy
+  description: |
+    Get details of a specific security policy.
+  provider: avanan
+  endpoint: /v1.0/policies/{policyId}
+  method: GET
+  scopes: []
+  tags:
+    - policies
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a policy
+    properties:
+      policyId:
+        type: string
+        description: "Policy ID"
+    required:
+      - policyId
+
+- slug: avanan_list_alerts
+  name: List Alerts
+  description: |
+    List security alerts and incidents in Avanan.
+  provider: avanan
+  endpoint: /v1.0/alerts
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - security
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, resolved, all"
+        default: open
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Items per page"
+        default: 20
+    required: []
+
+- slug: avanan_get_alert
+  name: Get Alert
+  description: |
+    Get detailed information about a specific alert.
+  provider: avanan
+  endpoint: /v1.0/alerts/{alertId}
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an alert
+    properties:
+      alertId:
+        type: string
+        description: "Alert ID"
+    required:
+      - alertId
+
+- slug: avanan_list_domains
+  name: List Domains
+  description: |
+    List all domains managed by Avanan.
+  provider: avanan
+  endpoint: /v1.0/domains
+  method: GET
+  scopes: []
+  tags:
+    - domains
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing domains
+    properties: {}
+    required: []
+
+- slug: avanan_list_reports
+  name: List Reports
+  description: |
+    List available compliance and security reports.
+  provider: avanan
+  endpoint: /v1.0/reports
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - compliance
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      type:
+        type: string
+        description: "Report type filter"
+    required: []
+
+- slug: avanan_get_report
+  name: Get Report
+  description: |
+    Get data for a specific report.
+  provider: avanan
+  endpoint: /v1.0/reports/{reportId}
+  method: GET
+  scopes: []
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      reportId:
+        type: string
+        description: "Report ID"
+      startDate:
+        type: string
+        description: "Report start date (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "Report end date (YYYY-MM-DD)"
+    required:
+      - reportId

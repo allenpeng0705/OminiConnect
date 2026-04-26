@@ -1,0 +1,217 @@
+# Pipedream Tools - Allowlist
+# Curated subset of Pipedream API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pipedream_list_sources          - List event sources
+# 2. pipedream_get_source            - Get source details
+# 3. pipedream_list_workflows        - List workflows
+# 4. pipedream_get_workflow          - Get workflow details
+# 5. pipedream_list_keys             - List API keys
+# 6. pipedream_get_user              - Get user info
+# 7. pipedream_list_events           - List events
+# 8. pipedream_get_event            - Get event details
+# 9. pipedream_list_connections      - List connections
+# 10. pipedream_get_account          - Get account info
+
+- slug: pipedream_list_sources
+  name: List Sources
+  description: |
+    List all event sources.
+  provider: pipedream
+  endpoint: /v1/sources
+  method: GET
+  scopes: []
+  tags:
+    - sources
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sources
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pipedream_get_source
+  name: Get Source
+  description: |
+    Get detailed information about a specific source.
+  provider: pipedream
+  endpoint: /v1/sources/{sourceId}
+  method: GET
+  scopes: []
+  tags:
+    - sources
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a source
+    properties:
+      sourceId:
+        type: string
+        description: "Source ID"
+    required:
+      - sourceId
+
+- slug: pipedream_list_workflows
+  name: List Workflows
+  description: |
+    List all workflows.
+  provider: pipedream
+  endpoint: /v1/workflows
+  method: GET
+  scopes: []
+  tags:
+    - workflows
+    - automation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing workflows
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: pipedream_get_workflow
+  name: Get Workflow
+  description: |
+    Get detailed information about a specific workflow.
+  provider: pipedream
+  endpoint: /v1/workflows/{workflowId}
+  method: GET
+  scopes: []
+  tags:
+    - workflows
+    - automation
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a workflow
+    properties:
+      workflowId:
+        type: string
+        description: "Workflow ID"
+    required:
+      - workflowId
+
+- slug: pipedream_list_keys
+  name: List Keys
+  description: |
+    List all API keys.
+  provider: pipedream
+  endpoint: /v1/keys
+  method: GET
+  scopes: []
+  tags:
+    - keys
+    - api
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing keys
+    properties: {}
+    required: []
+
+- slug: pipedream_get_user
+  name: Get User
+  description: |
+    Get current user information.
+  provider: pipedream
+  endpoint: /v1/users/me
+  method: GET
+  scopes: []
+  tags:
+    - user
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties: {}
+    required: []
+
+- slug: pipedream_list_events
+  name: List Events
+  description: |
+    List events from a source or workflow.
+  provider: pipedream
+  endpoint: /v1/events
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      sourceId:
+        type: string
+        description: "Filter by source ID"
+      workflowId:
+        type: string
+        description: "Filter by workflow ID"
+    required: []
+
+- slug: pipedream_get_event
+  name: Get Event
+  description: |
+    Get detailed information about a specific event.
+  provider: pipedream
+  endpoint: /v1/events/{eventId}
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID"
+    required:
+      - eventId
+
+- slug: pipedream_list_connections
+  name: List Connections
+  description: |
+    List all app connections.
+  provider: pipedream
+  endpoint: /v1/connections
+  method: GET
+  scopes: []
+  tags:
+    - connections
+    - apps
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties: {}
+    required: []
+
+- slug: pipedream_get_account
+  name: Get Account
+  description: |
+    Get account information.
+  provider: pipedream
+  endpoint: /v1/account
+  method: GET
+  scopes: []
+  tags:
+    - account
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting account info
+    properties: {}
+    required: []

@@ -1,0 +1,303 @@
+# GitHub App Tools - Allowlist
+# Curated subset of GitHub App API for AI agent use.
+# APP via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. github_app_list_repos         - List repositories
+# 2. github_app_get_repo          - Get repository details
+# 3. github_app_list_issues       - List issues
+# 4. github_app_get_issue         - Get issue details
+# 5. github_app_list_pulls        - List pull requests
+# 6. github_app_get_pull          - Get pull request details
+# 7. github_app_list_comments     - List issue comments
+# 8. github_app_create_comment    - Create issue comment
+# 9. github_app_list_labels       - List labels
+# 10. github_app_list_milestones - List milestones
+
+- slug: github_app_list_repos
+  name: List Repositories
+  description: |
+    List repositories the GitHub App has access to.
+  provider: github-app
+  endpoint: /installation/repositories
+  method: GET
+  scopes:
+    - read
+  tags:
+    - repos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: github_app_get_repo
+  name: Get Repository
+  description: |
+    Get detailed information about a repository.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - repos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+    required:
+      - owner
+      - repo
+
+- slug: github_app_list_issues
+  name: List Issues
+  description: |
+    List issues in repositories the app has access to.
+  provider: github-app
+  endpoint: /issues
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      state:
+        type: string
+        description: "Filter by state (open, closed, all)"
+        default: open
+      repo:
+        type: string
+        description: "Filter by repository (owner/repo)"
+    required: []
+
+- slug: github_app_get_issue
+  name: Get Issue
+  description: |
+    Get detailed information about a specific issue.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/issues/{issue_number}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      issue_number:
+        type: integer
+        description: "Issue number"
+    required:
+      - owner
+      - repo
+      - issue_number
+
+- slug: github_app_list_pulls
+  name: List Pull Requests
+  description: |
+    List pull requests in a repository.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/pulls
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pulls
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pull requests
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      state:
+        type: string
+        description: "Filter by state (open, closed, all)"
+        default: open
+    required:
+      - owner
+      - repo
+
+- slug: github_app_get_pull
+  name: Get Pull Request
+  description: |
+    Get detailed information about a pull request.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/pulls/{pull_number}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pulls
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pull request
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      pull_number:
+        type: integer
+        description: "Pull request number"
+    required:
+      - owner
+      - repo
+      - pull_number
+
+- slug: github_app_list_comments
+  name: List Issue Comments
+  description: |
+    List comments on an issue or pull request.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/issues/{issue_number}/comments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - comments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      issue_number:
+        type: integer
+        description: "Issue or PR number"
+    required:
+      - owner
+      - repo
+      - issue_number
+
+- slug: github_app_create_comment
+  name: Create Issue Comment
+  description: |
+    Create a comment on an issue or pull request.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/issues/{issue_number}/comments
+  method: POST
+  scopes:
+    - write
+  tags:
+    - comments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a comment
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      issue_number:
+        type: integer
+        description: "Issue or PR number"
+      body:
+        type: string
+        description: "Comment text"
+    required:
+      - owner
+      - repo
+      - issue_number
+      - body
+
+- slug: github_app_list_labels
+  name: List Labels
+  description: |
+    List labels in a repository.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/labels
+  method: GET
+  scopes:
+    - read
+  tags:
+    - labels
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing labels
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+    required:
+      - owner
+      - repo
+
+- slug: github_app_list_milestones
+  name: List Milestones
+  description: |
+    List milestones in a repository.
+  provider: github-app
+  endpoint: /repos/{owner}/{repo}/milestones
+  method: GET
+  scopes:
+    - read
+  tags:
+    - milestones
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing milestones
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      state:
+        type: string
+        description: "Filter by state (open, closed, all)"
+        default: open
+    required:
+      - owner
+      - repo

@@ -1,0 +1,255 @@
+# Sage-intacct-oauth Tools - Allowlist
+# Curated subset of Sage Intacct API for AI agent use.
+# OAuth2 via Nango (OAuth variant).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. sage-intacct-oauth_list_locations      - List all locations
+# 2. sage-intacct-oauth_get_location       - Get location details
+# 3. sage-intacct-oauth_list_departments   - List departments
+# 4. sage-intacct-oauth_list_employees    - List employees
+# 5. sage-intacct-oauth_get_employee       - Get employee details
+# 6. sage-intacct-oauth_list_projects     - List projects
+# 7. sage-intacct-oauth_get_project       - Get project details
+# 8. sage-intacct-oauth_list_GL_accounts   - List GL accounts
+# 9. sage-intacct-oauth_list_journals     - List journal entries
+# 10. sage-intacct-oauth_get_reports      - Get financial reports
+
+- slug: sage-intacct-oauth_list_locations
+  name: List Locations
+  description: |
+    Retrieve a list of all locations in Sage Intacct.
+  provider: sage-intacct-oauth
+  endpoint: /v3/locations
+  method: GET
+  scopes:
+    - locations:read
+  tags:
+    - locations
+    - organization
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing locations
+    properties:
+      limit:
+        type: integer
+        description: "Number of locations"
+        default: 50
+    required: []
+
+- slug: sage-intacct-oauth_get_location
+  name: Get Location
+  description: |
+    Get details of a specific location.
+  provider: sage-intacct-oauth
+  endpoint: /v3/locations/{locationId}
+  method: GET
+  scopes:
+    - locations:read
+  tags:
+    - locations
+    - organization
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for getting a location
+    properties:
+      locationId:
+        type: string
+        description: "The location ID"
+    required:
+      - locationId
+
+- slug: sage-intacct-oauth_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of all departments.
+  provider: sage-intacct-oauth
+  endpoint: /v3/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - departments
+    - organization
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      limit:
+        type: integer
+        description: "Number of departments"
+        default: 50
+    required: []
+
+- slug: sage-intacct-oauth_list_employees
+  name: List Employees
+  description: |
+    Retrieve a list of all employees.
+  provider: sage-intacct-oauth
+  endpoint: /v3/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Number of employees"
+        default: 50
+    required: []
+
+- slug: sage-intacct-oauth_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: sage-intacct-oauth
+  endpoint: /v3/employees/{employeeId}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "The employee ID"
+    required:
+      - employeeId
+
+- slug: sage-intacct-oauth_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects.
+  provider: sage-intacct-oauth
+  endpoint: /v3/projects
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      limit:
+        type: integer
+        description: "Number of projects"
+        default: 50
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: sage-intacct-oauth_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project.
+  provider: sage-intacct-oauth
+  endpoint: /v3/projects/{projectId}
+  method: GET
+  scopes:
+    - projects:read
+  tags:
+    - projects
+    - accounting
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "The project ID"
+    required:
+      - projectId
+
+- slug: sage-intacct-oauth_list_GL_accounts
+  name: List GL Accounts
+  description: |
+    Retrieve a list of all GL accounts.
+  provider: sage-intacct-oauth
+  endpoint: /v3/gl-accounts
+  method: GET
+  scopes:
+    - gl-accounts:read
+  tags:
+    - gl-accounts
+    - accounting
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for listing GL accounts
+    properties:
+      limit:
+        type: integer
+        description: "Number of accounts"
+        default: 50
+    required: []
+
+- slug: sage-intacct-oauth_list_journals
+  name: List Journals
+  description: |
+    Retrieve a list of journal entries.
+  provider: sage-intacct-oauth
+  endpoint: /v3/journals
+  method: GET
+  scopes:
+    - journals:read
+  tags:
+    - journals
+    - accounting
+    - entries
+  input_schema:
+    type: object
+    description: Parameters for listing journals
+    properties:
+      limit:
+        type: integer
+        description: "Number of entries"
+        default: 50
+    required: []
+
+- slug: sage-intacct-oauth_get_reports
+  name: Get Reports
+  description: |
+    Get financial reports.
+  provider: sage-intacct-oauth
+  endpoint: /v3/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - reports
+    - accounting
+    - finance
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties:
+      reportId:
+        type: string
+        description: "Report ID"
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required:
+      - reportId

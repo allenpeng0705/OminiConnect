@@ -1,0 +1,232 @@
+- slug: replicate_list_models
+  name: List Models
+  description: |
+    Retrieve a list of all available Replicate models.
+  provider: replicate
+  endpoint: /v1/models
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for listing models
+    properties:
+      filter:
+        type: string
+        description: "Filter by creator or name pattern"
+      limit:
+        type: integer
+        description: "Maximum number of models to return"
+    required: []
+
+- slug: replicate_get_model
+  name: Get Model
+  description: |
+    Retrieve details for a specific model by owner and name.
+  provider: replicate
+  endpoint: /v1/models/{owner}/{name}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for retrieving a model
+    properties:
+      owner:
+        type: string
+        description: "The model owner (username or organization)"
+      name:
+        type: string
+        description: "The model name"
+    required:
+      - owner
+      - name
+
+- slug: replicate_get_model_version
+  name: Get Model Version
+  description: |
+    Retrieve a specific version of a model.
+  provider: replicate
+  endpoint: /v1/models/{owner}/{name}/versions/{version_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - models
+  input_schema:
+    type: object
+    description: Parameters for retrieving a model version
+    properties:
+      owner:
+        type: string
+        description: "The model owner"
+      name:
+        type: string
+        description: "The model name"
+      version_id:
+        type: string
+        description: "The version ID"
+    required:
+      - owner
+      - name
+      - version_id
+
+- slug: replicate_create_prediction
+  name: Create Prediction
+  description: |
+    Start a new prediction with a model.
+  provider: replicate
+  endpoint: /v1/predictions
+  method: POST
+  scopes:
+    - write
+  tags:
+    - predictions
+  input_schema:
+    type: object
+    description: Parameters for creating a prediction
+    properties:
+      model:
+        type: string
+        description: "Model version ID to use"
+      input:
+        type: object
+        description: "Input parameters for the model"
+      webhook:
+        type: string
+        description: "Callback URL for completion notification"
+    required:
+      - model
+      - input
+
+- slug: replicate_get_prediction
+  name: Get Prediction
+  description: |
+    Retrieve a prediction by ID.
+  provider: replicate
+  endpoint: /v1/predictions/{prediction_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - predictions
+  input_schema:
+    type: object
+    description: Parameters for retrieving a prediction
+    properties:
+      prediction_id:
+        type: string
+        description: "The prediction ID"
+    required:
+      - prediction_id
+
+- slug: replicate_list_predictions
+  name: List Predictions
+  description: |
+    Retrieve a list of predictions.
+  provider: replicate
+  endpoint: /v1/predictions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - predictions
+  input_schema:
+    type: object
+    description: Parameters for listing predictions
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of predictions to return"
+    required: []
+
+- slug: replicate_cancel_prediction
+  name: Cancel Prediction
+  description: |
+    Cancel a running prediction.
+  provider: replicate
+  endpoint: /v1/predictions/{prediction_id}/cancel
+  method: POST
+  scopes:
+    - write
+  tags:
+    - predictions
+  input_schema:
+    type: object
+    description: Parameters for canceling a prediction
+    properties:
+      prediction_id:
+        type: string
+        description: "The prediction ID to cancel"
+    required:
+      - prediction_id
+
+- slug: replicate_list_collections
+  name: List Collections
+  description: |
+    Retrieve a list of curated model collections.
+  provider: replicate
+  endpoint: /v1/collections
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Parameters for listing collections
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of collections to return"
+    required: []
+
+- slug: replicate_get_collection
+  name: Get Collection
+  description: |
+    Retrieve a specific collection by slug.
+  provider: replicate
+  endpoint: /v1/collections/{slug}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Parameters for retrieving a collection
+    properties:
+      slug:
+        type: string
+        description: "The collection slug"
+    required:
+      - slug
+
+- slug: replicate_create_webhook
+  name: Create Webhook
+  description: |
+    Register a webhook for prediction events.
+  provider: replicate
+  endpoint: /v1/webhooks
+  method: POST
+  scopes:
+    - write
+  tags:
+    - webhooks
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      url:
+        type: string
+        description: "The webhook URL"
+      events:
+        type: array
+        description: "Event types to subscribe to"
+    required:
+      - url
+      - events

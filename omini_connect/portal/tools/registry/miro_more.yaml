@@ -1,0 +1,289 @@
+# Miro Additional Tools - Allowlist
+# Curated subset of the Miro REST API for AI agent use.
+
+# === TOOL LIST ===
+# 1. miro_more_list_teams          - List teams in Miro
+# 2. miro_more_get_team            - Get a specific team
+# 3. miro_more_list_members        - List members of a team
+# 4. miro_more_get_member          - Get a specific team member
+# 5. miro_more_list_boards         - List boards
+# 6. miro_more_get_board          - Get a specific board
+# 7. miro_more_create_board       - Create a new board
+# 8. miro_more_list_projects      - List projects
+# 9. miro_more_get_project       - Get a specific project
+# 10. miro_more_list_frames       - List frames on a board
+
+- slug: miro_more_list_teams
+  name: List Teams
+  description: |
+    List all teams in the organization that the authenticated user belongs to.
+    Teams are used to organize members and manage access to boards and projects.
+  provider: miro_more
+  endpoint: /v2/teams
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: miro_more_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team including name, description, and member count.
+    Use this to retrieve team information before listing members or managing access.
+  provider: miro_more
+  endpoint: /v2/teams/{teamId}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - teams
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      teamId:
+        type: string
+        description: "Team ID (path parameter)"
+    required:
+      - teamId
+
+- slug: miro_more_list_members
+  name: List Team Members
+  description: |
+    List all members of a specific team. Returns user information including name, email, and role.
+    Use this to see who belongs to a team or find specific users.
+  provider: miro_more
+  endpoint: /v2/teams/{teamId}/members
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - teams
+    - members
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing team members
+    properties:
+      teamId:
+        type: string
+        description: "Team ID (path parameter)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required:
+      - teamId
+
+- slug: miro_more_get_member
+  name: Get Team Member
+  description: |
+    Get details of a specific member in a team including their role and permissions.
+    Use this to check a user's role or verify their access level.
+  provider: miro_more
+  endpoint: /v2/teams/{teamId}/members/{userId}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - teams
+    - members
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a team member
+    properties:
+      teamId:
+        type: string
+        description: "Team ID (path parameter)"
+      userId:
+        type: string
+        description: "User ID (path parameter)"
+    required:
+      - teamId
+      - userId
+
+- slug: miro_more_list_boards
+  name: List Boards
+  description: |
+    List all boards accessible to the authenticated user.
+    Boards are the main workspace in Miro where teams collaborate using frames, widgets, and mind maps.
+  provider: miro_more
+  endpoint: /v2/boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - workspace
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: miro_more_get_board
+  name: Get Board
+  description: |
+    Get details of a specific board including name, description, owner, and sharing settings.
+    Use this to retrieve board metadata before accessing its contents.
+  provider: miro_more
+  endpoint: /v2/boards/{boardId}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      boardId:
+        type: string
+        description: "Board ID (path parameter)"
+    required:
+      - boardId
+
+- slug: miro_more_create_board
+  name: Create Board
+  description: |
+    Create a new board in a specified team. The board starts empty and can be populated with frames and widgets.
+    Specify a name and optional description to help team members understand its purpose.
+  provider: miro_more
+  endpoint: /v2/boards
+  method: POST
+  scopes:
+    - boards:write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a board
+    properties:
+      name:
+        type: string
+        description: "Board name (required)"
+      description:
+        type: string
+        description: "Board description"
+      team_id:
+        type: string
+        description: "Team ID to create the board in"
+      is_private:
+        type: boolean
+        description: "Make board private (default false)"
+        default: false
+    required:
+      - name
+
+- slug: miro_more_list_projects
+  name: List Projects
+  description: |
+    List all projects in a team. Projects are top-level containers that group related boards together.
+    Use projects to organize boards by initiative, quarter, or team.
+  provider: miro_more
+  endpoint: /v2/projects
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - projects
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      team_id:
+        type: string
+        description: "Filter by team ID"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required: []
+
+- slug: miro_more_get_project
+  name: Get Project
+  description: |
+    Get details of a specific project including its name, description, and associated boards.
+    Use this to understand the scope of a project before accessing its boards.
+  provider: miro_more
+  endpoint: /v2/projects/{projectId}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: string
+        description: "Project ID (path parameter)"
+    required:
+      - projectId
+
+- slug: miro_more_list_frames
+  name: List Frames
+  description: |
+    List all frames on a specific board. Frames are containers that organize content on a board.
+    They can hold widgets, text, images, and other elements.
+  provider: miro_more
+  endpoint: /v2/boards/{boardId}/frames
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - frames
+    - board
+  input_schema:
+    type: object
+    description: Parameters for listing frames
+    properties:
+      boardId:
+        type: string
+        description: "Board ID (path parameter)"
+      cursor:
+        type: string
+        description: "Pagination cursor for next page"
+      limit:
+        type: integer
+        description: "Number of results per page (max 50, default 20)"
+        default: 20
+    required:
+      - boardId

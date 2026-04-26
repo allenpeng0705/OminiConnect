@@ -1,0 +1,252 @@
+- slug: clarity_list_sessions
+  name: List Sessions
+  description: |
+    Retrieve a list of user sessions with filtering options.
+  provider: clarity
+  endpoint: /v1/sessions
+  method: GET
+  scopes:
+    - sessions:read
+  tags:
+    - sessions
+  input_schema:
+    type: object
+    description: Parameters for listing sessions
+    properties:
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+      limit:
+        type: integer
+        description: "Maximum number of sessions to return (default 50)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required:
+      - project_id
+
+- slug: clarity_get_session
+  name: Get Session
+  description: |
+    Retrieve a specific session by its ID with detailed information.
+  provider: clarity
+  endpoint: /v1/sessions/{session_id}
+  method: GET
+  scopes:
+    - sessions:read
+  tags:
+    - sessions
+  input_schema:
+    type: object
+    description: Parameters for getting a session
+    properties:
+      session_id:
+        type: string
+        description: "Unique identifier of the session"
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+    required:
+      - session_id
+      - project_id
+
+- slug: clarity_list_events
+  name: List Events
+  description: |
+    Retrieve a list of user interaction events.
+  provider: clarity
+  endpoint: /v1/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+      session_id:
+        type: string
+        description: "Filter events by session ID"
+      limit:
+        type: integer
+        description: "Maximum number of events to return"
+    required:
+      - project_id
+
+- slug: clarity_get_event
+  name: Get Event
+  description: |
+    Retrieve a specific event by its ID.
+  provider: clarity
+  endpoint: /v1/events/{event_id}
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      event_id:
+        type: string
+        description: "Unique identifier of the event"
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+    required:
+      - event_id
+      - project_id
+
+- slug: clarity_list_heatmaps
+  name: List Heatmaps
+  description: |
+    Retrieve a list of heatmaps for a project.
+  provider: clarity
+  endpoint: /v1/heatmaps
+  method: GET
+  scopes:
+    - heatmaps:read
+  tags:
+    - heatmaps
+  input_schema:
+    type: object
+    description: Parameters for listing heatmaps
+    properties:
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+      limit:
+        type: integer
+        description: "Maximum number of heatmaps to return"
+    required:
+      - project_id
+
+- slug: clarity_get_heatmap
+  name: Get Heatmap
+  description: |
+    Retrieve a specific heatmap by its ID.
+  provider: clarity
+  endpoint: /v1/heatmaps/{heatmap_id}
+  method: GET
+  scopes:
+    - heatmaps:read
+  tags:
+    - heatmaps
+  input_schema:
+    type: object
+    description: Parameters for getting a heatmap
+    properties:
+      heatmap_id:
+        type: string
+        description: "Unique identifier of the heatmap"
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+    required:
+      - heatmap_id
+      - project_id
+
+- slug: clarity_list_users
+  name: List Users
+  description: |
+    Retrieve a list of identified users with their attributes.
+  provider: clarity
+  endpoint: /v1/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+      limit:
+        type: integer
+        description: "Maximum number of users to return"
+    required:
+      - project_id
+
+- slug: clarity_get_user
+  name: Get User
+  description: |
+    Retrieve a specific user by their ID with session history.
+  provider: clarity
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "Unique identifier of the user"
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+    required:
+      - user_id
+      - project_id
+
+- slug: clarity_list_contrasts
+  name: List Contrasts
+  description: |
+    Retrieve a list of A/B testing contrasts for a project.
+  provider: clarity
+  endpoint: /v1/contrasts
+  method: GET
+  scopes:
+    - contrasts:read
+  tags:
+    - contrasts
+    - ab-testing
+  input_schema:
+    type: object
+    description: Parameters for listing contrasts
+    properties:
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+      status:
+        type: string
+        description: "Filter by contrast status (active, completed)"
+    required:
+      - project_id
+
+- slug: clarity_get_contrast
+  name: Get Contrast
+  description: |
+    Retrieve a specific A/B test contrast by its ID with results.
+  provider: clarity
+  endpoint: /v1/contrasts/{contrast_id}
+  method: GET
+  scopes:
+    - contrasts:read
+  tags:
+    - contrasts
+    - ab-testing
+  input_schema:
+    type: object
+    description: Parameters for getting a contrast
+    properties:
+      contrast_id:
+        type: string
+        description: "Unique identifier of the contrast"
+      project_id:
+        type: string
+        description: "Microsoft Clarity project ID"
+    required:
+      - contrast_id
+      - project_id

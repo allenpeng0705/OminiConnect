@@ -1,0 +1,329 @@
+# 17hats Tools - Allowlist
+# Curated subset of 17hats CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. 17hats_list_clients         - List all clients
+# 2. 17hats_get_client          - Get client details
+# 3. 17hats_create_client       - Create a new client
+# 4. 17hats_list_projects       - List all projects
+# 5. 17hats_get_project         - Get project details
+# 6. 17hats_create_project     - Create a new project
+# 7. 17hats_list_tasks          - List all tasks
+# 8. 17hats_get_task            - Get task details
+# 9. 17hats_list_invoices       - List all invoices
+# 10. 17hats_get_invoice        - Get invoice details
+
+- slug: 17hats_list_clients
+  name: List Clients
+  description: |
+    List all clients in 17hats CRM.
+    Filter by name, email, or status.
+  provider: 17hats
+  endpoint: /clients
+  method: GET
+  scopes:
+    - clients:r
+  tags:
+    - clients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      search:
+        type: string
+        description: "Search by name or email"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: 17hats_get_client
+  name: Get Client
+  description: |
+    Get detailed information about a specific 17hats client.
+  provider: 17hats
+  endpoint: /clients/{id}
+  method: GET
+  scopes:
+    - clients:r
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      id:
+        type: string
+        description: "Client ID"
+    required:
+      - id
+
+- slug: 17hats_create_client
+  name: Create Client
+  description: |
+    Create a new client in 17hats CRM.
+    Set name, email, phone, and company details.
+  provider: 17hats
+  endpoint: /clients
+  method: POST
+  scopes:
+    - clients:w
+  tags:
+    - clients
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a client
+    properties:
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      company:
+        type: string
+        description: "Company name"
+    required:
+      - first_name
+      - last_name
+
+- slug: 17hats_list_projects
+  name: List Projects
+  description: |
+    List all projects in 17hats CRM.
+    Filter by client, status, or type.
+  provider: 17hats
+  endpoint: /projects
+  method: GET
+  scopes:
+    - projects:r
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      status:
+        type: string
+        description: "Filter by status (active, completed, on-hold)"
+      project_type:
+        type: string
+        description: "Filter by project type"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: 17hats_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a specific 17hats project.
+  provider: 17hats
+  endpoint: /projects/{id}
+  method: GET
+  scopes:
+    - projects:r
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      id:
+        type: string
+        description: "Project ID"
+    required:
+      - id
+
+- slug: 17hats_create_project
+  name: Create Project
+  description: |
+    Create a new project in 17hats CRM.
+    Set title, client, description, and timeline.
+  provider: 17hats
+  endpoint: /projects
+  method: POST
+  scopes:
+    - projects:w
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      client_id:
+        type: string
+        description: "Client ID"
+      description:
+        type: string
+        description: "Project description"
+      status:
+        type: string
+        description: "Project status"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      due_date:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+    required:
+      - name
+      - client_id
+
+- slug: 17hats_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in 17hats CRM.
+    Filter by project, status, or assignee.
+  provider: 17hats
+  endpoint: /tasks
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      status:
+        type: string
+        description: "Filter by status (pending, in-progress, completed)"
+      assignee_id:
+        type: string
+        description: "Filter by assignee ID"
+      due_date_from:
+        type: string
+        description: "Due date from (YYYY-MM-DD)"
+      due_date_to:
+        type: string
+        description: "Due date to (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: 17hats_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific 17hats task.
+  provider: 17hats
+  endpoint: /tasks/{id}
+  method: GET
+  scopes:
+    - tasks:r
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: 17hats_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in 17hats CRM.
+    Filter by client, status, or date range.
+  provider: 17hats
+  endpoint: /invoices
+  method: GET
+  scopes:
+    - invoices:r
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      client_id:
+        type: string
+        description: "Filter by client ID"
+      status:
+        type: string
+        description: "Filter by status (draft, sent, paid, overdue)"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: 17hats_get_invoice
+  name: Get Invoice
+  description: |
+    Get detailed information about a specific 17hats invoice.
+  provider: 17hats
+  endpoint: /invoices/{id}
+  method: GET
+  scopes:
+    - invoices:r
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - id

@@ -1,0 +1,232 @@
+# Kandji Tools - Allowlist
+# Curated subset of Kandji API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. kandji_list_devices         - List devices
+# 2. kandji_get_device          - Get device details
+# 3. kandji_list_blueprints     - List blueprints
+# 4. kandji_get_blueprint      - Get blueprint details
+# 5. kandji_list_apps           - List apps
+# 6. kandji_get_app            - Get app details
+# 7. kandji_list_library_items  - List library items
+# 8. kandji_get_library_item   - Get library item details
+# 9. kandji_list_users         - List users
+# 10. kandji_get_device_activity - Get device activity
+
+- slug: kandji_list_devices
+  name: List Devices
+  description: |
+    List all devices in Kandji.
+  provider: kandji
+  endpoint: /api/v1/devices
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: kandji_get_device
+  name: Get Device
+  description: |
+    Get details for a specific device.
+  provider: kandji
+  endpoint: /api/v1/devices/{device_id}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id
+
+- slug: kandji_list_blueprints
+  name: List Blueprints
+  description: |
+    List all blueprints.
+  provider: kandji
+  endpoint: /api/v1/blueprints
+  method: GET
+  scopes: []
+  tags:
+    - blueprints
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing blueprints
+    properties: {}
+    required: []
+
+- slug: kandji_get_blueprint
+  name: Get Blueprint
+  description: |
+    Get details for a specific blueprint.
+  provider: kandji
+  endpoint: /api/v1/blueprints/{blueprint_id}
+  method: GET
+  scopes: []
+  tags:
+    - blueprints
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a blueprint
+    properties:
+      blueprint_id:
+        type: string
+        description: "Blueprint ID"
+    required:
+      - blueprint_id
+
+- slug: kandji_list_apps
+  name: List Apps
+  description: |
+    List all apps.
+  provider: kandji
+  endpoint: /api/v1/apps
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing apps
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: kandji_get_app
+  name: Get App
+  description: |
+    Get details for a specific app.
+  provider: kandji
+  endpoint: /api/v1/apps/{app_id}
+  method: GET
+  scopes: []
+  tags:
+    - apps
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an app
+    properties:
+      app_id:
+        type: string
+        description: "App ID"
+    required:
+      - app_id
+
+- slug: kandji_list_library_items
+  name: List Library Items
+  description: |
+    List all library items.
+  provider: kandji
+  endpoint: /api/v1/library
+  method: GET
+  scopes: []
+  tags:
+    - library
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing library items
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: kandji_get_library_item
+  name: Get Library Item
+  description: |
+    Get details for a specific library item.
+  provider: kandji
+  endpoint: /api/v1/library/{library_item_id}
+  method: GET
+  scopes: []
+  tags:
+    - library
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a library item
+    properties:
+      library_item_id:
+        type: string
+        description: "Library Item ID"
+    required:
+      - library_item_id
+
+- slug: kandji_list_users
+  name: List Users
+  description: |
+    List all users.
+  provider: kandji
+  endpoint: /api/v1/users
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 20
+    required: []
+
+- slug: kandji_get_device_activity
+  name: Get Device Activity
+  description: |
+    Get activity for a specific device.
+  provider: kandji
+  endpoint: /api/v1/devices/{device_id}/activity
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - activity
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting device activity
+    properties:
+      device_id:
+        type: string
+        description: "Device ID"
+    required:
+      - device_id

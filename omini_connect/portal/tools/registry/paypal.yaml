@@ -1,0 +1,305 @@
+# PayPal Tools - Allowlist
+# Curated subset of the PayPal API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. paypal_list_orders           - List orders
+# 2. paypal_get_order             - Get details of a specific order
+# 3. paypal_create_order          - Create a new order
+# 4. paypal_capture_order         - Capture payment for an order
+# 5. paypal_list_payments         - List authorized payments
+# 6. paypal_get_payment           - Get details of a specific payment
+# 7. paypal_list_subscriptions    - List subscriptions
+# 8. paypal_get_subscription      - Get details of a specific subscription
+# 9. paypal_create_subscription   - Create a new subscription
+# 10. paypal_list_invoices        - List invoices
+
+- slug: paypal_list_orders
+  name: List Orders
+  description: |
+    List orders from PayPal. Returns order details with status, amounts, and payer information.
+  provider: paypal
+  endpoint: /v2/checkout/orders
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - orders
+    - payments
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      after:
+        type: string
+        description: "Cursor for forward pagination"
+      before:
+        type: string
+        description: "Cursor for backward pagination"
+      start_time:
+        type: string
+        description: "Filter by start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "Filter by end time (ISO 8601)"
+    required: []
+
+- slug: paypal_get_order
+  name: Get Order
+  description: |
+    Get details of a specific PayPal order including status, purchase units, and payer info.
+  provider: paypal
+  endpoint: /v2/checkout/orders/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - orders
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: paypal_create_order
+  name: Create Order
+  description: |
+    Create a new PayPal order with amount and intent (CAPTURE or AUTHORIZE). Returns order ID for checkout.
+  provider: paypal
+  endpoint: /v2/checkout/orders
+  method: POST
+  scopes:
+    - write
+  tags:
+    - orders
+    - payments
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      intent:
+        type: string
+        description: "Payment intent: CAPTURE or AUTHORIZE"
+        enum: [CAPTURE, AUTHORIZE]
+        default: CAPTURE
+      purchase_units:
+        type: array
+        items:
+          type: object
+        description: "Array of purchase units with amount and description"
+    required:
+      - intent
+      - purchase_units
+
+- slug: paypal_capture_order
+  name: Capture Order
+  description: |
+    Capture payment for an order that was authorized. Completes the payment flow after buyer approval.
+  provider: paypal
+  endpoint: /v2/checkout/orders/{id}/capture
+  method: POST
+  scopes:
+    - write
+  tags:
+    - orders
+    - payments
+    - capture
+  input_schema:
+    type: object
+    description: Parameters for capturing an order
+    properties:
+      id:
+        type: string
+        description: "Order ID to capture"
+      idempotency_id:
+        type: string
+        description: "Idempotency ID to prevent duplicate captures"
+    required:
+      - id
+
+- slug: paypal_list_payments
+  name: List Payments
+  description: |
+    List authorized payments (not yet captured) for the PayPal account.
+  provider: paypal
+  endpoint: /v2/payments/authorizations
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - payments
+    - authorization
+  input_schema:
+    type: object
+    description: Parameters for listing authorized payments
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      start_time:
+        type: string
+        description: "Filter by start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "Filter by end time (ISO 8601)"
+    required: []
+
+- slug: paypal_get_payment
+  name: Get Payment
+  description: |
+    Get details of a specific authorized payment including status, amount, and payer information.
+  provider: paypal
+  endpoint: /v2/payments/authorizations/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - payments
+    - authorization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payment
+    properties:
+      id:
+        type: string
+        description: "Authorization ID"
+    required:
+      - id
+
+- slug: paypal_list_subscriptions
+  name: List Subscriptions
+  description: |
+    List PayPal subscriptions. Returns subscription details with status, plan, and billing info.
+  provider: paypal
+  endpoint: /v1/billing/subscriptions
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - subscriptions
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      status:
+        type: string
+        description: "Filter by status: ACTIVE, SUSPENDED, CANCELED, EXPIRED"
+        enum: [ACTIVE, SUSPENDED, CANCELED, EXPIRED]
+      plan_id:
+        type: string
+        description: "Filter by plan ID"
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      start_time:
+        type: string
+        description: "Filter by start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "Filter by end time (ISO 8601)"
+    required: []
+
+- slug: paypal_get_subscription
+  name: Get Subscription
+  description: |
+    Get details of a specific subscription including plan, status, billing cycles, and next billing date.
+  provider: paypal
+  endpoint: /v1/billing/subscriptions/{id}
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - subscriptions
+    - billing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscription
+    properties:
+      id:
+        type: string
+        description: "Subscription ID"
+    required:
+      - id
+
+- slug: paypal_create_subscription
+  name: Create Subscription
+  description: |
+    Create a new PayPal subscription with plan ID and subscriber info. Triggers billing agreement.
+  provider: paypal
+  endpoint: /v1/billing/subscriptions
+  method: POST
+  scopes:
+    - write
+  tags:
+    - subscriptions
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a subscription
+    properties:
+      plan_id:
+        type: string
+        description: "Subscription plan ID"
+      subscriber:
+        type: object
+        description: "Subscriber object with email_address and name"
+      start_time:
+        type: string
+        description: "Billing cycle start time (ISO 8601)"
+      quantity:
+        type: string
+        description: "Quantity to subscribe"
+      application_context:
+        type: object
+        description: "Application context with return_url and cancel_url"
+    required:
+      - plan_id
+
+- slug: paypal_list_invoices
+  name: List Invoices
+  description: |
+    List invoices from PayPal. Returns invoice details with amounts, status, and payment terms.
+  provider: paypal
+  endpoint: /v2/invoicing/invoices
+  method: GET
+  scopes:
+    - read_only
+  tags:
+    - invoices
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      page_size:
+        type: integer
+        description: "Number of results per page (max 100, default 100)"
+        default: 100
+      start_time:
+        type: string
+        description: "Filter by start time (ISO 8601)"
+      end_time:
+        type: string
+        description: "Filter by end time (ISO 8601)"
+      status:
+        type: string
+        description: "Filter by status: DRAFT, SENT, PAID, MARKED_AS_PAID, CANCELED"
+        enum: [DRAFT, SENT, PAID, MARKED_AS_PAID, CANCELED]
+    required: []

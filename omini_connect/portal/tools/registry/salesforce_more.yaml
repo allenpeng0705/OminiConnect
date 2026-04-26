@@ -1,0 +1,283 @@
+- slug: salesforce_more_list_cases
+  name: List Cases
+  description: |
+    Retrieve a list of all support cases in Salesforce.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Case
+  method: GET
+  scopes:
+    - cases.read
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for listing cases
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of cases to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      status:
+        type: string
+        description: "Filter by case status (e.g., New, Open, Closed)"
+      priority:
+        type: string
+        description: "Filter by priority (e.g., Low, Medium, High, Critical)"
+    required: []
+
+- slug: salesforce_more_get_case
+  name: Get Case
+  description: |
+    Retrieve detailed information for a specific case by ID.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Case/{case_id}
+  method: GET
+  scopes:
+    - cases.read
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for getting a case
+    properties:
+      case_id:
+        type: string
+        description: "Unique identifier of the case"
+    required:
+      - case_id
+
+- slug: salesforce_more_create_case
+  name: Create Case
+  description: |
+    Create a new support case in Salesforce.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Case
+  method: POST
+  scopes:
+    - cases.write
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for creating a case
+    properties:
+      subject:
+        type: string
+        description: "Subject/title of the case"
+      description:
+        type: string
+        description: "Detailed description of the case"
+      status:
+        type: string
+        description: "Initial status (default: New)"
+      priority:
+        type: string
+        description: "Priority level (Low, Medium, High, Critical)"
+      account_id:
+        type: string
+        description: "ID of the associated account"
+    required:
+      - subject
+      - description
+
+- slug: salesforce_more_update_case
+  name: Update Case
+  description: |
+    Update an existing support case in Salesforce.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Case/{case_id}
+  method: PATCH
+  scopes:
+    - cases.write
+  tags:
+    - cases
+  input_schema:
+    type: object
+    description: Parameters for updating a case
+    properties:
+      case_id:
+        type: string
+        description: "Unique identifier of the case"
+      status:
+        type: string
+        description: "Updated status"
+      priority:
+        type: string
+        description: "Updated priority"
+      resolution:
+        type: string
+        description: "Resolution description"
+    required:
+      - case_id
+
+- slug: salesforce_more_list_solutions
+  name: List Solutions
+  description: |
+    Retrieve a list of all solutions in the Salesforce knowledge base.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Solution
+  method: GET
+  scopes:
+    - solutions.read
+  tags:
+    - solutions
+  input_schema:
+    type: object
+    description: Parameters for listing solutions
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of solutions to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      status:
+        type: string
+        description: "Filter by solution status (e.g., Draft, Published)"
+    required: []
+
+- slug: salesforce_more_get_solution
+  name: Get Solution
+  description: |
+    Retrieve detailed information for a specific solution by ID.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/Solution/{solution_id}
+  method: GET
+  scopes:
+    - solutions.read
+  tags:
+    - solutions
+  input_schema:
+    type: object
+    description: Parameters for getting a solution
+    properties:
+      solution_id:
+        type: string
+        description: "Unique identifier of the solution"
+    required:
+      - solution_id
+
+- slug: salesforce_more_list_reports
+  name: List Reports
+  description: |
+    Retrieve a list of all reports in the Salesforce Analytics Cloud.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/analytics/reports
+  method: GET
+  scopes:
+    - reports.read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for listing reports
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of reports to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      folder:
+        type: string
+        description: "Filter by folder ID"
+    required: []
+
+- slug: salesforce_more_get_report
+  name: Get Report
+  description: |
+    Retrieve detailed information and metadata for a specific report by ID.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/analytics/reports/{report_id}
+  method: GET
+  scopes:
+    - reports.read
+  tags:
+    - reports
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      report_id:
+        type: string
+        description: "Unique identifier of the report"
+    required:
+      - report_id
+
+- slug: salesforce_more_list_dashboards
+  name: List Dashboards
+  description: |
+    Retrieve a list of all dashboards in the Salesforce Analytics Cloud.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/analytics/dashboards
+  method: GET
+  scopes:
+    - dashboards.read
+  tags:
+    - dashboards
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of dashboards to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      folder:
+        type: string
+        description: "Filter by folder ID"
+    required: []
+
+- slug: salesforce_more_get_dashboard
+  name: Get Dashboard
+  description: |
+    Retrieve detailed information and metadata for a specific dashboard by ID.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/analytics/dashboards/{dashboard_id}
+  method: GET
+  scopes:
+    - dashboards.read
+  tags:
+    - dashboards
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboard_id:
+        type: string
+        description: "Unique identifier of the dashboard"
+    required:
+      - dashboard_id
+
+- slug: salesforce_more_list_knowledge_articles
+  name: List Knowledge Articles
+  description: |
+    Retrieve a list of all published knowledge articles in Salesforce.
+  provider: salesforce_more
+  endpoint: /services/data/v59.0/sobjects/KnowledgeArticleVersion
+  method: GET
+  scopes:
+    - knowledge.read
+  tags:
+    - knowledge
+  input_schema:
+    type: object
+    description: Parameters for listing knowledge articles
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of articles to return (default 50, max 200)"
+      offset:
+        type: integer
+        description: "Number of records to skip for pagination"
+      category:
+        type: string
+        description: "Filter by article category"
+      language:
+        type: string
+        description: "Filter by language code (e.g., en_US, es)"
+    required: []

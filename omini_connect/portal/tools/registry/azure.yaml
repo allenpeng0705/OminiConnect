@@ -1,0 +1,341 @@
+# Azure Tools - Allowlist
+# Curated subset of Azure Resource Manager API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. azure_list_resource_groups     - List Azure resource groups
+# 2. azure_get_resource_group      - Get resource group details
+# 3. azure_create_resource_group   - Create a new resource group
+# 4. azure_list_resources          - List resources in subscription
+# 5. azure_get_resource            - Get resource details
+# 6. azure_list_storage_accounts   - List storage accounts
+# 7. azure_get_storage_account     - Get storage account details
+# 8. azure_list_virtual_machines   - List virtual machines
+# 9. azure_get_virtual_machine     - Get virtual machine details
+# 10. azure_list_containers       - List blob containers
+
+- slug: azure_list_resource_groups
+  name: List Resource Groups
+  description: |
+    List all Azure resource groups in the subscription.
+    Resource groups are containers that hold related resources for an Azure solution.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourcegroups
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - resource-groups
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing resource groups
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      filter:
+        type: string
+        description: "OData filter expression"
+      top:
+        type: integer
+        description: "Number of results to return"
+    required:
+      - subscriptionId
+
+- slug: azure_get_resource_group
+  name: Get Resource Group
+  description: |
+    Get details about a specific Azure resource group including its resources and tags.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - resource-groups
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a resource group
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+    required:
+      - subscriptionId
+      - resourceGroupName
+
+- slug: azure_create_resource_group
+  name: Create Resource Group
+  description: |
+    Create a new Azure resource group to organize resources and manage permissions.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}
+  method: PUT
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - resource-groups
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a resource group
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Desired resource group name"
+      location:
+        type: string
+        description: "Azure region (e.g., eastus, westus2)"
+      tags:
+        type: object
+        description: "Resource tags as key-value pairs"
+    required:
+      - subscriptionId
+      - resourceGroupName
+      - location
+
+- slug: azure_list_resources
+  name: List Resources
+  description: |
+    List all resources in a subscription or resource group.
+    Use this to discover what resources exist in your Azure environment.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resources
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - resources
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing resources
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Filter by resource group name"
+      filter:
+        type: string
+        description: "OData filter expression"
+      top:
+        type: integer
+        description: "Number of results to return"
+    required:
+      - subscriptionId
+
+- slug: azure_get_resource
+  name: Get Resource
+  description: |
+    Get details about a specific Azure resource including provisioning state, tags, and metadata.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - resources
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a resource
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+      resourceProviderNamespace:
+        type: string
+        description: "Resource provider namespace (e.g., Microsoft.Compute)"
+      resourceType:
+        type: string
+        description: "Resource type (e.g., virtualMachines)"
+      resourceName:
+        type: string
+        description: "Resource name"
+      apiVersion:
+        type: string
+        description: "API version of the resource provider"
+    required:
+      - subscriptionId
+      - resourceGroupName
+      - resourceProviderNamespace
+      - resourceType
+      - resourceName
+
+- slug: azure_list_storage_accounts
+  name: List Storage Accounts
+  description: |
+    List all Azure storage accounts in a subscription or resource group.
+    Storage accounts contain blob, file, table, and queue data.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/providers/Microsoft.Storage/storageaccounts
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - storage
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing storage accounts
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Filter by resource group name"
+      filter:
+        type: string
+        description: "OData filter expression"
+    required:
+      - subscriptionId
+
+- slug: azure_get_storage_account
+  name: Get Storage Account
+  description: |
+    Get details about a specific Azure storage account including keys, endpoints, and properties.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - storage
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a storage account
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+      storageAccountName:
+        type: string
+        description: "Storage account name"
+    required:
+      - subscriptionId
+      - resourceGroupName
+      - storageAccountName
+
+- slug: azure_list_virtual_machines
+  name: List Virtual Machines
+  description: |
+    List all virtual machines in a subscription or resource group.
+    Returns VM sizes, statuses, and basic configuration.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - compute
+    - virtual-machines
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing virtual machines
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+      filter:
+        type: string
+        description: "OData filter expression"
+      expand:
+        type: string
+        description: "Expand response with additional details (e.g., instanceView)"
+    required:
+      - subscriptionId
+      - resourceGroupName
+
+- slug: azure_get_virtual_machine
+  name: Get Virtual Machine
+  description: |
+    Get detailed information about an Azure virtual machine including status, sizes, and configuration.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - compute
+    - virtual-machines
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a virtual machine
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+      vmName:
+        type: string
+        description: "Virtual machine name"
+      expand:
+        type: string
+        description: "Expand response with additional details (e.g., instanceView)"
+    required:
+      - subscriptionId
+      - resourceGroupName
+      - vmName
+
+- slug: azure_list_containers
+  name: List Containers
+  description: |
+    List blob containers in an Azure storage account.
+    Containers organize blobs similar to folders in a file system.
+  provider: azure
+  endpoint: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/blobServices/default/containers
+  method: GET
+  scopes:
+    - https://management.azure.com/user_impersonation
+  tags:
+    - storage
+    - blobs
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing blob containers
+    properties:
+      subscriptionId:
+        type: string
+        description: "Azure subscription ID"
+      resourceGroupName:
+        type: string
+        description: "Resource group name"
+      storageAccountName:
+        type: string
+        description: "Storage account name"
+      filter:
+        type: string
+        description: "OData filter expression"
+      maxresults:
+        type: integer
+        description: "Maximum number of results to return"
+    required:
+      - subscriptionId
+      - resourceGroupName
+      - storageAccountName

@@ -1,0 +1,278 @@
+# Pipeline Tools - Allowlist
+# Curated subset of Pipeline CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pipeline_list_deals      - List deals
+# 2. pipeline_get_deal         - Get deal details
+# 3. pipeline_create_deal      - Create a new deal
+# 4. pipeline_list_contacts    - List contacts
+# 5. pipeline_get_contact      - Get contact details
+# 6. pipeline_list_activities   - List activities
+# 7. pipeline_get_activity     - Get activity details
+# 8. pipeline_list_pipelines   - List pipelines
+# 9. pipeline_get_pipeline     - Get pipeline details
+# 10. pipeline_get_report      - Get report data
+
+- slug: pipeline_list_deals
+  name: List Deals
+  description: |
+    List all deals in Pipeline CRM. Filter by pipeline, stage, or status.
+  provider: pipeline
+  endpoint: /deals
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      pipeline_id:
+        type: integer
+        description: "Filter by pipeline ID"
+      stage_id:
+        type: integer
+        description: "Filter by stage ID"
+      status:
+        type: string
+        description: "Filter by status (open, won, lost)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: pipeline_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a specific deal.
+  provider: pipeline
+  endpoint: /deals/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - deals
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: integer
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: pipeline_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in Pipeline CRM.
+  provider: pipeline
+  endpoint: /deals
+  method: POST
+  scopes:
+    - write
+  tags:
+    - deals
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      name:
+        type: string
+        description: "Deal name"
+      value:
+        type: number
+        description: "Deal value (amount)"
+      pipeline_id:
+        type: integer
+        description: "Pipeline ID"
+      stage_id:
+        type: integer
+        description: "Stage ID"
+      contact_id:
+        type: integer
+        description: "Associated contact ID"
+    required:
+      - name
+
+- slug: pipeline_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Pipeline CRM.
+  provider: pipeline
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: pipeline_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: pipeline
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: pipeline_list_activities
+  name: List Activities
+  description: |
+    List all activities in Pipeline CRM. Filter by type, deal, or date range.
+  provider: pipeline
+  endpoint: /activities
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      type:
+        type: string
+        description: "Activity type (call, meeting, email, note)"
+      deal_id:
+        type: integer
+        description: "Filter by deal ID"
+      date_after:
+        type: string
+        description: "Activities after date (ISO 8601)"
+      date_before:
+        type: string
+        description: "Activities before date (ISO 8601)"
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: pipeline_get_activity
+  name: Get Activity
+  description: |
+    Get detailed information about a specific activity.
+  provider: pipeline
+  endpoint: /activities/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - activities
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: integer
+        description: "Activity ID"
+    required:
+      - id
+
+- slug: pipeline_list_pipelines
+  name: List Pipelines
+  description: |
+    List all sales pipelines in Pipeline CRM.
+  provider: pipeline
+  endpoint: /pipelines
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pipelines
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pipelines
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+    required: []
+
+- slug: pipeline_get_pipeline
+  name: Get Pipeline
+  description: |
+    Get detailed information about a specific pipeline including stages.
+  provider: pipeline
+  endpoint: /pipelines/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pipelines
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pipeline
+    properties:
+      id:
+        type: integer
+        description: "Pipeline ID"
+    required:
+      - id
+
+- slug: pipeline_get_report
+  name: Get Report
+  description: |
+    Get report data from Pipeline CRM such as sales metrics or activity summary.
+  provider: pipeline
+  endpoint: /reports/{type}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      type:
+        type: string
+        description: "Report type (sales, activity, pipeline)"
+      date_from:
+        type: string
+        description: "Start date (ISO 8601)"
+      date_to:
+        type: string
+        description: "End date (ISO 8601)"
+    required:
+      - type

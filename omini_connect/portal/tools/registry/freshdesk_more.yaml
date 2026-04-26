@@ -1,0 +1,274 @@
+# Freshdesk More Tools - Allowlist
+# Additional Freshdesk tools for solutions, categories, agents, and teams.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. freshdesk_list_solutions        - List all solutions/articles
+# 2. freshdesk_get_solution          - Get a specific solution
+# 3. freshdesk_create_solution       - Create a new solution
+# 4. freshdesk_list_categories       - List solution categories
+# 5. freshdesk_get_category          - Get a specific category
+# 6. freshdesk_list_agents           - List all agents
+# 7. freshdesk_get_agent             - Get a specific agent
+# 8. freshdesk_list_teams            - List all teams
+# 9. freshdesk_get_team              - Get a specific team
+# 10. freshdesk_get_forum_settings   - Get forum settings
+
+- slug: freshdesk_list_solutions
+  name: List Solutions
+  description: |
+    List all solutions (articles) in your Freshdesk knowledge base.
+    Returns title, description, category, and status for each solution.
+  provider: freshdesk_more
+  endpoint: /solutions
+  method: GET
+  scopes:
+    - solutions
+  tags:
+    - solutions
+    - knowledge_base
+  input_schema:
+    type: object
+    description: Parameters for listing solutions
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freshdesk_get_solution
+  name: Get Solution
+  description: |
+    Get a specific solution by ID. Returns full solution content, metadata, and category information.
+  provider: freshdesk_more
+  endpoint: /solutions/{id}
+  method: GET
+  scopes:
+    - solutions
+  tags:
+    - solutions
+    - knowledge_base
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a solution
+    properties:
+      id:
+        type: integer
+        description: "Solution ID (path parameter)"
+    required:
+      - id
+
+- slug: freshdesk_create_solution
+  name: Create Solution
+  description: |
+    Create a new solution article in your Freshdesk knowledge base.
+    Include title, description, and body content. Optionally assign to a category.
+  provider: freshdesk_more
+  endpoint: /solutions
+  method: POST
+  scopes:
+    - solutions
+  tags:
+    - solutions
+    - knowledge_base
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a solution
+    properties:
+      title:
+        type: string
+        description: "Solution title (required)"
+      description:
+        type: string
+        description: "Short description (required)"
+      body:
+        type: string
+        description: "Solution content in HTML (required)"
+      category_id:
+        type: integer
+        description: "Category ID to place the solution in"
+      status:
+        type: string
+        description: "Solution status: published or draft"
+        enum: [published, draft]
+        default: published
+    required:
+      - title
+      - description
+      - body
+
+- slug: freshdesk_list_categories
+  name: List Categories
+  description: |
+    List all categories in your Freshdesk solution portal.
+    Categories group solutions together for better organization.
+  provider: freshdesk_more
+  endpoint: /solution/categories
+  method: GET
+  scopes:
+    - solutions
+  tags:
+    - categories
+    - knowledge_base
+  input_schema:
+    type: object
+    description: Parameters for listing categories
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freshdesk_get_category
+  name: Get Category
+  description: |
+    Get a specific category by ID. Returns name, description, and count of solutions.
+  provider: freshdesk_more
+  endpoint: /solution/categories/{id}
+  method: GET
+  scopes:
+    - solutions
+  tags:
+    - categories
+    - knowledge_base
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a category
+    properties:
+      id:
+        type: integer
+        description: "Category ID (path parameter)"
+    required:
+      - id
+
+- slug: freshdesk_list_agents
+  name: List Agents
+  description: |
+    List all agents in your Freshdesk account.
+    Returns name, email, role, group, and availability status.
+  provider: freshdesk_more
+  endpoint: /agents
+  method: GET
+  scopes:
+    - agents
+  tags:
+    - agents
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freshdesk_get_agent
+  name: Get Agent
+  description: |
+    Get details of a specific agent by ID. Returns profile, skills, availability, and current assignments.
+  provider: freshdesk_more
+  endpoint: /agents/{id}
+  method: GET
+  scopes:
+    - agents
+  tags:
+    - agents
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      id:
+        type: integer
+        description: "Agent ID (path parameter)"
+    required:
+      - id
+
+- slug: freshdesk_list_teams
+  name: List Teams
+  description: |
+    List all teams in your Freshdesk account.
+    Teams group agents together for ticket assignment and routing.
+  provider: freshdesk_more
+  endpoint: /teams
+  method: GET
+  scopes:
+    - teams
+  tags:
+    - teams
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing teams
+    properties:
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: freshdesk_get_team
+  name: Get Team
+  description: |
+    Get details of a specific team by ID. Returns team name, description, and member list.
+  provider: freshdesk_more
+  endpoint: /teams/{id}
+  method: GET
+  scopes:
+    - teams
+  tags:
+    - teams
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a team
+    properties:
+      id:
+        type: integer
+        description: "Team ID (path parameter)"
+    required:
+      - id
+
+- slug: freshdesk_get_forum_settings
+  name: Get Forum Settings
+  description: |
+    Get the global forum settings for your Freshdesk community portal.
+    Includes moderation settings and display preferences.
+  provider: freshdesk_more
+  endpoint: /forum_settings
+  method: GET
+  scopes:
+    - solutions
+  tags:
+    - forum
+    - settings
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []

@@ -1,0 +1,300 @@
+# Spotify Tools - Allowlist
+# Curated subset of Spotify Web API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. spotify_list_playlists   - List user's playlists
+# 2. spotify_get_playlist     - Get playlist details
+# 3. spotify_create_playlist  - Create a new playlist
+# 4. spotify_list_tracks      - List tracks in a playlist
+# 5. spotify_get_track       - Get track details
+# 6. spotify_search_tracks   - Search for tracks by keyword
+# 7. spotify_list_artists     - List artists
+# 8. spotify_get_artist       - Get artist details
+# 9. spotify_list_albums      - List albums
+# 10. spotify_get_album       - Get album details
+
+- slug: spotify_list_playlists
+  name: List Playlists
+  description: |
+    List playlists for the authenticated user.
+    Returns user's playlists with name, description, track count, and owner info.
+  provider: spotify
+  endpoint: /me/playlists
+  method: GET
+  scopes:
+    - playlist-read-private
+    - playlist-read-collaborative
+  tags:
+    - playlists
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing playlists
+    properties:
+      limit:
+        type: integer
+        description: "Max playlists to return (default 50, max 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: spotify_get_playlist
+  name: Get Playlist
+  description: |
+    Get detailed information about a specific playlist.
+    Returns playlist metadata, description, cover image, and owner info.
+  provider: spotify
+  endpoint: /playlists/{playlist_id}
+  method: GET
+  scopes:
+    - playlist-read-private
+    - playlist-read-collaborative
+  tags:
+    - playlists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a playlist
+    properties:
+      playlist_id:
+        type: string
+        description: "Playlist ID (required)"
+    required:
+      - playlist_id
+
+- slug: spotify_create_playlist
+  name: Create Playlist
+  description: |
+    Create a new playlist for the authenticated user.
+    Returns playlist ID and initial configuration.
+  provider: spotify
+  endpoint: /users/{user_id}/playlists
+  method: POST
+  scopes:
+    - playlist-modify-public
+    - playlist-modify-private
+  tags:
+    - playlists
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a playlist
+    properties:
+      user_id:
+        type: string
+        description: "User ID - use 'me' for authenticated user (required)"
+      name:
+        type: string
+        description: "Playlist name (required)"
+      description:
+        type: string
+        description: "Playlist description"
+      public:
+        type: boolean
+        description: "Make playlist public (default false)"
+        default: false
+    required:
+      - user_id
+      - name
+
+- slug: spotify_list_tracks
+  name: List Tracks
+  description: |
+    List tracks in a playlist with full details.
+    Returns track items including name, artists, album, duration, and added info.
+  provider: spotify
+  endpoint: /playlists/{playlist_id}/tracks
+  method: GET
+  scopes:
+    - playlist-read-private
+    - playlist-read-collaborative
+  tags:
+    - tracks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tracks
+    properties:
+      playlist_id:
+        type: string
+        description: "Playlist ID (required)"
+      limit:
+        type: integer
+        description: "Max tracks (default 100, max 100)"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - playlist_id
+
+- slug: spotify_get_track
+  name: Get Track
+  description: |
+    Get detailed information about a specific track.
+    Returns track name, artists, album, duration, popularity, and preview URL.
+  provider: spotify
+  endpoint: /tracks/{track_id}
+  method: GET
+  scopes: []
+  tags:
+    - tracks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a track
+    properties:
+      track_id:
+        type: string
+        description: "Track ID (required)"
+    required:
+      - track_id
+
+- slug: spotify_search_tracks
+  name: Search Tracks
+  description: |
+    Search for tracks by keyword query.
+    Returns matching tracks with artist, album, and preview info.
+  provider: spotify
+  endpoint: /search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - tracks
+    - discovery
+  input_schema:
+    type: object
+    description: Parameters for searching tracks
+    properties:
+      q:
+        type: string
+        description: "Search query (required)"
+      type:
+        type: string
+        description: "Result type filter (default track)"
+        default: track
+      limit:
+        type: integer
+        description: "Max results (default 20, max 50)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - q
+
+- slug: spotify_list_artists
+  name: List Artists
+  description: |
+    List artists, optionally from a user's followed artists or search results.
+    Returns artist profiles with images, genres, and follower counts.
+  provider: spotify
+  endpoint: /me/following
+  method: GET
+  scopes:
+    - user-follow-read
+  tags:
+    - artists
+    - list
+    - social
+  input_schema:
+    type: object
+    description: Parameters for listing artists
+    properties:
+      type:
+        type: string
+        description: "Type of items to list (default artist)"
+        default: artist
+      limit:
+        type: integer
+        description: "Max artists (default 20, max 50)"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination (artist ID)"
+    required:
+      - type
+
+- slug: spotify_get_artist
+  name: Get Artist
+  description: |
+    Get detailed information about an artist.
+    Returns artist name, images, genres, follower count, and popularity metrics.
+  provider: spotify
+  endpoint: /artists/{artist_id}
+  method: GET
+  scopes: []
+  tags:
+    - artists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an artist
+    properties:
+      artist_id:
+        type: string
+        description: "Artist ID (required)"
+    required:
+      - artist_id
+
+- slug: spotify_list_albums
+  name: List Albums
+  description: |
+    List albums, optionally from an artist's discography or search results.
+    Returns album metadata with images, release dates, and track counts.
+  provider: spotify
+  endpoint: /artist/{artist_id}/albums
+  method: GET
+  scopes: []
+  tags:
+    - albums
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing albums
+    properties:
+      artist_id:
+        type: string
+        description: "Artist ID (required)"
+      limit:
+        type: integer
+        description: "Max albums (default 20, max 50)"
+        default: 20
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required:
+      - artist_id
+
+- slug: spotify_get_album
+  name: Get Album
+  description: |
+    Get detailed information about an album.
+    Returns album name, artist, cover art, release date, and track listing.
+  provider: spotify
+  endpoint: /albums/{album_id}
+  method: GET
+  scopes: []
+  tags:
+    - albums
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an album
+    properties:
+      album_id:
+        type: string
+        description: "Album ID (required)"
+    required:
+      - album_id

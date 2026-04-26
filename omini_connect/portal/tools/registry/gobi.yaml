@@ -1,0 +1,276 @@
+# Gobi Tools - Allowlist
+# Curated subset of Gobi API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gobi_list_candidates    - List all candidates
+# 2. gobi_get_candidate      - Get candidate details
+# 3. gobi_create_candidate   - Create a new candidate
+# 4. gobi_update_candidate   - Update a candidate
+# 5. gobi_list_jobs          - List all jobs
+# 6. gobi_get_job            - Get job details
+# 7. gobi_list_interviews    - List interviews
+# 8. gobi_get_interview      - Get interview details
+# 9. gobi_list_offers        - List offers
+# 10. gobi_get_offer         - Get offer details
+
+- slug: gobi_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates in Gobi.
+  provider: gobi
+  endpoint: /candidates
+  method: GET
+  scopes:
+    - gobi.candidates.read
+  tags:
+    - candidates
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing candidates
+    properties:
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: gobi_get_candidate
+  name: Get Candidate
+  description: |
+    Get detailed information about a specific candidate.
+  provider: gobi
+  endpoint: /candidates/{candidateId}
+  method: GET
+  scopes:
+    - gobi.candidates.read
+  tags:
+    - candidates
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+    required:
+      - candidateId
+
+- slug: gobi_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate in Gobi.
+  provider: gobi
+  endpoint: /candidates
+  method: POST
+  scopes:
+    - gobi.candidates.write
+  tags:
+    - candidates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a candidate
+    properties:
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - firstName
+      - lastName
+      - email
+
+- slug: gobi_update_candidate
+  name: Update Candidate
+  description: |
+    Update an existing candidate's information.
+  provider: gobi
+  endpoint: /candidates/{candidateId}
+  method: PUT
+  scopes:
+    - gobi.candidates.write
+  tags:
+    - candidates
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a candidate
+    properties:
+      candidateId:
+        type: string
+        description: "Candidate ID"
+      firstName:
+        type: string
+        description: "First name"
+      lastName:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - candidateId
+
+- slug: gobi_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs in Gobi.
+  provider: gobi
+  endpoint: /jobs
+  method: GET
+  scopes:
+    - gobi.jobs.read
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed, draft)"
+      limit:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: gobi_get_job
+  name: Get Job
+  description: |
+    Get details about a specific job.
+  provider: gobi
+  endpoint: /jobs/{jobId}
+  method: GET
+  scopes:
+    - gobi.jobs.read
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      jobId:
+        type: string
+        description: "Job ID"
+    required:
+      - jobId
+
+- slug: gobi_list_interviews
+  name: List Interviews
+  description: |
+    List all interviews in Gobi.
+  provider: gobi
+  endpoint: /interviews
+  method: GET
+  scopes:
+    - gobi.interviews.read
+  tags:
+    - interviews
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing interviews
+    properties:
+      candidateId:
+        type: string
+        description: "Filter by candidate ID"
+      jobId:
+        type: string
+        description: "Filter by job ID"
+      status:
+        type: string
+        description: "Filter by status (scheduled, completed, cancelled)"
+    required: []
+
+- slug: gobi_get_interview
+  name: Get Interview
+  description: |
+    Get details about a specific interview.
+  provider: gobi
+  endpoint: /interviews/{interviewId}
+  method: GET
+  scopes:
+    - gobi.interviews.read
+  tags:
+    - interviews
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an interview
+    properties:
+      interviewId:
+        type: string
+        description: "Interview ID"
+    required:
+      - interviewId
+
+- slug: gobi_list_offers
+  name: List Offers
+  description: |
+    List all offers in Gobi.
+  provider: gobi
+  endpoint: /offers
+  method: GET
+  scopes:
+    - gobi.offers.read
+  tags:
+    - offers
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      candidateId:
+        type: string
+        description: "Filter by candidate ID"
+      jobId:
+        type: string
+        description: "Filter by job ID"
+      status:
+        type: string
+        description: "Filter by status (pending, accepted, rejected)"
+    required: []
+
+- slug: gobi_get_offer
+  name: Get Offer
+  description: |
+    Get details about a specific offer.
+  provider: gobi
+  endpoint: /offers/{offerId}
+  method: GET
+  scopes:
+    - gobi.offers.read
+  tags:
+    - offers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an offer
+    properties:
+      offerId:
+        type: string
+        description: "Offer ID"
+    required:
+      - offerId

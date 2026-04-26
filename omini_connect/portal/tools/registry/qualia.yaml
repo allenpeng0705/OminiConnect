@@ -1,0 +1,227 @@
+# Qualia Tools - Allowlist
+# Curated subset of Qualia API for AI agent use.
+# Basic Auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. qualia_list_transactions        - List transactions
+# 2. qualia_get_transaction         - Get transaction details
+# 3. qualia_list_orders             - List orders
+# 4. qualia_get_order               - Get order details
+# 5. qualia_list_documents          - List documents
+# 6. qualia_get_document           - Get document details
+# 7. qualia_list_contacts          - List contacts
+# 8. qualia_get_contact            - Get contact details
+# 9. qualia_list_products          - List products
+# 10. qualia_get_company           - Get company info
+
+- slug: qualia_list_transactions
+  name: List Transactions
+  description: |
+    List all transactions.
+  provider: qualia
+  endpoint: /transactions
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: qualia_get_transaction
+  name: Get Transaction
+  description: |
+    Get detailed information about a specific transaction.
+  provider: qualia
+  endpoint: /transactions/{transactionId}
+  method: GET
+  scopes: []
+  tags:
+    - transactions
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "Transaction ID"
+    required:
+      - transactionId
+
+- slug: qualia_list_orders
+  name: List Orders
+  description: |
+    List all orders.
+  provider: qualia
+  endpoint: /orders
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - commerce
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+    required: []
+
+- slug: qualia_get_order
+  name: Get Order
+  description: |
+    Get detailed information about a specific order.
+  provider: qualia
+  endpoint: /orders/{orderId}
+  method: GET
+  scopes: []
+  tags:
+    - orders
+    - commerce
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      orderId:
+        type: string
+        description: "Order ID"
+    required:
+      - orderId
+
+- slug: qualia_list_documents
+  name: List Documents
+  description: |
+    List all documents.
+  provider: qualia
+  endpoint: /documents
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      transactionId:
+        type: string
+        description: "Filter by transaction ID"
+    required: []
+
+- slug: qualia_get_document
+  name: Get Document
+  description: |
+    Get detailed information about a specific document.
+  provider: qualia
+  endpoint: /documents/{documentId}
+  method: GET
+  scopes: []
+  tags:
+    - documents
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      documentId:
+        type: string
+        description: "Document ID"
+    required:
+      - documentId
+
+- slug: qualia_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts.
+  provider: qualia
+  endpoint: /contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties: {}
+    required: []
+
+- slug: qualia_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: qualia
+  endpoint: /contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: qualia_list_products
+  name: List Products
+  description: |
+    List all products.
+  provider: qualia
+  endpoint: /products
+  method: GET
+  scopes: []
+  tags:
+    - products
+    - catalog
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties: {}
+    required: []
+
+- slug: qualia_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: qualia
+  endpoint: /company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

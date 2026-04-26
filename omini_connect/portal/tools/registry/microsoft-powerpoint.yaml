@@ -1,0 +1,281 @@
+# Microsoft PowerPoint Tools - Allowlist
+# Curated subset of Microsoft PowerPoint API for AI agent use.
+# OAuth2 via Nango (alias: microsoft).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. powerpoint_list_presentations - List presentations
+# 2. powerpoint_get_presentation  - Get presentation details
+# 3. powerpoint_list_slides        - List slides
+# 4. powerpoint_get_slide          - Get slide details
+# 5. powerpoint_list_shapes        - List shapes on a slide
+# 6. powerpoint_get_shape          - Get shape details
+# 7. powerpoint_create_slide       - Create a new slide
+# 8. powerpoint_delete_slide       - Delete a slide
+# 9. powerpoint_update_slide       - Update slide content
+# 10. powerpoint_list_themes      - List themes
+
+- slug: powerpoint_list_presentations
+  name: List Presentations
+  description: |
+    List all PowerPoint presentations accessible to the user.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - presentations
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing presentations
+    properties:
+      $filter:
+        type: string
+        description: "OData filter expression"
+      $top:
+        type: integer
+        description: "Max results"
+        default: 50
+    required: []
+
+- slug: powerpoint_get_presentation
+  name: Get Presentation
+  description: |
+    Get details of a specific presentation.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - presentations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a presentation
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+    required:
+      - itemId
+
+- slug: powerpoint_list_slides
+  name: List Slides
+  description: |
+    List all slides in a presentation.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - slides
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing slides
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+    required:
+      - itemId
+
+- slug: powerpoint_get_slide
+  name: Get Slide
+  description: |
+    Get details of a specific slide.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides/{slideId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - slides
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a slide
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      slideId:
+        type: string
+        description: "Slide ID"
+    required:
+      - itemId
+      - slideId
+
+- slug: powerpoint_list_shapes
+  name: List Shapes
+  description: |
+    List all shapes on a specific slide.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides/{slideId}/shapes
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - shapes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing shapes
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      slideId:
+        type: string
+        description: "Slide ID"
+    required:
+      - itemId
+      - slideId
+
+- slug: powerpoint_get_shape
+  name: Get Shape
+  description: |
+    Get details of a specific shape on a slide.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides/{slideId}/shapes/{shapeId}
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - shapes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a shape
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      slideId:
+        type: string
+        description: "Slide ID"
+      shapeId:
+        type: string
+        description: "Shape ID"
+    required:
+      - itemId
+      - slideId
+      - shapeId
+
+- slug: powerpoint_create_slide
+  name: Create Slide
+  description: |
+    Create a new slide in a presentation.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides
+  method: POST
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - powerpoint
+    - slides
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a slide
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      layoutId:
+        type: string
+        description: "Slide layout ID to use"
+      position:
+        type: integer
+        description: "Position to insert slide (0-based index)"
+    required:
+      - itemId
+
+- slug: powerpoint_delete_slide
+  name: Delete Slide
+  description: |
+    Delete a slide from a presentation.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides/{slideId}
+  method: DELETE
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - powerpoint
+    - slides
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a slide
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      slideId:
+        type: string
+        description: "Slide ID to delete"
+    required:
+      - itemId
+      - slideId
+
+- slug: powerpoint_update_slide
+  name: Update Slide
+  description: |
+    Update content on a slide.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/items/{itemId}/presentation/slides/{slideId}
+  method: PATCH
+  scopes:
+    - Files.ReadWrite
+  tags:
+    - powerpoint
+    - slides
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a slide
+    properties:
+      itemId:
+        type: string
+        description: "Presentation item ID"
+      slideId:
+        type: string
+        description: "Slide ID"
+      title:
+        type: string
+        description: "Slide title"
+    required:
+      - itemId
+      - slideId
+
+- slug: powerpoint_list_themes
+  name: List Themes
+  description: |
+    List available themes for presentations.
+  provider: microsoft-powerpoint
+  endpoint: /v1.0/me/drive/root/children
+  method: GET
+  scopes:
+    - Files.Read
+  tags:
+    - powerpoint
+    - themes
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing themes
+    properties:
+      $filter:
+        type: string
+        description: "Filter for theme files"
+    required: []

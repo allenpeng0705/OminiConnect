@@ -16,10 +16,21 @@ import type { ConnectUIEventSettingsChanged, ConnectUIEventToken } from '@nangoh
 
 export const Home: React.FC = () => {
     const navigate = useNavigate();
-    const { sessionToken, setApiURL, setAuthLink, setSession, setSessionToken, setDetectClosedAuthWindow, setIsEmbedded, setIsPreview } = useGlobal();
+    const {
+        sessionToken,
+        setApiURL,
+        setWebsocketsPath,
+        setAuthLink,
+        setSession,
+        setSessionToken,
+        setDetectClosedAuthWindow,
+        setIsEmbedded,
+        setIsPreview
+    } = useGlobal();
 
     const { data, error } = useQuery({ enabled: sessionToken !== null, queryKey: ['sessionToken'], queryFn: getConnectSession });
     const apiURL = useSearchParam('apiURL');
+    const websocketsPath = useSearchParam('websocketsPath');
     const theme = useSearchParam('theme');
     const isEmbedded = useSearchParam('embedded');
     const isPreview = useSearchParam('preview') === 'true';
@@ -75,12 +86,26 @@ export const Home: React.FC = () => {
 
     useEffect(() => {
         if (apiURL) setApiURL(apiURL);
+        if (websocketsPath) setWebsocketsPath(websocketsPath);
         if (detectClosedAuthWindow) setDetectClosedAuthWindow(detectClosedAuthWindow === 'true');
         if (isEmbedded) setIsEmbedded(isEmbedded === 'true');
         if (isPreview) setIsPreview(isPreview);
         if (theme && isValidTheme(theme)) setTheme(theme);
         setAuthLink(window.self === window.top);
-    }, [apiURL, detectClosedAuthWindow, isEmbedded, isPreview, setApiURL, setDetectClosedAuthWindow, setAuthLink, setIsEmbedded, setIsPreview, theme]);
+    }, [
+        apiURL,
+        websocketsPath,
+        detectClosedAuthWindow,
+        isEmbedded,
+        isPreview,
+        setApiURL,
+        setWebsocketsPath,
+        setDetectClosedAuthWindow,
+        setAuthLink,
+        setIsEmbedded,
+        setIsPreview,
+        theme
+    ]);
 
     useEffect(() => {
         if (data) {

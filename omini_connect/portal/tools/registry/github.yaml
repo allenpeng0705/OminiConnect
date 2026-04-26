@@ -1,0 +1,375 @@
+# GitHub Tools - Allowlist
+# Curated subset of the GitHub REST API v3 for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. github_list_repos          - List repositories for the authenticated user
+# 2. github_get_repo            - Get details of a specific repository
+# 3. github_create_repo         - Create a new repository
+# 4. github_list_issues         - List issues in a repository
+# 5. github_get_issue           - Get a specific issue
+# 6. github_create_issue        - Create a new issue
+# 7. github_list_pull_requests  - List pull requests in a repository
+# 8. github_get_pull_request    - Get a specific pull request
+# 9. github_list_branches       - List branches in a repository
+# 10. github_get_branch         - Get a specific branch
+
+- slug: github_list_repos
+  name: List Repositories
+  description: |
+    List repositories for the authenticated user.
+    Returns a paginated list of public and private repositories the authenticated user has access to.
+  provider: github
+  endpoint: /user/repos
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - repositories
+    - code
+  input_schema:
+    type: object
+    description: Parameters for listing repositories
+    properties:
+      sort:
+        type: string
+        description: "Sort order: created, updated, pushed, full_name (default)"
+        enum: [created, updated, pushed, full_name]
+      direction:
+        type: string
+        description: "Sort direction: asc or desc (default desc)"
+        enum: [asc, desc]
+      per_page:
+        type: integer
+        description: "Results per page (max 100, default 30)"
+        default: 30
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: github_get_repo
+  name: Get Repository
+  description: |
+    Get details of a specific repository including description, visibility, default branch, and stats.
+  provider: github
+  endpoint: /repos/{owner}/{repo}
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - repositories
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a repository
+    properties:
+      owner:
+        type: string
+        description: "Repository owner username or organization"
+      repo:
+        type: string
+        description: "Repository name"
+    required:
+      - owner
+      - repo
+
+- slug: github_create_repo
+  name: Create Repository
+  description: |
+    Create a new repository under the authenticated user's account or an organization.
+  provider: github
+  endpoint: /user/repos
+  method: POST
+  scopes:
+    - repo
+  tags:
+    - repository
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a repository
+    properties:
+      name:
+        type: string
+        description: "Repository name (required, must be unique to the owner)"
+      description:
+        type: string
+        description: "Repository description"
+      private:
+        type: boolean
+        description: "Make repository private"
+        default: true
+      auto_init:
+        type: boolean
+        description: "Initialize with README"
+        default: false
+      org:
+        type: string
+        description: "Organization name (if creating under an org)"
+    required:
+      - name
+
+- slug: github_list_issues
+  name: List Issues
+  description: |
+    List issues in a repository. Filter by state (open/closed), labels, or assignees.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/issues
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - issues
+    - tasks
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      owner:
+        type: string
+        description: "Repository owner username"
+      repo:
+        type: string
+        description: "Repository name"
+      state:
+        type: string
+        description: "Filter by state: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      sort:
+        type: string
+        description: "Sort by: created, updated, comments (default created)"
+        enum: [created, updated, comments]
+      direction:
+        type: string
+        description: "Sort direction: asc or desc"
+        enum: [asc, desc]
+      per_page:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - owner
+      - repo
+
+- slug: github_get_issue
+  name: Get Issue
+  description: |
+    Get details of a specific issue including title, body, labels, assignees, and state.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/issues/{issue_number}
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      owner:
+        type: string
+        description: "Repository owner username"
+      repo:
+        type: string
+        description: "Repository name"
+      issue_number:
+        type: integer
+        description: "Issue number"
+    required:
+      - owner
+      - repo
+      - issue_number
+
+- slug: github_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue in a repository. Include a clear title and optional body/description.
+    Optionally assign labels and assignees.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/issues
+  method: POST
+  scopes:
+    - repo
+  tags:
+    - issues
+    - create
+  input_schema:
+    type: object
+    description: Issue creation parameters
+    properties:
+      owner:
+        type: string
+        description: "Repository owner (path parameter)"
+      repo:
+        type: string
+        description: "Repository name (path parameter)"
+      title:
+        type: string
+        description: "Issue title (required)"
+      body:
+        type: string
+        description: "Issue body/description (optional)"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "Array of label names to add"
+      assignees:
+        type: array
+        items:
+          type: string
+        description: "Array of usernames to assign"
+    required:
+      - owner
+      - repo
+      - title
+
+- slug: github_list_pull_requests
+  name: List Pull Requests
+  description: |
+    List pull requests in a repository. Filter by state (open/closed/merged), author, or label.
+    Use for code review and merge tracking.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/pulls
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - pull requests
+    - code review
+  input_schema:
+    type: object
+    description: Parameters for listing pull requests
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      state:
+        type: string
+        description: "PR state: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      sort:
+        type: string
+        description: "Sort by: created, updated, popularity (default created)"
+        enum: [created, updated, popularity]
+      direction:
+        type: string
+        description: "Sort direction: asc or desc"
+        enum: [asc, desc]
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - owner
+      - repo
+
+- slug: github_get_pull_request
+  name: Get Pull Request
+  description: |
+    Get details of a specific pull request: title, body, state, reviews, and merge status.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/pulls/{pull_number}
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - pull requests
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a PR
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      pull_number:
+        type: integer
+        description: "Pull request number"
+    required:
+      - owner
+      - repo
+      - pull_number
+
+- slug: github_list_branches
+  name: List Branches
+  description: |
+    List all branches in a repository including protected branch info.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/branches
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - branches
+    - repository
+  input_schema:
+    type: object
+    description: Parameters for listing branches
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 30
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required:
+      - owner
+      - repo
+
+- slug: github_get_branch
+  name: Get Branch
+  description: |
+    Get details of a specific branch including the commit SHA, protected status, and branch name.
+  provider: github
+  endpoint: /repos/{owner}/{repo}/branches/{branch}
+  method: GET
+  scopes:
+    - repo
+  tags:
+    - branches
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a branch
+    properties:
+      owner:
+        type: string
+        description: "Repository owner"
+      repo:
+        type: string
+        description: "Repository name"
+      branch:
+        type: string
+        description: "Branch name"
+    required:
+      - owner
+      - repo
+      - branch

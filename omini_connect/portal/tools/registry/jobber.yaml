@@ -1,0 +1,237 @@
+# Jobber Tools - Allowlist
+# Curated subset of Jobber API for AI agent use.
+# OAUTH2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jobber_list_clients       - List clients
+# 2. jobber_get_client         - Get client details
+# 3. jobber_list_jobs         - List jobs
+# 4. jobber_get_job           - Get job details
+# 5. jobber_list_quotes       - List quotes
+# 6. jobber_get_quote         - Get quote details
+# 7. jobber_list_invoices     - List invoices
+# 8. jobber_get_invoice       - Get invoice details
+# 9. jobber_list_visits       - List visits
+# 10. jobber_get_visit        - Get visit details
+
+- slug: jobber_list_clients
+  name: List Clients
+  description: |
+    List all clients in Jobber.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - clients
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      first:
+        type: integer
+        description: "Number of results"
+        default: 20
+      after:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: jobber_get_client
+  name: Get Client
+  description: |
+    Get details for a specific client.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - clients
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+    required:
+      - client_id
+
+- slug: jobber_list_jobs
+  name: List Jobs
+  description: |
+    List all jobs.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - jobs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Job status filter"
+      first:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: jobber_get_job
+  name: Get Job
+  description: |
+    Get details for a specific job.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - jobs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a job
+    properties:
+      job_id:
+        type: string
+        description: "Job ID"
+    required:
+      - job_id
+
+- slug: jobber_list_quotes
+  name: List Quotes
+  description: |
+    List all quotes.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - quotes
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing quotes
+    properties:
+      first:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: jobber_get_quote
+  name: Get Quote
+  description: |
+    Get details for a specific quote.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - quotes
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a quote
+    properties:
+      quote_id:
+        type: string
+        description: "Quote ID"
+    required:
+      - quote_id
+
+- slug: jobber_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - invoices
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      first:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: jobber_get_invoice
+  name: Get Invoice
+  description: |
+    Get details for a specific invoice.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID"
+    required:
+      - invoice_id
+
+- slug: jobber_list_visits
+  name: List Visits
+  description: |
+    List all visits.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - visits
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing visits
+    properties:
+      first:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: jobber_get_visit
+  name: Get Visit
+  description: |
+    Get details for a specific visit.
+  provider: jobber
+  endpoint: /graphql
+  method: POST
+  scopes: []
+  tags:
+    - visits
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visit
+    properties:
+      visit_id:
+        type: string
+        description: "Visit ID"
+    required:
+      - visit_id

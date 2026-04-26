@@ -1,0 +1,316 @@
+# PagerDuty Tools - Allowlist
+# Curated subset of PagerDuty REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pagerduty_list_incidents     - List incidents
+# 2. pagerduty_get_incident       - Get a specific incident
+# 3. pagerduty_create_incident    - Create a new incident
+# 4. pagerduty_manage_incident    - Update/resolve an incident
+# 5. pagerduty_list_users        - List users
+# 6. pagerduty_get_user          - Get a specific user
+# 7. pagerduty_list_services     - List services
+# 8. pagerduty_get_service       - Get a specific service
+# 9. pagerduty_list_schedules    - List on-call schedules
+# 10. pagerduty_get_schedule     - Get a specific schedule
+
+- slug: pagerduty_list_incidents
+  name: List Incidents
+  description: |
+    List incidents in your PagerDuty account. Incidents are alerts or events
+    that trigger notifications to users. Filter by status, service, or date range.
+  provider: pagerduty
+  endpoint: /incidents
+  method: GET
+  scopes:
+    - incidents.read
+  tags:
+    - incidents
+    - monitoring
+  input_schema:
+    type: object
+    description: Parameters for listing incidents
+    properties:
+      status:
+        type: string
+        description: "Filter by status: triggered, acknowledged, resolved"
+        enum: [triggered, acknowledged, resolved]
+      service_ids:
+        type: array
+        items:
+          type: string
+        description: "Filter by service IDs"
+      date_range:
+        type: string
+        description: "Date range: today, week, month"
+      sort_by:
+        type: string
+        description: "Sort field: created_at, urgency"
+      limit:
+        type: integer
+        description: "Max results (default 25, max 100)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: pagerduty_get_incident
+  name: Get Incident
+  description: |
+    Get details of a specific incident by ID. Returns title, description,
+    status, service, assigned users, and timeline of events.
+  provider: pagerduty
+  endpoint: /incidents/{id}
+  method: GET
+  scopes:
+    - incidents.read
+  tags:
+    - incidents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an incident
+    properties:
+      incident_id:
+        type: string
+        description: "Incident ID (required)"
+    required:
+      - incident_id
+
+- slug: pagerduty_create_incident
+  name: Create Incident
+  description: |
+    Create a new incident in PagerDuty. Incidents trigger alerts
+    to on-call responders based on escalation policies.
+  provider: pagerduty
+  endpoint: /incidents
+  method: POST
+  scopes:
+    - incidents.write
+  tags:
+    - incidents
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an incident
+    properties:
+      title:
+        type: string
+        description: "Incident title (required)"
+      service_id:
+        type: string
+        description: "Service ID to attach the incident to (required)"
+      urgency:
+        type: string
+        description: "Urgency level: high or low"
+        enum: [high, low]
+        default: high
+      body:
+        type: string
+        description: "Incident description/details"
+      incident_key:
+        type: string
+        description: "Deduplication key to prevent duplicate incidents"
+    required:
+      - title
+      - service_id
+
+- slug: pagerduty_manage_incident
+  name: Manage Incident
+  description: |
+    Update an existing incident: acknowledge, resolve, or reassign.
+    Use this to change the status or update details of an active incident.
+  provider: pagerduty
+  endpoint: /incidents/{id}
+  method: PUT
+  scopes:
+    - incidents.write
+  tags:
+    - incidents
+    - update
+  input_schema:
+    type: object
+    description: Parameters for managing an incident
+    properties:
+      incident_id:
+        type: string
+        description: "Incident ID (required)"
+      status:
+        type: string
+        description: "New status: acknowledged, resolved"
+        enum: [acknowledged, resolved]
+      urgency:
+        type: string
+        description: "Change urgency: high or low"
+        enum: [high, low]
+      assignee:
+        type: array
+        items:
+          type: object
+        description: "Array of assignee user objects"
+    required:
+      - incident_id
+
+- slug: pagerduty_list_users
+  name: List Users
+  description: |
+    List all users in your PagerDuty account. Users are people who can
+    be assigned to incidents and are part of escalation policies.
+  provider: pagerduty
+  endpoint: /users
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      query:
+        type: string
+        description: "Search users by name or email"
+      limit:
+        type: integer
+        description: "Max results (default 25, max 100)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: pagerduty_get_user
+  name: Get User
+  description: |
+    Get details of a specific user including their contact methods,
+    time zone, and current on-call status.
+  provider: pagerduty
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - users.read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID (required)"
+    required:
+      - user_id
+
+- slug: pagerduty_list_services
+  name: List Services
+  description: |
+    List all services in your PagerDuty account. Services are applications
+    or components that can create incidents and have escalation policies.
+  provider: pagerduty
+  endpoint: /services
+  method: GET
+  scopes:
+    - services.read
+  tags:
+    - services
+    - infrastructure
+  input_schema:
+    type: object
+    description: Parameters for listing services
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 25, max 100)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: pagerduty_get_service
+  name: Get Service
+  description: |
+    Get details of a specific service including its integration keys,
+    escalation policy, and incident creation settings.
+  provider: pagerduty
+  endpoint: /services/{id}
+  method: GET
+  scopes:
+    - services.read
+  tags:
+    - services
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a service
+    properties:
+      service_id:
+        type: string
+        description: "Service ID (required)"
+    required:
+      - service_id
+
+- slug: pagerduty_list_schedules
+  name: List Schedules
+  description: |
+    List all on-call schedules in PagerDuty. Schedules define who is on-call
+    and when they receive incident notifications.
+  provider: pagerduty
+  endpoint: /schedules
+  method: GET
+  scopes:
+    - schedules.read
+  tags:
+    - schedules
+    - on-call
+  input_schema:
+    type: object
+    description: Parameters for listing schedules
+    properties:
+      query:
+        type: string
+        description: "Search schedules by name"
+      limit:
+        type: integer
+        description: "Max results (default 25, max 100)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: pagerduty_get_schedule
+  name: Get Schedule
+  description: |
+    Get details of a specific schedule including the escalation policy
+    and upcoming on-call shifts. Useful for finding who is on-call.
+  provider: pagerduty
+  endpoint: /schedules/{id}
+  method: GET
+  scopes:
+    - schedules.read
+  tags:
+    - schedules
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a schedule
+    properties:
+      schedule_id:
+        type: string
+        description: "Schedule ID (required)"
+      since:
+        type: string
+        description: "Start time for schedule overview (ISO 8601)"
+      until:
+        type: string
+        description: "End time for schedule overview (ISO 8601)"
+    required:
+      - schedule_id

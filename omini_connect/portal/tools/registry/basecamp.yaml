@@ -1,0 +1,272 @@
+- slug: basecamp_list_projects
+  name: List Projects
+  description: |
+    Retrieve a list of all projects accessible to the authenticated user.
+  provider: basecamp
+  endpoint: /projects.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      status:
+        type: string
+        description: "Filter by status: active, archived, or trashed"
+    required: []
+
+- slug: basecamp_get_project
+  name: Get Project
+  description: |
+    Retrieve details of a specific project including its structure and participants.
+  provider: basecamp
+  endpoint: /projects/{projectId}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the project to retrieve"
+    required:
+      - projectId
+
+- slug: basecamp_create_project
+  name: Create Project
+  description: |
+    Create a new project in Basecamp.
+  provider: basecamp
+  endpoint: /projects.json
+  method: POST
+  scopes:
+    - write
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Name of the new project"
+      description:
+        type: string
+        description: "Description of the project"
+      topics:
+        type: array
+        description: "Array of topic IDs to associate with the project"
+        items:
+          type: integer
+      bookmarks:
+        type: array
+        description: "Array of bookmark URLs to add to the project"
+        items:
+          type: string
+    required:
+      - name
+
+- slug: basecamp_list_todos
+  name: List Todos
+  description: |
+    Retrieve all todo items from a project, organized by todo sets.
+  provider: basecamp
+  endpoint: /projects/{projectId}/todos.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - todos
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing todos
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the project"
+      filter:
+        type: string
+        description: "Filter: active, pending, or archived"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - projectId
+
+- slug: basecamp_get_todo
+  name: Get Todo
+  description: |
+    Retrieve details of a specific todo item including comments and assignments.
+  provider: basecamp
+  endpoint: /projects/{projectId}/todos/{todoId}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - todos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a todo
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the parent project"
+      todoId:
+        type: integer
+        description: "The ID of the todo to retrieve"
+    required:
+      - projectId
+      - todoId
+
+- slug: basecamp_create_todo
+  name: Create Todo
+  description: |
+    Create a new todo item in a project's todo set.
+  provider: basecamp
+  endpoint: /projects/{projectId}/todos.json
+  method: POST
+  scopes:
+    - write
+  tags:
+    - todos
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a todo
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the project"
+      content:
+        type: string
+        description: "The todo item content/description"
+      due_on:
+        type: string
+        description: "Due date (YYYY-MM-DD format)"
+      assignee_ids:
+        type: array
+        description: "Array of user IDs to assign"
+        items:
+          type: integer
+      parent_todo_id:
+        type: integer
+        description: "Parent todo ID for subtodos"
+    required:
+      - projectId
+      - content
+
+- slug: basecamp_list_documents
+  name: List Documents
+  description: |
+    Retrieve all documents from a project's documents vault.
+  provider: basecamp
+  endpoint: /projects/{projectId}/documents.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - documents
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the project"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - projectId
+
+- slug: basecamp_get_document
+  name: Get Document
+  description: |
+    Retrieve details and content of a specific document.
+  provider: basecamp
+  endpoint: /projects/{projectId}/documents/{documentId}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - documents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the parent project"
+      documentId:
+        type: integer
+        description: "The ID of the document to retrieve"
+    required:
+      - projectId
+      - documentId
+
+- slug: basecamp_list_events
+  name: List Events
+  description: |
+    Retrieve recent activity events from a project.
+  provider: basecamp
+  endpoint: /projects/{projectId}/events.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      projectId:
+        type: integer
+        description: "The ID of the project"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      since:
+        type: string
+        description: "Return events after this timestamp (ISO 8601)"
+    required:
+      - projectId
+
+- slug: basecamp_get_person
+  name: Get Person
+  description: |
+    Retrieve profile information for a specific user.
+  provider: basecamp
+  endpoint: /people/{userId}.json
+  method: GET
+  scopes:
+    - read
+  tags:
+    - people
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a person
+    properties:
+      userId:
+        type: integer
+        description: "The ID of the user to retrieve"
+    required:
+      - userId

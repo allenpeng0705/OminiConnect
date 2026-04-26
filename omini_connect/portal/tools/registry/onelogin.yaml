@@ -1,0 +1,251 @@
+# OneLogin Tools - Allowlist
+# Curated subset of OneLogin API for AI agent use.
+# OAuth2 Client Credentials via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. onelogin_list_users               - List users
+# 2. onelogin_get_user                - Get user details
+# 3. onelogin_create_user             - Create user
+# 4. onelogin_update_user             - Update user
+# 5. onelogin_list_groups             - List groups
+# 6. onelogin_list_roles              - List roles
+# 7. onelogin_assign_role             - Assign role to user
+# 8. onelogin_list_applications       - List applications
+# 9. onelogin_get_reports            - Get reports
+# 10. onelogin_get_events            - Get events
+
+- slug: onelogin_list_users
+  name: List Users
+  description: |
+    List all users in OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/users
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - iam
+    - users
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      limit:
+        type: integer
+        description: "Number of users (default 50)"
+        default: 50
+    required: []
+
+- slug: onelogin_get_user
+  name: Get User
+  description: |
+    Get detailed information for a specific user.
+  provider: onelogin
+  endpoint: /api/v2/users/{id}
+  method: GET
+  scopes:
+    - users:read
+  tags:
+    - iam
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+    required:
+      - id
+
+- slug: onelogin_create_user
+  name: Create User
+  description: |
+    Create a new user in OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/users
+  method: POST
+  scopes:
+    - users:manage
+  tags:
+    - iam
+    - users
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a user
+    properties:
+      email:
+        type: string
+        description: "User email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - email
+      - first_name
+      - last_name
+
+- slug: onelogin_update_user
+  name: Update User
+  description: |
+    Update an existing user.
+  provider: onelogin
+  endpoint: /api/v2/users/{id}
+  method: PUT
+  scopes:
+    - users:manage
+  tags:
+    - iam
+    - users
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a user
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+      email:
+        type: string
+        description: "User email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+    required:
+      - id
+
+- slug: onelogin_list_groups
+  name: List Groups
+  description: |
+    List all groups in OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/groups
+  method: GET
+  scopes:
+    - groups:read
+  tags:
+    - iam
+    - groups
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties: {}
+    required: []
+
+- slug: onelogin_list_roles
+  name: List Roles
+  description: |
+    List all roles in OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/roles
+  method: GET
+  scopes:
+    - roles:read
+  tags:
+    - iam
+    - roles
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing roles
+    properties: {}
+    required: []
+
+- slug: onelogin_assign_role
+  name: Assign Role
+  description: |
+    Assign a role to a user.
+  provider: onelogin
+  endpoint: /api/v2/users/{id}/roles
+  method: POST
+  scopes:
+    - roles:manage
+  tags:
+    - iam
+    - roles
+    - assign
+  input_schema:
+    type: object
+    description: Parameters for assigning a role
+    properties:
+      id:
+        type: integer
+        description: "User ID"
+      role_id:
+        type: integer
+        description: "Role ID to assign"
+    required:
+      - id
+      - role_id
+
+- slug: onelogin_list_applications
+  name: List Applications
+  description: |
+    List all applications in OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/apps
+  method: GET
+  scopes:
+    - apps:read
+  tags:
+    - iam
+    - applications
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing applications
+    properties: {}
+    required: []
+
+- slug: onelogin_get_reports
+  name: Get Reports
+  description: |
+    Get reports from OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/reports
+  method: GET
+  scopes:
+    - reports:read
+  tags:
+    - iam
+    - reports
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting reports
+    properties: {}
+    required: []
+
+- slug: onelogin_get_events
+  name: Get Events
+  description: |
+    Get events/audit logs from OneLogin.
+  provider: onelogin
+  endpoint: /api/v2/events
+  method: GET
+  scopes:
+    - events:read
+  tags:
+    - iam
+    - events
+    - audit
+  input_schema:
+    type: object
+    description: Parameters for getting events
+    properties:
+      limit:
+        type: integer
+        description: "Number of events (default 50)"
+        default: 50
+    required: []

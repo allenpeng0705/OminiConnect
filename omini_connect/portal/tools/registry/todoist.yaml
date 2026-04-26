@@ -1,0 +1,312 @@
+# Todoist Tools - Allowlist
+# Curated subset of Todoist REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. todoist_list_tasks        - List tasks
+# 2. todoist_get_task          - Get task details
+# 3. todoist_create_task       - Create a task
+# 4. todoist_update_task       - Update a task
+# 5. todoist_close_task        - Close/complete a task
+# 6. todoist_list_projects     - List projects
+# 7. todoist_get_project       - Get project details
+# 8. todoist_create_project    - Create a project
+# 9. todoist_list_sections     - List sections
+# 10. todoist_get_section      - Get section details
+
+- slug: todoist_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks. Filter by project, section, assignee, labels, or due date.
+  provider: todoist
+  endpoint: /rest/v2/tasks
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+      section_id:
+        type: string
+        description: "Filter by section ID"
+      assignee:
+        type: string
+        description: "Filter by assignee ID"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "Filter by labels (comma-separated)"
+      due_date:
+        type: string
+        description: "Filter by due date (YYYY-MM-DD)"
+      filter:
+        type: string
+        description: "Todoist filter string (e.g. 'today | overdue')"
+    required: []
+
+- slug: todoist_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a task including description, due date, priority, and labels.
+  provider: todoist
+  endpoint: /rest/v2/tasks/{task_id}
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - tasks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: todoist_create_task
+  name: Create Task
+  description: |
+    Create a new task in a project or inbox.
+  provider: todoist
+  endpoint: /rest/v2/tasks
+  method: POST
+  scopes:
+    - task:add
+  tags:
+    - tasks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a task
+    properties:
+      content:
+        type: string
+        description: "Task title/content"
+      description:
+        type: string
+        description: "Task description"
+      project_id:
+        type: string
+        description: "Project ID (defaults to inbox)"
+      section_id:
+        type: string
+        description: "Section ID to add task to"
+      parent_id:
+        type: string
+        description: "Parent task ID (for subtasks)"
+      order:
+        type: integer
+        description: "Position in project"
+      priority:
+        type: integer
+        description: "Priority 1-4 (1=normal, 4=urgent)"
+      due_string:
+        type: string
+        description: "Natural language due date (e.g. 'tomorrow at 3pm')"
+      due_date:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+      due_datetime:
+        type: string
+        description: "Due datetime (RFC3339)"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "Array of label names"
+    required:
+      - content
+
+- slug: todoist_update_task
+  name: Update Task
+  description: |
+    Update a task's content, description, due date, priority, or labels.
+  provider: todoist
+  endpoint: /rest/v2/tasks/{task_id}
+  method: POST
+  scopes:
+    - task:update
+  tags:
+    - tasks
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+      content:
+        type: string
+        description: "New task title"
+      description:
+        type: string
+        description: "New description"
+      priority:
+        type: integer
+        description: "Priority 1-4 (1=normal, 4=urgent)"
+      due_string:
+        type: string
+        description: "Natural language due date"
+      due_date:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+      due_datetime:
+        type: string
+        description: "Due datetime (RFC3339)"
+      labels:
+        type: array
+        items:
+          type: string
+        description: "Array of label names"
+    required:
+      - task_id
+
+- slug: todoist_close_task
+  name: Close Task
+  description: |
+    Close (complete) a task.
+  provider: todoist
+  endpoint: /rest/v2/tasks/{task_id}/close
+  method: POST
+  scopes:
+    - task:complete
+  tags:
+    - tasks
+    - close
+    - complete
+  input_schema:
+    type: object
+    description: Parameters for closing a task
+    properties:
+      task_id:
+        type: string
+        description: "Task ID"
+    required:
+      - task_id
+
+- slug: todoist_list_projects
+  name: List Projects
+  description: |
+    List all projects the user has access to.
+  provider: todoist
+  endpoint: /rest/v2/projects
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - list
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: todoist_get_project
+  name: Get Project
+  description: |
+    Get detailed information about a project.
+  provider: todoist
+  endpoint: /rest/v2/projects/{project_id}
+  method: GET
+  scopes:
+    - project:read
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id:
+        type: string
+        description: "Project ID"
+    required:
+      - project_id
+
+- slug: todoist_create_project
+  name: Create Project
+  description: |
+    Create a new project.
+  provider: todoist
+  endpoint: /rest/v2/projects
+  method: POST
+  scopes:
+    - project:add
+  tags:
+    - projects
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a project
+    properties:
+      name:
+        type: string
+        description: "Project name"
+      parent_id:
+        type: string
+        description: "Parent project ID for subprojects"
+      color:
+        type: string
+        description: "Project color (e.g. 'blue', 'red')"
+      is_favorite:
+        type: boolean
+        description: "Mark as favorite"
+    required:
+      - name
+
+- slug: todoist_list_sections
+  name: List Sections
+  description: |
+    List all sections in a project.
+  provider: todoist
+  endpoint: /rest/v2/sections
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - sections
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sections
+    properties:
+      project_id:
+        type: string
+        description: "Filter by project ID"
+    required: []
+
+- slug: todoist_get_section
+  name: Get Section
+  description: |
+    Get detailed information about a section.
+  provider: todoist
+  endpoint: /rest/v2/sections/{section_id}
+  method: GET
+  scopes:
+    - task:read
+  tags:
+    - sections
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a section
+    properties:
+      section_id:
+        type: string
+        description: "Section ID"
+    required:
+      - section_id

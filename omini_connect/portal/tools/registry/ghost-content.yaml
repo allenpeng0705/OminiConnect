@@ -1,0 +1,232 @@
+# Ghost Content API Tools - Allowlist
+# Curated subset of Ghost Content API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ghost_content_list_posts       - List published posts
+# 2. ghost_content_get_post        - Get post by slug
+# 3. ghost_content_list_pages      - List published pages
+# 4. ghost_content_get_page        - Get page by slug
+# 5. ghost_content_list_tags       - List tags
+# 6. ghost_content_get_tag         - Get tag by slug
+# 7. ghost_content_list_authors    - List authors
+# 8. ghost_content_get_author      - Get author by slug
+# 9. ghost_content_list_settings   - Get site settings
+# 10. ghost_content_list_tiers    - List membership tiers
+
+- slug: ghost_content_list_posts
+  name: List Posts
+  description: |
+    List all published posts from Ghost.
+  provider: ghost-content
+  endpoint: /posts
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - list
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing posts
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: ghost_content_get_post
+  name: Get Post
+  description: |
+    Get a specific post by its slug.
+  provider: ghost-content
+  endpoint: /posts/{slug}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - posts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a post
+    properties:
+      slug:
+        type: string
+        description: "Post slug"
+    required:
+      - slug
+
+- slug: ghost_content_list_pages
+  name: List Pages
+  description: |
+    List all published pages from Ghost.
+  provider: ghost-content
+  endpoint: /pages
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: ghost_content_get_page
+  name: Get Page
+  description: |
+    Get a specific page by its slug.
+  provider: ghost-content
+  endpoint: /pages/{slug}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      slug:
+        type: string
+        description: "Page slug"
+    required:
+      - slug
+
+- slug: ghost_content_list_tags
+  name: List Tags
+  description: |
+    List all tags from Ghost.
+  provider: ghost-content
+  endpoint: /tags
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: ghost_content_get_tag
+  name: Get Tag
+  description: |
+    Get a specific tag by its slug.
+  provider: ghost-content
+  endpoint: /tags/{slug}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tags
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      slug:
+        type: string
+        description: "Tag slug"
+    required:
+      - slug
+
+- slug: ghost_content_list_authors
+  name: List Authors
+  description: |
+    List all authors from Ghost.
+  provider: ghost-content
+  endpoint: /authors
+  method: GET
+  scopes:
+    - read
+  tags:
+    - authors
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing authors
+    properties:
+      limit:
+        type: integer
+        description: "Number of results"
+        default: 20
+    required: []
+
+- slug: ghost_content_get_author
+  name: Get Author
+  description: |
+    Get a specific author by their slug.
+  provider: ghost-content
+  endpoint: /authors/{slug}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - authors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an author
+    properties:
+      slug:
+        type: string
+        description: "Author slug"
+    required:
+      - slug
+
+- slug: ghost_content_list_settings
+  name: List Settings
+  description: |
+    Get public site settings from Ghost.
+  provider: ghost-content
+  endpoint: /settings
+  method: GET
+  scopes:
+    - read
+  tags:
+    - settings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting settings
+    properties: {}
+
+- slug: ghost_content_list_tiers
+  name: List Tiers
+  description: |
+    List membership tiers from Ghost.
+  provider: ghost-content
+  endpoint: /tiers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - tiers
+    - membership
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tiers
+    properties: {}

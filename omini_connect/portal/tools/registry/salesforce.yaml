@@ -1,0 +1,334 @@
+# Salesforce Tools - Allowlist
+# Curated subset of Salesforce REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesforce_list_accounts     - List accounts
+# 2. salesforce_get_account      - Get account details
+# 3. salesforce_create_account   - Create an account
+# 4. salesforce_list_contacts     - List contacts
+# 5. salesforce_get_contact       - Get contact details
+# 6. salesforce_create_contact    - Create a contact
+# 7. salesforce_list_leads        - List leads
+# 8. salesforce_get_lead          - Get lead details
+# 9. salesforce_list_opportunities - List opportunities
+# 10. salesforce_get_opportunity    - Get opportunity details
+
+- slug: salesforce_list_accounts
+  name: List Accounts
+  description: |
+    List Salesforce accounts (companies/organizations).
+    Filter by industry, type, or location.
+  provider: salesforce
+  endpoint: /services/data/v59.0/query
+  method: GET
+  scopes:
+    - api
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      industry:
+        type: string
+        description: "Filter by industry"
+      type:
+        type: string
+        description: "Filter by account type"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: salesforce_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a Salesforce account including name, industry, revenue, and contacts.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Account/{accountId}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      accountId:
+        type: string
+        description: "Account ID"
+    required:
+      - accountId
+
+- slug: salesforce_create_account
+  name: Create Account
+  description: |
+    Create a new account in Salesforce. Set company name, industry, type, and contact information.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Account
+  method: POST
+  scopes:
+    - api
+  tags:
+    - accounts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an account
+    properties:
+      Name:
+        type: string
+        description: "Account/Company name (required)"
+      Industry:
+        type: string
+        description: "Industry (e.g., Technology, Healthcare, Finance)"
+      Type:
+        type: string
+        description: "Account type (Prospect, Customer, Competitor)"
+      Website:
+        type: string
+        description: "Website URL"
+      Phone:
+        type: string
+        description: "Phone number"
+      BillingStreet:
+        type: string
+        description: "Billing street address"
+      BillingCity:
+        type: string
+        description: "Billing city"
+      BillingState:
+        type: string
+        description: "Billing state/province"
+      BillingPostalCode:
+        type: string
+        description: "Billing postal code"
+      BillingCountry:
+        type: string
+        description: "Billing country"
+    required:
+      - Name
+
+- slug: salesforce_list_contacts
+  name: List Contacts
+  description: |
+    List Salesforce contacts. Filter by account, title, department, or state.
+  provider: salesforce
+  endpoint: /services/data/v59.0/query
+  method: GET
+  scopes:
+    - api
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      accountId:
+        type: string
+        description: "Filter by account ID"
+      title:
+        type: string
+        description: "Filter by job title"
+      department:
+        type: string
+        description: "Filter by department"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: salesforce_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a Salesforce contact including name, email, phone, and account.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Contact/{contactId}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: salesforce_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Salesforce. Set name, email, phone, and account association.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Contact
+  method: POST
+  scopes:
+    - api
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      FirstName:
+        type: string
+        description: "First name"
+      LastName:
+        type: string
+        description: "Last name (required)"
+      Email:
+        type: string
+        description: "Email address"
+      Phone:
+        type: string
+        description: "Phone number"
+      MobilePhone:
+        type: string
+        description: "Mobile phone number"
+      Title:
+        type: string
+        description: "Job title"
+      Department:
+        type: string
+        description: "Department"
+      AccountId:
+        type: string
+        description: "Associated account ID"
+    required:
+      - LastName
+
+- slug: salesforce_list_leads
+  name: List Leads
+  description: |
+    List Salesforce leads with optional filters.
+    Filter by status, source, industry, rating, or created date.
+  provider: salesforce
+  endpoint: /services/data/v59.0/query
+  method: GET
+  scopes:
+    - api
+  tags:
+    - leads
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      status:
+        type: string
+        description: "Lead status (Open, Working, Closed - Converted, Closed - Not Converted)"
+      leadSource:
+        type: string
+        description: "Lead source (Web, Referral, Partner, Trade Show, etc.)"
+      industry:
+        type: string
+        description: "Filter by industry"
+      rating:
+        type: string
+        description: "Rating (Hot, Warm, Cold)"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: salesforce_get_lead
+  name: Get Lead
+  description: |
+    Get detailed information about a Salesforce lead including name, company, status, and source.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Lead/{leadId}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - leads
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a lead
+    properties:
+      leadId:
+        type: string
+        description: "Lead ID"
+    required:
+      - leadId
+
+- slug: salesforce_list_opportunities
+  name: List Opportunities
+  description: |
+    List Salesforce opportunities. Filter by stage, type, close date, or account.
+  provider: salesforce
+  endpoint: /services/data/v59.0/query
+  method: GET
+  scopes:
+    - api
+  tags:
+    - opportunities
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing opportunities
+    properties:
+      stage:
+        type: string
+        description: "Opportunity stage (Prospecting, Qualification, etc.)"
+      type:
+        type: string
+        description: "Opportunity type (New Business, Existing Business)"
+      closeDate:
+        type: string
+        description: "Filter by close date (This Month, Next Month, This Quarter)"
+      accountId:
+        type: string
+        description: "Filter by account ID"
+      limit:
+        type: integer
+        description: "Max results (default 20, max 200)"
+        default: 20
+    required: []
+
+- slug: salesforce_get_opportunity
+  name: Get Opportunity
+  description: |
+    Get detailed information about an opportunity including name, amount, stage, close date, and account.
+  provider: salesforce
+  endpoint: /services/data/v59.0/sobjects/Opportunity/{opportunityId}
+  method: GET
+  scopes:
+    - api
+  tags:
+    - opportunities
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an opportunity
+    properties:
+      opportunityId:
+        type: string
+        description: "Opportunity ID"
+    required:
+      - opportunityId

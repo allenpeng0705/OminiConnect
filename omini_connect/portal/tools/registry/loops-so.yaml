@@ -1,0 +1,300 @@
+# Loops.so Tools - Allowlist
+# Curated subset of Loops.so API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. loops_list_contacts        - List all contacts
+# 2. loops_get_contact          - Get contact details
+# 3. loops_create_contact       - Create a contact
+# 4. loops_update_contact      - Update a contact
+# 5. loops_delete_contact      - Delete a contact
+# 6. loops_list_campaigns      - List all campaigns
+# 7. loops_get_campaign        - Get campaign details
+# 8. loops_send_transactional  - Send transactional email
+# 9. loops_list_events         - List events
+# 10. loops_create_event       - Create an event
+
+- slug: loops_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Loops.so.
+    Filter by segment, tags, or search query.
+  provider: loops-so
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      segment:
+        type: string
+        description: "Filter by segment"
+      tags:
+        type: string
+        description: "Filter by tags (comma-separated)"
+      query:
+        type: string
+        description: "Search query"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loops_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact.
+  provider: loops-so
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: loops_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Loops.so.
+  provider: loops-so
+  endpoint: /v1/contacts
+  method: POST
+  scopes: []
+  tags:
+    - contacts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      tags:
+        type: array
+        description: "Tags to assign"
+      subscribed:
+        type: boolean
+        description: "Whether contact is subscribed"
+        default: true
+    required:
+      - email
+
+- slug: loops_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact.
+  provider: loops-so
+  endpoint: /v1/contacts/{contactId}
+  method: PUT
+  scopes: []
+  tags:
+    - contacts
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      tags:
+        type: array
+        description: "Tags to assign"
+      subscribed:
+        type: boolean
+        description: "Whether contact is subscribed"
+    required:
+      - contactId
+
+- slug: loops_delete_contact
+  name: Delete Contact
+  description: |
+    Delete a contact from Loops.so.
+  provider: loops-so
+  endpoint: /v1/contacts/{contactId}
+  method: DELETE
+  scopes: []
+  tags:
+    - contacts
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for deleting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: loops_list_campaigns
+  name: List Campaigns
+  description: |
+    List all email campaigns in Loops.so.
+  provider: loops-so
+  endpoint: /v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      status:
+        type: string
+        description: "Filter by status (draft, scheduled, sending, sent)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loops_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign.
+  provider: loops-so
+  endpoint: /v1/campaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: loops_send_transactional
+  name: Send Transactional
+  description: |
+    Send a transactional email to a contact.
+  provider: loops-so
+  endpoint: /v1/send
+  method: POST
+  scopes: []
+  tags:
+    - email
+    - transactional
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending transactional email
+    properties:
+      email:
+        type: string
+        description: "Recipient email"
+      transactional_id:
+        type: string
+        description: "Transactional email ID"
+      data_variables:
+        type: object
+        description: "Variables to replace in template"
+    required:
+      - email
+      - transactional_id
+
+- slug: loops_list_events
+  name: List Events
+  description: |
+    List events for a contact (opens, clicks, etc.).
+  provider: loops-so
+  endpoint: /v1/events
+  method: GET
+  scopes: []
+  tags:
+    - events
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID"
+      type:
+        type: string
+        description: "Event type (opened, clicked, bounced, etc.)"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 50
+    required: []
+
+- slug: loops_create_event
+  name: Create Event
+  description: |
+    Track a custom event for a contact.
+  provider: loops-so
+  endpoint: /v1/events
+  method: POST
+  scopes: []
+  tags:
+    - events
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an event
+    properties:
+      email:
+        type: string
+        description: "Contact email"
+      event_name:
+        type: string
+        description: "Event name"
+      created_at:
+        type: string
+        description: "Event timestamp (ISO 8601)"
+    required:
+      - email
+      - event_name

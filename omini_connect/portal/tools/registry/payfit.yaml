@@ -1,0 +1,231 @@
+# Payfit Tools - Allowlist
+# Curated subset of Payfit API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. payfit_list_employees        - List employees
+# 2. payfit_get_employee          - Get employee details
+# 3. payfit_list_payroll_runs     - List payroll runs
+# 4. payfit_get_payroll_run       - Get payroll run details
+# 5. payfit_list_time_off         - List time off requests
+# 6. payfit_list_departments      - List departments
+# 7. payfit_list_contracts       - List employment contracts
+# 8. payfit_list_benefits         - List benefit plans
+# 9. payfit_list_pay_conditions   - List pay conditions
+# 10. payfit_get_company_info     - Get company information
+
+- slug: payfit_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: payfit
+  endpoint: /employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      departmentId:
+        type: string
+        description: "Filter by department ID"
+      status:
+        type: string
+        description: "Filter by status (active, inactive)"
+    required: []
+
+- slug: payfit_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information about a specific employee.
+  provider: payfit
+  endpoint: /employees/{employeeId}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "Employee ID"
+    required:
+      - employeeId
+
+- slug: payfit_list_payroll_runs
+  name: List Payroll Runs
+  description: |
+    List all payroll runs for the organization.
+  provider: payfit
+  endpoint: /payroll/runs
+  method: GET
+  scopes: []
+  tags:
+    - payroll
+    - finance
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing payroll runs
+    properties:
+      status:
+        type: string
+        description: "Filter by status"
+      startDate:
+        type: string
+        description: "Start date filter (YYYY-MM-DD)"
+      endDate:
+        type: string
+        description: "End date filter (YYYY-MM-DD)"
+    required: []
+
+- slug: payfit_get_payroll_run
+  name: Get Payroll Run
+  description: |
+    Get detailed information about a specific payroll run.
+  provider: payfit
+  endpoint: /payroll/runs/{runId}
+  method: GET
+  scopes: []
+  tags:
+    - payroll
+    - finance
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a payroll run
+    properties:
+      runId:
+        type: string
+        description: "Payroll run ID"
+    required:
+      - runId
+
+- slug: payfit_list_time_off
+  name: List Time Off
+  description: |
+    List time off requests for employees.
+  provider: payfit
+  endpoint: /time-off/requests
+  method: GET
+  scopes: []
+  tags:
+    - time-off
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+      status:
+        type: string
+        description: "Filter by status (pending, approved, denied)"
+    required: []
+
+- slug: payfit_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: payfit
+  endpoint: /departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - organization
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: payfit_list_contracts
+  name: List Contracts
+  description: |
+    List all employment contracts in the organization.
+  provider: payfit
+  endpoint: /contracts
+  method: GET
+  scopes: []
+  tags:
+    - contracts
+    - employment
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties:
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+    required: []
+
+- slug: payfit_list_benefits
+  name: List Benefits
+  description: |
+    List all benefit plans available in the organization.
+  provider: payfit
+  endpoint: /benefits
+  method: GET
+  scopes: []
+  tags:
+    - benefits
+    - hr
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing benefit plans
+    properties:
+      benefitType:
+        type: string
+        description: "Filter by benefit type"
+    required: []
+
+- slug: payfit_list_pay_conditions
+  name: List Pay Conditions
+  description: |
+    List all pay conditions (salary, hourly rates, etc.).
+  provider: payfit
+  endpoint: /pay-conditions
+  method: GET
+  scopes: []
+  tags:
+    - pay-conditions
+    - compensation
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing pay conditions
+    properties: {}
+    required: []
+
+- slug: payfit_get_company_info
+  name: Get Company Info
+  description: |
+    Get company/organization information.
+  provider: payfit
+  endpoint: /company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - organization
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []

@@ -5,6 +5,7 @@ use std::sync::Arc;
 use sqlx::Any;
 
 use crate::db::{SqlxApiKeyRepo, SqlxConnectorRepo, SqlxSessionRepo, SqlxUserRepo};
+use crate::tools::ToolRegistry;
 
 /// Shared application state.
 #[derive(Clone)]
@@ -14,10 +15,11 @@ pub struct AppState {
     pub api_keys: Arc<dyn crate::db::ApiKeyRepository>,
     pub connectors: Arc<dyn crate::db::ConnectorRepository>,
     pub oauth_vault: Arc<omini_connect_oauth_vault::OAuthVault>,
+    pub tools: Arc<ToolRegistry>,
 }
 
 impl AppState {
-    pub async fn new(pool: sqlx::pool::Pool<Any>) -> Self {
+    pub async fn new(pool: sqlx::pool::Pool<Any>, tools: ToolRegistry) -> Self {
         let user_repo = SqlxUserRepo::new(pool.clone());
         let session_repo = SqlxSessionRepo::new(pool.clone());
         let api_key_repo = SqlxApiKeyRepo::new(pool.clone());
@@ -34,6 +36,7 @@ impl AppState {
             api_keys: Arc::new(api_key_repo),
             connectors: Arc::new(connector_repo),
             oauth_vault,
+            tools: Arc::new(tools),
         }
     }
 }

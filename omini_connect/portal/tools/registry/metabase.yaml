@@ -1,0 +1,254 @@
+# Metabase Tools - Allowlist
+# Curated subset of the Metabase API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. metabase_list_databases      - List databases connected to Metabase
+# 2. metabase_get_database        - Get database details
+# 3. metabase_list_tables         - List tables across databases
+# 4. metabase_get_table           - Get table details and columns
+# 5. metabase_list_questions      - List saved questions/cards
+# 6. metabase_get_question        - Get question details
+# 7. metabase_create_question     - Create a new question
+# 8. metabase_list_dashboards     - List dashboards
+# 9. metabase_get_dashboard       - Get dashboard details
+# 10. metabase_get_pulse          - Get pulse/subscription details
+
+- slug: metabase_list_databases
+  name: List Databases
+  description: |
+    List all databases connected to Metabase. Returns database names, descriptions, and connection status.
+    Use this to discover available data sources for querying.
+  provider: metabase
+  endpoint: /api/database
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - database
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of databases to return"
+        default: 100
+    required: []
+
+- slug: metabase_get_database
+  name: Get Database
+  description: |
+    Get detailed information about a specific database including tables, features, and connection details.
+  provider: metabase
+  endpoint: /api/database/{database_id}
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - database
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database_id:
+        type: integer
+        description: "Database ID (required)"
+    required:
+      - database_id
+
+- slug: metabase_list_tables
+  name: List Tables
+  description: |
+    List all tables across databases in Metabase. Returns table names, schemas, and database associations.
+    Use this to discover available tables for querying.
+  provider: metabase
+  endpoint: /api/table
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - table
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing tables
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of tables to return"
+        default: 100
+    required: []
+
+- slug: metabase_get_table
+  name: Get Table
+  description: |
+    Get detailed information about a specific table including column definitions, types, and visibility.
+  provider: metabase
+  endpoint: /api/table/{table_id}
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - table
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a table
+    properties:
+      table_id:
+        type: integer
+        description: "Table ID (required)"
+    required:
+      - table_id
+
+- slug: metabase_list_questions
+  name: List Questions
+  description: |
+    List all saved questions (cards) in Metabase. Returns question names, collections, and query types.
+    Use this to discover existing analyses.
+  provider: metabase
+  endpoint: /api/card
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - question
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing questions
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of questions to return"
+        default: 100
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: metabase_get_question
+  name: Get Question
+  description: |
+    Get detailed information about a specific question including the query definition and results metadata.
+  provider: metabase
+  endpoint: /api/card/{card_id}
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - question
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a question
+    properties:
+      card_id:
+        type: integer
+        description: "Card/Question ID (required)"
+    required:
+      - card_id
+
+- slug: metabase_create_question
+  name: Create Question
+  description: |
+    Create a new saved question in Metabase. Specify the query, display type, and optional collection.
+  provider: metabase
+  endpoint: /api/card
+  method: POST
+  scopes:
+    - metabase_full_access
+  tags:
+    - question
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a question
+    properties:
+      name:
+        type: string
+        description: "Question name (required)"
+      dataset_query:
+        type: object
+        description: "Query definition object (required)"
+      display:
+        type: string
+        description: "Visualization type (e.g., table, bar, line)"
+        default: table
+      collection_id:
+        type: integer
+        description: "Collection to save the question in"
+    required:
+      - name
+      - dataset_query
+
+- slug: metabase_list_dashboards
+  name: List Dashboards
+  description: |
+    List all dashboards in Metabase. Returns dashboard names, descriptions, and owner information.
+    Use this to discover available dashboards.
+  provider: metabase
+  endpoint: /api/dashboard
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - dashboard
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing dashboards
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of dashboards to return"
+        default: 100
+    required: []
+
+- slug: metabase_get_dashboard
+  name: Get Dashboard
+  description: |
+    Get detailed information about a specific dashboard including cards, tabs, and parameters.
+  provider: metabase
+  endpoint: /api/dashboard/{dashboard_id}
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - dashboard
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a dashboard
+    properties:
+      dashboard_id:
+        type: integer
+        description: "Dashboard ID (required)"
+    required:
+      - dashboard_id
+
+- slug: metabase_get_pulse
+  name: Get Pulse
+  description: |
+    Get detailed information about a pulse (scheduled report/subscription) including schedule and recipients.
+  provider: metabase
+  endpoint: /api/pulse/{pulse_id}
+  method: GET
+  scopes:
+    - metabase_full_access
+  tags:
+    - pulse
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pulse
+    properties:
+      pulse_id:
+        type: integer
+        description: "Pulse ID (required)"
+    required:
+      - pulse_id

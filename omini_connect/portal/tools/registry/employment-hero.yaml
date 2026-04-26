@@ -1,0 +1,240 @@
+# Employment Hero Tools - Allowlist
+# Curated subset of Employment Hero API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. employment_hero_list_employees       - List employees
+# 2. employment_hero_get_employee         - Get employee details
+# 3. employment_hero_list_leaves          - List leave requests
+# 4. employment_hero_get_leave            - Get leave details
+# 5. employment_hero_approve_leave        - Approve leave request
+# 6. employment_hero_list_departments     - List departments
+# 7. employment_hero_list_jobs            - List job postings
+# 8. employment_hero_get_company          - Get company info
+# 9. employment_hero_list_awards          - List awards
+# 10. employment_hero_list_timesheets     - List timesheets
+
+- slug: employment_hero_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: employment-hero
+  endpoint: /api/v1/employees
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: employment_hero_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee.
+  provider: employment-hero
+  endpoint: /api/v1/employees/{id}
+  method: GET
+  scopes: []
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting employee
+    properties:
+      id:
+        type: integer
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: employment_hero_list_leaves
+  name: List Leaves
+  description: |
+    List leave requests in the organization.
+  provider: employment-hero
+  endpoint: /api/v1/leaves
+  method: GET
+  scopes: []
+  tags:
+    - leaves
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leaves
+    properties:
+      status:
+        type: string
+        description: "Filter by status (pending, approved, rejected)"
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: employment_hero_get_leave
+  name: Get Leave
+  description: |
+    Get details of a specific leave request.
+  provider: employment-hero
+  endpoint: /api/v1/leaves/{id}
+  method: GET
+  scopes: []
+  tags:
+    - leaves
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting leave
+    properties:
+      id:
+        type: integer
+        description: "Leave ID"
+    required:
+      - id
+
+- slug: employment_hero_approve_leave
+  name: Approve Leave
+  description: |
+    Approve a pending leave request.
+  provider: employment-hero
+  endpoint: /api/v1/leaves/{id}/approve
+  method: POST
+  scopes: []
+  tags:
+    - leaves
+    - hr
+    - update
+  input_schema:
+    type: object
+    description: Parameters for approving leave
+    properties:
+      id:
+        type: integer
+        description: "Leave ID"
+    required:
+      - id
+
+- slug: employment_hero_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: employment-hero
+  endpoint: /api/v1/departments
+  method: GET
+  scopes: []
+  tags:
+    - departments
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: employment_hero_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings.
+  provider: employment-hero
+  endpoint: /api/v1/jobs
+  method: GET
+  scopes: []
+  tags:
+    - jobs
+    - recruiting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+    required: []
+
+- slug: employment_hero_get_company
+  name: Get Company
+  description: |
+    Get company information.
+  provider: employment-hero
+  endpoint: /api/v1/company
+  method: GET
+  scopes: []
+  tags:
+    - company
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: employment_hero_list_awards
+  name: List Awards
+  description: |
+    List all awards and recognitions.
+  provider: employment-hero
+  endpoint: /api/v1/awards
+  method: GET
+  scopes: []
+  tags:
+    - awards
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing awards
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+    required: []
+
+- slug: employment_hero_list_timesheets
+  name: List Timesheets
+  description: |
+    List timesheet entries.
+  provider: employment-hero
+  endpoint: /api/v1/timesheets
+  method: GET
+  scopes: []
+  tags:
+    - timesheets
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing timesheets
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+    required: []

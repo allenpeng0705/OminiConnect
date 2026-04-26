@@ -1,0 +1,225 @@
+# Epic Games Tools - Allowlist
+# Curated subset of Epic Games API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. epic_games_get_catalog         - Get catalog items
+# 2. epic_games_list_offers         - List available offers
+# 3. epic_games_get_offer            - Get offer details
+# 4. epic_games_get_player           - Get player info
+# 5. epic_games_list_entitlements    - List player entitlements
+# 6. epic_games_get_achievements     - Get player achievements
+# 7. epic_games_list_leaderboards   - List leaderboards
+# 8. epic_games_get_leaderboard      - Get leaderboard entries
+# 9. epic_games_list_news           - List news items
+# 10. epic_games_get_tournament     - Get tournament details
+
+- slug: epic_games_get_catalog
+  name: Get Catalog
+  description: |
+    Get the game catalog with available items.
+  provider: epic-games
+  endpoint: /api/v1/catalog
+  method: GET
+  scopes: []
+  tags:
+    - catalog
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting catalog
+    properties:
+      country:
+        type: string
+        description: "Country code for localization"
+        default: US
+    required: []
+
+- slug: epic_games_list_offers
+  name: List Offers
+  description: |
+    List available offers in the store.
+  provider: epic-games
+  endpoint: /api/v1/offers
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - store
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing offers
+    properties:
+      country:
+        type: string
+        description: "Country code"
+        default: US
+    required: []
+
+- slug: epic_games_get_offer
+  name: Get Offer
+  description: |
+    Get details of a specific offer.
+  provider: epic-games
+  endpoint: /api/v1/offers/{id}
+  method: GET
+  scopes: []
+  tags:
+    - offers
+    - store
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting offer
+    properties:
+      id:
+        type: string
+        description: "Offer ID"
+    required:
+      - id
+
+- slug: epic_games_get_player
+  name: Get Player
+  description: |
+    Get player profile information.
+  provider: epic-games
+  endpoint: /api/v1/player
+  method: GET
+  scopes: []
+  tags:
+    - player
+    - games
+    - read
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: epic_games_list_entitlements
+  name: List Entitlements
+  description: |
+    List player entitlements and owned items.
+  provider: epic-games
+  endpoint: /api/v1/entitlements
+  method: GET
+  scopes: []
+  tags:
+    - entitlements
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing entitlements
+    properties:
+      epic_id:
+        type: string
+        description: "Player Epic ID"
+    required: []
+
+- slug: epic_games_get_achievements
+  name: Get Achievements
+  description: |
+    Get player achievements and progress.
+  provider: epic-games
+  endpoint: /api/v1/achievements
+  method: GET
+  scopes: []
+  tags:
+    - achievements
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting achievements
+    properties:
+      epic_id:
+        type: string
+        description: "Player Epic ID"
+    required: []
+
+- slug: epic_games_list_leaderboards
+  name: List Leaderboards
+  description: |
+    List available leaderboards.
+  provider: epic-games
+  endpoint: /api/v1/leaderboards
+  method: GET
+  scopes: []
+  tags:
+    - leaderboards
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leaderboards
+    properties: {}
+    required: []
+
+- slug: epic_games_get_leaderboard
+  name: Get Leaderboard
+  description: |
+    Get leaderboard entries.
+  provider: epic-games
+  endpoint: /api/v1/leaderboards/{id}
+  method: GET
+  scopes: []
+  tags:
+    - leaderboards
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting leaderboard
+    properties:
+      id:
+        type: string
+        description: "Leaderboard ID"
+    required:
+      - id
+
+- slug: epic_games_list_news
+  name: List News
+  description: |
+    List news articles and updates.
+  provider: epic-games
+  endpoint: /api/v1/news
+  method: GET
+  scopes: []
+  tags:
+    - news
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing news
+    properties:
+      country:
+        type: string
+        description: "Country code"
+        default: US
+    required: []
+
+- slug: epic_games_get_tournament
+  name: Get Tournament
+  description: |
+    Get tournament details.
+  provider: epic-games
+  endpoint: /api/v1/tournaments/{id}
+  method: GET
+  scopes: []
+  tags:
+    - tournaments
+    - games
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting tournament
+    properties:
+      id:
+        type: string
+        description: "Tournament ID"
+    required:
+      - id

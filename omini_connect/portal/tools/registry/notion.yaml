@@ -1,0 +1,286 @@
+# Notion Tools - Allowlist
+# Curated subset of Notion API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. notion_list_pages        - List pages accessible to the user
+# 2. notion_get_page          - Get a specific page by ID
+# 3. notion_create_page       - Create a new page
+# 4. notion_list_databases    - List databases accessible to the user
+# 5. notion_get_database      - Get a specific database by ID
+# 6. notion_create_database   - Create a new database
+# 7. notion_list_blocks       - List blocks in a page or database
+# 8. notion_get_block         - Get a specific block by ID
+# 9. notion_get_user          - Get a user by ID
+# 10. notion_search           - Search pages and databases by title
+
+- slug: notion_list_pages
+  name: List Pages
+  description: |
+    List all pages accessible to the authenticated user.
+    Returns a paginated list of pages from the user's workspace.
+  provider: notion
+  endpoint: /v1/search
+  method: POST
+  scopes:
+    - Notion
+  tags:
+    - pages
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing pages
+    properties:
+      filter:
+        type: object
+        description: "Filter by type: {property: 'object', value: 'page'}"
+      page_size:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+      start_cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required: []
+
+- slug: notion_get_page
+  name: Get Page
+  description: |
+    Retrieve a page by its ID. Returns page properties, content blocks, and metadata.
+  provider: notion
+  endpoint: /v1/pages/{page_id}
+  method: GET
+  scopes:
+    - Notion
+  tags:
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      page_id:
+        type: string
+        description: "The page ID (32-character hex string)"
+    required:
+      - page_id
+
+- slug: notion_create_page
+  name: Create Page
+  description: |
+    Create a new page as a child of a parent page or inside a database.
+    Include properties and initial content blocks.
+  provider: notion
+  endpoint: /v1/pages
+  method: POST
+  scopes:
+    - Notion
+  tags:
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      parent_id:
+        type: string
+        description: "Parent page ID or database ID"
+      parent_type:
+        type: string
+        description: "Parent type: page_id or database_id"
+      properties:
+        type: object
+        description: "Page properties (title required for database parent)"
+      children:
+        type: array
+        description: "Initial block content"
+    required:
+      - parent_id
+      - parent_type
+
+- slug: notion_list_databases
+  name: List Databases
+  description: |
+    List all databases accessible to the authenticated user in their workspace.
+  provider: notion
+  endpoint: /v1/search
+  method: POST
+  scopes:
+    - Notion
+  tags:
+    - databases
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties:
+      filter:
+        type: object
+        description: "Filter by type: {property: 'object', value: 'database'}"
+      page_size:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+      start_cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required: []
+
+- slug: notion_get_database
+  name: Get Database
+  description: |
+    Retrieve a database by its ID. Returns database title and property schema.
+  provider: notion
+  endpoint: /v1/databases/{database_id}
+  method: GET
+  scopes:
+    - Notion
+  tags:
+    - databases
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a database
+    properties:
+      database_id:
+        type: string
+        description: "The database ID (32-character hex string)"
+    required:
+      - database_id
+
+- slug: notion_create_database
+  name: Create Database
+  description: |
+    Create a new database as a child of a parent page. Define schema with property types.
+  provider: notion
+  endpoint: /v1/databases
+  method: POST
+  scopes:
+    - Notion
+  tags:
+    - databases
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a database
+    properties:
+      parent_id:
+        type: string
+        description: "Parent page ID"
+      title:
+        type: array
+        description: "Database title as rich text array"
+      properties:
+        type: object
+        description: "Database schema with property names and types"
+    required:
+      - parent_id
+      - title
+      - properties
+
+- slug: notion_list_blocks
+  name: List Blocks
+  description: |
+    List all blocks (content elements) in a page. Returns block hierarchy with children nested.
+  provider: notion
+  endpoint: /v1/blocks/{block_id}/children
+  method: GET
+  scopes:
+    - Notion
+  tags:
+    - blocks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing blocks
+    properties:
+      block_id:
+        type: string
+        description: "The block or page ID"
+      page_size:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+      start_cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required:
+      - block_id
+
+- slug: notion_get_block
+  name: Get Block
+  description: |
+    Retrieve a specific block by its ID including content and children.
+  provider: notion
+  endpoint: /v1/blocks/{block_id}
+  method: GET
+  scopes:
+    - Notion
+  tags:
+    - blocks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a block
+    properties:
+      block_id:
+        type: string
+        description: "The block ID (32-character hex string)"
+    required:
+      - block_id
+
+- slug: notion_get_user
+  name: Get User
+  description: |
+    Retrieve a user by their ID. Returns user profile and bot info if applicable.
+  provider: notion
+  endpoint: /v1/users/{user_id}
+  method: GET
+  scopes:
+    - Notion
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+    required:
+      - user_id
+
+- slug: notion_search
+  name: Search
+  description: |
+    Search pages and databases by title. Filter by object type and sort results.
+  provider: notion
+  endpoint: /v1/search
+  method: POST
+  scopes:
+    - Notion
+  tags:
+    - search
+    - pages
+    - databases
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query text"
+      filter:
+        type: object
+        description: "Filter by object type (page or database)"
+      sort:
+        type: object
+        description: "Sort direction and timestamp field"
+      page_size:
+        type: integer
+        description: "Number of results (default 10, max 100)"
+      start_cursor:
+        type: string
+        description: "Pagination cursor for next page"
+    required: []

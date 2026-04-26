@@ -1,0 +1,276 @@
+# Crisp Tools - Customer Messaging
+# Tools for managing conversations, visitors, contacts, operators, and websites.
+
+# === TOOL LIST ===
+# 1. crisp_list_conversations      - List conversations
+# 2. crisp_get_conversation        - Get a specific conversation
+# 3. crisp_send_message           - Send a message
+# 4. crisp_list_visitors          - List visitors
+# 5. crisp_get_visitor            - Get a specific visitor
+# 6. crisp_list_contacts         - List contacts
+# 7. crisp_get_contact           - Get a specific contact
+# 8. crisp_list_operators        - List operators
+# 9. crisp_get_operator          - Get a specific operator
+# 10. crisp_get_website          - Get website settings
+
+- slug: crisp_list_conversations
+  name: List Conversations
+  description: |
+    List conversations from your Crisp workspace.
+    Returns a paginated list of conversations with their status, participants, and latest message.
+  provider: crisp
+  endpoint: /conversations
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - messaging
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      status:
+        type: string
+        description: "Filter by status: open, closed, all (default open)"
+        enum: [open, closed, all]
+        default: open
+      limit:
+        type: integer
+        description: "Results per page (default 25)"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: crisp_get_conversation
+  name: Get Conversation
+  description: |
+    Get a specific conversation by ID. Returns full conversation details including messages, timeline, and metadata.
+  provider: crisp
+  endpoint: /conversations/{id}
+  method: GET
+  scopes:
+    - conversation_read
+  tags:
+    - conversations
+    - messaging
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - id
+
+- slug: crisp_send_message
+  name: Send Message
+  description: |
+    Send a message in a conversation. Use this to respond to customers or proactively reach out to contacts.
+  provider: crisp
+  endpoint: /conversations/{id}/messages
+  method: POST
+  scopes:
+    - conversation_write
+  tags:
+    - messages
+    - messaging
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      id:
+        type: string
+        description: "Conversation ID (path parameter)"
+      message:
+        type: string
+        description: "Message content (required)"
+      type:
+        type: string
+        description: "Message type: text, file (default text)"
+        enum: [text, file]
+        default: text
+    required:
+      - id
+      - message
+
+- slug: crisp_list_visitors
+  name: List Visitors
+  description: |
+    List all visitors on your website. Returns visitor profiles including location, device, and current page.
+  provider: crisp
+  endpoint: /visitors
+  method: GET
+  scopes:
+    - visitor_read
+  tags:
+    - visitors
+    - website
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      website_id:
+        type: string
+        description: "Filter by website ID"
+    required: []
+
+- slug: crisp_get_visitor
+  name: Get Visitor
+  description: |
+    Get a specific visitor by ID. Returns visitor details including location, device, browsing history, and conversation history.
+  provider: crisp
+  endpoint: /visitors/{id}
+  method: GET
+  scopes:
+    - visitor_read
+  tags:
+    - visitors
+    - website
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      id:
+        type: string
+        description: "Visitor ID (path parameter)"
+    required:
+      - id
+
+- slug: crisp_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in your Crisp workspace. Returns contact profiles including name, email, company, and activity.
+  provider: crisp
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      email:
+        type: string
+        description: "Filter by email address"
+    required: []
+
+- slug: crisp_get_contact
+  name: Get Contact
+  description: |
+    Get a specific contact by ID. Returns full contact profile including custom attributes, conversation history, and activity.
+  provider: crisp
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contact_read
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID (path parameter)"
+    required:
+      - id
+
+- slug: crisp_list_operators
+  name: List Operators
+  description: |
+    List all operators in your Crisp workspace. Returns operator names, roles, and availability status.
+  provider: crisp
+  endpoint: /operators
+  method: GET
+  scopes:
+    - operator_read
+  tags:
+    - operators
+    - team
+  input_schema:
+    type: object
+    description: Parameters for listing operators
+    properties:
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 25
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: crisp_get_operator
+  name: Get Operator
+  description: |
+    Get a specific operator by ID. Returns their profile including name, email, role, and permissions.
+  provider: crisp
+  endpoint: /operators/{id}
+  method: GET
+  scopes:
+    - operator_read
+  tags:
+    - operators
+    - team
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an operator
+    properties:
+      id:
+        type: string
+        description: "Operator ID (path parameter)"
+    required:
+      - id
+
+- slug: crisp_get_website
+  name: Get Website
+  description: |
+    Get website settings for your Crisp workspace. Returns configuration including name, domain, and integration settings.
+  provider: crisp
+  endpoint: /websites/{id}
+  method: GET
+  scopes:
+    - website_read
+  tags:
+    - websites
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for getting website settings
+    properties:
+      id:
+        type: string
+        description: "Website ID (path parameter)"
+    required:
+      - id

@@ -1,0 +1,257 @@
+# Salesforce-cdp Tools - Allowlist
+# Curated subset of Salesforce CDP API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. salesforce-cdp_list_data_models       - List data models
+# 2. salesforce-cdp_get_data_model        - Get data model details
+# 3. salesforce-cdp_list_ingest_jobs      - List ingest jobs
+# 4. salesforce-cdp_create_ingest_job     - Create ingest job
+# 5. salesforce-cdp_list_connections      - List connections
+# 6. salesforce-cdp_create_connection     - Create connection
+# 7. salesforce-cdp_list_segments         - List segments
+# 8. salesforce-cdp_get_segment           - Get segment details
+# 9. salesforce-cdp_list_exports          - List export jobs
+# 10. salesforce-cdp_get_analytics       - Get analytics
+
+- slug: salesforce-cdp_list_data_models
+  name: List Data Models
+  description: |
+    Retrieve a list of all data models in Salesforce CDP.
+  provider: salesforce-cdp
+  endpoint: /v1/dataModels
+  method: GET
+  scopes:
+    - data_model:read
+  tags:
+    - data-models
+    - cdp
+    - data
+  input_schema:
+    type: object
+    description: Parameters for listing data models
+    properties:
+      limit:
+        type: integer
+        description: "Number of data models"
+        default: 50
+    required: []
+
+- slug: salesforce-cdp_get_data_model
+  name: Get Data Model
+  description: |
+    Get details of a specific data model.
+  provider: salesforce-cdp
+  endpoint: /v1/dataModels/{modelId}
+  method: GET
+  scopes:
+    - data_model:read
+  tags:
+    - data-models
+    - cdp
+    - data
+  input_schema:
+    type: object
+    description: Parameters for getting a data model
+    properties:
+      modelId:
+        type: string
+        description: "The data model ID"
+    required:
+      - modelId
+
+- slug: salesforce-cdp_list_ingest_jobs
+  name: List Ingest Jobs
+  description: |
+    Retrieve a list of ingest jobs.
+  provider: salesforce-cdp
+  endpoint: /v1/ingestJobs
+  method: GET
+  scopes:
+    - ingest:read
+  tags:
+    - ingest
+    - data
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing ingest jobs
+    properties:
+      limit:
+        type: integer
+        description: "Number of jobs"
+        default: 50
+    required: []
+
+- slug: salesforce-cdp_create_ingest_job
+  name: Create Ingest Job
+  description: |
+    Create a new data ingest job.
+  provider: salesforce-cdp
+  endpoint: /v1/ingestJobs
+  method: POST
+  scopes:
+    - ingest:write
+  tags:
+    - ingest
+    - data
+    - cdp
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an ingest job
+    properties:
+      definitionId:
+        type: string
+        description: "Ingest definition ID"
+      records:
+        type: array
+        description: "Records to ingest"
+    required:
+      - definitionId
+
+- slug: salesforce-cdp_list_connections
+  name: List Connections
+  description: |
+    Retrieve a list of all connections.
+  provider: salesforce-cdp
+  endpoint: /v1/connections
+  method: GET
+  scopes:
+    - connections:read
+  tags:
+    - connections
+    - integrations
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing connections
+    properties:
+      limit:
+        type: integer
+        description: "Number of connections"
+        default: 50
+    required: []
+
+- slug: salesforce-cdp_create_connection
+  name: Create Connection
+  description: |
+    Create a new data connection.
+  provider: salesforce-cdp
+  endpoint: /v1/connections
+  method: POST
+  scopes:
+    - connections:write
+  tags:
+    - connections
+    - integrations
+    - cdp
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a connection
+    properties:
+      name:
+        type: string
+        description: "Connection name"
+      type:
+        type: string
+        description: "Connection type"
+    required:
+      - name
+      - type
+
+- slug: salesforce-cdp_list_segments
+  name: List Segments
+  description: |
+    Retrieve a list of all segments.
+  provider: salesforce-cdp
+  endpoint: /v1/segments
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - cdp
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for listing segments
+    properties:
+      limit:
+        type: integer
+        description: "Number of segments"
+        default: 50
+    required: []
+
+- slug: salesforce-cdp_get_segment
+  name: Get Segment
+  description: |
+    Get details of a specific segment.
+  provider: salesforce-cdp
+  endpoint: /v1/segments/{segmentId}
+  method: GET
+  scopes:
+    - segments:read
+  tags:
+    - segments
+    - cdp
+    - audiences
+  input_schema:
+    type: object
+    description: Parameters for getting a segment
+    properties:
+      segmentId:
+        type: string
+        description: "The segment ID"
+    required:
+      - segmentId
+
+- slug: salesforce-cdp_list_exports
+  name: List Exports
+  description: |
+    Retrieve a list of export jobs.
+  provider: salesforce-cdp
+  endpoint: /v1/exports
+  method: GET
+  scopes:
+    - exports:read
+  tags:
+    - exports
+    - data
+    - cdp
+  input_schema:
+    type: object
+    description: Parameters for listing exports
+    properties:
+      limit:
+        type: integer
+        description: "Number of exports"
+        default: 50
+    required: []
+
+- slug: salesforce-cdp_get_analytics
+  name: Get Analytics
+  description: |
+    Get analytics and insights.
+  provider: salesforce-cdp
+  endpoint: /v1/analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - cdp
+    - insights
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      startDate:
+        type: string
+        description: "Start date"
+      endDate:
+        type: string
+        description: "End date"
+    required: []

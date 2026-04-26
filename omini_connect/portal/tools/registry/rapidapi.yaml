@@ -1,0 +1,255 @@
+# Rapidapi Tools - Allowlist
+# Curated subset of RapidAPI Platform API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. rapidapi_list_apis           - List available APIs
+# 2. rapidapi_get_api             - Get API details
+# 3. rapidapi_list_subscriptions  - List API subscriptions
+# 4. rapidapi_subscribe_api       - Subscribe to an API
+# 5. rapidapi_unsubscribe_api     - Unsubscribe from an API
+# 6. rapidapi_list_endpoints      - List API endpoints
+# 7. rapidapi_get_usage           - Get API usage statistics
+# 8. rapidapi_list_my_apis        - List your published APIs
+# 9. rapidapi_get_endpoint_usage  - Get endpoint usage stats
+# 10. rapidapi_list_analytics     - Get analytics data
+
+- slug: rapidapi_list_apis
+  name: List APIs
+  description: |
+    Retrieve a list of available APIs on RapidAPI marketplace.
+  provider: rapidapi
+  endpoint: /marketplace/apis
+  method: GET
+  scopes:
+    - marketplace:read
+  tags:
+    - apis
+    - marketplace
+  input_schema:
+    type: object
+    description: Parameters for listing APIs
+    properties:
+      category:
+        type: string
+        description: "Filter by category"
+      limit:
+        type: integer
+        description: "Number of APIs to return"
+        default: 20
+    required: []
+
+- slug: rapidapi_get_api
+  name: Get API
+  description: |
+    Get details of a specific API on RapidAPI.
+  provider: rapidapi
+  endpoint: /marketplace/apis/{apiId}
+  method: GET
+  scopes:
+    - marketplace:read
+  tags:
+    - apis
+    - marketplace
+  input_schema:
+    type: object
+    description: Parameters for getting API details
+    properties:
+      apiId:
+        type: string
+        description: "The API ID"
+    required:
+      - apiId
+
+- slug: rapidapi_list_subscriptions
+  name: List Subscriptions
+  description: |
+    Retrieve a list of your API subscriptions.
+  provider: rapidapi
+  endpoint: /subscriptions
+  method: GET
+  scopes:
+    - subscriptions:read
+  tags:
+    - subscriptions
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing subscriptions
+    properties:
+      limit:
+        type: integer
+        description: "Number of subscriptions to return"
+        default: 50
+    required: []
+
+- slug: rapidapi_subscribe_api
+  name: Subscribe to API
+  description: |
+    Subscribe to a specific API on RapidAPI.
+  provider: rapidapi
+  endpoint: /subscriptions
+  method: POST
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - billing
+    - create
+  input_schema:
+    type: object
+    description: Parameters for subscribing to an API
+    properties:
+      apiId:
+        type: string
+        description: "The API ID to subscribe to"
+      plan:
+        type: string
+        description: "Subscription plan"
+    required:
+      - apiId
+
+- slug: rapidapi_unsubscribe_api
+  name: Unsubscribe from API
+  description: |
+    Cancel your subscription to an API.
+  provider: rapidapi
+  endpoint: /subscriptions/{subscriptionId}
+  method: DELETE
+  scopes:
+    - subscriptions:write
+  tags:
+    - subscriptions
+    - billing
+    - delete
+  input_schema:
+    type: object
+    description: Parameters for unsubscribing
+    properties:
+      subscriptionId:
+        type: string
+        description: "The subscription ID to cancel"
+    required:
+      - subscriptionId
+
+- slug: rapidapi_list_endpoints
+  name: List Endpoints
+  description: |
+    List all endpoints available for a subscribed API.
+  provider: rapidapi
+  endpoint: /apis/{apiId}/endpoints
+  method: GET
+  scopes:
+    - marketplace:read
+  tags:
+    - endpoints
+    - apis
+  input_schema:
+    type: object
+    description: Parameters for listing endpoints
+    properties:
+      apiId:
+        type: string
+        description: "The API ID"
+    required:
+      - apiId
+
+- slug: rapidapi_get_usage
+  name: Get Usage
+  description: |
+    Get your overall API usage statistics.
+  provider: rapidapi
+  endpoint: /usage
+  method: GET
+  scopes:
+    - usage:read
+  tags:
+    - usage
+    - analytics
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for getting usage
+    properties:
+      period:
+        type: string
+        description: "Time period: daily, monthly"
+        default: monthly
+    required: []
+
+- slug: rapidapi_list_my_apis
+  name: List My APIs
+  description: |
+    List APIs you have published on RapidAPI.
+  provider: rapidapi
+  endpoint: /my/apis
+  method: GET
+  scopes:
+    - developer:read
+  tags:
+    - apis
+    - developer
+    - publishing
+  input_schema:
+    type: object
+    description: Parameters for listing your APIs
+    properties:
+      limit:
+        type: integer
+        description: "Number of APIs to return"
+        default: 20
+    required: []
+
+- slug: rapidapi_get_endpoint_usage
+  name: Get Endpoint Usage
+  description: |
+    Get usage statistics for a specific API endpoint.
+  provider: rapidapi
+  endpoint: /usage/endpoint/{endpointId}
+  method: GET
+  scopes:
+    - usage:read
+  tags:
+    - usage
+    - endpoints
+    - analytics
+  input_schema:
+    type: object
+    description: Parameters for getting endpoint usage
+    properties:
+      endpointId:
+        type: string
+        description: "The endpoint ID"
+      period:
+        type: string
+        description: "Time period"
+        default: monthly
+    required:
+      - endpointId
+
+- slug: rapidapi_list_analytics
+  name: List Analytics
+  description: |
+    Get analytics data for your APIs.
+  provider: rapidapi
+  endpoint: /analytics
+  method: GET
+  scopes:
+    - analytics:read
+  tags:
+    - analytics
+    - apis
+    - metrics
+  input_schema:
+    type: object
+    description: Parameters for getting analytics
+    properties:
+      apiId:
+        type: string
+        description: "Filter by API ID"
+      period:
+        type: string
+        description: "Time period"
+        default: 30d
+    required: []

@@ -1,0 +1,292 @@
+- slug: livechat_more_list_conversations
+  name: List Conversations
+  description: |
+    Retrieve a list of conversations from your LiveChat account.
+    Supports filtering by state, date range, and pagination.
+  provider: livechat_more
+  endpoint: /v3.5/conversations
+  method: GET
+  scopes:
+    - conversations--read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing conversations
+    properties:
+      state:
+        type: string
+        description: "Filter by state: active, pending, archived (default active)"
+        enum: [active, pending, archived]
+        default: active
+      date_from:
+        type: string
+        description: "Start date in ISO 8601 format"
+      date_to:
+        type: string
+        description: "End date in ISO 8601 format"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page (max 100)"
+        default: 20
+    required: []
+
+- slug: livechat_more_get_conversation
+  name: Get Conversation
+  description: |
+    Get details of a specific conversation including messages, metadata, and participants.
+  provider: livechat_more
+  endpoint: /v3.5/conversations/{conversation_id}
+  method: GET
+  scopes:
+    - conversations--read
+  tags:
+    - conversations
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a conversation
+    properties:
+      conversation_id:
+        type: string
+        description: "Conversation ID (path parameter)"
+    required:
+      - conversation_id
+
+- slug: livechat_more_create_conversation
+  name: Create Conversation
+  description: |
+    Create a new conversation. Typically used for initiating a chat with a visitor or sending a message to a specific user.
+  provider: livechat_more
+  endpoint: /v3.5/conversations
+  method: POST
+  scopes:
+    - conversations--write
+  tags:
+    - conversations
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a conversation
+    properties:
+      user_id:
+        type: string
+        description: "User ID to start the conversation with"
+      session_id:
+        type: string
+        description: "Session ID for the conversation"
+      message:
+        type: object
+        description: "Initial message object with type and content"
+        properties:
+          type:
+            type: string
+            description: "Message type"
+            enum: [text]
+          content:
+            type: string
+            description: "Message text content"
+    required:
+      - user_id
+
+- slug: livechat_more_list_visitors
+  name: List Visitors
+  description: |
+    Retrieve a list of visitors currently on your website or recently visited.
+    Useful for monitoring active users and their browsing behavior.
+  provider: livechat_more
+  endpoint: /v3.5/visitors
+  method: GET
+  scopes:
+    - visitors--read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing visitors
+    properties:
+      state:
+        type: string
+        description: "Visitor state: online, offline, or all"
+        enum: [online, offline, all]
+        default: all
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: livechat_more_get_visitor
+  name: Get Visitor
+  description: |
+    Get detailed information about a specific visitor including their browse history, current page, and chat history.
+  provider: livechat_more
+  endpoint: /v3.5/visitors/{visitor_id}
+  method: GET
+  scopes:
+    - visitors--read
+  tags:
+    - visitors
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a visitor
+    properties:
+      visitor_id:
+        type: string
+        description: "Visitor ID (path parameter)"
+    required:
+      - visitor_id
+
+- slug: livechat_more_list_agents
+  name: List Agents
+  description: |
+    Retrieve a list of agents in your LiveChat account.
+    Shows agent status, role, and availability.
+  provider: livechat_more
+  endpoint: /v3.5/agents
+  method: GET
+  scopes:
+    - agents--read
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing agents
+    properties:
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to include in response"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: livechat_more_get_agent
+  name: Get Agent
+  description: |
+    Get detailed information about a specific agent including their profile, role, and performance stats.
+  provider: livechat_more
+  endpoint: /v3.5/agents/{agent_id}
+  method: GET
+  scopes:
+    - agents--read
+  tags:
+    - agents
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an agent
+    properties:
+      agent_id:
+        type: string
+        description: "Agent ID (path parameter)"
+    required:
+      - agent_id
+
+- slug: livechat_more_get_report
+  name: Get Report
+  description: |
+    Retrieve reports on chat performance, agent activity, or goal metrics.
+    Supports various report types and date ranges.
+  provider: livechat_more
+  endpoint: /v3.5/reports
+  method: GET
+  scopes:
+    - reports--read
+  tags:
+    - reports
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a report
+    properties:
+      type:
+        type: string
+        description: "Report type: chats, agents, goals"
+        enum: [chats, agents, goals]
+      date_from:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      date_to:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      agent_id:
+        type: string
+        description: "Filter by agent ID"
+    required:
+      - type
+      - date_from
+      - date_to
+
+- slug: livechat_more_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of departments configured in your LiveChat account.
+    Departments allow routing chats to specific teams.
+  provider: livechat_more
+  endpoint: /v3.5/departments
+  method: GET
+  scopes:
+    - departments--read
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties:
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to include in response"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      limit:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: livechat_more_get_department
+  name: Get Department
+  description: |
+    Get details of a specific department including configuration, agents assigned, and routing rules.
+  provider: livechat_more
+  endpoint: /v3.5/departments/{department_id}
+  method: GET
+  scopes:
+    - departments--read
+  tags:
+    - departments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a department
+    properties:
+      department_id:
+        type: string
+        description: "Department ID (path parameter)"
+    required:
+      - department_id

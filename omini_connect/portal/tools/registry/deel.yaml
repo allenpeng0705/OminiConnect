@@ -1,0 +1,337 @@
+# Deel Tools - Allowlist
+# Curated subset of the Deel API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. deel_list_contracts        - List contracts
+# 2. deem_get_contract         - Get a specific contract
+# 3. deel_create_contract       - Create a new contract
+# 4. deel_list_employees       - List employees
+# 5. deel_get_employee         - Get a specific employee
+# 6. deel_create_employee       - Create a new employee
+# 7. deel_list_time_off         - List time off requests
+# 8. deel_get_time_off_request  - Get a specific time off request
+# 9. deel_approve_time_off      - Approve a time off request
+# 10. deel_list_invoices        - List invoices
+
+- slug: deel_list_contracts
+  name: List Contracts
+  description: |
+    List all contracts in the Deel platform. Returns contract details, types (full-time, contractor), and status.
+    Use this to manage the workforce and track contractual relationships.
+  provider: deel
+  endpoint: /v1/contracts
+  method: GET
+  scopes:
+    - contracts:read
+  tags:
+    - contracts
+    - workforce
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for listing contracts
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, ended, draft"
+        enum: [active, ended, draft]
+      type:
+        type: string
+        description: "Contract type: full_time, contractor"
+        enum: [full_time, contractor]
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: deem_get_contract
+  name: Get Contract
+  description: |
+    Get details of a specific contract by ID. Returns full contract terms, parties, payment details, and status.
+  provider: deel
+  endpoint: /v1/contracts/{contract_id}
+  method: GET
+  scopes:
+    - contracts:read
+  tags:
+    - contracts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contract
+    properties:
+      contract_id:
+        type: string
+        description: "Contract ID"
+    required:
+      - contract_id
+
+- slug: deel_create_contract
+  name: Create Contract
+  description: |
+    Create a new contract for a worker. Specify worker details, compensation, contract type, and terms.
+  provider: deel
+  endpoint: /v1/contracts
+  method: POST
+  scopes:
+    - contracts:write
+  tags:
+    - contracts
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contract
+    properties:
+      worker_id:
+        type: string
+        description: "Worker ID or candidate ID"
+      contract_type:
+        type: string
+        description: "Contract type: full_time, contractor"
+        enum: [full_time, contractor]
+      title:
+        type: string
+        description: "Job title or contract title"
+      compensation:
+        type: object
+        description: "Compensation details including amount and currency"
+      start_date:
+        type: string
+        description: "Contract start date in YYYY-MM-DD format"
+      end_date:
+        type: string
+        description: "Contract end date in YYYY-MM-DD format"
+    required:
+      - worker_id
+      - contract_type
+
+- slug: deel_list_employees
+  name: List Employees
+  description: |
+    List all employees in the Deel platform. Returns employee profiles, employment status, and assigned contracts.
+    Use this to manage the HR workforce and track employee records.
+  provider: deel
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - workforce
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      status:
+        type: string
+        description: "Filter by status: active, inactive"
+        enum: [active, inactive]
+      employment_type:
+        type: string
+        description: "Employment type: full_time, contractor"
+        enum: [full_time, contractor]
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: deel_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by ID. Returns employee profile, employment details, and payroll information.
+  provider: deel
+  endpoint: /v1/employees/{employee_id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employee_id:
+        type: string
+        description: "Employee ID"
+    required:
+      - employee_id
+
+- slug: deel_create_employee
+  name: Create Employee
+  description: |
+    Create a new employee record in the Deel platform. Include personal details, employment terms, and payroll setup.
+  provider: deel
+  endpoint: /v1/employees
+  method: POST
+  scopes:
+    - employees:write
+  tags:
+    - employees
+    - create
+    - hr
+  input_schema:
+    type: object
+    description: Parameters for creating an employee
+    properties:
+      first_name:
+        type: string
+        description: "Employee first name"
+      last_name:
+        type: string
+        description: "Employee last name"
+      email:
+        type: string
+        description: "Employee email address"
+      employment_type:
+        type: string
+        description: "Employment type: full_time, contractor"
+        enum: [full_time, contractor]
+      start_date:
+        type: string
+        description: "Employment start date in YYYY-MM-DD format"
+      compensation:
+        type: object
+        description: "Compensation details"
+    required:
+      - first_name
+      - last_name
+      - email
+
+- slug: deel_list_time_off
+  name: List Time Off
+  description: |
+    List all time off requests across the organization. Returns request details, types (vacation, sick leave), status, and dates.
+    Use this to track leave balances and manage time off approvals.
+  provider: deel
+  endpoint: /v1/time_off
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - leave
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      status:
+        type: string
+        description: "Filter by status: pending, approved, rejected"
+        enum: [pending, approved, rejected]
+      employee_id:
+        type: string
+        description: "Filter by employee ID"
+      start_date:
+        type: string
+        description: "Start date filter in YYYY-MM-DD format"
+      end_date:
+        type: string
+        description: "End date filter in YYYY-MM-DD format"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []
+
+- slug: deel_get_time_off_request
+  name: Get Time Off Request
+  description: |
+    Get details of a specific time off request by ID. Returns employee, dates, leave type, status, and approver info.
+  provider: deel
+  endpoint: /v1/time_off/{request_id}
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - time_off
+    - hr
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a time off request
+    properties:
+      request_id:
+        type: string
+        description: "Time off request ID"
+    required:
+      - request_id
+
+- slug: deel_approve_time_off
+  name: Approve Time Off
+  description: |
+    Approve a pending time off request. Use this to manage leave approvals from the HR workflow.
+  provider: deel
+  endpoint: /v1/time_off/{request_id}/approve
+  method: POST
+  scopes:
+    - time_off:write
+  tags:
+    - time_off
+    - hr
+    - approve
+  input_schema:
+    type: object
+    description: Parameters for approving time off
+    properties:
+      request_id:
+        type: string
+        description: "Time off request ID"
+      notes:
+        type: string
+        description: "Optional approval notes"
+    required:
+      - request_id
+
+- slug: deel_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the Deel platform. Returns invoice details, amounts, status, and worker information.
+    Use this to track payments, manage billing, and monitor contractor payments.
+  provider: deel
+  endpoint: /v1/invoices
+  method: GET
+  scopes:
+    - invoices:read
+  tags:
+    - invoices
+    - payments
+    - billing
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      status:
+        type: string
+        description: "Filter by status: draft, sent, paid, overdue"
+        enum: [draft, sent, paid, overdue]
+      contract_id:
+        type: string
+        description: "Filter by contract ID"
+      limit:
+        type: integer
+        description: "Maximum results (default 50)"
+        default: 50
+      offset:
+        type: integer
+        description: "Pagination offset"
+        default: 0
+    required: []

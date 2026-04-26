@@ -1,0 +1,274 @@
+# Notion (MCP) Tools - Allowlist
+# Curated subset of Notion MCP API for AI agent use.
+# MCP OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. notion_mcp_search                - Search pages
+# 2. notion_mcp_get_page            - Get page details
+# 3. notion_mcp_create_page         - Create new page
+# 4. notion_mcp_update_page         - Update page content
+# 5. notion_mcp_list_databases       - List databases
+# 6. notion_mcp_query_database       - Query database
+# 7. notion_mcp_create_database_entry - Create database entry
+# 8. notion_mcp_list_comments       - List comments
+# 9. notion_mcp_add_comment         - Add comment
+# 10. notion_mcp_get_block          - Get block content
+
+- slug: notion_mcp_search
+  name: Search
+  description: |
+    Search all pages and databases in Notion.
+  provider: notion-mcp
+  endpoint: /search
+  method: GET
+  scopes:
+    - search:read
+  tags:
+    - knowledge-base
+    - search
+    - pages
+  input_schema:
+    type: object
+    description: Parameters for searching
+    properties:
+      query:
+        type: string
+        description: "Search query"
+      filter:
+        type: string
+        description: "Filter by property value"
+      sort:
+        type: object
+        description: "Sort options"
+    required:
+      - query
+
+- slug: notion_mcp_get_page
+  name: Get Page
+  description: |
+    Get detailed information for a specific page.
+  provider: notion-mcp
+  endpoint: /pages/{page_id}
+  method: GET
+  scopes:
+    - pages:read
+  tags:
+    - knowledge-base
+    - pages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a page
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+    required:
+      - page_id
+
+- slug: notion_mcp_create_page
+  name: Create Page
+  description: |
+    Create a new page in Notion.
+  provider: notion-mcp
+  endpoint: /pages
+  method: POST
+  scopes:
+    - pages:create
+  tags:
+    - knowledge-base
+    - pages
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a page
+    properties:
+      parent_id:
+        type: string
+        description: "Parent page or database ID"
+      properties:
+        type: object
+        description: "Page properties"
+      children:
+        type: array
+        description: "Page content blocks"
+    required:
+      - parent_id
+
+- slug: notion_mcp_update_page
+  name: Update Page
+  description: |
+    Update an existing page's properties and content.
+  provider: notion-mcp
+  endpoint: /pages/{page_id}
+  method: PATCH
+  scopes:
+    - pages:update
+  tags:
+    - knowledge-base
+    - pages
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a page
+    properties:
+      page_id:
+        type: string
+        description: "Page ID"
+      properties:
+        type: object
+        description: "Properties to update"
+    required:
+      - page_id
+
+- slug: notion_mcp_list_databases
+  name: List Databases
+  description: |
+    List all databases accessible to the user.
+  provider: notion-mcp
+  endpoint: /databases
+  method: GET
+  scopes:
+    - databases:read
+  tags:
+    - knowledge-base
+    - databases
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing databases
+    properties: {}
+    required: []
+
+- slug: notion_mcp_query_database
+  name: Query Database
+  description: |
+    Query a Notion database with filters and sorts.
+  provider: notion-mcp
+  endpoint: /databases/{database_id}/query
+  method: POST
+  scopes:
+    - databases:query
+  tags:
+    - knowledge-base
+    - databases
+    - query
+  input_schema:
+    type: object
+    description: Parameters for querying a database
+    properties:
+      database_id:
+        type: string
+        description: "Database ID"
+      filter:
+        type: object
+        description: "Filter conditions"
+      sorts:
+        type: array
+        description: "Sort conditions"
+      page_size:
+        type: integer
+        description: "Results per page (default 100)"
+        default: 100
+    required:
+      - database_id
+
+- slug: notion_mcp_create_database_entry
+  name: Create Database Entry
+  description: |
+    Create a new entry in a Notion database.
+  provider: notion-mcp
+  endpoint: /pages
+  method: POST
+  scopes:
+    - pages:create
+  tags:
+    - knowledge-base
+    - databases
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a database entry
+    properties:
+      database_id:
+        type: string
+        description: "Database ID"
+      properties:
+        type: object
+        description: "Entry properties"
+    required:
+      - database_id
+      - properties
+
+- slug: notion_mcp_list_comments
+  name: List Comments
+  description: |
+    List comments on a page or block.
+  provider: notion-mcp
+  endpoint: /comments
+  method: GET
+  scopes:
+    - comments:read
+  tags:
+    - knowledge-base
+    - comments
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      block_id:
+        type: string
+        description: "Block or page ID"
+    required: []
+
+- slug: notion_mcp_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to a page or discussion.
+  provider: notion-mcp
+  endpoint: /comments
+  method: POST
+  scopes:
+    - comments:create
+  tags:
+    - knowledge-base
+    - comments
+    - collaboration
+  input_schema:
+    type: object
+    description: Parameters for adding a comment
+    properties:
+      parent_id:
+        type: string
+        description: "Page or discussion ID"
+      content:
+        type: string
+        description: "Comment text"
+    required:
+      - parent_id
+      - content
+
+- slug: notion_mcp_get_block
+  name: Get Block
+  description: |
+    Get content of a specific block.
+  provider: notion-mcp
+  endpoint: /blocks/{block_id}
+  method: GET
+  scopes:
+    - blocks:read
+  tags:
+    - knowledge-base
+    - blocks
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a block
+    properties:
+      block_id:
+        type: string
+        description: "Block ID"
+    required:
+      - block_id

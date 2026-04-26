@@ -1,0 +1,244 @@
+# PRTG Classic Tools - Allowlist
+# Curated subset of PRTG API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. prtg_list_sensors             - List sensors
+# 2. prtg_get_sensor               - Get sensor details
+# 3. prtg_list_devices             - List devices
+# 4. prtg_get_device               - Get device details
+# 5. prtg_list_groups              - List groups
+# 6. prtg_get_group                 - Get group details
+# 7. prtg_list_alerts              - List alerts
+# 8. prtg_get_ticket               - Get ticket details
+# 9. prtg_list_channels            - List channels
+# 10. prtg_get_system_status       - Get system status
+
+- slug: prtg_list_sensors
+  name: List Sensors
+  description: |
+    List all sensors in the monitoring system.
+  provider: prtg-classic
+  endpoint: /api/table.json
+  method: GET
+  scopes: []
+  tags:
+    - sensors
+    - monitoring
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sensors
+    properties:
+      content:
+        type: string
+        description: "Content type (sensors)"
+        default: sensors
+      count:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required: []
+
+- slug: prtg_get_sensor
+  name: Get Sensor
+  description: |
+    Get detailed information about a specific sensor.
+  provider: prtg-classic
+  endpoint: /api/sensors/{sensorId}
+  method: GET
+  scopes: []
+  tags:
+    - sensors
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sensor
+    properties:
+      sensorId:
+        type: string
+        description: "Sensor ID"
+    required:
+      - sensorId
+
+- slug: prtg_list_devices
+  name: List Devices
+  description: |
+    List all devices in the monitoring system.
+  provider: prtg-classic
+  endpoint: /api/table.json
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - monitoring
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing devices
+    properties:
+      content:
+        type: string
+        description: "Content type (devices)"
+        default: devices
+      count:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required: []
+
+- slug: prtg_get_device
+  name: Get Device
+  description: |
+    Get detailed information about a specific device.
+  provider: prtg-classic
+  endpoint: /api/devices/{deviceId}
+  method: GET
+  scopes: []
+  tags:
+    - devices
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a device
+    properties:
+      deviceId:
+        type: string
+        description: "Device ID"
+    required:
+      - deviceId
+
+- slug: prtg_list_groups
+  name: List Groups
+  description: |
+    List all groups in the monitoring system.
+  provider: prtg-classic
+  endpoint: /api/table.json
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - monitoring
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing groups
+    properties:
+      content:
+        type: string
+        description: "Content type (groups)"
+        default: groups
+      count:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required: []
+
+- slug: prtg_get_group
+  name: Get Group
+  description: |
+    Get detailed information about a specific group.
+  provider: prtg-classic
+  endpoint: /api/groups/{groupId}
+  method: GET
+  scopes: []
+  tags:
+    - groups
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a group
+    properties:
+      groupId:
+        type: string
+        description: "Group ID"
+    required:
+      - groupId
+
+- slug: prtg_list_alerts
+  name: List Alerts
+  description: |
+    List all active alerts.
+  provider: prtg-classic
+  endpoint: /api/alarms.json
+  method: GET
+  scopes: []
+  tags:
+    - alerts
+    - monitoring
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing alerts
+    properties:
+      count:
+        type: integer
+        description: "Number of results"
+        default: 50
+    required: []
+
+- slug: prtg_get_ticket
+  name: Get Ticket
+  description: |
+    Get detailed information about a specific ticket.
+  provider: prtg-classic
+  endpoint: /api/tickets/{ticketId}
+  method: GET
+  scopes: []
+  tags:
+    - tickets
+    - monitoring
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      ticketId:
+        type: string
+        description: "Ticket ID"
+    required:
+      - ticketId
+
+- slug: prtg_list_channels
+  name: List Channels
+  description: |
+    List all channels for a sensor.
+  provider: prtg-classic
+  endpoint: /api/channels/{sensorId}
+  method: GET
+  scopes: []
+  tags:
+    - channels
+    - monitoring
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      sensorId:
+        type: string
+        description: "Sensor ID"
+    required:
+      - sensorId
+
+- slug: prtg_get_system_status
+  name: Get System Status
+  description: |
+    Get PRTG system status.
+  provider: prtg-classic
+  endpoint: /api/status.json
+  method: GET
+  scopes: []
+  tags:
+    - system
+    - status
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting system status
+    properties: {}
+    required: []

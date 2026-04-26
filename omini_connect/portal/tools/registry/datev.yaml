@@ -1,0 +1,284 @@
+# DATEV Tools - Allowlist
+# Curated subset of the DATEV API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. datev_list_clients              - List client accounts
+# 2. datev_get_client               - Get client details
+# 3. datev_list_accounts            - List accounting accounts
+# 4. datev_get_account              - Get account details
+# 5. datev_list_vouchers            - List vouchers/entries
+# 6. datev_get_voucher              - Get voucher details
+# 7. datev_list_contacts           - List contacts
+# 8. datev_get_contact             - Get contact details
+# 9. datev_list_documents          - List documents
+# 10. datev_get_document          - Get document details
+
+- slug: datev_list_clients
+  name: List Clients
+  description: |
+    List all client/accounting offices in DATEV.
+  provider: datev
+  endpoint: /v1/clients
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - clients
+    - accounting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing clients
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: datev_get_client
+  name: Get Client
+  description: |
+    Get details of a specific client/accounting office.
+  provider: datev
+  endpoint: /v1/clients/{client_id}
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - clients
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a client
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+    required:
+      - client_id
+
+- slug: datev_list_accounts
+  name: List Accounts
+  description: |
+    List all accounting accounts for a client.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/accounts
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - accounts
+    - accounting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - client_id
+
+- slug: datev_get_account
+  name: Get Account
+  description: |
+    Get details of a specific accounting account.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/accounts/{account_id}
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - accounts
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      account_id:
+        type: string
+        description: "Account ID"
+    required:
+      - client_id
+      - account_id
+
+- slug: datev_list_vouchers
+  name: List Vouchers
+  description: |
+    List all vouchers (accounting entries) for a client.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/vouchers
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - vouchers
+    - accounting
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing vouchers
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      from_date:
+        type: string
+        description: "From date (YYYY-MM-DD)"
+      to_date:
+        type: string
+        description: "To date (YYYY-MM-DD)"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - client_id
+
+- slug: datev_get_voucher
+  name: Get Voucher
+  description: |
+    Get details of a specific accounting voucher.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/vouchers/{voucher_id}
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - vouchers
+    - accounting
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a voucher
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      voucher_id:
+        type: string
+        description: "Voucher ID"
+    required:
+      - client_id
+      - voucher_id
+
+- slug: datev_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts (vendors/customers) for a client.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/contacts
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - contacts
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - client_id
+
+- slug: datev_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/contacts/{contact_id}
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      contact_id:
+        type: string
+        description: "Contact ID"
+    required:
+      - client_id
+      - contact_id
+
+- slug: datev_list_documents
+  name: List Documents
+  description: |
+    List all documents for a client.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/documents
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - documents
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing documents
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required:
+      - client_id
+
+- slug: datev_get_document
+  name: Get Document
+  description: |
+    Get details of a specific document.
+  provider: datev
+  endpoint: /v1/clients/{client_id}/documents/{document_id}
+  method: GET
+  scopes:
+    - openid
+  tags:
+    - documents
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a document
+    properties:
+      client_id:
+        type: string
+        description: "Client ID"
+      document_id:
+        type: string
+        description: "Document ID"
+    required:
+      - client_id
+      - document_id

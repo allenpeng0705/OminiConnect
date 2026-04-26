@@ -1,0 +1,315 @@
+# Dependabot Tools - Allowlist
+# Curated subset of GitHub Dependabot REST API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. dependabot_list_repositories        - List Dependabot-enabled repositories
+# 2. dependabot_get_repository           - Get repository Dependabot status
+# 3. dependabot_list_dependencies        - List dependencies
+# 4. dependabot_get_dependency           - Get dependency details
+# 5. dependabot_list_pull_requests       - List Dependabot PRs
+# 6. dependabot_get_pull_request         - Get PR details
+# 7. dependabot_create_pull_request      - Create Dependabot PR
+# 8. dependabot_update_dependency        - Trigger dependency update
+# 9. dependabot_list_security_updates    - List security updates
+# 10. dependabot_get_security_update      - Get security update details
+
+- slug: dependabot_list_repositories
+  name: List Repositories
+  description: |
+    Retrieve all repositories enabled for Dependabot in the organization.
+  provider: dependabot
+  endpoint: /repositories
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - repositories
+  input_schema:
+    type: object
+    description: Parameters for listing Dependabot-enabled repositories
+    properties:
+      org:
+        type: string
+        description: "GitHub organization login"
+      per_page:
+        type: integer
+        description: "Results per page (default: 100)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required:
+      - org
+
+- slug: dependabot_get_repository
+  name: Get Repository
+  description: |
+    Retrieve Dependabot configuration and status for a specific repository.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - repositories
+  input_schema:
+    type: object
+    description: Parameters for getting repository Dependabot status
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+    required:
+      - owner
+      - repo
+
+- slug: dependabot_list_dependencies
+  name: List Dependencies
+  description: |
+    Retrieve all dependencies tracked by Dependabot for a repository.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/dependencies
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - dependencies
+  input_schema:
+    type: object
+    description: Parameters for listing dependencies
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      manifest_path:
+        type: string
+        description: "Filter by manifest file path"
+    required:
+      - owner
+      - repo
+
+- slug: dependabot_get_dependency
+  name: Get Dependency
+  description: |
+    Retrieve details about a specific dependency tracked by Dependabot.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/dependencies/{dependency_id}
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - dependencies
+  input_schema:
+    type: object
+    description: Parameters for getting dependency details
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      dependency_id:
+        type: string
+        description: "The dependency identifier (package ecosystem:name:version)"
+    required:
+      - owner
+      - repo
+      - dependency_id
+
+- slug: dependabot_list_pull_requests
+  name: List Pull Requests
+  description: |
+    Retrieve all Dependabot pull requests for repositories in the organization.
+  provider: dependabot
+  endpoint: /pulls
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - pull_requests
+  input_schema:
+    type: object
+    description: Parameters for listing Dependabot pull requests
+    properties:
+      org:
+        type: string
+        description: "GitHub organization login"
+      repo:
+        type: string
+        description: "Repository name (optional, for single repo)"
+      state:
+        type: string
+        description: "Filter by state (open, closed, all)"
+      package_ecosystem:
+        type: string
+        description: "Filter by package ecosystem (npm, pip, gems)"
+    required:
+      - org
+
+- slug: dependabot_get_pull_request
+  name: Get Pull Request
+  description: |
+    Retrieve details about a specific Dependabot pull request.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/pulls/{pull_number}
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - pull_requests
+  input_schema:
+    type: object
+    description: Parameters for getting pull request details
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      pull_number:
+        type: integer
+        description: "Pull request number"
+    required:
+      - owner
+      - repo
+      - pull_number
+
+- slug: dependabot_create_pull_request
+  name: Create Pull Request
+  description: |
+    Create a Dependabot pull request to update a dependency.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/pulls
+  method: POST
+  scopes:
+    - dependabot_write
+  tags:
+    - pull_requests
+  input_schema:
+    type: object
+    description: Parameters for creating Dependabot PR
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      dependency:
+        type: object
+        description: "Dependency to update"
+        properties:
+          package_ecosystem:
+            type: string
+            description: "Package ecosystem (npm, pip, gems)"
+          directory:
+            type: string
+            description: "Manifest directory path"
+          name:
+            type: string
+            description: "Dependency name"
+          version:
+            type: string
+            description: "Target version"
+      version_updates:
+        type: array
+        items:
+          type: object
+        description: "Version update specifications"
+    required:
+      - owner
+      - repo
+      - dependency
+
+- slug: dependabot_update_dependency
+  name: Update Dependency
+  description: |
+    Trigger an immediate update for a specific dependency via Dependabot.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/dependabot/updates/{update_id}
+  method: PATCH
+  scopes:
+    - dependabot_write
+  tags:
+    - dependencies
+  input_schema:
+    type: object
+    description: Parameters for updating a dependency
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      update_id:
+        type: string
+        description: "The update configuration ID"
+      version:
+        type: string
+        description: "Target version for the update"
+    required:
+      - owner
+      - repo
+      - update_id
+
+- slug: dependabot_list_security_updates
+  name: List Security Updates
+  description: |
+    Retrieve all security updates configured for repositories.
+  provider: dependabot
+  endpoint: /security-updates
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - security_updates
+  input_schema:
+    type: object
+    description: Parameters for listing security updates
+    properties:
+      org:
+        type: string
+        description: "GitHub organization login"
+      repository:
+        type: string
+        description: "Specific repository name"
+    required:
+      - org
+
+- slug: dependabot_get_security_update
+  name: Get Security Update
+  description: |
+    Retrieve details about a specific security update.
+  provider: dependabot
+  endpoint: /repositories/{owner}/{repo}/security-updates/{update_id}
+  method: GET
+  scopes:
+    - dependabot_read
+  tags:
+    - security_updates
+  input_schema:
+    type: object
+    description: Parameters for getting security update details
+    properties:
+      owner:
+        type: string
+        description: "Repository owner login"
+      repo:
+        type: string
+        description: "Repository name"
+      update_id:
+        type: string
+        description: "The security update ID"
+    required:
+      - owner
+      - repo
+      - update_id

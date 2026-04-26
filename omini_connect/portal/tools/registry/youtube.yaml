@@ -1,0 +1,319 @@
+# YouTube Tools - Allowlist
+# Curated subset of the YouTube Data API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. youtube_list_videos           - List videos (search by chart or filter)
+# 2. youtube_get_video            - Get video details by ID
+# 3. youtube_search_videos        - Search for videos by keyword
+# 4. youtube_list_channels        - List channels
+# 5. youtube_get_channel          - Get channel details by ID
+# 6. youtube_list_playlists       - List playlists for authenticated user
+# 7. youtube_get_playlist          - Get playlist details by ID
+# 8. youtube_add_video_to_playlist - Add a video to a playlist
+# 9. youtube_list_comments        - List comments on a video
+# 10. youtube_get_comment          - Get comment details by ID
+
+- slug: youtube_list_videos
+  name: List Videos
+  description: |
+    List videos from YouTube. Returns most popular videos (chart) or videos matching filters.
+    Use this to discover trending content or browse by category.
+  provider: youtube
+  endpoint: /youtube/v3/videos
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - videos
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing videos
+    properties:
+      chart:
+        type: string
+        description: "Chart type: mostPopular"
+        enum: [mostPopular]
+      region_code:
+        type: string
+        description: "ISO 3166-1 alpha-2 country code for regional content"
+        default: US
+      video_category_id:
+        type: string
+        description: "Filter by video category ID"
+      max_results:
+        type: integer
+        description: "Maximum results (max 50, default 10)"
+        default: 10
+    required: []
+
+- slug: youtube_get_video
+  name: Get Video
+  description: |
+    Get details of a specific video by its ID. Returns title, description, view count, likes, and metadata.
+    Use this to get detailed information about a video.
+  provider: youtube
+  endpoint: /youtube/v3/videos
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - videos
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a video
+    properties:
+      id:
+        type: string
+        description: "Video ID (required)"
+      part:
+        type: string
+        description: "Comma-separated list of parts: snippet,contentDetails,statistics,player"
+        default: snippet,statistics
+    required:
+      - id
+
+- slug: youtube_search_videos
+  name: Search Videos
+  description: |
+    Search for videos by keyword. Returns video IDs, titles, and thumbnails matching the query.
+    Great for finding specific content or researching topics.
+  provider: youtube
+  endpoint: /youtube/v3/search
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.search
+  tags:
+    - search
+    - videos
+    - discovery
+  input_schema:
+    type: object
+    description: Search parameters
+    properties:
+      q:
+        type: string
+        description: "Search query (required)"
+      type:
+        type: string
+        description: "Resource type: video, playlist, or channel"
+        enum: [video, playlist, channel]
+        default: video
+      channel_id:
+        type: string
+        description: "Limit search to specific channel"
+      max_results:
+        type: integer
+        description: "Maximum results (max 50, default 10)"
+        default: 10
+      order:
+        type: string
+        description: "Sort order: date, rating, relevance, title, viewCount"
+        enum: [date, rating, relevance, title, viewCount]
+        default: relevance
+    required:
+      - q
+
+- slug: youtube_list_channels
+  name: List Channels
+  description: |
+    List channels. Returns channel information for authenticated user or specific channel IDs.
+    Use this to find channel details or manage subscriptions.
+  provider: youtube
+  endpoint: /youtube/v3/channels
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - channels
+  input_schema:
+    type: object
+    description: Parameters for listing channels
+    properties:
+      mine:
+        type: boolean
+        description: "Set to true to list authenticated user's channel"
+        default: false
+      id:
+        type: string
+        description: "Comma-separated list of channel IDs"
+      max_results:
+        type: integer
+        description: "Maximum results (max 50, default 10)"
+        default: 10
+    required: []
+
+- slug: youtube_get_channel
+  name: Get Channel
+  description: |
+    Get details of a specific channel by its ID. Returns channel name, description, subscriber count, and branding.
+    Use this to learn about a creator's channel.
+  provider: youtube
+  endpoint: /youtube/v3/channels
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - channels
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a channel
+    properties:
+      id:
+        type: string
+        description: "Channel ID (required)"
+      part:
+        type: string
+        description: "Comma-separated list of parts: snippet,contentDetails,statistics,brandingSettings"
+        default: snippet,statistics
+    required:
+      - id
+
+- slug: youtube_list_playlists
+  name: List Playlists
+  description: |
+    List playlists for the authenticated user. Returns playlists created or curated by the user.
+    Use this to organize videos or find saved collections.
+  provider: youtube
+  endpoint: /youtube/v3/playlists
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - playlists
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing playlists
+    properties:
+      channel_id:
+        type: string
+        description: "Channel ID (defaults to authenticated user)"
+      mine:
+        type: boolean
+        description: "Set to true for authenticated user's playlists"
+        default: true
+      max_results:
+        type: integer
+        description: "Maximum results (max 50, default 10)"
+        default: 10
+    required: []
+
+- slug: youtube_get_playlist
+  name: Get Playlist
+  description: |
+    Get details of a specific playlist by its ID. Returns playlist title, description, and video count.
+    Use this to view playlist contents or learn about a collection.
+  provider: youtube
+  endpoint: /youtube/v3/playlists
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - playlists
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a playlist
+    properties:
+      id:
+        type: string
+        description: "Playlist ID (required)"
+      part:
+        type: string
+        description: "Comma-separated list of parts: snippet,status"
+        default: snippet
+    required:
+      - id
+
+- slug: youtube_add_video_to_playlist
+  name: Add Video to Playlist
+  description: |
+    Add a video to a playlist. Specify the video ID and playlist ID to add an item.
+    Use this to save videos or organize content into collections.
+  provider: youtube
+  endpoint: /youtube/v3/playlistItems
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/youtube
+  tags:
+    - playlists
+    - create
+  input_schema:
+    type: object
+    description: Parameters for adding a video to playlist
+    properties:
+      playlist_id:
+        type: string
+        description: "Playlist ID (required)"
+      video_id:
+        type: string
+        description: "Video ID to add (required)"
+      position:
+        type: integer
+        description: "Position in playlist (0 = first)"
+    required:
+      - playlist_id
+      - video_id
+
+- slug: youtube_list_comments
+  name: List Comments
+  description: |
+    List comments on a video. Returns comment threads with replies and metadata.
+    Use this to read discussions, feedback, or community sentiment.
+  provider: youtube
+  endpoint: /youtube/v3/commentThreads
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - comments
+    - discussion
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      video_id:
+        type: string
+        description: "Video ID to get comments for"
+      max_results:
+        type: integer
+        description: "Maximum results (max 100, default 20)"
+        default: 20
+      order:
+        type: string
+        description: "Sort order: time, relevance"
+        enum: [time, relevance]
+        default: relevance
+    required:
+      - video_id
+
+- slug: youtube_get_comment
+  name: Get Comment
+  description: |
+    Get details of a specific comment by its ID. Returns comment text, author, likes, and moderation status.
+    Use this to read a specific comment in a thread.
+  provider: youtube
+  endpoint: /youtube/v3/comments
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/youtube.readonly
+  tags:
+    - comments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a comment
+    properties:
+      id:
+        type: string
+        description: "Comment ID (required)"
+      part:
+        type: string
+        description: "Part: snippet"
+        default: snippet
+    required:
+      - id

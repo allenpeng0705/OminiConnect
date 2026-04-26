@@ -1,0 +1,267 @@
+# Onlogist Tools - Allowlist
+# Curated subset of Onlogist API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. onlogist_list_orders             - List orders
+# 2. onlogist_get_order              - Get order details
+# 3. onlogist_create_order           - Create order
+# 4. onlogist_update_order           - Update order
+# 5. onlogist_list_bookings         - List bookings
+# 6. onlogist_get_booking            - Get booking details
+# 7. onlogist_create_booking         - Create booking
+# 8. onlogist_list_carriers         - List carriers
+# 9. onlogist_get_quote              - Get shipping quote
+# 10. onlogist_track_shipment        - Track shipment
+
+- slug: onlogist_list_orders
+  name: List Orders
+  description: |
+    List all orders in Onlogist.
+  provider: onlogist
+  endpoint: /api/orders
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - logistics
+    - orders
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing orders
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: onlogist_get_order
+  name: Get Order
+  description: |
+    Get detailed information for a specific order.
+  provider: onlogist
+  endpoint: /api/orders/{id}
+  method: GET
+  scopes:
+    - orders:read
+  tags:
+    - logistics
+    - orders
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+    required:
+      - id
+
+- slug: onlogist_create_order
+  name: Create Order
+  description: |
+    Create a new order in Onlogist.
+  provider: onlogist
+  endpoint: /api/orders
+  method: POST
+  scopes:
+    - orders:write
+  tags:
+    - logistics
+    - orders
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating an order
+    properties:
+      origin_address:
+        type: string
+        description: "Origin address"
+      destination_address:
+        type: string
+        description: "Destination address"
+      weight:
+        type: number
+        description: "Package weight"
+    required:
+      - origin_address
+      - destination_address
+
+- slug: onlogist_update_order
+  name: Update Order
+  description: |
+    Update an existing order.
+  provider: onlogist
+  endpoint: /api/orders/{id}
+  method: PUT
+  scopes:
+    - orders:write
+  tags:
+    - logistics
+    - orders
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating an order
+    properties:
+      id:
+        type: string
+        description: "Order ID"
+      status:
+        type: string
+        description: "Order status"
+    required:
+      - id
+
+- slug: onlogist_list_bookings
+  name: List Bookings
+  description: |
+    List all bookings in Onlogist.
+  provider: onlogist
+  endpoint: /api/bookings
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - logistics
+    - bookings
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing bookings
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: onlogist_get_booking
+  name: Get Booking
+  description: |
+    Get detailed information for a specific booking.
+  provider: onlogist
+  endpoint: /api/bookings/{id}
+  method: GET
+  scopes:
+    - bookings:read
+  tags:
+    - logistics
+    - bookings
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a booking
+    properties:
+      id:
+        type: string
+        description: "Booking ID"
+    required:
+      - id
+
+- slug: onlogist_create_booking
+  name: Create Booking
+  description: |
+    Create a new booking in Onlogist.
+  provider: onlogist
+  endpoint: /api/bookings
+  method: POST
+  scopes:
+    - bookings:write
+  tags:
+    - logistics
+    - bookings
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a booking
+    properties:
+      order_id:
+        type: string
+        description: "Order ID"
+      carrier_id:
+        type: string
+        description: "Carrier ID"
+      pickup_date:
+        type: string
+        description: "Pickup date"
+    required:
+      - order_id
+      - carrier_id
+
+- slug: onlogist_list_carriers
+  name: List Carriers
+  description: |
+    List all available carriers.
+  provider: onlogist
+  endpoint: /api/carriers
+  method: GET
+  scopes:
+    - carriers:read
+  tags:
+    - logistics
+    - carriers
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing carriers
+    properties: {}
+    required: []
+
+- slug: onlogist_get_quote
+  name: Get Quote
+  description: |
+    Get a shipping quote.
+  provider: onlogist
+  endpoint: /api/quotes
+  method: GET
+  scopes:
+    - quotes:read
+  tags:
+    - logistics
+    - quotes
+    - pricing
+  input_schema:
+    type: object
+    description: Parameters for getting a quote
+    properties:
+      origin:
+        type: string
+        description: "Origin address"
+      destination:
+        type: string
+        description: "Destination address"
+      weight:
+        type: number
+        description: "Package weight"
+    required:
+      - origin
+      - destination
+      - weight
+
+- slug: onlogist_track_shipment
+  name: Track Shipment
+  description: |
+    Track a shipment by tracking number.
+  provider: onlogist
+  endpoint: /api/shipments/{trackingNumber}/track
+  method: GET
+  scopes:
+    - tracking:read
+  tags:
+    - logistics
+    - tracking
+    - shipments
+  input_schema:
+    type: object
+    description: Parameters for tracking a shipment
+    properties:
+      trackingNumber:
+        type: string
+        description: "Tracking number"
+    required:
+      - trackingNumber

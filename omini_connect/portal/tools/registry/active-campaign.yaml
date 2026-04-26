@@ -1,0 +1,249 @@
+- slug: active-campaign_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a paginated list of all contacts in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /contacts
+  method: GET
+  scopes:
+    - contact_list
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      limit:
+        type: integer
+        description: "Number of contacts to return (default 20, max 100)"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: active-campaign_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by ID.
+  provider: active-campaign
+  endpoint: /contacts/{id}
+  method: GET
+  scopes:
+    - contact_view
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "The contact ID"
+    required:
+      - id
+
+- slug: active-campaign_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /contacts
+  method: POST
+  scopes:
+    - contact_add
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      email:
+        type: string
+        description: "Email address of the contact"
+      firstName:
+        type: string
+        description: "First name of the contact"
+      lastName:
+        type: string
+        description: "Last name of the contact"
+      phone:
+        type: string
+        description: "Phone number of the contact"
+    required:
+      - email
+
+- slug: active-campaign_update_contact
+  name: Update Contact
+  description: |
+    Update an existing contact's information.
+  provider: active-campaign
+  endpoint: /contacts/{id}
+  method: PUT
+  scopes:
+    - contact_edit
+  tags:
+    - contacts
+  input_schema:
+    type: object
+    description: Parameters for updating a contact
+    properties:
+      id:
+        type: string
+        description: "The contact ID"
+      email:
+        type: string
+        description: "Updated email address"
+      firstName:
+        type: string
+        description: "Updated first name"
+      lastName:
+        type: string
+        description: "Updated last name"
+      phone:
+        type: string
+        description: "Updated phone number"
+    required:
+      - id
+
+- slug: active-campaign_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of all deals in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /deals
+  method: GET
+  scopes:
+    - deal_list
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      limit:
+        type: integer
+        description: "Number of deals to return"
+      offset:
+        type: integer
+        description: "Offset for pagination"
+    required: []
+
+- slug: active-campaign_get_deal
+  name: Get Deal
+  description: |
+    Get details of a specific deal by ID.
+  provider: active-campaign
+  endpoint: /deals/{id}
+  method: GET
+  scopes:
+    - deal_view
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: string
+        description: "The deal ID"
+    required:
+      - id
+
+- slug: active-campaign_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /deals
+  method: POST
+  scopes:
+    - deal_add
+  tags:
+    - deals
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      title:
+        type: string
+        description: "Title of the deal"
+      value:
+        type: number
+        description: "Monetary value of the deal"
+      pipelineId:
+        type: string
+        description: "ID of the pipeline"
+      contactId:
+        type: string
+        description: "Associated contact ID"
+    required:
+      - title
+
+- slug: active-campaign_list_campaigns
+  name: List Campaigns
+  description: |
+    Retrieve a list of all email campaigns in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /campaigns
+  method: GET
+  scopes:
+    - campaign_list
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Number of campaigns to return"
+      status:
+        type: string
+        description: "Filter by status (published, draft, scheduled)"
+    required: []
+
+- slug: active-campaign_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific campaign by ID.
+  provider: active-campaign
+  endpoint: /campaigns/{id}
+  method: GET
+  scopes:
+    - campaign_view
+  tags:
+    - campaigns
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      id:
+        type: string
+        description: "The campaign ID"
+    required:
+      - id
+
+- slug: active-campaign_add_contact_to_tag
+  name: Add Contact to Tag
+  description: |
+    Add a tag to a contact in your ActiveCampaign account.
+  provider: active-campaign
+  endpoint: /contacts/tags
+  method: POST
+  scopes:
+    - contact_tag
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for adding a tag to a contact
+    properties:
+      contactId:
+        type: string
+        description: "The contact ID"
+      tagId:
+        type: string
+        description: "The tag ID to apply"
+    required:
+      - contactId
+      - tagId

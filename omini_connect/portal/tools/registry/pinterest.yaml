@@ -1,0 +1,290 @@
+# Pinterest Tools - Allowlist
+# Curated subset of the Pinterest API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. pinterest_list_pins          - List pins for authenticated user
+# 2. pinterest_get_pin             - Get a specific pin by ID
+# 3. pinterest_create_pin          - Create a new pin on a board
+# 4. pinterest_list_boards         - List boards for authenticated user
+# 5. pinterest_get_board           - Get a specific board by ID
+# 6. pinterest_create_board       - Create a new board
+# 7. pinterest_list_user_pins     - List pins on a specific board
+# 8. pinterest_get_user_info      - Get user profile information
+# 9. pinterest_search_pins        - Search pins by keyword
+# 10. pinterest_list_ads           - List advertising campaigns
+
+- slug: pinterest_list_pins
+  name: List Pins
+  description: |
+    List pins for the authenticated user. Returns a paginated list of pins the user has created or saved.
+    Use this to browse your pin collection or find specific content.
+  provider: pinterest
+  endpoint: /v5/pins
+  method: GET
+  scopes:
+    - pins:read
+  tags:
+    - pins
+    - content
+  input_schema:
+    type: object
+    description: Parameters for listing pins
+    properties:
+      page_size:
+        type: integer
+        description: "Number of pins to return (max 100, default 25)"
+        default: 25
+      bookmark:
+        type: string
+        description: "Bookmark for pagination"
+    required: []
+
+- slug: pinterest_get_pin
+  name: Get Pin
+  description: |
+    Get details of a specific pin by its ID. Returns the pin's description, images, link, and board information.
+  provider: pinterest
+  endpoint: /v5/pins/{pin_id}
+  method: GET
+  scopes:
+    - pins:read
+  tags:
+    - pins
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a pin
+    properties:
+      pin_id:
+        type: string
+        description: "The unique identifier of the pin"
+    required:
+      - pin_id
+
+- slug: pinterest_create_pin
+  name: Create Pin
+  description: |
+    Create a new pin on a board. Include an image URL, title, description, and destination link.
+    Use this to save content to your boards programmatically.
+  provider: pinterest
+  endpoint: /v5/pins
+  method: POST
+  scopes:
+    - pins:write
+  tags:
+    - pins
+    - create
+  input_schema:
+    type: object
+    description: Pin creation parameters
+    properties:
+      board_id:
+        type: string
+        description: "Board ID where the pin will be created (required)"
+      title:
+        type: string
+        description: "Pin title (required)"
+      description:
+        type: string
+        description: "Pin description"
+      link:
+        type: string
+        description: "Destination URL when clicking the pin"
+      image_url:
+        type: string
+        description: "URL of the image to pin"
+    required:
+      - board_id
+      - title
+
+- slug: pinterest_list_boards
+  name: List Boards
+  description: |
+    List boards for the authenticated user. Returns boards the user owns or follows.
+    Use this to find boards before creating pins or understanding organization.
+  provider: pinterest
+  endpoint: /v5/boards
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing boards
+    properties:
+      page_size:
+        type: integer
+        description: "Number of boards to return (max 100, default 25)"
+        default: 25
+      bookmark:
+        type: string
+        description: "Bookmark for pagination"
+    required: []
+
+- slug: pinterest_get_board
+  name: Get Board
+  description: |
+    Get details of a specific board by its ID. Returns board name, description, and privacy settings.
+  provider: pinterest
+  endpoint: /v5/boards/{board_id}
+  method: GET
+  scopes:
+    - boards:read
+  tags:
+    - boards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a board
+    properties:
+      board_id:
+        type: string
+        description: "The unique identifier of the board"
+    required:
+      - board_id
+
+- slug: pinterest_create_board
+  name: Create Board
+  description: |
+    Create a new board. Include a name, optional description, and privacy setting.
+    Use this to organize pins into specific collections.
+  provider: pinterest
+  endpoint: /v5/boards
+  method: POST
+  scopes:
+    - boards:write
+  tags:
+    - boards
+    - create
+  input_schema:
+    type: object
+    description: Board creation parameters
+    properties:
+      name:
+        type: string
+        description: "Board name (required)"
+      description:
+        type: string
+        description: "Board description"
+      privacy:
+        type: string
+        description: "Privacy level: public or private"
+        enum: [public, private]
+        default: public
+    required:
+      - name
+
+- slug: pinterest_list_user_pins
+  name: List User Pins
+  description: |
+    List pins for a specific user on a specific board. Use this to view all content on a board.
+  provider: pinterest
+  endpoint: /v5/pins
+  method: GET
+  scopes:
+    - pins:read
+  tags:
+    - pins
+    - boards
+  input_schema:
+    type: object
+    description: Parameters for listing user pins
+    properties:
+      owner:
+        type: string
+        description: "Owner ID (user or business)"
+      board:
+        type: string
+        description: "Board ID"
+      page_size:
+        type: integer
+        description: "Number of pins to return (max 100, default 25)"
+        default: 25
+      bookmark:
+        type: string
+        description: "Bookmark for pagination"
+    required:
+      - owner
+      - board
+
+- slug: pinterest_get_user_info
+  name: Get User Info
+  description: |
+    Get the authenticated user's profile information including name, username, profile image, and counts.
+    Useful for personalization and context.
+  provider: pinterest
+  endpoint: /v5/users/me
+  method: GET
+  scopes:
+    - user_accounts:read
+  tags:
+    - user
+    - profile
+  input_schema:
+    type: object
+    description: No parameters required
+    properties: {}
+    required: []
+
+- slug: pinterest_search_pins
+  name: Search Pins
+  description: |
+    Search pins by keyword. Returns pins that match the query across public content.
+    Great for finding ideas, products, or inspiration.
+  provider: pinterest
+  endpoint: /v5/pins/search
+  method: GET
+  scopes: []
+  tags:
+    - search
+    - pins
+    - discovery
+  input_schema:
+    type: object
+    description: Search parameters
+    properties:
+      query:
+        type: string
+        description: "Search query (required)"
+      page_size:
+        type: integer
+        description: "Number of results to return (max 100, default 25)"
+        default: 25
+      bookmark:
+        type: string
+        description: "Bookmark for pagination"
+    required:
+      - query
+
+- slug: pinterest_list_ads
+  name: List Ads
+  description: |
+    List advertising campaigns for the authenticated user. Returns ad campaign details and performance metrics.
+    Use this to monitor advertising performance.
+  provider: pinterest
+  endpoint: /v5/ad_accounts/{ad_account_id}/ads
+  method: GET
+  scopes:
+    - ads:read
+  tags:
+    - ads
+    - advertising
+  input_schema:
+    type: object
+    description: Parameters for listing ads
+    properties:
+      ad_account_id:
+        type: string
+        description: "Ad Account ID (required)"
+      page_size:
+        type: integer
+        description: "Number of ads to return (max 100, default 25)"
+        default: 25
+      bookmark:
+        type: string
+        description: "Bookmark for pagination"
+    required:
+      - ad_account_id

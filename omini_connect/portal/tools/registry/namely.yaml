@@ -1,0 +1,255 @@
+# Namely Tools - Allowlist
+# Curated subset of Namely HR platform API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. namely_list_employees         - List employees
+# 2. namely_get_employee           - Get employee details
+# 3. namely_list_departments       - List departments
+# 4. namely_list_jobs              - List job postings
+# 5. namely_list_time_off          - List time off requests
+# 6. namely_create_time_off        - Create time off request
+# 7. namely_list_benefits          - List benefits enrollment
+# 8. namely_list_payroll           - List payroll data
+# 9. namely_list_company           - Get company info
+# 10. namely_list_profiles          - List employee profiles
+
+- slug: namely_list_employees
+  name: List Employees
+  description: |
+    List all employees in the organization.
+  provider: namely
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - hr
+    - employees
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Items per page (default 20, max 100)"
+        default: 20
+    required: []
+
+- slug: namely_get_employee
+  name: Get Employee
+  description: |
+    Get detailed information for a specific employee.
+  provider: namely
+  endpoint: /v1/employees/{id}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - hr
+    - employees
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      id:
+        type: integer
+        description: "Employee ID"
+    required:
+      - id
+
+- slug: namely_list_departments
+  name: List Departments
+  description: |
+    List all departments in the organization.
+  provider: namely
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - hr
+    - departments
+    - organization
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: namely_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings in the organization.
+  provider: namely
+  endpoint: /v1/jobs
+  method: GET
+  scopes:
+    - jobs:read
+  tags:
+    - hr
+    - jobs
+    - recruiting
+  input_schema:
+    type: object
+    description: Parameters for listing jobs
+    properties:
+      status:
+        type: string
+        description: "Filter by status (open, closed)"
+    required: []
+
+- slug: namely_list_time_off
+  name: List Time Off
+  description: |
+    List time off requests for employees.
+  provider: namely
+  endpoint: /v1/time_off_requests
+  method: GET
+  scopes:
+    - time_off:read
+  tags:
+    - hr
+    - time-off
+    - requests
+  input_schema:
+    type: object
+    description: Parameters for listing time off requests
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      status:
+        type: string
+        description: "Filter by status (pending, approved, denied)"
+    required: []
+
+- slug: namely_create_time_off
+  name: Create Time Off
+  description: |
+    Create a new time off request for an employee.
+  provider: namely
+  endpoint: /v1/time_off_requests
+  method: POST
+  scopes:
+    - time_off:write
+  tags:
+    - hr
+    - time-off
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating time off request
+    properties:
+      employee_id:
+        type: integer
+        description: "Employee ID"
+      start_date:
+        type: string
+        description: "Start date (YYYY-MM-DD)"
+      end_date:
+        type: string
+        description: "End date (YYYY-MM-DD)"
+      type:
+        type: string
+        description: "Time off type (vacation, sick, personal)"
+    required:
+      - employee_id
+      - start_date
+      - end_date
+      - type
+
+- slug: namely_list_benefits
+  name: List Benefits
+  description: |
+    List benefits enrollment for employees.
+  provider: namely
+  endpoint: /v1/benefits_enrollments
+  method: GET
+  scopes:
+    - benefits:read
+  tags:
+    - hr
+    - benefits
+    - enrollment
+  input_schema:
+    type: object
+    description: Parameters for listing benefits
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+    required: []
+
+- slug: namely_list_payroll
+  name: List Payroll
+  description: |
+    List payroll data for employees.
+  provider: namely
+  endpoint: /v1/payroll
+  method: GET
+  scopes:
+    - payroll:read
+  tags:
+    - hr
+    - payroll
+    - compensation
+  input_schema:
+    type: object
+    description: Parameters for listing payroll
+    properties:
+      employee_id:
+        type: integer
+        description: "Filter by employee ID"
+      pay_period_start:
+        type: string
+        description: "Pay period start date"
+    required: []
+
+- slug: namely_list_company
+  name: List Company
+  description: |
+    Get company information and settings.
+  provider: namely
+  endpoint: /v1/company
+  method: GET
+  scopes:
+    - company:read
+  tags:
+    - hr
+    - company
+    - settings
+  input_schema:
+    type: object
+    description: Parameters for getting company info
+    properties: {}
+    required: []
+
+- slug: namely_list_profiles
+  name: List Profiles
+  description: |
+    List employee profiles with detailed information.
+  provider: namely
+  endpoint: /v1/profiles
+  method: GET
+  scopes:
+    - profiles:read
+  tags:
+    - hr
+    - profiles
+    - directory
+  input_schema:
+    type: object
+    description: Parameters for listing profiles
+    properties:
+      department_id:
+        type: integer
+        description: "Filter by department ID"
+    required: []

@@ -1,0 +1,262 @@
+# Bird Tools - Allowlist
+# Curated subset of Bird Composable API for AI agent use.
+# API_KEY auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. bird_list_messages         - List messages
+# 2. bird_get_message          - Get message details
+# 3. bird_send_message         - Send a message
+# 4. bird_list_templates       - List message templates
+# 5. bird_create_template      - Create message template
+# 6. bird_list_contacts       - List contacts
+# 7. bird_get_contact          - Get contact details
+# 8. bird_list_campaigns       - List campaigns
+# 9. bird_get_campaign        - Get campaign details
+# 10. bird_get_webhooks       - Get webhook events
+
+- slug: bird_list_messages
+  name: List Messages
+  description: |
+    List all messages sent through Bird.
+  provider: bird
+  endpoint: /v1/messages
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - communication
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Messages per page"
+        default: 20
+    required: []
+
+- slug: bird_get_message
+  name: Get Message
+  description: |
+    Get details for a specific message.
+  provider: bird
+  endpoint: /v1/messages/{messageId}
+  method: GET
+  scopes: []
+  tags:
+    - messages
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      messageId:
+        type: string
+        description: "Message ID"
+    required:
+      - messageId
+
+- slug: bird_send_message
+  name: Send Message
+  description: |
+    Send a message through Bird.
+  provider: bird
+  endpoint: /v1/messages
+  method: POST
+  scopes: []
+  tags:
+    - messages
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      channel:
+        type: string
+        description: "Channel: sms, email, whatsapp, etc."
+      recipient:
+        type: string
+        description: "Recipient identifier"
+      content:
+        type: string
+        description: "Message content"
+    required:
+      - channel
+      - recipient
+      - content
+
+- slug: bird_list_templates
+  name: List Templates
+  description: |
+    List all message templates.
+  provider: bird
+  endpoint: /v1/templates
+  method: GET
+  scopes: []
+  tags:
+    - templates
+    - messages
+  input_schema:
+    type: object
+    description: Parameters for listing templates
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Templates per page"
+        default: 20
+    required: []
+
+- slug: bird_create_template
+  name: Create Template
+  description: |
+    Create a new message template.
+  provider: bird
+  endpoint: /v1/templates
+  method: POST
+  scopes: []
+  tags:
+    - templates
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a template
+    properties:
+      name:
+        type: string
+        description: "Template name"
+      channel:
+        type: string
+        description: "Channel: sms, email, etc."
+      content:
+        type: string
+        description: "Template content"
+    required:
+      - name
+      - channel
+      - content
+
+- slug: bird_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Bird.
+  provider: bird
+  endpoint: /v1/contacts
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Contacts per page"
+        default: 20
+    required: []
+
+- slug: bird_get_contact
+  name: Get Contact
+  description: |
+    Get details for a specific contact.
+  provider: bird
+  endpoint: /v1/contacts/{contactId}
+  method: GET
+  scopes: []
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contactId:
+        type: string
+        description: "Contact ID"
+    required:
+      - contactId
+
+- slug: bird_list_campaigns
+  name: List Campaigns
+  description: |
+    List all campaigns in Bird.
+  provider: bird
+  endpoint: /v1/campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Campaigns per page"
+        default: 20
+    required: []
+
+- slug: bird_get_campaign
+  name: Get Campaign
+  description: |
+    Get details for a specific campaign.
+  provider: bird
+  endpoint: /v1/campaigns/{campaignId}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaignId:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaignId
+
+- slug: bird_get_webhooks
+  name: Get Webhooks
+  description: |
+    Get webhook events and logs.
+  provider: bird
+  endpoint: /v1/webhooks
+  method: GET
+  scopes: []
+  tags:
+    - webhooks
+    - events
+  input_schema:
+    type: object
+    description: Parameters for getting webhooks
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      pageSize:
+        type: integer
+        description: "Events per page"
+        default: 20
+    required: []

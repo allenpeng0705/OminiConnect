@@ -1,0 +1,237 @@
+- slug: quora_list_topics
+  name: List Topics
+  description: |
+    Retrieve a list of topics on Quora.
+  provider: quora
+  endpoint: /topics
+  method: GET
+  scopes:
+    - read
+  tags:
+    - topics
+  input_schema:
+    type: object
+    description: Parameters for listing topics
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required: []
+
+- slug: quora_get_topic
+  name: Get Topic
+  description: |
+    Get details about a specific topic by its ID or slug.
+  provider: quora
+  endpoint: /topics/{topic_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - topics
+  input_schema:
+    type: object
+    description: Parameters for getting a topic
+    properties:
+      topic_id:
+        type: string
+        description: "The topic ID or slug"
+    required:
+      - topic_id
+
+- slug: quora_list_questions
+  name: List Questions
+  description: |
+    Retrieve a list of questions, optionally filtered by topic.
+  provider: quora
+  endpoint: /questions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - questions
+  input_schema:
+    type: object
+    description: Parameters for listing questions
+    properties:
+      topic_id:
+        type: string
+        description: "Filter by topic ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required: []
+
+- slug: quora_get_question
+  name: Get Question
+  description: |
+    Get details about a specific question by its ID.
+  provider: quora
+  endpoint: /questions/{question_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - questions
+  input_schema:
+    type: object
+    description: Parameters for getting a question
+    properties:
+      question_id:
+        type: string
+        description: "The question ID"
+    required:
+      - question_id
+
+- slug: quora_create_question
+  name: Create Question
+  description: |
+    Create a new question on Quora.
+  provider: quora
+  endpoint: /questions
+  method: POST
+  scopes:
+    - write
+  tags:
+    - questions
+  input_schema:
+    type: object
+    description: Parameters for creating a question
+    properties:
+      text:
+        type: string
+        description: "The question text"
+      topic_ids:
+        type: array
+        items:
+          type: string
+        description: "Topic IDs to attach to the question"
+    required:
+      - text
+
+- slug: quora_list_answers
+  name: List Answers
+  description: |
+    Retrieve answers for a specific question.
+  provider: quora
+  endpoint: /questions/{question_id}/answers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - answers
+  input_schema:
+    type: object
+    description: Parameters for listing answers
+    properties:
+      question_id:
+        type: string
+        description: "The question ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - question_id
+
+- slug: quora_get_answer
+  name: Get Answer
+  description: |
+    Get details about a specific answer by its ID.
+  provider: quora
+  endpoint: /answers/{answer_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - answers
+  input_schema:
+    type: object
+    description: Parameters for getting an answer
+    properties:
+      answer_id:
+        type: string
+        description: "The answer ID"
+    required:
+      - answer_id
+
+- slug: quora_create_answer
+  name: Create Answer
+  description: |
+    Create an answer to a specific question.
+  provider: quora
+  endpoint: /questions/{question_id}/answers
+  method: POST
+  scopes:
+    - write
+  tags:
+    - answers
+  input_schema:
+    type: object
+    description: Parameters for creating an answer
+    properties:
+      question_id:
+        type: string
+        description: "The question ID to answer"
+      text:
+        type: string
+        description: "The answer text"
+    required:
+      - question_id
+      - text
+
+- slug: quora_get_user_info
+  name: Get User Info
+  description: |
+    Get profile information for a specific user.
+  provider: quora
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting user info
+    properties:
+      user_id:
+        type: string
+        description: "The user ID"
+    required:
+      - user_id
+
+- slug: quora_search_questions
+  name: Search Questions
+  description: |
+    Search for questions matching a query.
+  provider: quora
+  endpoint: /search/questions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - search
+  input_schema:
+    type: object
+    description: Parameters for searching questions
+    properties:
+      q:
+        type: string
+        description: "Search query string"
+      page:
+        type: integer
+        description: "Page number for pagination"
+      limit:
+        type: integer
+        description: "Number of results per page (default 20)"
+    required:
+      - q

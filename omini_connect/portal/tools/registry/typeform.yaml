@@ -1,0 +1,284 @@
+# Typeform Tools - Allowlist
+# Curated subset of Typeform API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. typeform_list_forms          - List forms
+# 2. typeform_get_form            - Get form details
+# 3. typeform_create_form         - Create a form
+# 4. typeform_list_responses      - List form responses
+# 5. typeform_get_response        - Get response details
+# 6. typeform_list_fields         - List form fields
+# 7. typeform_get_field           - Get field details
+# 8. typeform_create_webhook      - Create a webhook
+# 9. typeform_list_webhooks       - List webhooks
+# 10. typeform_calculate_form     - Calculate form logic
+
+- slug: typeform_list_forms
+  name: List Forms
+  description: |
+    List all forms in the Typeform account.
+  provider: typeform
+  endpoint: /forms
+  method: GET
+  scopes:
+    - read_forms
+  tags:
+    - forms
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties:
+      page_count:
+        type: integer
+        description: "Number of forms per page (default 200)"
+        default: 200
+      page:
+        type: integer
+        description: "Page number"
+      workspace_id:
+        type: string
+        description: "Filter by workspace ID"
+    required: []
+
+- slug: typeform_get_form
+  name: Get Form
+  description: |
+    Get detailed information about a specific form including fields and settings.
+  provider: typeform
+  endpoint: /forms/{form_id}
+  method: GET
+  scopes:
+    - read_forms
+  tags:
+    - forms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a form
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+    required:
+      - form_id
+
+- slug: typeform_create_form
+  name: Create Form
+  description: |
+    Create a new form with the specified title and fields.
+  provider: typeform
+  endpoint: /forms
+  method: POST
+  scopes:
+    - write_forms
+  tags:
+    - forms
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a form
+    properties:
+      title:
+        type: string
+        description: "Form title"
+      fields:
+        type: array
+        description: "Array of field definitions"
+      settings:
+        type: object
+        description: "Form settings (language, progress bar, etc.)"
+    required:
+      - title
+
+- slug: typeform_list_responses
+  name: List Responses
+  description: |
+    List all responses for a specific form.
+  provider: typeform
+  endpoint: /forms/{form_id}/responses
+  method: GET
+  scopes:
+    - read_responses
+  tags:
+    - responses
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+      page_count:
+        type: integer
+        description: "Number of responses per page"
+        default: 100
+      after:
+        type: string
+        description: "Filter responses after this submission time"
+      before:
+        type: string
+        description: "Filter responses before this submission time"
+    required:
+      - form_id
+
+- slug: typeform_get_response
+  name: Get Response
+  description: |
+    Get detailed information about a specific response including all answers.
+  provider: typeform
+  endpoint: /forms/{form_id}/responses/{response_id}
+  method: GET
+  scopes:
+    - read_responses
+  tags:
+    - responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a response
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+      response_id:
+        type: string
+        description: "Response ID"
+    required:
+      - form_id
+      - response_id
+
+- slug: typeform_list_fields
+  name: List Fields
+  description: |
+    List all fields (questions) in a specific form.
+  provider: typeform
+  endpoint: /forms/{form_id}/fields
+  method: GET
+  scopes:
+    - read_forms
+  tags:
+    - fields
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing fields
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+    required:
+      - form_id
+
+- slug: typeform_get_field
+  name: Get Field
+  description: |
+    Get detailed information about a specific field including properties and validation.
+  provider: typeform
+  endpoint: /forms/{form_id}/fields/{field_id}
+  method: GET
+  scopes:
+    - read_forms
+  tags:
+    - fields
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a field
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+      field_id:
+        type: string
+        description: "Field ID"
+    required:
+      - form_id
+      - field_id
+
+- slug: typeform_create_webhook
+  name: Create Webhook
+  description: |
+    Create a webhook for a form to receive response notifications.
+  provider: typeform
+  endpoint: /forms/{form_id}/webhooks
+  method: POST
+  scopes:
+    - write_forms
+  tags:
+    - webhooks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+      url:
+        type: string
+        description: "Webhook endpoint URL"
+      enabled:
+        type: boolean
+        description: "Enable the webhook immediately"
+        default: true
+      secret:
+        type: string
+        description: "Secret for verifying webhook signatures"
+    required:
+      - form_id
+      - url
+
+- slug: typeform_list_webhooks
+  name: List Webhooks
+  description: |
+    List all webhooks configured for a form.
+  provider: typeform
+  endpoint: /forms/{form_id}/webhooks
+  method: GET
+  scopes:
+    - read_forms
+  tags:
+    - webhooks
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+    required:
+      - form_id
+
+- slug: typeform_calculate_form
+  name: Calculate Form
+  description: |
+    Calculate form logic and get expected output for given answers.
+  provider: typeform
+  endpoint: /forms/{form_id}/calculate
+  method: POST
+  scopes:
+    - read_forms
+  tags:
+    - forms
+    - calculate
+  input_schema:
+    type: object
+    description: Parameters for calculating form logic
+    properties:
+      form_id:
+        type: string
+        description: "Form ID"
+      answers:
+        type: object
+        description: "Answers to calculate logic against"
+    required:
+      - form_id
+      - answers

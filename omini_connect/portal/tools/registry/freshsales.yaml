@@ -1,0 +1,288 @@
+- slug: freshsales_list_contacts
+  name: List Contacts
+  description: |
+    Retrieve a paginated list of contacts from Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/contacts
+  method: GET
+  scopes:
+    - crm.contacts.read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      filter:
+        type: string
+        description: "Filter type: all, walk_in, cold_call, marketing"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+      per_page:
+        type: integer
+        description: "Number of results per page (default 20)"
+      page:
+        type: integer
+        description: "Page number for pagination"
+    required: []
+
+- slug: freshsales_get_contact
+  name: Get Contact
+  description: |
+    Retrieve detailed information for a specific contact by ID.
+  provider: freshsales
+  endpoint: /crm/sales/contacts/{id}
+  method: GET
+  scopes:
+    - crm.contacts.read
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: integer
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: freshsales_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/contacts
+  method: POST
+  scopes:
+    - crm.contacts.write
+  tags:
+    - contacts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      first_name:
+        type: string
+        description: "First name of the contact"
+      last_name:
+        type: string
+        description: "Last name of the contact"
+      email:
+        type: string
+        description: "Email address"
+      phone:
+        type: string
+        description: "Phone number"
+      mobile:
+        type: string
+        description: "Mobile number"
+    required:
+      - first_name
+      - last_name
+
+- slug: freshsales_list_deals
+  name: List Deals
+  description: |
+    Retrieve a list of deals from Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/deals
+  method: GET
+  scopes:
+    - crm.deals.read
+  tags:
+    - deals
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      filter:
+        type: string
+        description: "Filter: all, open, won, lost"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      page:
+        type: integer
+        description: "Page number"
+    required: []
+
+- slug: freshsales_get_deal
+  name: Get Deal
+  description: |
+    Retrieve detailed information for a specific deal by ID.
+  provider: freshsales
+  endpoint: /crm/sales/deals/{id}
+  method: GET
+  scopes:
+    - crm.deals.read
+  tags:
+    - deals
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: integer
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: freshsales_create_deal
+  name: Create Deal
+  description: |
+    Create a new deal in Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/deals
+  method: POST
+  scopes:
+    - crm.deals.write
+  tags:
+    - deals
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for creating a deal
+    properties:
+      title:
+        type: string
+        description: "Deal title"
+      amount:
+        type: number
+        description: "Deal amount"
+      pipeline:
+        type: string
+        description: "Pipeline name"
+      stage:
+        type: string
+        description: "Deal stage"
+      close_date:
+        type: string
+        description: "Expected close date (YYYY-MM-DD)"
+    required:
+      - title
+
+- slug: freshsales_list_accounts
+  name: List Accounts
+  description: |
+    Retrieve a list of accounts (companies) from Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/accounts
+  method: GET
+  scopes:
+    - crm.accounts.read
+  tags:
+    - accounts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      filter:
+        type: string
+        description: "Filter type"
+      sort_by:
+        type: string
+        description: "Field to sort by"
+      sort_order:
+        type: string
+        description: "asc or desc"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      page:
+        type: integer
+        description: "Page number"
+    required: []
+
+- slug: freshsales_get_account
+  name: Get Account
+  description: |
+    Retrieve detailed information for a specific account by ID.
+  provider: freshsales
+  endpoint: /crm/sales/accounts/{id}
+  method: GET
+  scopes:
+    - crm.accounts.read
+  tags:
+    - accounts
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: integer
+        description: "Account ID"
+    required:
+      - id
+
+- slug: freshsales_list_activities
+  name: List Activities
+  description: |
+    Retrieve a list of activities (calls, meetings, notes) from Freshsales CRM.
+  provider: freshsales
+  endpoint: /crm/sales/activities
+  method: GET
+  scopes:
+    - crm.activities.read
+  tags:
+    - activities
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for listing activities
+    properties:
+      filter:
+        type: string
+        description: "Filter by type: all, call, meeting, note, email"
+      entity_type:
+        type: string
+        description: "Related entity type (contact, deal, account)"
+      entity_id:
+        type: integer
+        description: "Related entity ID"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      page:
+        type: integer
+        description: "Page number"
+    required: []
+
+- slug: freshsales_get_activity
+  name: Get Activity
+  description: |
+    Retrieve detailed information for a specific activity by ID.
+  provider: freshsales
+  endpoint: /crm/sales/activities/{id}
+  method: GET
+  scopes:
+    - crm.activities.read
+  tags:
+    - activities
+    - crm
+  input_schema:
+    type: object
+    description: Parameters for getting an activity
+    properties:
+      id:
+        type: integer
+        description: "Activity ID"
+    required:
+      - id

@@ -1,0 +1,246 @@
+# Google Forms Tools - Allowlist
+# Curated subset of Google Forms API for AI agent use.
+# OAUTH2 via Nango (alias: google).
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. google_forms_list_forms           - List forms
+# 2. google_forms_get_form           - Get form details
+# 3. google_forms_create_form        - Create form
+# 4. google_forms_update_form        - Update form
+# 5. google_forms_list_questions     - List questions
+# 6. google_forms_create_question     - Create question
+# 7. google_forms_list_responses     - List responses
+# 8. google_forms_get_response       - Get response details
+# 9. google_forms_list_watches       - List watches
+# 10. google_forms_create_watch     - Create watch
+
+- slug: google_forms_list_forms
+  name: List Forms
+  description: |
+    List forms in Google Forms.
+  provider: google-forms
+  endpoint: /forms/v1/forms
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - forms
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing forms
+    properties: {}
+
+- slug: google_forms_get_form
+  name: Get Form
+  description: |
+    Get detailed information about a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - forms
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a form
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: google_forms_create_form
+  name: Create Form
+  description: |
+    Create a new Google Form.
+  provider: google-forms
+  endpoint: /forms/v1/forms
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - forms
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a form
+    properties:
+      title:
+        type: string
+        description: "Form title"
+    required:
+      - title
+
+- slug: google_forms_update_form
+  name: Update Form
+  description: |
+    Update a form's settings.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}
+  method: PATCH
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - forms
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a form
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      title:
+        type: string
+        description: "New title"
+    required:
+      - formId
+
+- slug: google_forms_list_questions
+  name: List Questions
+  description: |
+    List questions in a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/questions
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - questions
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing questions
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: google_forms_create_question
+  name: Create Question
+  description: |
+    Create a question in a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/questions
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - questions
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a question
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      question:
+        type: object
+        description: "Question object"
+    required:
+      - formId
+      - question
+
+- slug: google_forms_list_responses
+  name: List Responses
+  description: |
+    List responses to a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/responses
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.responses.readonly
+  tags:
+    - responses
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing responses
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: google_forms_get_response
+  name: Get Response
+  description: |
+    Get details of a form response.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/responses/{responseId}
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.responses.readonly
+  tags:
+    - responses
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a response
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      responseId:
+        type: string
+        description: "Response ID"
+    required:
+      - formId
+      - responseId
+
+- slug: google_forms_list_watches
+  name: List Watches
+  description: |
+    List watches on a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/watches
+  method: GET
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - watches
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing watches
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+    required:
+      - formId
+
+- slug: google_forms_create_watch
+  name: Create Watch
+  description: |
+    Create a watch (webhook) on a form.
+  provider: google-forms
+  endpoint: /forms/v1/forms/{formId}/watches
+  method: POST
+  scopes:
+    - https://www.googleapis.com/auth/forms.body
+  tags:
+    - watches
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a watch
+    properties:
+      formId:
+        type: string
+        description: "Form ID"
+      watch:
+        type: object
+        description: "Watch object with target and event type"
+    required:
+      - formId
+      - watch

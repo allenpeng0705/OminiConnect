@@ -1,0 +1,255 @@
+- slug: guru_list_collections
+  name: List Collections
+  description: |
+    Retrieve a list of all collections in Guru.
+  provider: guru
+  endpoint: /collections
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing collections
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of collections per page (default: 30, max: 100)"
+    required: []
+
+- slug: guru_get_collection
+  name: Get Collection
+  description: |
+    Retrieve details of a specific collection by ID.
+  provider: guru
+  endpoint: /collections/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - collections
+  input_schema:
+    type: object
+    description: Parameters for getting a specific collection
+    properties:
+      id:
+        type: string
+        description: "Collection ID"
+    required:
+      - id
+
+- slug: guru_list_cards
+  name: List Cards
+  description: |
+    Retrieve a list of all cards in Guru.
+  provider: guru
+  endpoint: /cards
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing cards
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of cards per page (default: 30, max: 100)"
+      collection_id:
+        type: string
+        description: "Filter by collection ID"
+    required: []
+
+- slug: guru_get_card
+  name: Get Card
+  description: |
+    Retrieve details of a specific card by ID.
+  provider: guru
+  endpoint: /cards/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for getting a specific card
+    properties:
+      id:
+        type: string
+        description: "Card ID"
+    required:
+      - id
+
+- slug: guru_create_card
+  name: Create Card
+  description: |
+    Create a new card in a Guru collection.
+  provider: guru
+  endpoint: /cards
+  method: POST
+  scopes:
+    - create
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Card creation parameters
+    properties:
+      collection_id:
+        type: string
+        description: "Collection ID to add the card to"
+      title:
+        type: string
+        description: "Card title"
+      content:
+        type: string
+        description: "Card content/answer"
+      type:
+        type: string
+        description: "Card type: text, url, file"
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Tags to associate with the card"
+    required:
+      - collection_id
+      - title
+      - content
+
+- slug: guru_list_users
+  name: List Users
+  description: |
+    Retrieve a list of all users in Guru.
+  provider: guru
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Filter and pagination options for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of users per page (default: 30, max: 100)"
+    required: []
+
+- slug: guru_get_user
+  name: Get User
+  description: |
+    Retrieve details of a specific user by ID.
+  provider: guru
+  endpoint: /users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+  input_schema:
+    type: object
+    description: Parameters for getting a specific user
+    properties:
+      id:
+        type: string
+        description: "User ID"
+    required:
+      - id
+
+- slug: guru_get_suggestions
+  name: Get Suggestions
+  description: |
+    Retrieve suggested cards or collections based on context.
+  provider: guru
+  endpoint: /suggestions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - suggestions
+  input_schema:
+    type: object
+    description: Options for getting suggestions
+    properties:
+      query:
+        type: string
+        description: "Query text to get suggestions for"
+    required: []
+
+- slug: guru_search_cards
+  name: Search Cards
+  description: |
+    Search for cards in Guru by keyword or phrase.
+  provider: guru
+  endpoint: /search
+  method: GET
+  scopes:
+    - read
+  tags:
+    - search
+  input_schema:
+    type: object
+    description: Search parameters
+    properties:
+      q:
+        type: string
+        description: "Search query string"
+      collection_id:
+        type: string
+        description: "Limit search to specific collection"
+      page:
+        type: integer
+        description: "Page number for pagination (default: 1)"
+      page_size:
+        type: integer
+        description: "Number of results per page (default: 30, max: 100)"
+    required:
+      - q
+
+- slug: guru_share_card
+  name: Share Card
+  description: |
+    Share a card with specific users or groups.
+  provider: guru
+  endpoint: /cards/{id}/share
+  method: POST
+  scopes:
+    - share
+  tags:
+    - cards
+  input_schema:
+    type: object
+    description: Parameters for sharing a card
+    properties:
+      id:
+        type: string
+        description: "Card ID"
+      user_ids:
+        type: array
+        items:
+          type: string
+        description: "List of user IDs to share with"
+      group_ids:
+        type: array
+        items:
+          type: string
+        description: "List of group IDs to share with"
+      message:
+        type: string
+        description: "Optional message to include with the share"
+    required:
+      - id

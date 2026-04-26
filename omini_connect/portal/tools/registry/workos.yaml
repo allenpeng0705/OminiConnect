@@ -1,0 +1,187 @@
+# WorkOS Tools - Allowlist
+# Curated subset of WorkOS API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. workos_list_connections           - List all SSO connections
+# # 2. workos_get_connection           - Get connection details
+# # 3. workos_list_directory_users           - List directory users
+# # 4. workos_get_directory_user           - Get directory user details
+# # 5. workos_list_directory_groups           - List directory groups
+# # 6. workos_get_directory_group           - Get directory group details
+# # 7. workos_list_audit_logs           - List audit log events
+# # 8. workos_create_audit_log           - Create an audit log event
+# # 9. workos_list_users           - List all users
+# # 10. workos_delete_user           - Delete a user
+
+- slug: workos_list_connections
+  name: List Connections
+  description: |
+    List all SSO connections
+  provider: workos
+  endpoint: /connections
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for list connections
+    properties: {}
+    required: []
+
+- slug: workos_get_connection
+  name: Get Connection
+  description: |
+    Get connection details
+  provider: workos
+  endpoint: /connections/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for get connection
+    properties: {}
+    required: []
+
+- slug: workos_list_directory_users
+  name: List Directory Users
+  description: |
+    List directory users
+  provider: workos
+  endpoint: /directory_users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for list directory users
+    properties: {}
+    required: []
+
+- slug: workos_get_directory_user
+  name: Get Directory User
+  description: |
+    Get directory user details
+  provider: workos
+  endpoint: /directory_users/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for get directory user
+    properties: {}
+    required: []
+
+- slug: workos_list_directory_groups
+  name: List Directory Groups
+  description: |
+    List directory groups
+  provider: workos
+  endpoint: /directory_groups
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for list directory groups
+    properties: {}
+    required: []
+
+- slug: workos_get_directory_group
+  name: Get Directory Group
+  description: |
+    Get directory group details
+  provider: workos
+  endpoint: /directory_groups/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for get directory group
+    properties: {}
+    required: []
+
+- slug: workos_list_audit_logs
+  name: List Audit Logs
+  description: |
+    List audit log events
+  provider: workos
+  endpoint: /audit_logs/events
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for list audit logs
+    properties: {}
+    required: []
+
+- slug: workos_create_audit_log
+  name: Create Audit Log
+  description: |
+    Create an audit log event
+  provider: workos
+  endpoint: /audit_logs/events
+  method: POST
+  scopes:
+    - write
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for create audit log
+    properties: {}
+    required: []
+
+- slug: workos_list_users
+  name: List Users
+  description: |
+    List all users
+  provider: workos
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for list users
+    properties: {}
+    required: []
+
+- slug: workos_delete_user
+  name: Delete User
+  description: |
+    Delete a user
+  provider: workos
+  endpoint: /users/{id}
+  method: DELETE
+  scopes:
+    - write
+  tags:
+    - workos
+  input_schema:
+    type: object
+    description: Parameters for delete user
+    properties: {}
+    required: []
+

@@ -1,0 +1,343 @@
+# Google Workspace Tools - Allowlist
+# Curated subset of Google Workspace APIs (Gmail, Drive, Calendar, Contacts, Sheets) for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# Gmail (3):
+# 1. google_workspace_list_gmail_messages    - List messages in mailbox
+# 2. google_workspace_get_gmail_message      - Get a specific message
+# 3. google_workspace_send_gmail_message     - Send an email
+# Drive (2):
+# 4. google_workspace_list_drive_files       - List files in Drive
+# 5. google_workspace_get_drive_file         - Get file metadata
+# Calendar (2):
+# 6. google_workspace_list_calendar_events   - List calendar events
+# 7. google_workspace_get_calendar_event     - Get a specific event
+# Contacts (2):
+# 8. google_workspace_list_contacts          - List contacts
+# 9. google_workspace_get_contact            - Get contact details
+# Sheets (2):
+# 10. google_workspace_list_sheets            - List spreadsheets
+# 11. google_workspace_get_sheets             - Get spreadsheet data
+
+- slug: google_workspace_list_gmail_messages
+  name: List Gmail Messages
+  description: |
+    List messages in the authenticated user's Gmail mailbox.
+    Supports filtering by label, query, and pagination.
+  provider: google_workspace
+  endpoint: /gmail/v1/users/me/messages
+  method: GET
+  scopes:
+    - gmail.readonly
+  tags:
+    - gmail
+    - email
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing messages
+    properties:
+      maxResults:
+        type: integer
+        description: "Maximum number of messages to return (default 20, max 100)"
+        default: 20
+      pageToken:
+        type: string
+        description: "Page token for pagination"
+      q:
+        type: string
+        description: "Search query (e.g., 'from:user@example.com is:unread')"
+    required: []
+
+- slug: google_workspace_get_gmail_message
+  name: Get Gmail Message
+  description: |
+    Get a specific email message by ID including headers, body, and metadata.
+  provider: google_workspace
+  endpoint: /gmail/v1/users/me/messages/{id}
+  method: GET
+  scopes:
+    - gmail.readonly
+  tags:
+    - gmail
+    - email
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a message
+    properties:
+      id:
+        type: string
+        description: "Message ID (required)"
+      format:
+        type: string
+        description: "Format: full, metadata, minimal"
+        default: full
+    required:
+      - id
+
+- slug: google_workspace_send_gmail_message
+  name: Send Gmail Message
+  description: |
+    Send an email message. Include recipients, subject, and body.
+  provider: google_workspace
+  endpoint: /gmail/v1/users/me/messages/send
+  method: POST
+  scopes:
+    - gmail.send
+  tags:
+    - gmail
+    - email
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending a message
+    properties:
+      to:
+        type: string
+        description: "Recipient email address (required)"
+      subject:
+        type: string
+        description: "Email subject (required)"
+      body:
+        type: string
+        description: "Email body (plain text, required)"
+      cc:
+        type: string
+        description: "CC recipient"
+      bcc:
+        type: string
+        description: "BCC recipient"
+    required:
+      - to
+      - subject
+      - body
+
+- slug: google_workspace_list_drive_files
+  name: List Drive Files
+  description: |
+    List files in the authenticated user's Google Drive.
+    Supports filtering by name, type, and folder.
+  provider: google_workspace
+  endpoint: /drive/v3/files
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - drive
+    - files
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing files
+    properties:
+      pageSize:
+        type: integer
+        description: "Number of files to return (default 20, max 100)"
+        default: 20
+      pageToken:
+        type: string
+        description: "Page token for pagination"
+      q:
+        type: string
+        description: "Query (e.g., name contains 'report' and mimeType='application/pdf')"
+    required: []
+
+- slug: google_workspace_get_drive_file
+  name: Get Drive File
+  description: |
+    Get metadata for a specific file in Google Drive.
+  provider: google_workspace
+  endpoint: /drive/v3/files/{fileId}
+  method: GET
+  scopes:
+    - drive.readonly
+  tags:
+    - drive
+    - files
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting file metadata
+    properties:
+      fileId:
+        type: string
+        description: "File ID (required)"
+      fields:
+        type: string
+        description: "Fields to include"
+    required:
+      - fileId
+
+- slug: google_workspace_list_calendar_events
+  name: List Calendar Events
+  description: |
+    List calendar events for the authenticated user.
+    Supports filtering by time range, calendar ID, and query.
+  provider: google_workspace
+  endpoint: /calendar/v3/calendars/primary/events
+  method: GET
+  scopes:
+    - calendar.readonly
+  tags:
+    - calendar
+    - events
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing events
+    properties:
+      calendarId:
+        type: string
+        description: "Calendar ID (default 'primary')"
+        default: primary
+      timeMin:
+        type: string
+        description: "Start time (RFC3339 format)"
+      timeMax:
+        type: string
+        description: "End time (RFC3339 format)"
+      maxResults:
+        type: integer
+        description: "Maximum number of events (default 20)"
+        default: 20
+      q:
+        type: string
+        description: "Search query"
+      singleEvents:
+        type: boolean
+        description: "Expand recurring events"
+        default: true
+      orderBy:
+        type: string
+        description: "Order by: startTime or updated"
+        default: startTime
+    required: []
+
+- slug: google_workspace_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get a specific calendar event by ID.
+  provider: google_workspace
+  endpoint: /calendar/v3/calendars/primary/events/{eventId}
+  method: GET
+  scopes:
+    - calendar.readonly
+  tags:
+    - calendar
+    - events
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an event
+    properties:
+      eventId:
+        type: string
+        description: "Event ID (required)"
+      calendarId:
+        type: string
+        description: "Calendar ID"
+        default: primary
+    required:
+      - eventId
+
+- slug: google_workspace_list_contacts
+  name: List Contacts
+  description: |
+    List contacts from the authenticated user's Google contacts.
+  provider: google_workspace
+  endpoint: /contacts/v3/people/me/connections
+  method: GET
+  scopes:
+    - contacts.readonly
+  tags:
+    - contacts
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      pageSize:
+        type: integer
+        description: "Number of contacts to return (default 20)"
+        default: 20
+      pageToken:
+        type: string
+        description: "Page token for pagination"
+    required: []
+
+- slug: google_workspace_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by resource name.
+  provider: google_workspace
+  endpoint: /contacts/v3/people/{resourceName}
+  method: GET
+  scopes:
+    - contacts.readonly
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      resourceName:
+        type: string
+        description: "Contact resource name (required)"
+    required:
+      - resourceName
+
+- slug: google_workspace_list_sheets
+  name: List Sheets
+  description: |
+    List spreadsheets in Google Sheets that the user has access to.
+  provider: google_workspace
+  endpoint: /sheets/v4/spreadsheets
+  method: GET
+  scopes:
+    - spreadsheet.readonly
+  tags:
+    - sheets
+    - spreadsheet
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing spreadsheets
+    properties:
+      pageSize:
+        type: integer
+        description: "Maximum number of spreadsheets (default 20)"
+        default: 20
+      pageToken:
+        type: string
+        description: "Page token for pagination"
+    required: []
+
+- slug: google_workspace_get_sheets
+  name: Get Sheets Data
+  description: |
+    Get data from a Google Sheets spreadsheet. Specify the spreadsheet ID and range.
+  provider: google_workspace
+  endpoint: /sheets/v4/spreadsheets/{spreadsheetId}/values/{range}
+  method: GET
+  scopes:
+    - spreadsheet.readonly
+  tags:
+    - sheets
+    - spreadsheet
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting sheet data
+    properties:
+      spreadsheetId:
+        type: string
+        description: "The spreadsheet ID (required)"
+      range:
+        type: string
+        description: "The cell range (e.g., Sheet1!A1:D10, required)"
+    required:
+      - spreadsheetId
+      - range

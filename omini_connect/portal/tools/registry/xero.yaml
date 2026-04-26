@@ -1,0 +1,309 @@
+# Xero Tools - Allowlist
+# Curated subset of the Xero API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. xero_list_invoices             - List invoices
+# 2. xero_get_invoice               - Get a specific invoice
+# 3. xero_create_invoice            - Create a new invoice
+# 4. xero_update_invoice            - Update an invoice
+# 5. xero_list_contacts             - List contacts (customers/vendors)
+# 6. xero_get_contact               - Get a specific contact
+# 7. xero_list_accounts             - List accounts
+# 8. xero_get_account               - Get a specific account
+# 9. xero_list_bank_transactions    - List bank transactions
+# 10. xero_get_bank_transaction     - Get a specific bank transaction
+
+- slug: xero_list_invoices
+  name: List Invoices
+  description: |
+    List all invoices in the Xero organization.
+    Returns invoice details including invoice number, contact, date, and total.
+  provider: xero
+  endpoint: /api.xro/2.0/Invoices
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - invoices
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing invoices
+    properties:
+      if_modified_since:
+        type: string
+        description: "Filter by date modified after this date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status: DRAFT, SUBMITTED, AUTHORISED, PAID, VOIDED"
+      contact_id:
+        type: string
+        description: "Filter by contact ID"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      include_archived:
+        type: boolean
+        description: "Include archived invoices"
+        default: false
+    required: []
+
+- slug: xero_get_invoice
+  name: Get Invoice
+  description: |
+    Get details of a specific invoice by its ID.
+    Returns full invoice information including line items, totals, and status.
+  provider: xero
+  endpoint: /api.xro/2.0/Invoices/{invoice_id}
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - invoices
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an invoice
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID (GUID)"
+    required:
+      - invoice_id
+
+- slug: xero_create_invoice
+  name: Create Invoice
+  description: |
+    Create a new invoice in Xero.
+    Include contact, line items, and optional due date and invoice number.
+  provider: xero
+  endpoint: /api.xro/2.0/Invoices
+  method: POST
+  scopes:
+    - accounting
+  tags:
+    - invoices
+    - create
+  input_schema:
+    type: object
+    description: Invoice creation parameters
+    properties:
+      Type:
+        type: string
+        description: "Invoice type: ACCREC (accounts receivable)"
+        enum: [ACCREC]
+      Contact:
+        type: object
+        description: "Contact object {ContactID: 'guid'}"
+      LineItems:
+        type: array
+        description: "Array of line item objects"
+      Date:
+        type: string
+        description: "Invoice date (YYYY-MM-DD)"
+      DueDate:
+        type: string
+        description: "Due date (YYYY-MM-DD)"
+      InvoiceNumber:
+        type: string
+        description: "Invoice number"
+      Reference:
+        type: string
+        description: "Invoice reference"
+    required:
+      - Type
+      - Contact
+      - LineItems
+
+- slug: xero_update_invoice
+  name: Update Invoice
+  description: |
+    Update an existing invoice in Xero.
+    You can update line items, dates, and other details for DRAFT or SUBMITTED invoices.
+  provider: xero
+  endpoint: /api.xro/2.0/Invoices/{invoice_id}
+  method: POST
+  scopes:
+    - accounting
+  tags:
+    - invoices
+    - update
+  input_schema:
+    type: object
+    description: Invoice update parameters
+    properties:
+      invoice_id:
+        type: string
+        description: "Invoice ID (GUID)"
+      LineItems:
+        type: array
+        description: "Updated line items array"
+      Date:
+        type: string
+        description: "Updated invoice date (YYYY-MM-DD)"
+      DueDate:
+        type: string
+        description: "Updated due date (YYYY-MM-DD)"
+      Status:
+        type: string
+        description: "Status: DRAFT, SUBMITTED, AUTHORISED, VOIDED"
+    required:
+      - invoice_id
+
+- slug: xero_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in the Xero organization.
+    Contacts include customers, suppliers, and other business entities.
+  provider: xero
+  endpoint: /api.xro/2.0/Contacts
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - contacts
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      if_modified_since:
+        type: string
+        description: "Filter by date modified after this date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status: ACTIVE, ARCHIVED"
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+      include_archived:
+        type: boolean
+        description: "Include archived contacts"
+        default: false
+    required: []
+
+- slug: xero_get_contact
+  name: Get Contact
+  description: |
+    Get details of a specific contact by their ID.
+    Returns full contact information including name, email, phone, and address.
+  provider: xero
+  endpoint: /api.xro/2.0/Contacts/{contact_id}
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - contacts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      contact_id:
+        type: string
+        description: "Contact ID (GUID)"
+    required:
+      - contact_id
+
+- slug: xero_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts in the Xero organization.
+    Returns account details including name, type, and currency.
+  provider: xero
+  endpoint: /api.xro/2.0/Accounts
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - accounts
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      if_modified_since:
+        type: string
+        description: "Filter by date modified after this date (YYYY-MM-DD)"
+    required: []
+
+- slug: xero_get_account
+  name: Get Account
+  description: |
+    Get details of a specific account by its ID.
+    Returns full account information including type, balance, and metadata.
+  provider: xero
+  endpoint: /api.xro/2.0/Accounts/{account_id}
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - accounts
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      account_id:
+        type: string
+        description: "Account ID (GUID)"
+    required:
+      - account_id
+
+- slug: xero_list_bank_transactions
+  name: List Bank Transactions
+  description: |
+    List all bank transactions in the Xero organization.
+    Returns transaction details including date, amount, and associated account.
+  provider: xero
+  endpoint: /api.xro/2.0/BankTransactions
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - bank_transactions
+    - accounting
+  input_schema:
+    type: object
+    description: Parameters for listing bank transactions
+    properties:
+      if_modified_since:
+        type: string
+        description: "Filter by date modified after this date (YYYY-MM-DD)"
+      status:
+        type: string
+        description: "Filter by status: DRAFT, AUTHORISED, PAID"
+      type:
+        type: string
+        description: "Transaction type: RECEIVE, SPEND, RECEIVE-PREPAYMENT, etc."
+      page:
+        type: integer
+        description: "Page number for pagination"
+        default: 1
+    required: []
+
+- slug: xero_get_bank_transaction
+  name: Get Bank Transaction
+  description: |
+    Get details of a specific bank transaction by its ID.
+    Returns full transaction information including amount, date, and line items.
+  provider: xero
+  endpoint: /api.xro/2.0/BankTransactions/{bank_transaction_id}
+  method: GET
+  scopes:
+    - accounting
+  tags:
+    - bank_transactions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a bank transaction
+    properties:
+      bank_transaction_id:
+        type: string
+        description: "Bank Transaction ID (GUID)"
+    required:
+      - bank_transaction_id

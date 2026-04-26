@@ -1,0 +1,275 @@
+- slug: yandex_list_disk_files
+  name: List Disk Files
+  description: |
+    List all files and folders in Yandex Disk storage.
+  provider: yandex
+  endpoint: /v1/disk/resources
+  method: GET
+  scopes:
+    - cloud_api
+  tags:
+    - disk
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for listing disk files
+    properties:
+      path:
+        type: string
+        description: "Path to the directory on Yandex Disk (e.g., /). Defaults to root."
+      limit:
+        type: integer
+        description: "Maximum number of items to return (1-100)."
+      offset:
+        type: integer
+        description: "Number of items to skip for pagination."
+    required: []
+
+- slug: yandex_get_disk_file
+  name: Get Disk File
+  description: |
+    Get metadata and download URL for a specific file on Yandex Disk.
+  provider: yandex
+  endpoint: /v1/disk/resources
+  method: GET
+  scopes:
+    - cloud_api
+  tags:
+    - disk
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for getting disk file metadata
+    properties:
+      path:
+        type: string
+        description: "Full path to the file on Yandex Disk (e.g., /photos/cat.jpg)."
+    required:
+      - path
+
+- slug: yandex_upload_disk_file
+  name: Upload Disk File
+  description: |
+    Upload a file to Yandex Disk storage.
+  provider: yandex
+  endpoint: /v1/disk/resources
+  method: PUT
+  scopes:
+    - cloud_api
+  tags:
+    - disk
+    - storage
+  input_schema:
+    type: object
+    description: Parameters for uploading a file to disk
+    properties:
+      path:
+        type: string
+        description: "Destination path on Yandex Disk (e.g., /photos/cat.jpg)."
+      content:
+        type: string
+        description: "Base64-encoded file content or URL to upload from."
+      overwrite:
+        type: boolean
+        description: "Whether to overwrite existing file. Defaults to false."
+    required:
+      - path
+      - content
+
+- slug: yandex_translate_text
+  name: Translate Text
+  description: |
+    Translate text between languages using Yandex Translate.
+  provider: yandex
+  endpoint: /api/v1.5/tr.json/translate
+  method: GET
+  scopes:
+    - translate
+  tags:
+    - translate
+    - i18n
+  input_schema:
+    type: object
+    description: Parameters for translating text
+    properties:
+      text:
+        type: string
+        description: "Text to translate (max 10000 characters)."
+      target_language:
+        type: string
+        description: "Target language code (e.g., en, ru, zh). Required if source not specified."
+      source_language:
+        type: string
+        description: "Source language code (e.g., en, auto for auto-detect)."
+      format:
+        type: string
+        description: "Text format: plain or html. Defaults to plain."
+    required:
+      - text
+      - target_language
+
+- slug: yandex_detect_language
+  name: Detect Language
+  description: |
+    Detect the language of the given text using Yandex Translate.
+  provider: yandex
+  endpoint: /api/v1.5/tr.json/detect
+  method: GET
+  scopes:
+    - translate
+  tags:
+    - translate
+    - i18n
+  input_schema:
+    type: object
+    description: Parameters for language detection
+    properties:
+      text:
+        type: string
+        description: "Text to detect language for (max 10000 characters)."
+      hint:
+        type: string
+        description: "Comma-separated list of language codes to prioritize in detection."
+    required:
+      - text
+
+- slug: yandex_list_mail_messages
+  name: List Mail Messages
+  description: |
+    List email messages from Yandex Mail inbox.
+  provider: yandex
+  endpoint: /v2/messages
+  method: GET
+  scopes:
+    - mail
+  tags:
+    - mail
+    - email
+  input_schema:
+    type: object
+    description: Parameters for listing mail messages
+    properties:
+      folder:
+        type: string
+        description: "Mail folder to list (inbox, sent, draft, spam, trash). Defaults to inbox."
+      limit:
+        type: integer
+        description: "Maximum number of messages to return (1-100)."
+      offset:
+        type: integer
+        description: "Number of messages to skip for pagination."
+    required: []
+
+- slug: yandex_get_mail_message
+  name: Get Mail Message
+  description: |
+    Get a specific email message by ID from Yandex Mail.
+  provider: yandex
+  endpoint: /v2/messages/{message_id}
+  method: GET
+  scopes:
+    - mail
+  tags:
+    - mail
+    - email
+  input_schema:
+    type: object
+    description: Parameters for getting a mail message
+    properties:
+      message_id:
+        type: string
+        description: "Unique identifier of the email message."
+    required:
+      - message_id
+
+- slug: yandex_send_mail_message
+  name: Send Mail Message
+  description: |
+    Send an email message via Yandex Mail.
+  provider: yandex
+  endpoint: /v2/messages/send
+  method: POST
+  scopes:
+    - mail
+  tags:
+    - mail
+    - email
+  input_schema:
+    type: object
+    description: Parameters for sending a mail message
+    properties:
+      to:
+        type: string
+        description: "Recipient email address."
+      subject:
+        type: string
+        description: "Email subject line."
+      body:
+        type: string
+        description: "Email body content (plain text or HTML)."
+      cc:
+        type: string
+        description: "CC recipient(s), comma-separated."
+      bcc:
+        type: string
+        description: "BCC recipient(s), comma-separated."
+    required:
+      - to
+      - subject
+      - body
+
+- slug: yandex_list_calendar_events
+  name: List Calendar Events
+  description: |
+    List events from Yandex Calendar.
+  provider: yandex
+  endpoint: /calendar/v1/calendars/{calendar_id}/events
+  method: GET
+  scopes:
+    - calendar
+  tags:
+    - calendar
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for listing calendar events
+    properties:
+      calendar_id:
+        type: string
+        description: "Calendar ID. Use 'default' for primary calendar."
+      time_min:
+        type: string
+        description: "Start time in ISO 8601 format."
+      time_max:
+        type: string
+        description: "End time in ISO 8601 format."
+      limit:
+        type: integer
+        description: "Maximum number of events to return."
+    required: []
+
+- slug: yandex_get_calendar_event
+  name: Get Calendar Event
+  description: |
+    Get a specific calendar event by ID from Yandex Calendar.
+  provider: yandex
+  endpoint: /calendar/v1/calendars/{calendar_id}/events/{event_id}
+  method: GET
+  scopes:
+    - calendar
+  tags:
+    - calendar
+    - scheduling
+  input_schema:
+    type: object
+    description: Parameters for getting a calendar event
+    properties:
+      calendar_id:
+        type: string
+        description: "Calendar ID. Use 'default' for primary calendar."
+      event_id:
+        type: string
+        description: "Unique identifier of the calendar event."
+    required:
+      - calendar_id
+      - event_id

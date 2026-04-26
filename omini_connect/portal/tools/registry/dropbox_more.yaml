@@ -1,0 +1,232 @@
+- slug: dropbox_more_list_paper_docs
+  name: List Paper Docs
+  description: |
+    Retrieve a list of Paper documents (now called Dropbox Paper) in the user's account.
+  provider: dropbox_more
+  endpoint: /paper/docs/list
+  method: POST
+  scopes:
+    - files.content.read
+  tags:
+    - paper
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for listing Paper docs
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of docs to return (default 100)"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+      filter:
+        type: string
+        description: "Filter by doc modified date (none, client_modified, server_modified)"
+    required: []
+
+- slug: dropbox_more_get_paper_doc
+  name: Get Paper Doc
+  description: |
+    Retrieve metadata and content of a specific Paper document.
+  provider: dropbox_more
+  endpoint: /paper/docs/get
+  method: POST
+  scopes:
+    - files.content.read
+  tags:
+    - paper
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for getting a Paper doc
+    properties:
+      doc_id:
+        type: string
+        description: "The Paper doc ID"
+    required:
+      - doc_id
+
+- slug: dropbox_more_create_paper_doc
+  name: Create Paper Doc
+  description: |
+    Create a new Paper document with optional initial content.
+  provider: dropbox_more
+  endpoint: /paper/docs/create
+  method: POST
+  scopes:
+    - files.content.write
+  tags:
+    - paper
+    - docs
+  input_schema:
+    type: object
+    description: Parameters for creating a Paper doc
+    properties:
+      title:
+        type: string
+        description: "Title of the new document"
+      content:
+        type: string
+        description: "Initial markdown content for the document"
+    required:
+      - title
+
+- slug: dropbox_more_list_shared_folders
+  name: List Shared Folders
+  description: |
+    Retrieve a list of all shared folders the user has access to.
+  provider: dropbox_more
+  endpoint: /sharing/list_folders
+  method: POST
+  scopes:
+    - sharing.read
+  tags:
+    - sharing
+    - folders
+  input_schema:
+    type: object
+    description: Parameters for listing shared folders
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of folders to return (default 100)"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+      direct_only:
+        type: boolean
+        description: "Only list directly shared folders (default false)"
+    required: []
+
+- slug: dropbox_more_get_shared_folder
+  name: Get Shared Folder
+  description: |
+    Retrieve detailed information about a specific shared folder including members and settings.
+  provider: dropbox_more
+  endpoint: /sharing/get_folder_metadata
+  method: POST
+  scopes:
+    - sharing.read
+  tags:
+    - sharing
+    - folders
+  input_schema:
+    type: object
+    description: Parameters for getting shared folder metadata
+    properties:
+      shared_folder_id:
+        type: string
+        description: "The shared folder ID"
+    required:
+      - shared_folder_id
+
+- slug: dropbox_more_list_team_members
+  name: List Team Members
+  description: |
+    Retrieve a list of members in the Dropbox team.
+  provider: dropbox_more
+  endpoint: /team/members/list
+  method: POST
+  scopes:
+    - members.read
+  tags:
+    - team
+    - members
+  input_schema:
+    type: object
+    description: Parameters for listing team members
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of members to return (default 100)"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: dropbox_more_get_team_member
+  name: Get Team Member
+  description: |
+    Retrieve detailed information about a specific team member.
+  provider: dropbox_more
+  endpoint: /team/members/get
+  method: POST
+  scopes:
+    - members.read
+  tags:
+    - team
+    - members
+  input_schema:
+    type: object
+    description: Parameters for getting a team member
+    properties:
+      member_id:
+        type: string
+        description: "The team member ID"
+    required:
+      - member_id
+
+- slug: dropbox_more_list_team_groups
+  name: List Team Groups
+  description: |
+    Retrieve a list of groups in the Dropbox team.
+  provider: dropbox_more
+  endpoint: /team/groups/list
+  method: POST
+  scopes:
+    - groups.read
+  tags:
+    - team
+    - groups
+  input_schema:
+    type: object
+    description: Parameters for listing team groups
+    properties:
+      limit:
+        type: integer
+        description: "Maximum number of groups to return (default 100)"
+      cursor:
+        type: string
+        description: "Cursor for pagination"
+    required: []
+
+- slug: dropbox_more_get_team_group
+  name: Get Team Group
+  description: |
+    Retrieve detailed information about a specific team group including members.
+  provider: dropbox_more
+  endpoint: /team/groups/get
+  method: POST
+  scopes:
+    - groups.read
+  tags:
+    - team
+    - groups
+  input_schema:
+    type: object
+    description: Parameters for getting a team group
+    properties:
+      group_id:
+        type: string
+        description: "The team group ID"
+    required:
+      - group_id
+
+- slug: dropbox_more_get_team_info
+  name: Get Team Info
+  description: |
+    Retrieve general information about the Dropbox team including name, admin count, and settings.
+  provider: dropbox_more
+  endpoint: /team/get_info
+  method: POST
+  scopes:
+    - teams.read
+  tags:
+    - team
+    - admin
+  input_schema:
+    type: object
+    description: Parameters for getting team info
+    properties: {}
+    required: []

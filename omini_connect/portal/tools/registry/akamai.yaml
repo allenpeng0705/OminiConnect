@@ -1,0 +1,269 @@
+- slug: akamai_list_properties
+  name: List Properties
+  description: |
+    List all Akamai property configurations in your account.
+  provider: akamai
+  endpoint: /papi/v1/properties
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - properties
+  input_schema:
+    type: object
+    description: Parameters for listing properties
+    properties:
+      contract_id:
+        type: string
+        description: "Filter by contract ID"
+      group_id:
+        type: string
+        description: "Filter by group ID"
+      page:
+        type: integer
+        description: "Page number for pagination (default: 0)"
+      page_size:
+        type: integer
+        description: "Number of items per page (default: 100)"
+    required: []
+
+- slug: akamai_get_property
+  name: Get Property
+  description: |
+    Get details for a specific Akamai property by ID.
+  provider: akamai
+  endpoint: /papi/v1/properties/{property_id}
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - properties
+  input_schema:
+    type: object
+    description: Parameters for getting a property
+    properties:
+      property_id:
+        type: string
+        description: "The unique property ID"
+      property_version:
+        type: integer
+        description: "Specific version to retrieve (latest if not specified)"
+    required:
+      - property_id
+
+- slug: akamai_create_property
+  name: Create Property
+  description: |
+    Create a new Akamai property configuration with a product and contract.
+  provider: akamai
+  endpoint: /papi/v1/properties
+  method: POST
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - properties
+  input_schema:
+    type: object
+    description: Parameters for creating a property
+    properties:
+      product_id:
+        type: string
+        description: "The product ID to use"
+      contract_id:
+        type: string
+        description: "The contract ID"
+      group_id:
+        type: string
+        description: "The group ID"
+      property_name:
+        type: string
+        description: "Name for the new property"
+    required:
+      - product_id
+      - contract_id
+      - group_id
+      - property_name
+
+- slug: akamai_list_activations
+  name: List Activations
+  description: |
+    List all activation history for a specific Akamai property.
+  provider: akamai
+  endpoint: /papi/v1/properties/{property_id}/activations
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - activations
+  input_schema:
+    type: object
+    description: Parameters for listing activations
+    properties:
+      property_id:
+        type: string
+        description: "The unique property ID"
+      page:
+        type: integer
+        description: "Page number for pagination (default: 0)"
+      page_size:
+        type: integer
+        description: "Number of items per page (default: 100)"
+    required:
+      - property_id
+
+- slug: akamai_get_activation
+  name: Get Activation
+  description: |
+    Get details for a specific activation by ID.
+  provider: akamai
+  endpoint: /papi/v1/properties/{property_id}/activations/{activation_id}
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - activations
+  input_schema:
+    type: object
+    description: Parameters for getting an activation
+    properties:
+      property_id:
+        type: string
+        description: "The unique property ID"
+      activation_id:
+        type: string
+        description: "The activation ID"
+    required:
+      - property_id
+      - activation_id
+
+- slug: akamai_activate_property
+  name: Activate Property
+  description: |
+    Activate a specific version of an Akamai property to staging or production network.
+  provider: akamai
+  endpoint: /papi/v1/properties/{property_id}/activations
+  method: POST
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - activations
+  input_schema:
+    type: object
+    description: Parameters for activating a property
+    properties:
+      property_id:
+        type: string
+        description: "The unique property ID"
+      property_version:
+        type: integer
+        description: "The version number to activate"
+      network:
+        type: string
+        description: "Network to activate on (STAGING or PRODUCTION)"
+      notes:
+        type: string
+        description: "Optional notes for the activation"
+    required:
+      - property_id
+      - property_version
+      - network
+
+- slug: akamai_list_cp_codes
+  name: List CP Codes
+  description: |
+    List all Content Provider (CP) codes in your account.
+  provider: akamai
+  endpoint: /papi/v1/cp-codes
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - cp-codes
+  input_schema:
+    type: object
+    description: Parameters for listing CP codes
+    properties:
+      contract_id:
+        type: string
+        description: "Filter by contract ID"
+      group_id:
+        type: string
+        description: "Filter by group ID"
+      page:
+        type: integer
+        description: "Page number for pagination (default: 0)"
+      page_size:
+        type: integer
+        description: "Number of items per page (default: 100)"
+    required: []
+
+- slug: akamai_get_cp_code
+  name: Get CP Code
+  description: |
+    Get details for a specific CP code by ID.
+  provider: akamai
+  endpoint: /papi/v1/cp-codes/{cp_code_id}
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - cp-codes
+  input_schema:
+    type: object
+    description: Parameters for getting a CP code
+    properties:
+      cp_code_id:
+        type: string
+        description: "The CP code ID"
+    required:
+      - cp_code_id
+
+- slug: akamai_list_edge_hostnames
+  name: List Edge Hostnames
+  description: |
+    List all edge hostnames in your account.
+  provider: akamai
+  endpoint: /papi/v1/edge-hostnames
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - edge-hostnames
+  input_schema:
+    type: object
+    description: Parameters for listing edge hostnames
+    properties:
+      contract_id:
+        type: string
+        description: "Filter by contract ID"
+      group_id:
+        type: string
+        description: "Filter by group ID"
+      page:
+        type: integer
+        description: "Page number for pagination (default: 0)"
+      page_size:
+        type: integer
+        description: "Number of items per page (default: 100)"
+    required: []
+
+- slug: akamai_get_edge_hostname
+  name: Get Edge Hostname
+  description: |
+    Get details for a specific edge hostname by ID.
+  provider: akamai
+  endpoint: /papi/v1/edge-hostnames/{edge_hostname_id}
+  method: GET
+  scopes:
+    - Property Provisioning Manager
+  tags:
+    - edge-hostnames
+  input_schema:
+    type: object
+    description: Parameters for getting an edge hostname
+    properties:
+      edge_hostname_id:
+        type: string
+        description: "The edge hostname ID"
+    required:
+      - edge_hostname_id

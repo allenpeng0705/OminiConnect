@@ -1,0 +1,285 @@
+# Nextiva Tools - Allowlist
+# Curated subset of Nextiva API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. nextiva_list_users          - List users
+# 2. nextiva_get_user            - Get user details
+# 3. nextiva_list_call_logs      - List call logs
+# 4. nextiva_get_call_log        - Get call log details
+# 5. nextiva_list_voicemails     - List voicemails
+# 6. nextiva_get_voicemail       - Get voicemail details
+# 7. nextiva_list_extensions     - List extensions
+# 8. nextiva_get_extension      - Get extension details
+# 9. nextiva_create_call        - Create a call
+# 10. nextiva_send_sms          - Send SMS
+
+- slug: nextiva_list_users
+  name: List Users
+  description: |
+    List all users in Nextiva.
+    Returns user details including name, email, and department.
+  provider: nextiva
+  endpoint: /users
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing users
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Users per page (default 25)"
+        default: 25
+    required: []
+
+- slug: nextiva_get_user
+  name: Get User
+  description: |
+    Get detailed information about a specific user.
+    Includes extension, role, and presence status.
+  provider: nextiva
+  endpoint: /users/{user_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - users
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a user
+    properties:
+      user_id:
+        type: string
+        description: "User ID"
+    required:
+      - user_id
+
+- slug: nextiva_list_call_logs
+  name: List Call Logs
+  description: |
+    List all call logs in Nextiva.
+    Returns call details including duration, direction, and participants.
+  provider: nextiva
+  endpoint: /call_logs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - call_logs
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing call logs
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Call logs per page (default 25)"
+        default: 25
+      start_date:
+        type: string
+        description: "Start date (ISO 8601)"
+      end_date:
+        type: string
+        description: "End date (ISO 8601)"
+    required: []
+
+- slug: nextiva_get_call_log
+  name: Get Call Log
+  description: |
+    Get detailed information about a specific call log.
+    Includes recording, duration, and call disposition.
+  provider: nextiva
+  endpoint: /call_logs/{call_log_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - call_logs
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a call log
+    properties:
+      call_log_id:
+        type: string
+        description: "Call Log ID"
+    required:
+      - call_log_id
+
+- slug: nextiva_list_voicemails
+  name: List Voicemails
+  description: |
+    List all voicemails in Nextiva.
+    Returns voicemail details including caller and duration.
+  provider: nextiva
+  endpoint: /voicemails
+  method: GET
+  scopes:
+    - read
+  tags:
+    - voicemails
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing voicemails
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Voicemails per page (default 25)"
+        default: 25
+      is_read:
+        type: boolean
+        description: "Filter by read status"
+    required: []
+
+- slug: nextiva_get_voicemail
+  name: Get Voicemail
+  description: |
+    Get detailed information about a specific voicemail.
+    Includes audio recording URL and transcription.
+  provider: nextiva
+  endpoint: /voicemails/{voicemail_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - voicemails
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a voicemail
+    properties:
+      voicemail_id:
+        type: string
+        description: "Voicemail ID"
+    required:
+      - voicemail_id
+
+- slug: nextiva_list_extensions
+  name: List Extensions
+  description: |
+    List all extensions in Nextiva.
+    Returns extension details including user and department.
+  provider: nextiva
+  endpoint: /extensions
+  method: GET
+  scopes:
+    - read
+  tags:
+    - extensions
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing extensions
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      page_size:
+        type: integer
+        description: "Extensions per page (default 25)"
+        default: 25
+    required: []
+
+- slug: nextiva_get_extension
+  name: Get Extension
+  description: |
+    Get detailed information about a specific extension.
+    Includes user assignment and features.
+  provider: nextiva
+  endpoint: /extensions/{extension_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - extensions
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an extension
+    properties:
+      extension_id:
+        type: string
+        description: "Extension ID"
+    required:
+      - extension_id
+
+- slug: nextiva_create_call
+  name: Create Call
+  description: |
+    Initiate a new outbound call.
+    Connect an extension to a phone number.
+  provider: nextiva
+  endpoint: /calls
+  method: POST
+  scopes:
+    - write
+  tags:
+    - calls
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a call
+    properties:
+      from_extension:
+        type: string
+        description: "Source extension"
+      to_phone_number:
+        type: string
+        description: "Destination phone number"
+    required:
+      - from_extension
+      - to_phone_number
+
+- slug: nextiva_send_sms
+  name: Send SMS
+  description: |
+    Send an SMS message from a Nextiva extension.
+  provider: nextiva
+  endpoint: /sms
+  method: POST
+  scopes:
+    - write
+  tags:
+    - sms
+    - send
+  input_schema:
+    type: object
+    description: Parameters for sending SMS
+    properties:
+      from_extension:
+        type: string
+        description: "Source extension"
+      to_phone_number:
+        type: string
+        description: "Destination phone number"
+      message:
+        type: string
+        description: "SMS message content"
+    required:
+      - from_extension
+      - to_phone_number
+      - message

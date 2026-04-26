@@ -1,0 +1,187 @@
+# Workable (OAuth) Tools - Allowlist
+# Curated subset of Workable (OAuth) API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. workable_list_jobs           - List all job postings
+# # 2. workable_get_job           - Get job details
+# # 3. workable_list_candidates           - List all candidates
+# # 4. workable_get_candidate           - Get candidate details
+# # 5. workable_create_candidate           - Create a new candidate
+# # 6. workable_list_applications           - List job applications
+# # 7. workable_get_application           - Get application details
+# # 8. workable_list_offices           - List all offices
+# # 9. workable_list_departments           - List all departments
+# # 10. workable_list_interviews           - List scheduled interviews
+
+- slug: workable_list_jobs
+  name: List Jobs
+  description: |
+    List all job postings
+  provider: workable-oauth
+  endpoint: /spi/v3/jobs
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list jobs
+    properties: {}
+    required: []
+
+- slug: workable_get_job
+  name: Get Job
+  description: |
+    Get job details
+  provider: workable-oauth
+  endpoint: /spi/v3/jobs/{shortcode}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for get job
+    properties: {}
+    required: []
+
+- slug: workable_list_candidates
+  name: List Candidates
+  description: |
+    List all candidates
+  provider: workable-oauth
+  endpoint: /spi/v3/candidates
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list candidates
+    properties: {}
+    required: []
+
+- slug: workable_get_candidate
+  name: Get Candidate
+  description: |
+    Get candidate details
+  provider: workable-oauth
+  endpoint: /spi/v3/candidates/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for get candidate
+    properties: {}
+    required: []
+
+- slug: workable_create_candidate
+  name: Create Candidate
+  description: |
+    Create a new candidate
+  provider: workable-oauth
+  endpoint: /spi/v3/candidates
+  method: POST
+  scopes:
+    - write
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for create candidate
+    properties: {}
+    required: []
+
+- slug: workable_list_applications
+  name: List Applications
+  description: |
+    List job applications
+  provider: workable-oauth
+  endpoint: /spi/v3/applications
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list applications
+    properties: {}
+    required: []
+
+- slug: workable_get_application
+  name: Get Application
+  description: |
+    Get application details
+  provider: workable-oauth
+  endpoint: /spi/v3/applications/{id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for get application
+    properties: {}
+    required: []
+
+- slug: workable_list_offices
+  name: List Offices
+  description: |
+    List all offices
+  provider: workable-oauth
+  endpoint: /spi/v3/offices
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list offices
+    properties: {}
+    required: []
+
+- slug: workable_list_departments
+  name: List Departments
+  description: |
+    List all departments
+  provider: workable-oauth
+  endpoint: /spi/v3/departments
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list departments
+    properties: {}
+    required: []
+
+- slug: workable_list_interviews
+  name: List Interviews
+  description: |
+    List scheduled interviews
+  provider: workable-oauth
+  endpoint: /spi/v3/interviews
+  method: GET
+  scopes:
+    - read
+  tags:
+    - workable-oauth
+  input_schema:
+    type: object
+    description: Parameters for list interviews
+    properties: {}
+    required: []
+

@@ -1,0 +1,264 @@
+# DataCandy Tools - Allowlist
+# Curated subset of the DataCandy API for AI agent use.
+# BASIC auth via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. datacandy_list_customers          - List customers
+# 2. datacandy_get_customer           - Get customer details
+# 3. datacandy_create_customer        - Create a customer
+# 4. datacandy_update_customer        - Update customer details
+# 5. datacandy_list_loyalty_rewards   - List loyalty rewards
+# 6. datacandy_get_loyalty_reward     - Get reward details
+# 7. datacandy_list_gift_cards        - List gift cards
+# 8. datacandy_get_gift_card          - Get gift card details
+# 9. datacandy_list_campaigns         - List campaigns
+# 10. datacandy_get_campaign          - Get campaign details
+
+- slug: datacandy_list_customers
+  name: List Customers
+  description: |
+    List all customers in DataCandy.
+  provider: datacandy
+  endpoint: /merchant
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+    required: []
+
+- slug: datacandy_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information for a specific customer.
+  provider: datacandy
+  endpoint: /merchant/{customer_id}
+  method: GET
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: datacandy_create_customer
+  name: Create Customer
+  description: |
+    Create a new customer in DataCandy.
+  provider: datacandy
+  endpoint: /merchant
+  method: POST
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a customer
+    properties:
+      email:
+        type: string
+        description: "Customer email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - email
+
+- slug: datacandy_update_customer
+  name: Update Customer
+  description: |
+    Update customer information.
+  provider: datacandy
+  endpoint: /merchant/{customer_id}
+  method: PUT
+  scopes: []
+  tags:
+    - customers
+    - crm
+    - update
+  input_schema:
+    type: object
+    description: Parameters for updating a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+      email:
+        type: string
+        description: "Customer email"
+      first_name:
+        type: string
+        description: "First name"
+      last_name:
+        type: string
+        description: "Last name"
+      phone:
+        type: string
+        description: "Phone number"
+    required:
+      - customer_id
+
+- slug: datacandy_list_loyalty_rewards
+  name: List Loyalty Rewards
+  description: |
+    List all loyalty rewards and points.
+  provider: datacandy
+  endpoint: /loyalty
+  method: GET
+  scopes: []
+  tags:
+    - loyalty
+    - rewards
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing loyalty rewards
+    properties:
+      customer_id:
+        type: string
+        description: "Filter by customer ID"
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: datacandy_get_loyalty_reward
+  name: Get Loyalty Reward
+  description: |
+    Get details of a specific loyalty reward.
+  provider: datacandy
+  endpoint: /loyalty/{reward_id}
+  method: GET
+  scopes: []
+  tags:
+    - loyalty
+    - rewards
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a reward
+    properties:
+      reward_id:
+        type: string
+        description: "Reward ID"
+    required:
+      - reward_id
+
+- slug: datacandy_list_gift_cards
+  name: List Gift Cards
+  description: |
+    List all gift cards.
+  provider: datacandy
+  endpoint: /giftcard
+  method: GET
+  scopes: []
+  tags:
+    - gift-cards
+    - payments
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing gift cards
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: datacandy_get_gift_card
+  name: Get Gift Card
+  description: |
+    Get details of a specific gift card.
+  provider: datacandy
+  endpoint: /giftcard/{card_id}
+  method: GET
+  scopes: []
+  tags:
+    - gift-cards
+    - payments
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a gift card
+    properties:
+      card_id:
+        type: string
+        description: "Gift Card ID"
+    required:
+      - card_id
+
+- slug: datacandy_list_campaigns
+  name: List Campaigns
+  description: |
+    List all marketing campaigns.
+  provider: datacandy
+  endpoint: /campaigns
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing campaigns
+    properties:
+      limit:
+        type: integer
+        description: "Max results (default 50, max 200)"
+        default: 50
+    required: []
+
+- slug: datacandy_get_campaign
+  name: Get Campaign
+  description: |
+    Get details of a specific marketing campaign.
+  provider: datacandy
+  endpoint: /campaigns/{campaign_id}
+  method: GET
+  scopes: []
+  tags:
+    - campaigns
+    - marketing
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a campaign
+    properties:
+      campaign_id:
+        type: string
+        description: "Campaign ID"
+    required:
+      - campaign_id

@@ -1,0 +1,275 @@
+# Ramp-Sandbox Tools - Allowlist
+# Curated subset of Ramp API for AI agent use.
+# Sandbox environment for testing.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. ramp-sandbox_list_transactions    - List all transactions
+# 2. ramp-sandbox_get_transaction      - Get transaction details
+# 3. ramp-sandbox_list_cards           - List company cards
+# 4. ramp-sandbox_get_card             - Get card details
+# 5. ramp-sandbox_list_employees       - List employees
+# 6. ramp-sandbox_get_employee         - Get employee details
+# 7. ramp-sandbox_list_departments     - List departments
+# 8. ramp-sandbox_create_expense       - Create an expense
+# 9. ramp-sandbox_list_limits          - List spending limits
+# 10. ramp-sandbox_get_balance         - Get account balance
+
+- slug: ramp-sandbox_list_transactions
+  name: List Transactions
+  description: |
+    Retrieve a list of all transactions in your Ramp sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/transactions
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - spending
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing transactions
+    properties:
+      limit:
+        type: integer
+        description: "Number of transactions to return"
+        default: 50
+      offset:
+        type: integer
+        description: "Offset for pagination"
+        default: 0
+      status:
+        type: string
+        description: "Filter by status: pending, posted, declined"
+    required: []
+
+- slug: ramp-sandbox_get_transaction
+  name: Get Transaction
+  description: |
+    Get details of a specific transaction by ID.
+  provider: ramp-sandbox
+  endpoint: /v1/transactions/{transactionId}
+  method: GET
+  scopes:
+    - transactions:read
+  tags:
+    - transactions
+    - spending
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting a transaction
+    properties:
+      transactionId:
+        type: string
+        description: "The transaction ID"
+    required:
+      - transactionId
+
+- slug: ramp-sandbox_list_cards
+  name: List Cards
+  description: |
+    Retrieve a list of all company cards in sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/cards
+  method: GET
+  scopes:
+    - cards:read
+  tags:
+    - cards
+    - spending
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing cards
+    properties:
+      limit:
+        type: integer
+        description: "Number of cards to return"
+        default: 50
+      employeeId:
+        type: string
+        description: "Filter by employee ID"
+    required: []
+
+- slug: ramp-sandbox_get_card
+  name: Get Card
+  description: |
+    Get details of a specific card by ID.
+  provider: ramp-sandbox
+  endpoint: /v1/cards/{cardId}
+  method: GET
+  scopes:
+    - cards:read
+  tags:
+    - cards
+    - spending
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting a card
+    properties:
+      cardId:
+        type: string
+        description: "The card ID"
+    required:
+      - cardId
+
+- slug: ramp-sandbox_list_employees
+  name: List Employees
+  description: |
+    Retrieve a list of all employees in your Ramp sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/employees
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing employees
+    properties:
+      limit:
+        type: integer
+        description: "Number of employees to return"
+        default: 50
+    required: []
+
+- slug: ramp-sandbox_get_employee
+  name: Get Employee
+  description: |
+    Get details of a specific employee by ID.
+  provider: ramp-sandbox
+  endpoint: /v1/employees/{employeeId}
+  method: GET
+  scopes:
+    - employees:read
+  tags:
+    - employees
+    - hr
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting an employee
+    properties:
+      employeeId:
+        type: string
+        description: "The employee ID"
+    required:
+      - employeeId
+
+- slug: ramp-sandbox_list_departments
+  name: List Departments
+  description: |
+    Retrieve a list of all departments in sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/departments
+  method: GET
+  scopes:
+    - departments:read
+  tags:
+    - departments
+    - organization
+    - hr
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing departments
+    properties: {}
+    required: []
+
+- slug: ramp-sandbox_create_expense
+  name: Create Expense
+  description: |
+    Create a new expense record in sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/expenses
+  method: POST
+  scopes:
+    - expenses:write
+  tags:
+    - expenses
+    - finance
+    - create
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for creating an expense
+    properties:
+      amount:
+        type: number
+        description: "Expense amount"
+      currency:
+        type: string
+        description: "Currency code (e.g., USD)"
+        default: USD
+      merchantName:
+        type: string
+        description: "Merchant name"
+      description:
+        type: string
+        description: "Expense description"
+      employeeId:
+        type: string
+        description: "Employee ID"
+      date:
+        type: string
+        description: "Expense date (ISO 8601)"
+    required:
+      - amount
+      - merchantName
+
+- slug: ramp-sandbox_list_limits
+  name: List Limits
+  description: |
+    Retrieve spending limits for cards and employees in sandbox.
+  provider: ramp-sandbox
+  endpoint: /v1/limits
+  method: GET
+  scopes:
+    - limits:read
+  tags:
+    - limits
+    - cards
+    - finance
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for listing limits
+    properties:
+      cardId:
+        type: string
+        description: "Filter by card ID"
+    required: []
+
+- slug: ramp-sandbox_get_balance
+  name: Get Balance
+  description: |
+    Get your Ramp sandbox account balance.
+  provider: ramp-sandbox
+  endpoint: /v1/balance
+  method: GET
+  scopes:
+    - balance:read
+  tags:
+    - balance
+    - finance
+    - account
+    - sandbox
+  input_schema:
+    type: object
+    description: Parameters for getting balance
+    properties: {}
+    required: []

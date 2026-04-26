@@ -1,0 +1,269 @@
+# Jira Data Center API Key Tools - Allowlist
+# Curated subset of Jira Data Center API for AI agent use.
+# API_KEY via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. jira_data_center_api_key_get_current_user - Get current user
+# 2. jira_data_center_api_key_list_projects     - List projects
+# 3. jira_data_center_api_key_get_project       - Get project details
+# 4. jira_data_center_api_key_list_issues      - List issues
+# 5. jira_data_center_api_key_get_issue        - Get issue details
+# 6. jira_data_center_api_key_create_issue     - Create an issue
+# 7. jira_data_center_api_key_update_issue     - Update an issue
+# 8. jira_data_center_api_key_list_comments    - List issue comments
+# 9. jira_data_center_api_key_add_comment      - Add a comment
+# 10. jira_data_center_api_key_search_issues   - Search issues
+
+- slug: jira_data_center_api_key_get_current_user
+  name: Get Current User
+  description: |
+    Get the current authenticated user.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/myself
+  method: GET
+  scopes: []
+  tags:
+    - users
+    - read
+    - auth
+  input_schema:
+    type: object
+    description: Parameters for getting current user
+    properties: {}
+    required: []
+
+- slug: jira_data_center_api_key_list_projects
+  name: List Projects
+  description: |
+    List all projects the user has access to.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/project
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing projects
+    properties: {}
+    required: []
+
+- slug: jira_data_center_api_key_get_project
+  name: Get Project
+  description: |
+    Get details for a specific project.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/project/{project_id_or_key}
+  method: GET
+  scopes: []
+  tags:
+    - projects
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a project
+    properties:
+      project_id_or_key:
+        type: string
+        description: "Project ID or key"
+    required:
+      - project_id_or_key
+
+- slug: jira_data_center_api_key_list_issues
+  name: List Issues
+  description: |
+    List issues in a project.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/search
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing issues
+    properties:
+      jql:
+        type: string
+        description: "JQL query string"
+      maxResults:
+        type: integer
+        description: "Max results (default 50)"
+        default: 50
+      startAt:
+        type: integer
+        description: "Start at index"
+        default: 0
+    required: []
+
+- slug: jira_data_center_api_key_get_issue
+  name: Get Issue
+  description: |
+    Get details for a specific issue.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/issue/{issue_id_or_key}
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an issue
+    properties:
+      issue_id_or_key:
+        type: string
+        description: "Issue ID or key"
+    required:
+      - issue_id_or_key
+
+- slug: jira_data_center_api_key_create_issue
+  name: Create Issue
+  description: |
+    Create a new issue.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/issue
+  method: POST
+  scopes: []
+  tags:
+    - issues
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for creating an issue
+    properties:
+      project_id:
+        type: string
+        description: "Project ID or key"
+      issue_type:
+        type: string
+        description: "Issue type (Bug, Task, Story, etc.)"
+      summary:
+        type: string
+        description: "Issue summary"
+      description:
+        type: string
+        description: "Issue description"
+      priority:
+        type: string
+        description: "Priority (Low, Medium, High, Highest)"
+    required:
+      - project_id
+      - issue_type
+      - summary
+
+- slug: jira_data_center_api_key_update_issue
+  name: Update Issue
+  description: |
+    Update an existing issue.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/issue/{issue_id_or_key}
+  method: PUT
+  scopes: []
+  tags:
+    - issues
+    - update
+    - write
+  input_schema:
+    type: object
+    description: Parameters for updating an issue
+    properties:
+      issue_id_or_key:
+        type: string
+        description: "Issue ID or key"
+      summary:
+        type: string
+        description: "New summary"
+      description:
+        type: string
+        description: "New description"
+      priority:
+        type: string
+        description: "New priority"
+    required:
+      - issue_id_or_key
+
+- slug: jira_data_center_api_key_list_comments
+  name: List Comments
+  description: |
+    List comments on an issue.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/issue/{issue_id_or_key}/comment
+  method: GET
+  scopes: []
+  tags:
+    - comments
+    - list
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing comments
+    properties:
+      issue_id_or_key:
+        type: string
+        description: "Issue ID or key"
+    required:
+      - issue_id_or_key
+
+- slug: jira_data_center_api_key_add_comment
+  name: Add Comment
+  description: |
+    Add a comment to an issue.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/issue/{issue_id_or_key}/comment
+  method: POST
+  scopes: []
+  tags:
+    - comments
+    - create
+    - write
+  input_schema:
+    type: object
+    description: Parameters for adding a comment
+    properties:
+      issue_id_or_key:
+        type: string
+        description: "Issue ID or key"
+      body:
+        type: string
+        description: "Comment content"
+    required:
+      - issue_id_or_key
+      - body
+
+- slug: jira_data_center_api_key_search_issues
+  name: Search Issues
+  description: |
+    Search for issues using JQL.
+  provider: jira-data-center-api-key
+  endpoint: /rest/api/3/search
+  method: GET
+  scopes: []
+  tags:
+    - issues
+    - search
+    - read
+  input_schema:
+    type: object
+    description: Parameters for searching issues
+    properties:
+      jql:
+        type: string
+        description: "JQL query"
+      maxResults:
+        type: integer
+        description: "Max results"
+        default: 50
+      fields:
+        type: array
+        items:
+          type: string
+        description: "Fields to return"
+    required:
+      - jql

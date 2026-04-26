@@ -1,0 +1,187 @@
+# Terraform Cloud Tools - Allowlist
+# Curated subset of Terraform Cloud API for AI agent use.
+# API Key via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# # 1. terraform_list_workspaces           - List all workspaces in Terraform Cloud
+# # 2. terraform_get_workspace           - Get details of a workspace
+# # 3. terraform_list_runs           - List runs in a workspace
+# # 4. terraform_create_run           - Create a new run in a workspace
+# # 5. terraform_get_run           - Get details of a run
+# # 6. terraform_apply_run           - Apply a pending run
+# # 7. terraform_discard_run           - Discard a run
+# # 8. terraform_list_state_versions           - List state versions for a workspace
+# # 9. terraform_get_current_state           - Get the current state of a workspace
+# # 10. terraform_list_organizations           - List all organizations
+
+- slug: terraform_list_workspaces
+  name: List Workspaces
+  description: |
+    List all workspaces in Terraform Cloud
+  provider: terraform
+  endpoint: /api/v2/workspaces
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for list workspaces
+    properties: {}
+    required: []
+
+- slug: terraform_get_workspace
+  name: Get Workspace
+  description: |
+    Get details of a workspace
+  provider: terraform
+  endpoint: /api/v2/workspaces/{workspace_id}
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for get workspace
+    properties: {}
+    required: []
+
+- slug: terraform_list_runs
+  name: List Runs
+  description: |
+    List runs in a workspace
+  provider: terraform
+  endpoint: /api/v2/workspaces/{workspace_id}/runs
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for list runs
+    properties: {}
+    required: []
+
+- slug: terraform_create_run
+  name: Create Run
+  description: |
+    Create a new run in a workspace
+  provider: terraform
+  endpoint: /api/v2/runs
+  method: POST
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for create run
+    properties: {}
+    required: []
+
+- slug: terraform_get_run
+  name: Get Run
+  description: |
+    Get details of a run
+  provider: terraform
+  endpoint: /api/v2/runs/{run_id}
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for get run
+    properties: {}
+    required: []
+
+- slug: terraform_apply_run
+  name: Apply Run
+  description: |
+    Apply a pending run
+  provider: terraform
+  endpoint: /api/v2/runs/{run_id}/actions/apply
+  method: POST
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for apply run
+    properties: {}
+    required: []
+
+- slug: terraform_discard_run
+  name: Discard Run
+  description: |
+    Discard a run
+  provider: terraform
+  endpoint: /api/v2/runs/{run_id}/actions/discard
+  method: POST
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for discard run
+    properties: {}
+    required: []
+
+- slug: terraform_list_state_versions
+  name: List State Versions
+  description: |
+    List state versions for a workspace
+  provider: terraform
+  endpoint: /api/v2/workspaces/{workspace_id}/state-versions
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for list state versions
+    properties: {}
+    required: []
+
+- slug: terraform_get_current_state
+  name: Get Current State
+  description: |
+    Get the current state of a workspace
+  provider: terraform
+  endpoint: /api/v2/workspaces/{workspace_id}/current-state-version
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for get current state
+    properties: {}
+    required: []
+
+- slug: terraform_list_organizations
+  name: List Organizations
+  description: |
+    List all organizations
+  provider: terraform
+  endpoint: /api/v2/organizations
+  method: GET
+  scopes:
+    - 
+  tags:
+    - terraform
+  input_schema:
+    type: object
+    description: Parameters for list organizations
+    properties: {}
+    required: []
+

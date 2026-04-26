@@ -1,0 +1,246 @@
+- slug: gorgias_list_tickets
+  name: List Tickets
+  description: |
+    Retrieves a paginated list of support tickets from Gorgias.
+  provider: gorgias
+  endpoint: /tickets
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for listing tickets
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page (default 20)"
+      state:
+        type: string
+        description: "Filter by ticket state (open, pending, resolved, closed)"
+    required: []
+
+- slug: gorgias_get_ticket
+  name: Get Ticket
+  description: |
+    Retrieves a single support ticket by its ID.
+  provider: gorgias
+  endpoint: /tickets/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for getting a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+    required:
+      - id
+
+- slug: gorgias_create_ticket
+  name: Create Ticket
+  description: |
+    Creates a new support ticket in Gorgias.
+  provider: gorgias
+  endpoint: /tickets
+  method: POST
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for creating a ticket
+    properties:
+      subject:
+        type: string
+        description: "The ticket subject line"
+      body:
+        type: string
+        description: "The ticket body/description"
+      customer_email:
+        type: string
+        description: "Customer email address"
+      priority:
+        type: string
+        description: "Ticket priority (low, medium, high, urgent)"
+    required:
+      - subject
+      - body
+      - customer_email
+
+- slug: gorgias_update_ticket
+  name: Update Ticket
+  description: |
+    Updates an existing support ticket.
+  provider: gorgias
+  endpoint: /tickets/{id}
+  method: PUT
+  scopes:
+    - base
+  tags:
+    - tickets
+  input_schema:
+    type: object
+    description: Parameters for updating a ticket
+    properties:
+      id:
+        type: integer
+        description: "The unique ticket ID"
+      subject:
+        type: string
+        description: "Updated ticket subject"
+      body:
+        type: string
+        description: "Updated ticket body"
+      state:
+        type: string
+        description: "Updated ticket state"
+      priority:
+        type: string
+        description: "Updated ticket priority"
+    required:
+      - id
+
+- slug: gorgias_list_customers
+  name: List Customers
+  description: |
+    Retrieves a list of customers from Gorgias.
+  provider: gorgias
+  endpoint: /customers
+  method: GET
+  scopes:
+    - base
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+      email:
+        type: string
+        description: "Filter by customer email"
+    required: []
+
+- slug: gorgias_get_customer
+  name: Get Customer
+  description: |
+    Retrieves a single customer by their ID.
+  provider: gorgias
+  endpoint: /customers/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - customers
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      id:
+        type: integer
+        description: "The unique customer ID"
+    required:
+      - id
+
+- slug: gorgias_list_macros
+  name: List Macros
+  description: |
+    Retrieves a list of canned responses/macros.
+  provider: gorgias
+  endpoint: /macros
+  method: GET
+  scopes:
+    - base
+  tags:
+    - macros
+  input_schema:
+    type: object
+    description: Parameters for listing macros
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: gorgias_get_macro
+  name: Get Macro
+  description: |
+    Retrieves a single macro by its ID.
+  provider: gorgias
+  endpoint: /macros/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - macros
+  input_schema:
+    type: object
+    description: Parameters for getting a macro
+    properties:
+      id:
+        type: integer
+        description: "The unique macro ID"
+    required:
+      - id
+
+- slug: gorgias_list_tags
+  name: List Tags
+  description: |
+    Retrieves a list of all tags used in Gorgias.
+  provider: gorgias
+  endpoint: /tags
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for listing tags
+    properties:
+      page:
+        type: integer
+        description: "Page number for pagination"
+      per_page:
+        type: integer
+        description: "Number of results per page"
+    required: []
+
+- slug: gorgias_get_tag
+  name: Get Tag
+  description: |
+    Retrieves a single tag by its ID.
+  provider: gorgias
+  endpoint: /tags/{id}
+  method: GET
+  scopes:
+    - base
+  tags:
+    - tags
+  input_schema:
+    type: object
+    description: Parameters for getting a tag
+    properties:
+      id:
+        type: integer
+        description: "The unique tag ID"
+    required:
+      - id

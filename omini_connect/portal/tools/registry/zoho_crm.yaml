@@ -1,0 +1,343 @@
+# Zoho CRM Tools - Allowlist
+# Curated subset of Zoho CRM API for AI agent use.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. zoho_crm_list_contacts    - List contacts
+# 2. zoho_crm_get_contact      - Get contact details
+# 3. zoho_crm_create_contact   - Create a contact
+# 4. zoho_crm_list_accounts    - List accounts
+# 5. zoho_crm_get_account      - Get account details
+# 6. zoho_crm_list_deals       - List deals
+# 7. zoho_crm_get_deal         - Get deal details
+# 8. zoho_crm_list_tasks       - List tasks
+# 9. zoho_crm_get_task         - Get task details
+# 10. zoho_crm_list_leads       - List leads
+
+- slug: zoho_crm_list_contacts
+  name: List Contacts
+  description: |
+    List all contacts in Zoho CRM. Filter by email, phone, account, or tag.
+  provider: zoho_crm
+  endpoint: /crm/v2/Contacts
+  method: GET
+  scopes:
+    - ZohoCRM.modules.contacts.READ
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing contacts
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 200, max 200)"
+        default: 200
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., Email, Full_Name)"
+      sort_order:
+        type: string
+        description: "Sort order (asc or desc)"
+        enum: [asc, desc]
+      phone:
+        type: string
+        description: "Filter by phone number"
+      email:
+        type: string
+        description: "Filter by email address"
+    required: []
+
+- slug: zoho_crm_get_contact
+  name: Get Contact
+  description: |
+    Get detailed information about a specific contact including name, email, phone, account, and tags.
+  provider: zoho_crm
+  endpoint: /crm/v2/Contacts/{id}
+  method: GET
+  scopes:
+    - ZohoCRM.modules.contacts.READ
+  tags:
+    - contacts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a contact
+    properties:
+      id:
+        type: string
+        description: "Contact ID"
+    required:
+      - id
+
+- slug: zoho_crm_create_contact
+  name: Create Contact
+  description: |
+    Create a new contact in Zoho CRM. Set name, email, phone, account association, and custom fields.
+  provider: zoho_crm
+  endpoint: /crm/v2/Contacts
+  method: POST
+  scopes:
+    - ZohoCRM.modules.contacts.CREATE
+  tags:
+    - contacts
+    - crm
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a contact
+    properties:
+      First_Name:
+        type: string
+        description: "First name"
+      Last_Name:
+        type: string
+        description: "Last name"
+      Email:
+        type: string
+        description: "Email address"
+      Phone:
+        type: string
+        description: "Phone number"
+      Mobile:
+        type: string
+        description: "Mobile phone number"
+      Account_Name:
+        type: object
+        description: "Associated account (use id or name)"
+      Title:
+        type: string
+        description: "Job title"
+      Department:
+        type: string
+        description: "Department"
+    required: []
+
+- slug: zoho_crm_list_accounts
+  name: List Accounts
+  description: |
+    List all accounts (companies/organizations) in Zoho CRM. Filter by industry, type, or location.
+  provider: zoho_crm
+  endpoint: /crm/v2/Accounts
+  method: GET
+  scopes:
+    - ZohoCRM.modules.accounts.READ
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing accounts
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 200, max 200)"
+        default: 200
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., Account_Name, Industry)"
+      sort_order:
+        type: string
+        description: "Sort order (asc or desc)"
+        enum: [asc, desc]
+      industry:
+        type: string
+        description: "Filter by industry"
+    required: []
+
+- slug: zoho_crm_get_account
+  name: Get Account
+  description: |
+    Get detailed information about a specific account including name, industry, website, and associated contacts.
+  provider: zoho_crm
+  endpoint: /crm/v2/Accounts/{id}
+  method: GET
+  scopes:
+    - ZohoCRM.modules.accounts.READ
+  tags:
+    - accounts
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting an account
+    properties:
+      id:
+        type: string
+        description: "Account ID"
+    required:
+      - id
+
+- slug: zoho_crm_list_deals
+  name: List Deals
+  description: |
+    List all deals in Zoho CRM. Filter by stage, amount, or closing date.
+  provider: zoho_crm
+  endpoint: /crm/v2/Deals
+  method: GET
+  scopes:
+    - ZohoCRM.modules.deals.READ
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing deals
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 200, max 200)"
+        default: 200
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., Amount, Closing_Date)"
+      sort_order:
+        type: string
+        description: "Sort order (asc or desc)"
+        enum: [asc, desc]
+      stage:
+        type: string
+        description: "Filter by deal stage"
+    required: []
+
+- slug: zoho_crm_get_deal
+  name: Get Deal
+  description: |
+    Get detailed information about a specific deal including name, amount, stage, contacts, and activities.
+  provider: zoho_crm
+  endpoint: /crm/v2/Deals/{id}
+  method: GET
+  scopes:
+    - ZohoCRM.modules.deals.READ
+  tags:
+    - deals
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a deal
+    properties:
+      id:
+        type: string
+        description: "Deal ID"
+    required:
+      - id
+
+- slug: zoho_crm_list_tasks
+  name: List Tasks
+  description: |
+    List all tasks in Zoho CRM. Filter by status, priority, or due date.
+  provider: zoho_crm
+  endpoint: /crm/v2/Tasks
+  method: GET
+  scopes:
+    - ZohoCRM.modules.tasks.READ
+  tags:
+    - tasks
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing tasks
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 200, max 200)"
+        default: 200
+      status:
+        type: string
+        description: "Filter by status (Not Started, In Progress, Completed)"
+      priority:
+        type: string
+        description: "Filter by priority (High, Medium, Low)"
+      due_date_before:
+        type: string
+        description: "Due date before (YYYY-MM-DD)"
+      due_date_after:
+        type: string
+        description: "Due date after (YYYY-MM-DD)"
+    required: []
+
+- slug: zoho_crm_get_task
+  name: Get Task
+  description: |
+    Get detailed information about a specific task including subject, description, due date, and status.
+  provider: zoho_crm
+  endpoint: /crm/v2/Tasks/{id}
+  method: GET
+  scopes:
+    - ZohoCRM.modules.tasks.READ
+  tags:
+    - tasks
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a task
+    properties:
+      id:
+        type: string
+        description: "Task ID"
+    required:
+      - id
+
+- slug: zoho_crm_list_leads
+  name: List Leads
+  description: |
+    List all leads in Zoho CRM. Filter by source, status, or industry.
+  provider: zoho_crm
+  endpoint: /crm/v2/Leads
+  method: GET
+  scopes:
+    - ZohoCRM.modules.leads.READ
+  tags:
+    - leads
+    - crm
+    - read
+  input_schema:
+    type: object
+    description: Parameters for listing leads
+    properties:
+      page:
+        type: integer
+        description: "Page number (default 1)"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page (default 200, max 200)"
+        default: 200
+      sort_by:
+        type: string
+        description: "Field to sort by (e.g., Email, First_Name)"
+      sort_order:
+        type: string
+        description: "Sort order (asc or desc)"
+        enum: [asc, desc]
+      lead_source:
+        type: string
+        description: "Filter by lead source"
+      status:
+        type: string
+        description: "Filter by status"
+    required: []

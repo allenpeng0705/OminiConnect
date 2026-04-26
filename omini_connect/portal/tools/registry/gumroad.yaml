@@ -1,0 +1,255 @@
+# Gumroad Tools - Allowlist
+# Curated subset of Gumroad API for AI agent use.
+# OAuth2 via Nango.
+# Each tool is an allowlist entry: only listed tools are exposed to LLMs.
+
+# === TOOL LIST ===
+# 1. gumroad_list_products         - List products
+# 2. gumroad_get_product           - Get product details
+# 3. gumroad_list_sales            - List sales
+# 4. gumroad_get_sale              - Get sale details
+# 5. gumroad_list_customers        - List customers
+# 6. gumroad_get_customer          - Get customer details
+# 7. gumroad_list_subscribers      - List subscribers
+# 8. gumroad_get_subscriber        - Get subscriber details
+# 9. gumroad_list_webhooks         - List webhooks
+# 10. gumroad_create_webhook       - Create a webhook
+
+- slug: gumroad_list_products
+  name: List Products
+  description: |
+    List all products in your Gumroad account.
+    Returns product details including name, price, and status.
+  provider: gumroad
+  endpoint: /v1/products
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing products
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+      per_page:
+        type: integer
+        description: "Results per page"
+        default: 20
+    required: []
+
+- slug: gumroad_get_product
+  name: Get Product
+  description: |
+    Get detailed information about a specific product.
+    Includes product description, price, and sales stats.
+  provider: gumroad
+  endpoint: /v1/products/{product_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - products
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a product
+    properties:
+      product_id:
+        type: string
+        description: "Product ID"
+    required:
+      - product_id
+
+- slug: gumroad_list_sales
+  name: List Sales
+  description: |
+    List all sales in your Gumroad account.
+    Returns sale details including product, customer, and amount.
+  provider: gumroad
+  endpoint: /v1/sales
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sales
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing sales
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gumroad_get_sale
+  name: Get Sale
+  description: |
+    Get detailed information about a specific sale.
+    Includes customer info, product, and payment details.
+  provider: gumroad
+  endpoint: /v1/sales/{sale_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - sales
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a sale
+    properties:
+      sale_id:
+        type: string
+        description: "Sale ID"
+    required:
+      - sale_id
+
+- slug: gumroad_list_customers
+  name: List Customers
+  description: |
+    List all customers in your Gumroad account.
+    Returns customer details including email and purchase history.
+  provider: gumroad
+  endpoint: /v1/customers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing customers
+    properties:
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gumroad_get_customer
+  name: Get Customer
+  description: |
+    Get detailed information about a specific customer.
+    Includes email, purchases, and subscription status.
+  provider: gumroad
+  endpoint: /v1/customers/{customer_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - customers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a customer
+    properties:
+      customer_id:
+        type: string
+        description: "Customer ID"
+    required:
+      - customer_id
+
+- slug: gumroad_list_subscribers
+  name: List Subscribers
+  description: |
+    List all subscribers for your Gumroad products.
+    Returns subscriber details including plan and status.
+  provider: gumroad
+  endpoint: /v1/subscribers
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing subscribers
+    properties:
+      product_id:
+        type: string
+        description: "Filter by product ID"
+      page:
+        type: integer
+        description: "Page number"
+        default: 1
+    required: []
+
+- slug: gumroad_get_subscriber
+  name: Get Subscriber
+  description: |
+    Get detailed information about a specific subscriber.
+    Includes subscription details and billing info.
+  provider: gumroad
+  endpoint: /v1/subscribers/{subscriber_id}
+  method: GET
+  scopes:
+    - read
+  tags:
+    - subscribers
+    - read
+  input_schema:
+    type: object
+    description: Parameters for getting a subscriber
+    properties:
+      subscriber_id:
+        type: string
+        description: "Subscriber ID"
+    required:
+      - subscriber_id
+
+- slug: gumroad_list_webhooks
+  name: List Webhooks
+  description: |
+    List all configured webhooks in your Gumroad account.
+    Returns webhook details including URL and events.
+  provider: gumroad
+  endpoint: /v1/webhooks
+  method: GET
+  scopes:
+    - read
+  tags:
+    - webhooks
+    - list
+  input_schema:
+    type: object
+    description: Parameters for listing webhooks
+    properties: {}
+    required: []
+
+- slug: gumroad_create_webhook
+  name: Create Webhook
+  description: |
+    Create a new webhook for Gumroad events.
+    Set URL and event types to receive.
+  provider: gumroad
+  endpoint: /v1/webhooks
+  method: POST
+  scopes:
+    - write
+  tags:
+    - webhooks
+    - create
+  input_schema:
+    type: object
+    description: Parameters for creating a webhook
+    properties:
+      url:
+        type: string
+        description: "Webhook URL"
+      events:
+        type: array
+        description: "Event types to subscribe"
+    required:
+      - url
