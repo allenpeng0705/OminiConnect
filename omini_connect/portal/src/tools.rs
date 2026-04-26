@@ -59,6 +59,9 @@ pub struct Tool {
     /// JSON Schema for input parameters.
     #[serde(default)]
     pub input_schema: InputSchema,
+    /// JSON Schema for response output (optional).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub output_schema: Option<serde_json::Value>,
     /// Required OAuth scopes for this tool.
     #[serde(default)]
     pub scopes: Vec<String>,

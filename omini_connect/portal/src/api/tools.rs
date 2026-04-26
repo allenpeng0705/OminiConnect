@@ -504,7 +504,10 @@ async fn execute_api_key(
         return tool_error(StatusCode::UNAUTHORIZED, "API key or PAT not configured");
     }
 
-    let base_url = get_platform_base_url(&connector.platform);
+    let base_url = match get_platform_base_url(&connector.platform) {
+        Some(url) => url,
+        None => return tool_error(StatusCode::BAD_GATEWAY, "unsupported platform for direct API access"),
+    };
     let full_url = match &query_string {
         Some(q) => format!("{}/{}?{}", base_url, native_path, q),
         None => format!("{}/{}", base_url, native_path),
@@ -551,7 +554,10 @@ async fn execute_oauth_vault(
         }
     };
 
-    let base_url = get_platform_base_url(&connector.platform);
+    let base_url = match get_platform_base_url(&connector.platform) {
+        Some(url) => url,
+        None => return tool_error(StatusCode::BAD_GATEWAY, "unsupported platform for direct API access"),
+    };
     let full_url = match &query_string {
         Some(q) => format!("{}/{}?{}", base_url, native_path, q),
         None => format!("{}/{}", base_url, native_path),
@@ -619,8 +625,8 @@ fn tool_error(status: StatusCode, message: &str) -> Response {
     response
 }
 
-fn get_platform_base_url(platform: &str) -> &'static str {
-    match platform {
+fn get_platform_base_url(platform: &str) -> Option<&'static str> {
+    Some(match platform {
         "github" => "https://api.github.com",
         "feishu" => "https://open.feishu.cn/open-apis",
         "dingtalk" => "https://api.dingtalk.com",
@@ -632,8 +638,17 @@ fn get_platform_base_url(platform: &str) -> &'static str {
         "qqmail" => "https://api.exmail.qq.com",
         "slack" => "https://slack.com/api",
         "notion" => "https://api.notion.com/v1",
-        _ => "",
-    }
+        "hubspot" => "https://api.hubapi.com",
+        "salesforce" => "https://login.salesforce.com/services/oauth2",
+        "gitlab" => "https://gitlab.com/api/v4",
+        "jira" => "https://api.atlassian.com",
+        "confluence" => "https://api.atlassian.com",
+        "google" => "https://www.googleapis.com",
+        "zoom" => "https://api.zoom.us/v2",
+        "stripe" => "https://api.stripe.com/v1",
+        "shopify" => "https://{shop}.myshopify.com/admin/api",
+        _ => return None,
+    })
 }
 
 /// Router for tools API.

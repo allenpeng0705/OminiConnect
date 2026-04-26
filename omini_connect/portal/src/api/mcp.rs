@@ -73,9 +73,11 @@ impl McpResponse {
 /// MCP tool representation.
 #[derive(Debug, Serialize)]
 pub struct McpTool {
-    name: String,
-    description: String,
-    input_schema: serde_json::Value,
+    pub name: String,
+    pub description: String,
+    pub input_schema: serde_json::Value,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub scope_satisfied: Option<String>,
 }
 
 impl From<&crate::tools::Tool> for McpTool {
@@ -95,6 +97,7 @@ impl From<&crate::tools::Tool> for McpTool {
             name: tool.slug.clone(),
             description: tool.description.clone(),
             input_schema,
+            scope_satisfied: None,
         }
     }
 }
@@ -168,10 +171,20 @@ async fn handle_tools_list(
         .iter()
         .filter(|t| user_connectors.contains_key(&t.provider))
         .flat_map(|t| {
+            let granted_scopes = user_connectors.get(&t.provider).cloned().unwrap_or_default();
             state.tools.tools_for_provider(&t.provider)
                 .unwrap_or(&[])
                 .iter()
-                .map(|tool| McpTool::from(tool))
+                .map(move |tool| {
+                    let scope_sat = crate::api::tools::check_scope_satisfied(&tool.scopes, &granted_scopes);
+                    let mut mcpt = McpTool::from(tool);
+                    mcpt.scope_satisfied = Some(match scope_sat {
+                        crate::api::tools::ScopeSatisfied::Yes => "yes".to_string(),
+                        crate::api::tools::ScopeSatisfied::No => "no".to_string(),
+                        crate::api::tools::ScopeSatisfied::Unknown => "unknown".to_string(),
+                    });
+                    mcpt
+                })
         })
         .collect();
 
