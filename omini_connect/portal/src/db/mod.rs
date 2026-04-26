@@ -155,6 +155,19 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
             active INTEGER NOT NULL DEFAULT 1,
             created_at TEXT NOT NULL
         )"#,
+        // Tool execution audit log
+        r#"CREATE TABLE IF NOT EXISTS tool_executions (
+            id TEXT PRIMARY KEY,
+            agent_id TEXT NOT NULL,
+            owner_username TEXT NOT NULL,
+            tool_slug TEXT NOT NULL,
+            platform TEXT NOT NULL,
+            arguments TEXT NOT NULL DEFAULT '{}',
+            result TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'success',
+            duration_ms INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL
+        )"#,
         // Connectors table
         r#"CREATE TABLE IF NOT EXISTS connectors (
             platform TEXT PRIMARY KEY,
@@ -214,6 +227,20 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         .await
     {
         tracing::debug!("Skipping agents active migration: {}", e);
+    }
+
+    // Add index on tool_executions for efficient queries
+    if let Err(e) = sqlx::query("CREATE INDEX IF NOT EXISTS idx_tool_executions_agent_id ON tool_executions(agent_id)")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping tool_executions index migration: {}", e);
+    }
+    if let Err(e) = sqlx::query("CREATE INDEX IF NOT EXISTS idx_tool_executions_created_at ON tool_executions(created_at)")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping tool_executions created_at index: {}", e);
     }
 
     // Rename legacy built-in engine label (pre–OminiConnect naming).
@@ -390,7 +417,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
         )
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| r.into()).collect())
+        Ok(rows.into_iter().map(|r: models::ApiKeyRow| r.into()).collect())
     }
 
     async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>> {
@@ -400,7 +427,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
         .bind(username)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| r.into()).collect())
+        Ok(rows.into_iter().map(|r: models::ApiKeyRow| r.into()).collect())
     }
 
     async fn delete(&self, key_hash: &str) -> anyhow::Result<()> {
@@ -458,7 +485,7 @@ impl ConnectorRepository for SqlxConnectorRepo {
         .fetch_all(&self.pool)
         .await?;
 
-        Ok(rows.into_iter().map(|r| r.into()).collect())
+        Ok(rows.into_iter().map(|r: models::ConnectorRow| r.into()).collect())
     }
 
     async fn list_all(&self) -> anyhow::Result<Vec<ConnectorConfig>> {
@@ -468,7 +495,7 @@ impl ConnectorRepository for SqlxConnectorRepo {
         .fetch_all(&self.pool)
         .await?;
 
-        Ok(rows.into_iter().map(|r| r.into()).collect())
+        Ok(rows.into_iter().map(|r: models::ConnectorRow| r.into()).collect())
     }
 
     async fn upsert(&self, owner: &str, config: &ConnectorConfig) -> anyhow::Result<()> {
@@ -570,7 +597,7 @@ impl AgentRepository for SqlxAgentRepo {
         .bind(owner)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r| r.into()).collect())
+        Ok(rows.into_iter().map(|r: models::AgentRow| r.into()).collect())
     }
 
     async fn set_active(&self, id: &str, active: bool) -> anyhow::Result<()> {
@@ -588,6 +615,85 @@ impl AgentRepository for SqlxAgentRepo {
             .execute(&self.pool)
             .await?;
         Ok(())
+    }
+}
+
+// ------------------------------------------------------------------------------------------------
+// Tool execution audit log repository
+// ------------------------------------------------------------------------------------------------
+
+pub struct ToolExecution {
+    pub id: String,
+    pub agent_id: String,
+    pub owner_username: String,
+    pub tool_slug: String,
+    pub platform: String,
+    pub arguments: serde_json::Value,
+    pub result: String,
+    pub status: String,
+    pub duration_ms: i64,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[async_trait::async_trait]
+pub trait ToolExecutionRepository: Send + Sync {
+    async fn insert(&self, exec: &ToolExecution) -> anyhow::Result<()>;
+    async fn list_by_agent(&self, agent_id: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>>;
+    async fn list_by_owner(&self, owner: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>>;
+}
+
+pub struct SqlxToolExecutionRepo {
+    pool: sqlx::AnyPool,
+}
+
+impl SqlxToolExecutionRepo {
+    pub fn new(pool: sqlx::AnyPool) -> Self {
+        Self { pool }
+    }
+}
+
+#[async_trait::async_trait]
+impl ToolExecutionRepository for SqlxToolExecutionRepo {
+    async fn insert(&self, exec: &ToolExecution) -> anyhow::Result<()> {
+        let args_str = serde_json::to_string(&exec.arguments).unwrap_or_default();
+        sqlx::query(
+            "INSERT INTO tool_executions (id, agent_id, owner_username, tool_slug, platform, arguments, result, status, duration_ms, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+        )
+        .bind(&exec.id)
+        .bind(&exec.agent_id)
+        .bind(&exec.owner_username)
+        .bind(&exec.tool_slug)
+        .bind(&exec.platform)
+        .bind(&args_str)
+        .bind(&exec.result)
+        .bind(&exec.status)
+        .bind(exec.duration_ms)
+        .bind(exec.created_at.to_rfc3339())
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn list_by_agent(&self, agent_id: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>> {
+        let rows: Vec<models::ToolExecutionRow> = sqlx::query_as(
+            "SELECT id, agent_id, owner_username, tool_slug, platform, arguments, result, status, duration_ms, created_at FROM tool_executions WHERE agent_id = $1 ORDER BY created_at DESC LIMIT $2",
+        )
+        .bind(agent_id)
+        .bind(limit as i64)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows.into_iter().map(|r: models::ToolExecutionRow| r.into()).collect())
+    }
+
+    async fn list_by_owner(&self, owner: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>> {
+        let rows: Vec<models::ToolExecutionRow> = sqlx::query_as(
+            "SELECT id, agent_id, owner_username, tool_slug, platform, arguments, result, status, duration_ms, created_at FROM tool_executions WHERE owner_username = $1 ORDER BY created_at DESC LIMIT $2",
+        )
+        .bind(owner)
+        .bind(limit as i64)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows.into_iter().map(|r: models::ToolExecutionRow| r.into()).collect())
     }
 }
 
@@ -749,6 +855,40 @@ mod models {
                 connection_ref: r.connection_ref,
                 agent_id: r.agent_id,
                 enabled: r.enabled != 0,
+            }
+        }
+    }
+
+    #[derive(FromRow)]
+    pub struct ToolExecutionRow {
+        pub id: String,
+        pub agent_id: String,
+        pub owner_username: String,
+        pub tool_slug: String,
+        pub platform: String,
+        pub arguments: String,
+        pub result: String,
+        pub status: String,
+        pub duration_ms: i64,
+        pub created_at: String,
+    }
+
+    impl From<ToolExecutionRow> for super::ToolExecution {
+        fn from(r: ToolExecutionRow) -> Self {
+            let args: serde_json::Value = serde_json::from_str(&r.arguments).unwrap_or(serde_json::Value::Object(Default::default()));
+            super::ToolExecution {
+                id: r.id,
+                agent_id: r.agent_id,
+                owner_username: r.owner_username,
+                tool_slug: r.tool_slug,
+                platform: r.platform,
+                arguments: args,
+                result: r.result,
+                status: r.status,
+                duration_ms: r.duration_ms,
+                created_at: DateTime::parse_from_rfc3339(&r.created_at)
+                    .map(|dt| dt.with_timezone(&Utc))
+                    .unwrap_or_else(|_| Utc::now()),
             }
         }
     }

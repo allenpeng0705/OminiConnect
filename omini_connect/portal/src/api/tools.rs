@@ -5,10 +5,12 @@ use std::{collections::HashSet, sync::Arc, time::Duration};
 use axum::{
     extract::{Query, State},
     http::{HeaderMap, StatusCode},
+    response::IntoResponse,
     response::Response,
     routing::{get, post},
     Json, Router,
 };
+use http_body_util::BodyExt;
 use regex::Regex;
 use reqwest::header::AUTHORIZATION;
 use serde::{Deserialize, Serialize};
@@ -92,7 +94,7 @@ pub async fn list(
     Query(query): Query<ListToolsQuery>,
     headers: HeaderMap,
 ) -> Result<Json<ListToolsResponse>, Response> {
-    let owner = match auth_user(&state, &headers).await {
+    let (owner, _agent_id) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return Err(e),
     };
@@ -146,7 +148,7 @@ pub async fn search(
     Query(query): Query<SearchToolsQuery>,
     headers: HeaderMap,
 ) -> Result<Json<SearchToolsResponse>, Response> {
-    let owner = match auth_user(&state, &headers).await {
+    let (owner, _agent_id) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return Err(e),
     };
@@ -319,7 +321,7 @@ pub async fn execute(
     headers: HeaderMap,
     Json(body): Json<ExecuteToolRequest>,
 ) -> Response {
-    let owner = match auth_user(&state, &headers).await {
+    let (owner, agent_id) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return e,
     };
@@ -346,14 +348,59 @@ pub async fn execute(
     // Build query string from arguments
     let (query_string, body_json) = build_params(&tool.method, &body.arguments, &tool.endpoint);
 
+    // Time the execution for audit
+    let start = std::time::Instant::now();
+    let exec_result: Response;
+
     // Forward based on connector type (similar to proxy.rs)
     if connector.engine == "nango" {
-        execute_nango(&state, &connector, &tool.method, &native_path, query_string, body_json).await
+        exec_result = execute_nango(&state, &connector, &tool.method, &native_path, query_string, body_json).await;
     } else if connector.platform == "maton" || connector.platform == "qqmail" || connector.platform == "github" {
-        execute_api_key(&connector, &tool.method, &native_path, query_string, body_json).await
+        exec_result = execute_api_key(&connector, &tool.method, &native_path, query_string, body_json).await;
     } else {
-        execute_oauth_vault(&state, &owner, &connector, &tool.method, &native_path, query_string, body_json).await
+        exec_result = execute_oauth_vault(&state, &owner, &connector, &tool.method, &native_path, query_string, body_json).await;
+    };
+
+    let duration_ms = start.elapsed().as_millis() as i64;
+    let status_code = exec_result.status();
+    let status = if status_code.is_success() { "success" } else { "error" };
+
+    // Extract body bytes for audit log (body is consumed from Response)
+    let body_bytes = {
+        use axum::body::HttpBody;
+        let mut body = exec_result.into_body();
+        let mut bytes = bytes::BytesMut::new();
+        while let Some(item) = body.frame().await {
+            if let Ok(frame) = item {
+                if let Some(data) = frame.data_ref() {
+                    bytes.extend_from_slice(data);
+                }
+            }
+        }
+        bytes.freeze()
+    };
+    let result_text = String::from_utf8_lossy(&body_bytes).to_string();
+
+    // Record to audit log
+    let exec_record = crate::db::ToolExecution {
+        id: uuid::Uuid::new_v4().to_string(),
+        agent_id: agent_id.unwrap_or_else(|| "".to_string()),
+        owner_username: owner,
+        tool_slug: body.tool_slug.clone(),
+        platform: body.platform.clone(),
+        arguments: body.arguments,
+        result: result_text.clone(),
+        status: status.to_string(),
+        duration_ms,
+        created_at: chrono::Utc::now(),
+    };
+    if let Err(e) = state.tool_executions.insert(&exec_record).await {
+        tracing::warn!("Failed to record tool execution audit: {}", e);
     }
+
+    let mut resp = axum::response::Response::new(result_text.into());
+    *resp.status_mut() = status_code;
+    resp
 }
 
 /// Substitutes {path_param} placeholders in the endpoint with values from arguments.
@@ -585,11 +632,11 @@ async fn execute_oauth_vault(
     }
 }
 
-/// Authenticate via Bearer token and return owner username.
+/// Authenticate via Bearer token and return (owner_username, agent_id).
 async fn auth_user(
     state: &Arc<AppState>,
     headers: &HeaderMap,
-) -> Result<String, Response> {
+) -> Result<(String, Option<String>), Response> {
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
         None => {
@@ -602,7 +649,7 @@ async fn auth_user(
 
     for ak in api_keys {
         if bcrypt::verify(api_key, &ak.key_hash).ok() == Some(true) {
-            return Ok(ak.username);
+            return Ok((ak.username, ak.agent_id));
         }
     }
 
