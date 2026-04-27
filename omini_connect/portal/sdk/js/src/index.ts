@@ -2,7 +2,104 @@
  * OminiConnect JavaScript/TypeScript SDK.
  */
 
-const DEFAULT_BASE_URL = "http://localhost:8080";
+const DEFAULT_BASE_URL = "http://localhost:9000";
+
+// ─── Error classes ────────────────────────────────────────────────────────────────
+
+export class OminiConnectError extends Error {}
+
+export class AuthError extends OminiConnectError {}
+
+export class ConnectorNotFoundError extends OminiConnectError {}
+
+export class ToolNotFoundError extends OminiConnectError {}
+
+export class ScopeInsufficientError extends OminiConnectError {}
+
+export class UpstreamError extends OminiConnectError {
+  constructor(
+    public readonly statusCode: number,
+    public readonly body: string,
+  ) {
+    super(`upstream error ${statusCode}: ${body.slice(0, 200)}`);
+  }
+}
+
+export class NetworkError extends OminiConnectError {}
+
+export class RateLimitedError extends OminiConnectError {}
+
+// ─── Shared types ───────────────────────────────────────────────────────────────
+
+export interface CallOptions {
+  params?: Record<string, string | number | boolean>;
+  body?: unknown;
+}
+
+export interface ToolSummary {
+  slug: string;
+  name: string;
+  description: string;
+  method: string;
+  endpoint: string;
+  scopes: string[];
+  scope_satisfied: "yes" | "no" | "unknown";
+  tags: string[];
+}
+
+export interface Toolkit {
+  slug: string;
+  name: string;
+  logo: string | null;
+  provider: string;
+  tools: ToolSummary[];
+}
+
+export interface ToolkitsResponse {
+  toolkits: Toolkit[];
+}
+
+export interface ToolsSearchResponse {
+  tools: ToolSummary[];
+  query: string;
+}
+
+export interface ToolExecuteResult {
+  ok: boolean;
+  body?: unknown;
+  error?: string;
+  call_id?: string;
+  status?: "pending";
+  duration_ms?: number;
+}
+
+export interface Connector {
+  platform: string;
+  enabled: boolean;
+  scopes: string[];
+  created_at: string;
+}
+
+export interface ApiKeyCreated {
+  key: string;
+  label: string;
+  created_at: string;
+}
+
+export interface ApiKeySummary {
+  key_hash: string;
+  label: string;
+  created_at: string;
+}
+
+export interface McpTool {
+  name: string;
+  description: string;
+  input_schema: Record<string, unknown>;
+  scope_satisfied?: string;
+}
+
+// ─── Main client ───────────────────────────────────────────────────────────────
 
 export interface OminiConnectOptions {
   apiKey: string;
@@ -10,26 +107,47 @@ export interface OminiConnectOptions {
   fetchFn?: typeof fetch;
 }
 
-/**
- * Main SDK client for OminiConnect portal.
- */
-export class OminiConnectClient {
+export class OminiConnect {
   private readonly apiKey: string;
   private readonly baseUrl: string;
   private readonly fetch: typeof fetch;
+
+  /** Connectors manager — list and manage OAuth/API key connections. */
+  readonly connectors: ConnectorsManager;
+
+  /** API keys manager — create, list, revoke named API keys. */
+  readonly apiKeys: ApiKeysManager;
+
+  /** Tools manager — list, search, execute tools. */
+  readonly tools: ToolsManager;
 
   constructor(options: OminiConnectOptions) {
     this.apiKey = options.apiKey;
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
     this.fetch = options.fetchFn ?? fetch;
+
+    this.connectors = new ConnectorsManager(this);
+    this.apiKeys = new ApiKeysManager(this);
+    this.tools = new ToolsManager(this);
   }
 
+  // ─── HTTP layer ────────────────────────────────────────────────────────────
+
   private async request<T>(
-    method: "GET" | "POST" | "DELETE",
+    method: "GET" | "POST" | "DELETE" | "PUT" | "PATCH",
     path: string,
     body?: unknown,
+    params?: Record<string, string>,
   ): Promise<T> {
-    const resp = await this.fetch(`${this.baseUrl}${path}`, {
+    let url = `${this.baseUrl}${path}`;
+    if (params) {
+      const qs = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])),
+      ).toString();
+      url += `?${qs}`;
+    }
+
+    const resp = await this.fetch(url, {
       method,
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
@@ -38,17 +156,21 @@ export class OminiConnectClient {
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
 
+    if (resp.status === 401) throw new AuthError("invalid or missing API key");
+    if (resp.status === 429) throw new RateLimitedError("rate limited — back off and retry");
+    if (resp.status === 404) throw new ConnectorNotFoundError(`not found: ${path}`);
+
     if (!resp.ok) {
       const text = await resp.text().catch(() => "");
-      throw new Error(`OminiConnect API error ${resp.status}: ${text}`);
+      throw new UpstreamError(resp.status, text);
     }
 
+    if (resp.headers.get("content-length") === "0") return undefined as T;
     return resp.json() as Promise<T>;
   }
 
   get<T>(path: string, params?: Record<string, string>): Promise<T> {
-    const qs = params ? "?" + new URLSearchParams(params).toString() : "";
-    return this.request<T>("GET", path + qs);
+    return this.request<T>("GET", path, undefined, params);
   }
 
   post<T>(path: string, body?: unknown): Promise<T> {
@@ -59,123 +181,129 @@ export class OminiConnectClient {
     return this.request<T>("DELETE", path);
   }
 
-  readonly agents = new AgentManager(this);
-  readonly tools = new ToolManager(this);
+  // ─── Maton-style direct call ──────────────────────────────────────────────
+
+  /**
+   * Call any connected platform's API directly — Maton style.
+   *
+   * This is the simplest way to use OminiConnect. No tool schemas needed.
+   *
+   * @example
+   * const repos = await client.call("github", "GET", "/user/repos", { params: { sort: "updated" } });
+   * await client.call("slack", "POST", "/api/chat.postMessage", { body: { channel: "C0123", text: "Hi!" } });
+   */
+  async call(
+    platform: string,
+    method: string,
+    path: string,
+    options?: CallOptions,
+  ): Promise<unknown> {
+    const payload: Record<string, unknown> = {
+      method: method.toUpperCase(),
+      path,
+    };
+    if (options?.params) payload.params = options.params;
+    if (options?.body !== undefined) payload.body = options.body;
+    return this.post(`/api/call/${platform}`, payload);
+  }
 }
 
-// ─── Agents ──────────────────────────────────────────────────────────────────
+// ─── Connectors ────────────────────────────────────────────────────────────────
 
-export interface AgentResponse {
-  id: string;
-  name: string;
-  description: string;
-  owner_username: string;
-  active: boolean;
-  created_at: string;
-  api_key?: string; // only on registration
+export class ConnectorsManager {
+  constructor(private client: OminiConnect) {}
+
+  /** List all connected platforms. */
+  list(): Promise<Connector[]> {
+    return this.client.get<Connector[]>("/api/connectors");
+  }
+
+  /** Get a specific connector. */
+  async get(platform: string): Promise<Connector> {
+    try {
+      return await this.client.get<Connector>(`/api/connectors/${platform}`);
+    } catch {
+      throw new ConnectorNotFoundError(`Platform '${platform}' is not connected`);
+    }
+  }
+
+  /** Remove a connected platform. */
+  delete(platform: string): Promise<{ ok: boolean }> {
+    return this.client.delete<{ ok: boolean }>(`/api/connectors/${platform}`);
+  }
 }
 
-export interface AgentSummary {
-  id: string;
-  name: string;
-  description: string;
-  active: boolean;
-  created_at: string;
-}
+// ─── API Keys ─────────────────────────────────────────────────────────────────
 
-class AgentManager {
-  constructor(private client: OminiConnectClient) {}
+export class ApiKeysManager {
+  constructor(private client: OminiConnect) {}
 
-  /** Register a new agent. Returns the agent with its raw API key (shown once). */
-  register(name: string, description?: string): Promise<AgentResponse> {
-    return this.client.post<AgentResponse>("/api/agents", {
-      name,
-      description,
-    });
+  /**
+   * Create a new named API key.
+   * The raw key is returned ONLY here — store it securely.
+   */
+  create(label: string): Promise<ApiKeyCreated> {
+    return this.client.post<ApiKeyCreated>("/auth/apikey", { label });
   }
 
-  /** List all agents for the authenticated user. */
-  list(): Promise<{ agents: AgentSummary[] }> {
-    return this.client.get<{ agents: AgentSummary[] }>("/api/agents");
+  /** List all API keys (raw key is never returned). */
+  list(): Promise<ApiKeySummary[]> {
+    return this.client.get<ApiKeySummary[]>("/auth/apikey");
   }
 
-  /** Get a specific agent by ID. */
-  get(agentId: string): Promise<{ agent: AgentSummary }> {
-    return this.client.get<{ agent: AgentSummary }>(`/api/agents/${agentId}`);
-  }
-
-  /** Delete an agent and revoke its API key. */
-  delete(agentId: string): Promise<{ ok: boolean }> {
-    return this.client.delete<{ ok: boolean }>(`/api/agents/${agentId}`);
-  }
-
-  /** Deactivate an agent. */
-  deactivate(agentId: string): Promise<{ ok: boolean }> {
-    return this.client.post<{ ok: boolean }>(`/api/agents/${agentId}/deactivate`);
+  /** Revoke an API key. */
+  delete(keyHash: string): Promise<{ ok: boolean }> {
+    return this.client.delete<{ ok: boolean }>(`/auth/apikey/${keyHash}`);
   }
 }
 
 // ─── Tools ───────────────────────────────────────────────────────────────────
 
-export interface Tool {
-  slug: string;
-  name: string;
-  description: string;
-  provider: string;
-  input_schema: Record<string, unknown>;
-  scopes: string[];
-  tags?: string[];
-  scope_satisfied?: "yes" | "no" | "unknown";
-}
+export class ToolsManager {
+  constructor(private client: OminiConnect) {}
 
-export interface ToolExecutionResult {
-  ok: boolean;
-  body?: unknown;
-  error?: string;
-  duration_ms?: number;
-  call_id?: string; // async callback calls
-}
-
-class ToolManager {
-  constructor(private client: OminiConnectClient) {}
-
-  /** List available tools, optionally filtered by platform. */
-  list(platform?: string): Promise<{ tools: Tool[] }> {
-    return this.client.get<{ tools: Tool[] }>(
+  /**
+   * List available tools, optionally filtered by platform.
+   * Returns { toolkits: [...] } grouped by platform.
+   */
+  list(platform?: string): Promise<ToolkitsResponse> {
+    return this.client.get<ToolkitsResponse>(
       "/api/tools",
       platform ? { platform } : undefined,
     );
   }
 
-  /** Search tools by name/description/tags. */
+  /**
+   * Search tools by name, description, or tags.
+   */
   search(
     q: string,
     platform?: string,
-  ): Promise<{ tools: Tool[] }> {
-    return this.client.get<{ tools: Tool[] }>(
-      "/api/tools/search",
-      platform ? { q, platform } : { q },
-    );
+    filterScope?: "yes" | "no" | "any",
+  ): Promise<ToolsSearchResponse> {
+    const params: Record<string, string> = { q };
+    if (platform) params.platform = platform;
+    if (filterScope) params.filter_scope = filterScope;
+    return this.client.get<ToolsSearchResponse>("/api/tools/search", params);
   }
 
-  /** Execute a tool synchronously. */
+  /**
+   * Execute a tool by slug with structured arguments.
+   * Set callbackUrl for async execution (returns immediately).
+   */
   execute(
     toolSlug: string,
     args?: Record<string, unknown>,
-    options?: {
-      callbackUrl?: string;
-      platform?: string;
-    },
-  ): Promise<ToolExecutionResult> {
+    callbackUrl?: string,
+  ): Promise<ToolExecuteResult> {
     const body: Record<string, unknown> = {
       tool_slug: toolSlug,
       arguments: args ?? {},
     };
-    if (options?.callbackUrl) body.callback_url = options.callbackUrl;
-    if (options?.platform) body.platform = options.platform;
-
-    return this.client.post<ToolExecutionResult>("/api/tools/execute", body);
+    if (callbackUrl) body.callback_url = callbackUrl;
+    return this.client.post<ToolExecuteResult>("/api/tools/execute", body);
   }
 }
 
-export default OminiConnectClient;
+// Default export for convenience
+export default OminiConnect;

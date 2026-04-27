@@ -48,12 +48,12 @@ from ominiconnect import OminiConnect
 
 client = OminiConnect(api_key="your-portal-api-key")
 
-# Register an agent — get a dedicated API key for the agent
-agent = client.agents.register(name="github-writer")
-print(agent["api_key"])  # store securely — shown only once
+# Create a named API key for the agent — one key per agent is recommended
+key = client.api_keys.create("github-writer")
+print(key["key"])  # store securely — shown only once
 
 # Agent uses this key to call tools
-agent_client = OminiConnect(api_key=agent["api_key"])
+agent_client = OminiConnect(api_key=key["key"])
 tools = agent_client.tools.list(platform="github")
 result = agent_client.tools.execute(
     "github_list_repos",
@@ -110,13 +110,16 @@ Connect Feishu, DingTalk, or WeChat Work. Agents help employees query internal t
 
 | Method | Path | What it does |
 |--------|------|--------------|
-| `POST` | `/api/agents` | Register an agent, get its API key |
+| `POST` | `/api/call/{platform}` | Call any platform API directly (Maton style) |
+| `POST` | `/auth/apikey` | Create a named API key |
+| `GET` | `/auth/apikey` | List all API keys |
+| `DELETE` | `/auth/apikey/{key_hash}` | Revoke an API key |
+| `GET` | `/api/connectors` | List connected platforms |
 | `GET` | `/api/tools` | List available tools for a platform |
 | `GET` | `/api/tools/search` | Search tools by name or description |
 | `POST` | `/api/tools/execute` | Execute a tool (sync or async via `callback_url`) |
 | `POST` | `/api/mcp` | MCP JSON-RPC — `tools/list`, `tools/call` |
 | `GET` | `/api/mcp/sse` | SSE stream for async push to MCP clients |
-| `POST` | `/api/proxy/{platform}/*` | Passthrough to vendor API with stored token |
 
 Full API reference: see `docs/API.md` (coming soon).
 
@@ -124,10 +127,17 @@ Full API reference: see `docs/API.md` (coming soon).
 
 ## SDKs
 
-- **Python**: `pip install ominiconnect` — `from ominiconnect import OminiConnect`
-- **JS/TS**: `npm install @ominiconnect/sdk` — `OminiConnectClient`
+| Language | Install | Docs |
+|----------|---------|------|
+| Python | `pip install ominiconnect` | [sdk/python](./sdk/python) |
+| JavaScript/TypeScript | `npm install @ominiconnect/sdk` | [sdk/js](./sdk/js) |
+| Go | `go get github.com/ominiconnect/go-sdk/ominiconnect` | [sdk/go](./sdk/go) |
+| Rust | `cargo add omini-connect-sdk` | [sdk/rust](./sdk/rust) |
+| iOS (Swift) | Swift Package Manager | [sdk/ios](./sdk/ios) |
+| Android (Kotlin) | Gradle dependency | [sdk/android](./sdk/android) |
+| Flutter (Dart) | `flutter pub add ominiconnect` | [sdk/flutter](./sdk/flutter) |
 
-See `sdk/README.md` for full usage.
+See [sdk/README.md](./sdk/README.md) for full SDK documentation.
 
 ---
 

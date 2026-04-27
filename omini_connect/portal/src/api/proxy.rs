@@ -189,7 +189,7 @@ pub async fn forward(
     }
 }
 
-async fn send_reqwest_response(
+pub(crate) async fn send_reqwest_response(
     result: Result<reqwest::Response, reqwest::Error>,
     platform: &str,
 ) -> axum::response::Response<Body> {
@@ -209,7 +209,7 @@ async fn send_reqwest_response(
     }
 }
 
-async fn map_reqwest_to_axum(resp: reqwest::Response) -> axum::response::Response<Body> {
+pub(crate) async fn map_reqwest_to_axum(resp: reqwest::Response) -> axum::response::Response<Body> {
     let status = resp.status();
     let body = resp.bytes().await.unwrap_or_default();
     let code = StatusCode::from_u16(status.as_u16()).unwrap_or(StatusCode::BAD_GATEWAY);
@@ -218,14 +218,14 @@ async fn map_reqwest_to_axum(resp: reqwest::Response) -> axum::response::Respons
     response
 }
 
-fn proxy_error_response(status: StatusCode, message: &str) -> axum::response::Response<Body> {
+pub(crate) fn proxy_error_response(status: StatusCode, message: &str) -> axum::response::Response<Body> {
     let body = serde_json::json!({ "error": message }).to_string();
     let mut response = axum::response::Response::new(body.into());
     *response.status_mut() = status;
     response
 }
 
-fn get_platform_base_url(platform: &str) -> &'static str {
+pub(crate) fn get_platform_base_url(platform: &str) -> &'static str {
     match platform {
         "feishu" => "https://open.feishu.cn/open-apis",
         "dingtalk" => "https://api.dingtalk.com",

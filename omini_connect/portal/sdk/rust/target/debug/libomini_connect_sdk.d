@@ -1,0 +1,1 @@
+/Users/shileipeng/Documents/mygithub/OminiConnect/omini_connect/portal/sdk/rust/target/debug/libomini_connect_sdk.rlib: /Users/shileipeng/Documents/mygithub/OminiConnect/omini_connect/portal/sdk/rust/src/lib.rs
