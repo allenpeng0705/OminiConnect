@@ -357,6 +357,261 @@ Trusted internal agent should call provider APIs directly for performance. Omini
 
 ---
 
+## Real World Scenarios
+
+### Scenario A: AI Code Review Agent
+
+**Setup:**
+- Company uses GitHub Enterprise (on-premise)
+- Development team: 50 engineers
+- Need automated code review on PRs
+
+**Without OminiConnect:**
+- Build OAuth integration for GitHub Enterprise (complex, on-premise auth)
+- Handle token storage and refresh for 50 users
+- Scope management per user/department
+- Build tool registry so agent knows what it can do
+
+**With OminiConnect:**
+```
+1. IT Admin registers GitHub Enterprise as connector
+2. Engineers connect their GitHub accounts via OAuth
+3. AI Agent code:
+   tools = client.tools.list(platform="github")
+   # Discovers: github_list_pulls, github_create_review_comment, ...
+
+   result = client.tools.execute("github_list_pulls", {
+     "owner": "my-company",
+     "repo": "backend-api",
+     "state": "open"
+   })
+```
+
+**Value:**
+- 50+ OAuth integrations handled by OminiConnect
+- Token auto-refresh (no expired token errors)
+- Scope enforcement (intern can't access private repos outside company)
+
+---
+
+### Scenario B: Sales AI Assistant with Multi-Platform
+
+**Setup:**
+- Sales team uses: Salesforce (CRM), Slack (comms), Gmail (email)
+- AI assistant helps: prepare meeting notes, update CRM, send follow-ups
+
+**Without OminiConnect:**
+- Integrate Salesforce OAuth + API
+- Integrate Slack OAuth + API
+- Integrate Gmail OAuth + API
+- Each has different auth flow, token format, refresh logic
+
+**With OminiConnect:**
+```
+1. Sales rep connects all three via OminiConnect portal (one OAuth per platform)
+2. AI Agent discovers tools across platforms:
+   tools = client.tools.list()
+   # Returns: salesforce_get_lead, salesforce_update_opportunity,
+   #          slack_post_message, gmail_send_email, ...
+
+3. Agent workflow:
+   # Get lead info
+   lead = client.tools.execute("salesforce_get_lead", {"id": "00Qxx0000001234"})
+
+   # Create Slack message
+   client.tools.execute("slack_post_message", {
+     "channel": "#sales-team",
+     "text": f"Meeting prep: {lead['Name']} - {lead['Company']}"
+   })
+
+   # Log activity in Salesforce
+   client.tools.execute("salesforce_update_opportunity", {
+     "id": "006xx0000012345",
+     "stage": "Closed Won"
+   })
+```
+
+**Value:**
+- Single interface for all platforms
+- Agent doesn't need to know about Salesforce vs Gmail API differences
+- Scope: sales rep can only access their assigned leads
+
+---
+
+### Scenario C: Enterprise Compliance Dashboard
+
+**Setup:**
+- Fortune 500 company
+- Must audit all API calls for SOC2 compliance
+- Data residency: EU only
+- PII must be filtered
+
+**Without OminiConnect:**
+- Build logging system for every API call
+- Store all API responses with timestamps
+- Filter PII manually in each integration
+- Ensure no data leaves EU
+
+**With OminiConnect:**
+```
+1. IT configures in portal:
+   - Data residency: EU
+   - PII filter: email, phone, SSN
+   - Audit: all tool executions logged
+
+2. Employee connects their Google Workspace
+   - OminiConnect stores token with scopes: "email.read", "contacts.read"
+
+3. Agent calls tool:
+   POST /api/tools/execute
+   { "tool_slug": "google_list_contacts" }
+
+4. OminiConnect:
+   - Checks scope (email.read → allowed)
+   - Calls Google API
+   - PII filter: masks {email}, {phone}
+   - Audit log: { "user": "john@company.com", "tool": "google_list_contacts", "timestamp": "..." }
+   - Ensures response stays in EU data center
+
+5. Compliance team reviews audit trail
+```
+
+**Value:**
+- Automatic audit logging for every tool execution
+- PII scrubbing without building custom filters
+- Scope enforcement per employee
+- Data residency enforcement
+
+---
+
+### Scenario D: Claude Desktop Integration
+
+**Setup:**
+- Developer uses Claude Desktop
+- Wants Claude to help with GitHub issues and Slack notifications
+
+**Without OminiConnect:**
+- Configure Claude Desktop MCP manually for each service
+- Manage multiple MCP server configurations
+- No scope control (Claude has full token access)
+
+**With OminiConnect:**
+```
+1. User connects GitHub and Slack via portal
+2. Adds to claude_desktop_config.json:
+   {
+     "mcpServers": {
+       "OminiConnect": {
+         "command": "npx",
+         "args": ["-y", "@ominiconnect/sdk-mcp"]
+       }
+     }
+   }
+
+3. Claude Desktop automatically discovers tools via MCP:
+   - tools/list → returns all available tools
+   - tools/call → executes with token management
+
+4. User asks Claude:
+   "Create a GitHub issue for the login bug and notify the team on Slack"
+
+   Claude → OminiConnect MCP:
+   - tools/call: github_create_issue → success
+   - tools/call: slack_post_message → success
+```
+
+**Value:**
+- One MCP server for all connected platforms
+- Scope: limited to what user authorized
+- Token auto-refresh handled
+- No need to configure multiple MCP servers
+
+---
+
+### Scenario E: China Market AI Agent
+
+**Setup:**
+- Company expanding to China
+- Need AI agent that works with: Feishu, DingTalk, WeChat Work
+
+**Without OminiConnect:**
+- Implement OAuth for each Chinese platform (different flows, different UAs)
+- Handle token storage and refresh
+- Build Chinese-language tool descriptions for LLM
+
+**With OminiConnect:**
+```
+1. Admin connects company accounts:
+   - Feishu (飞书) - enterprise IM
+   - DingTalk (钉钉) - enterprise comms
+   - WeChat Work (企业微信) - enterprise WeChat
+
+2. AI Agent discovers Chinese platform tools:
+   tools = client.tools.list()
+   # Returns: feishu_send_message, dingtalk_create_task,
+   #          wechatwork_send_message, ...
+
+3. Agent responds to user in Chinese:
+   "好的，我会在飞书群发送会议提醒"
+
+   client.tools.execute("feishu_send_message", {
+     "chat_id": "oc_xxxxx",
+     "content": "会议提醒：明天下午3点"
+   })
+```
+
+**Value:**
+- Built-in support for Chinese platforms (Feishu, DingTalk, WeChat Work)
+- Handles domestic OAuth flows (different from Western platforms)
+- Chinese-language tool descriptions for LLM
+- No need to understand Chinese platform API quirks
+
+---
+
+### Scenario F: Multi-Agent Orchestration
+
+**Setup:**
+- Company has 3 AI agents:
+  - Code Reviewer: GitHub access only
+  - Social Media Manager: Twitter, LinkedIn, Facebook
+  - Customer Support: Zendesk, Gmail
+
+**Without OminiConnect:**
+- Each agent needs its own OAuth flow and token management
+- No centralized audit of which agent did what
+- Hard to revoke access per agent
+
+**With OminiConnect:**
+```
+1. Admin creates 3 API keys in portal:
+   - code-reviewer: tools=[github_*]
+   - social-media: tools=[twitter_*, linkedin_*, facebook_*]
+   - support-agent: tools=[zendesk_*, gmail_*]
+
+2. Each agent gets its own key:
+   code_reviewer = OminiConnect(api_key="sk-om-code-reviewer-xxx")
+   social_manager = OminiConnect(api_key="sk-om-social-xxx")
+   support_agent = OminiConnect(api_key="sk-om-support-xxx")
+
+3. code-reviewer tries to post to Twitter:
+   → Blocked! Tool not in code-reviewer key's allowed list
+
+4. support_agent reads Gmail:
+   → Allowed! Gmail in support-agent key's allowed list
+
+5. Admin reviews audit logs:
+   - "support-agent called gmail_read at 2024-04-27 14:32"
+   - "social-media posted to Twitter at 2024-04-27 14:45"
+```
+
+**Value:**
+- Per-agent API keys with tool restrictions
+- Centralized audit log
+- Instant revocation (just delete API key)
+- No token sharing between agents
+
+---
+
 ## Questions to Validate
 
 ### 1. Token Delivery vs Proxy
