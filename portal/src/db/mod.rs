@@ -6,6 +6,7 @@
 //! - `postgres://user:pass@localhost/omini_connect_portal`
 
 use chrono::{DateTime, Utc};
+use serde::Serialize;
 use sqlx::any::Any;
 use sqlx::pool::PoolOptions;
 
@@ -273,6 +274,28 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         .await
     {
         tracing::debug!("Skipping users data_residency migration: {}", e);
+    }
+
+    // Add department column to users
+    if let Err(e) = sqlx::query("ALTER TABLE users ADD COLUMN department TEXT")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping users department migration: {}", e);
+    }
+
+    // Create department_scopes table for department-based scope mapping
+    if let Err(e) = sqlx::query(
+        r#"CREATE TABLE IF NOT EXISTS department_scopes (
+            department TEXT PRIMARY KEY,
+            scopes TEXT NOT NULL,
+            description TEXT NOT NULL DEFAULT ''
+        )"#,
+    )
+    .execute(&mut *conn)
+    .await
+    {
+        tracing::debug!("Skipping department_scopes table creation: {}", e);
     }
 
     // Add active column to agents
@@ -939,6 +962,92 @@ impl CustomToolRepository for SqlxCustomToolRepo {
 }
 
 // ------------------------------------------------------------------------------------------------
+// Department scopes repository
+// ------------------------------------------------------------------------------------------------
+
+#[derive(Debug, Clone, Serialize)]
+pub struct DepartmentScope {
+    pub department: String,
+    pub scopes: Vec<String>,
+    pub description: String,
+}
+
+#[async_trait::async_trait]
+pub trait DepartmentScopeRepository: Send + Sync {
+    async fn upsert(&self, scope: &DepartmentScope) -> anyhow::Result<()>;
+    async fn delete(&self, department: &str) -> anyhow::Result<()>;
+    async fn list_all(&self) -> anyhow::Result<Vec<DepartmentScope>>;
+    async fn get(&self, department: &str) -> anyhow::Result<Option<DepartmentScope>>;
+}
+
+pub struct SqlxDepartmentScopeRepo {
+    pool: sqlx::AnyPool,
+}
+
+impl SqlxDepartmentScopeRepo {
+    pub fn new(pool: sqlx::AnyPool) -> Self {
+        Self { pool }
+    }
+}
+
+#[async_trait::async_trait]
+impl DepartmentScopeRepository for SqlxDepartmentScopeRepo {
+    async fn upsert(&self, scope: &DepartmentScope) -> anyhow::Result<()> {
+        sqlx::query(
+            r#"INSERT INTO department_scopes (department, scopes, description)
+               VALUES ($1, $2, $3)
+               ON CONFLICT(department) DO UPDATE SET
+               scopes = EXCLUDED.scopes,
+               description = EXCLUDED.description"#,
+        )
+        .bind(&scope.department)
+        .bind(scope.scopes.join(" "))
+        .bind(&scope.description)
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn delete(&self, department: &str) -> anyhow::Result<()> {
+        sqlx::query("DELETE FROM department_scopes WHERE department = $1")
+            .bind(department)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+
+    async fn list_all(&self) -> anyhow::Result<Vec<DepartmentScope>> {
+        let rows: Vec<(String, String, String)> = sqlx::query_as(
+            "SELECT department, scopes, description FROM department_scopes",
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows
+            .into_iter()
+            .map(|(department, scopes, description)| DepartmentScope {
+                department,
+                scopes: scopes.split_whitespace().map(String::from).collect(),
+                description,
+            })
+            .collect())
+    }
+
+    async fn get(&self, department: &str) -> anyhow::Result<Option<DepartmentScope>> {
+        let row: Option<(String, String, String)> = sqlx::query_as(
+            "SELECT department, scopes, description FROM department_scopes WHERE department = $1",
+        )
+        .bind(department)
+        .fetch_optional(&self.pool)
+        .await?;
+        Ok(row.map(|(department, scopes, description)| DepartmentScope {
+            department,
+            scopes: scopes.split_whitespace().map(String::from).collect(),
+            description,
+        }))
+    }
+}
+
+// ------------------------------------------------------------------------------------------------
 // Seed
 // ------------------------------------------------------------------------------------------------
 
@@ -952,6 +1061,7 @@ pub async fn seed_admin_user(user_repo: &dyn UserRepository) {
             password_hash: hash,
             created_at: Utc::now(),
             data_residency: None,
+            department: None,
         };
         if let Err(e) = user_repo.insert(&user).await {
             tracing::error!("Failed to seed admin user: {}", e);
@@ -978,6 +1088,7 @@ mod models {
         pub password_hash: String,
         pub created_at: String,
         pub data_residency: Option<String>,
+        pub department: Option<String>,
     }
 
     impl From<UserRow> for User {
@@ -996,6 +1107,7 @@ mod models {
                         _ => None,
                     }
                 }),
+                department: r.department,
             }
         }
     }

@@ -5,6 +5,7 @@ pub mod audit;
 pub mod call;
 pub mod connectors;
 pub mod custom_tools;
+pub mod departments;
 pub mod llm;
 pub mod mcp;
 pub mod nango_catalog;
@@ -73,4 +74,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(custom_tools::router())
         .merge(settings::router())
         .merge(audit::router())
+        .merge(departments::router())
 }

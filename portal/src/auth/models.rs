@@ -28,6 +28,9 @@ pub struct User {
     /// Data residency requirement. None means no restriction.
     #[serde(default)]
     pub data_residency: Option<DataResidency>,
+    /// Department for scope mapping. None means no department mapping.
+    #[serde(default)]
+    pub department: Option<String>,
 }
 
 /// An active browser session.

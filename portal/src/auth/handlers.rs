@@ -356,6 +356,7 @@ async fn ensure_local_user(state: &Arc<AppState>, email: &str) -> anyhow::Result
             password_hash: "!managed-by-nango!".to_string(),
             created_at: chrono::Utc::now(),
             data_residency: None,
+            department: None,
         };
         state.users.insert(&user).await?;
     }
