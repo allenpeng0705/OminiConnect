@@ -1,5 +1,7 @@
 # OminiConnect SDKs
 
+<img src="../../docs/logo-with-text.svg" alt="OminiConnect" width="560"/>
+
 Client libraries for the OminiConnect API — connect AI agents to 700+ external platforms through a unified interface.
 
 ---
