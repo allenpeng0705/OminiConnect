@@ -751,4 +751,172 @@ OminiConnect combines features from multiple categories into one platform:
 
 ---
 
+## Implementation Gaps
+
+Based on the user stories and scenarios, here are the gaps between current implementation and requirements:
+
+### Critical Gaps (Must Have)
+
+#### 1. Token Delivery Endpoint (Story 1, Story 8, Scenario F)
+**Gap:** No `GET /api/token/{platform}` endpoint exists.
+
+**Current state:** Tokens are used internally for tool execution and proxy, but there's no endpoint to just retrieve a fresh token for direct API calls.
+
+**Needed:**
+```
+GET /api/token/{platform}
+Authorization: Bearer sk-xxx
+
+Response: { access_token: "...", expires_in: 3600, scope: "repo,user" }
+```
+
+**Why critical:** Story 1 (token-first for trusted agents) and Story 8 (performance-critical direct calls) require this. Also needed for Scenario F (multi-agent with per-agent tokens).
+
+---
+
+#### 2. Per-Agent Tool Restrictions (Scenario F)
+**Gap:** API keys exist but have no tool-level permissions.
+
+**Current state:** API key in `auth/middleware.rs` validates the key exists, but doesn't filter which tools the agent can use.
+
+**Scenarios affected:** Scenario F (multi-agent), Story 6
+
+**Needed:**
+- API keys with `allowed_tools: ["github_*"]` field
+- Middleware checks API key's allowed tools before tool execution
+- UI to configure tool restrictions per API key
+
+**Current code to check:** `portal/src/auth/middleware.rs` - needs `allowed_tools` check in `validate_api_key()`.
+
+---
+
+#### 3. Scope Enforcement for Chinese Platforms (Scenario E)
+**Gap:** Feishu, DingTalk, WeChat Work OAuth is implemented in `oauth_vault`, but scope enforcement at tool execution is unclear.
+
+**Current state:** `connectors/` crate has feishu, dingtalk, wechatwork, maton - but are they integrated with tool execution scope checking?
+
+**Needed:**
+- Verify scopes from OAuth are stored correctly
+- Verify tool execution checks scopes against token's allowed scopes
+- Chinese platform OAuth flows work correctly
+
+---
+
+#### 4. Custom Tool Registration UI (Story 7)
+**Gap:** Custom tools require manual YAML creation in `portal/tools/registry/`.
+
+**Current state:** Developer must create YAML files manually, no portal UI.
+
+**Needed:**
+- UI to add custom tools (name, description, endpoint, method, input schema)
+- Or at minimum: API endpoint to register tools
+- Tool registry auto-reloads when new tools added
+
+---
+
+### Important Gaps (Should Have)
+
+#### 5. Data Residency Enforcement (Scenario C)
+**Gap:** No data residency configuration or enforcement.
+
+**Current state:** `wasm_policies` has PII filtering, but no data residency rules.
+
+**Needed:**
+- Portal UI to set data residency: "US only", "EU only", "China only"
+- Middleware checks response data center based on config
+- Tool execution respects residency rules
+
+---
+
+#### 6. Department/Role-based Scopes (Story 4, Scenario C)
+**Gap:** User scopes are from OAuth, but no per-department scope mapping.
+
+**Current state:** Token stores OAuth scopes directly, no transformation based on user department/role.
+
+**Needed:**
+- Admin can map departments to additional scopes
+- Example: "sales" department gets "drive.read" in addition to OAuth scopes
+- Token issuance applies department scope mapping
+
+---
+
+#### 7. Audit Log UI (Story 4, Scenario C, Scenario F)
+**Gap:** `audit_logger` crate exists, but no UI to view audit logs.
+
+**Current state:** Logs are stored, but compliance team has no way to view them via portal.
+
+**Needed:**
+- Audit log page in portal
+- Filters: by user, by tool, by date range
+- Export to CSV/JSON for compliance
+
+---
+
+### Minor Gaps (Nice to Have)
+
+#### 8. LLM Tool Selection for Complex Queries (Story 5)
+**Gap:** Current LLM endpoint uses rule-based keyword matching.
+
+**Current state:** Works for simple queries like "list my repos". May fail for complex multi-step reasoning.
+
+**Needed:**
+- Optional Claude integration for complex queries
+- Threshold-based fallback: if rule-based confidence < X, use Claude
+- Config: `ANTHROPIC_API_KEY`, `LLM_FALLBACK_THRESHOLD`
+
+---
+
+#### 9. MCP SDK Package (Scenario D)
+**Gap:** No `@ominiconnect/sdk-mcp` npm package for Claude Desktop.
+
+**Current state:** Claude Desktop config example uses `npx -y @ominiconnect/sdk-mcp` which doesn't exist.
+
+**Needed:**
+- Publish `@ominiconnect/sdk-mcp` npm package
+- Implements MCP protocol client for OminiConnect
+- Handles `tools/list` and `tools/call` JSON-RPC
+
+---
+
+#### 10. Tool Execution Callback/Async (Story 4)
+**Gap:** Tool execution is synchronous. Long-running tools block.
+
+**Current state:** `POST /api/tools/execute` returns result immediately.
+
+**Needed:**
+- `callback_url` parameter: if provided, execute async and POST result to callback
+- `status` field: "completed", "pending", "failed"
+- SSE stream for real-time status updates
+
+---
+
+## Quick Wins (Already Mostly There)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| OAuth + Token Storage | ✅ | `oauth_vault` crate works |
+| Token Auto-Refresh | ✅ | Handled in `oauth_vault` |
+| Tool Registry | ✅ | `portal/tools/registry/*.yaml` |
+| MCP Endpoint | ✅ | `POST /api/mcp` works |
+| LLM Endpoint | ✅ | `POST /api/llm` rule-based works |
+| API Proxy (Maton-style) | ✅ | `POST /api/call/{platform}` |
+| Scope Enforcement | ⚠️ | Works for tools, but not per-API-key restrictions |
+| wasm_policies (PII) | ✅ | Implemented |
+| Audit Logging | ⚠️ | Logs stored, no UI |
+| Chinese Platforms | ⚠️ | OAuth works, tool execution unclear |
+
+---
+
+## Recommended Priority Order
+
+1. **Token Delivery Endpoint** — enables many use cases (Story 1, 8, F)
+2. **Per-Agent Tool Restrictions** — critical for multi-agent (Scenario F)
+3. **Audit Log UI** — compliance requirement (Scenario C)
+4. **Custom Tool Registration API** — developer experience (Story 7)
+5. **MCP SDK Package** — enables Claude Desktop (Scenario D)
+6. **Data Residency Config** — enterprise requirement (Scenario C)
+7. **Department Scopes** — enterprise requirement (Story 4)
+
+---
+
 *Last updated: 2026-04-27*
