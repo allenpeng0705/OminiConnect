@@ -1,327 +1,155 @@
 # OminiConnect
 
-**A self-hosted API gateway that lets AI agents use connected services via OAuth.**
+**Give your AI agents and LLM applications real API superpowers.**
 
-OminiConnect is a **Rust workspace** centered on **`omini_connect/portal`**: a web UI and Axum API that store OAuth tokens, issue API keys, and **proxy** requests to vendor APIs with tokens attached. For **integration catalog and Nango-backed flows** (Option B), the same portal can call a **self-hosted [Nango](https://github.com/NangoHQ/nango)** instance over HTTP using **`NANGO_BASE_URL`** and **`NANGO_SECRET_KEY`** — you **use** upstream Nango as a submodule; a small **optional patch** (`scripts/nango_omini_connect_local.patch`) only smooths local split-origin dev (dashboard vs API ports) and signup without SMTP until upstream or your deployment layout removes the need.
+OminiConnect is a self-hosted platform that lets AI agents interact with external services — GitHub, Slack, Salesforce, and 700+ more — the same way a human would through a browser. It handles OAuth, stores tokens, enforces scopes, and gives AI agents a clean tool interface instead of raw API keys.
 
-## How it works
+---
 
-```
-AI agent / client
-        │  Authorization: Bearer <OminiConnect API key>
-        ▼
-┌───────────────────────────────────────┐
-│  OminiConnect portal                  │
-│  (Rust + React, repo-root workspace)  │
-│  • OAuth connect / token vault        │
-│  • API keys, sessions, proxy routes   │
-│  • Optional: Nango HTTP client        │
-└───────────────┬───────────────────────┘
-                │  When Nango is configured:
-                │  NANGO_BASE_URL + NANGO_SECRET_KEY
-                ▼
-        ┌───────────────┐         ┌─────────────────┐
-        │  Nango (opt.) │ ──────► │  Provider APIs  │
-        │  self-hosted  │         │  (LinkedIn, …)  │
-        └───────────────┘         └─────────────────┘
-```
+## What you can do with it
 
-## Features
+**Connect accounts once, use them forever.**
+Connect GitHub, LinkedIn, Salesforce, and other platforms via OAuth. Tokens are stored securely and refreshed automatically. No more "the user revoked my token" errors.
 
-- **OAuth2 management**: Connect platforms (LinkedIn, Facebook, Feishu, DingTalk, WeChat Work, X, and more).
-- **Token persistence** and **auto-refresh** where supported.
-- **API key auth** for agents: Bearer token to the portal; portal injects stored OAuth tokens on proxy calls.
-- **Passthrough proxy**: `POST/GET /api/proxy/{platform}/{path}` to native APIs.
-- **Nango (Option B)**: Optional integration with self-hosted Nango for catalog / flows; see **Developing with Nango** below.
-- **Tool Registry**: 700+ tools across providers (GitHub, Slack, Notion, Google, …) with scope filtering and tool execution via REST or MCP.
-- **MCP server**: JSON-RPC 2.0 endpoint (`POST /api/mcp`) compatible with the Model Context Protocol — `tools/list` and `tools/call` — plus SSE stream (`GET /api/mcp/sse`) for async push.
-- **Agent registration**: AI agents can self-register and get dedicated API keys scoped to the registering user.
-- **Audit log**: Every tool call recorded with duration, status, and response body for compliance.
-- **Python & JS SDKs**: Client libraries for agents, tools, and proxy — see `sdk/`.
+**Give AI agents tools, not API keys.**
+Agents get a bounded set of tools (`list_repos`, `send_message`, `create_contact`) scoped to what the connected account can actually do. Agents can't read your emails or post to pages you didn't authorize.
 
-## Repository layout
+**Build agentic workflows that actually work.**
+Agents can call `POST /api/tools/execute` with natural-language-friendly arguments. Every call is logged. Long-running tasks can POST results back to your webhook. Agents connect via MCP (Model Context Protocol) for discovery and streaming.
 
-```
-OminiConnect/                    # Cargo workspace root (`cargo build`, `cargo run -p …`)
-├── omini_connect/
-│   ├── portal/                  # Main UI + API (primary product crate: omini-connect-portal)
-│   ├── oauth_vault/             # Token storage / refresh helpers
-│   ├── connectors/              # Optional MCP-style connectors (Feishu, Maton, …)
-│   ├── sdk/, skills/, …         # Supporting crates
-│   └── …
-├── third_party/
-│   └── nango/                   # Git submodule → NangoHQ/nango (not vendored source in Git)
-├── scripts/                     # Nango setup, dev wrappers, secret sync, local patch
-│   ├── ensure_nango.sh          # Submodule + patch + npm ci + ts-build
-│   ├── dev_omini_connect_nango_native.sh
-│   ├── dev_with_nango.sh        # Docker Compose Nango + portal
-│   ├── repair_nango_submodule.sh
-│   ├── snapshot_nango_patch.sh
-│   ├── sync_nango_secret_to_omini_env.sh
-│   └── nango_omini_connect_local.patch
-├── docs/                        # e.g. omini_connect_nango_option_b.md, nango_upstream_strategy.md
-├── panda/                       # Forked Panda crates (proxy / WASM plugins workspace members)
-├── dashboard/                   # Additional workspace member
-├── Makefile                     # `make dev`, `make dev-nango-docker`
-├── .env.example                 # Portal + Nango env (loaded from repo root for portal)
-└── .gitmodules                  # Submodule URL + pinned commit for third_party/nango
-```
+**Use it with any AI framework.**
+Python or JS SDKs for the portal API. MCP endpoint for native MCP clients (Claude Desktop, Cursor, etc.). REST proxy for simple API passthrough.
+
+---
 
 ## Quick start
 
-### Prerequisites
-
-- **Rust** (stable), **cargo**
-- For **Nango + Postgres dev**: **Node.js 22+**, **npm**, **PostgreSQL** locally
-- For **Docker Nango**: **Docker** (see `make dev-nango-docker`)
-
-### A — Full stack: OminiConnect + Nango (native Postgres, recommended for Nango features)
+### 1. Run the portal
 
 ```bash
-git clone --recurse-submodules <your-repo-url>
-cd OminiConnect
-
-cp .env.example .env
-# Use a Postgres URL for the portal if you want Postgres (see .env.example comments).
-# Create two DBs on the same Postgres if you like: one for Nango, one for the portal.
-
-chmod +x scripts/ensure_nango.sh
-./scripts/ensure_nango.sh
-
-make dev
-# Same as: ./scripts/dev_omini_connect_nango_native.sh
-# Starts Nango (API :3003, dashboard :3000, Connect UI :3009) then `cargo run -p omini-connect-portal`.
-```
-
-First time, **`make dev`** may take several minutes while Nango runs **`npm ci`** / **`npm run ts-build`**. **`NANGO_SECRET_KEY`** in repo-root **`.env`** can be filled automatically when empty: **`./scripts/sync_nango_secret_to_omini_env.sh`** (see `.env.example`).
-
-Open the **OminiConnect** UI at **`http://localhost:9000`** (or **`PORTAL_BASE_URL`**). Use the **Nango dashboard** at **`http://localhost:3000`** when developing with the native script.
-
-### B — Docker Nango + portal
-
-```bash
-git clone --recurse-submodules <your-repo-url>
+git clone --recurse-submodules <your-repo>
 cd OminiConnect
 cp .env.example .env
-./scripts/ensure_nango.sh
-
-make dev-nango-docker
-# Same as: ./scripts/dev_with_nango.sh
-```
-
-### C — Portal only (no Nango submodule work)
-
-You can run the portal without checking out Nango if you do not need Nango-backed features:
-
-```bash
-git clone <your-repo-url>   # submodules optional
-cd OminiConnect
-cp .env.example .env
-# Leave NANGO_* unset or point NANGO_BASE_URL only if you have Nango elsewhere.
-
 cargo run -p omini-connect-portal
 ```
 
-Run from the **repository root** so workspace members and **`.env`** paths resolve correctly (the portal loads **`.env`** from the repo root per `.env.example`).
+Open **http://localhost:9000** and create an account.
 
-### After clone without `--recurse-submodules`
+### 2. Connect a platform
 
-```bash
-git submodule update --init --recursive
-./scripts/ensure_nango.sh
+In the UI, go to **Connectors** → pick a platform (GitHub, LinkedIn, etc.) → authorize via OAuth. The token is stored and refreshed automatically.
+
+### 3. Give an AI agent access
+
+```python
+from ominiconnect import OminiConnect
+
+client = OminiConnect(api_key="your-portal-api-key")
+
+# Register an agent — get a dedicated API key for the agent
+agent = client.agents.register(name="github-writer")
+print(agent["api_key"])  # store securely — shown only once
+
+# Agent uses this key to call tools
+agent_client = OminiConnect(api_key=agent["api_key"])
+tools = agent_client.tools.list(platform="github")
+result = agent_client.tools.execute(
+    "github_list_repos",
+    arguments={"sort": "updated"}
+)
 ```
+
+Or use MCP directly — any MCP-compatible AI client can discover and call tools through OminiConnect without any code changes.
+
+---
 
 ## Supported platforms
 
-| Platform | Type | Status | Notes |
-|----------|------|--------|-------|
-| LinkedIn | OAuth2 | ✅ | Posting, user info |
-| Facebook | OAuth2 | ✅ | Page access tokens (App Review for broad posting) |
-| X / Twitter | OAuth2 | ✅ | PKCE; credit-based API |
-| Feishu / Lark | OAuth2 | ✅ | Custom apps (not Enterprise Internal) |
-| DingTalk | OAuth2 | ✅ | |
-| WeChat Work | OAuth2 | ✅ | |
-| Maton.ai | API Key | ✅ | Agent connector |
-| QQ Enterprise Mail | API Key | ✅ | |
+OAuth: LinkedIn, Facebook, X/Twitter, Feishu, DingTalk, WeChat Work, Google, Salesforce, HubSpot, Jira, Confluence, Slack, Notion, Stripe, Shopify, GitLab, Zoom, and 700+ more via Nango.
 
-### Platform notes
+API Key: Maton.ai, QQ Enterprise Mail, and any platform with static credentials.
 
-- **Facebook**: `pages_manage_posts` / `pages_read_engagement` often need [App Review](https://developers.facebook.com/docs/app-review) in production.
-- **X**: PKCE; monthly limits apply.
-- **Feishu**: Use **Custom App** type for user OAuth.
+---
 
-## Environment variables
-
-The portal reads **repo-root `.env`** (see `.env.example` for full comments).
-
-| Variable | Typical value | Description |
-|----------|---------------|-------------|
-| `PORTAL_BASE_URL` | `http://localhost:9000` | Public base URL for OAuth callbacks and links |
-| `DATABASE_URL` | *(optional)* | Omit for default SQLite under `omini_connect/portal/`; or Postgres for the **portal** DB (separate from Nango’s DB) |
-| `NANGO_BASE_URL` | `http://localhost:3003` | Nango **HTTP API** base (native dev) |
-| `NANGO_SECRET_KEY` | *(from Nango UI or sync script)* | Nango **environment** API secret (Bearer), not per-user OAuth secrets |
-
-**Nango’s own** configuration lives in **`third_party/nango/.env`** (created by `dev_omini_connect_nango_native.sh` on first run, or maintained by you). **`sync_nango_secret_to_omini_env.sh`** copies the dev secret into repo-root **`.env`** when **`NANGO_SECRET_KEY`** is empty.
-
-## Developing with Nango
-
-### Design (Option B)
-
-- **OminiConnect** remains the product surface (UI, API keys, proxy). **Nango** is an **optional dependency**: same machine or cluster, reached over **HTTPS/HTTP** with **`NANGO_SECRET_KEY`**.
-- **Two databases** in typical Postgres dev: one for Nango (`NANGO_DATABASE_URL` in `third_party/nango/.env`), one for the portal (`DATABASE_URL` in repo-root `.env`). See `.env.example`.
-- **Submodule, not a fork in-tree**: `third_party/nango` tracks an upstream commit via **`.gitmodules`**. **`./scripts/ensure_nango.sh`** checks out the submodule, applies **`scripts/nango_omini_connect_local.patch`** when it still applies, installs deps, and builds TypeScript. Treat the patch as **local dev ergonomics** (CORS across `:3000` / `:3003`, optional email-verification skip); prefer **upstream fixes**, **Docker single-origin**, or **reverse proxy** long term if you want zero patch.
-
-### Scripts (from repo root)
-
-| Script | Purpose |
-|--------|---------|
-| `scripts/ensure_nango.sh` | Submodule init, patch, `npm ci` if needed, `ts-build` if needed (`NANGO_SKIP_*`, `NANGO_FORCE_BUILD` — see script header) |
-| `scripts/dev_omini_connect_nango_native.sh` | Postgres + Nango from source + `cargo run -p omini-connect-portal` |
-| `scripts/dev_with_nango.sh` | `docker-compose` in submodule + portal (`--nango-only` supported) |
-| `scripts/repair_nango_submodule.sh` | Re-clone submodule if `.git` was removed; restores `.env` backup; runs `ensure_nango.sh` |
-| `scripts/snapshot_nango_patch.sh` | Writes `nango_omini_connect_local.patch` from `git diff` in submodule; `--reset` cleans submodule + re-applies patch |
-| `scripts/sync_nango_secret_to_omini_env.sh` | Fills **`NANGO_SECRET_KEY`** in repo-root `.env` from local Nango DB |
-| `scripts/bootstrap_nango_submodule.sh` | Alias for **`ensure_nango.sh`** |
-
-### What the local patch does
-
-`scripts/nango_omini_connect_local.patch` adjusts **local** Nango dashboard + API split (Vite **3000**, API **3003**): CORS on loopback, optional **`NANGO_DEV_SKIP_EMAIL_VERIFICATION`** path for signup without SMTP, and clearer signup **403** handling in the webapp. Regenerate after editing inside `third_party/nango`:
-
-```bash
-cd third_party/nango && git diff > ../scripts/nango_omini_connect_local.patch
-```
-
-Or: **`./scripts/snapshot_nango_patch.sh`** (use **`--reset`** so the submodule is not left “dirty” for Git — see script).
-
-### Git: what to commit
-
-- **Commit** in **OminiConnect**: the patch file, `scripts/*`, `.gitmodules`, **README**, **`.env.example`** — not **`third_party/nango/.env`**, not **`node_modules`**, not **`scripts/.nango_omini_repair_backup/`** (gitignored).
-- **Do not** commit ad-hoc edits **inside** the submodule as the main story; snapshot them into **`nango_omini_connect_local.patch`** or use your **fork** of Nango and bump the submodule pointer.
-
-### Further reading
-
-- `docs/try_managed_nango_flow.md` — **hands-on**: popup Nango Connect from OminiConnect, then finalize
-- `docs/omini_connect_nango_option_b.md` — Option B architecture
-- `docs/nango_upstream_strategy.md` — upstream / submodule strategy
-
-## API reference
-
-### Agents
+## How it fits into your application
 
 ```
-POST   /api/agents              Register a new agent (returns raw API key once)
-GET    /api/agents              List all agents for the authenticated user
-GET    /api/agents/:id         Get a specific agent
-DELETE /api/agents/:id         Delete an agent and revoke its API key
-POST   /api/agents/:id/deactivate  Deactivate an agent (preserves audit trail)
+Your AI Agent
+    │  Bearer <agent-api-key>
+    ▼
+OminiConnect portal  ──── OAuth token ────► GitHub / Slack / etc.
+    │                                          ▲
+    │  tools/list  (MCP or REST)               │
+    │  tools/call                               │
+    │  proxy/{platform}/*                       │
+    ▼                                           │
+Your application  ◄──── webhook / SSE ──────────┘
 ```
 
-**Auth:** `Authorization: Bearer <OminiConnect API key>` (human user's key)
+### Scenario 1: AI coding assistant
 
-```bash
-# Register an agent
-curl -X POST http://localhost:9000/api/agents \
-  -H "Authorization: Bearer YOUR_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "github-writer", "description": "Writes GitHub PRs"}'
+Connect your GitHub org once. Agents can list repos, create issues, write PR descriptions — but can't access repos outside your org or post to accounts they weren't given scope for.
 
-# Response: { "id": "...", "api_key": "a1b2c3...", ... }
-# Use the returned api_key for agent requests.
+### Scenario 2: AI social media manager
 
-# List agents
-curl http://localhost:9000/api/agents \
-  -H "Authorization: Bearer YOUR_KEY"
-```
+Connect LinkedIn and Facebook pages. Agents can read page analytics and post content — scoped to the pages you authorized. No ability to post to personal profiles or other companies.
 
-### Tools
+### Scenario 3: AI sales assistant
 
-```
-GET  /api/tools?platform=github   List tools (optionally filtered by platform)
-GET  /api/tools/search?q=list      Search tools by name/description/tags
-POST /api/tools/execute            Execute a tool
-```
+Connect Salesforce and HubSpot. Agents can look up contacts, update CRM records, trigger workflows — with full audit logs for compliance.
 
-**Auth:** `Authorization: Bearer <OminiConnect API key>` (agent or user key)
+### Scenario 4: Enterprise productivity agent
 
-```bash
-# List GitHub tools
-curl "http://localhost:9000/api/tools?platform=github" \
-  -H "Authorization: Bearer AGENT_KEY"
+Connect Feishu, DingTalk, or WeChat Work. Agents help employees query internal tools, send messages, schedule meetings — with IT-managed scopes.
 
-# Execute a tool
-curl -X POST http://localhost:9000/api/tools/execute \
-  -H "Authorization: Bearer AGENT_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"tool_slug": "github_list_repos", "arguments": {"sort": "updated"}}'
+---
 
-# Execute async (result POSTed to callback_url when ready)
-curl -X POST http://localhost:9000/api/tools/execute \
-  -H "Authorization: Bearer AGENT_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"tool_slug": "github_list_repos", "arguments": {}, "callback_url": "https://myapp.com/callback"}'
-```
+## API overview
 
-**`scope_satisfied`** per tool: `"yes"` — connector has all required scopes; `"no"` — missing scopes; `"unknown"` — no connector configured.
+| Method | Path | What it does |
+|--------|------|--------------|
+| `POST` | `/api/agents` | Register an agent, get its API key |
+| `GET` | `/api/tools` | List available tools for a platform |
+| `GET` | `/api/tools/search` | Search tools by name or description |
+| `POST` | `/api/tools/execute` | Execute a tool (sync or async via `callback_url`) |
+| `POST` | `/api/mcp` | MCP JSON-RPC — `tools/list`, `tools/call` |
+| `GET` | `/api/mcp/sse` | SSE stream for async push to MCP clients |
+| `POST` | `/api/proxy/{platform}/*` | Passthrough to vendor API with stored token |
 
-### MCP (Model Context Protocol)
+Full API reference: see `docs/API.md` (coming soon).
 
-```
-POST /api/mcp       JSON-RPC 2.0 — tools/list, tools/call
-GET  /api/mcp/sse   SSE stream for async push to connected clients
-```
+---
 
-MCP uses JSON-RPC 2.0. Authentication is Bearer token in the `Authorization` header.
+## SDKs
 
-```bash
-# tools/list
-curl -X POST http://localhost:9000/api/mcp \
-  -H "Authorization: Bearer AGENT_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}'
+- **Python**: `pip install ominiconnect` — `from ominiconnect import OminiConnect`
+- **JS/TS**: `npm install @ominiconnect/sdk` — `OminiConnectClient`
 
-# tools/call
-curl -X POST http://localhost:9000/api/mcp \
-  -H "Authorization: Bearer AGENT_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "jsonrpc": "2.0",
-    "id": 2,
-    "method": "tools/call",
-    "params": {"name": "github_list_repos", "arguments": {"sort": "updated"}}
-  }'
-```
+See `sdk/README.md` for full usage.
 
-Connect via SSE (`EventSource`) to `GET /api/mcp/sse` to receive async tool results and notifications.
+---
 
-### Proxy
+## Security
 
-```
-POST /api/proxy/{platform}/{path}
-GET  /api/proxy/{platform}/{path}
-```
+- OAuth tokens and API keys are stored **hashed** — plaintext tokens are never returned.
+- Each agent gets its own scoped API key — no shared credentials.
+- Scopes are enforced per tool call — agents can only perform actions within authorized scopes.
+- All tool calls are **audited** with timestamp, duration, and response body.
 
-**Auth:** `Authorization: Bearer <OminiConnect API key>`
+---
 
-The proxy validates the key, loads the stored OAuth token for that platform, forwards to the vendor API, and returns the response.
+## Deploying
 
-### Examples
+OminiConnect is a Rust + React application. It needs:
 
-```bash
-curl -X POST http://localhost:9000/api/proxy/linkedin/v2/userinfo \
-  -H "Authorization: Bearer YOUR_KEY"
+- **A Postgres or SQLite database** for tokens and audit logs
+- **A public-facing URL** (`PORTAL_BASE_URL`) for OAuth callbacks
+- Optionally, **a self-hosted Nango instance** for 700+ additional platforms
 
-curl -X POST http://localhost:9000/api/proxy/facebook/me?fields=id,name,email \
-  -H "Authorization: Bearer YOUR_KEY"
+See `.env.example` for all configuration options. For production, use a reverse proxy (nginx/Caddy) with HTTPS and set `PORTAL_BASE_URL` to your public domain.
 
-curl -X POST http://localhost:9000/api/proxy/feishu/open-apis/contact/v3/users/me \
-  -H "Authorization: Bearer YOUR_KEY"
-```
-
-## Security notes
-
-- OAuth tokens and API keys are stored hashed; client secrets are not returned from the API.
-- Session cookies: `HttpOnly`, `Secure` when on HTTPS, `SameSite` as configured by the portal.
+---
 
 ## License
 
-Private — All rights reserved
+Private — All rights reserved.
