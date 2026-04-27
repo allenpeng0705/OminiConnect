@@ -1,53 +1,83 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366F1"/>
-      <stop offset="100%" style="stop-color:#8B5CF6"/>
+      <stop offset="0%" style="stop-color:#1E1B4B"/>
+      <stop offset="100%" style="stop-color:#312E81"/>
     </linearGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#06B6D4"/>
       <stop offset="100%" style="stop-color:#3B82F6"/>
     </linearGradient>
+    <linearGradient id="gatewayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6"/>
+      <stop offset="100%" style="stop-color:#6366F1"/>
+    </linearGradient>
   </defs>
 
-  <!-- Background circle -->
-  <circle cx="128" cy="128" r="120" fill="url(#bg)"/>
+  <!-- Background -->
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
 
-  <!-- Outer ring nodes -->
-  <circle cx="128" cy="30" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="216" cy="78" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="226" cy="168" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="160" cy="226" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="60" cy="200" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="30" cy="120" r="12" fill="#fff" opacity="0.95"/>
-  <circle cx="60" cy="56" r="12" fill="#fff" opacity="0.95"/>
+  <!-- Gateway/Router symbol - stylized O with entrance -->
+  <g transform="translate(128, 128)">
+    <!-- Outer gateway ring -->
+    <circle cx="0" cy="0" r="90" fill="none" stroke="url(#gatewayGrad)" stroke-width="8" stroke-dasharray="40 12"/>
 
-  <!-- Connection lines -->
-  <g stroke="url(#accent)" stroke-width="3" fill="none" opacity="0.6">
-    <line x1="128" y1="30" x2="216" y2="78"/>
-    <line x1="216" y1="78" x2="226" y2="168"/>
-    <line x1="226" y1="168" x2="160" y2="226"/>
-    <line x1="160" y1="226" x2="60" y2="200"/>
-    <line x1="60" y1="200" x2="30" y2="120"/>
-    <line x1="30" y1="120" x2="60" y2="56"/>
-    <line x1="60" y1="56" x2="128" y2="30"/>
-    <!-- Cross connections for mesh effect -->
-    <line x1="128" y1="30" x2="226" y2="168" opacity="0.3"/>
-    <line x1="216" y1="78" x2="160" y2="226" opacity="0.3"/>
-    <line x1="60" y1="200" x2="60" y2="56" opacity="0.3"/>
-    <line x1="30" y1="120" x2="160" y2="226" opacity="0.3"/>
+    <!-- Inner gateway entrance (router port) -->
+    <circle cx="0" cy="0" r="60" fill="none" stroke="url(#nodeGrad)" stroke-width="6"/>
+
+    <!-- Entry arrows suggesting router/gateway -->
+    <g fill="url(#nodeGrad)">
+      <polygon points="0,-95 -12,-80 12,-80"/>
+      <polygon points="95,0 80,-12 80,12"/>
+      <polygon points="0,95 -12,80 12,80"/>
+      <polygon points="-95,0 -80,-12 -80,12"/>
+    </g>
+
+    <!-- AI Neural network nodes inside -->
+    <!-- Central AI brain node -->
+    <circle cx="0" cy="0" r="18" fill="url(#nodeGrad)"/>
+    <circle cx="0" cy="0" r="10" fill="#1E1B4B"/>
+    <circle cx="0" cy="0" r="6" fill="url(#nodeGrad)"/>
+
+    <!-- Surrounding neural nodes -->
+    <g fill="#fff">
+      <circle cx="-35" cy="-30" r="8"/>
+      <circle cx="35" cy="-30" r="8"/>
+      <circle cx="-45" cy="10" r="8"/>
+      <circle cx="45" cy="10" r="8"/>
+      <circle cx="-30" cy="45" r="8"/>
+      <circle cx="30" cy="45" r="8"/>
+      <circle cx="0" cy="-50" r="6"/>
+      <circle cx="50" cy="0" r="6"/>
+      <circle cx="0" cy="50" r="6"/>
+      <circle cx="-50" cy="0" r="6"/>
+    </g>
+
+    <!-- Neural connections -->
+    <g stroke="url(#nodeGrad)" stroke-width="2" fill="none" opacity="0.7">
+      <!-- Outer ring connections -->
+      <line x1="-35" y1="-30" x2="35" y2="-30"/>
+      <line x1="35" y1="-30" x2="45" y2="10"/>
+      <line x1="45" y1="10" x2="30" y2="45"/>
+      <line x1="30" y1="45" x2="-30" y2="45"/>
+      <line x1="-30" y1="45" x2="-45" y2="10"/>
+      <line x1="-45" y1="10" x2="-35" y2="-30"/>
+
+      <!-- Connections to center -->
+      <line x1="-35" y1="-30" x2="0" y2="0" stroke-dasharray="4 3"/>
+      <line x1="35" y1="-30" x2="0" y2="0" stroke-dasharray="4 3"/>
+      <line x1="-45" y1="10" x2="0" y2="0" stroke-dasharray="4 3"/>
+      <line x1="45" y1="10" x2="0" y2="0" stroke-dasharray="4 3"/>
+      <line x1="-30" y1="45" x2="0" y2="0" stroke-dasharray="4 3"/>
+      <line x1="30" y1="45" x2="0" y2="0" stroke-dasharray="4 3"/>
+    </g>
+
+    <!-- AI sparkles -->
+    <g fill="#06B6D4">
+      <circle cx="-65" cy="-55" r="3"/>
+      <circle cx="65" cy="-55" r="3"/>
+      <circle cx="-70" cy="40" r="2"/>
+      <circle cx="70" cy="40" r="2"/>
+    </g>
   </g>
-
-  <!-- Center hub -->
-  <circle cx="128" cy="128" r="36" fill="#fff"/>
-  <circle cx="128" cy="128" r="28" fill="url(#bg)"/>
-
-  <!-- Inner O mark -->
-  <text x="128" y="140" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" fill="#fff" text-anchor="middle">O</text>
-
-  <!-- Orbiting dots -->
-  <circle cx="128" cy="76" r="6" fill="url(#accent)"/>
-  <circle cx="180" cy="128" r="6" fill="url(#accent)"/>
-  <circle cx="128" cy="180" r="6" fill="url(#accent)"/>
-  <circle cx="76" cy="128" r="6" fill="url(#accent)"/>
 </svg>
