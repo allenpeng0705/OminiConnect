@@ -6,7 +6,7 @@
 use std::{sync::Arc, time::Duration};
 
 use axum::{
-    body::{Bytes, Body},
+    body::{Body, Bytes},
     extract::{Path, State},
     http::{HeaderMap, StatusCode},
 };
@@ -36,7 +36,10 @@ pub async fn forward(
     let api_keys = match state.api_keys.list_all().await {
         Ok(keys) => keys,
         Err(_) => {
-            return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to list API keys");
+            return proxy_error_response(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to list API keys",
+            );
         }
     };
 
@@ -63,11 +66,18 @@ pub async fn forward(
     let connector = match state.connectors.get(&key_owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
-            tracing::warn!("proxy: no connector found for owner={}, platform={}", key_owner, platform);
+            tracing::warn!(
+                "proxy: no connector found for owner={}, platform={}",
+                key_owner,
+                platform
+            );
             return proxy_error_response(StatusCode::NOT_FOUND, "platform not configured");
         }
         Err(_) => {
-            return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to get connector");
+            return proxy_error_response(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to get connector",
+            );
         }
     };
 
@@ -97,12 +107,21 @@ pub async fn forward(
             return proxy_error_response(StatusCode::UNAUTHORIZED, "api key not configured");
         }
         let upstream_url = format!("{}/{}", get_platform_base_url(&platform), native_path);
-        let client = match reqwest::Client::builder().timeout(Duration::from_secs(60)).build() {
+        let client = match reqwest::Client::builder()
+            .timeout(Duration::from_secs(60))
+            .build()
+        {
             Ok(c) => c,
-            Err(_) => return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client"),
+            Err(_) => {
+                return proxy_error_response(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "failed to create HTTP client",
+                )
+            }
         };
         let mut req_builder = client.request(method.clone(), &upstream_url);
-        req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder =
+            req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
         req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
         let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
         if let Some(ct) = content_type {
@@ -116,17 +135,25 @@ pub async fn forward(
 
     if connector.engine == "nango" {
         let Some((base, secret)) = crate::nango::nango_credentials() else {
-            return proxy_error_response(StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL and NANGO_SECRET_KEY must be set for nango engine");
+            return proxy_error_response(
+                StatusCode::SERVICE_UNAVAILABLE,
+                "NANGO_BASE_URL and NANGO_SECRET_KEY must be set for nango engine",
+            );
         };
         let pk = connector.provider_key.trim();
         let cref = connector.connection_ref.trim();
         if pk.is_empty() || cref.is_empty() {
-            return proxy_error_response(StatusCode::UNAUTHORIZED, "nango connector missing provider_key or connection_ref; finalize after Connect");
+            return proxy_error_response(
+                StatusCode::UNAUTHORIZED,
+                "nango connector missing provider_key or connection_ref; finalize after Connect",
+            );
         }
         let rq_method =
             ReqwestMethod::from_bytes(method.as_str().as_bytes()).unwrap_or(ReqwestMethod::GET);
         let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
-        let linkedin_version = headers.get("x-linkedin-version").and_then(|v| v.to_str().ok());
+        let linkedin_version = headers
+            .get("x-linkedin-version")
+            .and_then(|v| v.to_str().ok());
         match crate::nango::forward_proxy(
             &base,
             &secret,
@@ -164,18 +191,30 @@ pub async fn forward(
             );
         }
         let upstream_url = format!("{}/{}", base, native_path);
-        let client = match reqwest::Client::builder().timeout(Duration::from_secs(60)).build() {
+        let client = match reqwest::Client::builder()
+            .timeout(Duration::from_secs(60))
+            .build()
+        {
             Ok(c) => c,
-            Err(_) => return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client"),
+            Err(_) => {
+                return proxy_error_response(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "failed to create HTTP client",
+                )
+            }
         };
 
         let mut req_builder = client.request(method.clone(), &upstream_url);
-        req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder =
+            req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
         req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
         let content_type = headers.get("content-type").and_then(|v| v.to_str().ok());
         if platform == "linkedin" {
-            if let Some(version) = headers.get("x-linkedin-version").and_then(|v| v.to_str().ok()) {
+            if let Some(version) = headers
+                .get("x-linkedin-version")
+                .and_then(|v| v.to_str().ok())
+            {
                 req_builder = req_builder.header("LinkedIn-Version", version);
             }
         }
@@ -218,7 +257,10 @@ pub(crate) async fn map_reqwest_to_axum(resp: reqwest::Response) -> axum::respon
     response
 }
 
-pub(crate) fn proxy_error_response(status: StatusCode, message: &str) -> axum::response::Response<Body> {
+pub(crate) fn proxy_error_response(
+    status: StatusCode,
+    message: &str,
+) -> axum::response::Response<Body> {
     let body = serde_json::json!({ "error": message }).to_string();
     let mut response = axum::response::Response::new(body.into());
     *response.status_mut() = status;

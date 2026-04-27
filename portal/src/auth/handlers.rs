@@ -13,7 +13,9 @@ use uuid::Uuid;
 
 use crate::app::AppState;
 use crate::auth::middleware::try_auth;
-use crate::auth::models::{ApiKey, ApiKeyResponse, GenerateApiKeyRequest, LoginRequest, SignupRequest};
+use crate::auth::models::{
+    ApiKey, ApiKeyResponse, GenerateApiKeyRequest, LoginRequest, SignupRequest,
+};
 
 fn nango_http_client() -> anyhow::Result<reqwest::Client> {
     // Avoid inheriting host proxy settings for localhost bridge calls.
@@ -35,11 +37,25 @@ fn google_auth_configured() -> bool {
     let managed = std::env::var("FLAG_MANAGED_AUTH_ENABLED")
         .ok()
         .or_else(|| std::env::var("FLAG_HAS_MANAGED_AUTH").ok())
-        .map(|s| matches!(s.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on"))
+        .map(|s| {
+            matches!(
+                s.trim().to_ascii_lowercase().as_str(),
+                "1" | "true" | "yes" | "on"
+            )
+        })
         .unwrap_or(false);
-    let workos_key = std::env::var("WORKOS_API_KEY").ok().map(|s| s.trim().to_string()).unwrap_or_default();
-    let workos_client = std::env::var("WORKOS_CLIENT_ID").ok().map(|s| s.trim().to_string()).unwrap_or_default();
-    managed && !workos_key.is_empty() && !workos_client.is_empty() && nango_auth_bridge_base_url().is_some()
+    let workos_key = std::env::var("WORKOS_API_KEY")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .unwrap_or_default();
+    let workos_client = std::env::var("WORKOS_CLIENT_ID")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .unwrap_or_default();
+    managed
+        && !workos_key.is_empty()
+        && !workos_client.is_empty()
+        && nango_auth_bridge_base_url().is_some()
 }
 
 fn cookie_bridge_path() -> String {
@@ -61,11 +77,14 @@ fn cookie_bridge_same_site() -> String {
 fn cookie_bridge_secure() -> bool {
     // If explicitly set, use that value.
     if let Ok(v) = std::env::var("NANGO_BRIDGE_COOKIE_SECURE") {
-        return matches!(v.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes" | "on");
+        return matches!(
+            v.trim().to_ascii_lowercase().as_str(),
+            "1" | "true" | "yes" | "on"
+        );
     }
     // Default: auto-detect from PORTAL_BASE_URL scheme (HTTPS → Secure, HTTP → no Secure).
-    let base = std::env::var("PORTAL_BASE_URL")
-        .unwrap_or_else(|_| "http://localhost:9000".to_string());
+    let base =
+        std::env::var("PORTAL_BASE_URL").unwrap_or_else(|_| "http://localhost:9000".to_string());
     base.trim().starts_with("https://")
 }
 
@@ -77,7 +96,10 @@ fn cookie_bridge_domain() -> Option<String> {
 }
 
 fn normalize_set_cookie(line: &str) -> String {
-    let mut parts = line.split(';').map(|s| s.trim().to_string()).collect::<Vec<_>>();
+    let mut parts = line
+        .split(';')
+        .map(|s| s.trim().to_string())
+        .collect::<Vec<_>>();
     if parts.is_empty() {
         return line.to_string();
     }
@@ -142,12 +164,7 @@ fn normalize_set_cookie(line: &str) -> String {
     parts.join("; ")
 }
 
-fn format_cookie(
-    name: &str,
-    value: &str,
-    max_age: i64,
-    http_only: bool,
-) -> String {
+fn format_cookie(name: &str, value: &str, max_age: i64, http_only: bool) -> String {
     let mut parts = vec![
         format!("{name}={value}"),
         format!("Path={}", cookie_bridge_path()),
@@ -166,7 +183,11 @@ fn format_cookie(
     parts.join("; ")
 }
 
-fn build_session_response_with_bridge(session_id: &str, redirect_to: &str, extra_set_cookies: &[String]) -> Response {
+fn build_session_response_with_bridge(
+    session_id: &str,
+    redirect_to: &str,
+    extra_set_cookies: &[String],
+) -> Response {
     let mut resp = Redirect::to(redirect_to).into_response();
     let cookie = format_cookie("session", session_id, 86400, true);
     if let Ok(h) = http::HeaderValue::from_str(&cookie) {
@@ -188,7 +209,12 @@ fn extract_set_cookie_headers(headers: &HeaderMap) -> Vec<String> {
         .collect()
 }
 
-async fn nango_signup(base_url: &str, name: &str, email: &str, password: &str) -> anyhow::Result<Vec<String>> {
+async fn nango_signup(
+    base_url: &str,
+    name: &str,
+    email: &str,
+    password: &str,
+) -> anyhow::Result<Vec<String>> {
     let client = nango_http_client()?;
     let url = format!("{}/api/v1/account/signup", base_url.trim_end_matches('/'));
     let resp = client
@@ -229,7 +255,10 @@ async fn nango_signin(base_url: &str, email: &str, password: &str) -> anyhow::Re
     anyhow::bail!("Nango signin failed {status}: {text}");
 }
 
-async fn nango_logout(base_url: &str, incoming_cookie_header: Option<&str>) -> anyhow::Result<Vec<String>> {
+async fn nango_logout(
+    base_url: &str,
+    incoming_cookie_header: Option<&str>,
+) -> anyhow::Result<Vec<String>> {
     let client = nango_http_client()?;
     let url = format!("{}/api/v1/account/logout", base_url.trim_end_matches('/'));
     let mut req = client.post(url);
@@ -257,7 +286,10 @@ struct ManagedSignupUrlResponse {
 
 async fn nango_google_auth_url(base_url: &str) -> anyhow::Result<String> {
     let client = nango_http_client()?;
-    let url = format!("{}/api/v1/account/managed/signup", base_url.trim_end_matches('/'));
+    let url = format!(
+        "{}/api/v1/account/managed/signup",
+        base_url.trim_end_matches('/')
+    );
     let resp = client
         .post(url)
         .header("Content-Type", "application/json")
@@ -272,8 +304,9 @@ async fn nango_google_auth_url(base_url: &str) -> anyhow::Result<String> {
         anyhow::bail!("Nango managed signup failed {status}: {text}");
     }
     let body = resp.text().await.unwrap_or_default();
-    let parsed: ManagedSignupUrlResponse = serde_json::from_str(&body)
-        .map_err(|e| anyhow::anyhow!("Nango managed signup JSON parse failed: {e}. Body: {body}"))?;
+    let parsed: ManagedSignupUrlResponse = serde_json::from_str(&body).map_err(|e| {
+        anyhow::anyhow!("Nango managed signup JSON parse failed: {e}. Body: {body}")
+    })?;
     if parsed.data.url.trim().is_empty() {
         anyhow::bail!("Nango managed signup returned empty URL");
     }
@@ -290,7 +323,11 @@ pub async fn google_start() -> Response {
             .into_response();
     }
     let Some(base) = nango_auth_bridge_base_url() else {
-        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            "NANGO_BASE_URL is required",
+        )
+            .into_response();
     };
     match nango_google_auth_url(&base).await {
         Ok(url) => Redirect::to(&url).into_response(),
@@ -325,20 +362,27 @@ async fn ensure_local_user(state: &Arc<AppState>, email: &str) -> anyhow::Result
 }
 
 /// POST /auth/login
-pub async fn login(
-    State(state): State<Arc<AppState>>,
-    Json(req): Json<LoginRequest>,
-) -> Response {
+pub async fn login(State(state): State<Arc<AppState>>, Json(req): Json<LoginRequest>) -> Response {
     let email = req.email.trim().to_ascii_lowercase();
     if email.is_empty() || req.password.is_empty() {
         return (StatusCode::BAD_REQUEST, "Email and password are required").into_response();
     }
     let Some(base) = nango_auth_bridge_base_url() else {
-        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            "NANGO_BASE_URL is required",
+        )
+            .into_response();
     };
     let nango_set_cookies = match nango_signin(&base, &email, &req.password).await {
         Ok(cookies) => cookies,
-        Err(e) => return (StatusCode::UNAUTHORIZED, format!("Nango sign-in failed: {e}")).into_response(),
+        Err(e) => {
+            return (
+                StatusCode::UNAUTHORIZED,
+                format!("Nango sign-in failed: {e}"),
+            )
+                .into_response()
+        }
     };
     if let Err(e) = ensure_local_user(&state, &email).await {
         tracing::error!("Failed to mirror Nango user {} locally: {}", email, e);
@@ -371,11 +415,19 @@ pub async fn signup(
         return (StatusCode::BAD_REQUEST, "Invalid email").into_response();
     }
     if req.password.len() < 8 {
-        return (StatusCode::BAD_REQUEST, "Password must be at least 8 characters").into_response();
+        return (
+            StatusCode::BAD_REQUEST,
+            "Password must be at least 8 characters",
+        )
+            .into_response();
     }
     let display_name = req.name.unwrap_or_else(|| email.clone()).trim().to_string();
     let Some(base) = nango_auth_bridge_base_url() else {
-        return (StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL is required").into_response();
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            "NANGO_BASE_URL is required",
+        )
+            .into_response();
     };
 
     let nango_set_cookies = match nango_signup(&base, &display_name, &email, &req.password).await {
@@ -407,19 +459,19 @@ pub async fn signup(
 }
 
 /// POST /auth/logout
-pub async fn logout(
-    State(state): State<Arc<AppState>>,
-    headers: http::HeaderMap,
-) -> Response {
+pub async fn logout(State(state): State<Arc<AppState>>, headers: http::HeaderMap) -> Response {
     let session_id = headers
         .get(header::COOKIE)
         .and_then(|v| v.to_str().ok())
         .and_then(|s| {
-            s.split(';')
-                .find_map(|pair| {
-                    let (k, v) = pair.trim().split_once('=')?;
-                    if k == "session" { Some(v) } else { None }
-                })
+            s.split(';').find_map(|pair| {
+                let (k, v) = pair.trim().split_once('=')?;
+                if k == "session" {
+                    Some(v)
+                } else {
+                    None
+                }
+            })
         });
 
     if let Some(sid) = session_id {
@@ -513,14 +565,17 @@ pub async fn list_api_keys(
 
     match state.api_keys.list_by_username(&username).await {
         Ok(keys) => {
-            let resp: Vec<_> = keys.into_iter().map(|k| {
-                serde_json::json!({
-                    "key_hash": k.key_hash,
-                    "username": k.username,
-                    "label": k.label,
-                    "created_at": k.created_at,
+            let resp: Vec<_> = keys
+                .into_iter()
+                .map(|k| {
+                    serde_json::json!({
+                        "key_hash": k.key_hash,
+                        "username": k.username,
+                        "label": k.label,
+                        "created_at": k.created_at,
+                    })
                 })
-            }).collect();
+                .collect();
             axum::Json(resp).into_response()
         }
         Err(e) => {
@@ -553,12 +608,8 @@ pub async fn delete_api_key(
             tracing::info!("API key deleted for user {}", username);
             (StatusCode::NO_CONTENT).into_response()
         }
-        Ok(Some(_)) => {
-            (StatusCode::FORBIDDEN, "Cannot delete another user's key").into_response()
-        }
-        Ok(None) => {
-            (StatusCode::NOT_FOUND, "API key not found").into_response()
-        }
+        Ok(Some(_)) => (StatusCode::FORBIDDEN, "Cannot delete another user's key").into_response(),
+        Ok(None) => (StatusCode::NOT_FOUND, "API key not found").into_response(),
         Err(e) => {
             tracing::error!("DB error looking up API key: {}", e);
             (StatusCode::INTERNAL_SERVER_ERROR, "Internal error").into_response()
@@ -567,10 +618,7 @@ pub async fn delete_api_key(
 }
 
 /// GET /auth/me — returns current user info
-pub async fn me(
-    State(state): State<Arc<AppState>>,
-    headers: http::HeaderMap,
-) -> Response {
+pub async fn me(State(state): State<Arc<AppState>>, headers: http::HeaderMap) -> Response {
     match try_auth(&state, &headers).await {
         Some(auth) => axum::Json(serde_json::json!({ "username": auth.username })).into_response(),
         None => (StatusCode::UNAUTHORIZED, "Not authenticated").into_response(),

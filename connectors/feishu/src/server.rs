@@ -10,7 +10,13 @@ use crate::tools::FeishuTool;
 
 /// Token vault access trait for connector
 pub trait TokenVaultAccess: Send + Sync {
-    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>>;
+    fn get_token(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> std::pin::Pin<
+        Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>,
+    >;
 }
 
 /// MCP JSON-RPC request
@@ -75,32 +81,46 @@ impl FeishuMcpServer {
 
     pub async fn handle_request(&self, req: JsonRpcRequest) -> JsonRpcResponse {
         match req.method.as_str() {
-            "initialize" => {
-                JsonRpcResponse::success(req.id, json!({
+            "initialize" => JsonRpcResponse::success(
+                req.id,
+                json!({
                     "protocolVersion": "2025-03-26",
                     "capabilities": {},
                     "serverInfo": {
                         "name": "feishu",
                         "version": "0.1.0"
                     }
-                }))
-            }
+                }),
+            ),
             "tools/list" => {
-                let tools: Vec<Value> = self.tools.iter().map(|t| json!({
-                    "name": t.name,
-                    "description": t.description,
-                    "inputSchema": t.input_schema,
-                })).collect();
+                let tools: Vec<Value> = self
+                    .tools
+                    .iter()
+                    .map(|t| {
+                        json!({
+                            "name": t.name,
+                            "description": t.description,
+                            "inputSchema": t.input_schema,
+                        })
+                    })
+                    .collect();
 
-                JsonRpcResponse::success(req.id, json!({
-                    "tools": tools
-                }))
+                JsonRpcResponse::success(
+                    req.id,
+                    json!({
+                        "tools": tools
+                    }),
+                )
             }
             "tools/call" => {
-                let tool_name = req.params.get("name")
+                let tool_name = req
+                    .params
+                    .get("name")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
-                let arguments = req.params.get("arguments")
+                let arguments = req
+                    .params
+                    .get("arguments")
                     .and_then(|v| v.as_object())
                     .cloned()
                     .map(serde_json::Value::Object)
@@ -112,29 +132,34 @@ impl FeishuMcpServer {
                 let token = match token_result {
                     Ok(t) => t,
                     Err(e) => {
-                        return JsonRpcResponse::error(req.id, 500, format!("Failed to get token: {}", e));
+                        return JsonRpcResponse::error(
+                            req.id,
+                            500,
+                            format!("Failed to get token: {}", e),
+                        );
                     }
                 };
 
                 let api = self.api_client.read().await;
-                let result = self.call_tool_internal(&api, &token, tool_name, arguments).await;
+                let result = self
+                    .call_tool_internal(&api, &token, tool_name, arguments)
+                    .await;
 
                 match result {
-                    Ok(data) => JsonRpcResponse::success(req.id, json!({
-                        "content": [{
-                            "type": "text",
-                            "text": serde_json::to_string_pretty(&data).unwrap_or_default()
-                        }]
-                    })),
+                    Ok(data) => JsonRpcResponse::success(
+                        req.id,
+                        json!({
+                            "content": [{
+                                "type": "text",
+                                "text": serde_json::to_string_pretty(&data).unwrap_or_default()
+                            }]
+                        }),
+                    ),
                     Err(e) => JsonRpcResponse::error(req.id, 500, e.to_string()),
                 }
             }
-            "ping" => {
-                JsonRpcResponse::success(req.id, json!({ "status": "ok" }))
-            }
-            _ => {
-                JsonRpcResponse::error(req.id, -32601, format!("Unknown method: {}", req.method))
-            }
+            "ping" => JsonRpcResponse::success(req.id, json!({ "status": "ok" })),
+            _ => JsonRpcResponse::error(req.id, -32601, format!("Unknown method: {}", req.method)),
         }
     }
 
@@ -147,30 +172,36 @@ impl FeishuMcpServer {
     ) -> anyhow::Result<Value> {
         match tool_name {
             "calendar_list" => {
-                api.call_api("GET", "/open-apis/calendar/v4/calendars", token, None).await
+                api.call_api("GET", "/open-apis/calendar/v4/calendars", token, None)
+                    .await
             }
             "calendar_event_list" => {
-                let calendar_id = arguments.get("calendar_id")
+                let calendar_id = arguments
+                    .get("calendar_id")
                     .and_then(|v| v.as_str())
                     .unwrap_or("primary");
                 let path = format!("/open-apis/calendar/v4/calendars/{}/events", calendar_id);
                 api.call_api("GET", &path, token, None).await
             }
             "bitable_list" => {
-                api.call_api("GET", "/open-apis/bitable/v1/apps", token, None).await
+                api.call_api("GET", "/open-apis/bitable/v1/apps", token, None)
+                    .await
             }
             "bitable_table_list" => {
-                let app_token = arguments.get("app_token")
+                let app_token = arguments
+                    .get("app_token")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
                 let path = format!("/open-apis/bitable/v1/apps/{}/tables", app_token);
                 api.call_api("GET", &path, token, None).await
             }
             "bitable_record_list" => {
-                let app_token = arguments.get("app_token")
+                let app_token = arguments
+                    .get("app_token")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
-                let table_id = arguments.get("table_id")
+                let table_id = arguments
+                    .get("table_id")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
                 let path = format!(
@@ -195,10 +226,12 @@ impl FeishuMcpServer {
                 .await
             }
             "message_list" => {
-                let container_id = arguments.get("container_id")
+                let container_id = arguments
+                    .get("container_id")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
-                let container_id_type = arguments.get("container_id_type")
+                let container_id_type = arguments
+                    .get("container_id_type")
                     .and_then(|v| v.as_str())
                     .unwrap_or("p2p");
                 let path = format!(

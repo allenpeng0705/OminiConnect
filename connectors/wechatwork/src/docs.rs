@@ -8,9 +8,18 @@ pub fn generate_markdown() -> String {
     let mut output = String::from("# WeChat Work Connector Tools\n\n");
     output.push_str(&format!("Total tools: {}\n\n", tools.len()));
 
-    let customer_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("external_contact_")).collect();
-    let message_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("message_")).collect();
-    let user_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("user_") || t.name.starts_with("department_")).collect();
+    let customer_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("external_contact_"))
+        .collect();
+    let message_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("message_"))
+        .collect();
+    let user_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("user_") || t.name.starts_with("department_"))
+        .collect();
 
     if !customer_tools.is_empty() {
         output.push_str("## Customer\n\n");

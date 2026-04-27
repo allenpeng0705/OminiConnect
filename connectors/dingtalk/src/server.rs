@@ -10,7 +10,13 @@ use crate::tools::DingTalkTool;
 
 /// Token vault access trait for connector
 pub trait TokenVaultAccess: Send + Sync {
-    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>>;
+    fn get_token(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> std::pin::Pin<
+        Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>,
+    >;
 }
 
 /// MCP JSON-RPC request
@@ -75,32 +81,46 @@ impl DingTalkMcpServer {
 
     pub async fn handle_request(&self, req: JsonRpcRequest) -> JsonRpcResponse {
         match req.method.as_str() {
-            "initialize" => {
-                JsonRpcResponse::success(req.id, json!({
+            "initialize" => JsonRpcResponse::success(
+                req.id,
+                json!({
                     "protocolVersion": "2025-03-26",
                     "capabilities": {},
                     "serverInfo": {
                         "name": "dingtalk",
                         "version": "0.1.0"
                     }
-                }))
-            }
+                }),
+            ),
             "tools/list" => {
-                let tools: Vec<Value> = self.tools.iter().map(|t| json!({
-                    "name": t.name,
-                    "description": t.description,
-                    "inputSchema": t.input_schema,
-                })).collect();
+                let tools: Vec<Value> = self
+                    .tools
+                    .iter()
+                    .map(|t| {
+                        json!({
+                            "name": t.name,
+                            "description": t.description,
+                            "inputSchema": t.input_schema,
+                        })
+                    })
+                    .collect();
 
-                JsonRpcResponse::success(req.id, json!({
-                    "tools": tools
-                }))
+                JsonRpcResponse::success(
+                    req.id,
+                    json!({
+                        "tools": tools
+                    }),
+                )
             }
             "tools/call" => {
-                let tool_name = req.params.get("name")
+                let tool_name = req
+                    .params
+                    .get("name")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
-                let arguments = req.params.get("arguments")
+                let arguments = req
+                    .params
+                    .get("arguments")
                     .and_then(|v| v.as_object())
                     .cloned()
                     .map(serde_json::Value::Object)
@@ -112,29 +132,34 @@ impl DingTalkMcpServer {
                 let token = match token_result {
                     Ok(t) => t,
                     Err(e) => {
-                        return JsonRpcResponse::error(req.id, 500, format!("Failed to get token: {}", e));
+                        return JsonRpcResponse::error(
+                            req.id,
+                            500,
+                            format!("Failed to get token: {}", e),
+                        );
                     }
                 };
 
                 let api = self.api_client.read().await;
-                let result = self.call_tool_internal(&api, &token, tool_name, arguments).await;
+                let result = self
+                    .call_tool_internal(&api, &token, tool_name, arguments)
+                    .await;
 
                 match result {
-                    Ok(data) => JsonRpcResponse::success(req.id, json!({
-                        "content": [{
-                            "type": "text",
-                            "text": serde_json::to_string_pretty(&data).unwrap_or_default()
-                        }]
-                    })),
+                    Ok(data) => JsonRpcResponse::success(
+                        req.id,
+                        json!({
+                            "content": [{
+                                "type": "text",
+                                "text": serde_json::to_string_pretty(&data).unwrap_or_default()
+                            }]
+                        }),
+                    ),
                     Err(e) => JsonRpcResponse::error(req.id, 500, e.to_string()),
                 }
             }
-            "ping" => {
-                JsonRpcResponse::success(req.id, json!({ "status": "ok" }))
-            }
-            _ => {
-                JsonRpcResponse::error(req.id, -32601, format!("Unknown method: {}", req.method))
-            }
+            "ping" => JsonRpcResponse::success(req.id, json!({ "status": "ok" })),
+            _ => JsonRpcResponse::error(req.id, -32601, format!("Unknown method: {}", req.method)),
         }
     }
 
@@ -147,8 +172,7 @@ impl DingTalkMcpServer {
     ) -> anyhow::Result<Value> {
         match tool_name {
             "workflow_list" => {
-                let process_code = arguments.get("process_code")
-                    .and_then(|v| v.as_str());
+                let process_code = arguments.get("process_code").and_then(|v| v.as_str());
                 let path = if let Some(code) = process_code {
                     format!("/topapi/process/instance/list?process_code={}", code)
                 } else {
@@ -163,14 +187,17 @@ impl DingTalkMcpServer {
                     "approvers": arguments.get("approvers"),
                     "data": arguments.get("data"),
                 });
-                api.call_api("POST", "/topapi/process/instance/create", token, Some(body)).await
+                api.call_api("POST", "/topapi/process/instance/create", token, Some(body))
+                    .await
             }
             "workflow_instance_detail" => {
-                let process_instance_id = arguments.get("process_instance_id")
+                let process_instance_id = arguments
+                    .get("process_instance_id")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
                 let body = json!({ "process_instance_id": process_instance_id });
-                api.call_api("POST", "/topapi/process/instance/get", token, Some(body)).await
+                api.call_api("POST", "/topapi/process/instance/get", token, Some(body))
+                    .await
             }
             "message_send" => {
                 let body = json!({
@@ -178,28 +205,34 @@ impl DingTalkMcpServer {
                     "msgtype": arguments.get("msg_type"),
                     "message": arguments.get("content"),
                 });
-                api.call_api("POST", "/message/send_to_conversation", token, Some(body)).await
+                api.call_api("POST", "/message/send_to_conversation", token, Some(body))
+                    .await
             }
             "message_list" => {
-                let chat_id = arguments.get("chat_id")
+                let chat_id = arguments
+                    .get("chat_id")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
                 let path = format!("/message/list?chat_id={}", chat_id);
                 api.call_api("GET", &path, token, None).await
             }
             "user_get" => {
-                let userid = arguments.get("userid")
+                let userid = arguments
+                    .get("userid")
                     .and_then(|v| v.as_str())
                     .unwrap_or("");
                 let body = json!({ "userid": userid });
-                api.call_api("POST", "/topapi/v2/user/get", token, Some(body)).await
+                api.call_api("POST", "/topapi/v2/user/get", token, Some(body))
+                    .await
             }
             "user_list" => {
-                let dept_id = arguments.get("dept_id")
+                let dept_id = arguments
+                    .get("dept_id")
                     .and_then(|v| v.as_i64())
                     .unwrap_or(1);
                 let body = json!({ "dept_id": dept_id });
-                api.call_api("POST", "/topapi/user/list", token, Some(body)).await
+                api.call_api("POST", "/topapi/user/list", token, Some(body))
+                    .await
             }
             _ => {
                 anyhow::bail!("unknown tool: {}", tool_name)

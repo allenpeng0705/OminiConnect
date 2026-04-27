@@ -7,11 +7,7 @@ pub fn catalog_entry_key(engine: &str, platform: &str, provider_key: &str) -> St
     let e = engine.trim();
     let pk = provider_key.trim();
     if e == "nango" {
-        pk.split("__")
-            .next()
-            .unwrap_or(pk)
-            .trim()
-            .to_lowercase()
+        pk.split("__").next().unwrap_or(pk).trim().to_lowercase()
     } else {
         platform.trim().to_lowercase()
     }

@@ -19,7 +19,14 @@ use crate::oauth::models::OAuthCallbackQuery;
 use crate::portal_env::portal_base_url;
 
 /// Built-in OminiConnect OAuth vault platforms (`engine=omini_connect_native` only).
-const NATIVE_OAUTH_PLATFORMS: &[&str] = &["feishu", "dingtalk", "wechatwork", "linkedin", "facebook", "x"];
+const NATIVE_OAUTH_PLATFORMS: &[&str] = &[
+    "feishu",
+    "dingtalk",
+    "wechatwork",
+    "linkedin",
+    "facebook",
+    "x",
+];
 
 /// GET /oauth/{platform} — initiate OAuth flow for a platform.
 pub async fn oauth_init(
@@ -28,7 +35,11 @@ pub async fn oauth_init(
     Path(platform): Path<String>,
 ) -> Response {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to connect OAuth").into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            "Sign in to the portal to connect OAuth",
+        )
+            .into_response();
     };
     let owner = auth.username.as_str();
 
@@ -76,7 +87,11 @@ pub async fn oauth_init(
             }
             Err(e) => {
                 tracing::error!("Nango connect/sessions failed: {}", e);
-                (StatusCode::BAD_GATEWAY, format!("Nango Connect session failed: {e}")).into_response()
+                (
+                    StatusCode::BAD_GATEWAY,
+                    format!("Nango Connect session failed: {e}"),
+                )
+                    .into_response()
             }
         };
     }
@@ -125,16 +140,30 @@ pub async fn oauth_init(
         };
         if let Err(e) = state.sessions.insert(&pkce_session).await {
             tracing::error!("Failed to store OAuth PKCE verifier: {}", e);
-            return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to prepare OAuth session").into_response();
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Failed to prepare OAuth session",
+            )
+                .into_response();
         }
         x.authorize_url(&state_param, &challenge)
     } else {
         let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
-            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
-            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
-            "wechatwork" => Box::new(omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
-            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
-            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(
+                platform_config,
+            )),
+            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(
+                platform_config,
+            )),
+            "wechatwork" => Box::new(
+                omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config),
+            ),
+            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(
+                platform_config,
+            )),
+            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(
+                platform_config,
+            )),
             _ => unreachable!(),
         };
         handler.get_auth_url(&state_param)
@@ -151,7 +180,11 @@ pub async fn oauth_init(
         tracing::error!("Failed to store OAuth state: {}", e);
     }
 
-    tracing::info!("Initiating OAuth for {} -> redirect to {}", platform, auth_url);
+    tracing::info!(
+        "Initiating OAuth for {} -> redirect to {}",
+        platform,
+        auth_url
+    );
     if platform == "wechatwork" {
         tracing::debug!("WeChat Work OAuth URL: {}", auth_url);
     }
@@ -166,7 +199,11 @@ pub async fn oauth_callback(
     Query(query): Query<OAuthCallbackQuery>,
 ) -> Response {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to complete OAuth").into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            "Sign in to the portal to complete OAuth",
+        )
+            .into_response();
     };
     let owner = auth.username.as_str();
 
@@ -201,7 +238,11 @@ pub async fn oauth_callback(
     if let Some(err) = &query.error {
         let err_desc = query.error_description.as_deref().unwrap_or("");
         tracing::warn!("OAuth error for {}: {} ({})", platform, err, err_desc);
-        return (StatusCode::BAD_REQUEST, format!("OAuth error: {err} - {err_desc}")).into_response();
+        return (
+            StatusCode::BAD_REQUEST,
+            format!("OAuth error: {err} - {err_desc}"),
+        )
+            .into_response();
     }
 
     let code = match &query.code {
@@ -234,7 +275,11 @@ pub async fn oauth_callback(
         let state_val = match &query.state {
             Some(s) if !s.is_empty() => s.as_str(),
             _ => {
-                return (StatusCode::BAD_REQUEST, "Missing OAuth state (required for X)").into_response();
+                return (
+                    StatusCode::BAD_REQUEST,
+                    "Missing OAuth state (required for X)",
+                )
+                    .into_response();
             }
         };
 
@@ -251,14 +296,25 @@ pub async fn oauth_callback(
         };
 
         let x = omini_connect_oauth_vault::platforms::XPlatform::new(platform_config);
-        x.exchange_authorization_code(code, &redirect_uri, &verifier).await
+        x.exchange_authorization_code(code, &redirect_uri, &verifier)
+            .await
     } else {
         let handler: Box<dyn OAuth2Platform + Send + Sync> = match platform.as_str() {
-            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
-            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
-            "wechatwork" => Box::new(omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
-            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
-            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
+            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(
+                platform_config,
+            )),
+            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(
+                platform_config,
+            )),
+            "wechatwork" => Box::new(
+                omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config),
+            ),
+            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(
+                platform_config,
+            )),
+            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(
+                platform_config,
+            )),
             _ => return (StatusCode::NOT_FOUND, "Unknown platform").into_response(),
         };
 
@@ -278,14 +334,19 @@ pub async fn oauth_callback(
             token.platform = oauth_vault_platform_key(owner, &platform);
             if let Err(e) = state.oauth_vault.store_token(token).await {
                 tracing::error!("Failed to store token for {}: {}", platform, e);
-                return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to store token").into_response();
+                return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to store token")
+                    .into_response();
             }
             tracing::info!("OAuth succeeded for {}", platform);
             Redirect::to("/").into_response()
         }
         Err(e) => {
             tracing::error!("Token exchange failed for {}: {}", platform, e);
-            (StatusCode::INTERNAL_SERVER_ERROR, format!("Token exchange failed: {e}")).into_response()
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Token exchange failed: {e}"),
+            )
+                .into_response()
         }
     }
 }
@@ -297,7 +358,11 @@ pub async fn nango_finalize(
     Path(platform): Path<String>,
 ) -> Response {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, "Sign in to the portal to finalize this connection").into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            "Sign in to the portal to finalize this connection",
+        )
+            .into_response();
     };
     let owner = auth.username.as_str();
 
@@ -333,15 +398,23 @@ pub async fn nango_finalize(
     }
 
     let end_user_id = crate::nango::end_user_id_for_connector(owner, &platform);
-    let connections = match crate::nango::list_connections(&base, &secret, &end_user_id, Some(integration_key)).await {
-        Ok(c) => c,
-        Err(e) => {
-            tracing::error!("Nango list connections failed: {}", e);
-            return (StatusCode::BAD_GATEWAY, format!("Nango list connections failed: {e}")).into_response();
-        }
-    };
+    let connections =
+        match crate::nango::list_connections(&base, &secret, &end_user_id, Some(integration_key))
+            .await
+        {
+            Ok(c) => c,
+            Err(e) => {
+                tracing::error!("Nango list connections failed: {}", e);
+                return (
+                    StatusCode::BAD_GATEWAY,
+                    format!("Nango list connections failed: {e}"),
+                )
+                    .into_response();
+            }
+        };
 
-    let Some(connection_id) = crate::nango::pick_connection_id(&connections, integration_key) else {
+    let Some(connection_id) = crate::nango::pick_connection_id(&connections, integration_key)
+    else {
         return (
             StatusCode::NOT_FOUND,
             "No matching Nango connection yet. Complete Connect in Nango, then try this link again.",
@@ -353,9 +426,17 @@ pub async fn nango_finalize(
     updated.connection_ref = connection_id.clone();
     if let Err(e) = state.connectors.upsert(owner, &updated).await {
         tracing::error!("Failed to persist connection_ref: {}", e);
-        return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to save connection").into_response();
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Failed to save connection",
+        )
+            .into_response();
     }
 
-    tracing::info!("Nango connection_ref saved for {} ({})", platform, connection_id);
+    tracing::info!(
+        "Nango connection_ref saved for {} ({})",
+        platform,
+        connection_id
+    );
     Redirect::to("/").into_response()
 }

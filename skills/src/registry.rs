@@ -58,7 +58,9 @@ impl SkillRegistry {
 
     /// Save registry to file
     pub fn save(&self) -> Result<(), RegistryError> {
-        let path = self.path.as_ref()
+        let path = self
+            .path
+            .as_ref()
             .ok_or_else(|| RegistryError::Internal("No path set".to_string()))?;
         let contents = serde_json::to_string_pretty(&self.entries)?;
         std::fs::write(path, contents)?;
@@ -72,7 +74,8 @@ impl SkillRegistry {
 
     /// Remove a skill from the registry
     pub fn remove(&mut self, id: &str) -> Result<(), RegistryError> {
-        self.entries.remove(id)
+        self.entries
+            .remove(id)
             .ok_or_else(|| RegistryError::NotFound(id.to_string()))?;
         Ok(())
     }
@@ -94,7 +97,9 @@ impl SkillRegistry {
 
     /// Enable a skill
     pub fn enable(&mut self, id: &str) -> Result<(), RegistryError> {
-        let entry = self.entries.get_mut(id)
+        let entry = self
+            .entries
+            .get_mut(id)
             .ok_or_else(|| RegistryError::NotFound(id.to_string()))?;
         entry.enabled = true;
         Ok(())
@@ -102,15 +107,23 @@ impl SkillRegistry {
 
     /// Disable a skill
     pub fn disable(&mut self, id: &str) -> Result<(), RegistryError> {
-        let entry = self.entries.get_mut(id)
+        let entry = self
+            .entries
+            .get_mut(id)
             .ok_or_else(|| RegistryError::NotFound(id.to_string()))?;
         entry.enabled = false;
         Ok(())
     }
 
     /// Update skill configuration
-    pub fn update_config(&mut self, id: &str, config: serde_json::Value) -> Result<(), RegistryError> {
-        let entry = self.entries.get_mut(id)
+    pub fn update_config(
+        &mut self,
+        id: &str,
+        config: serde_json::Value,
+    ) -> Result<(), RegistryError> {
+        let entry = self
+            .entries
+            .get_mut(id)
             .ok_or_else(|| RegistryError::NotFound(id.to_string()))?;
         entry.config = config;
         Ok(())

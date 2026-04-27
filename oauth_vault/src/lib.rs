@@ -16,19 +16,19 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+pub mod pkce;
 pub mod platform;
 pub mod platforms;
-pub mod pkce;
 pub mod token_store;
 
-pub use platform::OAuth2Platform;
-pub use platform::PlatformConfig;
-pub use token_store::TokenStore;
-pub use token_store::TokenStoreBackend;
-pub use token_store::InMemoryTokenStore;
-pub use token_store::SqlxTokenStoreBackend;
 pub use crate::platform::OAuth2Platform as OAuth2PlatformTrait;
 pub use pkce::{code_challenge_s256, random_code_verifier};
+pub use platform::OAuth2Platform;
+pub use platform::PlatformConfig;
+pub use token_store::InMemoryTokenStore;
+pub use token_store::SqlxTokenStoreBackend;
+pub use token_store::TokenStore;
+pub use token_store::TokenStoreBackend;
 
 /// OAuth2 token with metadata
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -91,7 +91,10 @@ impl OAuthVault {
 
     /// Get a valid token, refreshing if necessary
     pub async fn get_token(&self, platform: &str, subject: &str) -> Result<String, OAuthError> {
-        let token = self.store.get(platform, subject).await
+        let token = self
+            .store
+            .get(platform, subject)
+            .await
             .map_err(|e| OAuthError::StorageError(e.to_string()))?
             .ok_or_else(|| OAuthError::TokenNotFound(format!("{}:{}", platform, subject)))?;
 
@@ -101,7 +104,10 @@ impl OAuthVault {
             if let Some(refreshed) = self.refresh_token(platform, &token).await? {
                 return Ok(refreshed.new_token.access_token);
             }
-            return Err(OAuthError::TokenExpired(format!("{}:{}", platform, subject)));
+            return Err(OAuthError::TokenExpired(format!(
+                "{}:{}",
+                platform, subject
+            )));
         }
 
         Ok(token.access_token)
@@ -109,7 +115,9 @@ impl OAuthVault {
 
     /// Store a new token
     pub async fn store_token(&self, token: OAuthToken) -> Result<(), OAuthError> {
-        self.store.set(&token).await
+        self.store
+            .set(&token)
+            .await
             .map_err(|e| OAuthError::StorageError(e.to_string()))
     }
 
@@ -123,19 +131,29 @@ impl OAuthVault {
     }
 
     /// Refresh an expired token
-    async fn refresh_token(&self, platform: &str, token: &OAuthToken) -> Result<Option<TokenRefreshResult>, OAuthError> {
+    async fn refresh_token(
+        &self,
+        platform: &str,
+        token: &OAuthToken,
+    ) -> Result<Option<TokenRefreshResult>, OAuthError> {
         let platforms = self.platforms.read().await;
-        let platform_handler = platforms.get(platform)
-            .ok_or_else(|| OAuthError::InvalidConfig(format!("No platform handler registered for {}", platform)))?;
+        let platform_handler = platforms.get(platform).ok_or_else(|| {
+            OAuthError::InvalidConfig(format!("No platform handler registered for {}", platform))
+        })?;
 
-        let refresh_token = token.refresh_token.as_ref()
-            .ok_or_else(|| OAuthError::TokenExpired(format!("No refresh token for {}", platform)))?;
+        let refresh_token = token.refresh_token.as_ref().ok_or_else(|| {
+            OAuthError::TokenExpired(format!("No refresh token for {}", platform))
+        })?;
 
-        let new_token = platform_handler.refresh_token(refresh_token).await
+        let new_token = platform_handler
+            .refresh_token(refresh_token)
+            .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
         // Store the new token
-        self.store.set(&new_token).await
+        self.store
+            .set(&new_token)
+            .await
             .map_err(|e| OAuthError::StorageError(e.to_string()))?;
 
         Ok(Some(TokenRefreshResult {
@@ -146,7 +164,9 @@ impl OAuthVault {
 
     /// Delete a token
     pub async fn delete_token(&self, platform: &str, subject: &str) -> Result<(), OAuthError> {
-        self.store.delete(platform, subject).await
+        self.store
+            .delete(platform, subject)
+            .await
             .map_err(|e| OAuthError::StorageError(e.to_string()))
     }
 }
@@ -172,5 +192,9 @@ pub enum OAuthError {
 
 /// Token vault access trait - implemented by OAuthVault for use by connectors
 pub trait TokenVaultAccess: Send + Sync {
-    fn get_token(&self, platform: &str, subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, OAuthError>> + Send + '_>>;
+    fn get_token(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, OAuthError>> + Send + '_>>;
 }

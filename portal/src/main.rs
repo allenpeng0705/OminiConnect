@@ -18,7 +18,10 @@ mod websocket;
 
 use std::sync::Arc;
 
-use axum::{Router, routing::{any, get}};
+use axum::{
+    routing::{any, get},
+    Router,
+};
 use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -62,7 +65,11 @@ async fn register_platforms(state: &Arc<AppState>) {
 
     use omini_connect_oauth_vault::OAuth2Platform;
 
-    for config in connectors.iter().filter(|c| c.enabled).filter(|c| c.engine != "nango") {
+    for config in connectors
+        .iter()
+        .filter(|c| c.enabled)
+        .filter(|c| c.engine != "nango")
+    {
         let platform_config = omini_connect_oauth_vault::PlatformConfig {
             name: config.platform.clone(),
             client_id: config.client_id.clone(),
@@ -75,21 +82,43 @@ async fn register_platforms(state: &Arc<AppState>) {
             agent_id: config.agent_id.clone(),
         };
 
-        let storage_key = connector_scope::oauth_vault_platform_key(&config.owner_username, &config.platform);
+        let storage_key =
+            connector_scope::oauth_vault_platform_key(&config.owner_username, &config.platform);
 
         let inner: Box<dyn OAuth2Platform + Send + Sync> = match config.platform.as_str() {
-            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(platform_config)),
-            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(platform_config)),
-            "wechatwork" => Box::new(omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config)),
-            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(platform_config)),
-            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(platform_config)),
-            "x" => Box::new(omini_connect_oauth_vault::platforms::XPlatform::new(platform_config)),
+            "feishu" => Box::new(omini_connect_oauth_vault::platforms::FeishuPlatform::new(
+                platform_config,
+            )),
+            "dingtalk" => Box::new(omini_connect_oauth_vault::platforms::DingTalkPlatform::new(
+                platform_config,
+            )),
+            "wechatwork" => Box::new(
+                omini_connect_oauth_vault::platforms::WeChatWorkPlatform::new(platform_config),
+            ),
+            "linkedin" => Box::new(omini_connect_oauth_vault::platforms::LinkedInPlatform::new(
+                platform_config,
+            )),
+            "facebook" => Box::new(omini_connect_oauth_vault::platforms::FacebookPlatform::new(
+                platform_config,
+            )),
+            "x" => Box::new(omini_connect_oauth_vault::platforms::XPlatform::new(
+                platform_config,
+            )),
             _ => continue,
         };
 
-        let handler = Box::new(crate::oauth::vault_namespaced::VaultNamespacedPlatform::new(storage_key.clone(), inner));
+        let handler = Box::new(
+            crate::oauth::vault_namespaced::VaultNamespacedPlatform::new(
+                storage_key.clone(),
+                inner,
+            ),
+        );
         state.oauth_vault.register_platform(handler).await;
-        tracing::info!("Registered platform handler: {} ({})", config.platform, storage_key);
+        tracing::info!(
+            "Registered platform handler: {} ({})",
+            config.platform,
+            storage_key
+        );
     }
 }
 
@@ -128,7 +157,12 @@ async fn token_refresh_loop(state: Arc<AppState>) {
                 }
                 Err(omini_connect_oauth_vault::OAuthError::TokenNotFound(_)) => {}
                 Err(e) => {
-                    tracing::warn!("Token check failed for {} / {}: {}", c.owner_username, c.platform, e);
+                    tracing::warn!(
+                        "Token check failed for {} / {}: {}",
+                        c.owner_username,
+                        c.platform,
+                        e
+                    );
                 }
             }
         }
@@ -170,7 +204,11 @@ async fn main() -> anyhow::Result<()> {
             reg
         }
         Err(e) => {
-            tracing::warn!("Failed to load tool registry from {}: {}", tools_dir.display(), e);
+            tracing::warn!(
+                "Failed to load tool registry from {}: {}",
+                tools_dir.display(),
+                e
+            );
             tracing::warn!("Starting without tool registry");
             tools::ToolRegistry::empty()
         }
@@ -191,24 +229,37 @@ async fn main() -> anyhow::Result<()> {
     });
 
     // Axum rejects `/prefix/{*rest}` (catch-all not at end of pattern); nest + `fallback` like `/__omini/nango-hq`.
-    let nango_hq_proxy = Router::new().fallback(axum::routing::any(api::nango_hq_proxy::proxy_nango_hq_all));
-    let nango_integrations_proxy =
-        Router::new().fallback(axum::routing::any(api::nango_hq_proxy::proxy_nango_integrations_nested));
-    let nango_providers_proxy =
-        Router::new().fallback(axum::routing::any(api::nango_hq_proxy::proxy_nango_providers_nested));
-    let nango_oauth_connect_proxy =
-        Router::new().fallback(axum::routing::any(api::nango_hq_proxy::proxy_nango_oauth_connect_nested));
+    let nango_hq_proxy =
+        Router::new().fallback(axum::routing::any(api::nango_hq_proxy::proxy_nango_hq_all));
+    let nango_integrations_proxy = Router::new().fallback(axum::routing::any(
+        api::nango_hq_proxy::proxy_nango_integrations_nested,
+    ));
+    let nango_providers_proxy = Router::new().fallback(axum::routing::any(
+        api::nango_hq_proxy::proxy_nango_providers_nested,
+    ));
+    let nango_oauth_connect_proxy = Router::new().fallback(axum::routing::any(
+        api::nango_hq_proxy::proxy_nango_oauth_connect_nested,
+    ));
 
     let app = Router::new()
         .route("/", get(serve_spa))
         // Connect UI overwrites URL pathname — must proxy Nango API paths at portal origin.
-        .route("/connect/session", any(api::nango_hq_proxy::proxy_nango_connect_public))
-        .route("/connect/telemetry", any(api::nango_hq_proxy::proxy_nango_connect_public))
+        .route(
+            "/connect/session",
+            any(api::nango_hq_proxy::proxy_nango_connect_public),
+        )
+        .route(
+            "/connect/telemetry",
+            any(api::nango_hq_proxy::proxy_nango_connect_public),
+        )
         .nest("/integrations", nango_integrations_proxy)
         .nest("/providers", nango_providers_proxy)
         // OAuth popup + callback must reach Nango when `apiURL` is the portal origin.
         .nest("/oauth/connect", nango_oauth_connect_proxy)
-        .route("/oauth/callback", any(api::nango_hq_proxy::proxy_nango_oauth_callback))
+        .route(
+            "/oauth/callback",
+            any(api::nango_hq_proxy::proxy_nango_oauth_callback),
+        )
         .nest("/__omini/nango-hq", nango_hq_proxy)
         .nest("/auth", auth::router())
         .nest("/oauth", oauth::router())

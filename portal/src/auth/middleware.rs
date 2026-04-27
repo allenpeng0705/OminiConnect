@@ -13,10 +13,7 @@ pub struct AuthUser {
 }
 
 /// Try to extract auth from request. Returns Some(AuthUser) if valid.
-pub async fn try_auth(
-    state: &Arc<AppState>,
-    headers: &HeaderMap,
-) -> Option<AuthUser> {
+pub async fn try_auth(state: &Arc<AppState>, headers: &HeaderMap) -> Option<AuthUser> {
     // 1. Try session cookie
     if let Some(auth) = extract_session(state, headers).await {
         return Some(auth);
@@ -28,12 +25,14 @@ pub async fn try_auth(
 
 async fn extract_session(state: &Arc<AppState>, headers: &HeaderMap) -> Option<AuthUser> {
     let cookie_header = headers.get(COOKIE)?.to_str().ok()?;
-    let session_id = cookie_header
-        .split(';')
-        .find_map(|pair| {
-            let (k, v) = pair.trim().split_once('=')?;
-            if k == "session" { Some(v) } else { None }
-        })?;
+    let session_id = cookie_header.split(';').find_map(|pair| {
+        let (k, v) = pair.trim().split_once('=')?;
+        if k == "session" {
+            Some(v)
+        } else {
+            None
+        }
+    })?;
 
     let session = match state.sessions.get(session_id).await {
         Ok(Some(s)) => s,
@@ -48,7 +47,11 @@ async fn extract_session(state: &Arc<AppState>, headers: &HeaderMap) -> Option<A
     };
 
     if session.expires_at < chrono::Utc::now() {
-        tracing::debug!("Session expired: {} (expires_at={})", session_id, session.expires_at);
+        tracing::debug!(
+            "Session expired: {} (expires_at={})",
+            session_id,
+            session.expires_at
+        );
         return None;
     }
 

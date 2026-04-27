@@ -22,7 +22,11 @@ impl OAuth2Platform for VaultNamespacedPlatform {
         &self.storage_key
     }
 
-    async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         let mut t = self.inner.exchange_code(code, redirect_uri).await?;
         t.platform = self.storage_key.clone();
         Ok(t)

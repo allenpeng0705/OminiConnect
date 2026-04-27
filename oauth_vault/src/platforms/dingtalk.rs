@@ -1,7 +1,7 @@
 //! DingTalk OAuth2 platform implementation.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -37,7 +37,11 @@ impl OAuth2Platform for DingTalkPlatform {
         "dingtalk"
     }
 
-    async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         let url = "https://api.dingtalk.com/v1.0/oauth2/accessToken";
 
         let resp = self
@@ -125,12 +129,12 @@ impl OAuth2Platform for DingTalkPlatform {
     fn get_auth_url(&self, state: &str) -> String {
         // Simple URL encoding without external dependency
         fn encode_url(s: &str) -> String {
-            s.chars().map(|c| {
-                match c {
+            s.chars()
+                .map(|c| match c {
                     'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => c.to_string(),
                     _ => format!("%{:02X}", c as u8),
-                }
-            }).collect()
+                })
+                .collect()
         }
 
         let scopes = self.config.scopes.join(",");

@@ -176,7 +176,9 @@ impl RulesEngine {
         // Rule matched
         let decision = match &rule.action {
             RuleAction::RouteToLocal => RoutingDecision::RouteToLocal,
-            RuleAction::RouteToTarget { target } => RoutingDecision::RouteToTarget(Box::leak(target.clone().into_boxed_str())),
+            RuleAction::RouteToTarget { target } => {
+                RoutingDecision::RouteToTarget(Box::leak(target.clone().into_boxed_str()))
+            }
             RuleAction::RouteToCloud => RoutingDecision::RouteToCloud,
             RuleAction::AskWasmPolicy => RoutingDecision::AskWasmPolicy,
         };
@@ -187,9 +189,7 @@ impl RulesEngine {
     /// Evaluate a single condition
     fn evaluate_condition(&self, condition: &ConditionConfig, ctx: &RequestContext) -> bool {
         match condition {
-            ConditionConfig::ContentContainsPii => {
-                !ctx.pii_types.is_empty()
-            }
+            ConditionConfig::ContentContainsPii => !ctx.pii_types.is_empty(),
 
             ConditionConfig::ContentMatches { pattern } => {
                 if let Some(ref content) = ctx.content {
@@ -204,11 +204,9 @@ impl RulesEngine {
                     false
                 } else {
                     ctx.tools.iter().any(|t| {
-                        tools.iter().any(|pattern| {
-                            match glob_match(pattern, t) {
-                                Ok(matched) => matched,
-                                Err(_) => false,
-                            }
+                        tools.iter().any(|pattern| match glob_match(pattern, t) {
+                            Ok(matched) => matched,
+                            Err(_) => false,
                         })
                     })
                 }
@@ -216,12 +214,12 @@ impl RulesEngine {
 
             ConditionConfig::TenantIs { tenants } => {
                 if let Some(ref tenant_id) = ctx.tenant_id {
-                    tenants.iter().any(|pattern| {
-                        match glob_match(pattern, tenant_id) {
+                    tenants
+                        .iter()
+                        .any(|pattern| match glob_match(pattern, tenant_id) {
                             Ok(matched) => matched,
                             Err(_) => false,
-                        }
-                    })
+                        })
                 } else {
                     false
                 }
@@ -232,21 +230,18 @@ impl RulesEngine {
                     false
                 } else {
                     ctx.user_groups.iter().any(|g| {
-                        groups.iter().any(|pattern| {
-                            match glob_match(pattern, g) {
-                                Ok(matched) => matched,
-                                Err(_) => false,
-                            }
+                        groups.iter().any(|pattern| match glob_match(pattern, g) {
+                            Ok(matched) => matched,
+                            Err(_) => false,
                         })
                     })
                 }
             }
 
-            ConditionConfig::WasmSensitivityScoreGte { score } => {
-                ctx.wasm_sensitivity_score
-                    .map(|s| s >= *score)
-                    .unwrap_or(false)
-            }
+            ConditionConfig::WasmSensitivityScoreGte { score } => ctx
+                .wasm_sensitivity_score
+                .map(|s| s >= *score)
+                .unwrap_or(false),
 
             ConditionConfig::Always => true,
         }
@@ -255,12 +250,14 @@ impl RulesEngine {
     /// Check if content matches a pattern
     fn matches_pattern(&self, pattern: &PatternConfig, content: &str) -> bool {
         match pattern {
-            PatternConfig::Keywords { values } => {
-                values.iter().any(|kw| content.contains(kw))
-            }
+            PatternConfig::Keywords { values } => values.iter().any(|kw| content.contains(kw)),
             PatternConfig::Regex { pattern: p } => {
                 // Use pre-compiled regex if available, else compile on the fly
-                if let Some(found) = self.compiled_patterns.iter().find(|cp| &cp.pattern.to_string() == p) {
+                if let Some(found) = self
+                    .compiled_patterns
+                    .iter()
+                    .find(|cp| &cp.pattern.to_string() == p)
+                {
                     found.pattern.is_match(content)
                 } else {
                     Regex::new(p)

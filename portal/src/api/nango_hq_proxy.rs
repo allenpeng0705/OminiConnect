@@ -90,7 +90,10 @@ fn apply_cors(res_headers: &mut HeaderMap, req_headers: &HeaderMap, is_options: 
             ),
         );
     }
-    res_headers.insert(header::ACCESS_CONTROL_MAX_AGE, HeaderValue::from_static("86400"));
+    res_headers.insert(
+        header::ACCESS_CONTROL_MAX_AGE,
+        HeaderValue::from_static("86400"),
+    );
 }
 
 fn proxy_client() -> Result<Client, reqwest::Error> {
@@ -134,11 +137,7 @@ fn nango_upstream_path_tail(uri: &Uri) -> String {
 fn is_conditional_cache_header(name: &HeaderName) -> bool {
     matches!(
         name.as_str().to_ascii_lowercase().as_str(),
-        "if-none-match"
-            | "if-modified-since"
-            | "if-unmodified-since"
-            | "if-match"
-            | "if-range"
+        "if-none-match" | "if-modified-since" | "if-unmodified-since" | "if-match" | "if-range"
     )
 }
 
@@ -216,7 +215,10 @@ pub(crate) fn is_nango_connect_public_proxy_path(path: &str) -> bool {
 
 /// Root routes (`/connect/session`, `/integrations`, …) — same upstream forwarding as
 /// [`proxy_nango_hq_all`].
-pub async fn proxy_nango_connect_public(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_connect_public(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     let path = req.uri().path();
     if !is_nango_connect_public_proxy_path(path) {
         return (StatusCode::NOT_FOUND, "not a nango connect public api path").into_response();
@@ -226,7 +228,10 @@ pub async fn proxy_nango_connect_public(State(_state): State<Arc<AppState>>, req
 }
 
 /// Nested under `/integrations` — Axum strips the prefix; rebuild `integrations/...` for Nango.
-pub async fn proxy_nango_integrations_nested(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_integrations_nested(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     let inner = req.uri().path();
     let tail = inner.trim().trim_start_matches('/').trim_end_matches('/');
     let rest = if tail.is_empty() {
@@ -238,7 +243,10 @@ pub async fn proxy_nango_integrations_nested(State(_state): State<Arc<AppState>>
 }
 
 /// Nested under `/providers` — rebuild `providers/...` for Nango.
-pub async fn proxy_nango_providers_nested(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_providers_nested(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     let inner = req.uri().path();
     let tail = inner.trim().trim_start_matches('/').trim_end_matches('/');
     let rest = if tail.is_empty() {
@@ -250,7 +258,10 @@ pub async fn proxy_nango_providers_nested(State(_state): State<Arc<AppState>>, r
 }
 
 /// Nested under `/oauth/connect` — Nango `GET /oauth/connect/:providerConfigKey` (OAuth popup target).
-pub async fn proxy_nango_oauth_connect_nested(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_oauth_connect_nested(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     let inner = req.uri().path();
     let tail = inner.trim().trim_start_matches('/').trim_end_matches('/');
     let rest = if tail.is_empty() {
@@ -262,12 +273,18 @@ pub async fn proxy_nango_oauth_connect_nested(State(_state): State<Arc<AppState>
 }
 
 /// `GET /oauth/callback` — Nango OAuth return URL (must hit Nango, not the portal SPA).
-pub async fn proxy_nango_oauth_callback(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_oauth_callback(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     proxy_to_nango("oauth/callback".to_string(), req).await
 }
 
 /// Nested under `/__omini/nango-hq` — forwards to Nango `NANGO_BASE_URL`.
-pub async fn proxy_nango_hq_all(State(_state): State<Arc<AppState>>, req: Request<Body>) -> Response {
+pub async fn proxy_nango_hq_all(
+    State(_state): State<Arc<AppState>>,
+    req: Request<Body>,
+) -> Response {
     let rest = nango_upstream_path_tail(req.uri());
     proxy_to_nango(rest, req).await
 }
@@ -292,7 +309,11 @@ async fn proxy_to_nango(rest: String, req: Request<Body>) -> Response {
     let client = match proxy_client() {
         Ok(c) => c,
         Err(_) => {
-            return (StatusCode::INTERNAL_SERVER_ERROR, "proxy client init failed").into_response();
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "proxy client init failed",
+            )
+                .into_response();
         }
     };
 
@@ -315,7 +336,9 @@ async fn proxy_to_nango(rest: String, req: Request<Body>) -> Response {
     let mut out_headers = forward_request_headers(&req_headers);
     augment_nango_connect_session_auth(&rest, query.as_deref(), &mut out_headers);
 
-    let mut rb = client.request(method, upstream.as_str()).headers(out_headers);
+    let mut rb = client
+        .request(method, upstream.as_str())
+        .headers(out_headers);
     if !body_bytes.is_empty() {
         rb = rb.body(body_bytes);
     }

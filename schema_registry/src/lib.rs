@@ -31,18 +31,18 @@
 //! let mcp_response = registry.to_mcp_tool_list(None);
 //! ```
 
-pub mod tool_trait;
+pub mod adapters;
+pub mod docs;
+pub mod mcp;
 pub mod models;
 pub mod registry;
-pub mod mcp;
-pub mod docs;
-pub mod adapters;
+pub mod tool_trait;
 
-pub use tool_trait::{Platform, Category, ToolSchema, ToolSchemaRegistry, SchemaError};
+pub use docs::DocGenerator;
+pub use mcp::McpToolListResponse;
 pub use models::ToolFilter;
 pub use registry::SchemaRegistry;
-pub use mcp::McpToolListResponse;
-pub use docs::DocGenerator;
+pub use tool_trait::{Category, Platform, SchemaError, ToolSchema, ToolSchemaRegistry};
 
 #[cfg(feature = "all")]
 impl SchemaRegistry {

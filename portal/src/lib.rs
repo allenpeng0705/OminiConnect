@@ -14,4 +14,4 @@ pub mod portal_env;
 pub mod tools;
 
 pub use app::AppState;
-pub use tools::{Tool, Toolkit, ToolRegistry, HttpMethod, InputSchema};
+pub use tools::{HttpMethod, InputSchema, Tool, ToolRegistry, Toolkit};

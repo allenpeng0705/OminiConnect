@@ -113,10 +113,11 @@ impl ToolRegistry {
         let mut tools_by_slug = HashMap::new();
         let mut tools_by_provider: HashMap<String, Vec<Tool>> = HashMap::new();
         let mut toolkits: Vec<Toolkit> = Vec::new();
-        let mut seen_providers: std::collections::HashSet<String> = std::collections::HashSet::new();
+        let mut seen_providers: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
 
-        let entries = std::fs::read_dir(dir)
-            .map_err(|e| LoadError::ReadDir(dir.display().to_string(), e))?;
+        let entries =
+            std::fs::read_dir(dir).map_err(|e| LoadError::ReadDir(dir.display().to_string(), e))?;
 
         for entry in entries.flatten() {
             let path = entry.path();
@@ -196,7 +197,9 @@ impl ToolRegistry {
             "jira" => "Jira".to_string(),
             "salesforce" => "Salesforce".to_string(),
             "hubspot" => "HubSpot".to_string(),
-            other => other.replace('-', " ").replace('_', " ")
+            other => other
+                .replace('-', " ")
+                .replace('_', " ")
                 .split_whitespace()
                 .map(|w| {
                     let mut chars = w.chars();
@@ -347,9 +350,15 @@ mod tests {
     #[test]
     fn test_load_error_display() {
         use std::io;
-        let err = LoadError::ReadDir("/tmp".to_string(), io::Error::new(io::ErrorKind::NotFound, "no such file"));
+        let err = LoadError::ReadDir(
+            "/tmp".to_string(),
+            io::Error::new(io::ErrorKind::NotFound, "no such file"),
+        );
         assert!(err.to_string().contains("failed to read directory"));
-        let err2 = LoadError::ReadFile("/tmp/test.yaml".to_string(), io::Error::new(io::ErrorKind::NotFound, "no such file"));
+        let err2 = LoadError::ReadFile(
+            "/tmp/test.yaml".to_string(),
+            io::Error::new(io::ErrorKind::NotFound, "no such file"),
+        );
         assert!(err2.to_string().contains("failed to read file"));
     }
 

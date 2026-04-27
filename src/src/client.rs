@@ -144,8 +144,9 @@ impl Client {
         };
 
         let response = self.send_request(request).await?;
-        serde_json::from_value(response)
-            .map_err(|e| SdkError::Connection(format!("Failed to parse initialize response: {}", e)))
+        serde_json::from_value(response).map_err(|e| {
+            SdkError::Connection(format!("Failed to parse initialize response: {}", e))
+        })
     }
 
     /// List available tools
@@ -186,7 +187,8 @@ impl Client {
 
     /// Send a JSON-RPC request
     async fn send_request(&self, request: JsonRpcRequest) -> Result<Value> {
-        let response = self.http_client
+        let response = self
+            .http_client
             .post(&self.server_url)
             .json(&request)
             .send()
@@ -209,9 +211,9 @@ impl Client {
             return Err(SdkError::ToolInvocation(error.message));
         }
 
-        rpc_response.result.ok_or_else(|| {
-            SdkError::Connection("No result in response".to_string())
-        })
+        rpc_response
+            .result
+            .ok_or_else(|| SdkError::Connection("No result in response".to_string()))
     }
 }
 

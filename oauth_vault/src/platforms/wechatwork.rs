@@ -5,8 +5,8 @@
 //!
 //! After user authorization, the callback receives a `code` which is exchanged for a user access token.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -36,12 +36,12 @@ impl WeChatWorkPlatform {
 
     /// URL-encode string for WeChat Work OAuth
     fn encode_url(s: &str) -> String {
-        s.chars().map(|c| {
-            match c {
+        s.chars()
+            .map(|c| match c {
                 'A'..='Z' | 'a'..='z' | '0'..='9' | '-' | '_' | '.' | '~' => c.to_string(),
                 _ => format!("%{:02X}", c as u8),
-            }
-        }).collect()
+            })
+            .collect()
     }
 }
 
@@ -57,7 +57,11 @@ impl OAuth2Platform for WeChatWorkPlatform {
     /// 1. Redirect user to authorization URL
     /// 2. User authorizes, callback receives `code`
     /// 3. Exchange code for access token at /cgi-bin/oauth2/access_token
-    async fn exchange_code(&self, code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        _redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         // Exchange authorization code for user access token
         // Endpoint: https://qyapi.weixin.qq.com/cgi-bin/oauth2/access_token
         //
@@ -95,11 +99,15 @@ impl OAuth2Platform for WeChatWorkPlatform {
         eprintln!("WeChat Work token response body: {}", body_text);
 
         if body_text.is_empty() {
-            return Err(OAuthError::ExchangeFailed("Empty response body from WeChat Work".to_string()));
+            return Err(OAuthError::ExchangeFailed(
+                "Empty response body from WeChat Work".to_string(),
+            ));
         }
 
-        let token_resp: WeChatWorkTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let token_resp: WeChatWorkTokenResponse =
+            serde_json::from_str(&body_text).map_err(|e| {
+                OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+            })?;
 
         if token_resp.errcode != 0 {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -108,7 +116,8 @@ impl OAuth2Platform for WeChatWorkPlatform {
             )));
         }
 
-        let access_token = token_resp.access_token
+        let access_token = token_resp
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let expires_at = token_resp.expires_in.unwrap_or(7200);
@@ -121,7 +130,9 @@ impl OAuth2Platform for WeChatWorkPlatform {
             subject: "user".to_string(),
             access_token,
             refresh_token: token_resp.refresh_token.or_else(|| Some(code.to_string())),
-            token_type: token_resp.token_type.unwrap_or_else(|| "Bearer".to_string()),
+            token_type: token_resp
+                .token_type
+                .unwrap_or_else(|| "Bearer".to_string()),
             expires_at,
             scopes: self.config.scopes.clone(),
         })
@@ -138,8 +149,7 @@ impl OAuth2Platform for WeChatWorkPlatform {
         // Alternative: Get a new access token using corp secret (but this gives app token, not user token)
         let url = format!(
             "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={}&corpsecret={}",
-            self.config.client_id,
-            self.config.client_secret
+            self.config.client_id, self.config.client_secret
         );
 
         let resp = self
@@ -154,8 +164,10 @@ impl OAuth2Platform for WeChatWorkPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let token_resp: WeChatWorkTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let token_resp: WeChatWorkTokenResponse =
+            serde_json::from_str(&body_text).map_err(|e| {
+                OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+            })?;
 
         if token_resp.errcode != 0 {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -164,7 +176,8 @@ impl OAuth2Platform for WeChatWorkPlatform {
             )));
         }
 
-        let access_token = token_resp.access_token
+        let access_token = token_resp
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         // Note: This gives an application access token, not a user access token.
@@ -174,7 +187,9 @@ impl OAuth2Platform for WeChatWorkPlatform {
             subject: "user".to_string(),
             access_token,
             refresh_token: None,
-            token_type: token_resp.token_type.unwrap_or_else(|| "Bearer".to_string()),
+            token_type: token_resp
+                .token_type
+                .unwrap_or_else(|| "Bearer".to_string()),
             expires_at: token_resp.expires_in.unwrap_or(7200),
             scopes: self.config.scopes.clone(),
         })

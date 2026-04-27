@@ -2,15 +2,24 @@
 
 use crate::OAuthToken;
 use async_trait::async_trait;
-use std::sync::Arc;
 use sqlx::FromRow;
+use std::sync::Arc;
 
 /// Token storage backend trait
 #[async_trait]
 pub trait TokenStoreBackend: Send + Sync {
-    async fn get(&self, platform: &str, subject: &str) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>>;
-    async fn set(&self, token: &OAuthToken) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
-    async fn delete(&self, platform: &str, subject: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
+    async fn get(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>>;
+    async fn set(&self, token: &OAuthToken)
+        -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
+    async fn delete(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
 }
 
 /// In-memory token store (for development/testing)
@@ -34,20 +43,31 @@ impl Default for InMemoryTokenStore {
 
 #[async_trait]
 impl TokenStoreBackend for InMemoryTokenStore {
-    async fn get(&self, platform: &str, subject: &str) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
+    async fn get(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
         let key = format!("{}:{}", platform, subject);
         let guard = self.tokens.read().await;
         Ok(guard.get(&key).cloned())
     }
 
-    async fn set(&self, token: &OAuthToken) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    async fn set(
+        &self,
+        token: &OAuthToken,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let key = format!("{}:{}", token.platform, token.subject);
         let mut guard = self.tokens.write().await;
         guard.insert(key, token.clone());
         Ok(())
     }
 
-    async fn delete(&self, platform: &str, subject: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    async fn delete(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let key = format!("{}:{}", platform, subject);
         let mut guard = self.tokens.write().await;
         guard.remove(&key);
@@ -97,7 +117,11 @@ impl SqlxTokenStoreBackend {
 
 #[async_trait]
 impl TokenStoreBackend for SqlxTokenStoreBackend {
-    async fn get(&self, platform: &str, subject: &str) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
+    async fn get(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
         let row: Option<TokenRow> = sqlx::query_as(
             "SELECT platform, subject, access_token, refresh_token, token_type, expires_at, scopes FROM oauth_tokens WHERE platform = $1 AND subject = $2",
         )
@@ -109,7 +133,10 @@ impl TokenStoreBackend for SqlxTokenStoreBackend {
         Ok(row.map(|r| r.into()))
     }
 
-    async fn set(&self, token: &OAuthToken) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    async fn set(
+        &self,
+        token: &OAuthToken,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let scopes = token.scopes.join(" ");
         sqlx::query(
             r#"INSERT INTO oauth_tokens (platform, subject, access_token, refresh_token, token_type, expires_at, scopes, created_at)
@@ -133,7 +160,11 @@ impl TokenStoreBackend for SqlxTokenStoreBackend {
         Ok(())
     }
 
-    async fn delete(&self, platform: &str, subject: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    async fn delete(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         sqlx::query("DELETE FROM oauth_tokens WHERE platform = $1 AND subject = $2")
             .bind(platform)
             .bind(subject)
@@ -157,15 +188,26 @@ impl TokenStore {
         Self::new(Arc::new(InMemoryTokenStore::new()))
     }
 
-    pub async fn get(&self, platform: &str, subject: &str) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn get(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<Option<OAuthToken>, Box<dyn std::error::Error + Send + Sync>> {
         self.backend.get(platform, subject).await
     }
 
-    pub async fn set(&self, token: &OAuthToken) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn set(
+        &self,
+        token: &OAuthToken,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         self.backend.set(token).await
     }
 
-    pub async fn delete(&self, platform: &str, subject: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn delete(
+        &self,
+        platform: &str,
+        subject: &str,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         self.backend.delete(platform, subject).await
     }
 }

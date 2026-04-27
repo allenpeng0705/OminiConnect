@@ -1,7 +1,7 @@
 //! Facebook OAuth2 platform implementation.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -53,7 +53,11 @@ impl FacebookPlatform {
     }
 
     /// Exchange code for user token, then fetch Page token for the first managed Page
-    async fn exchange_code_impl(&self, code: &str, redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code_impl(
+        &self,
+        code: &str,
+        redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         // Step 1: Exchange code for user access token
         let url = "https://graph.facebook.com/v21.0/oauth/access_token";
 
@@ -77,14 +81,20 @@ impl FacebookPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FacebookTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: FacebookTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if let Some(err) = body.error {
-            return Err(OAuthError::ExchangeFailed(format!("Facebook auth error: {} - {}", err, body.error_message.unwrap_or_default())));
+            return Err(OAuthError::ExchangeFailed(format!(
+                "Facebook auth error: {} - {}",
+                err,
+                body.error_message.unwrap_or_default()
+            )));
         }
 
-        let user_token = body.access_token
+        let user_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         // Step 2: Exchange user token for long-lived token
@@ -131,15 +141,21 @@ impl FacebookPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FacebookTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: FacebookTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if let Some(err) = body.error {
-            return Err(OAuthError::ExchangeFailed(format!("Facebook token extend error: {} - {}", err, body.error_message.unwrap_or_default())));
+            return Err(OAuthError::ExchangeFailed(format!(
+                "Facebook token extend error: {} - {}",
+                err,
+                body.error_message.unwrap_or_default()
+            )));
         }
 
-        body.access_token
-            .ok_or_else(|| OAuthError::ExchangeFailed("No access token in extended response".to_string()))
+        body.access_token.ok_or_else(|| {
+            OAuthError::ExchangeFailed("No access token in extended response".to_string())
+        })
     }
 
     /// Get Page access token for the first managed Page
@@ -161,8 +177,12 @@ impl FacebookPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let pages: FacebookPagesResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error for pages: {} - body: {}", e, body_text)))?;
+        let pages: FacebookPagesResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!(
+                "JSON parse error for pages: {} - body: {}",
+                e, body_text
+            ))
+        })?;
 
         if let Some(page) = pages.data.first() {
             if let Some(token) = &page.access_token {
@@ -181,7 +201,11 @@ impl OAuth2Platform for FacebookPlatform {
         "facebook"
     }
 
-    async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         self.exchange_code_impl(code, redirect_uri).await
     }
 

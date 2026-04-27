@@ -44,17 +44,20 @@ impl ConnectorExecutor for OminiConnectNativeExecutor {
             // Keep in sync with `api/proxy.rs` (maton/github: client_id and/or client_secret; qqmail: corp id + secret).
             let ok = match connector.platform.as_str() {
                 "qqmail" => {
-                    !connector.client_id.trim().is_empty() && !connector.client_secret.trim().is_empty()
+                    !connector.client_id.trim().is_empty()
+                        && !connector.client_secret.trim().is_empty()
                 }
                 "maton" | "github" => {
-                    !connector.client_id.trim().is_empty() || !connector.client_secret.trim().is_empty()
+                    !connector.client_id.trim().is_empty()
+                        || !connector.client_secret.trim().is_empty()
                 }
                 _ => !connector.client_id.is_empty(),
             };
             return Ok(if ok {
                 ConnectorTestResult {
                     status: "ok".to_string(),
-                    message: "API credentials present (not validated against provider API)".to_string(),
+                    message: "API credentials present (not validated against provider API)"
+                        .to_string(),
                 }
             } else {
                 ConnectorTestResult {
@@ -117,18 +120,24 @@ impl ConnectorExecutor for NangoExecutor {
         if pk.is_empty() {
             return Ok(ConnectorTestResult {
                 status: "error".to_string(),
-                message: "provider_key is empty (Nango integration unique key required)".to_string(),
+                message: "provider_key is empty (Nango integration unique key required)"
+                    .to_string(),
             });
         }
 
-        match crate::nango::probe_connection(&base, &secret, connector.connection_ref.trim(), pk).await {
+        match crate::nango::probe_connection(&base, &secret, connector.connection_ref.trim(), pk)
+            .await
+        {
             Ok(status) if status.is_success() => Ok(ConnectorTestResult {
                 status: "ok".to_string(),
                 message: format!("Nango connection exists (HTTP {})", status.as_u16()),
             }),
             Ok(status) => Ok(ConnectorTestResult {
                 status: "error".to_string(),
-                message: format!("Nango GET /connections/{{id}} returned HTTP {}", status.as_u16()),
+                message: format!(
+                    "Nango GET /connections/{{id}} returned HTTP {}",
+                    status.as_u16()
+                ),
             }),
             Err(e) => Ok(ConnectorTestResult {
                 status: "error".to_string(),
@@ -144,10 +153,16 @@ pub async fn test_connector_by_engine(
     owner_username: &str,
 ) -> anyhow::Result<ConnectorTestResult> {
     match connector.engine.as_str() {
-        "nango" => NangoExecutor.test_connection(state, connector, owner_username).await,
-        _ => OminiConnectNativeExecutor
-            .test_connection(state, connector, owner_username)
-            .await,
+        "nango" => {
+            NangoExecutor
+                .test_connection(state, connector, owner_username)
+                .await
+        }
+        _ => {
+            OminiConnectNativeExecutor
+                .test_connection(state, connector, owner_username)
+                .await
+        }
     }
 }
 

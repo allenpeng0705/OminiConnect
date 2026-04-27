@@ -25,8 +25,13 @@ fn test_keyword_filter_blocked_words() {
     // Check that "机密" is present
     let keyword = "机密";
     let keyword_bytes = keyword.as_bytes();
-    assert!(content_bytes.windows(keyword_bytes.len()).any(|w| w == keyword_bytes),
-        "Keyword '{}' not found in content", keyword);
+    assert!(
+        content_bytes
+            .windows(keyword_bytes.len())
+            .any(|w| w == keyword_bytes),
+        "Keyword '{}' not found in content",
+        keyword
+    );
 }
 
 // PII detection test (simplified - actual regex would be in wasm)
@@ -40,5 +45,11 @@ fn test_pii_patterns() {
     let phone = b"13812345678";
     assert_eq!(phone.len(), 11);
     assert!(phone[0] == b'1');
-    assert!(phone[1] == b'3' || phone[1] == b'5' || phone[1] == b'7' || phone[1] == b'8' || phone[1] == b'9');
+    assert!(
+        phone[1] == b'3'
+            || phone[1] == b'5'
+            || phone[1] == b'7'
+            || phone[1] == b'8'
+            || phone[1] == b'9'
+    );
 }

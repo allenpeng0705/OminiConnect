@@ -83,7 +83,9 @@ impl Skill {
         }
 
         if self.connectors.is_empty() {
-            return Err(SdkError::Skill("At least one connector is required".to_string()));
+            return Err(SdkError::Skill(
+                "At least one connector is required".to_string(),
+            ));
         }
 
         if self.tools.is_empty() {
@@ -103,7 +105,8 @@ impl Skill {
 
     /// Get all tool names (fully qualified)
     pub fn all_tools(&self) -> Vec<String> {
-        self.connectors.iter()
+        self.connectors
+            .iter()
             .flat_map(|c| c.tools.iter().map(|t| format!("{}_{}", c.name, t)))
             .collect()
     }
@@ -251,9 +254,9 @@ mod tests {
         let skill = Skill::builder("feishu_pm")
             .description("Project management with Feishu")
             .add_connector("feishu")
-                .with_tool("calendar_list")
-                .with_tool("calendar_create")
-                .done()
+            .with_tool("calendar_list")
+            .with_tool("calendar_create")
+            .done()
             .add_policy("content_moderation")
             .build()
             .unwrap();
@@ -269,14 +272,13 @@ mod tests {
         // Empty name should fail
         let result = Skill::builder("")
             .add_connector("feishu")
-                .with_tool("calendar_list")
-                .done()
+            .with_tool("calendar_list")
+            .done()
             .build();
         assert!(result.is_err());
 
         // Empty connectors should fail
-        let result = Skill::builder("test")
-            .build();
+        let result = Skill::builder("test").build();
         assert!(result.is_err());
     }
 
@@ -284,9 +286,9 @@ mod tests {
     fn test_skill_tools() {
         let skill = Skill::builder("wechat_service")
             .add_connector("wechatwork")
-                .with_tool("external_contact_list")
-                .with_tool("message_send")
-                .done()
+            .with_tool("external_contact_list")
+            .with_tool("message_send")
+            .done()
             .build()
             .unwrap();
 

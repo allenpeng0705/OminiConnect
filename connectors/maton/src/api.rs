@@ -131,7 +131,10 @@ impl MatonClient {
     pub async fn get_connection(&self, connection_id: &str) -> Result<Connection, MatonError> {
         let response = self
             .http
-            .get(format!("{}/connections/{}", self.control_url, connection_id))
+            .get(format!(
+                "{}/connections/{}",
+                self.control_url, connection_id
+            ))
             .header("Authorization", format!("Bearer {}", self.api_key))
             .send()
             .await?;
@@ -153,7 +156,10 @@ impl MatonClient {
     pub async fn delete_connection(&self, connection_id: &str) -> Result<(), MatonError> {
         let response = self
             .http
-            .delete(format!("{}/connections/{}", self.control_url, connection_id))
+            .delete(format!(
+                "{}/connections/{}",
+                self.control_url, connection_id
+            ))
             .header("Authorization", format!("Bearer {}", self.api_key))
             .send()
             .await?;
@@ -186,8 +192,7 @@ impl MatonClient {
         let mut request = self
             .http
             .request(
-                reqwest::Method::from_bytes(method.as_bytes())
-                    .unwrap_or(reqwest::Method::GET),
+                reqwest::Method::from_bytes(method.as_bytes()).unwrap_or(reqwest::Method::GET),
                 &url,
             )
             .header("Authorization", format!("Bearer {}", self.api_key));
@@ -197,9 +202,7 @@ impl MatonClient {
         }
 
         if let Some(b) = body {
-            request = request
-                .header("Content-Type", "application/json")
-                .json(&b);
+            request = request.header("Content-Type", "application/json").json(&b);
         }
 
         let response = request.send().await?;

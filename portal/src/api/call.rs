@@ -17,9 +17,11 @@ use axum::{
 use reqwest::header::AUTHORIZATION;
 use serde::Deserialize;
 
+use super::proxy::{
+    get_platform_base_url, map_reqwest_to_axum, proxy_error_response, send_reqwest_response,
+};
 use crate::app::AppState;
 use crate::connector_scope::oauth_vault_platform_key;
-use super::proxy::{get_platform_base_url, map_reqwest_to_axum, proxy_error_response, send_reqwest_response};
 
 /// Request body for POST /api/call/{platform}
 #[derive(Debug, Deserialize)]
@@ -54,7 +56,10 @@ pub async fn handle_call(
     let api_keys = match state.api_keys.list_all().await {
         Ok(keys) => keys,
         Err(_) => {
-            return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to list API keys");
+            return proxy_error_response(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to list API keys",
+            );
         }
     };
 
@@ -79,11 +84,18 @@ pub async fn handle_call(
     let connector = match state.connectors.get(&key_owner, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
-            tracing::warn!("call: no connector for owner={}, platform={}", key_owner, platform);
+            tracing::warn!(
+                "call: no connector for owner={}, platform={}",
+                key_owner,
+                platform
+            );
             return proxy_error_response(StatusCode::NOT_FOUND, "platform not configured");
         }
         Err(_) => {
-            return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to get connector");
+            return proxy_error_response(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to get connector",
+            );
         }
     };
 
@@ -92,14 +104,14 @@ pub async fn handle_call(
     }
 
     // 3. Build upstream URL
-    let method = Method::from_bytes(req.method.as_bytes())
-        .unwrap_or(Method::GET);
+    let method = Method::from_bytes(req.method.as_bytes()).unwrap_or(Method::GET);
 
     // Build query string from params
     let query_string: String = if req.params.is_empty() {
         String::new()
     } else {
-        let pairs: Vec<String> = req.params
+        let pairs: Vec<String> = req
+            .params
             .iter()
             .map(|(k, v)| {
                 let val = match v {
@@ -120,7 +132,8 @@ pub async fn handle_call(
     );
 
     // 4. Build body bytes
-    let body_bytes: Bytes = req.body
+    let body_bytes: Bytes = req
+        .body
         .map(|b| serde_json::to_vec(&b).unwrap_or_default())
         .map(Bytes::from)
         .unwrap_or_default();
@@ -152,12 +165,16 @@ pub async fn handle_call(
         {
             Ok(c) => c,
             Err(_) => {
-                return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client");
+                return proxy_error_response(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "failed to create HTTP client",
+                );
             }
         };
 
         let mut req_builder = client.request(method, &upstream_url);
-        req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder =
+            req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
         req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
         req_builder = req_builder.header("Content-Type", "application/json");
         if !body_bytes.is_empty() {
@@ -184,8 +201,8 @@ pub async fn handle_call(
             );
         }
 
-        let rq_method = reqwest::Method::from_bytes(req.method.as_bytes())
-            .unwrap_or(reqwest::Method::GET);
+        let rq_method =
+            reqwest::Method::from_bytes(req.method.as_bytes()).unwrap_or(reqwest::Method::GET);
 
         match crate::nango::forward_proxy(
             &base,
@@ -231,12 +248,16 @@ pub async fn handle_call(
         {
             Ok(c) => c,
             Err(_) => {
-                return proxy_error_response(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client");
+                return proxy_error_response(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "failed to create HTTP client",
+                );
             }
         };
 
         let mut req_builder = client.request(method, &upstream_url);
-        req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+        req_builder =
+            req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
         req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
         req_builder = req_builder.header("Content-Type", "application/json");
         if !body_bytes.is_empty() {

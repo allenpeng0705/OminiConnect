@@ -161,9 +161,7 @@ async fn get_violations(
     let events = state.events.read().await;
     let violations: Vec<AuditEvent> = events
         .iter()
-        .filter(|e| {
-            e.category.contains("violation")
-        })
+        .filter(|e| e.category.contains("violation"))
         .take(limit)
         .cloned()
         .collect();

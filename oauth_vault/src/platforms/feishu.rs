@@ -1,7 +1,7 @@
 //! Feishu (Lark) OAuth2 platform implementation.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -44,7 +44,11 @@ impl OAuth2Platform for FeishuPlatform {
     }
 
     /// Exchange authorization code for user access token
-    async fn exchange_code(&self, code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        _redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         let url = "https://open.feishu.cn/open-apis/authen/v1/oid/connect/token";
 
         let resp = self
@@ -66,8 +70,9 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: FeishuTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if body.code != 0 {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -76,7 +81,8 @@ impl OAuth2Platform for FeishuPlatform {
             )));
         }
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let now = std::time::SystemTime::now()
@@ -119,8 +125,9 @@ impl OAuth2Platform for FeishuPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: FeishuTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: FeishuTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if body.code != 0 {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -129,7 +136,8 @@ impl OAuth2Platform for FeishuPlatform {
             )));
         }
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         Ok(OAuthToken {

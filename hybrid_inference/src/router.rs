@@ -7,8 +7,8 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use thiserror::Error;
+use tokio::sync::RwLock;
 
 /// Router errors
 #[derive(Debug, Error)]
@@ -126,9 +126,7 @@ impl Router {
 
         // Decide where to route
         match result.action {
-            RoutingDecision::RouteToLocal => {
-                self.route_to_local(messages, model).await
-            }
+            RoutingDecision::RouteToLocal => self.route_to_local(messages, model).await,
             RoutingDecision::RouteToTarget(target) => {
                 self.route_to_cloud(target, messages, model).await
             }
@@ -179,9 +177,21 @@ impl Router {
                         content: response.choices[0].message.content.clone(),
                         model: response.model,
                         usage: LocalUsage {
-                            prompt_tokens: response.usage.as_ref().map(|u| u.prompt_tokens).unwrap_or(0),
-                            completion_tokens: response.usage.as_ref().map(|u| u.completion_tokens).unwrap_or(0),
-                            total_tokens: response.usage.as_ref().map(|u| u.total_tokens).unwrap_or(0),
+                            prompt_tokens: response
+                                .usage
+                                .as_ref()
+                                .map(|u| u.prompt_tokens)
+                                .unwrap_or(0),
+                            completion_tokens: response
+                                .usage
+                                .as_ref()
+                                .map(|u| u.completion_tokens)
+                                .unwrap_or(0),
+                            total_tokens: response
+                                .usage
+                                .as_ref()
+                                .map(|u| u.total_tokens)
+                                .unwrap_or(0),
                         },
                     }),
                 })
@@ -191,7 +201,9 @@ impl Router {
                 if self.config.cloud_fallback.enabled {
                     self.route_to_cloud_fallback(messages, model).await
                 } else {
-                    Err(RouterError::Config("Local LLM disabled and no cloud fallback".to_string()))
+                    Err(RouterError::Config(
+                        "Local LLM disabled and no cloud fallback".to_string(),
+                    ))
                 }
             }
         }
@@ -231,20 +243,23 @@ impl Router {
 
         if !response.status().is_success() {
             // Try fallback if not already a fallback
-            if self.config.cloud_fallback.enabled && target.name != self.config.cloud_fallback.target {
+            if self.config.cloud_fallback.enabled
+                && target.name != self.config.cloud_fallback.target
+            {
                 return self.route_to_cloud_fallback(messages, model).await;
             }
-            return Err(RouterError::Request(response.error_for_status().unwrap_err()));
+            return Err(RouterError::Request(
+                response.error_for_status().unwrap_err(),
+            ));
         }
 
         // Parse response body as JSON
         let body_text = response.text().await?;
-        let json: serde_json::Value = serde_json::from_str(&body_text).map_err(|e| {
-            RouterError::InvalidJsonResponse {
+        let json: serde_json::Value =
+            serde_json::from_str(&body_text).map_err(|e| RouterError::InvalidJsonResponse {
                 target: target.name.clone(),
                 message: format!("{}: {}", e, &body_text[..body_text.len().min(200)]),
-            }
-        })?;
+            })?;
 
         Ok(RouterResponse {
             target: RouteTarget::Cloud(Box::leak(target_name.to_string().into_boxed_str())),
@@ -288,20 +303,23 @@ impl Router {
             .await?;
 
         if !response.status().is_success() {
-            return Err(RouterError::Request(response.error_for_status().unwrap_err()));
+            return Err(RouterError::Request(
+                response.error_for_status().unwrap_err(),
+            ));
         }
 
         // Parse response body as JSON
         let body_text = response.text().await?;
-        let json: serde_json::Value = serde_json::from_str(&body_text).map_err(|e| {
-            RouterError::InvalidJsonResponse {
+        let json: serde_json::Value =
+            serde_json::from_str(&body_text).map_err(|e| RouterError::InvalidJsonResponse {
                 target: fallback_target_name.clone(),
                 message: format!("{}: {}", e, &body_text[..body_text.len().min(200)]),
-            }
-        })?;
+            })?;
 
         Ok(RouterResponse {
-            target: RouteTarget::Cloud(Box::leak(fallback_target_name.to_string().into_boxed_str())),
+            target: RouteTarget::Cloud(Box::leak(
+                fallback_target_name.to_string().into_boxed_str(),
+            )),
             target_name: Some(fallback_target_name.to_string()),
             is_fallback: true,
             content: ResponseContent::Cloud(json),
@@ -363,7 +381,8 @@ mod tests {
     use super::*;
 
     fn test_config() -> HybridConfig {
-        serde_json::from_str(r#"{
+        serde_json::from_str(
+            r#"{
             "enabled": true,
             "local_llm": {
                 "enabled": true,
@@ -391,7 +410,9 @@ mod tests {
                     "action": "route_to_cloud"
                 }
             ]
-        }"#).unwrap()
+        }"#,
+        )
+        .unwrap()
     }
 
     #[tokio::test]

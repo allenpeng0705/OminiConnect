@@ -3,8 +3,8 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use super::{Platform, ToolSchema, ToolSchemaRegistry, Category};
 use super::models::ToolFilter;
+use super::{Category, Platform, ToolSchema, ToolSchemaRegistry};
 
 /// Centralized schema registry for all connectors
 pub struct SchemaRegistry {

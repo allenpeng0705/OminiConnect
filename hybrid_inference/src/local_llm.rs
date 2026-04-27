@@ -131,10 +131,9 @@ impl LocalLlmClient {
             )));
         }
 
-        let completion_response: ChatCompletionResponse =
-            response.json().await.map_err(|e| {
-                LocalLlmError::InvalidResponse(format!("Failed to parse response: {}", e))
-            })?;
+        let completion_response: ChatCompletionResponse = response.json().await.map_err(|e| {
+            LocalLlmError::InvalidResponse(format!("Failed to parse response: {}", e))
+        })?;
 
         Ok(completion_response)
     }

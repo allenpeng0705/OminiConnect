@@ -4,7 +4,10 @@ use std::sync::Arc;
 
 use sqlx::Any;
 
-use crate::db::{SqlxAgentRepo, SqlxApiKeyRepo, SqlxConnectorRepo, SqlxSessionRepo, SqlxToolExecutionRepo, SqlxUserRepo};
+use crate::db::{
+    SqlxAgentRepo, SqlxApiKeyRepo, SqlxConnectorRepo, SqlxCustomToolRepo, SqlxSessionRepo,
+    SqlxToolExecutionRepo, SqlxUserRepo,
+};
 use crate::tools::ToolRegistry;
 
 /// Shared application state.
@@ -18,6 +21,7 @@ pub struct AppState {
     pub tool_executions: Arc<dyn crate::db::ToolExecutionRepository>,
     pub oauth_vault: Arc<omini_connect_oauth_vault::OAuthVault>,
     pub tools: Arc<ToolRegistry>,
+    pub custom_tools: Arc<dyn crate::db::CustomToolRepository>,
 }
 
 impl AppState {
@@ -28,10 +32,15 @@ impl AppState {
         let connector_repo = SqlxConnectorRepo::new(pool.clone());
         let agent_repo = SqlxAgentRepo::new(pool.clone());
         let tool_exec_repo = SqlxToolExecutionRepo::new(pool.clone());
+        let custom_tool_repo = SqlxCustomToolRepo::new(pool.clone());
 
         // Create SQLx-backed token store for OAuth token persistence
-        let token_store_backend = Arc::new(omini_connect_oauth_vault::SqlxTokenStoreBackend::new(pool.clone()));
-        let token_store = Arc::new(omini_connect_oauth_vault::TokenStore::new(token_store_backend));
+        let token_store_backend = Arc::new(omini_connect_oauth_vault::SqlxTokenStoreBackend::new(
+            pool.clone(),
+        ));
+        let token_store = Arc::new(omini_connect_oauth_vault::TokenStore::new(
+            token_store_backend,
+        ));
         let oauth_vault = Arc::new(omini_connect_oauth_vault::OAuthVault::new(token_store));
 
         Self {
@@ -43,6 +52,7 @@ impl AppState {
             tool_executions: Arc::new(tool_exec_repo),
             oauth_vault,
             tools: Arc::new(tools),
+            custom_tools: Arc::new(custom_tool_repo),
         }
     }
 }

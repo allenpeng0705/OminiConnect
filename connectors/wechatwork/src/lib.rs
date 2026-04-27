@@ -24,5 +24,5 @@ pub mod tools;
 
 pub use api::WeChatWorkApiClient;
 pub use docs::{generate_markdown, generate_summary};
-pub use server::{WeChatWorkMcpServer, JsonRpcRequest, JsonRpcResponse, TokenVaultAccess};
+pub use server::{JsonRpcRequest, JsonRpcResponse, TokenVaultAccess, WeChatWorkMcpServer};
 pub use tools::WeChatWorkTool;

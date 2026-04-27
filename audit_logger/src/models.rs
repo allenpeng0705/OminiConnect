@@ -149,13 +149,11 @@ impl AuditEvent {
     /// Set content preview (will be truncated to 500 chars)
     pub fn with_content_preview(mut self, content: impl Into<String>) -> Self {
         let preview = content.into();
-        self.content_preview = Some(
-            if preview.len() > 500 {
-                format!("{}...", &preview[..500])
-            } else {
-                preview
-            }
-        );
+        self.content_preview = Some(if preview.len() > 500 {
+            format!("{}...", &preview[..500])
+        } else {
+            preview
+        });
         self
     }
 

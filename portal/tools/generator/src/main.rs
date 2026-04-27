@@ -8,9 +8,9 @@
 //!     --tags "repos,issues,users"  # Only operations with these tags
 //!     --prefix "list_,get_,create_"  # Only operations starting with these prefixes
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize)]
 struct Tool {
@@ -108,11 +108,15 @@ fn main() {
     // Parse command line args manually (simple approach)
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
-        println!("Usage: generate-tools --spec <openapi.json> --provider <name> --output <output.yaml>");
+        println!(
+            "Usage: generate-tools --spec <openapi.json> --provider <name> --output <output.yaml>"
+        );
         println!("Options:");
         println!("  --operation-ids <comma,sep,list>  # Explicit operation IDs to include");
         println!("  --tags <comma,sep,tags>           # Only include operations with these tags");
-        println!("  --prefixes <comma,sep,prefixes>   # Only include operations starting with these");
+        println!(
+            "  --prefixes <comma,sep,prefixes>   # Only include operations starting with these"
+        );
         std::process::exit(1);
     }
 
@@ -126,22 +130,48 @@ fn main() {
     let mut i = 1;
     while i < args.len() {
         match args[i].as_str() {
-            "--spec" => { spec_path = Some(args[i + 1].clone()); i += 2; }
-            "--provider" => { provider = Some(args[i + 1].clone()); i += 2; }
-            "--output" => { output_path = Some(args[i + 1].clone()); i += 2; }
+            "--spec" => {
+                spec_path = Some(args[i + 1].clone());
+                i += 2;
+            }
+            "--provider" => {
+                provider = Some(args[i + 1].clone());
+                i += 2;
+            }
+            "--output" => {
+                output_path = Some(args[i + 1].clone());
+                i += 2;
+            }
             "--operation-ids" => {
-                operation_ids = Some(args[i + 1].split(',').map(|s| s.trim().to_string()).collect());
+                operation_ids = Some(
+                    args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect(),
+                );
                 i += 2;
             }
             "--tags" => {
-                tags = Some(args[i + 1].split(',').map(|s| s.trim().to_string()).collect());
+                tags = Some(
+                    args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect(),
+                );
                 i += 2;
             }
             "--prefixes" => {
-                prefixes = Some(args[i + 1].split(',').map(|s| s.trim().to_string()).collect());
+                prefixes = Some(
+                    args[i + 1]
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect(),
+                );
                 i += 2;
             }
-            _ => { i += 1; }
+            _ => {
+                i += 1;
+            }
         }
     }
 
@@ -150,10 +180,10 @@ fn main() {
     let output_path = output_path.expect("--output required");
 
     println!("Loading OpenAPI spec from {}...", spec_path);
-    let spec_content = std::fs::read_to_string(&spec_path)
-        .expect("Failed to read OpenAPI spec file");
-    let spec: OpenAPISpec = serde_json::from_str(&spec_content)
-        .expect("Failed to parse OpenAPI JSON");
+    let spec_content =
+        std::fs::read_to_string(&spec_path).expect("Failed to read OpenAPI spec file");
+    let spec: OpenAPISpec =
+        serde_json::from_str(&spec_content).expect("Failed to parse OpenAPI JSON");
 
     println!("Generating tools for provider '{}'...", provider);
 
@@ -169,13 +199,23 @@ fn main() {
         ];
 
         for (method, operation_opt) in methods {
-            let Some(operation) = operation_opt else { continue; };
+            let Some(operation) = operation_opt else {
+                continue;
+            };
 
             // Skip if no operation ID
-            let Some(operation_id) = &operation.operation_id else { continue; };
+            let Some(operation_id) = &operation.operation_id else {
+                continue;
+            };
 
             // Apply allowlist filters
-            if !should_include(operation_id, &operation.tags, &operation_ids, &tags, &prefixes) {
+            if !should_include(
+                operation_id,
+                &operation.tags,
+                &operation_ids,
+                &tags,
+                &prefixes,
+            ) {
                 continue;
             }
 
@@ -207,7 +247,9 @@ fn should_include(
 
     // Check tags
     if let Some(tag_list) = tags {
-        return operation_tags.iter().any(|t| tag_list.iter().any(|tag| t == tag));
+        return operation_tags
+            .iter()
+            .any(|t| tag_list.iter().any(|tag| t == tag));
     }
 
     // Check prefixes
@@ -220,13 +262,21 @@ fn should_include(
 }
 
 fn generate_tool(provider: &str, path: &str, method: &str, operation: &Operation) -> Tool {
-    let slug = format!("{}_{}", provider, to_snake_case(operation.operation_id.as_ref().unwrap_or(&String::new())));
+    let slug = format!(
+        "{}_{}",
+        provider,
+        to_snake_case(operation.operation_id.as_ref().unwrap_or(&String::new()))
+    );
 
-    let name = operation.summary.clone()
+    let name = operation
+        .summary
+        .clone()
         .or(operation.operation_id.clone())
         .unwrap_or_else(|| format!("{} {}", method, path));
 
-    let description = operation.description.clone()
+    let description = operation
+        .description
+        .clone()
         .or(operation.summary.clone())
         .unwrap_or_default();
 
@@ -241,7 +291,10 @@ fn generate_tool(provider: &str, path: &str, method: &str, operation: &Operation
         }
         if let Some(desc) = &param.description {
             if let Some(obj) = schema.as_object_mut() {
-                obj.insert("description".to_string(), serde_json::Value::String(desc.clone()));
+                obj.insert(
+                    "description".to_string(),
+                    serde_json::Value::String(desc.clone()),
+                );
             }
         }
         properties.insert(param.name.clone(), schema);
@@ -313,5 +366,8 @@ fn to_snake_case(s: &str) -> String {
         result.push(c.to_lowercase().next().unwrap());
     }
     // Replace non-alphanumeric with underscores
-    result.chars().map(|c| if c.is_alphanumeric() { c } else { '_' }).collect()
+    result
+        .chars()
+        .map(|c| if c.is_alphanumeric() { c } else { '_' })
+        .collect()
 }

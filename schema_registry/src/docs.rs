@@ -18,7 +18,10 @@ impl DocGenerator {
     /// Generate markdown documentation for all tools
     pub fn generate_markdown(&self) -> String {
         let mut output = String::from("# OminiConnect Tool Registry\n\n");
-        output.push_str(&format!("Total tools: {}\n\n", self.registry.total_tool_count()));
+        output.push_str(&format!(
+            "Total tools: {}\n\n",
+            self.registry.total_tool_count()
+        ));
 
         // Group by platform
         for platform in [Platform::Feishu, Platform::DingTalk, Platform::WeChatWork] {

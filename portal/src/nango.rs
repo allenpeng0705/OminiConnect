@@ -58,7 +58,10 @@ pub fn nango_browser_api_base_for_connect_link(internal_base: &str) -> String {
 fn url_host_loopback(url: &reqwest::Url) -> bool {
     match url.host_str() {
         Some("localhost") | Some("127.0.0.1") | Some("::1") => true,
-        Some(h) => h.parse::<std::net::IpAddr>().ok().is_some_and(|ip| ip.is_loopback()),
+        Some(h) => h
+            .parse::<std::net::IpAddr>()
+            .ok()
+            .is_some_and(|ip| ip.is_loopback()),
         None => false,
     }
 }
@@ -146,8 +149,14 @@ pub(crate) fn is_allowed_nango_connect_api_base(candidate: &str) -> bool {
     url_host_loopback(&cand_origin)
 }
 
-pub(crate) fn resolve_nango_connect_browser_api_base(override_from_client: Option<&str>, internal_base: &str) -> String {
-    let chosen = if let Some(o) = override_from_client.map(str::trim).filter(|s| !s.is_empty()) {
+pub(crate) fn resolve_nango_connect_browser_api_base(
+    override_from_client: Option<&str>,
+    internal_base: &str,
+) -> String {
+    let chosen = if let Some(o) = override_from_client
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+    {
         if is_allowed_nango_connect_api_base(o) {
             o.to_string()
         } else {
@@ -175,14 +184,17 @@ fn auth_headers(secret: &str) -> anyhow::Result<HeaderMap> {
     let bearer = format!("Bearer {secret}");
     h.insert(
         AUTHORIZATION,
-        HeaderValue::from_str(&bearer).map_err(|e| anyhow::anyhow!("invalid NANGO_SECRET_KEY for header: {e}"))?,
+        HeaderValue::from_str(&bearer)
+            .map_err(|e| anyhow::anyhow!("invalid NANGO_SECRET_KEY for header: {e}"))?,
     );
     if let Ok(key) = std::env::var("NANGO_OMINICONNECT_INTERNAL_KEY") {
         let k = key.trim();
         if !k.is_empty() {
             h.insert(
                 HeaderName::from_static("x-omini-internal-key"),
-                HeaderValue::from_str(k).map_err(|e| anyhow::anyhow!("invalid NANGO_OMINICONNECT_INTERNAL_KEY header: {e}"))?,
+                HeaderValue::from_str(k).map_err(|e| {
+                    anyhow::anyhow!("invalid NANGO_OMINICONNECT_INTERNAL_KEY header: {e}")
+                })?,
             );
         }
     }
@@ -191,7 +203,8 @@ fn auth_headers(secret: &str) -> anyhow::Result<HeaderMap> {
         if !v.is_empty() {
             h.insert(
                 HeaderName::from_static("x-nango-environment-id"),
-                HeaderValue::from_str(v).map_err(|e| anyhow::anyhow!("invalid NANGO_ENVIRONMENT_ID header: {e}"))?,
+                HeaderValue::from_str(v)
+                    .map_err(|e| anyhow::anyhow!("invalid NANGO_ENVIRONMENT_ID header: {e}"))?,
             );
         }
     }
@@ -219,7 +232,11 @@ struct ConnectSessionData {
 ///
 /// Nango may already put `apiURL` on `connect_link` from server config — we still **merge** our
 /// `apiURL` / `websocketsPath` so the pop-up flow cannot skip WebSocket injection.
-fn attach_api_url_to_nango_connect_link(connect_link: &str, nango_api_base: &str, internal_nango_http_base: &str) -> String {
+fn attach_api_url_to_nango_connect_link(
+    connect_link: &str,
+    nango_api_base: &str,
+    internal_nango_http_base: &str,
+) -> String {
     let base = nango_api_base.trim().trim_end_matches('/');
     if base.is_empty() {
         return connect_link.to_string();
@@ -241,7 +258,8 @@ fn attach_api_url_to_nango_connect_link(connect_link: &str, nango_api_base: &str
         other.push((k.into_owned(), v.into_owned()));
     }
 
-    let ws_merged = optional_websockets_path_for_connect_link(base, internal_nango_http_base).or(existing_ws);
+    let ws_merged =
+        optional_websockets_path_for_connect_link(base, internal_nango_http_base).or(existing_ws);
 
     u.set_query(None);
     {
@@ -302,10 +320,16 @@ fn browser_api_base_to_portal_ws_bridge_url(browser_api_base: &str) -> Option<St
     } else {
         return None;
     };
-    Some(format!("{scheme}://{}/_nango_auth_ws", host_and_path.trim_end_matches('/')))
+    Some(format!(
+        "{scheme}://{}/_nango_auth_ws",
+        host_and_path.trim_end_matches('/')
+    ))
 }
 
-fn optional_websockets_path_for_connect_link(browser_api_base: &str, internal_http_base: &str) -> Option<String> {
+fn optional_websockets_path_for_connect_link(
+    browser_api_base: &str,
+    internal_http_base: &str,
+) -> Option<String> {
     if let Ok(v) = std::env::var("NANGO_BROWSER_WEBSOCKET_URL") {
         let t = v.trim().to_string();
         if !t.is_empty() {
@@ -315,7 +339,8 @@ fn optional_websockets_path_for_connect_link(browser_api_base: &str, internal_ht
     if !nango_browser_needs_direct_websocket(browser_api_base, internal_http_base) {
         return None;
     }
-    browser_api_base_to_portal_ws_bridge_url(browser_api_base).or_else(|| http_base_to_ws_root_url(internal_http_base))
+    browser_api_base_to_portal_ws_bridge_url(browser_api_base)
+        .or_else(|| http_base_to_ws_root_url(internal_http_base))
 }
 
 /// `POST /connect/sessions` — returns hosted Connect UI URL.
@@ -344,7 +369,11 @@ pub async fn create_connect_session(
     let parsed: ConnectSessionEnvelope = resp.json().await.context("parse connect session JSON")?;
     let link = parsed.data.connect_link;
     let browser_base = resolve_nango_connect_browser_api_base(browser_api_override, base_url);
-    Ok(attach_api_url_to_nango_connect_link(&link, &browser_base, base_url))
+    Ok(attach_api_url_to_nango_connect_link(
+        &link,
+        &browser_base,
+        base_url,
+    ))
 }
 
 /// `POST /connections` — create a connection with credentials directly (API_KEY or BASIC).
@@ -367,7 +396,12 @@ pub async fn create_nango_connection(
         "credentials": credentials,
     });
 
-    let resp = client.post(&url).headers(headers).json(&body).send().await?;
+    let resp = client
+        .post(&url)
+        .headers(headers)
+        .json(&body)
+        .send()
+        .await?;
     if !resp.status().is_success() {
         let status = resp.status();
         let text = resp.text().await.unwrap_or_default();
@@ -380,7 +414,10 @@ pub async fn create_nango_connection(
         connection_id: String,
     }
 
-    let parsed: ConnectionResponse = resp.json().await.context("parse connection response JSON")?;
+    let parsed: ConnectionResponse = resp
+        .json()
+        .await
+        .context("parse connection response JSON")?;
     Ok(parsed.connection_id)
 }
 
@@ -404,7 +441,10 @@ pub async fn list_connections(
     integration_id: Option<&str>,
 ) -> anyhow::Result<Vec<NangoConnectionSummary>> {
     let client = nango_client()?;
-    let mut url = format!("{base_url}/connections?endUserId={}", urlencoding::encode(end_user_id));
+    let mut url = format!(
+        "{base_url}/connections?endUserId={}",
+        urlencoding::encode(end_user_id)
+    );
     if let Some(iid) = integration_id.filter(|s| !s.is_empty()) {
         url.push_str("&integrationId=");
         url.push_str(&urlencoding::encode(iid));
@@ -423,7 +463,10 @@ pub async fn list_connections(
 }
 
 /// Pick the newest connection for `provider_config_key` (by `created` if present).
-pub fn pick_connection_id(connections: &[NangoConnectionSummary], provider_config_key: &str) -> Option<String> {
+pub fn pick_connection_id(
+    connections: &[NangoConnectionSummary],
+    provider_config_key: &str,
+) -> Option<String> {
     let mut matches: Vec<_> = connections
         .iter()
         .filter(|c| c.provider_config_key == provider_config_key)
@@ -458,7 +501,12 @@ pub fn connect_session_body(
 }
 
 /// `GET /connections/{id}?provider_config_key=...` — verify connection exists (token path).
-pub async fn probe_connection(base_url: &str, secret: &str, connection_id: &str, provider_config_key: &str) -> anyhow::Result<reqwest::StatusCode> {
+pub async fn probe_connection(
+    base_url: &str,
+    secret: &str,
+    connection_id: &str,
+    provider_config_key: &str,
+) -> anyhow::Result<reqwest::StatusCode> {
     let client = nango_client()?;
     let url = format!(
         "{}/connections/{}?provider_config_key={}",
@@ -490,11 +538,13 @@ pub async fn forward_proxy(
     let mut headers = auth_headers(secret)?;
     headers.insert(
         HeaderName::from_static("connection-id"),
-        HeaderValue::from_str(connection_id).map_err(|e| anyhow::anyhow!("connection id header: {e}"))?,
+        HeaderValue::from_str(connection_id)
+            .map_err(|e| anyhow::anyhow!("connection id header: {e}"))?,
     );
     headers.insert(
         HeaderName::from_static("provider-config-key"),
-        HeaderValue::from_str(provider_config_key).map_err(|e| anyhow::anyhow!("provider key header: {e}"))?,
+        HeaderValue::from_str(provider_config_key)
+            .map_err(|e| anyhow::anyhow!("provider key header: {e}"))?,
     );
 
     if let Some(ct) = content_type {
@@ -533,7 +583,10 @@ struct ListIntegrationsBody {
 }
 
 /// `GET /integrations` — configured integrations in the Nango environment.
-pub async fn list_integrations_catalog(base_url: &str, secret: &str) -> anyhow::Result<Vec<NangoIntegrationCatalogItem>> {
+pub async fn list_integrations_catalog(
+    base_url: &str,
+    secret: &str,
+) -> anyhow::Result<Vec<NangoIntegrationCatalogItem>> {
     let client = nango_client()?;
     let url = format!("{}/integrations", base_url.trim_end_matches('/'));
     let headers = auth_headers(secret)?;
@@ -634,7 +687,12 @@ pub async fn create_integration_catalog(
         })
     };
 
-    let resp = client.post(&url).headers(headers).json(&body).send().await?;
+    let resp = client
+        .post(&url)
+        .headers(headers)
+        .json(&body)
+        .send()
+        .await?;
 
     if resp.status().is_success() {
         return Ok(());
@@ -683,8 +741,8 @@ fn providers_catalog_from_data_root(root: serde_json::Value) -> Vec<serde_json::
 fn load_provider_scopes() -> std::collections::HashMap<String, Vec<String>> {
     let mut scopes = std::collections::HashMap::new();
     let manifest_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let scopes_yaml_path = manifest_dir
-        .join("../../third_party/nango/packages/providers/providers.scopes.yaml");
+    let scopes_yaml_path =
+        manifest_dir.join("../../third_party/nango/packages/providers/providers.scopes.yaml");
     if let Ok(content) = std::fs::read_to_string(&scopes_yaml_path) {
         if let Ok(parsed) = serde_yaml::from_str::<serde_yaml::Value>(&content) {
             if let Some(obj) = parsed.as_mapping() {
@@ -717,10 +775,7 @@ fn enrich_rows_with_scopes(
         if let Some(obj) = row.as_object_mut() {
             if let Some(name) = obj.get("name").and_then(|v| v.as_str()) {
                 if let Some(scopes) = scopes_map.get(name) {
-                    obj.insert(
-                        "available_scopes".to_string(),
-                        serde_json::json!(scopes),
-                    );
+                    obj.insert("available_scopes".to_string(), serde_json::json!(scopes));
                 }
             }
         }
@@ -746,7 +801,10 @@ async fn list_providers_catalog_from_public_json(
     let Some(obj) = root.as_object() else {
         anyhow::bail!("providers.json: expected a JSON object keyed by provider id");
     };
-    let needle = search.map(str::trim).filter(|s| !s.is_empty()).map(|s| s.to_lowercase());
+    let needle = search
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_lowercase());
     let mut rows: Vec<serde_json::Value> = Vec::new();
     for (name, v) in obj {
         if let Some(n) = needle.as_ref() {
@@ -783,7 +841,10 @@ async fn list_providers_catalog_from_public_json(
 
 /// Same as [`list_providers_catalog_from_public_json`] but exposed for callers that have no API secret yet
 /// (browse-only library in the portal).
-pub async fn list_providers_catalog_public_only(base_url: &str, search: Option<&str>) -> anyhow::Result<Vec<serde_json::Value>> {
+pub async fn list_providers_catalog_public_only(
+    base_url: &str,
+    search: Option<&str>,
+) -> anyhow::Result<Vec<serde_json::Value>> {
     let client = nango_client()?;
     let base_trim = base_url.trim_end_matches('/');
     list_providers_catalog_from_public_json(&client, base_trim, search).await
@@ -810,14 +871,33 @@ pub async fn list_providers_catalog(
     if resp.status().is_success() {
         let root: serde_json::Value = resp.json().await.context("parse providers JSON")?;
         let rows = providers_catalog_from_data_root(root);
-        tracing::debug!("list_providers_catalog: got {} rows from Nango /providers", rows.len());
+        tracing::debug!(
+            "list_providers_catalog: got {} rows from Nango /providers",
+            rows.len()
+        );
         let scopes_map = load_provider_scopes();
-        tracing::debug!("load_provider_scopes: {} providers with scopes", scopes_map.len());
+        tracing::debug!(
+            "load_provider_scopes: {} providers with scopes",
+            scopes_map.len()
+        );
         let rows = enrich_rows_with_scopes(rows, &scopes_map);
-        let enriched_count = rows.iter().filter(|r| r.get("available_scopes").is_some()).count();
-        tracing::debug!("enrich_rows_with_scopes: {} rows now have available_scopes", enriched_count);
-        if let Some(linkedin_row) = rows.iter().find(|r| r.get("name").and_then(|v| v.as_str()) == Some("linkedin")) {
-            let linkedin_scopes = linkedin_row.get("available_scopes").and_then(|v| v.as_array()).map(|a| a.len()).unwrap_or(0);
+        let enriched_count = rows
+            .iter()
+            .filter(|r| r.get("available_scopes").is_some())
+            .count();
+        tracing::debug!(
+            "enrich_rows_with_scopes: {} rows now have available_scopes",
+            enriched_count
+        );
+        if let Some(linkedin_row) = rows
+            .iter()
+            .find(|r| r.get("name").and_then(|v| v.as_str()) == Some("linkedin"))
+        {
+            let linkedin_scopes = linkedin_row
+                .get("available_scopes")
+                .and_then(|v| v.as_array())
+                .map(|a| a.len())
+                .unwrap_or(0);
             tracing::debug!("DEBUG: linkedin has {} available_scopes", linkedin_scopes);
         }
         return Ok(rows);
@@ -841,15 +921,20 @@ pub async fn list_providers_catalog(
     anyhow::bail!("Nango GET /providers failed {status}: {text}");
 }
 
-
 #[cfg(test)]
 mod scope_enrichment_tests {
     use super::*;
     #[test]
     fn test_scope_enrichment_for_all_providers() {
         let test_providers = vec![
-            "linkedin", "facebook", "github", "hubspot",
-            "airtable", "slack", "salesforce", "google",
+            "linkedin",
+            "facebook",
+            "github",
+            "hubspot",
+            "airtable",
+            "slack",
+            "salesforce",
+            "google",
         ];
         let rows: Vec<serde_json::Value> = test_providers
             .iter()
@@ -884,12 +969,16 @@ mod http_test {
             Ok(rows) => {
                 eprintln!("Total rows: {}", rows.len());
                 for name in &["linkedin", "github", "hubspot", "airtable"] {
-                    let row = rows.iter().find(|r| r.get("name").and_then(|v| v.as_str()) == Some(*name));
+                    let row = rows
+                        .iter()
+                        .find(|r| r.get("name").and_then(|v| v.as_str()) == Some(*name));
                     match row {
                         Some(r) => {
                             let scopes = r.get("available_scopes").and_then(|v| v.as_array());
                             match scopes {
-                                Some(s) if !s.is_empty() => eprintln!("OK: {} has {} scopes", name, s.len()),
+                                Some(s) if !s.is_empty() => {
+                                    eprintln!("OK: {} has {} scopes", name, s.len())
+                                }
                                 _ => eprintln!("FAIL: {} has no scopes", name),
                             }
                         }

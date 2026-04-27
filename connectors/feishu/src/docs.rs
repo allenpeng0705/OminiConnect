@@ -8,9 +8,18 @@ pub fn generate_markdown() -> String {
     let mut output = String::from("# Feishu Connector Tools\n\n");
     output.push_str(&format!("Total tools: {}\n\n", tools.len()));
 
-    let calendar_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("calendar_")).collect();
-    let bitable_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("bitable_")).collect();
-    let message_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("message_")).collect();
+    let calendar_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("calendar_"))
+        .collect();
+    let bitable_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("bitable_"))
+        .collect();
+    let message_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("message_"))
+        .collect();
 
     if !calendar_tools.is_empty() {
         output.push_str("## Calendar\n\n");

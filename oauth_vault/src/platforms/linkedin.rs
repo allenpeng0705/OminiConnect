@@ -1,7 +1,7 @@
 //! LinkedIn OAuth2 platform implementation.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -45,7 +45,11 @@ impl OAuth2Platform for LinkedInPlatform {
     }
 
     /// Exchange authorization code for user access token
-    async fn exchange_code(&self, code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        code: &str,
+        _redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         let url = "https://www.linkedin.com/oauth/v2/accessToken";
 
         let resp = self
@@ -68,10 +72,12 @@ impl OAuth2Platform for LinkedInPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: LinkedInTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: LinkedInTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let now = std::time::SystemTime::now()
@@ -114,10 +120,12 @@ impl OAuth2Platform for LinkedInPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: LinkedInTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: LinkedInTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let now = std::time::SystemTime::now()
@@ -130,7 +138,9 @@ impl OAuth2Platform for LinkedInPlatform {
             platform: self.name().to_string(),
             subject: body.sub.unwrap_or_else(|| "user".to_string()),
             access_token,
-            refresh_token: body.refresh_token.or_else(|| Some(refresh_token.to_string())),
+            refresh_token: body
+                .refresh_token
+                .or_else(|| Some(refresh_token.to_string())),
             token_type: body.token_type.unwrap_or_else(|| "Bearer".to_string()),
             expires_at,
             scopes: self.config.scopes.clone(),
@@ -169,7 +179,10 @@ impl OAuth2Platform for LinkedInPlatform {
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
         if !resp.status().is_success() {
-            return Err(OAuthError::ExchangeFailed(format!("Revoke failed: {}", resp.status())));
+            return Err(OAuthError::ExchangeFailed(format!(
+                "Revoke failed: {}",
+                resp.status()
+            )));
         }
 
         Ok(())

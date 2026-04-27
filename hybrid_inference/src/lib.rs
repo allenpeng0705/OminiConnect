@@ -27,13 +27,13 @@
 
 pub mod config;
 pub mod local_llm;
-pub mod rules;
 pub mod router;
+pub mod rules;
 
 pub use config::HybridConfig;
 pub use local_llm::{ChatMessage, LocalLlmClient};
-pub use router::{ResponseContent, RouteTarget, Router, RouterResponse, RouterError};
-pub use rules::{PiiType, RequestContext, RoutingDecision, RulesEngine, RuleResult};
+pub use router::{ResponseContent, RouteTarget, Router, RouterError, RouterResponse};
+pub use rules::{PiiType, RequestContext, RoutingDecision, RuleResult, RulesEngine};
 
 /// Maximum sensitivity score
 pub const MAX_SENSITIVITY_SCORE: u8 = 100;

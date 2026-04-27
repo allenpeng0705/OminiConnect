@@ -7,8 +7,7 @@ use sha2::{Digest, Sha256};
 
 /// Generate a URL-safe `code_verifier` (43–128 chars, RFC 7636 unreserved charset).
 pub fn random_code_verifier() -> String {
-    const CHARSET: &[u8] =
-        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+    const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
     let mut rng = rand::thread_rng();
     (0..64)
         .map(|_| CHARSET[rng.gen_range(0..CHARSET.len())] as char)

@@ -11,17 +11,17 @@ use panda_pdk::{set_body, set_header, PANDA_WASM_ABI_VERSION, RC_ALLOW, RC_REJEC
 
 // Common restricted keywords (configurable in production)
 static BLOCKED_KEYWORDS: &[&str] = &[
-    "机密",     // classified
-    "秘密",     // secret
-    "绝密",     // top secret
-    "反动",     // reactionary
-    "暴力",     // violence
-    "赌博",     // gambling
-    "毒品",     // drugs
-    "诈骗",     // fraud
-    "邪教",     // cult
-    "分裂",     // separatism
-    "恐怖",     // terrorism
+    "机密", // classified
+    "秘密", // secret
+    "绝密", // top secret
+    "反动", // reactionary
+    "暴力", // violence
+    "赌博", // gambling
+    "毒品", // drugs
+    "诈骗", // fraud
+    "邪教", // cult
+    "分裂", // separatism
+    "恐怖", // terrorism
 ];
 
 fn contains_blocked_keyword(content: &[u8]) -> bool {
@@ -129,7 +129,13 @@ fn redact_email(input: &[u8]) -> Option<Vec<u8>> {
             while local_start > 0 {
                 let prev = local_start - 1;
                 let c = input[prev];
-                if c.is_ascii_alphanumeric() || c == b'.' || c == b'_' || c == b'%' || c == b'+' || c == b'-' {
+                if c.is_ascii_alphanumeric()
+                    || c == b'.'
+                    || c == b'_'
+                    || c == b'%'
+                    || c == b'+'
+                    || c == b'-'
+                {
                     local_start = prev;
                 } else {
                     break;
@@ -267,8 +273,14 @@ mod tests {
         assert!(result.is_some());
         let redacted = result.unwrap();
         // Use windows to check for substring - [CHINESE_ID] is 12 characters
-        assert!(redacted.windows(12).any(|w| w == b"[CHINESE_ID]"), "Did not find [CHINESE_ID] in redacted");
-        assert!(!redacted.windows(18).any(|w| w == b"110101199003078935"), "Original ID still present");
+        assert!(
+            redacted.windows(12).any(|w| w == b"[CHINESE_ID]"),
+            "Did not find [CHINESE_ID] in redacted"
+        );
+        assert!(
+            !redacted.windows(18).any(|w| w == b"110101199003078935"),
+            "Original ID still present"
+        );
     }
 
     #[test]

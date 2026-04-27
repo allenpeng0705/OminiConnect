@@ -30,14 +30,20 @@ async fn auth_agent(
 
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
-        None => return Err(error(StatusCode::UNAUTHORIZED, "missing authorization header")),
+        None => {
+            return Err(error(
+                StatusCode::UNAUTHORIZED,
+                "missing authorization header",
+            ))
+        }
     };
 
-    let api_keys = state
-        .api_keys
-        .list_all()
-        .await
-        .map_err(|e| error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to list API keys: {}", e)))?;
+    let api_keys = state.api_keys.list_all().await.map_err(|e| {
+        error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("failed to list API keys: {}", e),
+        )
+    })?;
 
     for ak in api_keys {
         if bcrypt::verify(api_key, &ak.key_hash).ok() == Some(true) {
@@ -93,7 +99,10 @@ pub async fn register_agent(
 
     if let Err(e) = state.api_keys.insert(&api_key).await {
         tracing::error!("DB error inserting agent API key: {}", e);
-        return error(StatusCode::INTERNAL_SERVER_ERROR, "failed to create agent API key");
+        return error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "failed to create agent API key",
+        );
     }
 
     tracing::info!("Registered agent {} for owner {}", agent_id, owner);
@@ -112,10 +121,7 @@ pub async fn register_agent(
 }
 
 /// List all agents for the authenticated user.
-pub async fn list_agents(
-    State(state): State<Arc<AppState>>,
-    headers: HeaderMap,
-) -> Response {
+pub async fn list_agents(State(state): State<Arc<AppState>>, headers: HeaderMap) -> Response {
     let (owner, _) = match auth_agent(&state, &headers).await {
         Ok(v) => v,
         Err(e) => return e,
@@ -126,7 +132,10 @@ pub async fn list_agents(
             let summaries: Vec<AgentSummary> = agents.into_iter().map(|a| a.into()).collect();
             Json(serde_json::json!({ "agents": summaries })).into_response()
         }
-        Err(e) => error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to list agents: {}", e)),
+        Err(e) => error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("failed to list agents: {}", e),
+        ),
     }
 }
 
@@ -148,7 +157,10 @@ pub async fn get_agent(
         }
         Ok(Some(_)) => error(StatusCode::FORBIDDEN, "not your agent"),
         Ok(None) => error(StatusCode::NOT_FOUND, "agent not found"),
-        Err(e) => error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to get agent: {}", e)),
+        Err(e) => error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("failed to get agent: {}", e),
+        ),
     }
 }
 
@@ -169,7 +181,12 @@ pub async fn deactivate_agent(
             return error(StatusCode::FORBIDDEN, "not your agent");
         }
         Ok(None) => return error(StatusCode::NOT_FOUND, "agent not found"),
-        Err(e) => return error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to get agent: {}", e)),
+        Err(e) => {
+            return error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                &format!("failed to get agent: {}", e),
+            )
+        }
         _ => {}
     }
 
@@ -178,7 +195,10 @@ pub async fn deactivate_agent(
             tracing::info!("Deactivated agent {}", agent_id);
             Json(serde_json::json!({ "ok": true })).into_response()
         }
-        Err(e) => error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to deactivate agent: {}", e)),
+        Err(e) => error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("failed to deactivate agent: {}", e),
+        ),
     }
 }
 
@@ -199,13 +219,21 @@ pub async fn delete_agent(
             return error(StatusCode::FORBIDDEN, "not your agent");
         }
         Ok(None) => return error(StatusCode::NOT_FOUND, "agent not found"),
-        Err(e) => return error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to get agent: {}", e)),
+        Err(e) => {
+            return error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                &format!("failed to get agent: {}", e),
+            )
+        }
         _ => {}
     }
 
     // Delete the agent
     if let Err(e) = state.agents.delete(&agent_id).await {
-        return error(StatusCode::INTERNAL_SERVER_ERROR, &format!("failed to delete agent: {}", e));
+        return error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &format!("failed to delete agent: {}", e),
+        );
     }
 
     // Revoke all API keys for this agent

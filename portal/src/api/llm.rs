@@ -10,7 +10,10 @@
 //!   4. If ambiguous → return candidates for disambiguation
 //!   5. If no match → return helpful error with available tools
 
-use std::{collections::{HashMap, HashSet}, sync::Arc};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 
 use axum::{
     extract::{Query, State},
@@ -22,14 +25,14 @@ use axum::{
 use http_body_util::BodyExt;
 use serde::{Deserialize, Serialize};
 
-use crate::app::AppState;
 use crate::api::tools::{auth_user, check_scope_satisfied, ScopeSatisfied};
+use crate::app::AppState;
 
 /// Stop words to remove from queries for matching.
 const STOP_WORDS: &[&str] = &[
-    "a", "an", "the", "to", "for", "of", "in", "on", "at", "by",
-    "my", "i", "me", "can", "could", "would", "should", "will", "do", "does",
-    "please", "kindly", "just", "now", "and", "or", "with", "from",
+    "a", "an", "the", "to", "for", "of", "in", "on", "at", "by", "my", "i", "me", "can", "could",
+    "would", "should", "will", "do", "does", "please", "kindly", "just", "now", "and", "or",
+    "with", "from",
 ];
 
 /// Request body for LLM natural language execution.
@@ -153,12 +156,15 @@ pub async fn execute(
     let query_tokens = tokenize(&query_lower);
 
     // Platform hint or auto-detect
-    let target_platform = body.platform
+    let target_platform = body
+        .platform
         .or_else(|| detect_platform_from_query(&query_lower, &user_connectors));
 
     // Collect candidate tools (only from connected platforms)
     let platform_filter = target_platform.as_ref();
-    let tools: Vec<_> = state.tools.toolkits()
+    let tools: Vec<_> = state
+        .tools
+        .toolkits()
         .iter()
         .filter(|t| {
             let is_connected = user_connectors.contains_key(&t.provider);
@@ -168,8 +174,13 @@ pub async fn execute(
             }
         })
         .flat_map(|t| {
-            let granted_scopes = user_connectors.get(&t.provider).cloned().unwrap_or_default();
-            state.tools.tools_for_provider(&t.provider)
+            let granted_scopes = user_connectors
+                .get(&t.provider)
+                .cloned()
+                .unwrap_or_default();
+            state
+                .tools
+                .tools_for_provider(&t.provider)
                 .unwrap_or(&[])
                 .iter()
                 .map(move |tool| (t, tool, granted_scopes.clone()))
@@ -188,7 +199,9 @@ pub async fn execute(
             error: Some("platform_not_connected".to_string()),
             message: Some(format!(
                 "Platform '{}' is not connected. Connect it at /dashboard first.",
-                target_platform.as_deref().unwrap_or("(inferred from query)")
+                target_platform
+                    .as_deref()
+                    .unwrap_or("(inferred from query)")
             )),
             candidates: None,
             available_tools_hint: Some(hint),
@@ -197,7 +210,8 @@ pub async fn execute(
     }
 
     // Score all tools
-    let mut scored: Vec<_> = tools.iter()
+    let mut scored: Vec<_> = tools
+        .iter()
         .map(|(toolkit, tool, granted_scopes)| {
             let score = score_tool(&query_lower, &query_tokens, tool, &toolkit.provider);
             let scope_sat = check_scope_satisfied(&tool.scopes, granted_scopes);
@@ -240,13 +254,15 @@ pub async fn execute(
     };
 
     if ambiguous && top_tools.len() >= 2 {
-        let candidates: Vec<_> = top_tools.iter().take(3).map(|(tk, t, score, _)| {
-            CandidateTool {
+        let candidates: Vec<_> = top_tools
+            .iter()
+            .take(3)
+            .map(|(tk, t, score, _)| CandidateTool {
                 tool: t.slug.clone(),
                 name: t.name.clone(),
                 match_reason: format!("score {:.2}", score),
-            }
-        }).collect();
+            })
+            .collect();
 
         let resp = LlmExecuteResponse {
             ok: false,
@@ -256,7 +272,9 @@ pub async fn execute(
             explanation: None,
             result: None,
             error: Some("ambiguous".to_string()),
-            message: Some("Your query could match multiple tools. Did you mean one of:".to_string()),
+            message: Some(
+                "Your query could match multiple tools. Did you mean one of:".to_string(),
+            ),
             candidates: Some(candidates),
             available_tools_hint: None,
         };
@@ -287,7 +305,10 @@ pub async fn execute(
                 selected_tool.name,
                 selected_tool.scopes.join(", "),
                 selected_tool.provider,
-                user_connectors.get(&selected_tool.provider).cloned().unwrap_or_default()
+                user_connectors
+                    .get(&selected_tool.provider)
+                    .cloned()
+                    .unwrap_or_default()
             )),
             candidates: None,
             available_tools_hint: None,
@@ -303,11 +324,7 @@ pub async fn execute(
         callback_url: None,
     };
 
-    let exec_resp = crate::api::tools::execute(
-        State(state.clone()),
-        headers,
-        Json(exec_req),
-    ).await;
+    let exec_resp = crate::api::tools::execute(State(state.clone()), headers, Json(exec_req)).await;
 
     // Parse the execution response
     let exec_status = exec_resp.status();
@@ -322,16 +339,19 @@ pub async fn execute(
             explanation: Some(explanation),
             result: None,
             error: Some("execution_failed".to_string()),
-            message: Some(format!("Tool execution failed with status {}: {}", exec_status.as_u16(), exec_body)),
+            message: Some(format!(
+                "Tool execution failed with status {}: {}",
+                exec_status.as_u16(),
+                exec_body
+            )),
             candidates: None,
             available_tools_hint: None,
         };
         return ok_json(resp);
     }
 
-    let result_json: serde_json::Value = serde_json::from_str(&exec_body).unwrap_or_else(|_| {
-        serde_json::json!({ "raw": exec_body })
-    });
+    let result_json: serde_json::Value = serde_json::from_str(&exec_body)
+        .unwrap_or_else(|_| serde_json::json!({ "raw": exec_body }));
 
     let resp = LlmExecuteResponse {
         ok: true,
@@ -371,47 +391,64 @@ pub async fn list_tools(
         let tools = if connected {
             let granted = user_connectors.get(p).cloned().unwrap_or_default();
             let tool_list = state.tools.tools_for_provider(p).unwrap_or(&[]);
-            Some(tool_list.iter().map(|t| {
-                let scope_sat = check_scope_satisfied(&t.scopes, &granted);
-                AvailableTool {
-                    slug: t.slug.clone(),
-                    name: t.name.clone(),
-                    description: t.description.clone(),
-                    example_queries: t.example_queries.clone(),
-                    scopes: t.scopes.clone(),
-                    scope_satisfied: match scope_sat {
-                        ScopeSatisfied::Yes => "yes".to_string(),
-                        ScopeSatisfied::No => "no".to_string(),
-                        ScopeSatisfied::Unknown => "unknown".to_string(),
-                    },
-                }
-            }).collect())
+            Some(
+                tool_list
+                    .iter()
+                    .map(|t| {
+                        let scope_sat = check_scope_satisfied(&t.scopes, &granted);
+                        AvailableTool {
+                            slug: t.slug.clone(),
+                            name: t.name.clone(),
+                            description: t.description.clone(),
+                            example_queries: t.example_queries.clone(),
+                            scopes: t.scopes.clone(),
+                            scope_satisfied: match scope_sat {
+                                ScopeSatisfied::Yes => "yes".to_string(),
+                                ScopeSatisfied::No => "no".to_string(),
+                                ScopeSatisfied::Unknown => "unknown".to_string(),
+                            },
+                        }
+                    })
+                    .collect(),
+            )
         } else {
             None
         };
         map.insert(p.clone(), PlatformTools { connected, tools });
         map
     } else {
-        user_connectors.keys()
+        user_connectors
+            .keys()
             .map(|platform| {
                 let granted = user_connectors.get(platform).cloned().unwrap_or_default();
                 let tool_list = state.tools.tools_for_provider(platform).unwrap_or(&[]);
-                let tools = Some(tool_list.iter().map(|t| {
-                    let scope_sat = check_scope_satisfied(&t.scopes, &granted);
-                    AvailableTool {
-                        slug: t.slug.clone(),
-                        name: t.name.clone(),
-                        description: t.description.clone(),
-                        example_queries: t.example_queries.clone(),
-                        scopes: t.scopes.clone(),
-                        scope_satisfied: match scope_sat {
-                            ScopeSatisfied::Yes => "yes".to_string(),
-                            ScopeSatisfied::No => "no".to_string(),
-                            ScopeSatisfied::Unknown => "unknown".to_string(),
-                        },
-                    }
-                }).collect());
-                (platform.clone(), PlatformTools { connected: true, tools })
+                let tools = Some(
+                    tool_list
+                        .iter()
+                        .map(|t| {
+                            let scope_sat = check_scope_satisfied(&t.scopes, &granted);
+                            AvailableTool {
+                                slug: t.slug.clone(),
+                                name: t.name.clone(),
+                                description: t.description.clone(),
+                                example_queries: t.example_queries.clone(),
+                                scopes: t.scopes.clone(),
+                                scope_satisfied: match scope_sat {
+                                    ScopeSatisfied::Yes => "yes".to_string(),
+                                    ScopeSatisfied::No => "no".to_string(),
+                                    ScopeSatisfied::Unknown => "unknown".to_string(),
+                                },
+                            }
+                        })
+                        .collect(),
+                );
+                (
+                    platform.clone(),
+                    PlatformTools {
+                        connected: true,
+                        tools,
+                    },
+                )
             })
             .collect()
     };
@@ -448,17 +485,25 @@ pub async fn explain(
         let body = serde_json::json!({
             "error": "platform_not_connected",
             "message": format!("{} is not connected", tool.provider)
-        }).to_string();
+        })
+        .to_string();
         return not_found(body);
     }
 
-    let granted = user_connectors.get(&tool.provider).cloned().unwrap_or_default();
+    let granted = user_connectors
+        .get(&tool.provider)
+        .cloned()
+        .unwrap_or_default();
     let scope_sat = check_scope_satisfied(&tool.scopes, &granted);
 
     let arguments = extract_arguments(&query.query, tool);
-    let missing: Vec<String> = tool.input_schema.required.iter()
+    let missing: Vec<String> = tool
+        .input_schema
+        .required
+        .iter()
         .filter(|r| {
-            arguments.as_object()
+            arguments
+                .as_object()
                 .map(|o| !o.contains_key(*r))
                 .unwrap_or(true)
         })
@@ -490,7 +535,12 @@ pub async fn explain(
 }
 
 /// Score how well a tool matches the query (0.0 to 1.0).
-fn score_tool(query_lower: &str, query_tokens: &[&str], tool: &crate::tools::Tool, provider: &str) -> f64 {
+fn score_tool(
+    query_lower: &str,
+    query_tokens: &[&str],
+    tool: &crate::tools::Tool,
+    provider: &str,
+) -> f64 {
     let mut score = 0.0;
 
     // 1. Platform match (20%)
@@ -516,7 +566,15 @@ fn score_tool(query_lower: &str, query_tokens: &[&str], tool: &crate::tools::Too
 
 fn score_action_match(query_lower: &str, tool: &crate::tools::Tool) -> f64 {
     // Action patterns in queries
-    let list_patterns = ["list", "show", "get", "fetch", "retrieve", "all", "what do i have"];
+    let list_patterns = [
+        "list",
+        "show",
+        "get",
+        "fetch",
+        "retrieve",
+        "all",
+        "what do i have",
+    ];
     let create_patterns = ["create", "add", "new", "make", "post", "open"];
     let update_patterns = ["update", "edit", "modify", "patch", "put", "change"];
     let delete_patterns = ["delete", "remove", "destroy", "drop", "unlink"];
@@ -534,7 +592,12 @@ fn score_action_match(query_lower: &str, tool: &crate::tools::Tool) -> f64 {
         }
     }
     for pat in update_patterns {
-        if query_lower.contains(pat) && matches!(tool.method, crate::tools::HttpMethod::PUT | crate::tools::HttpMethod::PATCH) {
+        if query_lower.contains(pat)
+            && matches!(
+                tool.method,
+                crate::tools::HttpMethod::PUT | crate::tools::HttpMethod::PATCH
+            )
+        {
             max_score = max_score.max(1.0);
         }
     }
@@ -558,7 +621,8 @@ fn score_keyword_match(tokens: &[&str], tool: &crate::tools::Tool) -> f64 {
         tool.description.replace('\n', " "),
         tool.tags.join(" "),
         tool.provider
-    ).to_lowercase();
+    )
+    .to_lowercase();
 
     for token in tokens {
         if STOP_WORDS.contains(token) {
@@ -599,8 +663,14 @@ fn score_example_queries(query_lower: &str, tool: &crate::tools::Tool) -> f64 {
 
 /// Simple word overlap similarity.
 fn similarity(a: &str, b: &str) -> f64 {
-    let a_words: HashSet<_> = a.split_whitespace().filter(|w| !STOP_WORDS.contains(w) && w.len() >= 2).collect();
-    let b_words: HashSet<_> = b.split_whitespace().filter(|w| !STOP_WORDS.contains(w) && w.len() >= 2).collect();
+    let a_words: HashSet<_> = a
+        .split_whitespace()
+        .filter(|w| !STOP_WORDS.contains(w) && w.len() >= 2)
+        .collect();
+    let b_words: HashSet<_> = b
+        .split_whitespace()
+        .filter(|w| !STOP_WORDS.contains(w) && w.len() >= 2)
+        .collect();
 
     if a_words.is_empty() || b_words.is_empty() {
         return 0.0;
@@ -613,7 +683,8 @@ fn similarity(a: &str, b: &str) -> f64 {
 
 /// Tokenize query into meaningful words.
 fn tokenize(query: &str) -> Vec<&str> {
-    query.split_whitespace()
+    query
+        .split_whitespace()
         .filter(|w| w.len() >= 2 && !STOP_WORDS.contains(w))
         .collect()
 }
@@ -639,7 +710,10 @@ fn detect_platform_from_query<'a>(
         ("dingtalk", "dingtalk"),
         ("wechatwork", "wechatwork"),
         ("weixin", "wechatwork"),
-    ].iter().cloned().collect();
+    ]
+    .iter()
+    .cloned()
+    .collect();
 
     for (keyword, platform) in platform_keywords {
         if query_lower.contains(keyword) && connected.contains_key(platform) {
@@ -673,7 +747,10 @@ fn extract_arguments(query: &str, tool: &crate::tools::Tool) -> serde_json::Valu
     if tool.input_schema.properties.contains_key("sort") {
         for sort_val in ["created", "updated", "pushed", "full_name"] {
             if query_lower.contains(sort_val) {
-                args.insert("sort".to_string(), serde_json::Value::String(sort_val.to_string()));
+                args.insert(
+                    "sort".to_string(),
+                    serde_json::Value::String(sort_val.to_string()),
+                );
                 break;
             }
         }
@@ -682,7 +759,10 @@ fn extract_arguments(query: &str, tool: &crate::tools::Tool) -> serde_json::Valu
     // Handle per_page parameter
     if tool.input_schema.properties.contains_key("per_page") {
         if query_lower.contains("all") || query_lower.contains("every") {
-            args.insert("per_page".to_string(), serde_json::Value::Number(100.into()));
+            args.insert(
+                "per_page".to_string(),
+                serde_json::Value::Number(100.into()),
+            );
         }
     }
 
@@ -691,16 +771,14 @@ fn extract_arguments(query: &str, tool: &crate::tools::Tool) -> serde_json::Valu
 
 fn extract_value_after_word(query: &str, word: &str) -> Option<String> {
     // Look for patterns like "sort by updated" or "in repo myrepo"
-    let patterns = [
-        format!("{} ", word),
-        format!(" {} ", word),
-    ];
+    let patterns = [format!("{} ", word), format!(" {} ", word)];
 
     for pat in &patterns {
         if let Some(idx) = query.find(pat) {
             let after = &query[idx + pat.len()..];
             let end = after.find(' ').unwrap_or(after.len()).min(50);
-            let val = after[..end].trim_end_matches(|c: char| c.is_ascii_punctuation() || c == '\n');
+            let val =
+                after[..end].trim_end_matches(|c: char| c.is_ascii_punctuation() || c == '\n');
             if !val.is_empty() && !STOP_WORDS.contains(&val) {
                 return Some(val.to_string());
             }
@@ -721,8 +799,12 @@ fn build_explanation(query: &str, tool: &crate::tools::Tool, scope_sat: ScopeSat
 
     if !tool.scopes.is_empty() {
         match scope_sat {
-            ScopeSatisfied::Yes => parts.push("Your connection has the required scopes.".to_string()),
-            ScopeSatisfied::No => parts.push("Your connection is missing required scopes.".to_string()),
+            ScopeSatisfied::Yes => {
+                parts.push("Your connection has the required scopes.".to_string())
+            }
+            ScopeSatisfied::No => {
+                parts.push("Your connection is missing required scopes.".to_string())
+            }
             ScopeSatisfied::Unknown => parts.push("Scope status is unknown.".to_string()),
         }
     }
@@ -730,13 +812,13 @@ fn build_explanation(query: &str, tool: &crate::tools::Tool, scope_sat: ScopeSat
     parts.join(" ")
 }
 
-fn build_available_hint(
-    connected: &HashMap<String, Vec<String>>,
-    state: &AppState,
-) -> String {
-    let platform_names: Vec<String> = connected.keys()
+fn build_available_hint(connected: &HashMap<String, Vec<String>>, state: &AppState) -> String {
+    let platform_names: Vec<String> = connected
+        .keys()
         .map(|p| {
-            state.tools.toolkits()
+            state
+                .tools
+                .toolkits()
                 .iter()
                 .find(|t| t.provider == *p)
                 .map(|t| t.name.clone())
@@ -750,7 +832,8 @@ fn build_available_hint(
         format!(
             "You have {} connected. Available tools include: {}.",
             platform_names.join(", "),
-            connected.keys()
+            connected
+                .keys()
                 .flat_map(|p| state.tools.tools_for_provider(p).unwrap_or(&[]).iter())
                 .take(5)
                 .map(|t| t.slug.clone())
@@ -764,13 +847,13 @@ async fn get_user_connectors(
     state: &Arc<AppState>,
     owner: &str,
 ) -> Result<HashMap<String, Vec<String>>, Response> {
-    let connectors = state.connectors.list_all().await
-        .map_err(|e| {
-            let body = serde_json::json!({ "error": format!("failed to list connectors: {}", e) }).to_string();
-            let mut resp = Response::new(body.into());
-            *resp.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
-            resp
-        })?;
+    let connectors = state.connectors.list_all().await.map_err(|e| {
+        let body =
+            serde_json::json!({ "error": format!("failed to list connectors: {}", e) }).to_string();
+        let mut resp = Response::new(body.into());
+        *resp.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+        resp
+    })?;
 
     Ok(connectors
         .into_iter()

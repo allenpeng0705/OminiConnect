@@ -89,7 +89,11 @@ impl Config {
 
 impl PlatformConfig {
     /// Create a new platform config
-    pub fn new(name: impl Into<String>, client_id: impl Into<String>, client_secret: impl Into<String>) -> Self {
+    pub fn new(
+        name: impl Into<String>,
+        client_id: impl Into<String>,
+        client_secret: impl Into<String>,
+    ) -> Self {
         Self {
             name: name.into(),
             client_id: client_id.into(),
@@ -131,8 +135,7 @@ mod tests {
 
     #[test]
     fn test_platform_config() {
-        let platform = PlatformConfig::new("feishu", "id", "secret")
-            .with_tenant_id("tenant1");
+        let platform = PlatformConfig::new("feishu", "id", "secret").with_tenant_id("tenant1");
 
         assert_eq!(platform.name, "feishu");
         assert_eq!(platform.tenant_id, Some("tenant1".to_string()));

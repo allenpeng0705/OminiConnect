@@ -2,15 +2,10 @@
 //!
 //! Run as: cargo run -p omini-connect-feishu --bin feishu_server
 
+use axum::{extract::State, routing::post, Json, Router};
 use omini_connect_feishu::{FeishuApiClient, FeishuMcpServer, JsonRpcRequest, TokenVaultAccess};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use axum::{
-    extract::State,
-    routing::post,
-    Router,
-    Json,
-};
 
 #[derive(Clone)]
 struct AppState {
@@ -48,7 +43,9 @@ async fn main() {
 
     println!("Feishu MCP server listening on http://0.0.0.0:{}", port);
 
-    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
+        .await
+        .unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
@@ -67,7 +64,13 @@ impl MockTokenVault {
 }
 
 impl TokenVaultAccess for MockTokenVault {
-    fn get_token(&self, _platform: &str, _subject: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>> {
+    fn get_token(
+        &self,
+        _platform: &str,
+        _subject: &str,
+    ) -> std::pin::Pin<
+        Box<dyn std::future::Future<Output = Result<String, anyhow::Error>> + Send + '_>,
+    > {
         Box::pin(async { Ok(self.token.clone()) })
     }
 }

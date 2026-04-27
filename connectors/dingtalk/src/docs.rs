@@ -8,9 +8,18 @@ pub fn generate_markdown() -> String {
     let mut output = String::from("# DingTalk Connector Tools\n\n");
     output.push_str(&format!("Total tools: {}\n\n", tools.len()));
 
-    let workflow_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("workflow_")).collect();
-    let message_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("message_")).collect();
-    let user_tools: Vec<_> = tools.iter().filter(|t| t.name.starts_with("user_")).collect();
+    let workflow_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("workflow_"))
+        .collect();
+    let message_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("message_"))
+        .collect();
+    let user_tools: Vec<_> = tools
+        .iter()
+        .filter(|t| t.name.starts_with("user_"))
+        .collect();
 
     if !workflow_tools.is_empty() {
         output.push_str("## Workflow\n\n");

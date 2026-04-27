@@ -13,8 +13,8 @@ use axum::{
     },
     response::IntoResponse,
 };
-use futures_util::{SinkExt, StreamExt};
 use bytes::Bytes;
+use futures_util::{SinkExt, StreamExt};
 use tokio_tungstenite::{connect_async, tungstenite::Message as TungMsg};
 
 use crate::app::AppState;
@@ -49,7 +49,11 @@ fn tung_to_axum(msg: TungMsg) -> Option<AxumMsg> {
 }
 
 fn nango_ws_url() -> Option<String> {
-    let base = std::env::var("NANGO_BASE_URL").ok()?.trim().trim_end_matches('/').to_string();
+    let base = std::env::var("NANGO_BASE_URL")
+        .ok()?
+        .trim()
+        .trim_end_matches('/')
+        .to_string();
     if base.is_empty() {
         return None;
     }
@@ -70,7 +74,11 @@ fn nango_ws_url() -> Option<String> {
     } else {
         format!("/{configured_path}")
     };
-    Some(format!("{scheme}://{}{}", host_and_path.trim_end_matches('/'), path))
+    Some(format!(
+        "{scheme}://{}{}",
+        host_and_path.trim_end_matches('/'),
+        path
+    ))
 }
 
 /// GET /_nango_auth_ws — upgrades to WebSocket and proxies to Nango's auth WebSocket.
@@ -78,57 +86,55 @@ async fn ws_handler(
     State(_state): State<Arc<AppState>>,
     ws_upgrade: WebSocketUpgrade,
 ) -> impl IntoResponse {
-    ws_upgrade.on_upgrade(move |browser_ws: WebSocket| {
-        async move {
-            let Some(nango_ws_url) = nango_ws_url() else {
-                tracing::warn!("nango_ws_proxy: NANGO_BASE_URL is not a valid HTTP(S) URL");
+    ws_upgrade.on_upgrade(move |browser_ws: WebSocket| async move {
+        let Some(nango_ws_url) = nango_ws_url() else {
+            tracing::warn!("nango_ws_proxy: NANGO_BASE_URL is not a valid HTTP(S) URL");
+            return;
+        };
+        let (upstream_ws, _) = match connect_async(&nango_ws_url).await {
+            Ok(ws) => ws,
+            Err(e) => {
+                tracing::warn!("nango_ws_proxy: upstream connect failed: {}", e);
                 return;
-            };
-            let (upstream_ws, _) = match connect_async(&nango_ws_url).await {
-                Ok(ws) => ws,
-                Err(e) => {
-                    tracing::warn!("nango_ws_proxy: upstream connect failed: {}", e);
-                    return;
-                }
-            };
+            }
+        };
 
-            let (mut browser_out, mut browser_in) = browser_ws.split();
-            let (mut upstream_out, mut upstream_in) = upstream_ws.split();
+        let (mut browser_out, mut browser_in) = browser_ws.split();
+        let (mut upstream_out, mut upstream_in) = upstream_ws.split();
 
-            loop {
-                tokio::select! {
-                    msg = browser_in.next() => {
-                        match msg {
-                            Some(Ok(axum_msg)) => {
-                                if let Some(tung_msg) = axum_to_tung(axum_msg) {
-                                    if upstream_out.send(tung_msg).await.is_err() { break; }
-                                }
-                            }
-                            None => {
-                                let _ = upstream_out.send(TungMsg::Close(None)).await;
-                                break;
-                            }
-                            Some(Err(e)) => {
-                                tracing::debug!("browser ws: {}", e);
-                                break;
+        loop {
+            tokio::select! {
+                msg = browser_in.next() => {
+                    match msg {
+                        Some(Ok(axum_msg)) => {
+                            if let Some(tung_msg) = axum_to_tung(axum_msg) {
+                                if upstream_out.send(tung_msg).await.is_err() { break; }
                             }
                         }
+                        None => {
+                            let _ = upstream_out.send(TungMsg::Close(None)).await;
+                            break;
+                        }
+                        Some(Err(e)) => {
+                            tracing::debug!("browser ws: {}", e);
+                            break;
+                        }
                     }
-                    msg = upstream_in.next() => {
-                        match msg {
-                            Some(Ok(tung_msg)) => {
-                                if let Some(axum_msg) = tung_to_axum(tung_msg) {
-                                    if browser_out.send(axum_msg).await.is_err() { break; }
-                                }
+                }
+                msg = upstream_in.next() => {
+                    match msg {
+                        Some(Ok(tung_msg)) => {
+                            if let Some(axum_msg) = tung_to_axum(tung_msg) {
+                                if browser_out.send(axum_msg).await.is_err() { break; }
                             }
-                            None => {
-                                let _ = browser_out.send(AxumMsg::Close(None)).await;
-                                break;
-                            }
-                            Some(Err(e)) => {
-                                tracing::debug!("upstream ws: {}", e);
-                                break;
-                            }
+                        }
+                        None => {
+                            let _ = browser_out.send(AxumMsg::Close(None)).await;
+                            break;
+                        }
+                        Some(Err(e)) => {
+                            tracing::debug!("upstream ws: {}", e);
+                            break;
                         }
                     }
                 }

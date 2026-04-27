@@ -3,17 +3,11 @@
 //! MCP server that wraps Maton.ai API gateway.
 //! Configure via MATON_API_KEY environment variable.
 
+use axum::{extract::State, http::StatusCode, response::Json, routing::post, Router};
 use omini_connect_maton::MatonMcpServer;
-use std::net::SocketAddr;
-use axum::{
-    Router,
-    routing::post,
-    extract::State,
-    response::Json,
-    http::StatusCode,
-};
-use tower_http::cors::{CorsLayer, Any};
 use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
+use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Clone)]
 struct AppState {
@@ -69,8 +63,8 @@ async fn handle_mcp(
 #[tokio::main]
 async fn main() {
     // Load API key from environment
-    let api_key = std::env::var("MATON_API_KEY")
-        .expect("MATON_API_KEY environment variable must be set");
+    let api_key =
+        std::env::var("MATON_API_KEY").expect("MATON_API_KEY environment variable must be set");
 
     println!("Starting Maton.ai connector MCP server");
     println!("Gateway: https://gateway.maton.ai/{{app}}/{{path}}");

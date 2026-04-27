@@ -35,10 +35,14 @@ pub async fn get_token(
     let auth = match try_auth(&state, &headers).await {
         Some(a) => a,
         None => {
-            return (StatusCode::UNAUTHORIZED, Json(json!({
-                "error": "unauthorized",
-                "message": "Invalid or missing authentication"
-            }))).into_response();
+            return (
+                StatusCode::UNAUTHORIZED,
+                Json(json!({
+                    "error": "unauthorized",
+                    "message": "Invalid or missing authentication"
+                })),
+            )
+                .into_response();
         }
     };
 
@@ -46,40 +50,59 @@ pub async fn get_token(
     let connector = match state.connectors.get(&auth.username, &platform).await {
         Ok(Some(c)) => c,
         Ok(None) => {
-            return (StatusCode::NOT_FOUND, Json(json!({
-                "error": "connector_not_found",
-                "message": format!("{} is not connected", platform)
-            }))).into_response();
+            return (
+                StatusCode::NOT_FOUND,
+                Json(json!({
+                    "error": "connector_not_found",
+                    "message": format!("{} is not connected", platform)
+                })),
+            )
+                .into_response();
         }
         Err(e) => {
             tracing::error!("Failed to get connector for token: {}", e);
-            return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({
-                "error": "internal_error",
-                "message": "Failed to get connector"
-            }))).into_response();
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({
+                    "error": "internal_error",
+                    "message": "Failed to get connector"
+                })),
+            )
+                .into_response();
         }
     };
 
     if !connector.enabled {
-        return (StatusCode::FORBIDDEN, Json(json!({
-            "error": "connector_disabled",
-            "message": "Connector is disabled"
-        }))).into_response();
+        return (
+            StatusCode::FORBIDDEN,
+            Json(json!({
+                "error": "connector_disabled",
+                "message": "Connector is disabled"
+            })),
+        )
+            .into_response();
     }
 
     // Get the vault key for this platform and user
     let platform_key = oauth_vault_platform_key(&auth.username, &platform);
 
     // Get token from oauth_vault - requires (platform, subject)
-    let token_result = state.oauth_vault.get_token(&platform_key, &auth.username).await;
+    let token_result = state
+        .oauth_vault
+        .get_token(&platform_key, &auth.username)
+        .await;
 
     match token_result {
         Ok(token) => {
             // Token found
-            (StatusCode::OK, Json(json!({
-                "platform": platform,
-                "access_token": token,
-            }))).into_response()
+            (
+                StatusCode::OK,
+                Json(json!({
+                    "platform": platform,
+                    "access_token": token,
+                })),
+            )
+                .into_response()
         }
         Err(_e) => {
             // Check if this is a static token platform (maton, qqmail)
@@ -87,16 +110,24 @@ pub async fn get_token(
                 // For static token platforms, client_id holds the API key
                 let static_token = connector.client_id.clone();
                 if !static_token.is_empty() {
-                    return (StatusCode::OK, Json(json!({
-                        "platform": platform,
-                        "access_token": static_token,
-                    }))).into_response();
+                    return (
+                        StatusCode::OK,
+                        Json(json!({
+                            "platform": platform,
+                            "access_token": static_token,
+                        })),
+                    )
+                        .into_response();
                 }
             }
-            (StatusCode::NOT_FOUND, Json(json!({
-                "error": "token_not_found",
-                "message": "No token available for this platform. Please re-authenticate."
-            }))).into_response()
+            (
+                StatusCode::NOT_FOUND,
+                Json(json!({
+                    "error": "token_not_found",
+                    "message": "No token available for this platform. Please re-authenticate."
+                })),
+            )
+                .into_response()
         }
     }
 }
@@ -110,10 +141,14 @@ pub async fn list_tokens(
     let auth = match try_auth(&state, &headers).await {
         Some(a) => a,
         None => {
-            return (StatusCode::UNAUTHORIZED, Json(json!({
-                "error": "unauthorized",
-                "message": "Invalid or missing authentication"
-            }))).into_response();
+            return (
+                StatusCode::UNAUTHORIZED,
+                Json(json!({
+                    "error": "unauthorized",
+                    "message": "Invalid or missing authentication"
+                })),
+            )
+                .into_response();
         }
     };
 
@@ -122,10 +157,14 @@ pub async fn list_tokens(
         Ok(conns) => conns,
         Err(e) => {
             tracing::error!("Failed to list connectors: {}", e);
-            return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({
-                "error": "internal_error",
-                "message": "Failed to list connectors"
-            }))).into_response();
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({
+                    "error": "internal_error",
+                    "message": "Failed to list connectors"
+                })),
+            )
+                .into_response();
         }
     };
 
@@ -133,7 +172,11 @@ pub async fn list_tokens(
     for connector in connectors {
         let platform_key = oauth_vault_platform_key(&auth.username, &connector.platform);
 
-        let has_token = state.oauth_vault.get_token(&platform_key, &auth.username).await.is_ok();
+        let has_token = state
+            .oauth_vault
+            .get_token(&platform_key, &auth.username)
+            .await
+            .is_ok();
         let is_static = connector.platform == "maton" || connector.platform == "qqmail";
 
         tokens.push(json!({
@@ -144,7 +187,11 @@ pub async fn list_tokens(
         }));
     }
 
-    (StatusCode::OK, Json(json!({
-        "tokens": tokens
-    }))).into_response()
+    (
+        StatusCode::OK,
+        Json(json!({
+            "tokens": tokens
+        })),
+    )
+        .into_response()
 }

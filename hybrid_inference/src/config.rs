@@ -154,29 +154,19 @@ pub enum ConditionConfig {
     ContentContainsPii,
 
     /// Content matches pattern
-    ContentMatches {
-        pattern: PatternConfig,
-    },
+    ContentMatches { pattern: PatternConfig },
 
     /// Request uses specific tool(s)
-    ToolIs {
-        tools: Vec<String>,
-    },
+    ToolIs { tools: Vec<String> },
 
     /// Request from specific tenant(s)
-    TenantIs {
-        tenants: Vec<String>,
-    },
+    TenantIs { tenants: Vec<String> },
 
     /// User in group(s)
-    UserInGroup {
-        groups: Vec<String>,
-    },
+    UserInGroup { groups: Vec<String> },
 
     /// Wasm sensitivity score >= threshold
-    WasmSensitivityScoreGte {
-        score: u8,
-    },
+    WasmSensitivityScoreGte { score: u8 },
 
     /// Always match
     Always,
@@ -187,14 +177,10 @@ pub enum ConditionConfig {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum PatternConfig {
     /// Simple keyword list
-    Keywords {
-        values: Vec<String>,
-    },
+    Keywords { values: Vec<String> },
 
     /// Regex pattern
-    Regex {
-        pattern: String,
-    },
+    Regex { pattern: String },
 }
 
 /// Rule action
@@ -205,9 +191,7 @@ pub enum RuleAction {
     RouteToLocal,
 
     /// Route to specific target
-    RouteToTarget {
-        target: String,
-    },
+    RouteToTarget { target: String },
 
     /// Route to cloud
     RouteToCloud,

@@ -16,7 +16,8 @@ async fn test_token_store_in_memory() {
         expires_at: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
-            .as_secs() as i64 + 3600,
+            .as_secs() as i64
+            + 3600,
         scopes: vec!["calendar".to_string(), "message".to_string()],
     };
 

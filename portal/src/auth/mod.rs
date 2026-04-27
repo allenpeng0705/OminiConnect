@@ -6,12 +6,13 @@ pub mod models;
 
 use std::sync::Arc;
 
-use axum::{Router, routing::get, routing::post, routing::delete};
+use axum::{routing::delete, routing::get, routing::post, Router};
 
 use crate::app::AppState;
 
 async fn serve_spa() -> axum::response::Html<String> {
-    let index = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("frontend/dist/index.html");
+    let index =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("frontend/dist/index.html");
     match tokio::fs::read_to_string(index).await {
         Ok(html) => axum::response::Html(html),
         Err(e) => {
@@ -28,7 +29,10 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/google", get(handlers::google_start))
         .route("/capabilities", get(handlers::capabilities))
         .route("/logout", post(handlers::logout))
-        .route("/apikey", get(handlers::list_api_keys).post(handlers::generate_api_key))
+        .route(
+            "/apikey",
+            get(handlers::list_api_keys).post(handlers::generate_api_key),
+        )
         .route("/apikey/:key_hash", delete(handlers::delete_api_key))
         .route("/me", get(handlers::me))
 }

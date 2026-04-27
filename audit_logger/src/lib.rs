@@ -18,10 +18,10 @@
 //! cargo build -p omini-connect-audit-logger
 //! ```
 
+mod export;
 mod models;
 mod storage;
-mod export;
 
+pub use export::*;
 pub use models::*;
 pub use storage::*;
-pub use export::*;

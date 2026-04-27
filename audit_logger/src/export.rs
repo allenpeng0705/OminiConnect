@@ -88,7 +88,12 @@ pub async fn export_events_to_writer(
                     &format!("{:?}", event.platform),
                     event.user_id.as_deref().unwrap_or(""),
                     event.tenant_id.as_deref().unwrap_or(""),
-                    event.policy_type.as_ref().map(|p| format!("{:?}", p)).unwrap_or_default().as_str(),
+                    event
+                        .policy_type
+                        .as_ref()
+                        .map(|p| format!("{:?}", p))
+                        .unwrap_or_default()
+                        .as_str(),
                     &format!("{:?}", event.action),
                     event.content_preview.as_deref().unwrap_or(""),
                 ])?;
@@ -128,11 +133,17 @@ pub async fn generate_compliance_report(storage: &AuditStorage) -> String {
     let mut report = String::new();
     report.push_str("# OminiConnect Compliance Audit Report\n\n");
 
-    report.push_str(&format!("Generated: {}\n\n", chrono::Utc::now().to_rfc3339()));
+    report.push_str(&format!(
+        "Generated: {}\n\n",
+        chrono::Utc::now().to_rfc3339()
+    ));
 
     report.push_str("## Summary\n\n");
     report.push_str(&format!("- Total Events: {}\n", summary.total_events));
-    report.push_str(&format!("- Policy Violations: {}\n", summary.policy_violations));
+    report.push_str(&format!(
+        "- Policy Violations: {}\n",
+        summary.policy_violations
+    ));
     report.push_str(&format!("- PII Scrubbed: {}\n", summary.pii_scrubbed_count));
 
     report.push_str("\n### Events by Category\n\n");
@@ -208,7 +219,9 @@ mod tests {
             .unwrap();
 
         let mut output = Vec::new();
-        let count = export_events(&storage, ExportFormat::Csv, &mut output).await.unwrap();
+        let count = export_events(&storage, ExportFormat::Csv, &mut output)
+            .await
+            .unwrap();
 
         assert_eq!(count, 1);
         let output_str = String::from_utf8(output).unwrap();

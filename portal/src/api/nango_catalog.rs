@@ -38,7 +38,11 @@ pub async fn post_nango_connection(
     Json(body): Json<super::nango_connection::CreateNangoConnectionBody>,
 ) -> impl IntoResponse {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, Json(serde_json::json!({ "error": "unauthorized" }))).into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(serde_json::json!({ "error": "unauthorized" })),
+        )
+            .into_response();
     };
     let owner = auth.username.as_str();
 
@@ -170,7 +174,15 @@ pub async fn post_nango_connection(
         }
     };
 
-    match crate::nango::create_nango_connection(&base, &secret, integration_key, &end_user_id, &credentials).await {
+    match crate::nango::create_nango_connection(
+        &base,
+        &secret,
+        integration_key,
+        &end_user_id,
+        &credentials,
+    )
+    .await
+    {
         Ok(connection_id) => (
             StatusCode::CREATED,
             Json(serde_json::json!({ "connection_id": connection_id })),
@@ -194,7 +206,11 @@ pub async fn post_connect_session(
     Json(body): Json<NangoConnectSessionBody>,
 ) -> impl IntoResponse {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, Json(serde_json::json!({ "error": "unauthorized" }))).into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(serde_json::json!({ "error": "unauthorized" })),
+        )
+            .into_response();
     };
     let owner = auth.username.as_str();
 
@@ -299,7 +315,11 @@ pub async fn list_nango_connections(
     Query(q): Query<NangoConnectionsQuery>,
 ) -> impl IntoResponse {
     let Some(auth) = try_auth(&state, &headers).await else {
-        return (StatusCode::UNAUTHORIZED, Json(serde_json::json!({ "error": "unauthorized" }))).into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(serde_json::json!({ "error": "unauthorized" })),
+        )
+            .into_response();
     };
 
     let platform = q.platform.trim();
@@ -360,13 +380,24 @@ pub struct NangoConnectionsQuery {
 }
 
 /// GET /api/nango/integrations — list Nango environment integrations (requires login).
-pub async fn list_integrations(State(state): State<Arc<AppState>>, headers: HeaderMap) -> impl IntoResponse {
+pub async fn list_integrations(
+    State(state): State<Arc<AppState>>,
+    headers: HeaderMap,
+) -> impl IntoResponse {
     if try_auth(&state, &headers).await.is_none() {
-        return (StatusCode::UNAUTHORIZED, Json(serde_json::json!({ "error": "unauthorized" }))).into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(serde_json::json!({ "error": "unauthorized" })),
+        )
+            .into_response();
     }
 
     let Some((base, secret)) = crate::nango::nango_credentials() else {
-        return (StatusCode::OK, Json(Vec::<crate::nango::NangoIntegrationCatalogItem>::new())).into_response();
+        return (
+            StatusCode::OK,
+            Json(Vec::<crate::nango::NangoIntegrationCatalogItem>::new()),
+        )
+            .into_response();
     };
 
     match crate::nango::list_integrations_catalog(&base, &secret).await {
@@ -389,12 +420,22 @@ pub async fn list_providers(
     Query(q): Query<NangoProvidersQuery>,
 ) -> impl IntoResponse {
     if try_auth(&state, &headers).await.is_none() {
-        return (StatusCode::UNAUTHORIZED, Json(serde_json::json!({ "error": "unauthorized" }))).into_response();
+        return (
+            StatusCode::UNAUTHORIZED,
+            Json(serde_json::json!({ "error": "unauthorized" })),
+        )
+            .into_response();
     }
 
     let search = q.search.as_deref();
-    let base = std::env::var("NANGO_BASE_URL").ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
-    let secret = std::env::var("NANGO_SECRET_KEY").ok().map(|s| s.trim().to_string()).filter(|s| !s.is_empty());
+    let base = std::env::var("NANGO_BASE_URL")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty());
+    let secret = std::env::var("NANGO_SECRET_KEY")
+        .ok()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty());
 
     let result = match (base.as_ref(), secret.as_ref()) {
         (Some(b), Some(s)) => crate::nango::list_providers_catalog(b, s, search).await,

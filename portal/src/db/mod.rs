@@ -5,6 +5,7 @@
 //! - `mysql://user:pass@localhost/omini_connect_portal` (also works for MariaDB)
 //! - `postgres://user:pass@localhost/omini_connect_portal`
 
+use chrono::{DateTime, Utc};
 use sqlx::any::Any;
 use sqlx::pool::PoolOptions;
 
@@ -27,9 +28,10 @@ async fn migrate_connectors_per_owner(pool: &sqlx::AnyPool) -> anyhow::Result<()
     .execute(pool)
     .await?;
 
-    let cur: Option<String> = sqlx::query_scalar("SELECT v FROM portal_meta WHERE k = 'schema_version'")
-        .fetch_optional(pool)
-        .await?;
+    let cur: Option<String> =
+        sqlx::query_scalar("SELECT v FROM portal_meta WHERE k = 'schema_version'")
+            .fetch_optional(pool)
+            .await?;
     if cur.as_deref() == Some("2") {
         return Ok(());
     }
@@ -209,7 +211,11 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
     for statement in connector_alterations {
         if let Err(e) = sqlx::query(statement).execute(&mut *conn).await {
             // Ignore duplicate-column errors across sqlite/postgres/mysql variants.
-            tracing::debug!("Skipping connector migration statement '{}': {}", statement, e);
+            tracing::debug!(
+                "Skipping connector migration statement '{}': {}",
+                statement,
+                e
+            );
         }
     }
 
@@ -229,6 +235,38 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         tracing::debug!("Skipping api_keys allowed_tools migration: {}", e);
     }
 
+    // Create custom_tools table for user-registered tools
+    if let Err(e) = sqlx::query(
+        r#"CREATE TABLE IF NOT EXISTS custom_tools (
+            slug TEXT PRIMARY KEY,
+            owner_username TEXT NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
+            provider TEXT NOT NULL,
+            endpoint TEXT NOT NULL,
+            method TEXT NOT NULL DEFAULT 'GET',
+            input_schema TEXT NOT NULL DEFAULT '{}',
+            scopes TEXT NOT NULL DEFAULT '',
+            tags TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL
+        )"#,
+    )
+    .execute(&mut *conn)
+    .await
+    {
+        tracing::debug!("Skipping custom_tools table creation: {}", e);
+    }
+
+    // Create index on custom_tools owner
+    if let Err(e) = sqlx::query(
+        "CREATE INDEX IF NOT EXISTS idx_custom_tools_owner ON custom_tools(owner_username)",
+    )
+    .execute(&mut *conn)
+    .await
+    {
+        tracing::debug!("Skipping custom_tools index: {}", e);
+    }
+
     // Add active column to agents
     if let Err(e) = sqlx::query("ALTER TABLE agents ADD COLUMN active INTEGER NOT NULL DEFAULT 1")
         .execute(&mut *conn)
@@ -238,15 +276,19 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
     }
 
     // Add index on tool_executions for efficient queries
-    if let Err(e) = sqlx::query("CREATE INDEX IF NOT EXISTS idx_tool_executions_agent_id ON tool_executions(agent_id)")
-        .execute(&mut *conn)
-        .await
+    if let Err(e) = sqlx::query(
+        "CREATE INDEX IF NOT EXISTS idx_tool_executions_agent_id ON tool_executions(agent_id)",
+    )
+    .execute(&mut *conn)
+    .await
     {
         tracing::debug!("Skipping tool_executions index migration: {}", e);
     }
-    if let Err(e) = sqlx::query("CREATE INDEX IF NOT EXISTS idx_tool_executions_created_at ON tool_executions(created_at)")
-        .execute(&mut *conn)
-        .await
+    if let Err(e) = sqlx::query(
+        "CREATE INDEX IF NOT EXISTS idx_tool_executions_created_at ON tool_executions(created_at)",
+    )
+    .execute(&mut *conn)
+    .await
     {
         tracing::debug!("Skipping tool_executions created_at index: {}", e);
     }
@@ -301,14 +343,12 @@ impl UserRepository for SqlxUserRepo {
     }
 
     async fn insert(&self, user: &User) -> anyhow::Result<()> {
-        sqlx::query(
-            "INSERT INTO users (username, password_hash, created_at) VALUES ($1, $2, $3)",
-        )
-        .bind(&user.username)
-        .bind(&user.password_hash)
-        .bind(user.created_at.to_rfc3339())
-        .execute(&self.pool)
-        .await?;
+        sqlx::query("INSERT INTO users (username, password_hash, created_at) VALUES ($1, $2, $3)")
+            .bind(&user.username)
+            .bind(&user.password_hash)
+            .bind(user.created_at.to_rfc3339())
+            .execute(&self.pool)
+            .await?;
         Ok(())
     }
 }
@@ -420,12 +460,14 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
     }
 
     async fn list_all(&self) -> anyhow::Result<Vec<ApiKey>> {
-        let rows: Vec<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys",
-        )
-        .fetch_all(&self.pool)
-        .await?;
-        Ok(rows.into_iter().map(|r: models::ApiKeyRow| r.into()).collect())
+        let rows: Vec<models::ApiKeyRow> =
+            sqlx::query_as("SELECT key_hash, username, label, created_at, agent_id FROM api_keys")
+                .fetch_all(&self.pool)
+                .await?;
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ApiKeyRow| r.into())
+            .collect())
     }
 
     async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>> {
@@ -435,7 +477,10 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
         .bind(username)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r: models::ApiKeyRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ApiKeyRow| r.into())
+            .collect())
     }
 
     async fn delete(&self, key_hash: &str) -> anyhow::Result<()> {
@@ -493,7 +538,10 @@ impl ConnectorRepository for SqlxConnectorRepo {
         .fetch_all(&self.pool)
         .await?;
 
-        Ok(rows.into_iter().map(|r: models::ConnectorRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ConnectorRow| r.into())
+            .collect())
     }
 
     async fn list_all(&self) -> anyhow::Result<Vec<ConnectorConfig>> {
@@ -503,7 +551,10 @@ impl ConnectorRepository for SqlxConnectorRepo {
         .fetch_all(&self.pool)
         .await?;
 
-        Ok(rows.into_iter().map(|r: models::ConnectorRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ConnectorRow| r.into())
+            .collect())
     }
 
     async fn upsert(&self, owner: &str, config: &ConnectorConfig) -> anyhow::Result<()> {
@@ -605,7 +656,10 @@ impl AgentRepository for SqlxAgentRepo {
         .bind(owner)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r: models::AgentRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::AgentRow| r.into())
+            .collect())
     }
 
     async fn set_active(&self, id: &str, active: bool) -> anyhow::Result<()> {
@@ -646,7 +700,11 @@ pub struct ToolExecution {
 #[async_trait::async_trait]
 pub trait ToolExecutionRepository: Send + Sync {
     async fn insert(&self, exec: &ToolExecution) -> anyhow::Result<()>;
-    async fn list_by_agent(&self, agent_id: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>>;
+    async fn list_by_agent(
+        &self,
+        agent_id: &str,
+        limit: usize,
+    ) -> anyhow::Result<Vec<ToolExecution>>;
     async fn list_by_owner(&self, owner: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>>;
 }
 
@@ -682,7 +740,11 @@ impl ToolExecutionRepository for SqlxToolExecutionRepo {
         Ok(())
     }
 
-    async fn list_by_agent(&self, agent_id: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>> {
+    async fn list_by_agent(
+        &self,
+        agent_id: &str,
+        limit: usize,
+    ) -> anyhow::Result<Vec<ToolExecution>> {
         let rows: Vec<models::ToolExecutionRow> = sqlx::query_as(
             "SELECT id, agent_id, owner_username, tool_slug, platform, arguments, result, status, duration_ms, created_at FROM tool_executions WHERE agent_id = $1 ORDER BY created_at DESC LIMIT $2",
         )
@@ -690,7 +752,10 @@ impl ToolExecutionRepository for SqlxToolExecutionRepo {
         .bind(limit as i64)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r: models::ToolExecutionRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ToolExecutionRow| r.into())
+            .collect())
     }
 
     async fn list_by_owner(&self, owner: &str, limit: usize) -> anyhow::Result<Vec<ToolExecution>> {
@@ -701,7 +766,151 @@ impl ToolExecutionRepository for SqlxToolExecutionRepo {
         .bind(limit as i64)
         .fetch_all(&self.pool)
         .await?;
-        Ok(rows.into_iter().map(|r: models::ToolExecutionRow| r.into()).collect())
+        Ok(rows
+            .into_iter()
+            .map(|r: models::ToolExecutionRow| r.into())
+            .collect())
+    }
+}
+
+// ------------------------------------------------------------------------------------------------
+// Custom tools repository (user-registered tools)
+// ------------------------------------------------------------------------------------------------
+
+use crate::tools::{HttpMethod, InputSchema, Tool};
+
+#[derive(Debug, Clone)]
+pub struct CustomTool {
+    pub slug: String,
+    pub owner_username: String,
+    pub name: String,
+    pub description: String,
+    pub provider: String,
+    pub endpoint: String,
+    pub method: HttpMethod,
+    pub input_schema: InputSchema,
+    pub scopes: Vec<String>,
+    pub tags: Vec<String>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+impl From<models::CustomToolRow> for CustomTool {
+    fn from(r: models::CustomToolRow) -> Self {
+        CustomTool {
+            slug: r.slug,
+            owner_username: r.owner_username,
+            name: r.name,
+            description: r.description,
+            provider: r.provider,
+            endpoint: r.endpoint,
+            method: serde_json::from_str(&r.method).unwrap_or(HttpMethod::GET),
+            input_schema: serde_json::from_str(&r.input_schema).unwrap_or_default(),
+            scopes: r.scopes.split_whitespace().map(String::from).collect(),
+            tags: r.tags.split_whitespace().map(String::from).collect(),
+            created_at: DateTime::parse_from_rfc3339(&r.created_at)
+                .map(|dt| dt.with_timezone(&Utc))
+                .unwrap_or_else(|_| Utc::now()),
+        }
+    }
+}
+
+impl From<CustomTool> for Tool {
+    fn from(ct: CustomTool) -> Self {
+        Tool {
+            slug: ct.slug,
+            name: ct.name,
+            description: ct.description,
+            provider: ct.provider,
+            endpoint: ct.endpoint,
+            method: ct.method,
+            input_schema: ct.input_schema,
+            output_schema: None,
+            scopes: ct.scopes,
+            tags: ct.tags,
+            icon_url: None,
+            example_queries: Vec::new(),
+        }
+    }
+}
+
+#[async_trait::async_trait]
+pub trait CustomToolRepository: Send + Sync {
+    async fn upsert(&self, tool: &CustomTool) -> anyhow::Result<()>;
+    async fn delete(&self, slug: &str, owner: &str) -> anyhow::Result<()>;
+    async fn list_by_owner(&self, owner: &str) -> anyhow::Result<Vec<CustomTool>>;
+    async fn get(&self, slug: &str) -> anyhow::Result<Option<CustomTool>>;
+}
+
+pub struct SqlxCustomToolRepo {
+    pool: sqlx::AnyPool,
+}
+
+impl SqlxCustomToolRepo {
+    pub fn new(pool: sqlx::AnyPool) -> Self {
+        Self { pool }
+    }
+}
+
+#[async_trait::async_trait]
+impl CustomToolRepository for SqlxCustomToolRepo {
+    async fn upsert(&self, tool: &CustomTool) -> anyhow::Result<()> {
+        let input_schema = serde_json::to_string(&tool.input_schema).unwrap_or_default();
+        sqlx::query(
+            r#"INSERT INTO custom_tools (slug, owner_username, name, description, provider, endpoint, method, input_schema, scopes, tags, created_at)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+               ON CONFLICT(slug) DO UPDATE SET
+               name = EXCLUDED.name,
+               description = EXCLUDED.description,
+               provider = EXCLUDED.provider,
+               endpoint = EXCLUDED.endpoint,
+               method = EXCLUDED.method,
+               input_schema = EXCLUDED.input_schema,
+               scopes = EXCLUDED.scopes,
+               tags = EXCLUDED.tags"#,
+        )
+        .bind(&tool.slug)
+        .bind(&tool.owner_username)
+        .bind(&tool.name)
+        .bind(&tool.description)
+        .bind(&tool.provider)
+        .bind(&tool.endpoint)
+        .bind(serde_json::to_string(&tool.method).unwrap_or_default())
+        .bind(&input_schema)
+        .bind(tool.scopes.join(" "))
+        .bind(tool.tags.join(" "))
+        .bind(tool.created_at.to_rfc3339())
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    async fn delete(&self, slug: &str, owner: &str) -> anyhow::Result<()> {
+        sqlx::query("DELETE FROM custom_tools WHERE slug = $1 AND owner_username = $2")
+            .bind(slug)
+            .bind(owner)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+
+    async fn list_by_owner(&self, owner: &str) -> anyhow::Result<Vec<CustomTool>> {
+        let rows: Vec<models::CustomToolRow> = sqlx::query_as(
+            "SELECT slug, owner_username, name, description, provider, endpoint, method, input_schema, scopes, tags, created_at FROM custom_tools WHERE owner_username = $1",
+        )
+        .bind(owner)
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(rows.into_iter().map(|r| r.into()).collect())
+    }
+
+    async fn get(&self, slug: &str) -> anyhow::Result<Option<CustomTool>> {
+        let row: Option<models::CustomToolRow> = sqlx::query_as(
+            "SELECT slug, owner_username, name, description, provider, endpoint, method, input_schema, scopes, tags, created_at FROM custom_tools WHERE slug = $1",
+        )
+        .bind(slug)
+        .fetch_optional(&self.pool)
+        .await?;
+        Ok(row.map(|r| r.into()))
     }
 }
 
@@ -800,7 +1009,9 @@ mod models {
                     .map(|dt| dt.with_timezone(&Utc))
                     .unwrap_or_else(|_| Utc::now()),
                 agent_id: r.agent_id,
-                allowed_tools: r.allowed_tools.map(|s| serde_json::from_str(&s).unwrap_or_default()),
+                allowed_tools: r
+                    .allowed_tools
+                    .map(|s| serde_json::from_str(&s).unwrap_or_default()),
             }
         }
     }
@@ -860,7 +1071,11 @@ mod models {
                 client_secret: r.client_secret,
                 redirect_uri: r.redirect_uri,
                 scopes: r.scopes.split_whitespace().map(String::from).collect(),
-                engine: if r.engine.is_empty() { "omini_connect_native".to_string() } else { r.engine },
+                engine: if r.engine.is_empty() {
+                    "omini_connect_native".to_string()
+                } else {
+                    r.engine
+                },
                 provider_key,
                 connection_ref: r.connection_ref,
                 agent_id: r.agent_id,
@@ -885,7 +1100,8 @@ mod models {
 
     impl From<ToolExecutionRow> for super::ToolExecution {
         fn from(r: ToolExecutionRow) -> Self {
-            let args: serde_json::Value = serde_json::from_str(&r.arguments).unwrap_or(serde_json::Value::Object(Default::default()));
+            let args: serde_json::Value = serde_json::from_str(&r.arguments)
+                .unwrap_or(serde_json::Value::Object(Default::default()));
             super::ToolExecution {
                 id: r.id,
                 agent_id: r.agent_id,
@@ -901,5 +1117,20 @@ mod models {
                     .unwrap_or_else(|_| Utc::now()),
             }
         }
+    }
+
+    #[derive(Debug, Clone, FromRow)]
+    pub struct CustomToolRow {
+        pub slug: String,
+        pub owner_username: String,
+        pub name: String,
+        pub description: String,
+        pub provider: String,
+        pub endpoint: String,
+        pub method: String,
+        pub input_schema: String,
+        pub scopes: String,
+        pub tags: String,
+        pub created_at: String,
     }
 }

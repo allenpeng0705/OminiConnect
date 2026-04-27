@@ -151,7 +151,10 @@ impl MatonMcpServer {
         params: &serde_json::Value,
     ) -> Result<serde_json::Value, MatonError> {
         let tool_name = params.get("name").and_then(|n| n.as_str()).unwrap_or("");
-        let arguments = params.get("arguments").cloned().unwrap_or(serde_json::Value::Null);
+        let arguments = params
+            .get("arguments")
+            .cloned()
+            .unwrap_or(serde_json::Value::Null);
 
         match tool_name {
             "maton_list_connections" => {
@@ -182,8 +185,14 @@ impl MatonMcpServer {
             }
             "maton_gateway_call" => {
                 let app = arguments.get("app").and_then(|v| v.as_str()).unwrap_or("");
-                let method = arguments.get("method").and_then(|v| v.as_str()).unwrap_or("GET");
-                let path = arguments.get("path").and_then(|v| v.as_str()).unwrap_or("/");
+                let method = arguments
+                    .get("method")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("GET");
+                let path = arguments
+                    .get("path")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("/");
                 let body = arguments.get("body").cloned();
                 let connection_id = arguments.get("connection_id").and_then(|v| v.as_str());
 

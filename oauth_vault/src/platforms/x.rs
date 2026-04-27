@@ -1,7 +1,7 @@
 //! X (Twitter) OAuth2 platform implementation.
 
-use crate::{OAuthError, OAuthToken};
 use crate::platform::{OAuth2Platform, PlatformConfig};
+use crate::{OAuthError, OAuthToken};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
@@ -63,7 +63,8 @@ impl XPlatform {
 
         // X OAuth2 requires Basic auth header with client_id:client_secret
         let credentials = format!("{}:{}", self.config.client_id, self.config.client_secret);
-        let encoded = base64::Engine::encode(&base64::engine::general_purpose::STANDARD, credentials);
+        let encoded =
+            base64::Engine::encode(&base64::engine::general_purpose::STANDARD, credentials);
 
         let resp = self
             .client
@@ -94,8 +95,9 @@ impl XPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: XTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: XTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if let Some(err) = body.error {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -105,7 +107,8 @@ impl XPlatform {
             )));
         }
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let now = std::time::SystemTime::now()
@@ -136,7 +139,11 @@ impl OAuth2Platform for XPlatform {
         "x"
     }
 
-    async fn exchange_code(&self, _code: &str, _redirect_uri: &str) -> Result<OAuthToken, OAuthError> {
+    async fn exchange_code(
+        &self,
+        _code: &str,
+        _redirect_uri: &str,
+    ) -> Result<OAuthToken, OAuthError> {
         // X requires PKCE; portal must call `exchange_authorization_code` with a verifier.
         Err(OAuthError::ExchangeFailed(
             "X OAuth2 requires PKCE (use exchange_authorization_code)".to_string(),
@@ -148,7 +155,8 @@ impl OAuth2Platform for XPlatform {
 
         // X OAuth2 requires Basic auth header with client_id:client_secret
         let credentials = format!("{}:{}", self.config.client_id, self.config.client_secret);
-        let encoded = base64::Engine::encode(&base64::engine::general_purpose::STANDARD, credentials);
+        let encoded =
+            base64::Engine::encode(&base64::engine::general_purpose::STANDARD, credentials);
 
         let resp = self
             .client
@@ -168,8 +176,9 @@ impl OAuth2Platform for XPlatform {
             .await
             .map_err(|e| OAuthError::ExchangeFailed(e.to_string()))?;
 
-        let body: XTokenResponse = serde_json::from_str(&body_text)
-            .map_err(|e| OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text)))?;
+        let body: XTokenResponse = serde_json::from_str(&body_text).map_err(|e| {
+            OAuthError::ExchangeFailed(format!("JSON parse error: {} - body: {}", e, body_text))
+        })?;
 
         if let Some(err) = body.error {
             return Err(OAuthError::ExchangeFailed(format!(
@@ -179,7 +188,8 @@ impl OAuth2Platform for XPlatform {
             )));
         }
 
-        let access_token = body.access_token
+        let access_token = body
+            .access_token
             .ok_or_else(|| OAuthError::ExchangeFailed("No access token in response".to_string()))?;
 
         let now = std::time::SystemTime::now()
@@ -192,7 +202,9 @@ impl OAuth2Platform for XPlatform {
             platform: self.name().to_string(),
             subject: "user".to_string(),
             access_token,
-            refresh_token: body.refresh_token.or_else(|| Some(refresh_token.to_string())),
+            refresh_token: body
+                .refresh_token
+                .or_else(|| Some(refresh_token.to_string())),
             token_type: body.token_type.unwrap_or_else(|| "Bearer".to_string()),
             expires_at,
             scopes: self.config.scopes.clone(),

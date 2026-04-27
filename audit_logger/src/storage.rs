@@ -153,8 +153,12 @@ impl AuditStorage {
         let mut pii_scrubbed_count = 0u64;
 
         for event in events.iter() {
-            *events_by_category.entry(event.category.clone()).or_insert(0) += 1;
-            *events_by_severity.entry(event.severity.clone()).or_insert(0) += 1;
+            *events_by_category
+                .entry(event.category.clone())
+                .or_insert(0) += 1;
+            *events_by_severity
+                .entry(event.severity.clone())
+                .or_insert(0) += 1;
 
             if matches!(
                 event.category,

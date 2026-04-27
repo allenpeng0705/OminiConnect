@@ -10,7 +10,8 @@ pub trait OAuth2Platform: Send + Sync {
     fn name(&self) -> &str;
 
     /// Exchange authorization code for tokens
-    async fn exchange_code(&self, code: &str, redirect_uri: &str) -> Result<OAuthToken, OAuthError>;
+    async fn exchange_code(&self, code: &str, redirect_uri: &str)
+        -> Result<OAuthToken, OAuthError>;
 
     /// Refresh an expired token
     async fn refresh_token(&self, refresh_token: &str) -> Result<OAuthToken, OAuthError>;
