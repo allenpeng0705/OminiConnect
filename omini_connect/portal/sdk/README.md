@@ -19,9 +19,13 @@ pip install ominiconnect
 ```python
 from ominiconnect import OminiConnect, AuthError
 
-client = OminiConnect(api_key="sk-xxxxx")
+# Connect to your portal (default: http://localhost:9000)
+client = OminiConnect(
+    api_key="sk-xxxxx",           # API key from portal settings
+    base_url="https://your-portal.com"  # optional, defaults to localhost:9000
+)
 
-# Check what platforms are connected
+# List connected platforms
 print(client.connectors.list())
 
 # Call any API directly — Maton style (simplest way)
@@ -41,10 +45,6 @@ if result["ok"]:
 
 # Search tools
 tools = client.tools.search("list repos", platform="github")
-
-# Create named API keys — one per agent
-key = client.api_keys.create("pr-reviewer-agent")
-print(key["key"])  # shown once — store securely!
 ```
 
 ### Error handling
@@ -89,9 +89,13 @@ npm install @ominiconnect/sdk
 ```typescript
 import { OminiConnect } from "@ominiconnect/sdk";
 
-const client = new OminiConnect({ apiKey: "sk-xxxxx" });
+// Connect to your portal (default: http://localhost:9000)
+const client = new OminiConnect({
+    apiKey: "sk-xxxxx",           // API key from portal settings
+    baseUrl: "https://your-portal.com"  // optional, defaults to localhost:9000
+});
 
-// Check connected platforms
+// List connected platforms
 console.log(await client.connectors.list());
 
 // Call any API directly — Maton style
@@ -105,10 +109,6 @@ await client.call("slack", "POST", "/api/chat.postMessage", {
 
 // Use tools
 const result = await client.tools.execute("github_list_repos", { sort: "updated" });
-
-// Create named API keys
-const { key } = await client.apiKeys.create("pr-reviewer-agent");
-console.log(key); // shown once
 ```
 
 ### TypeScript types
@@ -158,6 +158,7 @@ go get github.com/ominiconnect/go-sdk/ominiconnect
 package main
 
 import (
+    "context"
     "fmt"
     "log"
 
@@ -165,6 +166,7 @@ import (
 )
 
 func main() {
+    // Connect to your portal (nil = default http://localhost:9000)
     client := ominiconnect.New("sk-xxxxx", nil)
 
     // List connected platforms
@@ -180,13 +182,6 @@ func main() {
         log.Fatal(err)
     }
     fmt.Println(user)
-
-    // Create a named API key
-    key, err := client.ApiKeys.Create("pr-reviewer-agent")
-    if err != nil {
-        log.Fatal(err)
-    }
-    fmt.Println(key.Key) // shown once — store securely
 }
 ```
 
@@ -227,6 +222,7 @@ use omini_connect_sdk::Client;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Connect to your portal (None = default http://localhost:9000)
     let client = Client::new("sk-xxxxx", None);
 
     // List connected platforms
@@ -238,10 +234,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .call("github", "GET", "/user", None, None)
         .await?;
     println!("{}", user);
-
-    // Create a named API key
-    let key = client.api_keys().create("pr-reviewer-agent").await?;
-    println!("{}", key.key); // shown once — store securely
 
     Ok(())
 }
@@ -448,7 +440,7 @@ curl -X POST http://localhost:9000/api/llm \
 ```python
 from ominiconnect import OminiConnect
 
-client = OminiConnect(api_key="sk-xxxxx")
+client = OminiConnect(api_key="sk-xxxxx", base_url="https://your-portal.com")
 
 # Natural language — the SDK picks the right tool and executes it
 result = client.llm.execute("list my github repos sorted by updated")
@@ -463,7 +455,10 @@ print(catalog.platforms["github"]["tools"][0]["example_queries"])
 ```
 
 ```typescript
-const client = new OminiConnect({ apiKey: "sk-xxxxx" });
+const client = new OminiConnect({
+    apiKey: "sk-xxxxx",
+    baseUrl: "https://your-portal.com"  // optional, defaults to localhost:9000
+});
 
 // Natural language query
 const result = await client.llm.execute("list my github repos sorted by updated");
@@ -479,6 +474,7 @@ const catalog = await client.llm.listAvailableTools();
 ```go
 client := ominiconnect.New("sk-xxxxx", nil)
 
+// Natural language query
 result, err := client.Llm().Execute(context.Background(), "list my github repos sorted by updated", nil)
 if err != nil {
     log.Fatal(err)
@@ -491,7 +487,7 @@ result, err = client.Llm().Execute(context.Background(), "create an issue", &pla
 ```
 
 ```rust
-let client = Client::new("sk-xxxxx", None);
+let client = Client::new("sk-xxxxx", None);  // None = default http://localhost:9000
 
 let result = client.llm()
     .execute("list my github repos sorted by updated", None)
