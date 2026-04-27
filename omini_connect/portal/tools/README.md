@@ -76,8 +76,20 @@ Tools have a `scope_satisfied` field in the API response:
 
 ## API Endpoints
 
-- `GET /api/tools?platform=github` - List tools for a platform
-- `POST /api/tools/execute` - Execute a tool
+- `GET /api/tools?platform=github` - List tools for a platform (supports `?platform=` filter)
+- `GET /api/tools/search?q=list` - Search tools by name, description, or tags
+- `POST /api/tools/execute` - Execute a tool (sync or async via `callback_url`)
+- `POST /api/mcp` - MCP JSON-RPC endpoint (`tools/list`, `tools/call`)
+- `GET /api/mcp/sse` - SSE stream for async push to connected clients
+
+## Tool Execution Audit
+
+Every `POST /api/tools/execute` call is recorded in the `tool_executions` table with:
+- `call_id`, `agent_id`, `tool_slug`, `platform`, `arguments`
+- `status` (success/error), `duration_ms`, `result_body`
+- `created_at` timestamp
+
+Async calls (with `callback_url`) are recorded immediately and updated when the callback fires.
 
 ## Adding a New Provider
 

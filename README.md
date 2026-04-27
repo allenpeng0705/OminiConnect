@@ -33,6 +33,11 @@ AI agent / client
 - **API key auth** for agents: Bearer token to the portal; portal injects stored OAuth tokens on proxy calls.
 - **Passthrough proxy**: `POST/GET /api/proxy/{platform}/{path}` to native APIs.
 - **Nango (Option B)**: Optional integration with self-hosted Nango for catalog / flows; see **Developing with Nango** below.
+- **Tool Registry**: 700+ tools across providers (GitHub, Slack, Notion, Google, …) with scope filtering and tool execution via REST or MCP.
+- **MCP server**: JSON-RPC 2.0 endpoint (`POST /api/mcp`) compatible with the Model Context Protocol — `tools/list` and `tools/call` — plus SSE stream (`GET /api/mcp/sse`) for async push.
+- **Agent registration**: AI agents can self-register and get dedicated API keys scoped to the registering user.
+- **Audit log**: Every tool call recorded with duration, status, and response body for compliance.
+- **Python & JS SDKs**: Client libraries for agents, tools, and proxy — see `sdk/`.
 
 ## Repository layout
 
@@ -200,6 +205,93 @@ Or: **`./scripts/snapshot_nango_patch.sh`** (use **`--reset`** so the submodule 
 - `docs/nango_upstream_strategy.md` — upstream / submodule strategy
 
 ## API reference
+
+### Agents
+
+```
+POST   /api/agents              Register a new agent (returns raw API key once)
+GET    /api/agents              List all agents for the authenticated user
+GET    /api/agents/:id         Get a specific agent
+DELETE /api/agents/:id         Delete an agent and revoke its API key
+POST   /api/agents/:id/deactivate  Deactivate an agent (preserves audit trail)
+```
+
+**Auth:** `Authorization: Bearer <OminiConnect API key>` (human user's key)
+
+```bash
+# Register an agent
+curl -X POST http://localhost:9000/api/agents \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "github-writer", "description": "Writes GitHub PRs"}'
+
+# Response: { "id": "...", "api_key": "a1b2c3...", ... }
+# Use the returned api_key for agent requests.
+
+# List agents
+curl http://localhost:9000/api/agents \
+  -H "Authorization: Bearer YOUR_KEY"
+```
+
+### Tools
+
+```
+GET  /api/tools?platform=github   List tools (optionally filtered by platform)
+GET  /api/tools/search?q=list      Search tools by name/description/tags
+POST /api/tools/execute            Execute a tool
+```
+
+**Auth:** `Authorization: Bearer <OminiConnect API key>` (agent or user key)
+
+```bash
+# List GitHub tools
+curl "http://localhost:9000/api/tools?platform=github" \
+  -H "Authorization: Bearer AGENT_KEY"
+
+# Execute a tool
+curl -X POST http://localhost:9000/api/tools/execute \
+  -H "Authorization: Bearer AGENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool_slug": "github_list_repos", "arguments": {"sort": "updated"}}'
+
+# Execute async (result POSTed to callback_url when ready)
+curl -X POST http://localhost:9000/api/tools/execute \
+  -H "Authorization: Bearer AGENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"tool_slug": "github_list_repos", "arguments": {}, "callback_url": "https://myapp.com/callback"}'
+```
+
+**`scope_satisfied`** per tool: `"yes"` — connector has all required scopes; `"no"` — missing scopes; `"unknown"` — no connector configured.
+
+### MCP (Model Context Protocol)
+
+```
+POST /api/mcp       JSON-RPC 2.0 — tools/list, tools/call
+GET  /api/mcp/sse   SSE stream for async push to connected clients
+```
+
+MCP uses JSON-RPC 2.0. Authentication is Bearer token in the `Authorization` header.
+
+```bash
+# tools/list
+curl -X POST http://localhost:9000/api/mcp \
+  -H "Authorization: Bearer AGENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}'
+
+# tools/call
+curl -X POST http://localhost:9000/api/mcp \
+  -H "Authorization: Bearer AGENT_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/call",
+    "params": {"name": "github_list_repos", "arguments": {"sort": "updated"}}
+  }'
+```
+
+Connect via SSE (`EventSource`) to `GET /api/mcp/sse` to receive async tool results and notifications.
 
 ### Proxy
 
