@@ -426,6 +426,74 @@ Use case: Story 3 (when CORS not supported)
 | Custom Tool Registration | ⚠️ | Manual YAML, no UI |
 | Multi-tenant/API Keys | ⚠️ | Basic support, needs refinement |
 
+## Positioning: How OminiConnect Compares to Others
+
+OminiConnect combines features from multiple categories into one platform:
+
+### Comparison Matrix
+
+| Feature | Nango | Maton | Composio | OminiConnect |
+|---------|-------|-------|----------|---------------|
+| OAuth + Token Management | ✅ 300+ providers | ❌ | ❌ | ✅ 700+ via Nango + built-in |
+| Unified API Call (Maton-style) | ❌ | ✅ | ❌ | ✅ |
+| LLM Tool Registry | ❌ | ❌ | ✅ | ✅ |
+| MCP Endpoint | ⚠️ | ❌ | ✅ | ✅ |
+| Natural Language Tool Selection | ❌ | ❌ | ❌ | ✅ |
+| Scope Enforcement | ❌ | ❌ | ❌ | ✅ |
+| Audit Logging | ❌ | ❌ | ❌ | ✅ |
+| wasm_policies (PII, content) | ❌ | ❌ | ❌ | ✅ |
+
+### OminiConnect is Layered
+
+```
+┌─────────────────────────────────────────────────┐
+│  Layer 4: LLM Natural Language                 │
+│  "Notify team about GitHub issues" → Tool     │
+├─────────────────────────────────────────────────┤
+│  Layer 3: Tool Registry + MCP                  │
+│  Discover & execute tools (like Composio)     │
+├─────────────────────────────────────────────────┤
+│  Layer 2: API Gateway (Maton-style)           │
+│  POST /api/call/{platform} - unified call     │
+├─────────────────────────────────────────────────┤
+│  Layer 1: OAuth + Token Management (like Nango)│
+│  Connect once, we handle tokens + refresh      │
+└─────────────────────────────────────────────────┘
+```
+
+### How Users Choose What to Use
+
+| Use Case | Use OminiConnect For | Example |
+|----------|---------------------|---------|
+| Need OAuth for Slack/GitHub | Token Delivery | Story 1 |
+| Building AI agent | MCP + Tool Registry | Story 2, Story 6 |
+| Can't call API due to CORS | API Gateway | Story 3 |
+| Need audit/compliance | Tool Execution + Audit | Story 4 |
+| Natural language to API | LLM Endpoint | Story 5 |
+| Custom internal API | Custom Tool Registry | Story 7 |
+| Trusted agent (performance) | Token Delivery | Story 8 |
+
+### The Unique Value
+
+**vs Nango alone:**
+- Nango handles OAuth but has no tool discovery for LLMs
+- OminiConnect adds: MCP endpoint, tool registry, LLM natural language selection
+- User connects their actual accounts (not test accounts)
+
+**vs Maton alone:**
+- Maton provides unified call interface but no OAuth/token management
+- OminiConnect wraps with: token injection, scope enforcement, audit
+
+**vs Composio alone:**
+- Composio gives tools but uses YOUR API keys
+- OminiConnect connects USER'S accounts via OAuth → agent works with user's actual data
+
+**vs building it yourself:**
+- OAuth for each provider is complex (every provider different)
+- Token refresh logic is error-prone
+- Scope enforcement requires tracking per-user permissions
+- OminiConnect handles all of this
+
 ---
 
 *Last updated: 2026-04-27*
