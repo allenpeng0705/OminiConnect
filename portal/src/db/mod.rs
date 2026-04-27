@@ -267,6 +267,14 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         tracing::debug!("Skipping custom_tools index: {}", e);
     }
 
+    // Add data_residency column to users
+    if let Err(e) = sqlx::query("ALTER TABLE users ADD COLUMN data_residency TEXT")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping users data_residency migration: {}", e);
+    }
+
     // Add active column to agents
     if let Err(e) = sqlx::query("ALTER TABLE agents ADD COLUMN active INTEGER NOT NULL DEFAULT 1")
         .execute(&mut *conn)
@@ -317,6 +325,7 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
 pub trait UserRepository: Send + Sync {
     async fn get(&self, username: &str) -> anyhow::Result<Option<User>>;
     async fn insert(&self, user: &User) -> anyhow::Result<()>;
+    async fn update_data_residency(&self, username: &str, residency: &str) -> anyhow::Result<()>;
 }
 
 pub struct SqlxUserRepo {
@@ -333,7 +342,7 @@ impl SqlxUserRepo {
 impl UserRepository for SqlxUserRepo {
     async fn get(&self, username: &str) -> anyhow::Result<Option<User>> {
         let row: Option<models::UserRow> = sqlx::query_as(
-            "SELECT username, password_hash, created_at FROM users WHERE username = $1",
+            "SELECT username, password_hash, created_at, data_residency FROM users WHERE username = $1",
         )
         .bind(username)
         .fetch_optional(&self.pool)
@@ -343,10 +352,25 @@ impl UserRepository for SqlxUserRepo {
     }
 
     async fn insert(&self, user: &User) -> anyhow::Result<()> {
-        sqlx::query("INSERT INTO users (username, password_hash, created_at) VALUES ($1, $2, $3)")
+        let data_residency = user.data_residency.as_ref().map(|r| match r {
+            crate::auth::models::DataResidency::Us => "us",
+            crate::auth::models::DataResidency::Eu => "eu",
+            crate::auth::models::DataResidency::Cn => "cn",
+        });
+        sqlx::query("INSERT INTO users (username, password_hash, created_at, data_residency) VALUES ($1, $2, $3, $4)")
             .bind(&user.username)
             .bind(&user.password_hash)
             .bind(user.created_at.to_rfc3339())
+            .bind(&data_residency)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
+
+    async fn update_data_residency(&self, username: &str, residency: &str) -> anyhow::Result<()> {
+        sqlx::query("UPDATE users SET data_residency = $1 WHERE username = $2")
+            .bind(residency)
+            .bind(username)
             .execute(&self.pool)
             .await?;
         Ok(())
@@ -927,6 +951,7 @@ pub async fn seed_admin_user(user_repo: &dyn UserRepository) {
             username: "admin".to_string(),
             password_hash: hash,
             created_at: Utc::now(),
+            data_residency: None,
         };
         if let Err(e) = user_repo.insert(&user).await {
             tracing::error!("Failed to seed admin user: {}", e);
@@ -944,7 +969,7 @@ mod models {
     use chrono::{DateTime, Utc};
     use sqlx::FromRow;
 
-    use crate::auth::models::{ApiKey, Session, User};
+    use crate::auth::models::{ApiKey, DataResidency, Session, User};
     use crate::oauth::models::ConnectorConfig;
 
     #[derive(FromRow)]
@@ -952,6 +977,7 @@ mod models {
         pub username: String,
         pub password_hash: String,
         pub created_at: String,
+        pub data_residency: Option<String>,
     }
 
     impl From<UserRow> for User {
@@ -962,6 +988,14 @@ mod models {
                 created_at: DateTime::parse_from_rfc3339(&r.created_at)
                     .map(|dt| dt.with_timezone(&Utc))
                     .unwrap_or_else(|_| Utc::now()),
+                data_residency: r.data_residency.and_then(|s| {
+                    match s.as_str() {
+                        "us" => Some(DataResidency::Us),
+                        "eu" => Some(DataResidency::Eu),
+                        "cn" => Some(DataResidency::Cn),
+                        _ => None,
+                    }
+                }),
             }
         }
     }

@@ -10,6 +10,7 @@ pub mod nango_catalog;
 pub mod nango_connection;
 pub mod nango_hq_proxy;
 pub mod proxy;
+pub mod settings;
 pub mod status;
 pub mod token;
 pub mod tools;
@@ -69,4 +70,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(llm::router())
         .merge(token::router())
         .merge(custom_tools::router())
+        .merge(settings::router())
 }

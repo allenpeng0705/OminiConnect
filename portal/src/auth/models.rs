@@ -3,6 +3,21 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+/// Data residency regions.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum DataResidency {
+    Us,
+    Eu,
+    Cn,
+}
+
+impl Default for DataResidency {
+    fn default() -> Self {
+        DataResidency::Us
+    }
+}
+
 /// A registered user account.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -10,6 +25,9 @@ pub struct User {
     /// bcrypt hash of the password
     pub password_hash: String,
     pub created_at: DateTime<Utc>,
+    /// Data residency requirement. None means no restriction.
+    #[serde(default)]
+    pub data_residency: Option<DataResidency>,
 }
 
 /// An active browser session.
