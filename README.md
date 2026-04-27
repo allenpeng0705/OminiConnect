@@ -4,7 +4,7 @@
 
 **Give your AI agents and LLM applications real API superpowers.**
 
-OminiConnect is a self-hosted platform that lets AI agents interact with external services — GitHub, Slack, Salesforce, and 700+ more — the same way a human would through a browser. It handles OAuth, stores tokens, enforces scopes, and gives AI agents a clean tool interface instead of raw API keys.
+OminiConnect is a platform — deploy it **self-hosted** on your own infrastructure, or in the **cloud** (Docker, Kubernetes coming soon) — that lets AI agents interact with external services like GitHub, Slack, Salesforce, Feishu, DingTalk, and 700+ more. It handles OAuth, stores tokens, enforces scopes, and gives AI agents a clean tool interface instead of raw API keys.
 
 ---
 
@@ -67,9 +67,9 @@ Or use MCP directly — any MCP-compatible AI client can discover and call tools
 
 ## Supported platforms
 
-OAuth: LinkedIn, Facebook, X/Twitter, Feishu, DingTalk, WeChat Work, Google, Salesforce, HubSpot, Jira, Confluence, Slack, Notion, Stripe, Shopify, GitLab, Zoom, and 700+ more via Nango.
+**International:** GitHub, LinkedIn, Facebook, X/Twitter, Google, Salesforce, HubSpot, Jira, Confluence, Slack, Notion, Stripe, Shopify, GitLab, Zoom, and 700+ more via Nango.
 
-API Key: Maton.ai, QQ Enterprise Mail, and any platform with static credentials.
+**China (中国):** Feishu (飞书), DingTalk (钉钉), WeChat Work (企业微信), QQ Enterprise Mail (QQ邮箱), and more — with domestic OAuth and API integrations optimized for China deployments.
 
 ---
 
@@ -100,9 +100,9 @@ Connect LinkedIn and Facebook pages. Agents can read page analytics and post con
 
 Connect Salesforce and HubSpot. Agents can look up contacts, update CRM records, trigger workflows — with full audit logs for compliance.
 
-### Scenario 4: Enterprise productivity agent
+### Scenario 4: Enterprise productivity (China)
 
-Connect Feishu, DingTalk, or WeChat Work. Agents help employees query internal tools, send messages, schedule meetings — with IT-managed scopes.
+Connect Feishu, DingTalk, or WeChat Work. Agents help employees query internal tools, send messages, schedule meetings — with IT-managed scopes and scopes enforced per tool call.
 
 ---
 
@@ -142,13 +142,15 @@ See `sdk/README.md` for full usage.
 
 ## Deploying
 
-OminiConnect is a Rust + React application. It needs:
+OminiConnect is a Rust + React application.
 
-- **A Postgres or SQLite database** for tokens and audit logs
-- **A public-facing URL** (`PORTAL_BASE_URL`) for OAuth callbacks
-- Optionally, **a self-hosted Nango instance** for 700+ additional platforms
+- **Self-hosted**: Run on your own VMs or bare metal with Docker or directly via `cargo run`.
+- **Cloud**: Docker images and Kubernetes Helm charts coming soon.
+- **Database**: Postgres (recommended) or SQLite for tokens, API keys, and audit logs.
+- **Public URL**: Set `PORTAL_BASE_URL` to your public domain for OAuth callbacks.
+- **Optional**: Self-hosted Nango for 700+ additional platforms.
 
-See `.env.example` for all configuration options. For production, use a reverse proxy (nginx/Caddy) with HTTPS and set `PORTAL_BASE_URL` to your public domain.
+See `.env.example` for all configuration options.
 
 ---
 
