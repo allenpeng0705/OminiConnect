@@ -1,5 +1,7 @@
 # OminiConnect
 
+![OminiConnect](./ominiconnect_logo_with_text.png)
+
 **Give your AI agents and LLM applications real API superpowers.**
 
 OminiConnect is a self-hosted platform that lets AI agents interact with external services — GitHub, Slack, Salesforce, and 700+ more — the same way a human would through a browser. It handles OAuth, stores tokens, enforces scopes, and gives AI agents a clean tool interface instead of raw API keys.
