@@ -98,3 +98,41 @@ class McpCallResponse(TypedDict):
     ok: bool
     body: Optional[Any]
     error: Optional[str]
+
+
+# ─── LLM ────────────────────────────────────────────────────────────────────
+
+
+class AvailableTool(TypedDict):
+    """A single available tool for LLM consumption."""
+    slug: str
+    name: str
+    description: str
+    example_queries: List[str]
+    scopes: List[str]
+    scope_satisfied: str
+
+
+class PlatformTools(TypedDict):
+    """Tools and connection status for a single platform."""
+    connected: bool
+    tools: Optional[List[AvailableTool]]
+
+
+class LlmToolsResponse(TypedDict):
+    """Response from GET /api/llm/tools."""
+    platforms: Dict[str, PlatformTools]
+
+
+class LlmExecuteResponse(TypedDict):
+    """Response from POST /api/llm."""
+    ok: bool
+    tool: Optional[str]
+    tool_name: Optional[str]
+    arguments: Optional[Dict[str, Any]]
+    explanation: Optional[str]
+    result: Optional[Dict[str, Any]]
+    error: Optional[str]
+    message: Optional[str]
+    candidates: Optional[List[Dict[str, Any]]]
+    available_tools_hint: Optional[str]

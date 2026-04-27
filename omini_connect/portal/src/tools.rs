@@ -71,6 +71,9 @@ pub struct Tool {
     /// Optional icon URL.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub icon_url: Option<String>,
+    /// Example natural language queries that map to this tool (for LLM selection).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub example_queries: Vec<String>,
 }
 
 /// A toolkit groups tools by provider.
@@ -217,4 +220,149 @@ pub enum LoadError {
     ReadFile(String, std::io::Error),
     #[error("failed to parse {0}: {1}")]
     Parse(String, serde_yaml::Error),
+}
+
+// ─── Unit tests ────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_tool(slug: &str, provider: &str, scopes: Vec<&str>) -> Tool {
+        Tool {
+            slug: slug.to_string(),
+            name: slug.to_string(),
+            description: "test tool".to_string(),
+            provider: provider.to_string(),
+            endpoint: "/test".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema::default(),
+            output_schema: None,
+            scopes: scopes.into_iter().map(String::from).collect(),
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+        }
+    }
+
+    #[test]
+    fn test_tool_registry_empty() {
+        let reg = ToolRegistry::empty();
+        assert!(reg.toolkits().is_empty());
+        assert!(reg.tool_by_slug("anything").is_none());
+        assert!(reg.tools_for_provider("github").is_none());
+        assert!(reg.all_slugs().next().is_none());
+    }
+
+    #[test]
+    fn test_http_method_default() {
+        assert_eq!(HttpMethod::default(), HttpMethod::GET);
+    }
+
+    #[test]
+    fn test_http_method_serde() {
+        let json = serde_json::to_string(&HttpMethod::GET).unwrap();
+        assert_eq!(json, "\"GET\"");
+        let json_post = serde_json::to_string(&HttpMethod::POST).unwrap();
+        assert_eq!(json_post, "\"POST\"");
+    }
+
+    #[test]
+    fn test_tool_serde_roundtrip() {
+        let tool = make_tool("github_list_repos", "github", vec!["repo"]);
+        let json = serde_json::to_string(&tool).unwrap();
+        let decoded: Tool = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.slug, "github_list_repos");
+        assert_eq!(decoded.provider, "github");
+        assert_eq!(decoded.scopes, vec!["repo"]);
+    }
+
+    #[test]
+    fn test_toolkit_serde() {
+        let tk = Toolkit {
+            slug: "github".to_string(),
+            name: "GitHub".to_string(),
+            logo: Some("/images/logo.svg".to_string()),
+            provider: "github".to_string(),
+        };
+        let json = serde_json::to_string(&tk).unwrap();
+        let decoded: Toolkit = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.slug, "github");
+        assert_eq!(decoded.name, "GitHub");
+    }
+
+    #[test]
+    fn test_input_schema_default() {
+        let schema = InputSchema::default();
+        assert!(schema.schema_type.is_none());
+        assert!(schema.properties.is_empty());
+        assert!(schema.required.is_empty());
+    }
+
+    #[test]
+    fn test_tool_creation_all_fields() {
+        let tool = Tool {
+            slug: "github_create_issue".to_string(),
+            name: "Create Issue".to_string(),
+            description: "Create a GitHub issue".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/repos/{owner}/{repo}/issues".to_string(),
+            method: HttpMethod::POST,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("issue parameters".to_string()),
+                properties: HashMap::new(),
+                required: vec!["title".to_string()],
+            },
+            output_schema: None,
+            scopes: vec!["repo".to_string()],
+            tags: vec!["github".to_string(), "issues".to_string()],
+            icon_url: None,
+            example_queries: vec![
+                "create a github issue".to_string(),
+                "open an issue".to_string(),
+            ],
+        };
+
+        assert_eq!(tool.slug, "github_create_issue");
+        assert_eq!(tool.method, HttpMethod::POST);
+        assert!(tool.input_schema.required.contains(&"title".to_string()));
+        assert_eq!(tool.scopes, vec!["repo"]);
+    }
+
+    #[test]
+    fn test_tool_http_method_variants() {
+        for (method_str, method) in [
+            ("GET", HttpMethod::GET),
+            ("POST", HttpMethod::POST),
+            ("PUT", HttpMethod::PUT),
+            ("DELETE", HttpMethod::DELETE),
+            ("PATCH", HttpMethod::PATCH),
+        ] {
+            let json = serde_json::to_string(&method).unwrap();
+            assert_eq!(json, format!("\"{}\"", method_str));
+        }
+    }
+
+    #[test]
+    fn test_load_error_display() {
+        use std::io;
+        let err = LoadError::ReadDir("/tmp".to_string(), io::Error::new(io::ErrorKind::NotFound, "no such file"));
+        assert!(err.to_string().contains("failed to read directory"));
+        let err2 = LoadError::ReadFile("/tmp/test.yaml".to_string(), io::Error::new(io::ErrorKind::NotFound, "no such file"));
+        assert!(err2.to_string().contains("failed to read file"));
+    }
+
+    #[test]
+    fn test_tool_registry_all_slugs_empty() {
+        let reg = ToolRegistry::empty();
+        let slugs: Vec<&str> = reg.all_slugs().collect();
+        assert!(slugs.is_empty());
+    }
+
+    #[test]
+    fn test_tool_registry_toolkits_empty() {
+        let reg = ToolRegistry::empty();
+        assert!(reg.toolkits().is_empty());
+    }
 }

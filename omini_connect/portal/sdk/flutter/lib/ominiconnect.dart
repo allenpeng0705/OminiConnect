@@ -1,9 +1,9 @@
+library ominiconnect;
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-/// OminiConnect Flutter SDK.
-/// Connect AI agents to external platforms via OAuth.
-library ominiconnect;
+part 'llm_manager.dart';
 
 /// Thrown for all OminiConnect errors.
 class OminiConnectException implements Exception {
@@ -252,6 +252,7 @@ class OminiConnect {
   late final ConnectorsManager connectors;
   late final ToolsManager tools;
   late final ApiKeysManager apiKeys;
+  late final LlmManager llm;
 
   OminiConnect({
     required this.apiKey,
@@ -262,6 +263,7 @@ class OminiConnect {
     connectors = ConnectorsManager(this, trimmedBase);
     tools = ToolsManager(this, trimmedBase);
     apiKeys = ApiKeysManager(this, trimmedBase);
+    llm = LlmManager(this, trimmedBase);
   }
 
   Map<String, String> get _headers => {
@@ -287,8 +289,7 @@ class OminiConnect {
 
     if (body != null) {
       resp = await _http
-          .request(
-            method,
+          .post(
             uri,
             headers: _headers,
             body: jsonEncode(body),
@@ -296,7 +297,7 @@ class OminiConnect {
           .timeout(const Duration(seconds: 30));
     } else {
       resp = await _http
-          .request(method, uri, headers: _headers)
+          .get(uri, headers: _headers)
           .timeout(const Duration(seconds: 30));
     }
 
@@ -317,12 +318,16 @@ class OminiConnect {
 
   Future<void> _requestNoContent(String method, String path, {Map<String, dynamic>? body}) async {
     final uri = Uri.parse('$baseUrl$path');
-    final resp = await (_http.request(
-      method,
-      uri,
-      headers: _headers,
-      body: body != null ? jsonEncode(body) : null,
-    )).timeout(const Duration(seconds: 30));
+    http.Response resp;
+    if (body != null) {
+      resp = await _http
+          .post(uri, headers: _headers, body: jsonEncode(body))
+          .timeout(const Duration(seconds: 30));
+    } else {
+      resp = await _http
+          .delete(uri, headers: _headers)
+          .timeout(const Duration(seconds: 30));
+    }
 
     if (resp.statusCode == 401) throw AuthException();
     if (resp.statusCode == 429) throw OminiConnectException('Rate limited', statusCode: 429);

@@ -219,9 +219,10 @@ public class OminiConnect {
     private let apiKey: String
     private let session: URLSession
 
-    public let connectors: ConnectorsManager
-    public let tools: ToolsManager
-    public let apiKeys: ApiKeysManager
+    public var connectors: ConnectorsManager!
+    public var tools: ToolsManager!
+    public var apiKeys: ApiKeysManager!
+    public var llm: LlmManager!
 
     public init(apiKey: String, baseURL: String = "http://localhost:9000") {
         self.apiKey = apiKey
@@ -230,9 +231,18 @@ public class OminiConnect {
         config.timeoutIntervalForRequest = 30
         self.session = URLSession(configuration: config)
 
+        // Swift requires all stored properties initialized before self can be used.
+        // Use nil placeholder initializers then assign via a helper.
+        self.connectors = nil
+        self.tools = nil
+        self.apiKeys = nil
+        self.llm = nil
+
+        // Now assign properly (self is fully initialized now)
         self.connectors = ConnectorsManager(client: self)
         self.tools = ToolsManager(client: self)
         self.apiKeys = ApiKeysManager(client: self)
+        self.llm = LlmManager(client: self)
     }
 
     // ─── HTTP layer ───────────────────────────────────────────────────────────

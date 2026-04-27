@@ -65,7 +65,7 @@ pub struct ToolkitWithTools {
 }
 
 /// Whether the tool's required scopes are satisfied by the connector.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ScopeSatisfied {
     Yes,
@@ -73,7 +73,7 @@ pub enum ScopeSatisfied {
     Unknown,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ToolSummary {
     pub slug: String,
     pub name: String,
@@ -738,7 +738,7 @@ async fn execute_oauth_vault(
 }
 
 /// Authenticate via Bearer token and return (owner_username, agent_id).
-async fn auth_user(
+pub(crate) async fn auth_user(
     state: &Arc<AppState>,
     headers: &HeaderMap,
 ) -> Result<(String, Option<String>), Response> {
@@ -809,4 +809,88 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/tools", get(list))
         .route("/tools/search", get(search))
         .route("/tools/execute", post(execute))
+}
+
+// ─── Unit tests ────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_check_scope_satisfied_empty_required() {
+        // Empty required scopes always returns Yes
+        assert_eq!(check_scope_satisfied(&[], &[]), ScopeSatisfied::Yes);
+        assert_eq!(check_scope_satisfied(&[], &["repo".to_string()]), ScopeSatisfied::Yes);
+    }
+
+    #[test]
+    fn test_check_scope_satisfied_empty_granted() {
+        // Empty granted with non-empty required returns Unknown
+        assert_eq!(
+            check_scope_satisfied(&["repo".to_string()], &[]),
+            ScopeSatisfied::Unknown
+        );
+    }
+
+    #[test]
+    fn test_check_scope_satisfied_all_present() {
+        let required = vec!["repo".to_string(), "user:email".to_string()];
+        let granted = vec!["repo".to_string(), "user:email".to_string(), "read:org".to_string()];
+        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::Yes);
+    }
+
+    #[test]
+    fn test_check_scope_satisfied_partial() {
+        let required = vec!["repo".to_string(), "user:email".to_string()];
+        let granted = vec!["repo".to_string()];
+        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::No);
+    }
+
+    #[test]
+    fn test_check_scope_satisfied_none_present() {
+        let required = vec!["repo".to_string()];
+        let granted = vec!["user:email".to_string()];
+        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::No);
+    }
+
+    #[test]
+    fn test_check_scope_satisfied_single_scope() {
+        assert_eq!(
+            check_scope_satisfied(&["repo".to_string()], &["repo".to_string()]),
+            ScopeSatisfied::Yes
+        );
+        assert_eq!(
+            check_scope_satisfied(&["repo".to_string()], &["user:email".to_string()]),
+            ScopeSatisfied::No
+        );
+    }
+
+    #[test]
+    fn test_scope_satisfied_serde() {
+        let json_yes = serde_json::to_string(&ScopeSatisfied::Yes).unwrap();
+        assert_eq!(json_yes, "\"yes\"");
+        let json_no = serde_json::to_string(&ScopeSatisfied::No).unwrap();
+        assert_eq!(json_no, "\"no\"");
+        let json_unknown = serde_json::to_string(&ScopeSatisfied::Unknown).unwrap();
+        assert_eq!(json_unknown, "\"unknown\"");
+    }
+
+    #[test]
+    fn test_tool_summary_serde() {
+        let summary = ToolSummary {
+            slug: "github_list_repos".to_string(),
+            name: "List Repos".to_string(),
+            description: "List repositories".to_string(),
+            method: "GET".to_string(),
+            endpoint: "/user/repos".to_string(),
+            scopes: vec!["repo".to_string()],
+            scope_satisfied: ScopeSatisfied::Yes,
+            tags: vec!["github".to_string()],
+        };
+        let json = serde_json::to_string(&summary).unwrap();
+        let decoded: ToolSummary = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.slug, "github_list_repos");
+        assert_eq!(decoded.scope_satisfied, ScopeSatisfied::Yes);
+    }
 }

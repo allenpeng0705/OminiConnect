@@ -19,7 +19,7 @@
 //! ```
 
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thiserror::Error;
 
@@ -57,6 +57,11 @@ impl Client {
     /// Create an ApiKeysManager.
     pub fn api_keys(&self) -> ApiKeysManager<'_> {
         ApiKeysManager { client: self }
+    }
+
+    /// Create an LlmManager.
+    pub fn llm(&self) -> LlmManager<'_> {
+        LlmManager { client: self }
     }
 
     /// Call a connected platform's API directly — Maton style.
@@ -350,6 +355,110 @@ impl ApiKeysManager<'_> {
     }
 }
 
+// ─── LLM ─────────────────────────────────────────────────────────────────────
+
+pub struct LlmManager<'a> {
+    client: &'a Client,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LlmExecuteResponse {
+    pub ok: bool,
+    #[serde(default)]
+    pub tool: Option<String>,
+    #[serde(default)]
+    pub tool_name: Option<String>,
+    #[serde(default)]
+    pub arguments: Option<serde_json::Value>,
+    #[serde(default)]
+    pub explanation: Option<String>,
+    #[serde(default)]
+    pub result: Option<serde_json::Value>,
+    #[serde(default)]
+    pub error: Option<String>,
+    #[serde(default)]
+    pub message: Option<String>,
+    #[serde(default)]
+    pub candidates: Option<Vec<CandidateTool>>,
+    #[serde(default)]
+    pub available_tools_hint: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CandidateTool {
+    pub tool: String,
+    pub name: String,
+    pub match_reason: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LlmToolsResponse {
+    pub platforms: HashMap<String, PlatformTools>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PlatformTools {
+    pub connected: bool,
+    #[serde(default)]
+    pub tools: Option<Vec<AvailableTool>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AvailableTool {
+    pub slug: String,
+    pub name: String,
+    pub description: String,
+    #[serde(default)]
+    pub example_queries: Vec<String>,
+    #[serde(default)]
+    pub scopes: Vec<String>,
+    pub scope_satisfied: String,
+}
+
+impl LlmManager<'_> {
+    /// Execute an LLM query, optionally constrained to a platform.
+    pub async fn execute(&self, query: &str, platform: Option<&str>) -> Result<LlmExecuteResponse, Error> {
+        let mut body = serde_json::json!({ "query": query });
+        if let Some(p) = platform {
+            body["platform"] = serde_json::json!(p);
+        }
+        let url = format!("{}/api/llm", self.client.base_url);
+        let resp = self.client.http.post(&url)
+            .header(AUTHORIZATION.as_str(), format!("Bearer {}", self.client.api_key))
+            .header(CONTENT_TYPE.as_str(), "application/json")
+            .json(&body)
+            .send()
+            .await?;
+        Self::handle_response(resp).await
+    }
+
+    /// List available tools for one or all platforms.
+    pub async fn list_available_tools(&self, platform: Option<&str>) -> Result<LlmToolsResponse, Error> {
+        let url = match platform {
+            Some(p) => format!("{}/api/llm/tools?platform={}", self.client.base_url, urlencoding::encode(p)),
+            None => format!("{}/api/llm/tools", self.client.base_url),
+        };
+        let resp = self.client.http.get(&url)
+            .header(AUTHORIZATION.as_str(), format!("Bearer {}", self.client.api_key))
+            .send()
+            .await?;
+        Self::handle_response(resp).await
+    }
+
+    async fn handle_response<T: for<'de> Deserialize<'de>>(resp: reqwest::Response) -> Result<T, Error> {
+        if resp.status() == reqwest::StatusCode::UNAUTHORIZED {
+            return Err(Error::Auth);
+        }
+        if !resp.status().is_success() {
+            let status = resp.status().as_u16();
+            let body = resp.text().await.unwrap_or_default();
+            return Err(Error::Upstream { status, body });
+        }
+        let value = resp.json().await?;
+        Ok(value)
+    }
+}
+
 // ─── Errors ────────────────────────────────────────────────────────────────
 
 #[derive(Debug, Error)]
@@ -365,4 +474,349 @@ pub enum Error {
 
     #[error("network error: {0}")]
     Network(#[from] reqwest::Error),
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─── Client::new ─────────────────────────────────────────────────────────
+
+    #[test]
+    fn client_new_default_base_url() {
+        let client = Client::new("sk-test", None);
+        assert_eq!(client.base_url, "http://localhost:9000");
+    }
+
+    #[test]
+    fn client_new_custom_base_url() {
+        let client = Client::new("sk-test", Some("https://api.example.com"));
+        assert_eq!(client.base_url, "https://api.example.com");
+    }
+
+    #[test]
+    fn client_new_strips_trailing_slash() {
+        let client = Client::new("sk-test", Some("https://api.example.com///"));
+        assert_eq!(client.base_url, "https://api.example.com");
+    }
+
+    // ─── ToolsManager::list ───────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn tools_manager_list_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!({
+            "toolkits": [
+                {
+                    "slug": "github",
+                    "name": "GitHub",
+                    "logo": null,
+                    "provider": "github",
+                    "tools": [
+                        {
+                            "slug": "github_list_repos",
+                            "name": "List Repositories",
+                            "description": "List all repositories for the authenticated user",
+                            "method": "GET",
+                            "endpoint": "/user/repos",
+                            "scopes": ["repo"],
+                            "scopeSatisfied": "yes",
+                            "tags": ["coding", "repository"]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        let mock = mock_server.mock("GET", "/api/tools")
+            .match_header("authorization", "Bearer sk-test")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.tools().list(None).await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert_eq!(response.toolkits.len(), 1);
+        assert_eq!(response.toolkits[0].slug, "github");
+        assert_eq!(response.toolkits[0].tools[0].slug, "github_list_repos");
+    }
+
+    // ─── ToolsManager::search ─────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn tools_manager_search_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!({
+            "tools": [
+                {
+                    "slug": "github_list_repos",
+                    "name": "List Repositories",
+                    "description": "List all repositories",
+                    "method": "GET",
+                    "endpoint": "/user/repos",
+                    "scopes": ["repo"],
+                    "scopeSatisfied": "yes",
+                    "tags": ["coding"]
+                }
+            ],
+            "query": "list repos"
+        });
+
+        let mock = mock_server.mock("GET", mockito::Matcher::Regex(r"^/api/tools/search.*$".to_string()))
+            .match_header("authorization", "Bearer sk-test")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.tools().search("list repos", None).await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert_eq!(response.tools.len(), 1);
+        assert_eq!(response.query, "list repos");
+    }
+
+    // ─── ToolsManager::execute ────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn tools_manager_execute_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!({
+            "ok": true,
+            "body": { "id": 123, "name": "test-repo" },
+            "error": null,
+            "callId": "call_abc123",
+            "status": "completed",
+            "durationMs": 150
+        });
+
+        let mock = mock_server.mock("POST", "/api/tools/execute")
+            .match_header("authorization", "Bearer sk-test")
+            .match_header("content-type", "application/json")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.tools().execute("github_list_repos", None, None).await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.ok);
+        assert_eq!(response.call_id.as_deref(), Some("call_abc123"));
+    }
+
+    // ─── ConnectorsManager::list ──────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn connectors_manager_list_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!([
+            {
+                "platform": "github",
+                "enabled": true,
+                "scopes": ["repo", "user"],
+                "created_at": "2024-01-15T10:30:00Z"
+            },
+            {
+                "platform": "slack",
+                "enabled": true,
+                "scopes": ["chat:write"],
+                "created_at": "2024-01-20T14:00:00Z"
+            }
+        ]);
+
+        let mock = mock_server.mock("GET", "/api/connectors")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.connectors().list().await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let connectors = result.unwrap();
+        assert_eq!(connectors.len(), 2);
+        assert_eq!(connectors[0].platform, "github");
+        assert_eq!(connectors[1].platform, "slack");
+    }
+
+    // ─── ConnectorsManager::delete ───────────────────────────────────────────
+
+    #[tokio::test]
+    async fn connectors_manager_delete_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock = mock_server.mock("DELETE", "/api/connectors/github")
+            .match_header("authorization", "Bearer sk-test")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body("{}")
+            .create();
+
+        let result = client.connectors().delete("github").await;
+        mock.assert();
+
+        assert!(result.is_ok());
+    }
+
+    // ─── ApiKeysManager::create ──────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn api_keys_manager_create_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!({
+            "key": "omk_live_abc123xyz",
+            "label": "pr-reviewer-agent",
+            "created_at": "2024-01-15T10:30:00Z"
+        });
+
+        let mock = mock_server.mock("POST", "/auth/apikey")
+            .match_header("authorization", "Bearer sk-test")
+            .match_header("content-type", "application/json")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.api_keys().create("pr-reviewer-agent").await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let api_key = result.unwrap();
+        assert_eq!(api_key.key, "omk_live_abc123xyz");
+        assert_eq!(api_key.label, "pr-reviewer-agent");
+    }
+
+    // ─── ApiKeysManager::list ────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn api_keys_manager_list_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock_response = serde_json::json!([
+            {
+                "key_hash": "hash123",
+                "label": "pr-reviewer-agent",
+                "created_at": "2024-01-15T10:30:00Z"
+            }
+        ]);
+
+        let mock = mock_server.mock("GET", "/auth/apikey")
+            .match_header("authorization", "Bearer sk-test")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(serde_json::to_string(&mock_response).unwrap())
+            .create();
+
+        let result = client.api_keys().list().await;
+        mock.assert();
+
+        assert!(result.is_ok());
+        let keys = result.unwrap();
+        assert_eq!(keys.len(), 1);
+        assert_eq!(keys[0].key_hash, "hash123");
+        // Verify the raw key field is not present in ApiKeySummary (only keyHash)
+        assert_eq!(keys[0].label, "pr-reviewer-agent");
+    }
+
+    // ─── ApiKeysManager::delete ───────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn api_keys_manager_delete_mock() {
+        let mut mock_server = mockito::Server::new_async().await;
+        let url: String = mock_server.url();
+        let static_url: &'static str = Box::leak(url.into_boxed_str());
+        let client = Client::new("sk-test", Some(static_url));
+
+        let mock = mock_server.mock("DELETE", "/auth/apikey/hash123")
+            .match_header("authorization", "Bearer sk-test")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body("{}")
+            .create();
+
+        let result = client.api_keys().delete("hash123").await;
+        mock.assert();
+
+        assert!(result.is_ok());
+    }
+
+    // ─── Error enum ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn error_auth_display() {
+        let err = Error::Auth;
+        assert_eq!(err.to_string(), "authentication failed");
+    }
+
+    #[test]
+    fn error_rate_limited_display() {
+        let err = Error::RateLimited;
+        assert_eq!(err.to_string(), "rate limited");
+    }
+
+    #[test]
+    fn error_upstream_display() {
+        let err = Error::Upstream { status: 500, body: "Internal Server Error".to_string() };
+        assert_eq!(err.to_string(), "upstream error 500: Internal Server Error");
+    }
+
+    // ─── Error::Network ───────────────────────────────────────────────────────
+
+    #[test]
+    fn error_network_implements_error_trait() {
+        fn assert_error<T: std::error::Error>() {}
+        assert_error::<Error>();
+    }
+
+    #[tokio::test]
+    async fn error_network_from_reqwest_error() {
+        // Create a reqwest error via a connection refused to localhost:1
+        let reqwest_err = reqwest::Client::builder()
+            .timeout(std::time::Duration::from_millis(100))
+            .build()
+            .unwrap()
+            .get("http://127.0.0.1:1")
+            .send()
+            .await
+            .unwrap_err();
+        let err = Error::Network(reqwest_err);
+        // Verify it contains "network error"
+        assert!(err.to_string().contains("network error"));
+    }
 }

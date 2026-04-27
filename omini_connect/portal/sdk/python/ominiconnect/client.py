@@ -17,6 +17,7 @@ from .errors import (
     RateLimitedError,
     UpstreamError,
 )
+from .llm import LlmManager
 from .models import ApiKeyCreated, ApiKeySummary
 from .tools import ToolManager
 
@@ -68,6 +69,7 @@ class OminiConnect:
         self.tools = ToolManager(self)
         self.connectors = ConnectorsManager(self)
         self.api_keys = ApiKeysManager(self)
+        self.llm = LlmManager(self)
 
     # ─── HTTP helpers ────────────────────────────────────────────────────
 

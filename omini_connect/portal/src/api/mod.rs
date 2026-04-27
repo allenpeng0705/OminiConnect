@@ -3,6 +3,7 @@
 pub mod agents;
 pub mod call;
 pub mod connectors;
+pub mod llm;
 pub mod mcp;
 pub mod nango_catalog;
 pub mod nango_connection;
@@ -36,4 +37,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(call::router())
         .merge(tools::router())
         .merge(mcp::router())
+        .merge(llm::router())
 }

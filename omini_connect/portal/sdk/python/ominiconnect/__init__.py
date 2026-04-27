@@ -31,13 +31,18 @@ from .errors import (
     ToolNotFoundError,
     UpstreamError,
 )
+from .llm import LlmManager
 from .models import (
     ApiKeyCreated,
     ApiKeySummary,
+    AvailableTool,
     Connector,
+    LlmExecuteResponse,
+    LlmToolsResponse,
     McpCallResponse,
     McpToolsListResponse,
     McpTool,
+    PlatformTools,
     ToolkitsResponse,
     ToolExecuteResult,
     ToolsSearchResponse,
@@ -49,8 +54,9 @@ from .tools import ToolManager
 __all__ = [
     # Client
     "OminiConnect",
-    # Tools
+    # Managers
     "ToolManager",
+    "LlmManager",
     # Errors
     "OminiConnectError",
     "AuthError",
@@ -72,4 +78,8 @@ __all__ = [
     "McpTool",
     "McpToolsListResponse",
     "McpCallResponse",
+    "AvailableTool",
+    "PlatformTools",
+    "LlmToolsResponse",
+    "LlmExecuteResponse",
 ]

@@ -99,6 +99,39 @@ export interface McpTool {
   scope_satisfied?: string;
 }
 
+// ─── LLM types ─────────────────────────────────────────────────────────────────
+
+export interface LlmExecuteResponse {
+  ok: boolean;
+  tool?: string;
+  tool_name?: string;
+  arguments?: Record<string, unknown>;
+  explanation?: string;
+  result?: unknown;
+  error?: string;
+  message?: string;
+  candidates?: Array<{tool: string; name: string; match_reason: string}>;
+  available_tools_hint?: string;
+}
+
+export interface AvailableTool {
+  slug: string;
+  name: string;
+  description: string;
+  example_queries: string[];
+  scopes: string[];
+  scope_satisfied: string;
+}
+
+export interface PlatformTools {
+  connected: boolean;
+  tools?: AvailableTool[];
+}
+
+export interface LlmToolsResponse {
+  platforms: Record<string, PlatformTools>;
+}
+
 // ─── Main client ───────────────────────────────────────────────────────────────
 
 export interface OminiConnectOptions {
@@ -121,6 +154,9 @@ export class OminiConnect {
   /** Tools manager — list, search, execute tools. */
   readonly tools: ToolsManager;
 
+  /** LLM manager — query LLM with tool routing and list available tools. */
+  readonly llm: LlmManager;
+
   constructor(options: OminiConnectOptions) {
     this.apiKey = options.apiKey;
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
@@ -129,6 +165,7 @@ export class OminiConnect {
     this.connectors = new ConnectorsManager(this);
     this.apiKeys = new ApiKeysManager(this);
     this.tools = new ToolsManager(this);
+    this.llm = new LlmManager(this);
   }
 
   // ─── HTTP layer ────────────────────────────────────────────────────────────
@@ -147,14 +184,19 @@ export class OminiConnect {
       url += `?${qs}`;
     }
 
-    const resp = await this.fetch(url, {
-      method,
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
-    });
+    let resp: Response;
+    try {
+      resp = await this.fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: body !== undefined ? JSON.stringify(body) : undefined,
+      });
+    } catch (err) {
+      throw new NetworkError();
+    }
 
     if (resp.status === 401) throw new AuthError("invalid or missing API key");
     if (resp.status === 429) throw new RateLimitedError("rate limited — back off and retry");
@@ -302,6 +344,33 @@ export class ToolsManager {
     };
     if (callbackUrl) body.callback_url = callbackUrl;
     return this.client.post<ToolExecuteResult>("/api/tools/execute", body);
+  }
+}
+
+// ─── LLM Manager ───────────────────────────────────────────────────────────────
+
+export class LlmManager {
+  constructor(private client: OminiConnect) {}
+
+  /**
+   * Execute an LLM query against a specific platform or across all connected platforms.
+   * Returns structured execution response with tool candidates and execution results.
+   */
+  execute(query: string, platform?: string): Promise<LlmExecuteResponse> {
+    const body: Record<string, unknown> = {query};
+    if (platform) body.platform = platform;
+    return this.client.post<LlmExecuteResponse>("/api/llm", body);
+  }
+
+  /**
+   * List available tools for LLM use, optionally filtered by platform.
+   * Returns platforms with their connection status and available tools.
+   */
+  listAvailableTools(platform?: string): Promise<LlmToolsResponse> {
+    return this.client.get<LlmToolsResponse>(
+      "/api/llm/tools",
+      platform ? {platform} : undefined,
+    );
   }
 }
 

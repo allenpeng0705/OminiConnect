@@ -388,6 +388,133 @@ For production use, use an MCP client library instead of curl.
 
 ---
 
+## LLM Integration (Natural Language API Selection)
+
+OminiConnect provides a natural language interface so AI agents can call APIs without knowing the underlying REST endpoints. Just describe what you want in plain English.
+
+### REST API
+
+| SDK method | HTTP | Body |
+|---|---|---|
+| `client.llm.execute(query)` | `POST /api/llm` | `{"query", "platform?"}` |
+| `client.llm.listAvailableTools()` | `GET /api/llm/tools` | — |
+
+### Example: Natural language query
+
+```bash
+curl -X POST http://localhost:9000/api/llm \
+  -H "Authorization: Bearer sk-xxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "list my github repos sorted by updated"}'
+```
+
+### Response
+
+```json
+{
+  "ok": true,
+  "tool": "github_list_repos",
+  "tool_name": "List Repositories",
+  "arguments": { "sort": "updated" },
+  "explanation": "Selected github_list_repos because your query mentions 'repos' and 'github'.",
+  "result": {
+    "ok": true,
+    "body": [{ "name": "my-repo", "updated_at": "2024-01-15T..." }],
+    "call_id": "call_abc123",
+    "status": "completed",
+    "duration_ms": 234
+  }
+}
+```
+
+### When the query is ambiguous
+
+```json
+{
+  "ok": false,
+  "error": "ambiguous",
+  "message": "Your query could match multiple tools. Did you mean one of:",
+  "candidates": [
+    { "tool": "github_list_repos", "name": "List Repositories", "match_reason": "score 0.85" },
+    { "tool": "github_search_code", "name": "Search Code", "match_reason": "score 0.72" }
+  ]
+}
+```
+
+### SDK usage
+
+```python
+from ominiconnect import OminiConnect
+
+client = OminiConnect(api_key="sk-xxxxx")
+
+# Natural language — the SDK picks the right tool and executes it
+result = client.llm.execute("list my github repos sorted by updated")
+print(result.result["body"])
+
+# Optional platform hint for faster routing
+result = client.llm.execute("create an issue", platform="github")
+
+# See what tools are available for external LLM selection
+catalog = client.llm.list_available_tools()
+print(catalog.platforms["github"]["tools"][0]["example_queries"])
+```
+
+```typescript
+const client = new OminiConnect({ apiKey: "sk-xxxxx" });
+
+// Natural language query
+const result = await client.llm.execute("list my github repos sorted by updated");
+console.log(result.result);
+
+// With platform hint
+const result2 = await client.llm.execute("create an issue", { platform: "github" });
+
+// Get available tools for external LLM
+const catalog = await client.llm.listAvailableTools();
+```
+
+```go
+client := ominiconnect.New("sk-xxxxx", nil)
+
+result, err := client.Llm().Execute(context.Background(), "list my github repos sorted by updated", nil)
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(result.Result)
+
+// With platform hint
+platform := "github"
+result, err = client.Llm().Execute(context.Background(), "create an issue", &platform)
+```
+
+```rust
+let client = Client::new("sk-xxxxx", None);
+
+let result = client.llm()
+    .execute("list my github repos sorted by updated", None)
+    .await?;
+println!("{:?}", result.result);
+
+// With platform hint
+let result = client.llm()
+    .execute("create an issue", Some("github"))
+    .await?;
+```
+
+### How it works
+
+The LLM endpoint uses **rule-based keyword matching** — no external LLM API needed:
+
+1. **Platform detection** — infers platform from query ("github" → GitHub connector)
+2. **Tool scoring** — scores each available tool by action verb match, keyword match, and example query similarity
+3. **Argument extraction** — parses query for common parameters (sort, per_page, etc.)
+4. **Execution** — calls the selected tool via the existing `/api/tools/execute` flow
+
+If the query is ambiguous (multiple tools have similar scores), returns a `candidates` list for disambiguation.
+
+---
+
 ## Architecture
 
 ```
@@ -397,13 +524,16 @@ OminiConnect client
     ├── .connectors                     → /api/connectors
     ├── .tools                          → /api/tools, /api/tools/search, /api/tools/execute
     ├── .api_keys                       → /auth/apikey
+    ├── .llm                            → /api/llm, /api/llm/tools, /api/llm/explain
     └── MCP                            → POST /api/mcp, GET /api/mcp/sse
 ```
 
 **One client, all capabilities.** Pass any API key — it works for both tools and direct calls.
 
-**Two ways to call APIs:**
+**Three ways to call APIs:**
 
 1. **Maton style** (`client.call(platform, method, path)`) — direct REST passthrough. You handle the API shape, OminiConnect handles auth and token management.
 
 2. **Tool style** (`client.tools.execute(slug, args)`) — structured, scope-checked, discoverable. OminiConnect validates scopes before forwarding. Better for AI agents that need guided tool selection.
+
+3. **LLM style** (`client.llm.execute("list my repos")`) — natural language. The AI picks the right tool and arguments automatically. Best for conversational AI agents that reason in natural language.
