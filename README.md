@@ -1,6 +1,6 @@
 # OminiConnect
 
-![OminiConnect](./ominiconnect_logo_with_text.png)
+![OminiConnect](./docs/ominiconnect_logo_with_text.svg)
 
 **Give your AI agents and LLM applications real API superpowers.**
 
@@ -48,14 +48,12 @@ from ominiconnect import OminiConnect
 
 client = OminiConnect(api_key="your-portal-api-key")
 
-# Create a named API key for the agent — one key per agent is recommended
-key = client.api_keys.create("github-writer")
-print(key["key"])  # store securely — shown only once
+# List connected platforms
+print(client.connectors.list())
 
-# Agent uses this key to call tools
-agent_client = OminiConnect(api_key=key["key"])
-tools = agent_client.tools.list(platform="github")
-result = agent_client.tools.execute(
+# Use tools (discoverable + scope-checked)
+tools = client.tools.list(platform="github")
+result = client.tools.execute(
     "github_list_repos",
     arguments={"sort": "updated"}
 )
