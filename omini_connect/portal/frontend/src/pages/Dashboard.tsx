@@ -250,7 +250,7 @@ export default function Dashboard() {
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       {/* Header */}
       <header style={{ background: 'white', borderBottom: '1px solid #e0e0e0', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <img src="/images/logos/ominiconnect_logo_with_text.png" alt="OminiConnect" style={{ height: '80px', objectFit: 'contain' }} />
+        <img src="/images/logos/ominiconnect_logo_with_text.svg" alt="OminiConnect" style={{ height: '80px', objectFit: 'contain' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span style={{ color: '#666', fontSize: '0.875rem' }}>{username}</span>
           <Link to="/api-keys" style={{ padding: '0.375rem 0.75rem', background: '#f5f5f5', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem', textDecoration: 'none', color: '#333' }}>API Keys</Link>
