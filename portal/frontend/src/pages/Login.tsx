@@ -42,7 +42,7 @@ export default function Login() {
         }}
       >
         <div style={{ marginBottom: '1rem' }}>
-          <img src="/images/logos/ominiconnect_logo_with_text.png" alt="OminiConnect" style={{ height: '80px', objectFit: 'contain', marginBottom: '0.75rem', display: 'block', margin: '0 auto 0.75rem' }} />
+          <img src="/images/logos/ominiconnect_logo_with_text.svg" alt="OminiConnect" style={{ height: '80px', objectFit: 'contain', marginBottom: '0.75rem', display: 'block', margin: '0 auto 0.75rem' }} />
           <h2 style={{ margin: '0.35rem 0 0.25rem', color: '#0f172a', fontSize: '1.25rem' }}>Welcome back</h2>
           <p style={{ margin: 0, color: '#64748b', fontSize: '0.88rem' }}>Sign in to your integration workspace.</p>
         </div>
