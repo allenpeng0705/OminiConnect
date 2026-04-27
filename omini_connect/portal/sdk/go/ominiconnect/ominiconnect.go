@@ -61,6 +61,7 @@ type Client struct {
 	Connectors *ConnectorsManager
 	Tools      *ToolsManager
 	ApiKeys    *ApiKeysManager
+	Llm        *LlmManager
 }
 
 // New creates a new OminiConnect client.
@@ -87,6 +88,7 @@ func New(apiKey string, opts *Options) *Client {
 	c.Connectors = &ConnectorsManager{client: c}
 	c.Tools = &ToolsManager{client: c}
 	c.ApiKeys = &ApiKeysManager{client: c}
+	c.Llm = &LlmManager{client: c}
 
 	return c
 }

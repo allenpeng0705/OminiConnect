@@ -90,6 +90,7 @@ class OminiConnect(
     val connectors = ConnectorsManager(this)
     val tools = ToolsManager(this)
     val apiKeys = ApiKeysManager(this)
+    val llm = LlmManager(this)
 
     private val scope = Dispatchers.IO + SupervisorJob()
 
@@ -280,6 +281,55 @@ class OminiConnect(
         if (json == null) return emptyList()
         val arr = json as? JSONArray ?: return emptyList()
         return (0 until arr.length()).map { parseApiKeySummary(arr.getJSONObject(it)) }
+    }
+
+    fun parseLlmExecuteResponse(json: JSONObject) = LlmExecuteResponse(
+        ok = json.getBoolean("ok"),
+        tool = if (json.has("tool") && !json.isNull("tool")) json.getString("tool") else null,
+        toolName = if (json.has("tool_name") && !json.isNull("tool_name")) json.getString("tool_name") else null,
+        arguments = if (json.has("arguments") && !json.isNull("arguments")) json.getJSONObject("arguments").toMap() as Map<String, Any> else null,
+        explanation = if (json.has("explanation") && !json.isNull("explanation")) json.getString("explanation") else null,
+        result = if (json.has("result") && !json.isNull("result")) json.getJSONObject("result").toMap() as Map<String, Any> else null,
+        error = if (json.has("error") && !json.isNull("error")) json.getString("error") else null,
+        message = if (json.has("message") && !json.isNull("message")) json.getString("message") else null,
+        candidates = if (json.has("candidates") && !json.isNull("candidates")) {
+            val arr = json.getJSONArray("candidates")
+            (0 until arr.length()).map { i ->
+                val obj = arr.getJSONObject(i)
+                CandidateTool(
+                    tool = obj.getString("tool"),
+                    name = obj.getString("name"),
+                    matchReason = obj.getString("match_reason")
+                )
+            }
+        } else null,
+        availableToolsHint = if (json.has("available_tools_hint") && !json.isNull("available_tools_hint")) json.getString("available_tools_hint") else null
+    )
+
+    fun parseLlmToolsResponse(json: JSONObject): LlmToolsResponse {
+        val platformsMap = mutableMapOf<String, PlatformTools>()
+        val platformsObj = json.getJSONObject("platforms")
+        platformsObj.keys().forEach { key ->
+            val obj = platformsObj.getJSONObject(key)
+            platformsMap[key] = PlatformTools(
+                connected = obj.getBoolean("connected"),
+                tools = if (obj.has("tools") && !obj.isNull("tools")) {
+                    val arr = obj.getJSONArray("tools")
+                    (0 until arr.length()).map { i ->
+                        val toolObj = arr.getJSONObject(i)
+                        AvailableTool(
+                            slug = toolObj.getString("slug"),
+                            name = toolObj.getString("name"),
+                            description = toolObj.getString("description"),
+                            exampleQueries = toolObj.getJSONArray("example_queries").let { arr2 -> (0 until arr2.length()).map { arr2.getString(it) } },
+                            scopes = toolObj.getJSONArray("scopes").let { arr2 -> (0 until arr2.length()).map { arr2.getString(it) } },
+                            scopeSatisfied = toolObj.getString("scope_satisfied")
+                        )
+                    }
+                } else null
+            )
+        }
+        return LlmToolsResponse(platformsMap)
     }
 }
 
