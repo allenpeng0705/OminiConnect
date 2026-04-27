@@ -1,6 +1,7 @@
 //! REST API routes.
 
 pub mod agents;
+pub mod audit;
 pub mod call;
 pub mod connectors;
 pub mod custom_tools;
@@ -71,4 +72,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(token::router())
         .merge(custom_tools::router())
         .merge(settings::router())
+        .merge(audit::router())
 }
