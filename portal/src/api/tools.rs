@@ -108,8 +108,12 @@ pub async fn list(
         vec![build_toolkit_response(&toolkit, tools, &connector_scopes)]
     } else {
         // All platforms - find which ones the user has connectors for
-        let connectors = state.connectors.list_all().await
-            .map_err(|e| tool_error(StatusCode::INTERNAL_SERVER_ERROR, &*format!("failed to list connectors: {}", e)))?;
+        let connectors = state.connectors.list_all().await.map_err(|e| {
+            tool_error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                &*format!("failed to list connectors: {}", e),
+            )
+        })?;
 
         // Build map of platform -> granted scopes for user's connectors
         let scopes_by_platform: std::collections::HashMap<_, _> = connectors
@@ -120,12 +124,17 @@ pub async fn list(
 
         let platforms: std::collections::HashSet<_> = scopes_by_platform.keys().cloned().collect();
 
-        state.tools.toolkits()
+        state
+            .tools
+            .toolkits()
             .iter()
             .filter(|t| platforms.contains(&t.provider) || platforms.contains(&t.slug))
             .map(|t| {
                 let tools = state.tools.tools_for_provider(&t.provider).unwrap_or(&[]);
-                let granted_scopes = scopes_by_platform.get(&t.provider).cloned().unwrap_or_default();
+                let granted_scopes = scopes_by_platform
+                    .get(&t.provider)
+                    .cloned()
+                    .unwrap_or_default();
                 build_toolkit_response(t, tools, &granted_scopes)
             })
             .collect()
@@ -157,8 +166,12 @@ pub async fn search(
     let filter_scope = query.filter_scope.as_deref();
 
     // Get user's connectors and their scopes
-    let connectors = state.connectors.list_all().await
-        .map_err(|e| tool_error(StatusCode::INTERNAL_SERVER_ERROR, &*format!("failed to list connectors: {}", e)))?;
+    let connectors = state.connectors.list_all().await.map_err(|e| {
+        tool_error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &*format!("failed to list connectors: {}", e),
+        )
+    })?;
 
     let user_connectors: std::collections::HashMap<_, _> = connectors
         .into_iter()
@@ -166,11 +179,15 @@ pub async fn search(
         .map(|c| (c.platform.clone(), c.scopes))
         .collect();
 
-    let all_tools: Vec<_> = state.tools.toolkits()
+    let all_tools: Vec<_> = state
+        .tools
+        .toolkits()
         .iter()
         .flat_map(|t| {
             let toolkit = t.clone();
-            state.tools.tools_for_provider(&t.provider)
+            state
+                .tools
+                .tools_for_provider(&t.provider)
                 .unwrap_or(&[])
                 .iter()
                 .map(move |tool| (toolkit.clone(), tool))
@@ -194,7 +211,8 @@ pub async fn search(
                 tool.name,
                 tool.description.replace('\n', " "),
                 tool.tags.join(" ")
-            ).to_lowercase();
+            )
+            .to_lowercase();
 
             if !search_text.contains(&q) {
                 return false;
@@ -202,7 +220,10 @@ pub async fn search(
 
             // Scope filter
             if let Some(filter) = filter_scope {
-                let granted = user_connectors.get(&tool.provider).cloned().unwrap_or_default();
+                let granted = user_connectors
+                    .get(&tool.provider)
+                    .cloned()
+                    .unwrap_or_default();
                 let scope_sat = check_scope_satisfied(&tool.scopes, &granted);
 
                 match (filter, scope_sat) {
@@ -217,7 +238,10 @@ pub async fn search(
             }
         })
         .map(|(_toolkit, tool)| {
-            let granted = user_connectors.get(&tool.provider).cloned().unwrap_or_default();
+            let granted = user_connectors
+                .get(&tool.provider)
+                .cloned()
+                .unwrap_or_default();
             let scope_sat = check_scope_satisfied(&tool.scopes, &granted);
             ToolSummary {
                 slug: tool.slug.clone(),
@@ -239,11 +263,7 @@ pub async fn search(
 }
 
 /// Get the connector's granted scopes for a platform.
-async fn get_connector_scopes(
-    state: &Arc<AppState>,
-    owner: &str,
-    platform: &str,
-) -> Vec<String> {
+async fn get_connector_scopes(state: &Arc<AppState>, owner: &str, platform: &str) -> Vec<String> {
     match state.connectors.get(owner, platform).await {
         Ok(Some(c)) if c.enabled => c.scopes,
         _ => Vec::new(),
@@ -252,7 +272,9 @@ async fn get_connector_scopes(
 
 /// Get toolkit from registry or create a default one.
 fn get_or_create_toolkit(state: &Arc<AppState>, provider: &str) -> crate::tools::Toolkit {
-    state.tools.toolkits()
+    state
+        .tools
+        .toolkits()
         .iter()
         .find(|t| t.provider == provider)
         .cloned()
@@ -290,19 +312,22 @@ fn build_toolkit_response(
         name: toolkit.name.clone(),
         logo: toolkit.logo.clone(),
         provider: toolkit.provider.clone(),
-        tools: tools.iter().map(|t| {
-            let scope_satisfied = check_scope_satisfied(&t.scopes, granted_scopes);
-            ToolSummary {
-                slug: t.slug.clone(),
-                name: t.name.clone(),
-                description: t.description.clone(),
-                method: format!("{:?}", t.method),
-                endpoint: t.endpoint.clone(),
-                scopes: t.scopes.clone(),
-                scope_satisfied,
-                tags: t.tags.clone(),
-            }
-        }).collect(),
+        tools: tools
+            .iter()
+            .map(|t| {
+                let scope_satisfied = check_scope_satisfied(&t.scopes, granted_scopes);
+                ToolSummary {
+                    slug: t.slug.clone(),
+                    name: t.name.clone(),
+                    description: t.description.clone(),
+                    method: format!("{:?}", t.method),
+                    endpoint: t.endpoint.clone(),
+                    scopes: t.scopes.clone(),
+                    scope_satisfied,
+                    tags: t.tags.clone(),
+                }
+            })
+            .collect(),
     }
 }
 
@@ -353,6 +378,15 @@ pub async fn execute(
         Err(_) => return tool_error(StatusCode::INTERNAL_SERVER_ERROR, "failed to get connector"),
     };
 
+    // Check if connector has required scopes for this tool
+    let scope_check = check_scope_satisfied(&tool.scopes, &connector.scopes);
+    if scope_check == ScopeSatisfied::No {
+        return tool_error(
+            StatusCode::FORBIDDEN,
+            "connector does not have required scopes for this tool",
+        );
+    }
+
     // Build the native path by substituting path parameters
     let native_path = substitute_path_params(&tool.endpoint, &body.arguments);
 
@@ -378,7 +412,11 @@ pub async fn execute(
             created_at: chrono::Utc::now(),
         };
         // Record as pending
-        if let Err(e) = state.tool_executions.insert(&exec_record_for_callback).await {
+        if let Err(e) = state
+            .tool_executions
+            .insert(&exec_record_for_callback)
+            .await
+        {
             tracing::warn!("Failed to record pending tool execution: {}", e);
         }
 
@@ -396,16 +434,47 @@ pub async fn execute(
         tokio::spawn(async move {
             let start = std::time::Instant::now();
             let exec_result = if connector_clone.engine == "nango" {
-                execute_nango(&state_clone, &connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
-            } else if connector_clone.platform == "maton" || connector_clone.platform == "qqmail" || connector_clone.platform == "github" {
-                execute_api_key(&connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
+                execute_nango(
+                    &state_clone,
+                    &connector_clone,
+                    &tool_clone.method,
+                    &native_path_clone,
+                    query_string_clone,
+                    body_json_clone,
+                )
+                .await
+            } else if connector_clone.platform == "maton"
+                || connector_clone.platform == "qqmail"
+                || connector_clone.platform == "github"
+            {
+                execute_api_key(
+                    &connector_clone,
+                    &tool_clone.method,
+                    &native_path_clone,
+                    query_string_clone,
+                    body_json_clone,
+                )
+                .await
             } else {
-                execute_oauth_vault(&state_clone, &owner_clone, &connector_clone, &tool_clone.method, &native_path_clone, query_string_clone, body_json_clone).await
+                execute_oauth_vault(
+                    &state_clone,
+                    &owner_clone,
+                    &connector_clone,
+                    &tool_clone.method,
+                    &native_path_clone,
+                    query_string_clone,
+                    body_json_clone,
+                )
+                .await
             };
 
             let duration_ms = start.elapsed().as_millis() as i64;
             let status_code = exec_result.status();
-            let status = if status_code.is_success() { "success" } else { "error" };
+            let status = if status_code.is_success() {
+                "success"
+            } else {
+                "error"
+            };
 
             // Extract body
             let body_bytes = {
@@ -449,7 +518,11 @@ pub async fn execute(
                 "duration_ms": duration_ms,
             });
             match client.post(&callback_url_clone).json(&payload).send().await {
-                Ok(resp) => tracing::info!("Callback posted to {}: {}", callback_url_clone, resp.status()),
+                Ok(resp) => tracing::info!(
+                    "Callback posted to {}: {}",
+                    callback_url_clone,
+                    resp.status()
+                ),
                 Err(e) => tracing::warn!("Callback to {} failed: {}", callback_url_clone, e),
             }
         });
@@ -467,16 +540,47 @@ pub async fn execute(
 
     // Forward based on connector type (similar to proxy.rs)
     if connector.engine == "nango" {
-        exec_result = execute_nango(&state, &connector, &tool.method, &native_path, query_string, body_json).await;
-    } else if connector.platform == "maton" || connector.platform == "qqmail" || connector.platform == "github" {
-        exec_result = execute_api_key(&connector, &tool.method, &native_path, query_string, body_json).await;
+        exec_result = execute_nango(
+            &state,
+            &connector,
+            &tool.method,
+            &native_path,
+            query_string,
+            body_json,
+        )
+        .await;
+    } else if connector.platform == "maton"
+        || connector.platform == "qqmail"
+        || connector.platform == "github"
+    {
+        exec_result = execute_api_key(
+            &connector,
+            &tool.method,
+            &native_path,
+            query_string,
+            body_json,
+        )
+        .await;
     } else {
-        exec_result = execute_oauth_vault(&state, &owner, &connector, &tool.method, &native_path, query_string, body_json).await;
+        exec_result = execute_oauth_vault(
+            &state,
+            &owner,
+            &connector,
+            &tool.method,
+            &native_path,
+            query_string,
+            body_json,
+        )
+        .await;
     };
 
     let duration_ms = start.elapsed().as_millis() as i64;
     let status_code = exec_result.status();
-    let status = if status_code.is_success() { "success" } else { "error" };
+    let status = if status_code.is_success() {
+        "success"
+    } else {
+        "error"
+    };
 
     // Extract body bytes for audit log (body is consumed from Response)
     let body_bytes = {
@@ -573,11 +677,13 @@ fn build_params(
     let query_string = if query_pairs.is_empty() {
         None
     } else {
-        Some(query_pairs
-            .iter()
-            .map(|(k, v)| format!("{}={}", encode(k), encode(v)))
-            .collect::<Vec<_>>()
-            .join("&"))
+        Some(
+            query_pairs
+                .iter()
+                .map(|(k, v)| format!("{}={}", encode(k), encode(v)))
+                .collect::<Vec<_>>()
+                .join("&"),
+        )
     };
 
     let body_json = if body_props.is_empty() {
@@ -605,7 +711,10 @@ async fn execute_nango(
     let pk = connector.provider_key.trim();
     let cref = connector.connection_ref.trim();
     if pk.is_empty() || cref.is_empty() {
-        return tool_error(StatusCode::UNAUTHORIZED, "Nango connector not fully configured");
+        return tool_error(
+            StatusCode::UNAUTHORIZED,
+            "Nango connector not fully configured",
+        );
     }
 
     // Build full path with query string
@@ -665,16 +774,29 @@ async fn execute_api_key(
 
     let base_url = match get_platform_base_url(&connector.platform) {
         Some(url) => url,
-        None => return tool_error(StatusCode::BAD_GATEWAY, "unsupported platform for direct API access"),
+        None => {
+            return tool_error(
+                StatusCode::BAD_GATEWAY,
+                "unsupported platform for direct API access",
+            )
+        }
     };
     let full_url = match &query_string {
         Some(q) => format!("{}/{}?{}", base_url, native_path, q),
         None => format!("{}/{}", base_url, native_path),
     };
 
-    let client = match reqwest::Client::builder().timeout(Duration::from_secs(60)).build() {
+    let client = match reqwest::Client::builder()
+        .timeout(Duration::from_secs(60))
+        .build()
+    {
         Ok(c) => c,
-        Err(_) => return tool_error(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client"),
+        Err(_) => {
+            return tool_error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to create HTTP client",
+            )
+        }
     };
 
     let mut req_builder = client.request(method.as_reqwest_method(), &full_url);
@@ -682,7 +804,9 @@ async fn execute_api_key(
     req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
     if let Some(body) = body_json {
-        req_builder = req_builder.header("Content-Type", "application/json").body(reqwest::Body::from(body));
+        req_builder = req_builder
+            .header("Content-Type", "application/json")
+            .body(reqwest::Body::from(body));
     }
 
     match req_builder.send().await {
@@ -715,16 +839,29 @@ async fn execute_oauth_vault(
 
     let base_url = match get_platform_base_url(&connector.platform) {
         Some(url) => url,
-        None => return tool_error(StatusCode::BAD_GATEWAY, "unsupported platform for direct API access"),
+        None => {
+            return tool_error(
+                StatusCode::BAD_GATEWAY,
+                "unsupported platform for direct API access",
+            )
+        }
     };
     let full_url = match &query_string {
         Some(q) => format!("{}/{}?{}", base_url, native_path, q),
         None => format!("{}/{}", base_url, native_path),
     };
 
-    let client = match reqwest::Client::builder().timeout(Duration::from_secs(60)).build() {
+    let client = match reqwest::Client::builder()
+        .timeout(Duration::from_secs(60))
+        .build()
+    {
         Ok(c) => c,
-        Err(_) => return tool_error(StatusCode::INTERNAL_SERVER_ERROR, "failed to create HTTP client"),
+        Err(_) => {
+            return tool_error(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "failed to create HTTP client",
+            )
+        }
     };
 
     let mut req_builder = client.request(method.as_reqwest_method(), &full_url);
@@ -732,7 +869,9 @@ async fn execute_oauth_vault(
     req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
     if let Some(body) = body_json {
-        req_builder = req_builder.header("Content-Type", "application/json").body(reqwest::Body::from(body));
+        req_builder = req_builder
+            .header("Content-Type", "application/json")
+            .body(reqwest::Body::from(body));
     }
 
     match req_builder.send().await {
@@ -752,12 +891,19 @@ pub(crate) async fn auth_user(
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
         None => {
-            return Err(tool_error(StatusCode::UNAUTHORIZED, "missing authorization header"));
+            return Err(tool_error(
+                StatusCode::UNAUTHORIZED,
+                "missing authorization header",
+            ));
         }
     };
 
-    let api_keys = state.api_keys.list_all().await
-        .map_err(|e| tool_error(StatusCode::INTERNAL_SERVER_ERROR, &*format!("failed to list API keys: {}", e)))?;
+    let api_keys = state.api_keys.list_all().await.map_err(|e| {
+        tool_error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &*format!("failed to list API keys: {}", e),
+        )
+    })?;
 
     for ak in api_keys {
         if bcrypt::verify(api_key, &ak.key_hash).ok() == Some(true) {
@@ -828,7 +974,10 @@ mod tests {
     fn test_check_scope_satisfied_empty_required() {
         // Empty required scopes always returns Yes
         assert_eq!(check_scope_satisfied(&[], &[]), ScopeSatisfied::Yes);
-        assert_eq!(check_scope_satisfied(&[], &["repo".to_string()]), ScopeSatisfied::Yes);
+        assert_eq!(
+            check_scope_satisfied(&[], &["repo".to_string()]),
+            ScopeSatisfied::Yes
+        );
     }
 
     #[test]
@@ -843,22 +992,35 @@ mod tests {
     #[test]
     fn test_check_scope_satisfied_all_present() {
         let required = vec!["repo".to_string(), "user:email".to_string()];
-        let granted = vec!["repo".to_string(), "user:email".to_string(), "read:org".to_string()];
-        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::Yes);
+        let granted = vec![
+            "repo".to_string(),
+            "user:email".to_string(),
+            "read:org".to_string(),
+        ];
+        assert_eq!(
+            check_scope_satisfied(&required, &granted),
+            ScopeSatisfied::Yes
+        );
     }
 
     #[test]
     fn test_check_scope_satisfied_partial() {
         let required = vec!["repo".to_string(), "user:email".to_string()];
         let granted = vec!["repo".to_string()];
-        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::No);
+        assert_eq!(
+            check_scope_satisfied(&required, &granted),
+            ScopeSatisfied::No
+        );
     }
 
     #[test]
     fn test_check_scope_satisfied_none_present() {
         let required = vec!["repo".to_string()];
         let granted = vec!["user:email".to_string()];
-        assert_eq!(check_scope_satisfied(&required, &granted), ScopeSatisfied::No);
+        assert_eq!(
+            check_scope_satisfied(&required, &granted),
+            ScopeSatisfied::No
+        );
     }
 
     #[test]
