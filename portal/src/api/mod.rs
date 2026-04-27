@@ -10,6 +10,7 @@ pub mod nango_connection;
 pub mod nango_hq_proxy;
 pub mod proxy;
 pub mod status;
+pub mod token;
 pub mod tools;
 
 use std::sync::Arc;
@@ -38,4 +39,5 @@ pub fn router() -> Router<Arc<AppState>> {
         .merge(tools::router())
         .merge(mcp::router())
         .merge(llm::router())
+        .merge(token::router())
 }

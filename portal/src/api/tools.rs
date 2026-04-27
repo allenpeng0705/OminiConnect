@@ -93,7 +93,7 @@ pub async fn list(
     Query(query): Query<ListToolsQuery>,
     headers: HeaderMap,
 ) -> Result<Json<ListToolsResponse>, Response> {
-    let (owner, _agent_id) = match auth_user(&state, &headers).await {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return Err(e),
     };
@@ -147,7 +147,7 @@ pub async fn search(
     Query(query): Query<SearchToolsQuery>,
     headers: HeaderMap,
 ) -> Result<Json<SearchToolsResponse>, Response> {
-    let (owner, _agent_id) = match auth_user(&state, &headers).await {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return Err(e),
     };
@@ -325,7 +325,7 @@ pub async fn execute(
     headers: HeaderMap,
     Json(body): Json<ExecuteToolRequest>,
 ) -> Response {
-    let (owner, agent_id) = match auth_user(&state, &headers).await {
+    let (owner, agent_id, allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return e,
     };
@@ -337,6 +337,13 @@ pub async fn execute(
             return tool_error(StatusCode::NOT_FOUND, "tool not found");
         }
     };
+
+    // Check if this API key is allowed to call this tool
+    if let Some(ref allowed) = allowed_tools {
+        if !allowed.contains(&tool.slug) {
+            return tool_error(StatusCode::FORBIDDEN, "tool not allowed for this API key");
+        }
+    }
 
     // Get connector for (owner, platform)
     let connector = match state.connectors.get(&owner, &body.platform).await {
@@ -737,11 +744,11 @@ async fn execute_oauth_vault(
     }
 }
 
-/// Authenticate via Bearer token and return (owner_username, agent_id).
+/// Authenticate via Bearer token and return (owner_username, agent_id, allowed_tools).
 pub(crate) async fn auth_user(
     state: &Arc<AppState>,
     headers: &HeaderMap,
-) -> Result<(String, Option<String>), Response> {
+) -> Result<(String, Option<String>, Option<Vec<String>>), Response> {
     let api_key = match headers.get(AUTHORIZATION).and_then(|v| v.to_str().ok()) {
         Some(v) => v.strip_prefix("Bearer ").unwrap_or(v),
         None => {
@@ -754,7 +761,7 @@ pub(crate) async fn auth_user(
 
     for ak in api_keys {
         if bcrypt::verify(api_key, &ak.key_hash).ok() == Some(true) {
-            return Ok((ak.username, ak.agent_id));
+            return Ok((ak.username, ak.agent_id, ak.allowed_tools));
         }
     }
 

@@ -221,6 +221,14 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         tracing::debug!("Skipping api_keys agent_id migration: {}", e);
     }
 
+    // Add allowed_tools column to api_keys (JSON array of allowed tool slugs)
+    if let Err(e) = sqlx::query("ALTER TABLE api_keys ADD COLUMN allowed_tools TEXT")
+        .execute(&mut *conn)
+        .await
+    {
+        tracing::debug!("Skipping api_keys allowed_tools migration: {}", e);
+    }
+
     // Add active column to agents
     if let Err(e) = sqlx::query("ALTER TABLE agents ADD COLUMN active INTEGER NOT NULL DEFAULT 1")
         .execute(&mut *conn)
@@ -779,6 +787,7 @@ mod models {
         pub label: String,
         pub created_at: String,
         pub agent_id: Option<String>,
+        pub allowed_tools: Option<String>,
     }
 
     impl From<ApiKeyRow> for ApiKey {
@@ -791,6 +800,7 @@ mod models {
                     .map(|dt| dt.with_timezone(&Utc))
                     .unwrap_or_else(|_| Utc::now()),
                 agent_id: r.agent_id,
+                allowed_tools: r.allowed_tools.map(|s| serde_json::from_str(&s).unwrap_or_default()),
             }
         }
     }

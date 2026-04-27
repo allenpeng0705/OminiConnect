@@ -88,6 +88,7 @@ pub async fn register_agent(
         label: format!("agent:{}", agent_id),
         created_at: now,
         agent_id: Some(agent_id.clone()),
+        allowed_tools: None,
     };
 
     if let Err(e) = state.api_keys.insert(&api_key).await {

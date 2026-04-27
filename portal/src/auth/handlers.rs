@@ -480,6 +480,7 @@ pub async fn generate_api_key(
         label: req.label.clone(),
         created_at: chrono::Utc::now(),
         agent_id: None,
+        allowed_tools: req.allowed_tools.clone(),
     };
 
     if let Err(e) = state.api_keys.insert(&api_key).await {

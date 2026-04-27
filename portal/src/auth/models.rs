@@ -31,6 +31,9 @@ pub struct ApiKey {
     pub created_at: DateTime<Utc>,
     /// Set when this key belongs to an agent (NULL for human user keys)
     pub agent_id: Option<String>,
+    /// Allowed tool slugs. If None, all tools are allowed.
+    #[serde(default)]
+    pub allowed_tools: Option<Vec<String>>,
 }
 
 /// Login request body.
@@ -52,6 +55,10 @@ pub struct SignupRequest {
 #[derive(Debug, Deserialize)]
 pub struct GenerateApiKeyRequest {
     pub label: String,
+    /// Optional list of tool slugs this key is allowed to call.
+    /// If None, all tools are allowed.
+    #[serde(default)]
+    pub allowed_tools: Option<Vec<String>>,
 }
 
 /// API key response — only returned once on creation.

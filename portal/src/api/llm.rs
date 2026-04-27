@@ -121,7 +121,7 @@ pub async fn execute(
     headers: HeaderMap,
     Json(body): Json<LlmExecuteRequest>,
 ) -> Response {
-    let (owner, _agent_id) = match auth_user(&state, &headers).await {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return e,
     };
@@ -355,7 +355,7 @@ pub async fn list_tools(
     Query(query): Query<LlmToolsQuery>,
     headers: HeaderMap,
 ) -> Response {
-    let (owner, _agent_id) = match auth_user(&state, &headers).await {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return e,
     };
@@ -425,7 +425,7 @@ pub async fn explain(
     headers: HeaderMap,
     Query(query): Query<LlmExplainQuery>,
 ) -> Response {
-    let (owner, _agent_id) = match auth_user(&state, &headers).await {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
         Ok(u) => u,
         Err(e) => return e,
     };
