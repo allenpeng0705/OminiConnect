@@ -582,12 +582,14 @@ pub async fn telemetry(
     struct TelemetryResponse {
         ok: bool,
         reset_applied: bool,
+        provider_context_enabled: bool,
         telemetry: crate::telemetry::LlmToolTelemetry,
     }
 
     ok_json(TelemetryResponse {
         ok: true,
         reset_applied: query.reset,
+        provider_context_enabled: state.llm_provider_context_enabled,
         telemetry: snapshot,
     })
 }
@@ -976,7 +978,7 @@ async fn llm_execute(
     user_connectors: &HashMap<String, Vec<String>>,
 ) -> Result<LlmExecuteResponse, Response> {
     // Build the list of tools for the LLM and platform->provider mapping
-    let (tools, platform_provider_map) = build_llm_tools(state, owner, user_connectors).await?;
+    let (tools, _platform_provider_map) = build_llm_tools(state, owner, user_connectors, query).await?;
     let tools_for_llm = tools; // rename for clarity
 
     if tools_for_llm.is_empty() {
@@ -1120,7 +1122,7 @@ async fn llm_execute(
             };
             {
                 let mut telemetry = state.llm_tool_telemetry.write().await;
-                telemetry.record_attempt(&tool_name);
+                telemetry.record_attempt(&tool_name, state.llm_provider_context_enabled);
             }
 
             let arguments_str = match tool_call.function.arguments.as_ref() {
@@ -1158,7 +1160,12 @@ async fn llm_execute(
                 *retry_count += 1;
                 {
                     let mut telemetry = state.llm_tool_telemetry.write().await;
-                    telemetry.record_missing_required(&tool_name, &missing_required, should_retry);
+                    telemetry.record_missing_required(
+                        &tool_name,
+                        &missing_required,
+                        should_retry,
+                        state.llm_provider_context_enabled,
+                    );
                 }
                 let missing_details = build_missing_param_details(&tool_def.input_schema, &missing_required);
                 let clarification_question = build_clarification_question(&tool_name, &missing_details);
@@ -1193,7 +1200,11 @@ async fn llm_execute(
                 *retry_count += 1;
                 {
                     let mut telemetry = state.llm_tool_telemetry.write().await;
-                    telemetry.record_schema_failure(&tool_name, should_retry);
+                    telemetry.record_schema_failure(
+                        &tool_name,
+                        should_retry,
+                        state.llm_provider_context_enabled,
+                    );
                 }
                 let schema_repair_hints = build_schema_repair_hints(&tool_def.input_schema, &schema_errors);
                 let call_id = tool_call.id.clone().unwrap_or_else(|| format!("call-{}", idx));
@@ -1228,7 +1239,7 @@ async fn llm_execute(
             ).await?;
             {
                 let mut telemetry = state.llm_tool_telemetry.write().await;
-                telemetry.record_execution(&tool_name);
+                telemetry.record_execution(&tool_name, state.llm_provider_context_enabled);
             }
 
             let tool_result = if validation_warnings.is_empty() {
@@ -1694,6 +1705,7 @@ async fn build_llm_tools(
     state: &Arc<AppState>,
     owner: &str,
     user_connectors: &HashMap<String, Vec<String>>,
+    query: &str,
 ) -> Result<(Vec<crate::llm::LLMTool>, HashMap<String, (String, Vec<String>)>), Response> {
     // First get all connectors with their provider_key
     let all_connectors = state.connectors.list_all().await.map_err(|e| {
@@ -1710,8 +1722,38 @@ async fn build_llm_tools(
     }
 
     let mut tools = Vec::new();
+    let query_lower = query.to_lowercase();
+
+    // Gather provider-level context first for intent pre-ranking.
+    let mut provider_contexts: HashMap<String, ProviderContext> = HashMap::new();
+    for (platform, _granted_scopes) in user_connectors {
+        let provider_key = if let Some((pk, _)) = platform_provider_map.get(platform) {
+            pk.as_str()
+        } else {
+            platform
+        };
+        let provider_tools = state
+            .tools
+            .tools_for_provider(provider_key)
+            .or_else(|| state.tools.tools_for_provider(platform))
+            .unwrap_or(&[]);
+        if provider_tools.is_empty() {
+            continue;
+        }
+        let ctx = build_provider_context(state, platform, provider_tools);
+        provider_contexts.insert(platform.clone(), ctx);
+    }
+
+    let selected_platforms = if state.llm_provider_context_enabled {
+        select_provider_candidates(&query_lower, &provider_contexts)
+    } else {
+        user_connectors.keys().cloned().collect()
+    };
 
     for (platform, granted_scopes) in user_connectors {
+        if !selected_platforms.contains(platform) {
+            continue;
+        }
         // Get the provider_key from the platform_provider_map
         // For github-pat, provider_key might be "github-pat__github-pat-6hcb4w" but tools are stored under "github"
         // We need to find which provider has tools for this platform
@@ -1741,7 +1783,10 @@ async fn build_llm_tools(
                 tool_type: "function".to_string(),
                 function: crate::llm::LLMFunction {
                     name: tool.slug.clone(),
-                    description: llm_tool_description(tool),
+                    description: llm_tool_description(
+                        tool,
+                        provider_contexts.get(platform),
+                    ),
                     parameters: serde_json::to_value(&tool.input_schema).unwrap_or_else(|_| {
                         serde_json::json!({
                             "type": "object",
@@ -1758,12 +1803,107 @@ async fn build_llm_tools(
     Ok((tools, platform_provider_map))
 }
 
-fn llm_tool_description(tool: &crate::tools::Tool) -> String {
+#[derive(Debug, Clone)]
+struct ProviderContext {
+    provider_key: String,
+    provider_name: String,
+    provider_summary: String,
+    categories: Vec<String>,
+}
+
+fn build_provider_context(
+    state: &Arc<AppState>,
+    platform: &str,
+    provider_tools: &[crate::tools::Tool],
+) -> ProviderContext {
+    let provider_name = state
+        .tools
+        .toolkits()
+        .iter()
+        .find(|t| t.provider == platform)
+        .map(|t| t.name.clone())
+        .unwrap_or_else(|| platform.to_string());
+
+    let mut tag_count: HashMap<String, usize> = HashMap::new();
+    for tool in provider_tools {
+        for tag in &tool.tags {
+            let t = tag.to_lowercase();
+            *tag_count.entry(t).or_insert(0) += 1;
+        }
+    }
+    let mut categories: Vec<(String, usize)> = tag_count.into_iter().collect();
+    categories.sort_by(|a, b| b.1.cmp(&a.1));
+    let categories = categories.into_iter().map(|(t, _)| t).take(3).collect::<Vec<_>>();
+
+    let provider_summary = if categories.is_empty() {
+        format!("APIs for {} workflows", provider_name)
+    } else {
+        format!("APIs for {} workflows", categories.join(", "))
+    };
+
+    ProviderContext {
+        provider_key: platform.to_string(),
+        provider_name,
+        provider_summary,
+        categories,
+    }
+}
+
+fn score_provider_intent(query_lower: &str, ctx: &ProviderContext) -> f64 {
+    let mut score = 0.0;
+    if query_lower.contains(&ctx.provider_key.to_lowercase())
+        || query_lower.contains(&ctx.provider_name.to_lowercase())
+    {
+        score += 1.0;
+    }
+    for c in &ctx.categories {
+        if query_lower.contains(c) {
+            score += 0.4;
+        }
+    }
+    score
+}
+
+fn select_provider_candidates(
+    query_lower: &str,
+    contexts: &HashMap<String, ProviderContext>,
+) -> std::collections::HashSet<String> {
+    let mut scored: Vec<(String, f64)> = contexts
+        .iter()
+        .map(|(platform, ctx)| (platform.clone(), score_provider_intent(query_lower, ctx)))
+        .collect();
+    scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+
+    let explicit: Vec<String> = scored
+        .iter()
+        .filter(|(_, s)| *s >= 1.0)
+        .map(|(p, _)| p.clone())
+        .collect();
+    if !explicit.is_empty() {
+        return explicit.into_iter().collect();
+    }
+
+    let top_n = 4usize;
+    scored
+        .into_iter()
+        .take(top_n)
+        .map(|(p, _)| p)
+        .collect()
+}
+
+fn llm_tool_description(tool: &crate::tools::Tool, provider_ctx: Option<&ProviderContext>) -> String {
     let mut parts = vec![
         format!("{}: {}", tool.name, tool.description.replace('\n', " ").trim()),
         format!("method={:?}", tool.method),
         format!("endpoint={}", tool.endpoint),
     ];
+    if let Some(ctx) = provider_ctx {
+        parts.push(format!("provider={}", ctx.provider_name));
+        parts.push(format!("provider_summary={}", ctx.provider_summary));
+        if !ctx.categories.is_empty() {
+            parts.push(format!("provider_categories={}", ctx.categories.join(",")));
+        }
+    }
 
     let required = schema_required_params(&tool.input_schema);
     if !required.is_empty() {

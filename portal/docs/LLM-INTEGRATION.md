@@ -223,6 +223,30 @@ GET /api/llm/telemetry?reset=true
 - Use `schema_validation_failures` and `coercions` to identify typing ambiguity.
 - Use `reset=true` before a focused test run to get clean experiment metrics.
 
+### Provider Context A/B Toggle
+
+LLM routing can use provider-level metadata (provider name, summary, categories) to improve disambiguation.
+
+Environment variable:
+
+```bash
+LLM_PROVIDER_CONTEXT_ENABLED=true   # default true
+```
+
+- `true`: enable provider-intent pre-ranking and provider metadata in tool descriptions.
+- `false`: disable provider pre-ranking (baseline behavior) for A/B comparisons.
+
+Telemetry (`GET /api/llm/telemetry`) includes split counters for context-on vs context-off runs:
+
+- `attempts_with_provider_context`
+- `attempts_without_provider_context`
+- `executions_with_provider_context`
+- `executions_without_provider_context`
+- `missing_required_with_provider_context`
+- `missing_required_without_provider_context`
+- `schema_failures_with_provider_context`
+- `schema_failures_without_provider_context`
+
 ## SDK Design
 
 Each SDK gets an `Llm` manager with a single `execute(query)` method.

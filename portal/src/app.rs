@@ -36,6 +36,7 @@ pub struct AppState {
     pub panda_mcp_gateway: Option<PandaMCPGatewayClient>,
     pub panda_api_gateway: Option<PandaAPIGatewayClient>,
     pub llm_tool_telemetry: Arc<RwLock<LlmToolTelemetry>>,
+    pub llm_provider_context_enabled: bool,
 }
 
 impl AppState {
@@ -79,6 +80,10 @@ impl AppState {
         } else {
             None
         };
+        let llm_provider_context_enabled = std::env::var("LLM_PROVIDER_CONTEXT_ENABLED")
+            .ok()
+            .and_then(|v| v.parse::<bool>().ok())
+            .unwrap_or(true);
 
         Self {
             users: Arc::new(user_repo),
@@ -98,6 +103,7 @@ impl AppState {
             panda_mcp_gateway,
             panda_api_gateway,
             llm_tool_telemetry: Arc::new(RwLock::new(LlmToolTelemetry::default())),
+            llm_provider_context_enabled,
         }
     }
 }

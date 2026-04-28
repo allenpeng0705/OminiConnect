@@ -22,6 +22,14 @@ pub struct LlmToolTelemetry {
     pub total_missing_required_failures: u64,
     pub total_schema_validation_failures: u64,
     pub total_retries: u64,
+    pub attempts_with_provider_context: u64,
+    pub attempts_without_provider_context: u64,
+    pub executions_with_provider_context: u64,
+    pub executions_without_provider_context: u64,
+    pub missing_required_with_provider_context: u64,
+    pub missing_required_without_provider_context: u64,
+    pub schema_failures_with_provider_context: u64,
+    pub schema_failures_without_provider_context: u64,
     pub by_tool: HashMap<String, ToolTelemetry>,
 }
 
@@ -35,18 +43,39 @@ impl LlmToolTelemetry {
             })
     }
 
-    pub fn record_attempt(&mut self, tool: &str) {
+    pub fn record_attempt(&mut self, tool: &str, provider_context_enabled: bool) {
         self.total_attempts += 1;
+        if provider_context_enabled {
+            self.attempts_with_provider_context += 1;
+        } else {
+            self.attempts_without_provider_context += 1;
+        }
         self.ensure_tool(tool).attempts += 1;
     }
 
-    pub fn record_execution(&mut self, tool: &str) {
+    pub fn record_execution(&mut self, tool: &str, provider_context_enabled: bool) {
         self.total_executions += 1;
+        if provider_context_enabled {
+            self.executions_with_provider_context += 1;
+        } else {
+            self.executions_without_provider_context += 1;
+        }
         self.ensure_tool(tool).executions += 1;
     }
 
-    pub fn record_missing_required(&mut self, tool: &str, missing_fields: &[String], retried: bool) {
+    pub fn record_missing_required(
+        &mut self,
+        tool: &str,
+        missing_fields: &[String],
+        retried: bool,
+        provider_context_enabled: bool,
+    ) {
         self.total_missing_required_failures += 1;
+        if provider_context_enabled {
+            self.missing_required_with_provider_context += 1;
+        } else {
+            self.missing_required_without_provider_context += 1;
+        }
         if retried {
             self.total_retries += 1;
         }
@@ -60,8 +89,13 @@ impl LlmToolTelemetry {
         }
     }
 
-    pub fn record_schema_failure(&mut self, tool: &str, retried: bool) {
+    pub fn record_schema_failure(&mut self, tool: &str, retried: bool, provider_context_enabled: bool) {
         self.total_schema_validation_failures += 1;
+        if provider_context_enabled {
+            self.schema_failures_with_provider_context += 1;
+        } else {
+            self.schema_failures_without_provider_context += 1;
+        }
         if retried {
             self.total_retries += 1;
         }
