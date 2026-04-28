@@ -87,16 +87,6 @@ impl Reporter {
         println!("Total queries: {}", summary.total);
         println!("Correct selections: {}", summary.correct);
         println!("Accuracy: {:.1}%", summary.accuracy * 100.0);
-        println!("\nBy Category:");
-        for (cat, (total, correct)) in &summary.by_category {
-            let pct = if *total > 0 { (*correct as f64 / *total as f64) * 100.0 } else { 0.0 };
-            println!("  {:20} {:4}/{:<4} ({:.0}%)", cat, correct, total, pct);
-        }
-        println!("\nBy Provider:");
-        for (provider, (total, correct)) in &summary.by_provider {
-            let pct = if *total > 0 { (*correct as f64 / *total as f64) * 100.0 } else { 0.0 };
-            println!("  {:20} {:4}/{:<4} ({:.0}%)", provider, correct, total, pct);
-        }
         println!("\nFailed cases recorded: {}", self.failures.len());
         println!("Unclear descriptions recorded: {}", self.unclear_descriptions.len());
         println!("{}", "=".repeat(80));
