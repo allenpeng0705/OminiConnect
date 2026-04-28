@@ -86,26 +86,43 @@ pub fn evaluate_query(
 
 /// Extract tool name from LLM JSON response.
 fn extract_tool_from_response(response: &str) -> Option<String> {
-    // Try JSON format first: {"tool": "slug", ...}
-    if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(response) {
-        if let Some(tool) = parsed.get("tool").or_else(|| parsed.get("name")) {
-            if let Some(s) = tool.as_str() {
-                return Some(s.to_string());
-            }
+    // Accept strict JSON payload first.
+    if let Some(name) = extract_tool_from_json_value(response) {
+        return Some(name);
+    }
+
+    // Common model behavior: wraps valid JSON in markdown fence.
+    if let Some((start, end)) = response
+        .find("```")
+        .and_then(|s| response[s + 3..].find("```").map(|e| (s, s + 3 + e)))
+    {
+        let fenced = response[start + 3..end]
+            .trim()
+            .trim_start_matches("json")
+            .trim();
+        if let Some(name) = extract_tool_from_json_value(fenced) {
+            return Some(name);
         }
     }
 
-    // Try OpenAI tool_calls format
-    if let Ok(parsed) = serde_json::from_str::<serde_json::Value>(response) {
-        if let Some(choices) = parsed.get("choices").and_then(|c| c.as_array()) {
-            for choice in choices {
-                if let Some(tool_calls) = choice.get("message").and_then(|m| m.get("tool_calls")) {
-                    if let Some(calls) = tool_calls.as_array() {
-                        for call in calls {
-                            if let Some(function) = call.get("function") {
-                                if let Some(name) = function.get("name").and_then(|n| n.as_str()) {
-                                    return Some(name.to_string());
-                                }
+    None
+}
+
+fn extract_tool_from_json_value(raw: &str) -> Option<String> {
+    let parsed = serde_json::from_str::<serde_json::Value>(raw).ok()?;
+    if let Some(tool) = parsed.get("tool").or_else(|| parsed.get("name")) {
+        if let Some(s) = tool.as_str() {
+            return Some(s.to_string());
+        }
+    }
+    if let Some(choices) = parsed.get("choices").and_then(|c| c.as_array()) {
+        for choice in choices {
+            if let Some(tool_calls) = choice.get("message").and_then(|m| m.get("tool_calls")) {
+                if let Some(calls) = tool_calls.as_array() {
+                    for call in calls {
+                        if let Some(function) = call.get("function") {
+                            if let Some(name) = function.get("name").and_then(|n| n.as_str()) {
+                                return Some(name.to_string());
                             }
                         }
                     }
@@ -113,15 +130,6 @@ fn extract_tool_from_response(response: &str) -> Option<String> {
             }
         }
     }
-
-    // Fallback: try to find a slug-like pattern in text
-    // e.g., "github_list_repos" or "I should call github_list_repos"
-    for word in response.split_whitespace() {
-        if word.contains('_') && !word.starts_with('{') {
-            return Some(word.trim_matches(|c| c == ',' || c == '.' || c == '"' || c == '}' || c == '(' || c == ')' || c == '\'' || c == '`').to_string());
-        }
-    }
-
     None
 }
 

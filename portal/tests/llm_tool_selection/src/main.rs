@@ -159,6 +159,9 @@ fn build_noisy_tool_set<'a>(
         tool_set.push(tool);
     }
 
+    // Shuffle final ordering to avoid position bias.
+    tool_set.shuffle(rng);
+
     tool_set
 }
 
@@ -189,6 +192,8 @@ Do not include any other text in your response."#;
         "model": model,
         "messages": messages,
         "tools": tools,
+        "temperature": 0.0,
+        "top_p": 1.0,
         "stream": false
     });
 
@@ -292,9 +297,12 @@ async fn main() -> Result<()> {
     let datasets = query::load_datasets(&args.queries)?;
     println!("Loaded {} provider datasets", datasets.len());
 
-    // Setup HTTP client
+    // Setup HTTP client - bypass system proxy
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
+        .connect_timeout(std::time::Duration::from_secs(10))
+        .http1_only()
+        .no_proxy()
         .build()?;
 
     // Filter datasets by provider if specified
@@ -363,8 +371,8 @@ async fn main() -> Result<()> {
                                 "type": "function",
                                 "function": {
                                     "name": t.slug,
-                                    "description": format!("{} - {}", t.name, t.description.replace('\n', " ")),
-                                    "parameters": {"type": "object", "properties": {}, "required": []}
+                                    "description": t.llm_description(),
+                                    "parameters": t.input_schema.clone()
                                 }
                             })
                         })
@@ -397,7 +405,7 @@ async fn main() -> Result<()> {
 
                                 // Build description map for reporting
                                 let desc_map: HashMap<String, String> = noisy_tools.iter()
-                                    .map(|t| (t.slug.clone(), format!("{} - {}", t.name, t.description.replace('\n', " "))))
+                                    .map(|t| (t.slug.clone(), t.llm_description()))
                                     .collect();
 
                                 let failure_type = if result.llm_selected_tool.is_none() {
@@ -563,8 +571,8 @@ async fn run_multi_round_tests(
                         "type": "function",
                         "function": {
                             "name": t.slug,
-                            "description": format!("{} - {}", t.name, t.description.replace('\n', " ")),
-                            "parameters": {"type": "object", "properties": {}, "required": []}
+                            "description": t.llm_description(),
+                            "parameters": t.input_schema.clone()
                         }
                     })
                 })

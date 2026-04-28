@@ -22,6 +22,44 @@ pub struct Tool {
     pub tags: Vec<String>,
     #[serde(default)]
     pub example_queries: Vec<String>,
+    #[serde(default = "default_input_schema")]
+    pub input_schema: serde_json::Value,
+}
+
+fn default_input_schema() -> serde_json::Value {
+    serde_json::json!({
+        "type": "object",
+        "properties": {},
+        "required": []
+    })
+}
+
+impl Tool {
+    /// Richer description helps reduce near-neighbor tool confusion.
+    pub fn llm_description(&self) -> String {
+        let mut parts = vec![
+            format!("{}: {}", self.name, self.description.replace('\n', " ").trim()),
+            format!("method={}", self.http_method),
+            format!("endpoint={}", self.endpoint),
+        ];
+
+        if !self.tags.is_empty() {
+            parts.push(format!("tags={}", self.tags.join(",")));
+        }
+        if !self.example_queries.is_empty() {
+            parts.push(format!(
+                "examples={}",
+                self.example_queries
+                    .iter()
+                    .take(2)
+                    .map(|q| q.replace('\n', " "))
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ));
+        }
+
+        parts.join(" ; ")
+    }
 }
 
 /// Load all tools from registry directory.
@@ -53,12 +91,8 @@ pub fn build_llm_tools(tools: &[Tool]) -> Vec<serde_json::Value> {
                 "type": "function",
                 "function": {
                     "name": tool.slug,
-                    "description": format!("{} - {}", tool.name, tool.description.replace('\n', " ")),
-                    "parameters": {
-                        "type": "object",
-                        "properties": {},
-                        "required": []
-                    }
+                    "description": tool.llm_description(),
+                    "parameters": tool.input_schema
                 }
             })
         })
