@@ -234,16 +234,12 @@ Do not include any other text in your response."#;
                     return Err(anyhow::anyhow!("API error: {:?}", error));
                 }
 
-                // Extract response content from message.content or tool_calls
+                // Provider-agnostic extraction:
+                // 1) Prefer native tool_calls if present
+                // 2) Fall back to JSON from message.content
                 if let Some(choices) = json.get("choices").and_then(|c| c.as_array()) {
                     if let Some(first) = choices.first() {
-                        // Try message.content first
-                        if let Some(content) = first.get("message").and_then(|m| m.get("content")).and_then(|c| c.as_str()) {
-                            if !content.is_empty() {
-                                return Ok(content.to_string());
-                            }
-                        }
-                        // Try tool_calls
+                        // Try tool_calls first (some providers return non-empty reasoning content too)
                         if let Some(tool_calls) = first.get("message").and_then(|m| m.get("tool_calls")) {
                             if let Some(calls) = tool_calls.as_array() {
                                 if let Some(call) = calls.first() {
@@ -251,14 +247,32 @@ Do not include any other text in your response."#;
                                         if let Some(name) = func.get("name") {
                                             if let Some(name_str) = name.as_str() {
                                                 // Return tool call in JSON format
-                                                let arguments = func.get("arguments")
-                                                    .map(|a| a.to_string())
+                                                let arguments = func
+                                                    .get("arguments")
+                                                    .and_then(|a| {
+                                                        if a.is_string() {
+                                                            a.as_str().map(|s| s.to_string())
+                                                        } else {
+                                                            Some(a.to_string())
+                                                        }
+                                                    })
                                                     .unwrap_or_else(|| "{}".to_string());
                                                 return Ok(format!(r#"{{"tool": "{}", "arguments": {}}}"#, name_str, arguments));
                                             }
                                         }
                                     }
                                 }
+                            }
+                        }
+
+                        // Try message.content after tool_calls
+                        if let Some(content) = first.get("message").and_then(|m| m.get("content")).and_then(|c| c.as_str()) {
+                            if !content.is_empty() {
+                                if let Some(extracted) = extract_json_object(content) {
+                                    return Ok(extracted);
+                                }
+                                // Keep raw content as last fallback for evaluator compatibility
+                                return Ok(content.to_string());
                             }
                         }
                     }
@@ -277,6 +291,54 @@ Do not include any other text in your response."#;
     }
 
     Err(last_error.unwrap_or_else(|| anyhow::anyhow!("Request failed after retries")))
+}
+
+/// Best-effort JSON object extraction from content that may include reasoning wrappers.
+fn extract_json_object(content: &str) -> Option<String> {
+    // Prefer fenced JSON blocks first
+    if let Some((start, end)) = content
+        .find("```")
+        .and_then(|s| content[s + 3..].find("```").map(|e| (s, s + 3 + e)))
+    {
+        let fenced = content[start + 3..end]
+            .trim()
+            .trim_start_matches("json")
+            .trim();
+        if serde_json::from_str::<serde_json::Value>(fenced).is_ok() {
+            return Some(fenced.to_string());
+        }
+    }
+
+    // Scan for first balanced {...} JSON object
+    let bytes = content.as_bytes();
+    let mut depth = 0i32;
+    let mut start_idx: Option<usize> = None;
+    for (i, b) in bytes.iter().enumerate() {
+        match *b as char {
+            '{' => {
+                if depth == 0 {
+                    start_idx = Some(i);
+                }
+                depth += 1;
+            }
+            '}' => {
+                if depth > 0 {
+                    depth -= 1;
+                    if depth == 0 {
+                        if let Some(s) = start_idx {
+                            let candidate = &content[s..=i];
+                            if serde_json::from_str::<serde_json::Value>(candidate).is_ok() {
+                                return Some(candidate.to_string());
+                            }
+                        }
+                        start_idx = None;
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    None
 }
 
 #[tokio::main]
@@ -364,6 +426,10 @@ async fn main() -> Result<()> {
 
                 // Test all variations
                 for query_text in query_case.all_queries() {
+                    if args.max_queries > 0 && total_queries >= args.max_queries {
+                        println!("\nReached max queries limit ({})", args.max_queries);
+                        break;
+                    }
                     // Build LLM tool list from noisy set
                     let llm_tools: Vec<_> = noisy_tools.iter()
                         .map(|t| {
@@ -448,15 +514,15 @@ async fn main() -> Result<()> {
                         break;
                     }
                 }
+
+                if args.max_queries > 0 && total_queries >= args.max_queries {
+                    break;
+                }
             }
 
             if args.max_queries > 0 && total_queries >= args.max_queries {
                 break;
             }
-        }
-
-        if args.max_queries > 0 && total_queries >= args.max_queries {
-            break;
         }
 
         all_results.extend(round_results);
@@ -468,10 +534,14 @@ async fn main() -> Result<()> {
             round_summary.accuracy * 100.0,
             round_summary.correct,
             round_summary.total);
+
+        if args.max_queries > 0 && total_queries >= args.max_queries {
+            break;
+        }
     }
 
     // Multi-round tests
-    if !args.multi_round_only {
+    if !args.multi_round_only && (args.max_queries == 0 || total_queries < args.max_queries) {
         println!("\n{}", "=".repeat(80));
         println!("MULTI-ROUND TOOL SELECTION TESTS");
         println!("{}", "=".repeat(80));

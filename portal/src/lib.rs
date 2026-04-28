@@ -13,6 +13,7 @@ pub mod nango;
 pub mod oauth;
 pub mod panda;
 pub mod portal_env;
+pub mod telemetry;
 pub mod tools;
 
 pub use app::AppState;

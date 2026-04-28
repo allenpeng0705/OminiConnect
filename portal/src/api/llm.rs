@@ -23,6 +23,7 @@ use axum::{
     Json, Router,
 };
 use http_body_util::BodyExt;
+use jsonschema::{self, draft7};
 use serde::{Deserialize, Serialize};
 
 use crate::api::tools::{auth_user, check_scope_satisfied, tool_error, ScopeSatisfied, substitute_path_params, build_params};
@@ -116,6 +117,13 @@ pub struct LlmToolsQuery {
 pub struct LlmExplainQuery {
     pub query: String,
     pub tool: String,
+}
+
+/// Query params for telemetry.
+#[derive(Debug, Deserialize)]
+pub struct LlmTelemetryQuery {
+    #[serde(default)]
+    pub reset: bool,
 }
 
 /// POST /api/llm — execute natural language query.
@@ -550,6 +558,40 @@ pub async fn explain(
     ok_json(resp)
 }
 
+/// GET /api/llm/telemetry — show LLM tool-routing telemetry.
+pub async fn telemetry(
+    State(state): State<Arc<AppState>>,
+    Query(query): Query<LlmTelemetryQuery>,
+    headers: HeaderMap,
+) -> Response {
+    let _ = match auth_user(&state, &headers).await {
+        Ok(u) => u,
+        Err(e) => return e,
+    };
+
+    let snapshot = {
+        let mut guard = state.llm_tool_telemetry.write().await;
+        let current = guard.clone();
+        if query.reset {
+            *guard = crate::telemetry::LlmToolTelemetry::default();
+        }
+        current
+    };
+
+    #[derive(Serialize)]
+    struct TelemetryResponse {
+        ok: bool,
+        reset_applied: bool,
+        telemetry: crate::telemetry::LlmToolTelemetry,
+    }
+
+    ok_json(TelemetryResponse {
+        ok: true,
+        reset_applied: query.reset,
+        telemetry: snapshot,
+    })
+}
+
 /// Score how well a tool matches the query (0.0 to 1.0).
 fn score_tool(
     query_lower: &str,
@@ -912,6 +954,7 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/llm", post(execute))
         .route("/llm/tools", get(list_tools))
         .route("/llm/explain", post(explain))
+        .route("/llm/telemetry", get(telemetry))
 }
 
 // ============================================================================
@@ -952,7 +995,7 @@ async fn llm_execute(
     }
 
     // Build system prompt
-    let system_prompt = build_llm_system_prompt();
+    let system_prompt = build_llm_system_prompt(&tools_for_llm);
 
     // Get max tool rounds from config
     let max_rounds = state.llm_config.max_tool_rounds;
@@ -979,6 +1022,8 @@ async fn llm_execute(
     let mut final_result: Option<serde_json::Value> = None;
     let mut executed_tools: Vec<String> = Vec::new();
     let mut rounds = 0;
+    let mut validation_retry_counts: HashMap<String, u8> = HashMap::new();
+    let max_validation_retries_per_tool_call: u8 = 2;
 
     // Tool loop: continue until no more tool calls or max rounds reached
     loop {
@@ -999,6 +1044,8 @@ async fn llm_execute(
                     messages: messages.clone(),
                     tools: Some(tools_for_llm.clone()),
                     stream: false,
+                    temperature: Some(0.0),
+                    top_p: Some(1.0),
                 };
                 panda_ai.chat(chat_request).await.map_err(|e| {
                     tracing::error!("Panda AI Gateway error: {}", e);
@@ -1020,6 +1067,8 @@ async fn llm_execute(
                 messages: messages.clone(),
                 tools: Some(tools_for_llm.clone()),
                 stream: false,
+                temperature: Some(0.0),
+                top_p: Some(1.0),
             };
             state.llm_client.chat(chat_request).await.map_err(|e| {
                 tracing::error!("LiteLLM error: {}", e);
@@ -1069,6 +1118,10 @@ async fn llm_execute(
                     continue;
                 }
             };
+            {
+                let mut telemetry = state.llm_tool_telemetry.write().await;
+                telemetry.record_attempt(&tool_name);
+            }
 
             let arguments_str = match tool_call.function.arguments.as_ref() {
                 Some(args) => args.clone(),
@@ -1086,15 +1139,106 @@ async fn llm_execute(
                 }
             };
 
+            let Some(tool_def) = state.tools.tool_by_slug(&tool_name) else {
+                tracing::warn!("Tool '{}' not found during validation", tool_name);
+                continue;
+            };
+
+            let (validated_args, validation_warnings, missing_required) =
+                normalize_arguments_for_schema(arguments, &tool_def.input_schema);
+            if !validation_warnings.is_empty() {
+                let mut telemetry = state.llm_tool_telemetry.write().await;
+                telemetry.record_normalization_warnings(&tool_name, &validation_warnings);
+            }
+
+            if !missing_required.is_empty() {
+                let retry_key = format!("{}::missing_required", tool_name);
+                let retry_count = validation_retry_counts.entry(retry_key.clone()).or_insert(0);
+                let should_retry = *retry_count < max_validation_retries_per_tool_call;
+                *retry_count += 1;
+                {
+                    let mut telemetry = state.llm_tool_telemetry.write().await;
+                    telemetry.record_missing_required(&tool_name, &missing_required, should_retry);
+                }
+                let missing_details = build_missing_param_details(&tool_def.input_schema, &missing_required);
+                let clarification_question = build_clarification_question(&tool_name, &missing_details);
+                let call_id = tool_call.id.clone().unwrap_or_else(|| format!("call-{}", idx));
+                let result = serde_json::json!({
+                    "error": "missing_required_arguments",
+                    "tool": tool_name,
+                    "missing_required": missing_required,
+                    "missing_param_details": missing_details,
+                    "clarification_question": clarification_question,
+                    "retryable": should_retry,
+                    "hint": if should_retry {
+                        "Fix arguments and call the same tool again with all required parameters."
+                    } else {
+                        "Required parameters are still missing after retries. Ask user a concise clarification question."
+                    }
+                });
+                executed_tools.push(tool_name.clone());
+                new_tool_results.push(crate::llm::ToolResult {
+                    call_id,
+                    tool_name,
+                    result,
+                });
+                continue;
+            }
+
+            let schema_errors = validate_arguments_with_jsonschema(&validated_args, &tool_def.input_schema);
+            if !schema_errors.is_empty() {
+                let retry_key = format!("{}::schema", tool_name);
+                let retry_count = validation_retry_counts.entry(retry_key.clone()).or_insert(0);
+                let should_retry = *retry_count < max_validation_retries_per_tool_call;
+                *retry_count += 1;
+                {
+                    let mut telemetry = state.llm_tool_telemetry.write().await;
+                    telemetry.record_schema_failure(&tool_name, should_retry);
+                }
+                let schema_repair_hints = build_schema_repair_hints(&tool_def.input_schema, &schema_errors);
+                let call_id = tool_call.id.clone().unwrap_or_else(|| format!("call-{}", idx));
+                let result = serde_json::json!({
+                    "error": "schema_validation_failed",
+                    "tool": tool_name,
+                    "retryable": should_retry,
+                    "errors": schema_errors,
+                    "repair_hints": schema_repair_hints,
+                    "hint": if should_retry {
+                        "Fix arguments to match the tool JSON schema and retry this tool."
+                    } else {
+                        "Schema validation keeps failing. Ask user for missing or corrected values."
+                    }
+                });
+                new_tool_results.push(crate::llm::ToolResult {
+                    call_id,
+                    tool_name,
+                    result,
+                });
+                continue;
+            }
+
             // Execute the tool
-            tracing::info!("Executing tool: {} with args: {:?}", tool_name, arguments);
+            tracing::info!("Executing tool: {} with args: {:?}", tool_name, validated_args);
             let tool_result = execute_tool_for_llm(
                 state,
                 owner,
                 &tool_name,
-                arguments,
+                validated_args,
                 user_connectors,
             ).await?;
+            {
+                let mut telemetry = state.llm_tool_telemetry.write().await;
+                telemetry.record_execution(&tool_name);
+            }
+
+            let tool_result = if validation_warnings.is_empty() {
+                tool_result
+            } else {
+                serde_json::json!({
+                    "result": tool_result,
+                    "warnings": validation_warnings,
+                })
+            };
 
             let call_id = tool_call.id.clone().unwrap_or_else(|| format!("call-{}", idx));
             executed_tools.push(tool_name.clone());
@@ -1161,6 +1305,167 @@ async fn llm_execute(
         candidates: None,
         available_tools_hint: None,
     })
+}
+
+fn normalize_arguments_for_schema(
+    arguments: serde_json::Value,
+    schema: &crate::tools::InputSchema,
+) -> (serde_json::Value, Vec<String>, Vec<String>) {
+    let mut warnings = Vec::new();
+    let mut normalized = serde_json::Map::new();
+    let mut missing_required = Vec::new();
+
+    let raw_obj = arguments.as_object().cloned().unwrap_or_default();
+
+    for required in &schema.required {
+        if !raw_obj.contains_key(required) {
+            missing_required.push(required.clone());
+        }
+    }
+
+    for (name, value) in raw_obj {
+        let Some(spec) = schema.properties.get(&name) else {
+            warnings.push(format!("ignored_unknown_parameter: {}", name));
+            continue;
+        };
+        let coerced = coerce_value_to_schema_type(&name, value, spec, &mut warnings);
+        normalized.insert(name, coerced);
+    }
+
+    (serde_json::Value::Object(normalized), warnings, missing_required)
+}
+
+fn coerce_value_to_schema_type(
+    field: &str,
+    value: serde_json::Value,
+    spec: &serde_json::Value,
+    warnings: &mut Vec<String>,
+) -> serde_json::Value {
+    let Some(expected_type) = spec.get("type").and_then(|t| t.as_str()) else {
+        return value;
+    };
+
+    if let Some(enum_values) = spec.get("enum").and_then(|e| e.as_array()) {
+        if enum_values.iter().any(|v| v == &value) {
+            return value;
+        }
+        if let Some(s) = value.as_str() {
+            if let Some(found) = enum_values.iter().find(|v| v.as_str() == Some(s)) {
+                return found.clone();
+            }
+        }
+    }
+
+    match expected_type {
+        "string" => {
+            if let Some(s) = value.as_str() {
+                serde_json::Value::String(s.to_string())
+            } else {
+                warnings.push(format!("coerced_to_string: {}", field));
+                serde_json::Value::String(value.to_string())
+            }
+        }
+        "integer" => {
+            if let Some(i) = value.as_i64() {
+                serde_json::Value::Number(i.into())
+            } else if let Some(s) = value.as_str() {
+                match s.parse::<i64>() {
+                    Ok(i) => {
+                        warnings.push(format!("coerced_to_integer: {}", field));
+                        serde_json::Value::Number(i.into())
+                    }
+                    Err(_) => {
+                        warnings.push(format!("invalid_integer_kept: {}", field));
+                        value
+                    }
+                }
+            } else {
+                value
+            }
+        }
+        "number" => {
+            if value.is_number() {
+                value
+            } else if let Some(s) = value.as_str() {
+                match s.parse::<f64>() {
+                    Ok(n) => {
+                        warnings.push(format!("coerced_to_number: {}", field));
+                        serde_json::json!(n)
+                    }
+                    Err(_) => {
+                        warnings.push(format!("invalid_number_kept: {}", field));
+                        value
+                    }
+                }
+            } else {
+                value
+            }
+        }
+        "boolean" => {
+            if value.is_boolean() {
+                value
+            } else if let Some(s) = value.as_str() {
+                let s = s.to_lowercase();
+                match s.as_str() {
+                    "true" | "1" | "yes" => {
+                        warnings.push(format!("coerced_to_boolean: {}", field));
+                        serde_json::Value::Bool(true)
+                    }
+                    "false" | "0" | "no" => {
+                        warnings.push(format!("coerced_to_boolean: {}", field));
+                        serde_json::Value::Bool(false)
+                    }
+                    _ => value,
+                }
+            } else {
+                value
+            }
+        }
+        "array" => {
+            if value.is_array() {
+                value
+            } else {
+                warnings.push(format!("wrapped_in_array: {}", field));
+                serde_json::Value::Array(vec![value])
+            }
+        }
+        "object" => {
+            if value.is_object() {
+                value
+            } else {
+                warnings.push(format!("invalid_object_kept: {}", field));
+                value
+            }
+        }
+        _ => value,
+    }
+}
+
+fn validate_arguments_with_jsonschema(
+    arguments: &serde_json::Value,
+    schema: &crate::tools::InputSchema,
+) -> Vec<String> {
+    let schema_json = serde_json::json!({
+        "type": schema.schema_type.clone().unwrap_or_else(|| "object".to_string()),
+        "description": schema.description.clone().unwrap_or_default(),
+        "properties": schema.properties,
+        "required": schema.required,
+        // We reject extra keys up front in normalize_arguments_for_schema.
+        "additionalProperties": false
+    });
+
+    let compiled = match draft7::new(&schema_json) {
+        Ok(c) => c,
+        Err(e) => {
+            return vec![format!("invalid_tool_schema: {}", e)];
+        }
+    };
+
+    let mut errors = Vec::new();
+    for err in compiled.iter_errors(arguments) {
+        errors.push(err.to_string());
+    }
+    errors
 }
 
 /// Execute a single tool for LLM orchestration.
@@ -1436,11 +1741,7 @@ async fn build_llm_tools(
                 tool_type: "function".to_string(),
                 function: crate::llm::LLMFunction {
                     name: tool.slug.clone(),
-                    description: format!(
-                        "{} - {}",
-                        tool.name,
-                        tool.description.replace('\n', " ")
-                    ),
+                    description: llm_tool_description(tool),
                     parameters: serde_json::to_value(&tool.input_schema).unwrap_or_else(|_| {
                         serde_json::json!({
                             "type": "object",
@@ -1457,34 +1758,196 @@ async fn build_llm_tools(
     Ok((tools, platform_provider_map))
 }
 
+fn llm_tool_description(tool: &crate::tools::Tool) -> String {
+    let mut parts = vec![
+        format!("{}: {}", tool.name, tool.description.replace('\n', " ").trim()),
+        format!("method={:?}", tool.method),
+        format!("endpoint={}", tool.endpoint),
+    ];
+
+    let required = schema_required_params(&tool.input_schema);
+    if !required.is_empty() {
+        parts.push(format!("required_params={}", required.join(",")));
+    }
+
+    let optional = schema_optional_params(&tool.input_schema);
+    if !optional.is_empty() {
+        parts.push(format!("optional_params={}", optional.join(",")));
+    }
+
+    if !tool.tags.is_empty() {
+        parts.push(format!("tags={}", tool.tags.join(",")));
+    }
+
+    if !tool.example_queries.is_empty() {
+        parts.push(format!(
+            "examples={}",
+            tool.example_queries
+                .iter()
+                .take(2)
+                .map(|q| q.replace('\n', " "))
+                .collect::<Vec<_>>()
+                .join(" | ")
+        ));
+    }
+
+    parts.join(" ; ")
+}
+
+fn schema_required_params(schema: &crate::tools::InputSchema) -> Vec<String> {
+    schema.required.clone()
+}
+
+fn schema_optional_params(schema: &crate::tools::InputSchema) -> Vec<String> {
+    schema
+        .properties
+        .keys()
+        .filter(|k| !schema.required.contains(*k))
+        .cloned()
+        .collect()
+}
+
+fn build_missing_param_details(
+    schema: &crate::tools::InputSchema,
+    missing_required: &[String],
+) -> Vec<serde_json::Value> {
+    missing_required
+        .iter()
+        .map(|name| {
+            let spec = schema.properties.get(name);
+            let param_type = spec
+                .and_then(|s| s.get("type"))
+                .and_then(|t| t.as_str())
+                .unwrap_or("unknown");
+            let description = spec
+                .and_then(|s| s.get("description"))
+                .and_then(|d| d.as_str())
+                .unwrap_or("No description available");
+            let enum_values = spec
+                .and_then(|s| s.get("enum"))
+                .and_then(|e| e.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .take(5)
+                        .map(|v| v.to_string())
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            serde_json::json!({
+                "name": name,
+                "type": param_type,
+                "description": description,
+                "enum_values": enum_values
+            })
+        })
+        .collect()
+}
+
+fn build_clarification_question(tool_name: &str, missing_details: &[serde_json::Value]) -> String {
+    if missing_details.is_empty() {
+        return format!("I need more information to call {}. Could you provide the required fields?", tool_name);
+    }
+    let fields = missing_details
+        .iter()
+        .filter_map(|d| d.get("name").and_then(|n| n.as_str()))
+        .collect::<Vec<_>>()
+        .join(", ");
+    format!("To run {}, please provide: {}.", tool_name, fields)
+}
+
+fn build_schema_repair_hints(
+    schema: &crate::tools::InputSchema,
+    schema_errors: &[String],
+) -> Vec<String> {
+    let mut hints = Vec::new();
+    for (name, spec) in &schema.properties {
+        let t = spec.get("type").and_then(|v| v.as_str()).unwrap_or("unknown");
+        if schema_errors.iter().any(|e| e.contains(name)) {
+            let mut hint = format!("Parameter '{}' should be type '{}'", name, t);
+            if let Some(enum_values) = spec.get("enum").and_then(|e| e.as_array()) {
+                let values = enum_values.iter().take(5).map(|v| v.to_string()).collect::<Vec<_>>().join(", ");
+                hint.push_str(&format!(" and one of [{}]", values));
+            }
+            hints.push(hint);
+        }
+    }
+    if hints.is_empty() {
+        hints.push("Arguments must strictly match the JSON schema (types, required, enum constraints).".to_string());
+    }
+    hints
+}
+
 /// Build system prompt for the LLM.
-fn build_llm_system_prompt() -> String {
-    r#"You are a helpful assistant that helps users accomplish tasks using available tools.
+fn build_llm_system_prompt(tools_for_llm: &[crate::llm::LLMTool]) -> String {
+    let few_shot = build_dynamic_few_shot_examples(tools_for_llm);
+    let mut prompt = r#"You are a precise API tool router and argument extractor.
 
 You have access to tools that can call APIs on behalf of the user. Each tool has:
 - A name (e.g., 'github_list_repos')
 - A description of what it does
 - An input schema specifying required and optional parameters
 
-When the user asks you to do something, you should:
+When the user asks you to do something:
 1. Understand what they want to accomplish
-2. Select the appropriate tool
-3. Extract the necessary arguments from their request
-4. Call the tool with the correct arguments
+2. Select the single best tool
+3. Extract only arguments supported by that tool schema
+4. Provide correctly typed JSON arguments
 
 IMPORTANT:
-- Only use tools that the user has access to (connected platforms)
-- If multiple tools could work, prefer the most specific one
-- If you need to ask for more information, do so
-- Be concise in your responses
+- Never invent parameter names not in the schema.
+- Always include all required parameters if user gave enough information.
+- Respect types exactly: integer/number/boolean/object/array/string.
+- Prefer enum values when provided.
+- If a required parameter is missing from user input, ask a concise clarification question.
+- Do not fabricate IDs, emails, timestamps, or URLs.
+- If multiple tools could work, choose the most specific one.
+- If tool validation returns missing_required_arguments or schema_validation_failed, correct arguments and retry.
+- If retryable=false, ask the user a concise clarification question using missing_param_details.
 
-When calling a tool, respond with a JSON object containing:
-- name: the tool's name
-- arguments: an object with the tool's parameters
+Tool-call output format:
+- Use tool calls with valid JSON arguments.
+- Arguments must be a JSON object (not a string).
+"#
+    .to_string();
+    prompt.push_str("\nFew-shot examples:\n");
+    prompt.push_str(&few_shot);
+    prompt
+}
 
-Example:
-User: "List my GitHub repositories"
-You call: {"name": "github_list_repos", "arguments": {"per_page": 10}}"#.to_string()
+fn build_dynamic_few_shot_examples(tools_for_llm: &[crate::llm::LLMTool]) -> String {
+    let mut examples = Vec::new();
+    for tool in tools_for_llm.iter().take(3) {
+        let name = &tool.function.name;
+        let params = tool
+            .function
+            .parameters
+            .get("properties")
+            .and_then(|p| p.as_object())
+            .map(|o| o.keys().take(2).cloned().collect::<Vec<_>>())
+            .unwrap_or_default();
+
+        let args = if params.is_empty() {
+            "{}".to_string()
+        } else {
+            let pairs = params
+                .iter()
+                .map(|p| format!(r#""{}":"<value>""#, p))
+                .collect::<Vec<_>>()
+                .join(", ");
+            format!("{{{}}}", pairs)
+        };
+
+        examples.push(format!(
+            "- User intent: use {} ; Tool call: {{\"name\":\"{}\",\"arguments\":{}}}",
+            tool.function.description, name, args
+        ));
+    }
+
+    if examples.is_empty() {
+        "- User: \"List records\" ; Tool call: {\"name\":\"tool_name\",\"arguments\":{}}".to_string()
+    } else {
+        examples.join("\n")
+    }
 }
 
 // ============================================================================

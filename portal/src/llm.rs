@@ -111,6 +111,12 @@ pub struct ChatRequest {
     /// Whether to stream the response
     #[serde(default)]
     pub stream: bool,
+    /// Sampling temperature. Keep low for deterministic tool routing.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub temperature: Option<f32>,
+    /// Nucleus sampling parameter.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub top_p: Option<f32>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -289,6 +295,8 @@ impl LiteLLMClient {
             messages: all_messages,
             tools: Some(tools),
             stream: false,
+            temperature: Some(0.0),
+            top_p: Some(1.0),
         };
 
         self.chat(request).await
@@ -307,6 +315,8 @@ impl LiteLLMClient {
             }],
             tools: None,
             stream: false,
+            temperature: None,
+            top_p: None,
         };
 
         let response = self.chat(request).await?;

@@ -3,6 +3,7 @@
 use std::sync::Arc;
 
 use sqlx::Any;
+use tokio::sync::RwLock;
 
 use crate::db::{
     SqlxAgentRepo, SqlxApiKeyRepo, SqlxConnectorRepo, SqlxCustomToolRepo, SqlxDepartmentScopeRepo,
@@ -10,6 +11,7 @@ use crate::db::{
 };
 use crate::llm::{LiteLLMClient, LiteLLMConfig};
 use crate::panda::{PandaAIGatewayClient, PandaAPIGatewayClient, PandaConfig, PandaMCPGatewayClient};
+use crate::telemetry::LlmToolTelemetry;
 use crate::tools::ToolRegistry;
 
 /// Shared application state.
@@ -33,6 +35,7 @@ pub struct AppState {
     pub panda_ai_gateway: Option<PandaAIGatewayClient>,
     pub panda_mcp_gateway: Option<PandaMCPGatewayClient>,
     pub panda_api_gateway: Option<PandaAPIGatewayClient>,
+    pub llm_tool_telemetry: Arc<RwLock<LlmToolTelemetry>>,
 }
 
 impl AppState {
@@ -94,6 +97,7 @@ impl AppState {
             panda_ai_gateway,
             panda_mcp_gateway,
             panda_api_gateway,
+            llm_tool_telemetry: Arc::new(RwLock::new(LlmToolTelemetry::default())),
         }
     }
 }

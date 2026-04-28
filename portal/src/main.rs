@@ -15,6 +15,7 @@ mod nango;
 mod oauth;
 mod panda;
 mod portal_env;
+mod telemetry;
 mod tools;
 mod websocket;
 

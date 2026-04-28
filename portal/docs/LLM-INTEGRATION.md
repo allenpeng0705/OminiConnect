@@ -104,6 +104,25 @@ POST /api/llm  { query, platform?, context? }
 }
 ```
 
+### Validation and Retry Behavior
+
+For LLM tool calls, OminiConnect now applies a strict argument pipeline before execution:
+
+1. Normalize and coerce obvious types where safe (for example `"10"` -> integer).
+2. Reject unknown parameters not present in the tool schema.
+3. Enforce required parameters.
+4. Validate final arguments against JSON Schema.
+
+If validation fails, the system returns a structured tool result back to the LLM and allows automatic retry:
+
+- `missing_required_arguments`
+  - includes `missing_required`, `missing_param_details`, and `clarification_question`
+- `schema_validation_failed`
+  - includes `errors` and `repair_hints`
+- `retryable` indicates whether the model should retry or ask the user for clarification.
+
+This significantly improves parameter extraction reliability across providers with heterogeneous APIs.
+
 ### `GET /api/llm/tools`
 
 Returns available tools with descriptions for a connected platform — useful for an external LLM to do tool selection client-side.
@@ -150,6 +169,59 @@ Given a natural language query and selected tool, return what arguments would be
   "explanation": "I extracted owner=my-username and repo=omniconnect from your query. Please provide title and body."
 }
 ```
+
+### `GET /api/llm/telemetry`
+
+Returns in-memory quality telemetry for LLM tool routing and argument extraction.
+
+**Purpose:**
+- Identify tools with high failure rates
+- Find frequently missing required fields
+- Detect schema/type mismatch hotspots
+- Prioritize API description and schema improvements
+
+**Request:**
+```http
+GET /api/llm/telemetry
+GET /api/llm/telemetry?reset=true
+```
+
+**Response:**
+```json
+{
+  "ok": true,
+  "reset_applied": false,
+  "telemetry": {
+    "total_attempts": 120,
+    "total_executions": 97,
+    "total_missing_required_failures": 12,
+    "total_schema_validation_failures": 11,
+    "total_retries": 18,
+    "by_tool": {
+      "github_create_issue": {
+        "tool": "github_create_issue",
+        "attempts": 24,
+        "executions": 17,
+        "missing_required_failures": 4,
+        "schema_validation_failures": 3,
+        "retries": 5,
+        "unknown_param_ignored": 2,
+        "coercions": 6,
+        "missing_fields": {
+          "title": 3,
+          "body": 2
+        }
+      }
+    }
+  }
+}
+```
+
+**How to use telemetry:**
+- Compare `total_attempts` vs `total_executions` to estimate end-to-end routing quality.
+- Use `missing_fields` per tool to improve schema descriptions and examples.
+- Use `schema_validation_failures` and `coercions` to identify typing ambiguity.
+- Use `reset=true` before a focused test run to get clean experiment metrics.
 
 ## SDK Design
 
@@ -359,6 +431,18 @@ sdk/
       ├── LlmManager.swift  # NEW
       └── OminiConnect.swift # Add llm property
 ```
+
+## Test Suite Reference
+
+For realistic, provider-agnostic tool-selection benchmark usage and dataset generation, see:
+
+- `portal/tests/llm_tool_selection/README.md`
+
+That guide includes:
+
+- 10-query smoke test commands (LiteLLM + OpenAI-compatible models)
+- realistic query regeneration workflow (`generate_queries.py --overwrite`)
+- response parsing reliability notes and troubleshooting guidance
 
 ## Configuration
 
