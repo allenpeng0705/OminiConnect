@@ -1,0 +1,32 @@
+# OminiConnect LLM Configuration
+# This file defines the LLM provider(s) to use for natural language tool selection.
+#
+# Supported providers:
+#   - litellm: Unified LLM proxy (OpenAI, Anthropic, Ollama, etc.)
+#   - minimax: MiniMax direct API (M2.7-highspeed model)
+#
+# Usage:
+#   OminiConnect will try providers in order of priority:
+#   1. If litellm is enabled and configured, use it
+#   2. Otherwise, try minimax if configured
+#   3. Otherwise, fall back to rule-based execution
+
+# LiteLLM configuration (unified LLM proxy)
+# Docs: https://docs.litellm.ai/
+litellm:
+  enabled: false  # Set to true to use LiteLLM
+  url: "http://localhost:4000"
+  api_key: ""  # Leave empty if LiteLLM doesn't require auth
+  default_model: "gpt-4o-mini"
+  max_tool_rounds: 4
+
+# MiniMax configuration (direct API - recommended if LiteLLM has compatibility issues)
+# Docs: https://platform.minimax.io/
+minimax:
+  enabled: true  # Set to true to use MiniMax direct API
+  api_key: "${MINIMAX_API_KEY}"  # Will be read from environment
+  model: "MiniMax-M2.7-highspeed"
+  max_tool_rounds: 4
+
+# Priority: which provider to use first (litellm | minimax)
+priority: minimax

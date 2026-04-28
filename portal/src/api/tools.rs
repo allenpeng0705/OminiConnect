@@ -1,6 +1,6 @@
 //! Tool registry API endpoints.
 
-use std::{collections::HashSet, sync::Arc, time::Duration};
+use std::{collections::{HashMap, HashSet}, sync::Arc, time::Duration};
 
 use axum::{
     extract::{Query, State},
@@ -85,6 +85,38 @@ pub struct ToolSummary {
     /// Whether the connector has all required scopes.
     pub scope_satisfied: ScopeSatisfied,
     pub tags: Vec<String>,
+}
+
+/// LLM-friendly tool registry response for Approach 1 (caller-controlled LLM).
+/// Returns all connected platforms with their tools in a format optimized for
+/// LLM tool selection.
+#[derive(Debug, Serialize)]
+pub struct ToolRegistryResponse {
+    pub platforms: HashMap<String, PlatformRegistry>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct PlatformRegistry {
+    /// Whether the user has a connected OAuth/API key for this platform.
+    pub connected: bool,
+    pub tools: Vec<ToolForLLM>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ToolForLLM {
+    pub name: String,
+    pub description: String,
+    /// HTTP method for the tool call.
+    pub method: String,
+    /// API endpoint path.
+    pub endpoint: String,
+    /// JSON Schema for input parameters - use this to know what arguments to pass.
+    pub input_schema: serde_json::Value,
+    /// Example natural language queries that map to this tool.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub example_queries: Vec<String>,
+    /// Whether the user's connector has required scopes.
+    pub scope_satisfied: ScopeSatisfied,
 }
 
 /// List tools for the authenticated user's connectors.
@@ -260,6 +292,118 @@ pub async fn search(
         tools: matching_tools,
         query: query.q.clone(),
     }))
+}
+
+/// GET /api/tools/registry — LLM-friendly tool registry for Approach 1.
+///
+/// Returns all tools from connected platforms in a format optimized for LLM consumption:
+/// - Full input_schema (JSON Schema) so callers know what arguments to pass
+/// - example_queries to help LLM understand when to use each tool
+/// - scope_satisfied per tool
+///
+/// This endpoint is designed for Approach 1 where the caller uses their own LLM
+/// to select which tool to use based on the descriptions provided.
+pub async fn registry(
+    State(state): State<Arc<AppState>>,
+    Query(query): Query<ListToolsQuery>,
+    headers: HeaderMap,
+) -> Result<Json<ToolRegistryResponse>, Response> {
+    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
+        Ok(u) => u,
+        Err(e) => return Err(e),
+    };
+
+    let platform_filter = query.platform.as_ref();
+
+    // Get user's connectors and their scopes
+    let connectors = state.connectors.list_all().await.map_err(|e| {
+        tool_error(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            &*format!("failed to list connectors: {}", e),
+        )
+    })?;
+
+    let user_connectors: HashMap<_, _> = connectors
+        .into_iter()
+        .filter(|c| c.owner_username == owner && c.enabled)
+        .map(|c| (c.platform.clone(), c.scopes))
+        .collect();
+
+    // Build response for all toolkits, marking connected ones
+    let all_toolkits = state.tools.toolkits();
+
+    let platforms: HashMap<String, PlatformRegistry> = if let Some(p) = platform_filter {
+        // Single platform requested
+        let mut map = HashMap::new();
+        let granted = user_connectors.get(p).cloned().unwrap_or_default();
+        let tools = state.tools.tools_for_provider(p).unwrap_or(&[]);
+
+        let platform_tools: Vec<ToolForLLM> = tools
+            .iter()
+            .map(|t| {
+                let scope_sat = check_scope_satisfied(&t.scopes, &granted);
+                build_tool_for_llm(t, scope_sat)
+            })
+            .collect();
+
+        map.insert(
+            p.clone(),
+            PlatformRegistry {
+                connected: user_connectors.contains_key(p),
+                tools: platform_tools,
+            },
+        );
+        map
+    } else {
+        // All platforms
+        all_toolkits
+            .iter()
+            .map(|tk| {
+                let granted = user_connectors.get(&tk.provider).cloned().unwrap_or_default();
+                let tools = state.tools.tools_for_provider(&tk.provider).unwrap_or(&[]);
+
+                let platform_tools: Vec<ToolForLLM> = tools
+                    .iter()
+                    .map(|t| {
+                        let scope_sat = check_scope_satisfied(&t.scopes, &granted);
+                        build_tool_for_llm(t, scope_sat)
+                    })
+                    .collect();
+
+                (
+                    tk.provider.clone(),
+                    PlatformRegistry {
+                        connected: user_connectors.contains_key(&tk.provider),
+                        tools: platform_tools,
+                    },
+                )
+            })
+            .collect()
+    };
+
+    Ok(Json(ToolRegistryResponse { platforms }))
+}
+
+/// Build a ToolForLLM from a Tool.
+fn build_tool_for_llm(tool: &crate::tools::Tool, scope_sat: ScopeSatisfied) -> ToolForLLM {
+    // Convert input_schema to JSON Value for serialization
+    let input_schema = serde_json::to_value(&tool.input_schema).unwrap_or_else(|_| {
+        serde_json::json!({
+            "type": "object",
+            "properties": {},
+            "required": []
+        })
+    });
+
+    ToolForLLM {
+        name: tool.name.clone(),
+        description: tool.description.clone(),
+        method: format!("{:?}", tool.method),
+        endpoint: tool.endpoint.clone(),
+        input_schema,
+        example_queries: tool.example_queries.clone(),
+        scope_satisfied: scope_sat,
+    }
 }
 
 /// Get the connector's granted scopes for a platform.
@@ -620,7 +764,7 @@ pub async fn execute(
 }
 
 /// Substitutes {path_param} placeholders in the endpoint with values from arguments.
-fn substitute_path_params(endpoint: &str, arguments: &serde_json::Value) -> String {
+pub(crate) fn substitute_path_params(endpoint: &str, arguments: &serde_json::Value) -> String {
     let mut result = endpoint.to_string();
     if let Some(obj) = arguments.as_object() {
         for (key, value) in obj {
@@ -636,7 +780,7 @@ fn substitute_path_params(endpoint: &str, arguments: &serde_json::Value) -> Stri
 }
 
 /// Builds query string and JSON body from arguments.
-fn build_params(
+pub(crate) fn build_params(
     method: &HttpMethod,
     arguments: &serde_json::Value,
     endpoint: &str,
@@ -923,7 +1067,7 @@ async fn map_reqwest_to_axum(resp: reqwest::Response) -> Response {
     response
 }
 
-fn tool_error(status: StatusCode, message: &str) -> Response {
+pub fn tool_error(status: StatusCode, message: &str) -> Response {
     let body = serde_json::json!({ "error": message }).to_string();
     let mut response = Response::new(body.into());
     *response.status_mut() = status;
@@ -961,6 +1105,7 @@ pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/tools", get(list))
         .route("/tools/search", get(search))
+        .route("/tools/registry", get(registry))
         .route("/tools/execute", post(execute))
 }
 

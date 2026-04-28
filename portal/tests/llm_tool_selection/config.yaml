@@ -1,0 +1,26 @@
+# LLM Tool Selection Test Configuration
+#
+# Usage:
+#   ./scripts/run_tests.sh
+
+# Test settings
+scale: small          # small (30 noise), medium (100), large (300), full (all tools)
+rounds: 1             # Number of test rounds
+model: gpt-4o-mini    # Model to use
+
+# Directories
+registry: ../tools/registry
+queries: queries
+
+# LLM endpoint
+llm_url: http://localhost:4000
+
+# LiteLLM startup settings
+litellm:
+  port: 4000
+  config: ../../litellm_config.yaml
+  health_check_retries: 30
+  health_check_interval_secs: 2
+
+# Test behavior
+delay_between_requests_ms: 500  # Delay between requests to avoid rate limiting

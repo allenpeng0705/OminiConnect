@@ -132,7 +132,9 @@ pub async fn run_migrations(pool: &sqlx::AnyPool) -> anyhow::Result<()> {
         r#"CREATE TABLE IF NOT EXISTS users (
             username TEXT PRIMARY KEY,
             password_hash TEXT NOT NULL,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            data_residency TEXT,
+            department TEXT
         )"#,
         // Sessions table
         r#"CREATE TABLE IF NOT EXISTS sessions (
@@ -365,7 +367,7 @@ impl SqlxUserRepo {
 impl UserRepository for SqlxUserRepo {
     async fn get(&self, username: &str) -> anyhow::Result<Option<User>> {
         let row: Option<models::UserRow> = sqlx::query_as(
-            "SELECT username, password_hash, created_at, data_residency FROM users WHERE username = $1",
+            "SELECT username, password_hash, created_at, data_residency, department FROM users WHERE username = $1",
         )
         .bind(username)
         .fetch_optional(&self.pool)
@@ -380,11 +382,12 @@ impl UserRepository for SqlxUserRepo {
             crate::auth::models::DataResidency::Eu => "eu",
             crate::auth::models::DataResidency::Cn => "cn",
         });
-        sqlx::query("INSERT INTO users (username, password_hash, created_at, data_residency) VALUES ($1, $2, $3, $4)")
+        sqlx::query("INSERT INTO users (username, password_hash, created_at, data_residency, department) VALUES ($1, $2, $3, $4, $5)")
             .bind(&user.username)
             .bind(&user.password_hash)
             .bind(user.created_at.to_rfc3339())
             .bind(&data_residency)
+            .bind(&user.department)
             .execute(&self.pool)
             .await?;
         Ok(())
@@ -483,7 +486,7 @@ impl SqlxApiKeyRepo {
 impl ApiKeyRepository for SqlxApiKeyRepo {
     async fn get_by_hash(&self, key_hash: &str) -> anyhow::Result<Option<ApiKey>> {
         let row: Option<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys WHERE key_hash = $1",
+            "SELECT key_hash, username, label, created_at, agent_id, allowed_tools FROM api_keys WHERE key_hash = $1",
         )
         .bind(key_hash)
         .fetch_optional(&self.pool)
@@ -508,7 +511,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
     async fn list_all(&self) -> anyhow::Result<Vec<ApiKey>> {
         let rows: Vec<models::ApiKeyRow> =
-            sqlx::query_as("SELECT key_hash, username, label, created_at, agent_id FROM api_keys")
+            sqlx::query_as("SELECT key_hash, username, label, created_at, agent_id, allowed_tools FROM api_keys")
                 .fetch_all(&self.pool)
                 .await?;
         Ok(rows
@@ -519,7 +522,7 @@ impl ApiKeyRepository for SqlxApiKeyRepo {
 
     async fn list_by_username(&self, username: &str) -> anyhow::Result<Vec<ApiKey>> {
         let rows: Vec<models::ApiKeyRow> = sqlx::query_as(
-            "SELECT key_hash, username, label, created_at, agent_id FROM api_keys WHERE username = $1",
+            "SELECT key_hash, username, label, created_at, agent_id, allowed_tools FROM api_keys WHERE username = $1",
         )
         .bind(username)
         .fetch_all(&self.pool)

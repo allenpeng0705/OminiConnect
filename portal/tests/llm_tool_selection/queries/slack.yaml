@@ -1,0 +1,43 @@
+# Slack Tool Selection Queries
+
+provider: slack
+queries:
+  - query: "send a message to channel C123"
+    expected_tool: slack_chat_post_message
+    category: create
+    variations:
+      - "post a message in #general"
+      - "message to channel C123"
+    description_notes: "Tool name could be clearer"
+
+  - query: "list all channels"
+    expected_tool: slack_conversations_list
+    category: list
+    variations:
+      - "show me all slack channels"
+      - "what channels do we have"
+    description_notes: null
+
+  - query: "get information about a user"
+    expected_tool: slack_users_info
+    category: read
+    variations:
+      - "lookup a slack user"
+      - "who is @username"
+    description_notes: null
+
+  - query: "find messages containing 'deploy'"
+    expected_tool: slack_search_messages
+    category: search
+    variations:
+      - "search for deploy in slack"
+      - "find messages about deployment"
+    description_notes: null
+
+  - query: "upload a file to a channel"
+    expected_tool: slack_files_upload
+    category: create
+    variations:
+      - "share a file in slack"
+      - "post a file to channel"
+    description_notes: null

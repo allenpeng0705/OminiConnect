@@ -8,6 +8,7 @@ import ConnectorConfig from './pages/ConnectorConfig';
 import IntegrationCatalog from './pages/IntegrationCatalog';
 import ConnectManagedHub from './pages/ConnectManagedHub';
 import ApiKeys from './pages/ApiKeys';
+import AuditLog from './pages/AuditLog';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [checking, setChecking] = useState(true);
@@ -77,6 +78,11 @@ export default function App() {
         <Route path="/api-keys" element={
           <ProtectedRoute>
             <ApiKeys />
+          </ProtectedRoute>
+        } />
+        <Route path="/audit" element={
+          <ProtectedRoute>
+            <AuditLog />
           </ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/" replace />} />

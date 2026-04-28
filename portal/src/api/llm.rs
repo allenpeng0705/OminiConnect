@@ -25,7 +25,7 @@ use axum::{
 use http_body_util::BodyExt;
 use serde::{Deserialize, Serialize};
 
-use crate::api::tools::{auth_user, check_scope_satisfied, ScopeSatisfied};
+use crate::api::tools::{auth_user, check_scope_satisfied, tool_error, ScopeSatisfied, substitute_path_params, build_params};
 use crate::app::AppState;
 
 /// Stop words to remove from queries for matching.
@@ -150,6 +150,22 @@ pub async fn execute(
         };
         return ok_json(resp);
     }
+
+    // Check if LLM is available (Approach 2)
+    let llm_available = state.llm_config.is_available()
+        || state.panda_ai_gateway.as_ref().map(|p| p.is_enabled()).unwrap_or(false);
+
+    // If LLM is available, use LLM-based execution
+    if llm_available {
+        tracing::info!("Using LLM-based execution for query: {}", body.query);
+        match llm_execute(&state, &owner, &body.query, &user_connectors).await {
+            Ok(resp) => return ok_json(resp),
+            Err(e) => return e,
+        }
+    }
+
+    // Fall back to rule-based execution (Approach 1 style)
+    tracing::info!("Using rule-based execution for query: {}", body.query);
 
     // Normalize query
     let query_lower = body.query.to_lowercase();
@@ -847,6 +863,8 @@ async fn get_user_connectors(
     state: &Arc<AppState>,
     owner: &str,
 ) -> Result<HashMap<String, Vec<String>>, Response> {
+    // Returns HashMap<platform, scopes> for enabled connectors (used for scope checking)
+    // Note: platform may differ from provider_key (e.g., github vs github-pat)
     let connectors = state.connectors.list_all().await.map_err(|e| {
         let body =
             serde_json::json!({ "error": format!("failed to list connectors: {}", e) }).to_string();
@@ -894,4 +912,794 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/llm", post(execute))
         .route("/llm/tools", get(list_tools))
         .route("/llm/explain", post(explain))
+}
+
+// ============================================================================
+// LLM-based execution (Approach 2) - Multi-step orchestration
+// ============================================================================
+
+/// Execute using LLM with multi-step tool orchestration.
+///
+/// This function:
+/// 1. Builds tool descriptions for the LLM
+/// 2. Calls the LLM with the user's query
+/// 3. Executes selected tools and feeds results back to LLM
+/// 4. Repeats until no more tool calls or max rounds reached
+/// 5. Returns the final result
+async fn llm_execute(
+    state: &Arc<AppState>,
+    owner: &str,
+    query: &str,
+    user_connectors: &HashMap<String, Vec<String>>,
+) -> Result<LlmExecuteResponse, Response> {
+    // Build the list of tools for the LLM and platform->provider mapping
+    let (tools, platform_provider_map) = build_llm_tools(state, owner, user_connectors).await?;
+    let tools_for_llm = tools; // rename for clarity
+
+    if tools_for_llm.is_empty() {
+        return Ok(LlmExecuteResponse {
+            ok: false,
+            tool: None,
+            tool_name: None,
+            arguments: None,
+            explanation: None,
+            result: None,
+            error: Some("no_tools_available".to_string()),
+            message: Some("No tools available for your connected platforms.".to_string()),
+            candidates: None,
+            available_tools_hint: None,
+        });
+    }
+
+    // Build system prompt
+    let system_prompt = build_llm_system_prompt();
+
+    // Get max tool rounds from config
+    let max_rounds = state.llm_config.max_tool_rounds;
+
+    // Initialize conversation context
+    let mut messages = vec![
+        crate::llm::Message {
+            role: "system".to_string(),
+            content: Some(system_prompt),
+            tool_call_id: None,
+            name: None,
+            tool_calls: None,
+        },
+        crate::llm::Message {
+            role: "user".to_string(),
+            content: Some(query.to_string()),
+            tool_call_id: None,
+            name: None,
+            tool_calls: None,
+        },
+    ];
+
+    let mut tool_results: Vec<crate::llm::ToolResult> = Vec::new();
+    let mut final_result: Option<serde_json::Value> = None;
+    let mut executed_tools: Vec<String> = Vec::new();
+    let mut rounds = 0;
+
+    // Tool loop: continue until no more tool calls or max rounds reached
+    loop {
+        rounds += 1;
+        tracing::info!("LLM orchestration round {}/{}", rounds, max_rounds);
+
+        if rounds > max_rounds {
+            tracing::warn!("Max tool rounds ({}) reached. Stopping orchestration.", max_rounds);
+            break;
+        }
+
+        // Determine which LLM client to use
+        let llm_response = if let Some(ref panda_ai) = state.panda_ai_gateway {
+            if panda_ai.is_enabled() {
+                tracing::info!("Using Panda AI Gateway for LLM call");
+                let chat_request = crate::llm::ChatRequest {
+                    model: state.llm_config.default_model.clone(),
+                    messages: messages.clone(),
+                    tools: Some(tools_for_llm.clone()),
+                    stream: false,
+                };
+                panda_ai.chat(chat_request).await.map_err(|e| {
+                    tracing::error!("Panda AI Gateway error: {}", e);
+                    tool_error(
+                        StatusCode::BAD_GATEWAY,
+                        &format!("LLM call failed: {}", e),
+                    )
+                })?
+            } else {
+                return Err(tool_error(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Panda AI Gateway not enabled",
+                ));
+            }
+        } else if state.llm_config.is_available() {
+            tracing::info!("Using LiteLLM directly for LLM call");
+            let chat_request = crate::llm::ChatRequest {
+                model: state.llm_config.default_model.clone(),
+                messages: messages.clone(),
+                tools: Some(tools_for_llm.clone()),
+                stream: false,
+            };
+            state.llm_client.chat(chat_request).await.map_err(|e| {
+                tracing::error!("LiteLLM error: {}", e);
+                tool_error(
+                    StatusCode::BAD_GATEWAY,
+                    &format!("LLM call failed: {}", e),
+                )
+            })?
+        } else {
+            return Err(tool_error(
+                StatusCode::SERVICE_UNAVAILABLE,
+                "LLM not configured. Set LITELLM_URL or enable Panda AI Gateway.",
+            ));
+        };
+
+        // Parse tool calls from LLM response (tool_calls are nested inside message in choices)
+        let first_choice = llm_response.choices.first();
+        let tool_calls = first_choice
+            .and_then(|c| c.message.tool_calls.as_ref())
+            .cloned()
+            .unwrap_or_default();
+        tracing::info!("[LLM] tool_calls count: {}, message: {:?}", tool_calls.len(), first_choice.map(|c| &c.message.content));
+
+        if tool_calls.is_empty() {
+            // No more tool calls, return the final text response
+            let content = first_choice
+                .and_then(|c| c.message.content.as_ref())
+                .map(|s| s.as_str())
+                .unwrap_or_default()
+                .to_string();
+            final_result = Some(serde_json::json!({
+                "response": content,
+                "executed_tools": executed_tools,
+                "rounds": rounds,
+            }));
+            break;
+        }
+
+        // Execute each tool call and collect results
+        let mut new_tool_results = Vec::new();
+
+        for (idx, tool_call) in tool_calls.iter().enumerate() {
+            let tool_name = match tool_call.function.name.as_ref() {
+                Some(name) => name.clone(),
+                None => {
+                    tracing::warn!("Tool call {} missing name, skipping", idx);
+                    continue;
+                }
+            };
+
+            let arguments_str = match tool_call.function.arguments.as_ref() {
+                Some(args) => args.clone(),
+                None => {
+                    tracing::warn!("Tool call {} missing arguments, skipping", idx);
+                    continue;
+                }
+            };
+
+            let arguments: serde_json::Value = match serde_json::from_str(&arguments_str) {
+                Ok(args) => args,
+                Err(e) => {
+                    tracing::warn!("Invalid arguments for tool {}: {}", tool_name, e);
+                    continue;
+                }
+            };
+
+            // Execute the tool
+            tracing::info!("Executing tool: {} with args: {:?}", tool_name, arguments);
+            let tool_result = execute_tool_for_llm(
+                state,
+                owner,
+                &tool_name,
+                arguments,
+                user_connectors,
+            ).await?;
+
+            let call_id = tool_call.id.clone().unwrap_or_else(|| format!("call-{}", idx));
+            executed_tools.push(tool_name.clone());
+            new_tool_results.push(crate::llm::ToolResult {
+                call_id,
+                tool_name,
+                result: tool_result,
+            });
+        }
+
+        // Add the assistant's tool_calls message to conversation history
+        let tool_calls_for_msg: Option<Vec<crate::llm::MessageToolCall>> = first_choice
+            .as_ref()
+            .and_then(|c| c.message.tool_calls.as_ref())
+            .map(|tcs| {
+                tcs.iter()
+                    .filter_map(|tc| {
+                        let id = tc.id.clone()?;
+                        let name = tc.function.name.clone()?;
+                        let args = tc.function.arguments.clone()?;
+                        Some(crate::llm::MessageToolCall::new(id, name, args))
+                    })
+                    .collect()
+            });
+
+        let assistant_msg = crate::llm::Message {
+            role: "assistant".to_string(),
+            content: first_choice.as_ref().and_then(|c| c.message.content.clone()),
+            tool_call_id: None,
+            name: None,
+            tool_calls: tool_calls_for_msg,
+        };
+        messages.push(assistant_msg);
+
+        // Add tool results to messages and continue loop
+        for tool_result in new_tool_results {
+            let call_id = tool_result.call_id.clone();
+            let tool_name = tool_result.tool_name.clone();
+            let result_str = serde_json::to_string(&tool_result.result).unwrap_or_default();
+            tracing::debug!("Tool result call_id={} tool_name={} result={}", call_id, tool_name, result_str);
+            messages.push(crate::llm::Message {
+                role: "tool".to_string(),
+                content: Some(format!(
+                    "{{\"tool\": \"{}\", \"result\": {}}}",
+                    tool_name, result_str
+                )),
+                tool_call_id: Some(call_id),
+                name: None,
+                tool_calls: None,
+            });
+            tool_results.push(tool_result);
+        }
+    }
+
+    Ok(LlmExecuteResponse {
+        ok: true,
+        tool: None,
+        tool_name: None,
+        arguments: None,
+        explanation: Some(format!("Executed {} tool(s) in {} round(s)", executed_tools.len(), rounds)),
+        result: final_result,
+        error: None,
+        message: None,
+        candidates: None,
+        available_tools_hint: None,
+    })
+}
+
+/// Execute a single tool for LLM orchestration.
+async fn execute_tool_for_llm(
+    state: &Arc<AppState>,
+    owner: &str,
+    tool_name: &str,
+    arguments: serde_json::Value,
+    user_connectors: &HashMap<String, Vec<String>>,
+) -> Result<serde_json::Value, Response> {
+    // Find the tool definition
+    let tool_def = state
+        .tools
+        .tool_by_slug(tool_name)
+        .ok_or_else(|| tool_error(StatusCode::NOT_FOUND, &format!("Tool '{}' not found", tool_name)))?;
+
+    // Find the platform (key in user_connectors) that corresponds to this tool's provider
+    // tool_def.provider could be "github-pat" but connector might be stored under "github"
+    let platform = user_connectors
+        .keys()
+        .find(|p| {
+            // Check if tools_for_provider would return this tool for this platform
+            let tools = state.tools.tools_for_provider(p);
+            tools.map(|t| t.iter().any(|tool| tool.slug == tool_name)).unwrap_or(false)
+        })
+        .ok_or_else(|| tool_error(
+            StatusCode::BAD_REQUEST,
+            &format!("No connected platform provides tool '{}'", tool_name),
+        ))?;
+
+    // Check if platform is connected (it should be since we found it above)
+    if !user_connectors.contains_key(platform) {
+        return Err(tool_error(
+            StatusCode::BAD_REQUEST,
+            &format!(
+                "Platform '{}' is not connected. Connect it at /dashboard first.",
+                platform
+            ),
+        ));
+    }
+
+    // Check scope satisfaction
+    let granted_scopes = user_connectors.get(platform).cloned().unwrap_or_default();
+    let scope_sat = check_scope_satisfied(&tool_def.scopes, &granted_scopes);
+    if scope_sat == ScopeSatisfied::No {
+        return Ok(serde_json::json!({
+            "error": "insufficient_scope",
+            "message": format!(
+                "The {} tool requires {} scopes, but your {} connection only has {:?}.",
+                tool_def.name,
+                tool_def.scopes.join(", "),
+                platform,
+                granted_scopes
+            )
+        }));
+    }
+
+    // Get the connector for this platform (not tool_def.provider which might be different)
+    let connector = state.connectors.get(owner, platform).await.map_err(|e| {
+        tracing::error!("DB error getting connector: {}", e);
+        tool_error(StatusCode::INTERNAL_SERVER_ERROR, "failed to get connector")
+    })?.ok_or_else(|| tool_error(
+        StatusCode::NOT_FOUND,
+        &format!("Connector for platform '{}' not found", platform)
+    ))?;
+
+    // Execute the tool via the proxy directly
+    let result = execute_tool_direct(state, &connector, tool_def, arguments).await?;
+
+    Ok(result)
+}
+
+/// Execute a tool directly using connector credentials (no auth required).
+async fn execute_tool_direct(
+    state: &Arc<AppState>,
+    connector: &crate::oauth::models::ConnectorConfig,
+    tool_def: &crate::tools::Tool,
+    arguments: serde_json::Value,
+) -> Result<serde_json::Value, Response> {
+    use crate::api::proxy::get_platform_base_url;
+
+    let base_url = get_platform_base_url(&tool_def.provider);
+    if base_url.is_empty() {
+        return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
+    }
+
+    // Build the path by substituting path parameters
+    let path = substitute_path_params(&tool_def.endpoint, &arguments);
+
+    // Build query and body from arguments
+    let (query_string, body_json) = build_params(&tool_def.method, &arguments, &tool_def.endpoint);
+
+    // Determine auth approach based on engine
+    if connector.engine == "nango" {
+        // Use Nango's proxy with provider_key and connection_ref
+        let Some((nango_base, nango_secret)) = crate::nango::nango_credentials() else {
+            return Err(tool_error(StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL and NANGO_SECRET_KEY must be set"));
+        };
+        let pk = connector.provider_key.trim();
+        let cref = connector.connection_ref.trim();
+        if pk.is_empty() || cref.is_empty() {
+            return Err(tool_error(StatusCode::UNAUTHORIZED, "nango connector missing provider_key or connection_ref"));
+        }
+
+        let method = match tool_def.method {
+            crate::tools::HttpMethod::GET => reqwest::Method::GET,
+            crate::tools::HttpMethod::POST => reqwest::Method::POST,
+            crate::tools::HttpMethod::PUT => reqwest::Method::PUT,
+            crate::tools::HttpMethod::DELETE => reqwest::Method::DELETE,
+            crate::tools::HttpMethod::PATCH => reqwest::Method::PATCH,
+        };
+
+        let path_with_query = if let Some(q) = query_string.as_ref() {
+            format!("{}{}", path, q)
+        } else {
+            path.clone()
+        };
+
+        let body_bytes = body_json
+            .map(|b| bytes::Bytes::from(b))
+            .unwrap_or_default();
+
+        match crate::nango::forward_proxy(
+            &nango_base,
+            &nango_secret,
+            pk,
+            cref,
+            method,
+            &path_with_query,
+            body_bytes,
+            Some("application/json"),
+            None,
+        )
+        .await
+        {
+            Ok(resp) => {
+                let status = resp.status();
+                let body = resp.text().await.unwrap_or_default();
+                if !status.is_success() {
+                    return Ok(serde_json::json!({
+                        "error": "api_error",
+                        "status": status.as_u16(),
+                        "message": body
+                    }));
+                }
+                let result = serde_json::from_str(&body).unwrap_or_else(|_| {
+                    serde_json::json!({ "raw": body })
+                });
+                return Ok(result);
+            }
+            Err(e) => {
+                tracing::error!("Nango proxy error: {}", e);
+                return Err(tool_error(StatusCode::BAD_GATEWAY, &format!("Nango proxy failed: {}", e)));
+            }
+        }
+    }
+
+    // For non-nango engines (PAT-based like github), use direct API call with Bearer token
+    let base_url = get_platform_base_url(&tool_def.provider);
+    if base_url.is_empty() {
+        return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
+    }
+
+    // Build the full URL
+    let full_url = format!("{}{}{}",
+        base_url,
+        path,
+        query_string.as_ref().map(|s| s.as_str()).unwrap_or("")
+    );
+
+    // Use client_secret as Bearer token (PAT for GitHub)
+    let token = if !connector.client_secret.is_empty() {
+        connector.client_secret.clone()
+    } else {
+        connector.client_id.clone()
+    };
+    let auth_headers = reqwest::header::HeaderMap::from_iter([
+        (reqwest::header::AUTHORIZATION, format!("Bearer {}", token).parse().unwrap()),
+    ]);
+
+    // Make the HTTP request
+    let client = reqwest::Client::new();
+    let method = match tool_def.method {
+        crate::tools::HttpMethod::GET => reqwest::Method::GET,
+        crate::tools::HttpMethod::POST => reqwest::Method::POST,
+        crate::tools::HttpMethod::PUT => reqwest::Method::PUT,
+        crate::tools::HttpMethod::DELETE => reqwest::Method::DELETE,
+        crate::tools::HttpMethod::PATCH => reqwest::Method::PATCH,
+    };
+
+    let mut request = client.request(method, &full_url)
+        .headers(auth_headers)
+        .header(reqwest::header::CONTENT_TYPE, "application/json");
+
+    if let Some(body) = body_json {
+        request = request.body(body);
+    }
+
+    let resp = request.send().await.map_err(|e| {
+        tracing::error!("HTTP request failed: {}", e);
+        tool_error(StatusCode::BAD_GATEWAY, &format!("Request failed: {}", e))
+    })?;
+
+    let status = resp.status();
+    let body = resp.text().await.unwrap_or_default();
+
+    if !status.is_success() {
+        return Ok(serde_json::json!({
+            "error": "api_error",
+            "status": status.as_u16(),
+            "message": body
+        }));
+    }
+
+    // Try to parse as JSON, fall back to raw string
+    let result = serde_json::from_str(&body).unwrap_or_else(|_| {
+        serde_json::json!({ "raw": body })
+    });
+
+    Ok(result)
+}
+
+/// Build the list of tools in LiteLLM format for the LLM.
+/// Also returns a map of platform -> (provider_key, scopes) for tool execution.
+async fn build_llm_tools(
+    state: &Arc<AppState>,
+    owner: &str,
+    user_connectors: &HashMap<String, Vec<String>>,
+) -> Result<(Vec<crate::llm::LLMTool>, HashMap<String, (String, Vec<String>)>), Response> {
+    // First get all connectors with their provider_key
+    let all_connectors = state.connectors.list_all().await.map_err(|e| {
+        let body = serde_json::json!({ "error": format!("failed to list connectors: {}", e) }).to_string();
+        let mut resp = Response::new(body.into());
+        *resp.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+        resp
+    })?;
+
+    // Build platform -> (provider_key, scopes) mapping for enabled connectors
+    let mut platform_provider_map: HashMap<String, (String, Vec<String>)> = HashMap::new();
+    for c in all_connectors.iter().filter(|c| c.owner_username == owner && c.enabled) {
+        platform_provider_map.insert(c.platform.clone(), (c.provider_key.clone(), c.scopes.clone()));
+    }
+
+    let mut tools = Vec::new();
+
+    for (platform, granted_scopes) in user_connectors {
+        // Get the provider_key from the platform_provider_map
+        // For github-pat, provider_key might be "github-pat__github-pat-6hcb4w" but tools are stored under "github"
+        // We need to find which provider has tools for this platform
+        let provider_key = if let Some((pk, _)) = platform_provider_map.get(platform) {
+            pk.as_str()
+        } else {
+            platform
+        };
+
+        // Try tools_for_provider with provider_key first, then fallback to platform name
+        // This handles cases like "github-pat__github-pat-6hcb4w" vs "github"
+        let provider_tools = state.tools.tools_for_provider(provider_key)
+            .or_else(|| state.tools.tools_for_provider(platform))
+            .unwrap_or(&[]);
+        let granted: std::collections::HashSet<_> = granted_scopes.iter().collect();
+
+        for tool in provider_tools {
+            // Check if all required scopes are satisfied
+            let all_scopes_satisfied = tool.scopes.is_empty()
+                || tool.scopes.iter().all(|s| granted.contains(s));
+
+            if !all_scopes_satisfied {
+                continue; // Skip tools with unsatisfied scopes
+            }
+
+            let llm_tool = crate::llm::LLMTool {
+                tool_type: "function".to_string(),
+                function: crate::llm::LLMFunction {
+                    name: tool.slug.clone(),
+                    description: format!(
+                        "{} - {}",
+                        tool.name,
+                        tool.description.replace('\n', " ")
+                    ),
+                    parameters: serde_json::to_value(&tool.input_schema).unwrap_or_else(|_| {
+                        serde_json::json!({
+                            "type": "object",
+                            "properties": {},
+                            "required": []
+                        })
+                    }),
+                },
+            };
+            tools.push(llm_tool);
+        }
+    }
+
+    Ok((tools, platform_provider_map))
+}
+
+/// Build system prompt for the LLM.
+fn build_llm_system_prompt() -> String {
+    r#"You are a helpful assistant that helps users accomplish tasks using available tools.
+
+You have access to tools that can call APIs on behalf of the user. Each tool has:
+- A name (e.g., 'github_list_repos')
+- A description of what it does
+- An input schema specifying required and optional parameters
+
+When the user asks you to do something, you should:
+1. Understand what they want to accomplish
+2. Select the appropriate tool
+3. Extract the necessary arguments from their request
+4. Call the tool with the correct arguments
+
+IMPORTANT:
+- Only use tools that the user has access to (connected platforms)
+- If multiple tools could work, prefer the most specific one
+- If you need to ask for more information, do so
+- Be concise in your responses
+
+When calling a tool, respond with a JSON object containing:
+- name: the tool's name
+- arguments: an object with the tool's parameters
+
+Example:
+User: "List my GitHub repositories"
+You call: {"name": "github_list_repos", "arguments": {"per_page": 10}}"#.to_string()
+}
+
+// ============================================================================
+// Unit tests for rule-based matching (Approach 1)
+// ============================================================================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Test that tokenize correctly splits queries.
+    #[test]
+    fn test_tokenize() {
+        let query = "list my github repositories sorted by updated";
+        let tokens = tokenize(query);
+
+        // Should remove stop words and short tokens
+        assert!(!tokens.contains(&"my"));
+        assert!(!tokens.contains(&"i"));
+        assert!(!tokens.contains(&"a"));
+        assert!(tokens.contains(&"list"));
+        assert!(tokens.contains(&"github"));
+        assert!(tokens.contains(&"repositories"));
+    }
+
+    /// Test that score_tool rewards platform mentions.
+    #[test]
+    fn test_score_tool_platform_match() {
+        use crate::tools::{Tool, HttpMethod, InputSchema};
+
+        let tool = Tool {
+            slug: "github_list_repos".to_string(),
+            name: "List Repositories".to_string(),
+            description: "List GitHub repos".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/user/repos".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema::default(),
+            output_schema: None,
+            scopes: vec![],
+            tags: vec!["repos".to_string()],
+            icon_url: None,
+            example_queries: vec![],
+        };
+
+        let query_lower = "list my github repositories";
+        let query_tokens = tokenize(query_lower);
+
+        let score = score_tool(query_lower, &query_tokens, &tool, "github");
+
+        // Platform match should contribute 20%
+        assert!(score >= 0.2, "score should include platform match bonus");
+    }
+
+    /// Test that score_tool rewards action verb matches.
+    #[test]
+    fn test_score_tool_action_match() {
+        use crate::tools::{Tool, HttpMethod, InputSchema};
+
+        let tool = Tool {
+            slug: "github_list_repos".to_string(),
+            name: "List Repositories".to_string(),
+            description: "List GitHub repos".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/user/repos".to_string(),
+            method: HttpMethod::GET, // GET method
+            input_schema: InputSchema::default(),
+            output_schema: None,
+            scopes: vec![],
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+        };
+
+        // Query with "list" should match GET method tools
+        let query_lower = "list repositories";
+        let query_tokens = tokenize(query_lower);
+
+        let score = score_tool(query_lower, &query_tokens, &tool, "github");
+        assert!(score > 0.0, "score should be positive for action match");
+    }
+
+    /// Test that detect_platform_from_query finds github.
+    #[test]
+    fn test_detect_platform_github() {
+        let connected: std::collections::HashMap<String, Vec<String>> =
+            [("github".to_string(), vec!["repo".to_string()])]
+            .into_iter()
+            .collect();
+
+        let query = "list my github repositories";
+        let platform = detect_platform_from_query(query, &connected);
+
+        assert_eq!(platform, Some("github".to_string()));
+    }
+
+    /// Test that detect_platform_from_query returns None for unconnected platforms.
+    #[test]
+    fn test_detect_platform_not_connected() {
+        let connected: std::collections::HashMap<String, Vec<String>> =
+            [("slack".to_string(), vec!["channels:read".to_string()])]
+            .into_iter()
+            .collect();
+
+        let query = "list my github repositories";
+        let platform = detect_platform_from_query(query, &connected);
+
+        assert_eq!(platform, None, "should not detect github if not connected");
+    }
+
+    /// Test extract_arguments extracts sort parameter.
+    #[test]
+    fn test_extract_arguments_sort() {
+        use crate::tools::{Tool, HttpMethod, InputSchema};
+
+        let tool = Tool {
+            slug: "github_list_repos".to_string(),
+            name: "List Repositories".to_string(),
+            description: "List GitHub repos".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/user/repos".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("".to_string()),
+                properties: [(
+                    "sort".to_string(),
+                    serde_json::json!({
+                        "type": "string",
+                        "description": "Sort order",
+                        "enum": ["created", "updated"]
+                    }),
+                )]
+                .into_iter()
+                .collect(),
+                required: vec![],
+            },
+            output_schema: None,
+            scopes: vec![],
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+        };
+
+        let query = "list repositories sorted by updated";
+        let args = extract_arguments(query, &tool);
+
+        assert_eq!(args.get("sort").and_then(|v| v.as_str()), Some("updated"));
+    }
+
+    /// Test extract_arguments handles per_page for "all" keyword.
+    #[test]
+    fn test_extract_arguments_per_page_all() {
+        use crate::tools::{Tool, HttpMethod, InputSchema};
+
+        let tool = Tool {
+            slug: "github_list_repos".to_string(),
+            name: "List Repositories".to_string(),
+            description: "List GitHub repos".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/user/repos".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("".to_string()),
+                properties: [(
+                    "per_page".to_string(),
+                    serde_json::json!({
+                        "type": "integer",
+                        "description": "Results per page"
+                    }),
+                )]
+                .into_iter()
+                .collect(),
+                required: vec![],
+            },
+            output_schema: None,
+            scopes: vec![],
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+        };
+
+        let query = "list all repositories";
+        let args = extract_arguments(query, &tool);
+
+        assert_eq!(
+            args.get("per_page").and_then(|v| v.as_u64()),
+            Some(100),
+            "per_page should be 100 when query contains 'all'"
+        );
+    }
+
+    /// Test similarity function.
+    #[test]
+    fn test_similarity() {
+        let a = "list my github repositories";
+        let b = "show my github repos";
+
+        let sim = similarity(a, b);
+        assert!(
+            sim > 0.1,
+            "similar queries should have positive similarity, got {}",
+            sim
+        );
+        assert!(sim < 1.0, "different queries should not have full similarity");
+    }
+
+    /// Test that similarity returns 0 for empty input.
+    #[test]
+    fn test_similarity_empty() {
+        let sim = similarity("", "list github repos");
+        assert_eq!(sim, 0.0);
+
+        let sim2 = similarity("list github repos", "");
+        assert_eq!(sim2, 0.0);
+    }
 }

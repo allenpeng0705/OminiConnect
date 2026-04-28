@@ -128,8 +128,17 @@ impl ToolRegistry {
             let yaml_content = std::fs::read_to_string(&path)
                 .map_err(|e| LoadError::ReadFile(path.display().to_string(), e))?;
 
-            let provider_tools: Vec<Tool> = serde_yaml::from_str(&yaml_content)
-                .map_err(|e| LoadError::Parse(path.display().to_string(), e))?;
+            let provider_tools: Vec<Tool> = match serde_yaml::from_str(&yaml_content) {
+                Ok(t) => t,
+                Err(e) => {
+                    tracing::warn!(
+                        "Skipping invalid tool file {}: {}",
+                        path.display(),
+                        e
+                    );
+                    continue;
+                }
+            };
 
             for tool in provider_tools {
                 let slug = tool.slug.clone();

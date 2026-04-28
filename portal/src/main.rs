@@ -10,8 +10,10 @@ mod auth;
 mod connector_engine;
 mod connector_scope;
 mod db;
+mod llm;
 mod nango;
 mod oauth;
+mod panda;
 mod portal_env;
 mod tools;
 mod websocket;
@@ -192,8 +194,9 @@ async fn main() -> anyhow::Result<()> {
     let pool = db::create_pool().await?;
     db::run_migrations(&pool).await?;
 
-    // Load tool registry from YAML files
-    let tools_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tools/registry");
+                // Load tool registry from YAML files (CARGO_MANIFEST_DIR = portal/ dir)
+    let tools_dir =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tools/registry");
     let tool_registry = match tools::ToolRegistry::load_from_dir(&tools_dir) {
         Ok(reg) => {
             tracing::info!(

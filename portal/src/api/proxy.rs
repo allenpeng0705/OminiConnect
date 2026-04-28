@@ -275,7 +275,7 @@ pub(crate) fn get_platform_base_url(platform: &str) -> &'static str {
         "linkedin" => "https://api.linkedin.com",
         "facebook" => "https://graph.facebook.com/v21.0",
         "x" => "https://api.x.com/2",
-        "github" => "https://api.github.com",
+        "github" | "github-pat" => "https://api.github.com",
         "maton" => "https://api.maton.ai",
         "qqmail" => "https://api.exmail.qq.com",
         _ => "",
