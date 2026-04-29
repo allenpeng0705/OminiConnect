@@ -525,7 +525,7 @@ export default function ConnectorConfig() {
   return (
     <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
       <header style={{ background: 'white', borderBottom: '1px solid #e0e0e0', padding: '0 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#666', padding: '1rem 0' }}>← Back</button>
+        <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: '#666', padding: '1rem 0' }}>← Back</button>
         <IntegrationProviderLogo url={configHeaderLogo} label={meta.name} size={40} />
         <h1 style={{ margin: 0, fontSize: '1.125rem', color: '#333' }}>{meta.name}</h1>
         {connected && <span style={{ marginLeft: 'auto', padding: '0.125rem 0.5rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 500, background: '#dcfce7', color: '#166534' }}>Connected</span>}
