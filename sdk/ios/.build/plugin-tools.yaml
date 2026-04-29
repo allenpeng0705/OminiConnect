@@ -1,0 +1,112 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "OminiConnect-arm64-apple-macosx15.0-debug.module": ["<OminiConnect-arm64-apple-macosx15.0-debug.module>"]
+  "OminiConnectPackageTests-arm64-apple-macosx15.0-debug.module": ["<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.module>"]
+  "OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test": ["<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test>"]
+  "OminiConnectTests-arm64-apple-macosx15.0-debug.module": ["<OminiConnectTests-arm64-apple-macosx15.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<OminiConnect-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<OminiConnect-arm64-apple-macosx15.0-debug.module>","<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test>","<OminiConnectTests-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Tests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/Agent.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/AgentsManager.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/LlmManager.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/OminiConnect.swift"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/sources"]
+    description: "Write auxiliary file /Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/sources"
+
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.derived/runner.swift"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/sources"]
+    description: "Write auxiliary file /Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/sources"
+
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.derived/runner.swift":
+    tool: test-entry-point-tool
+    inputs: []
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.derived/runner.swift"]
+
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/Agent.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/AgentsManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/LlmManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/OminiConnect.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/runner.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/OminiConnectTests.swift.o"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.product/Objects.LinkFileList"
+
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Tests/OminiConnectTests.swift"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/sources"]
+    description: "Write auxiliary file /Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/sources"
+
+  "/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<OminiConnect-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/Agent.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/AgentsManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/LlmManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/OminiConnect.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnect.swiftmodule"]
+    outputs: ["<OminiConnect-arm64-apple-macosx15.0-debug.module>"]
+
+  "<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/runner.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectPackageTests.swiftmodule"]
+    outputs: ["<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test>":
+    tool: phony
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.xctest/Contents/MacOS/OminiConnectPackageTests"]
+    outputs: ["<OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test>"]
+
+  "<OminiConnectTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/OminiConnectTests.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectTests.swiftmodule"]
+    outputs: ["<OminiConnectTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.OminiConnect-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/Agent.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/AgentsManager.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/LlmManager.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/OminiConnect.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/sources"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/Agent.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/AgentsManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/LlmManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/OminiConnect.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnect.swiftmodule"]
+    description: "Compiling Swift Module 'OminiConnect' (4 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","OminiConnect","-emit-dependencies","-emit-module","-emit-module-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnect.swiftmodule","-output-file-map","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/sources","-I","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx12.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/include/OminiConnect-Swift.h","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.OminiConnectPackageTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.derived/runner.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectTests.swiftmodule","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/sources"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/runner.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectPackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'OminiConnectPackageTests' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","OminiConnectPackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectPackageTests.swiftmodule","-output-file-map","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/sources","-I","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx12.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/include/OminiConnectPackageTests-Swift.h","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "C.OminiConnectPackageTests-arm64-apple-macosx15.0-debug.test":
+    tool: shell
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/Agent.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/AgentsManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/LlmManager.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnect.build/OminiConnect.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.build/runner.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/OminiConnectTests.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.product/Objects.LinkFileList"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.xctest/Contents/MacOS/OminiConnectPackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/OminiConnectPackageTests.xctest/Contents/MacOS/OminiConnectPackageTests"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug","-o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.xctest/Contents/MacOS/OminiConnectPackageTests","-module-name","OminiConnectPackageTests","-Xlinker","-no_warn_duplicate_libraries","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectPackageTests.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx14.0","-Xlinker","-add_ast_path","-Xlinker","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnect.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectPackageTests.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectTests.swiftmodule","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.OminiConnectTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Tests/OminiConnectTests.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnect.swiftmodule","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/sources"]
+    outputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/OminiConnectTests.swift.o","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectTests.swiftmodule"]
+    description: "Compiling Swift Module 'OminiConnectTests' (1 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","OminiConnectTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules/OminiConnectTests.swiftmodule","-output-file-map","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/OminiConnectTests.build/sources","-I","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx14.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Sources/OminiConnect/","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Tests/","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Package.swift","/Users/shileipeng/Documents/mygithub/OminiConnect/sdk/ios/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

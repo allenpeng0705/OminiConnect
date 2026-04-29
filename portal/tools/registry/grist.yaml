@@ -1,5 +1,5 @@
 - slug: grist_list_documents
-  name: List Documents
+  name: List grist Documents
   description: |
     Retrieve a list of all accessible Grist documents.
     Returns document names, IDs, and last modified dates for each document.
@@ -25,7 +25,7 @@
     required: []
 
 - slug: grist_get_document
-  name: Get Document
+  name: Get grist Document
   description: |
     Get details and metadata for a specific document by ID.
     Returns the complete document metadata including workspace, permissions, and schema.
@@ -49,7 +49,7 @@
       - documentId
 
 - slug: grist_create_document
-  name: Create Document
+  name: Create grist Document
   description: |
     Create a new Grist document with specified name and workspace.
     Returns the created document with its unique ID and initial configuration.
@@ -76,11 +76,11 @@
       - name
 
 - slug: grist_list_tables
-  name: List Tables
+  name: List grist Tables
   description: |
-    List all tables within a specific document.
-    Returns table names, IDs, and record counts for each table.
-    Use this to discover available data structures in a document.
+    Show all data tables available in a Grist document.
+    Returns table names, IDs, and row counts for each table.
+    Use this to discover what data tables exist in a Grist document.
   provider: grist
   endpoint: /documents/{documentId}/tables
   method: GET
@@ -95,12 +95,11 @@
     properties:
       documentId:
         type: string
-        description: "The unique identifier of the document"
-    required:
-      - documentId
+        description: "The unique identifier of the document (optional - lists tables across all documents if not specified)"
+    required: []
 
 - slug: grist_get_table
-  name: Get Table
+  name: Get grist Table
   description: |
     Get details, schema, and structure of a specific table.
     Returns the complete table definition including column types and field configurations.
@@ -128,11 +127,11 @@
       - tableId
 
 - slug: grist_list_records
-  name: List Records
+  name: List grist Records
   description: |
-    Retrieve all records from a specific table with optional filtering and pagination.
-    Returns record data with all column values for each matching row.
-    Use this to query table data for analysis and reporting.
+    Query data rows from a Grist table with optional filtering and pagination.
+    Returns cell values for each row in the specified table.
+    Use this to fetch data from a Grist spreadsheet table.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records
   method: GET
@@ -145,12 +144,12 @@
     type: object
     description: Parameters for listing records
     properties:
-      documentId:
-        type: string
-        description: "The unique identifier of the document"
       tableId:
         type: string
         description: "The unique identifier of the table"
+      documentId:
+        type: string
+        description: "The unique identifier of the document (optional)"
       limit:
         type: integer
         description: "Maximum number of records to return (default: 100)"
@@ -161,11 +160,10 @@
         type: object
         description: "Filter criteria for records"
     required:
-      - documentId
       - tableId
 
 - slug: grist_get_record
-  name: Get Record
+  name: Get grist Record
   description: |
     Get a single record by its unique identifier from a table.
     Returns the complete record data with all column values.
@@ -197,11 +195,11 @@
       - recordId
 
 - slug: grist_create_record
-  name: Create Record
+  name: Create grist Record
   description: |
-    Insert a new record into a specified table with provided data.
-    Returns the created record with its assigned ID.
-    This adds new data rows to a Grist table.
+    Insert a new data row into a Grist table with provided cell values.
+    Returns the created row with its assigned record ID.
+    Use this to add new rows of data to a Grist spreadsheet table.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records
   method: POST
@@ -229,11 +227,11 @@
       - data
 
 - slug: grist_update_record
-  name: Update Record
+  name: Update grist Record
   description: |
-    Update an existing record with new data in a specified table.
-    Returns the updated record with modified values.
-    This modifies existing data in a Grist table.
+    Modify cell values in an existing row of a Grist table.
+    Returns the updated row with modified values.
+    Use this to edit data in a Grist spreadsheet table.
   provider: grist
   endpoint: /documents/{documentId}/tables/{tableId}/records/{recordId}
   method: PUT
@@ -265,11 +263,11 @@
       - data
 
 - slug: grist_list_views
-  name: List Views
+  name: List grist Views
   description: |
-    List all views available for a specific document.
-    Returns view names, IDs, and configurations for each view.
-    Use this to discover available visualizations and custom layouts.
+    Show all saved views and custom layouts in a Grist document.
+    Returns view names, IDs, and widget configurations for each view.
+    Use this to discover saved views and charts in a Grist document.
   provider: grist
   endpoint: /documents/{documentId}/views
   method: GET
@@ -284,6 +282,5 @@
     properties:
       documentId:
         type: string
-        description: "The unique identifier of the document"
-    required:
-      - documentId
+        description: "The unique identifier of the document (optional - lists views across all documents if not specified)"
+    required: []

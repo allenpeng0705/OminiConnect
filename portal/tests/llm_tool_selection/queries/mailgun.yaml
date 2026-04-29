@@ -1,54 +1,68 @@
 # Mailgun Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: mailgun
 queries:
-- query: list all list domainss
+- query: List my domains.
   expected_tool: mailgun_list_domains
   category: list
   variations:
-  - show my list domainss
-  - find list domainss
+  - Show all domains.
+  - What domains do I have.
   description_notes: null
-- query: list all send messages
-  expected_tool: mailgun_send_message
+- query: List my add domain.
+  expected_tool: mailgun_add_domain
   category: list
   variations:
-  - show my send messages
-  - find send messages
+  - Show all add domain.
+  - What add domain do I have.
   description_notes: null
-- query: list all list stored messagess
+- query: List my messages.
   expected_tool: mailgun_list_messages
   category: list
   variations:
-  - show my list stored messagess
-  - find list stored messagess
+  - Show all messages.
+  - What messages do I have.
   description_notes: null
-- query: get get domain details
+- query: List my bounces.
+  expected_tool: mailgun_list_bounces
+  category: list
+  variations:
+  - Show all bounces.
+  - What bounces do I have.
+  description_notes: null
+- query: Get details for domain with domain=domain_value.
   expected_tool: mailgun_get_domain
   category: read
   variations:
-  - show me the get domain
-  - what is this get domain about
+  - Show me this domain with domain=domain_value.
+  - Retrieve domain information with domain=domain_value.
   description_notes: null
-- query: get get stored message details
+- query: Get details for message with url=url_value.
   expected_tool: mailgun_get_message
   category: read
   variations:
-  - show me the get stored message
-  - what is this get stored message about
+  - Show me this message with url=url_value.
+  - Retrieve message information with url=url_value.
   description_notes: null
-- query: get get bounce details
+- query: Get details for bounce with domain=domain_value and address=address_value.
   expected_tool: mailgun_get_bounce
   category: read
   variations:
-  - show me the get bounce
-  - what is this get bounce about
+  - Show me this bounce with domain=domain_value and address=address_value.
+  - Retrieve bounce information with domain=domain_value and address=address_value.
   description_notes: null
-- query: create a new add domain
-  expected_tool: mailgun_add_domain
+- query: Get details for complaint with domain=domain_value and address=address_value.
+  expected_tool: mailgun_get_complaint
+  category: read
+  variations:
+  - Show me this complaint with domain=domain_value and address=address_value.
+  - Retrieve complaint information with domain=domain_value and address=address_value.
+  description_notes: null
+- query: Create a new message with domain=domain_value and to=to_value.
+  expected_tool: mailgun_send_message
   category: create
   variations:
-  - add a add domain
-  - make a new add domain
+  - Add a message with domain=domain_value and to=to_value.
+  - Make a message with domain=domain_value and to=to_value.
   description_notes: null

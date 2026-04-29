@@ -1,61 +1,75 @@
 # Messagebird Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: messagebird
 queries:
-- query: list all list messagess
+- query: List my messages.
   expected_tool: messagebird_list_messages
   category: list
   variations:
-  - show my list messagess
-  - find list messagess
+  - Show all messages.
+  - What messages do I have.
   description_notes: null
-- query: list all send messages
-  expected_tool: messagebird_send_message
+- query: List my conversations.
+  expected_tool: messagebird_list_conversations
   category: list
   variations:
-  - show my send messages
-  - find send messages
+  - Show all conversations.
+  - What conversations do I have.
   description_notes: null
-- query: list all send smss
-  expected_tool: messagebird_send_sms
+- query: List my webhooks.
+  expected_tool: messagebird_list_webhooks
   category: list
   variations:
-  - show my send smss
-  - find send smss
+  - Show all webhooks.
+  - What webhooks do I have.
   description_notes: null
-- query: get get message details
+- query: Get details for message with messageId=messageid_123.
   expected_tool: messagebird_get_message
   category: read
   variations:
-  - show me the get message
-  - what is this get message about
+  - Show me this message with messageId=messageid_123.
+  - Retrieve message information with messageId=messageid_123.
   description_notes: null
-- query: get get conversation details
+- query: Get details for conversation with conversationId=conversationid_123.
   expected_tool: messagebird_get_conversation
   category: read
   variations:
-  - show me the get conversation
-  - what is this get conversation about
+  - Show me this conversation with conversationId=conversationid_123.
+  - Retrieve conversation information with conversationId=conversationid_123.
   description_notes: null
-- query: get get balance details
+- query: Get details for balance.
   expected_tool: messagebird_get_balance
   category: read
   variations:
-  - show me the get balance
-  - what is this get balance about
+  - Show me this balance.
+  - Retrieve balance information.
   description_notes: null
-- query: create a new create conversation
+- query: Create a new message with recipients=recipients_value and body=body_value.
+  expected_tool: messagebird_send_message
+  category: create
+  variations:
+  - Add a message with recipients=recipients_value and body=body_value.
+  - Make a message with recipients=recipients_value and body=body_value.
+  description_notes: null
+- query: Create a new sms with recipient=recipient_value and message=message_value.
+  expected_tool: messagebird_send_sms
+  category: create
+  variations:
+  - Add a sms with recipient=recipient_value and message=message_value.
+  - Make a sms with recipient=recipient_value and message=message_value.
+  description_notes: null
+- query: Create a new conversation with recipient=recipient_value and channel=channel_value.
   expected_tool: messagebird_create_conversation
   category: create
   variations:
-  - add a create conversation
-  - make a new create conversation
+  - Add a conversation with recipient=recipient_value and channel=channel_value.
+  - Make a conversation with recipient=recipient_value and channel=channel_value.
   description_notes: null
-- query: create a new create webhook
+- query: Create a new webhook with url=url_value and token=token_value.
   expected_tool: messagebird_create_webhook
   category: create
   variations:
-  - add a create webhook
-  - make a new create webhook
+  - Add a webhook with url=url_value and token=token_value.
+  - Make a webhook with url=url_value and token=token_value.
   description_notes: null

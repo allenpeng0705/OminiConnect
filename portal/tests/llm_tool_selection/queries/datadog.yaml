@@ -1,57 +1,75 @@
 # Datadog Tool Selection Queries
+# Auto-generated from registry (realistic mode)
 
 provider: datadog
 queries:
-  - query: "list all hosts"
-    expected_tool: datadog_list_hosts
-    category: list
-    variations:
-      - "show my hosts"
-      - "find hosts"
-      - "what hosts exist"
-    description_notes: null
-
-  - query: "search logs"
-    expected_tool: datadog_search_logs
-    category: search
-    variations:
-      - "find logs"
-      - "lookup logs"
-      - "search logs"
-    description_notes: null
-
-  - query: "get log details"
-    expected_tool: datadog_get_log
-    category: read
-    variations:
-      - "show me log details"
-      - "what is this log about"
-      - "lookup log"
-    description_notes: null
-
-  - query: "list all monitors"
-    expected_tool: datadog_list_monitors
-    category: list
-    variations:
-      - "show me monitors"
-      - "find monitors"
-      - "what monitors exist"
-    description_notes: null
-
-  - query: "create a monitor"
-    expected_tool: datadog_create_monitor
-    category: create
-    variations:
-      - "add a monitor"
-      - "create a monitor"
-      - "make a monitor"
-    description_notes: null
-
-  - query: "list all dashboards"
-    expected_tool: datadog_list_dashboards
-    category: list
-    variations:
-      - "show me dashboards"
-      - "find dashboards"
-      - "what dashboards exist"
-    description_notes: null
+- query: List my monitors.
+  expected_tool: datadog_list_monitors
+  category: list
+  variations:
+  - Show all monitors.
+  - What monitors do I have.
+  description_notes: null
+- query: List my dashboards.
+  expected_tool: datadog_list_dashboards
+  category: list
+  variations:
+  - Show all dashboards.
+  - What dashboards do I have.
+  description_notes: null
+- query: List my hosts.
+  expected_tool: datadog_list_hosts
+  category: list
+  variations:
+  - Show all hosts.
+  - What hosts do I have.
+  description_notes: null
+- query: List my metrics.
+  expected_tool: datadog_list_metrics
+  category: list
+  variations:
+  - Show all metrics.
+  - What metrics do I have.
+  description_notes: null
+- query: Get details for monitor with monitorId=monitorid_123.
+  expected_tool: datadog_get_monitor
+  category: read
+  variations:
+  - Show me this monitor with monitorId=monitorid_123.
+  - Retrieve monitor information with monitorId=monitorid_123.
+  description_notes: null
+- query: Get details for dashboard with dashboard_id=dashboard_id_123.
+  expected_tool: datadog_get_dashboard
+  category: read
+  variations:
+  - Show me this dashboard with dashboard_id=dashboard_id_123.
+  - Retrieve dashboard information with dashboard_id=dashboard_id_123.
+  description_notes: null
+- query: Get details for host with host_id=host_id_123.
+  expected_tool: datadog_get_host
+  category: read
+  variations:
+  - Show me this host with host_id=host_id_123.
+  - Retrieve host information with host_id=host_id_123.
+  description_notes: null
+- query: Create a new monitor with name=sample-name and query=status:open.
+  expected_tool: datadog_create_monitor
+  category: create
+  variations:
+  - Add a monitor with name=sample-name and query=status:open.
+  - Make a monitor with name=sample-name and query=status:open.
+  description_notes: null
+- query: Update this monitor with monitorId=monitorid_123.
+  expected_tool: datadog_update_monitor
+  category: update
+  variations:
+  - Modify the monitor with monitorId=monitorid_123.
+  - Edit monitor with monitorId=monitorid_123.
+  description_notes: null
+- query: Delete this monitor with monitorId=monitorid_123.
+  expected_tool: datadog_delete_monitor
+  category: delete
+  variations:
+  - Remove the monitor with monitorId=monitorid_123.
+  - Archive this monitor with monitorId=monitorid_123.
+  description_notes: null

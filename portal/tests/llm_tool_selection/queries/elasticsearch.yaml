@@ -1,26 +1,75 @@
 # Elasticsearch Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: elasticsearch
 queries:
-- query: list all list indicess
+- query: List my indices.
   expected_tool: elasticsearch_list_indices
   category: list
   variations:
-  - show my list indicess
-  - find list indicess
+  - Show all indices.
+  - What indices do I have.
   description_notes: null
-- query: list all get indexs
+- query: List my clusters.
+  expected_tool: elasticsearch_list_clusters
+  category: list
+  variations:
+  - Show all clusters.
+  - What clusters do I have.
+  description_notes: null
+- query: Get details for index with index_name=sample-name.
   expected_tool: elasticsearch_get_index
-  category: list
+  category: read
   variations:
-  - show my get indexs
-  - find get indexs
+  - Show me this index with index_name=sample-name.
+  - Retrieve index information with index_name=sample-name.
   description_notes: null
-- query: list all create indexs
-  expected_tool: elasticsearch_create_index
-  category: list
+- query: Get details for cluster health.
+  expected_tool: elasticsearch_get_cluster_health
+  category: read
   variations:
-  - show my create indexs
-  - find create indexs
+  - Show me this cluster health.
+  - Retrieve cluster health information.
+  description_notes: null
+- query: Get details for node stat.
+  expected_tool: elasticsearch_get_node_stats
+  category: read
+  variations:
+  - Show me this node stat.
+  - Retrieve node stat information.
+  description_notes: null
+- query: Create a new index with index_name=sample-name.
+  expected_tool: elasticsearch_create_index
+  category: create
+  variations:
+  - Add a index with index_name=sample-name.
+  - Make a index with index_name=sample-name.
+  description_notes: null
+- query: Delete this index with index_name=sample-name.
+  expected_tool: elasticsearch_delete_index
+  category: delete
+  variations:
+  - Remove the index with index_name=sample-name.
+  - Archive this index with index_name=sample-name.
+  description_notes: null
+- query: Delete this document with index_name=sample-name and document_id=document_id_123.
+  expected_tool: elasticsearch_delete_document
+  category: delete
+  variations:
+  - Remove the document with index_name=sample-name and document_id=document_id_123.
+  - Archive this document with index_name=sample-name and document_id=document_id_123.
+  description_notes: null
+- query: Search index document with index_name=sample-name and body=body_value.
+  expected_tool: elasticsearch_index_document
+  category: search
+  variations:
+  - Find index document matching criteria with index_name=sample-name and body=body_value.
+  - Look up index document with index_name=sample-name and body=body_value.
+  description_notes: null
+- query: Search records with index_name=sample-name.
+  expected_tool: elasticsearch_search
+  category: search
+  variations:
+  - Find records matching criteria with index_name=sample-name.
+  - Look up records with index_name=sample-name.
   description_notes: null

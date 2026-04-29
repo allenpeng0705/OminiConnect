@@ -1,26 +1,75 @@
 # Researchdesk Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: researchdesk
 queries:
-- query: list all list articless
+- query: List my articles.
   expected_tool: researchdesk_list_articles
   category: list
   variations:
-  - show my list articless
-  - find list articless
+  - Show all articles.
+  - What articles do I have.
   description_notes: null
-- query: list all get articles
+- query: List my collections.
+  expected_tool: researchdesk_list_collections
+  category: list
+  variations:
+  - Show all collections.
+  - What collections do I have.
+  description_notes: null
+- query: List my tags.
+  expected_tool: researchdesk_list_tags
+  category: list
+  variations:
+  - Show all tags.
+  - What tags do I have.
+  description_notes: null
+- query: Get details for article with articleId=articleid_123.
   expected_tool: researchdesk_get_article
-  category: list
+  category: read
   variations:
-  - show my get articles
-  - find get articles
+  - Show me this article with articleId=articleid_123.
+  - Retrieve article information with articleId=articleid_123.
   description_notes: null
-- query: list all search articless
-  expected_tool: researchdesk_search_articles
-  category: list
+- query: Get details for trending.
+  expected_tool: researchdesk_get_trending
+  category: read
   variations:
-  - show my search articless
-  - find search articless
+  - Show me this trending.
+  - Retrieve trending information.
+  description_notes: null
+- query: Create a new collection with name=sample-name.
+  expected_tool: researchdesk_create_collection
+  category: create
+  variations:
+  - Add a collection with name=sample-name.
+  - Make a collection with name=sample-name.
+  description_notes: null
+- query: Create a new tag with name=sample-name.
+  expected_tool: researchdesk_create_tag
+  category: create
+  variations:
+  - Add a tag with name=sample-name.
+  - Make a tag with name=sample-name.
+  description_notes: null
+- query: Search articles with query=status:open.
+  expected_tool: researchdesk_search_articles
+  category: search
+  variations:
+  - Find articles matching criteria with query=status:open.
+  - Look up articles with query=status:open.
+  description_notes: null
+- query: Search add collection with collectionId=collectionid_123 and articleId=articleid_123.
+  expected_tool: researchdesk_add_to_collection
+  category: search
+  variations:
+  - Find add collection matching criteria with collectionId=collectionid_123 and articleId=articleid_123.
+  - Look up add collection with collectionId=collectionid_123 and articleId=articleid_123.
+  description_notes: null
+- query: Search export research.
+  expected_tool: researchdesk_export_research
+  category: search
+  variations:
+  - Find export research matching criteria.
+  - Look up export research.
   description_notes: null

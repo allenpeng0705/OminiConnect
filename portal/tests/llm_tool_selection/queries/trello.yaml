@@ -1,57 +1,75 @@
 # Trello Tool Selection Queries
+# Auto-generated from registry (realistic mode)
 
 provider: trello
 queries:
-  - query: "list all boards"
-    expected_tool: trello_list_boards
-    category: list
-    variations:
-      - "show my trello boards"
-      - "find boards"
-      - "what boards do I have"
-    description_notes: null
-
-  - query: "list cards on a board"
-    expected_tool: trello_list_cards
-    category: list
-    variations:
-      - "show cards on the board"
-      - "find cards"
-      - "what cards exist"
-    description_notes: null
-
-  - query: "create a new card"
-    expected_tool: trello_create_card
-    category: create
-    variations:
-      - "add a card"
-      - "create a new card"
-      - "open a card"
-    description_notes: null
-
-  - query: "get card details"
-    expected_tool: trello_get_card
-    category: read
-    variations:
-      - "show me card details"
-      - "what is this card about"
-      - "lookup card"
-    description_notes: null
-
-  - query: "update a card"
-    expected_tool: trello_update_card
-    category: update
-    variations:
-      - "modify the card"
-      - "change card status"
-      - "move the card"
-    description_notes: null
-
-  - query: "list all lists on a board"
-    expected_tool: trello_list_lists
-    category: list
-    variations:
-      - "show me all lists"
-      - "find lists"
-      - "what lists exist"
-    description_notes: null
+- query: List my boards.
+  expected_tool: trello_list_boards
+  category: list
+  variations:
+  - Show all boards.
+  - What boards do I have.
+  description_notes: null
+- query: List my lists.
+  expected_tool: trello_list_lists
+  category: list
+  variations:
+  - Show all lists.
+  - What lists do I have.
+  description_notes: null
+- query: List my cards.
+  expected_tool: trello_list_cards
+  category: list
+  variations:
+  - Show all cards.
+  - What cards do I have.
+  description_notes: null
+- query: List my add member card.
+  expected_tool: trello_add_member_to_card
+  category: list
+  variations:
+  - Show all add member card.
+  - What add member card do I have.
+  description_notes: null
+- query: Get details for board with boardId=boardid_123.
+  expected_tool: trello_get_board
+  category: read
+  variations:
+  - Show me this board with boardId=boardid_123.
+  - Retrieve board information with boardId=boardid_123.
+  description_notes: null
+- query: Get details for record with listId=listid_123.
+  expected_tool: trello_get_list
+  category: read
+  variations:
+  - Show me this record with listId=listid_123.
+  - Retrieve record information with listId=listid_123.
+  description_notes: null
+- query: Get details for card with cardId=cardid_123.
+  expected_tool: trello_get_card
+  category: read
+  variations:
+  - Show me this card with cardId=cardid_123.
+  - Retrieve card information with cardId=cardid_123.
+  description_notes: null
+- query: Create a new board with name=sample-name.
+  expected_tool: trello_create_board
+  category: create
+  variations:
+  - Add a board with name=sample-name.
+  - Make a board with name=sample-name.
+  description_notes: null
+- query: Create a new record with name=sample-name and idBoard=idboard_value.
+  expected_tool: trello_create_list
+  category: create
+  variations:
+  - Add a record with name=sample-name and idBoard=idboard_value.
+  - Make a record with name=sample-name and idBoard=idboard_value.
+  description_notes: null
+- query: Create a new card with name=sample-name and idList=idlist_value.
+  expected_tool: trello_create_card
+  category: create
+  variations:
+  - Add a card with name=sample-name and idList=idlist_value.
+  - Make a card with name=sample-name and idList=idlist_value.
+  description_notes: null

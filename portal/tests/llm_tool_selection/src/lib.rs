@@ -12,8 +12,8 @@
 //! # Run with custom LLM endpoint
 //! cargo run -- --registry ./tools/registry --queries ./queries --llm-url http://localhost:4000
 //!
-//! # Run with specific provider only
-//! cargo run -- --registry ./tools/registry --queries ./queries --provider github
+//! # Run with specific providers only (comma-separated)
+//! cargo run -- --registry ./tools/registry --queries ./queries --providers github,slack,notion
 //!
 //! # Output results to files
 //! cargo run -- --registry ./tools/registry --queries ./queries --output ./test-results

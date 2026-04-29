@@ -1,43 +1,61 @@
 # Slack Tool Selection Queries
+# Auto-generated from registry (realistic mode)
 
 provider: slack
 queries:
-  - query: "send a message to channel C123"
-    expected_tool: slack_chat_post_message
-    category: create
-    variations:
-      - "post a message in #general"
-      - "message to channel C123"
-    description_notes: "Tool name could be clearer"
-
-  - query: "list all channels"
-    expected_tool: slack_conversations_list
-    category: list
-    variations:
-      - "show me all slack channels"
-      - "what channels do we have"
-    description_notes: null
-
-  - query: "get information about a user"
-    expected_tool: slack_users_info
-    category: read
-    variations:
-      - "lookup a slack user"
-      - "who is @username"
-    description_notes: null
-
-  - query: "find messages containing 'deploy'"
-    expected_tool: slack_search_messages
-    category: search
-    variations:
-      - "search for deploy in slack"
-      - "find messages about deployment"
-    description_notes: null
-
-  - query: "upload a file to a channel"
-    expected_tool: slack_files_upload
-    category: create
-    variations:
-      - "share a file in slack"
-      - "post a file to channel"
-    description_notes: null
+- query: List my channels.
+  expected_tool: slack_list_channels
+  category: list
+  variations:
+  - Show all channels.
+  - What channels do I have.
+  description_notes: null
+- query: List my post message.
+  expected_tool: slack_post_message
+  category: list
+  variations:
+  - Show all post message.
+  - What post message do I have.
+  description_notes: null
+- query: List my messages.
+  expected_tool: slack_list_messages
+  category: list
+  variations:
+  - Show all messages.
+  - What messages do I have.
+  description_notes: null
+- query: List my upload file.
+  expected_tool: slack_upload_file
+  category: list
+  variations:
+  - Show all upload file.
+  - What upload file do I have.
+  description_notes: null
+- query: Get details for channel with channel=channel_value.
+  expected_tool: slack_get_channel
+  category: read
+  variations:
+  - Show me this channel with channel=channel_value.
+  - Retrieve channel information with channel=channel_value.
+  description_notes: null
+- query: Get details for message with channel=channel_value and ts=ts_value.
+  expected_tool: slack_get_message
+  category: read
+  variations:
+  - Show me this message with channel=channel_value and ts=ts_value.
+  - Retrieve message information with channel=channel_value and ts=ts_value.
+  description_notes: null
+- query: Get details for user with user=user_value.
+  expected_tool: slack_get_user
+  category: read
+  variations:
+  - Show me this user with user=user_value.
+  - Retrieve user information with user=user_value.
+  description_notes: null
+- query: Get details for file with file=file_value.
+  expected_tool: slack_get_file
+  category: read
+  variations:
+  - Show me this file with file=file_value.
+  - Retrieve file information with file=file_value.
+  description_notes: null

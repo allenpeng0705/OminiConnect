@@ -1,61 +1,68 @@
 # Clickhouse Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: clickhouse
 queries:
-- query: list all list databasess
+- query: List my databases.
   expected_tool: clickhouse_list_databases
   category: list
   variations:
-  - show my list databasess
-  - find list databasess
+  - Show all databases.
+  - What databases do I have.
   description_notes: null
-- query: list all list tabless
+- query: List my tables.
   expected_tool: clickhouse_list_tables
   category: list
   variations:
-  - show my list tabless
-  - find list tabless
+  - Show all tables.
+  - What tables do I have.
   description_notes: null
-- query: list all list userss
+- query: List my users.
   expected_tool: clickhouse_list_users
   category: list
   variations:
-  - show my list userss
-  - find list userss
+  - Show all users.
+  - What users do I have.
   description_notes: null
-- query: get get database details
+- query: List my execute query.
+  expected_tool: clickhouse_execute_query
+  category: list
+  variations:
+  - Show all execute query.
+  - What execute query do I have.
+  description_notes: null
+- query: Get details for database with database=database_value.
   expected_tool: clickhouse_get_database
   category: read
   variations:
-  - show me the get database
-  - what is this get database about
+  - Show me this database with database=database_value.
+  - Retrieve database information with database=database_value.
   description_notes: null
-- query: get get table details
+- query: Get details for table with database=database_value and table=table_value.
   expected_tool: clickhouse_get_table
   category: read
   variations:
-  - show me the get table
-  - what is this get table about
+  - Show me this table with database=database_value and table=table_value.
+  - Retrieve table information with database=database_value and table=table_value.
   description_notes: null
-- query: get get user details
+- query: Get details for user with user=user_value.
   expected_tool: clickhouse_get_user
   category: read
   variations:
-  - show me the get user
-  - what is this get user about
+  - Show me this user with user=user_value.
+  - Retrieve user information with user=user_value.
   description_notes: null
-- query: create a new create user
+- query: Get details for query result with query_id=query_id_123.
+  expected_tool: clickhouse_get_query_result
+  category: read
+  variations:
+  - Show me this query result with query_id=query_id_123.
+  - Retrieve query result information with query_id=query_id_123.
+  description_notes: null
+- query: Create a new user with name=sample-name and password=password_value.
   expected_tool: clickhouse_create_user
   category: create
   variations:
-  - add a create user
-  - make a new create user
-  description_notes: null
-- query: search for execute query
-  expected_tool: clickhouse_execute_query
-  category: search
-  variations:
-  - find execute querys
-  - lookup execute query
+  - Add a user with name=sample-name and password=password_value.
+  - Make a user with name=sample-name and password=password_value.
   description_notes: null

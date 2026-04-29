@@ -97,9 +97,9 @@ struct Args {
     #[arg(long)]
     llm_api_key: Option<String>,
 
-    /// Filter to specific provider only.
-    #[arg(long)]
-    provider: Option<String>,
+    /// Filter to specific providers (comma-separated). E.g., --providers github,slack,notion
+    #[arg(long, value_delimiter = ',')]
+    providers: Vec<String>,
 
     /// Output directory for results.
     #[arg(long)]
@@ -367,10 +367,11 @@ async fn main() -> Result<()> {
         .no_proxy()
         .build()?;
 
-    // Filter datasets by provider if specified
-    let filtered_datasets: Vec<_> = match &args.provider {
-        Some(p) => datasets.iter().filter(|d| d.provider == *p).collect(),
-        None => datasets.iter().collect(),
+    // Filter datasets by providers if specified
+    let filtered_datasets: Vec<_> = if args.providers.is_empty() {
+        datasets.iter().collect()
+    } else {
+        datasets.iter().filter(|d| args.providers.contains(&d.provider)).collect()
     };
 
     // Run multiple rounds with different noise samples

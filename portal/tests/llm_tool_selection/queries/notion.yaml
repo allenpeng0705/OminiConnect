@@ -1,44 +1,75 @@
 # Notion Tool Selection Queries
+# Auto-generated from registry (realistic mode)
 
 provider: notion
 queries:
-  - query: "search for pages containing 'project'"
-    expected_tool: notion_search
-    category: search
-    variations:
-      - "find notion pages about project"
-      - "lookup pages with project in title"
-    description_notes: null
-
-  - query: "get details of a page"
-    expected_tool: notion_retrieve_page
-    category: read
-    variations:
-      - "show me the page content"
-      - "what is on this notion page"
-    description_notes: null
-
-  - query: "create a new database"
-    expected_tool: notion_create_database
-    category: create
-    variations:
-      - "add a new database in notion"
-      - "make a database"
-    description_notes: null
-
-  - query: "query a database"
-    expected_tool: notion_query_database
-    category: list
-    variations:
-      - "search the database"
-      - "find entries in the database"
-      - "list all items in this database"
-    description_notes: null
-
-  - query: "create a comment on a page"
-    expected_tool: notion_create_comment
-    category: create
-    variations:
-      - "add a comment to the page"
-      - "post a note on this page"
-    description_notes: null
+- query: List my pages.
+  expected_tool: notion_list_pages
+  category: list
+  variations:
+  - Show all pages.
+  - What pages do I have.
+  description_notes: null
+- query: List my databases.
+  expected_tool: notion_list_databases
+  category: list
+  variations:
+  - Show all databases.
+  - What databases do I have.
+  description_notes: null
+- query: List my blocks.
+  expected_tool: notion_list_blocks
+  category: list
+  variations:
+  - Show all blocks.
+  - What blocks do I have.
+  description_notes: null
+- query: Get details for page with page_id=page_id_123.
+  expected_tool: notion_get_page
+  category: read
+  variations:
+  - Show me this page with page_id=page_id_123.
+  - Retrieve page information with page_id=page_id_123.
+  description_notes: null
+- query: Get details for database with database_id=database_id_123.
+  expected_tool: notion_get_database
+  category: read
+  variations:
+  - Show me this database with database_id=database_id_123.
+  - Retrieve database information with database_id=database_id_123.
+  description_notes: null
+- query: Get details for block with block_id=block_id_123.
+  expected_tool: notion_get_block
+  category: read
+  variations:
+  - Show me this block with block_id=block_id_123.
+  - Retrieve block information with block_id=block_id_123.
+  description_notes: null
+- query: Get details for user with user_id=user_id_123.
+  expected_tool: notion_get_user
+  category: read
+  variations:
+  - Show me this user with user_id=user_id_123.
+  - Retrieve user information with user_id=user_id_123.
+  description_notes: null
+- query: Create a new page with parent_id=parent_id_123 and parent_type=parent_type_value.
+  expected_tool: notion_create_page
+  category: create
+  variations:
+  - Add a page with parent_id=parent_id_123 and parent_type=parent_type_value.
+  - Make a page with parent_id=parent_id_123 and parent_type=parent_type_value.
+  description_notes: null
+- query: Create a new database with parent_id=parent_id_123 and title=Sample Title.
+  expected_tool: notion_create_database
+  category: create
+  variations:
+  - Add a database with parent_id=parent_id_123 and title=Sample Title.
+  - Make a database with parent_id=parent_id_123 and title=Sample Title.
+  description_notes: null
+- query: Search records.
+  expected_tool: notion_search
+  category: search
+  variations:
+  - Find records matching criteria.
+  - Look up records.
+  description_notes: null

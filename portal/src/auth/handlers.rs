@@ -232,6 +232,10 @@ async fn nango_signup(
     }
     let status = resp.status();
     let text = resp.text().await.unwrap_or_default();
+    // Pass through 400-level errors as structured errors so the handler can respond properly
+    if !status.is_server_error() {
+        anyhow::bail!("{}|{}|{}", status.as_u16(), text, "");
+    }
     anyhow::bail!("Nango signup failed {status}: {text}");
 }
 
@@ -252,6 +256,9 @@ async fn nango_signin(base_url: &str, email: &str, password: &str) -> anyhow::Re
     }
     let status = resp.status();
     let text = resp.text().await.unwrap_or_default();
+    if !status.is_server_error() {
+        anyhow::bail!("{}|{}|{}", status.as_u16(), text, "");
+    }
     anyhow::bail!("Nango signin failed {status}: {text}");
 }
 
@@ -379,9 +386,26 @@ pub async fn login(State(state): State<Arc<AppState>>, Json(req): Json<LoginRequ
     let nango_set_cookies = match nango_signin(&base, &email, &req.password).await {
         Ok(cookies) => cookies,
         Err(e) => {
+            let err_str = e.to_string();
+            let parts: Vec<&str> = err_str.splitn(3, '|').collect();
+            if parts.len() >= 2 {
+                if let Ok(status_code) = parts[0].parse::<u16>() {
+                    if status_code >= 400 && status_code < 500 {
+                        let body = parts[1].to_string();
+                        if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body) {
+                            if let Some(msg) = json.get("error")
+                                .and_then(|e| e.get("message"))
+                                .and_then(|m| m.as_str()) {
+                                return (StatusCode::from_u16(status_code).unwrap_or(StatusCode::UNAUTHORIZED), msg.to_string()).into_response();
+                            }
+                        }
+                        return (StatusCode::from_u16(status_code).unwrap_or(StatusCode::UNAUTHORIZED), body).into_response();
+                    }
+                }
+            }
             return (
                 StatusCode::UNAUTHORIZED,
-                format!("Nango sign-in failed: {e}"),
+                format!("Sign-in failed: {e}"),
             )
                 .into_response()
         }
@@ -435,8 +459,27 @@ pub async fn signup(
     let nango_set_cookies = match nango_signup(&base, &display_name, &email, &req.password).await {
         Ok(cookies) => cookies,
         Err(e) => {
-            tracing::error!("Nango signup bridge failed for {}: {}", email, e);
-            return (StatusCode::BAD_GATEWAY, format!("Nango signup failed: {e}")).into_response();
+            let err_str = e.to_string();
+            // Structured error format: "status|body|hint"
+            let parts: Vec<&str> = err_str.splitn(3, '|').collect();
+            if parts.len() >= 2 {
+                if let Ok(status_code) = parts[0].parse::<u16>() {
+                    if status_code >= 400 && status_code < 500 {
+                        // Parse error message from Nango response
+                        let body = parts[1].to_string();
+                        if let Ok(json) = serde_json::from_str::<serde_json::Value>(&body) {
+                            if let Some(msg) = json.get("error")
+                                .and_then(|e| e.get("message"))
+                                .and_then(|m| m.as_str()) {
+                                return (StatusCode::from_u16(status_code).unwrap_or(StatusCode::BAD_REQUEST), msg.to_string()).into_response();
+                            }
+                        }
+                        return (StatusCode::from_u16(status_code).unwrap_or(StatusCode::BAD_REQUEST), body).into_response();
+                    }
+                }
+            }
+            tracing::error!("Nango signup bridge failed for {}: {}", email, err_str);
+            return (StatusCode::BAD_GATEWAY, format!("Signup failed: {}", e)).into_response();
         }
     };
     if let Err(e) = ensure_local_user(&state, &email).await {

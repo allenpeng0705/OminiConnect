@@ -1,61 +1,75 @@
 # Outlook Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: outlook
 queries:
-- query: list all list messagess
+- query: List my messages.
   expected_tool: outlook_list_messages
   category: list
   variations:
-  - show my list messagess
-  - find list messagess
+  - Show all messages.
+  - What messages do I have.
   description_notes: null
-- query: list all send messages
-  expected_tool: outlook_send_message
-  category: list
-  variations:
-  - show my send messages
-  - find send messages
-  description_notes: null
-- query: list all list calendarss
+- query: List my calendars.
   expected_tool: outlook_list_calendars
   category: list
   variations:
-  - show my list calendarss
-  - find list calendarss
+  - Show all calendars.
+  - What calendars do I have.
   description_notes: null
-- query: get get message details
+- query: List my events.
+  expected_tool: outlook_list_events
+  category: list
+  variations:
+  - Show all events.
+  - What events do I have.
+  description_notes: null
+- query: List my contacts.
+  expected_tool: outlook_list_contacts
+  category: list
+  variations:
+  - Show all contacts.
+  - What contacts do I have.
+  description_notes: null
+- query: Get details for message with messageId=messageid_123.
   expected_tool: outlook_get_message
   category: read
   variations:
-  - show me the get message
-  - what is this get message about
+  - Show me this message with messageId=messageid_123.
+  - Retrieve message information with messageId=messageid_123.
   description_notes: null
-- query: get get event details
+- query: Get details for event with eventId=eventid_123.
   expected_tool: outlook_get_event
   category: read
   variations:
-  - show me the get event
-  - what is this get event about
+  - Show me this event with eventId=eventid_123.
+  - Retrieve event information with eventId=eventid_123.
   description_notes: null
-- query: get get contact details
+- query: Get details for contact with contactId=contactid_123.
   expected_tool: outlook_get_contact
   category: read
   variations:
-  - show me the get contact
-  - what is this get contact about
+  - Show me this contact with contactId=contactid_123.
+  - Retrieve contact information with contactId=contactid_123.
   description_notes: null
-- query: create a new create event
+- query: Create a new message with toRecipients=torecipients_value and subject=subject_value.
+  expected_tool: outlook_send_message
+  category: create
+  variations:
+  - Add a message with toRecipients=torecipients_value and subject=subject_value.
+  - Make a message with toRecipients=torecipients_value and subject=subject_value.
+  description_notes: null
+- query: Create a new event with subject=subject_value and start=start_value.
   expected_tool: outlook_create_event
   category: create
   variations:
-  - add a create event
-  - make a new create event
+  - Add a event with subject=subject_value and start=start_value.
+  - Make a event with subject=subject_value and start=start_value.
   description_notes: null
-- query: delete a delete message
+- query: Delete this message with messageId=messageid_123.
   expected_tool: outlook_delete_message
   category: delete
   variations:
-  - remove a delete message
-  - erase a delete message
+  - Remove the message with messageId=messageid_123.
+  - Archive this message with messageId=messageid_123.
   description_notes: null

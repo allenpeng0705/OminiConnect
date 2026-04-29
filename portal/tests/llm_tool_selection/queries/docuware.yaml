@@ -1,54 +1,75 @@
 # Docuware Tool Selection Queries
-# Auto-generated from registry
+# Auto-generated from registry (realistic mode)
 
 provider: docuware
 queries:
-- query: list all list cabinetss
+- query: List my cabinets.
   expected_tool: docuware_list_cabinets
   category: list
   variations:
-  - show my list cabinetss
-  - find list cabinetss
+  - Show all cabinets.
+  - What cabinets do I have.
   description_notes: null
-- query: list all list documentss
+- query: List my documents.
   expected_tool: docuware_list_documents
   category: list
   variations:
-  - show my list documentss
-  - find list documentss
+  - Show all documents.
+  - What documents do I have.
   description_notes: null
-- query: list all search documentss
-  expected_tool: docuware_search_documents
+- query: List my folders.
+  expected_tool: docuware_list_folders
   category: list
   variations:
-  - show my search documentss
-  - find search documentss
+  - Show all folders.
+  - What folders do I have.
   description_notes: null
-- query: get get cabinet details
+- query: List my indexes.
+  expected_tool: docuware_list_indexes
+  category: list
+  variations:
+  - Show all indexes.
+  - What indexes do I have.
+  description_notes: null
+- query: Get details for cabinet with cabinet_id=cabinet_id_123.
   expected_tool: docuware_get_cabinet
   category: read
   variations:
-  - show me the get cabinet
-  - what is this get cabinet about
+  - Show me this cabinet with cabinet_id=cabinet_id_123.
+  - Retrieve cabinet information with cabinet_id=cabinet_id_123.
   description_notes: null
-- query: get get document details
+- query: Get details for document with cabinet_id=cabinet_id_123 and document_id=document_id_123.
   expected_tool: docuware_get_document
   category: read
   variations:
-  - show me the get document
-  - what is this get document about
+  - Show me this document with cabinet_id=cabinet_id_123 and document_id=document_id_123.
+  - Retrieve document information with cabinet_id=cabinet_id_123 and document_id=document_id_123.
   description_notes: null
-- query: get get folder details
+- query: Get details for folder with cabinet_id=cabinet_id_123 and folder_id=folder_id_123.
   expected_tool: docuware_get_folder
   category: read
   variations:
-  - show me the get folder
-  - what is this get folder about
+  - Show me this folder with cabinet_id=cabinet_id_123 and folder_id=folder_id_123.
+  - Retrieve folder information with cabinet_id=cabinet_id_123 and folder_id=folder_id_123.
   description_notes: null
-- query: create a new create document
+- query: Get details for user.
+  expected_tool: docuware_get_user
+  category: read
+  variations:
+  - Show me this user.
+  - Retrieve user information.
+  description_notes: null
+- query: Create a new document with cabinet_id=cabinet_id_123 and file_name=sample-name.
   expected_tool: docuware_create_document
   category: create
   variations:
-  - add a create document
-  - make a new create document
+  - Add a document with cabinet_id=cabinet_id_123 and file_name=sample-name.
+  - Make a document with cabinet_id=cabinet_id_123 and file_name=sample-name.
+  description_notes: null
+- query: Search documents with cabinet_id=cabinet_id_123 and query=status:open.
+  expected_tool: docuware_search_documents
+  category: search
+  variations:
+  - Find documents matching criteria with cabinet_id=cabinet_id_123 and query=status:open.
+  - Look up documents with cabinet_id=cabinet_id_123 and query=status:open.
   description_notes: null
