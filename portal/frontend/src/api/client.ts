@@ -72,7 +72,20 @@ export async function signup(email: string, password: string, name?: string): Pr
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(text || 'Signup failed');
+    // If the error response is HTML (e.g., from a proxy/gateway error page), show a generic message
+    if (text.trim().startsWith('<') || text.includes('DOCTYPE')) {
+      throw new Error('Service error — please try again in a moment.');
+    }
+    // Try to parse as JSON for structured error messages
+    try {
+      const json = JSON.parse(text);
+      throw new Error(json.error || json.message || text);
+    } catch {
+      if (text && !text.startsWith('<')) {
+        throw new Error(text);
+      }
+      throw new Error('Signup failed');
+    }
   }
 }
 
