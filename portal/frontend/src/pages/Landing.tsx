@@ -301,10 +301,7 @@ print(result.body)`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`# Natural language → tool execution
-resp = client.llm.execute(
-    "List my GitHub repos",
-    platform="github"
-)
+resp = client.llm.execute("List my GitHub repos")
 print(resp.result)`}</pre>
             </div>
           </div>
@@ -347,10 +344,7 @@ console.log(result.body);`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
-const resp = await client.llm.execute(
-    'List my GitHub repos',
-    'github'
-);
+const resp = await client.llm.execute('List my GitHub repos');
 console.log(resp.result);`}</pre>
             </div>
           </div>
@@ -393,7 +387,7 @@ fmt.Println(result.Body)`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
-resp, _ := client.LLM.Execute("List my GitHub repos", "github")
+resp, _ := client.LLM.Execute("List my repositories", nil)
 fmt.Println(resp.Result)`}</pre>
             </div>
           </div>
@@ -436,10 +430,7 @@ print(result.body)`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
-let resp = try await client.llm.execute(
-    query: "List my GitHub repos",
-    platform: "github"
-)
+let resp = try await client.llm.execute(query: "List my GitHub repos")
 print(resp.result)`}</pre>
             </div>
           </div>
@@ -482,10 +473,7 @@ print(result.body);`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
-final resp = await client.llm.execute(
-    'List my GitHub repos',
-    platform: 'github',
-);
+final resp = await client.llm.execute('List my GitHub repos');
 print(resp.result);`}</pre>
             </div>
           </div>
@@ -528,10 +516,7 @@ println!("{:?}", result.body);`}</pre>
             <div>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
               <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
-let resp = client.llm().execute(
-    "List my GitHub repos",
-    Some("github"),
-).await?;
+let resp = client.llm().execute("List my repositories", None).await?;
 println!("{:?}", resp.result);`}</pre>
             </div>
           </div>
