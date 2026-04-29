@@ -531,6 +531,50 @@ export default function ConnectorConfig() {
         {connected && <span style={{ marginLeft: 'auto', padding: '0.125rem 0.5rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 500, background: '#dcfce7', color: '#166534' }}>Connected</span>}
       </header>
 
+      {connected && (
+        <div style={{ background: '#f0fdf4', borderBottom: '1px solid #bbf7d0', padding: '1rem 2rem' }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#166534', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Connection Info
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+              <div>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '0.125rem' }}>Auth Mode</div>
+                <div style={{ fontSize: '0.8rem', color: '#1f2937' }}>{catalogRowForConnector?.auth_mode || (isGitHubPatPlatform ? 'API_KEY' : 'OAuth2')}</div>
+              </div>
+              {providerDocUrl && (
+                <div>
+                  <div style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '0.125rem' }}>Integration Guide</div>
+                  <a href={providerDocUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', color: '#2563eb', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    View docs ↗
+                  </a>
+                </div>
+              )}
+            </div>
+            {catalogRowForConnector?.available_scopes && catalogRowForConnector!.available_scopes!.length > 0 && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '0.25rem' }}>Available Scopes</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                  {catalogRowForConnector!.available_scopes!.map(scope => (
+                    <span key={scope} style={{ fontSize: '0.7rem', padding: '0.125rem 0.375rem', background: '#dcfce7', color: '#166534', borderRadius: '4px' }}>{scope}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {scopes.trim() && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <div style={{ fontSize: '0.7rem', color: '#6b7280', marginBottom: '0.25rem' }}>Configured Scopes</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+                  {scopes.split(' ').filter(Boolean).map(scope => (
+                    <span key={scope} style={{ fontSize: '0.7rem', padding: '0.125rem 0.375rem', background: '#dbeafe', color: '#1e40af', borderRadius: '4px' }}>{scope}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <main style={{ padding: '2rem', maxWidth: '600px' }}>
         <form onSubmit={handleFormSubmit} style={{ background: 'white', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
           <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', color: '#333' }}>

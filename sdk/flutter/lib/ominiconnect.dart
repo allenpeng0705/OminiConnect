@@ -3,6 +3,7 @@ library ominiconnect;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+part 'agents_manager.dart';
 part 'llm_manager.dart';
 
 /// Thrown for all OminiConnect errors.
@@ -253,6 +254,7 @@ class OminiConnect {
   late final ToolsManager tools;
   late final ApiKeysManager apiKeys;
   late final LlmManager llm;
+  late final AgentsManager agents;
 
   OminiConnect({
     required this.apiKey,
@@ -264,6 +266,7 @@ class OminiConnect {
     tools = ToolsManager(this, trimmedBase);
     apiKeys = ApiKeysManager(this, trimmedBase);
     llm = LlmManager(this, trimmedBase);
+    agents = AgentsManager(this, trimmedBase);
   }
 
   Map<String, String> get _headers => {

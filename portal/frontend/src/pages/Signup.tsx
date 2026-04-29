@@ -23,7 +23,7 @@ export default function Signup() {
     setSaving(true);
     try {
       await signup(email, password, name || undefined);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed');
     } finally {

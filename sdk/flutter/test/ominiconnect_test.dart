@@ -230,4 +230,101 @@ void main() {
       );
     });
   });
+
+  group('LlmManager', () {
+    test('execute sends query and parses response', () async {
+      final mockClient = MockClient((req) async {
+        expect(req.url.path, '/api/llm');
+        expect(req.method, 'POST');
+        final body = jsonDecode(req.body);
+        expect(body['query'], 'list my github repos');
+        return http.Response(
+          jsonEncode({
+            'ok': true,
+            'tool': 'github_list_repos',
+            'tool_name': 'List Repositories',
+            'explanation': 'Found matching tool for listing GitHub repositories',
+            'result': [{'name': 'my-repo'}],
+          }),
+          200,
+        );
+      });
+
+      final client = OminiConnect(apiKey: 'test-key', httpClient: mockClient);
+      final result = await client.llm.execute('list my github repos');
+      expect(result.ok, true);
+      expect(result.tool, 'github_list_repos');
+      expect(result.explanation, contains('Found matching tool'));
+    });
+
+    test('execute with platform filter', () async {
+      final mockClient = MockClient((req) async {
+        final body = jsonDecode(req.body);
+        expect(body['platform'], 'github');
+        return http.Response(
+          jsonEncode({
+            'ok': true,
+            'tool': 'github_list_repos',
+            'candidates': [
+              {
+                'tool': 'github_list_repos',
+                'name': 'List Repositories',
+                'match_reason': 'Matches query to list repositories',
+              }
+            ],
+          }),
+          200,
+        );
+      });
+
+      final client = OminiConnect(apiKey: 'test-key', httpClient: mockClient);
+      final result = await client.llm.execute('list repos', platform: 'github');
+      expect(result.ok, true);
+      expect(result.candidates?.first.tool, 'github_list_repos');
+    });
+
+    test('listAvailableTools returns platform tools', () async {
+      final mockClient = MockClient((req) async {
+        expect(req.url.path, '/api/llm/tools');
+        expect(req.url.queryParameters['platform'], 'github');
+        return http.Response(
+          jsonEncode({
+            'platforms': {
+              'github': {
+                'connected': true,
+                'tools': [
+                  {
+                    'slug': 'github_list_repos',
+                    'name': 'List Repositories',
+                    'description': 'List all repositories',
+                    'example_queries': ['list my repos', 'show repositories'],
+                    'scopes': ['repo'],
+                    'scope_satisfied': 'yes',
+                  }
+                ],
+              }
+            },
+          }),
+          200,
+        );
+      });
+
+      final client = OminiConnect(apiKey: 'test-key', httpClient: mockClient);
+      final result = await client.llm.listAvailableTools(platform: 'github');
+      expect(result.platforms['github']?.connected, true);
+      expect(result.platforms['github']?.tools?.first.slug, 'github_list_repos');
+    });
+
+    test('execute throws AuthException on 401', () async {
+      final mockClient = MockClient((req) async {
+        return http.Response('{"error": "invalid key"}', 401);
+      });
+
+      final client = OminiConnect(apiKey: 'test-key', httpClient: mockClient);
+      expect(
+        () => client.llm.execute('test'),
+        throwsA(isA<AuthException>()),
+      );
+    });
+  });
 }

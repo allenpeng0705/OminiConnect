@@ -16,5 +16,10 @@ let package = Package(
             dependencies: [],
             path: "Sources/OminiConnect"
         ),
+        .testTarget(
+            name: "OminiConnectTests",
+            dependencies: ["OminiConnect"],
+            path: "Tests"
+        ),
     ]
 )

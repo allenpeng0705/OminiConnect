@@ -8,7 +8,7 @@
 //		"fmt"
 //		"log"
 //
-//		"github.com/ominiconnect/go-sdk/ominiconnect"
+//		"github.com/allenpeng0705/OminiConnect/sdk/go/ominiconnect"
 //	)
 //
 //	func main() {

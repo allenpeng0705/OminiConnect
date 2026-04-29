@@ -1,4 +1,4 @@
-module github.com/ominiconnect/go-sdk/ominiconnect
+module github.com/allenpeng0705/OminiConnect/sdk/go/ominiconnect
 
 go 1.21
 

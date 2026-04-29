@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getMe } from './api/client';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -34,13 +35,38 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return authenticated ? <>{children}</> : <Navigate to="/auth/login" replace />;
 }
 
+function AuthRoute({ children }: { children: React.ReactNode }) {
+  const [checking, setChecking] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    getMe().then(me => {
+      setAuthenticated(!!me);
+      setChecking(false);
+    }).catch(() => {
+      setAuthenticated(false);
+      setChecking(false);
+    });
+  }, []);
+
+  if (checking) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '0.95rem' }}>
+        Checking session…
+      </div>
+    );
+  }
+  return authenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/signup" element={<Signup />} />
-        <Route path="/" element={
+        <Route path="/" element={<Landing />} />
+        <Route path="/auth/login" element={<AuthRoute><Login /></AuthRoute>} />
+        <Route path="/auth/signup" element={<AuthRoute><Signup /></AuthRoute>} />
+        <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>

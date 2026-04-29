@@ -132,6 +132,26 @@ export interface LlmToolsResponse {
   platforms: Record<string, PlatformTools>;
 }
 
+// ─── Agent types ─────────────────────────────────────────────────────────────────
+
+export interface Agent {
+  id: string;
+  name: string;
+  description?: string;
+  api_key?: string; // returned only on create
+  created_at: string;
+  enabled: boolean;
+}
+
+export interface AgentCreated {
+  id: string;
+  name: string;
+  description?: string;
+  api_key: string; // shown once only
+  created_at: string;
+  enabled: boolean;
+}
+
 // ─── Main client ───────────────────────────────────────────────────────────────
 
 export interface OminiConnectOptions {
@@ -157,6 +177,9 @@ export class OminiConnect {
   /** LLM manager — query LLM with tool routing and list available tools. */
   readonly llm: LlmManager;
 
+  /** Agents manager — register, list, get, delete, and deactivate AI agents. */
+  readonly agents: AgentsManager;
+
   constructor(options: OminiConnectOptions) {
     this.apiKey = options.apiKey;
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
@@ -166,6 +189,7 @@ export class OminiConnect {
     this.apiKeys = new ApiKeysManager(this);
     this.tools = new ToolsManager(this);
     this.llm = new LlmManager(this);
+    this.agents = new AgentsManager(this);
   }
 
   // ─── HTTP layer ────────────────────────────────────────────────────────────
@@ -299,7 +323,45 @@ export class ApiKeysManager {
   }
 }
 
-// ─── Tools ───────────────────────────────────────────────────────────────────
+// ─── Agents ───────────────────────────────────────────────────────────────────
+
+export class AgentsManager {
+  constructor(private client: OminiConnect) {}
+
+  /**
+   * Register a new agent and get its API key.
+   * The raw API key is returned ONLY here — store it securely.
+   */
+  register(name: string, description?: string): Promise<AgentCreated> {
+    const body: Record<string, unknown> = {name};
+    if (description) body.description = description;
+    return this.client.post<AgentCreated>("/api/agents", body);
+  }
+
+  /** List all agents for the authenticated user. */
+  list(): Promise<Agent[]> {
+    return this.client.get<Agent[]>("/api/agents");
+  }
+
+  /** Get a specific agent by ID. */
+  async get(agentId: string): Promise<Agent> {
+    try {
+      return await this.client.get<Agent>(`/api/agents/${agentId}`);
+    } catch {
+      throw new ConnectorNotFoundError(`Agent '${agentId}' not found`);
+    }
+  }
+
+  /** Delete an agent and revoke its API key. */
+  delete(agentId: string): Promise<{ok: boolean}> {
+    return this.client.delete<{ok: boolean}>(`/api/agents/${agentId}`);
+  }
+
+  /** Deactivate an agent (preserves audit trail). */
+  deactivate(agentId: string): Promise<Agent> {
+    return this.client.post<Agent>(`/api/agents/${agentId}/deactivate`, undefined);
+  }
+}
 
 export class ToolsManager {
   constructor(private client: OminiConnect) {}
@@ -336,12 +398,14 @@ export class ToolsManager {
   execute(
     toolSlug: string,
     args?: Record<string, unknown>,
+    platform?: string,
     callbackUrl?: string,
   ): Promise<ToolExecuteResult> {
     const body: Record<string, unknown> = {
       tool_slug: toolSlug,
       arguments: args ?? {},
     };
+    if (platform) body.platform = platform;
     if (callbackUrl) body.callback_url = callbackUrl;
     return this.client.post<ToolExecuteResult>("/api/tools/execute", body);
   }

@@ -223,6 +223,7 @@ public class OminiConnect {
     public var tools: ToolsManager!
     public var apiKeys: ApiKeysManager!
     public var llm: LlmManager!
+    public var agents: AgentsManager!
 
     public init(apiKey: String, baseURL: String = "http://localhost:9000") {
         self.apiKey = apiKey
@@ -237,12 +238,14 @@ public class OminiConnect {
         self.tools = nil
         self.apiKeys = nil
         self.llm = nil
+        self.agents = nil
 
         // Now assign properly (self is fully initialized now)
         self.connectors = ConnectorsManager(client: self)
         self.tools = ToolsManager(client: self)
         self.apiKeys = ApiKeysManager(client: self)
         self.llm = LlmManager(client: self)
+        self.agents = AgentsManager(client: self)
     }
 
     // ─── HTTP layer ───────────────────────────────────────────────────────────

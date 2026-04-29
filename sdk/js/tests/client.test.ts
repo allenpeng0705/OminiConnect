@@ -188,7 +188,7 @@ describe('client.tools', () => {
     it('includes callback_url when provided', async () => {
       mockResponse({ ok: true });
       const client = new OminiConnect({ apiKey: 'test-key' });
-      await client.tools.execute('github_list_repos', {}, 'https://callback.example.com');
+      await client.tools.execute('github_list_repos', {}, undefined, 'https://callback.example.com');
 
       expect(fetchMock).toHaveBeenCalledWith(
         'http://localhost:9000/api/tools/execute',
