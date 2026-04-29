@@ -243,25 +243,343 @@ export default function Landing() {
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
           <h2 style={{ fontSize: '2rem', fontWeight: 700, textAlign: 'center', marginBottom: '1rem' }}>SDKs & REST API</h2>
           <p style={{ color: '#71717a', textAlign: 'center', maxWidth: '640px', margin: '0 auto 3.5rem', fontSize: '1.05rem' }}>Official libraries for popular languages — plus a full REST API for any platform.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', marginBottom: '3rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem' }}>
             {[
-              { name: 'Python', icon: '🐍', install: 'pip install ominiconnect' },
-              { name: 'JavaScript', icon: '📜', install: 'npm install @ominiconnect/sdk' },
-              { name: 'Go', icon: '🔵', install: 'go get github.com/allenpeng0705/OminiConnect/...' },
-              { name: 'Swift', icon: '🍎', install: 'Swift Package Manager' },
-              { name: 'Flutter', icon: '🦋', install: 'flutter pub add ominiconnect' },
-              { name: 'Rust', icon: '🦀', install: 'cargo add ominiconnect' },
-            ].map(({ name, icon, install }) => (
-              <div key={name} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.25rem', textAlign: 'center' }}>
+              { id: 'sdk-python', name: 'Python', icon: '🐍', color: '#3b82f6' },
+              { id: 'sdk-javascript', name: 'JavaScript', icon: '📜', color: '#f59e0b' },
+              { id: 'sdk-go', name: 'Go', icon: '🔵', color: '#06b6d4' },
+              { id: 'sdk-swift', name: 'Swift', icon: '🍎', color: '#ef4444' },
+              { id: 'sdk-flutter', name: 'Flutter', icon: '🦋', color: '#10b981' },
+              { id: 'sdk-rust', name: 'Rust', icon: '🦀', color: '#f97316' },
+              { id: 'sdk-rest', name: 'REST API', icon: '🌐', color: '#8b5cf6' },
+            ].map(({ id, name, icon, color }) => (
+              <a key={id} href={`#${id}`} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.25rem', textAlign: 'center', textDecoration: 'none', display: 'block', transition: 'border-color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = color)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{icon}</div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.5rem' }}>{name}</h4>
-                <p style={{ color: '#71717a', fontSize: '0.7rem', margin: 0, fontFamily: 'ui-monospace, monospace' }}>{install}</p>
-              </div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 700, margin: 0, color: '#fff' }}>{name}</h4>
+              </a>
             ))}
           </div>
-          <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: '12px', padding: '1.5rem', textAlign: 'center' }}>
-            <p style={{ color: '#a1a1aa', fontSize: '0.9rem', margin: '0 0 0.75rem' }}>Prefer raw HTTP? The REST API works with any language or tool.</p>
-            <code style={{ color: '#a5b4fc', fontSize: '0.8rem' }}>https://api.ominiconnect.com/v1</code>
+        </div>
+      </section>
+
+      {/* Python SDK */}
+      <section id="sdk-python" style={{ padding: '5rem 0' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🐍</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Python SDK</h2>
+            <code style={{ background: 'rgba(59,130,246,0.15)', color: '#93c5fd', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>pip install ominiconnect</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`from ominiconnect import OminiConnect
+
+client = OminiConnect(api_key="sk_...")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`# List all connected platforms
+connectors = client.connectors.list()
+print(connectors)
+
+# Delete a connection
+client.connectors.delete("github")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`# Execute a tool by slug
+result = client.tools.execute(
+    "github_list_repos",
+    platform="github",
+    arguments={"owner": "test", "limit": 10}
+)
+print(result.body)`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`# Natural language → tool execution
+resp = client.llm.execute(
+    "List my GitHub repos",
+    platform="github"
+)
+print(resp.result)`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* JavaScript SDK */}
+      <section id="sdk-javascript" style={{ padding: '5rem 0', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>📜</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>JavaScript / TypeScript SDK</h2>
+            <code style={{ background: 'rgba(245,158,11,0.15)', color: '#fcd34d', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>npm install @ominiconnect/sdk</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`import { OminiConnect } from '@ominiconnect/sdk';
+
+const client = new OminiConnect({ apiKey: 'sk_...' });`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// List all connected platforms
+const connectors = await client.connectors.list();
+
+// Delete a connection
+await client.connectors.delete('github');`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Execute a tool by slug
+const result = await client.tools.execute(
+    'github_list_repos',
+    { owner: 'test', limit: 10 },
+    'github'
+);
+console.log(result.body);`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
+const resp = await client.llm.execute(
+    'List my GitHub repos',
+    'github'
+);
+console.log(resp.result);`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Go SDK */}
+      <section id="sdk-go" style={{ padding: '5rem 0' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🔵</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Go SDK</h2>
+            <code style={{ background: 'rgba(6,182,212,0.15)', color: '#67e8f9', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>go get github.com/allenpeng0705/OminiConnect/sdk/go/ominiconnect</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`import "github.com/allenpeng0705/OminiConnect/sdk/go/ominiconnect"
+
+client := ominiconnect.New("sk_...")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// List all connected platforms
+connectors, _ := client.Connectors.List()
+
+// Delete a connection
+client.Connectors.Delete("github")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Execute a tool by slug
+result, _ := client.Tools.Execute(
+    "github_list_repos",
+    "github",
+    map[string]any{"owner": "test", "limit": 10},
+)
+fmt.Println(result.Body)`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
+resp, _ := client.LLM.Execute("List my GitHub repos", "github")
+fmt.Println(resp.Result)`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Swift SDK */}
+      <section id="sdk-swift" style={{ padding: '5rem 0', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🍎</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Swift SDK</h2>
+            <code style={{ background: 'rgba(239,68,68,0.15)', color: '#fca5a5', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>Swift Package Manager</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`import OminiConnect
+
+let client = OminiConnect(apiKey: "sk_...")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// List all connected platforms
+let connectors = try await client.connectors.list()
+
+// Delete a connection
+try await client.connectors.delete(platform: "github")`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Execute a tool by slug
+let result = try await client.tools.execute(
+    toolSlug: "github_list_repos",
+    platform: "github",
+    arguments: ["owner": "test", "limit": 10]
+)
+print(result.body)`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
+let resp = try await client.llm.execute(
+    query: "List my GitHub repos",
+    platform: "github"
+)
+print(resp.result)`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Flutter SDK */}
+      <section id="sdk-flutter" style={{ padding: '5rem 0' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🦋</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Flutter SDK</h2>
+            <code style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>flutter pub add ominiconnect</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`import 'package:ominiconnect/ominiconnect.dart';
+
+final client = OminiConnect(apiKey: 'sk_...');`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// List all connected platforms
+final connectors = await client.connectors.list();
+
+// Delete a connection
+await client.connectors.delete('github');`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Execute a tool by slug
+final result = await client.tools.execute(
+    'github_list_repos',
+    platform: 'github',
+    arguments: {'owner': 'test', 'limit': 10},
+);
+print(result.body);`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
+final resp = await client.llm.execute(
+    'List my GitHub repos',
+    platform: 'github',
+);
+print(resp.result);`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Rust SDK */}
+      <section id="sdk-rust" style={{ padding: '5rem 0', background: 'rgba(255,255,255,0.02)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🦀</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>Rust SDK</h2>
+            <code style={{ background: 'rgba(249,115,22,0.15)', color: '#fdba74', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>cargo add ominiconnect</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Install & Setup</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`use ominiconnect::OminiConnect;
+
+let client = OminiConnect::new("sk_...");`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// List all connected platforms
+let connectors = client.connectors().list().await?;
+
+// Delete a connection
+client.connectors().delete("github").await?;`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Execute a tool by slug
+let result = client.tools().execute(
+    "github_list_repos",
+    "github",
+    &[("owner", "test"), ("limit", "10")],
+).await?;
+println!("{:?}", result.body);`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`// Natural language → tool execution
+let resp = client.llm().execute(
+    "List my GitHub repos",
+    Some("github"),
+).await?;
+println!("{:?}", resp.result);`}</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* REST API */}
+      <section id="sdk-rest" style={{ padding: '5rem 0' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌐</span>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 700 }}>REST API</h2>
+            <code style={{ background: 'rgba(139,92,246,0.15)', color: '#c4b5fd', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem' }}>https://api.ominiconnect.com/v1</code>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Base URL & Auth</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`Base URL: https://api.ominiconnect.com/v1
+Auth: Bearer token in Authorization header
+
+Authorization: Bearer sk_...`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>List connected platforms</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`GET /v1/api/connectors
+
+# Response
+[{"platform":"github","enabled":true,"scopes":[...]}]`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>Execute a tool</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`POST /v1/api/tools/execute
+{
+  "tool_slug": "github_list_repos",
+  "platform": "github",
+  "arguments": {"owner": "test", "limit": 10}
+}`}</pre>
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#a1a1aa' }}>AI delegation</h3>
+              <pre style={{ margin: 0, padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', fontSize: '0.8rem', overflow: 'auto', color: '#e4e4e7', fontFamily: 'ui-monospace, monospace' }}>{`POST /v1/api/llm
+{
+  "query": "List my GitHub repos",
+  "platform": "github"
+}
+
+# Response: {"ok":true,"result":...,"tool_used":"..."}`}</pre>
+            </div>
           </div>
         </div>
       </section>
