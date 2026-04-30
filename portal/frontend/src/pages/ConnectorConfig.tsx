@@ -337,22 +337,23 @@ export default function ConnectorConfig() {
    */
   async function openNangoConnectAndWaitForConnection(platform: string): Promise<void> {
     const { connect_url } = await createNangoConnectSession(platform);
-    const popup = window.open(connect_url, '_blank', 'noopener,noreferrer');
+    // Use a named window so window.close() from the callback page can close this popup.
+    const popup = window.open(connect_url, 'nango_connect', 'width=800,height=600,scrollbars=yes,resizable=yes');
     if (!popup) {
       throw new Error('Popup was blocked. Allow popups for this site and try again.');
     }
 
-    // Poll until popup closes
+    // Poll until popup closes (Nango's callback page calls window.close() on success)
     await new Promise<void>((resolve) => {
       const check = setInterval(() => {
         if (popup.closed) {
           clearInterval(check);
           resolve();
         }
-      }, 2000);
+      }, 1000);
     });
 
-    // Popup closed — find the new connection
+    // Popup closed — find the new connection and save the connection_id to the connector config
     const connections = await listNangoConnections(platform);
     const connector = await getConnectors().then(list => list.find(c => c.platform === platform));
     const providerKey = connector?.provider_key || platform;
@@ -366,6 +367,7 @@ export default function ConnectorConfig() {
 
     if (latest) {
       await persistConnectorConfig(latest.connection_id);
+      await loadStatus();
     }
   }
 
@@ -379,7 +381,8 @@ export default function ConnectorConfig() {
    */
   async function handleConnect() {
     if (!platform) return;
-    console.log('DEBUG handleConnect ENTRY', { engine, isOAuth2, isApiKeyStyle, isBasicStyle, clientIdTrimmed: clientId.trim(), providerKey, providerSlug });
+    // Guard: prevent double-invocation while async operations are in flight
+    if (saving || testing) return;
     if (!isOAuth2) {
       // BILL and TBA always go through Nango Connect popup (complex auth flows).
       if (engine === 'nango' && (isBILL || isTBA)) {
@@ -401,7 +404,6 @@ export default function ConnectorConfig() {
         // Build credentials object for API_KEY, BASIC, OAUTH2_CC, or SIGNATURE
         const auth_mode = isApiKeyStyle ? 'API_KEY' : isBasicStyle ? 'BASIC' : isOAuth2CC ? 'OAUTH2_CC' : 'SIGNATURE';
         try {
-          console.log('DEBUG: creating Nango connection directly with auth_mode=', auth_mode);
           const result = await createNangoConnectionDirect({
             platform,
             auth_mode,
@@ -409,7 +411,6 @@ export default function ConnectorConfig() {
             username: (isBasicStyle || isSignature) ? clientId.trim() : undefined,
             password: (isBasicStyle || isOAuth2CC || isSignature) ? clientSecret.trim() : undefined,
           });
-          console.log('DEBUG: Nango connection created, connection_id=', result.connection_id);
           const ok = await persistConnectorConfig(result.connection_id);
           if (!ok) return;
           navigate('/');
@@ -421,7 +422,6 @@ export default function ConnectorConfig() {
         const ok = await persistConnectorConfig();
         if (!ok) return;
         if (engine === 'nango' && !clientId.trim()) {
-          console.log('DEBUG BRANCH: open Nango Connect UI — engine=nango, no credentials, providerKey=', providerKey);
           try {
             await openNangoConnectAndWaitForConnection(platform);
           } catch (err) {
@@ -430,7 +430,7 @@ export default function ConnectorConfig() {
           navigate('/');
           return;
         } else {
-          console.log('DEBUG BRANCH: skip Nango Connect — engine=nango but credentials provided, saved via persistConnectorConfig, providerKey=', providerKey);
+          // engine=nango with credentials provided — saved via persistConnectorConfig above
         }
         navigate('/');
       }
@@ -444,7 +444,8 @@ export default function ConnectorConfig() {
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to open connection wizard');
       }
-      navigate('/');
+      // Stay on the config page after OAuth completes; state already reflects connected status
+      return;
     } else {
       window.location.href = `/oauth/${encodeURIComponent(platform)}`;
     }
