@@ -247,14 +247,19 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "OminiConnect": {
-      "url": "http://localhost:9000/api/mcp",
-      "headers": {
-        "Authorization": "Bearer sk-xxxxx"
-      }
+      "command": "curl",
+      "args": [
+        "-X", "POST", "http://localhost:9000/api/mcp",
+        "-H", "Authorization: Bearer sk-xxxxx",
+        "-H", "Content-Type: application/json",
+        "-d", "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\",\"params\":{}}"
+      ]
     }
   }
 }
 ```
+
+For production, use an MCP client library instead of curl.
 
 ### Cursor
 
@@ -296,13 +301,6 @@ All tool executions are logged with:
 
 ## Platform Coverage
 
-OminiConnect MCP exposes tools for all connected platforms. Current tool coverage:
+OminiConnect MCP exposes tools for all connected platforms. Use `tools/list` to discover available tools for each platform.
 
-| Platform | Tools Available |
-|----------|----------------|
-| GitHub | `github_list_repos`, `github_get_repo`, `github_create_issue`, `github_list_issues`, `github_create_pull_request`, `github_search_code` |
-| Slack | `slack_post_message`, `slack_list_channels`, `slack_get_user`, `slack_upload_file` |
-| Notion | `notion_search`, `notion_get_page`, `notion_create_page`, `notion_query_database` |
-| Google | `google_list_emails`, `google_send_email`, `google_list_events`, `google_create_event` |
-
-Tools are defined in `tools/registry/` and can be extended by adding YAML definitions.
+Tools are defined in `tools/registry/` (YAML) and can be extended by adding new tool definitions.

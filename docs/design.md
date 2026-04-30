@@ -1,5 +1,10 @@
 # OminiConnect Design Document
 
+> **⚠️ Historical — Pre-Nango Integration**
+> This document is the initial design from 2026-04-20 and predates the Nango integration.
+> Many sections describe approaches that were later revised. The current architecture
+> uses Nango as the connector engine for global providers.
+
 **Date:** 2026-04-20
 **Status:** Draft
 **Parent Project:** Panda (https://github.com/allenpeng0705/panda)

@@ -1,5 +1,10 @@
 # OminiConnect Connectors
 
+> **⚠️ Historical — Pre-Nango Integration**
+> This document describes the original connector spec before the current Nango-based architecture was implemented.
+> Built-in providers (feishu, dingtalk, wechatwork, qqmail, maton) are defined in `frontend/src/lib/builtinPlatforms.ts`.
+> Global connectors now use Nango as the execution engine (`engine=nango`).
+
 This document defines the connector spec for OminiConnect and platform notes for currently supported global connectors.
 
 ## Connector Spec (v1)
