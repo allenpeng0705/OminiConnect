@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OminiConnect — 一个 API，让 AI 连接 700+ 服务</title>
+  <meta name="description" content="OminiConnect 为 AI 代理和自动化工作流提供统一访问 700+ API 的接口。一次连接，随时使用。">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231E1B4B'/%3E%3Cstop offset='100%25' style='stop-color:%23312E81'/%3E%3C/linearGradient%3E%3ClinearGradient id='nodeGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2306B6D4'/%3E%3Cstop offset='100%25' style='stop-color:%233B82F6'/%3E%3C/linearGradient%3E%3ClinearGradient id='gatewayGrad' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B5CF6'/%3E%3Cstop offset='100%25' style='stop-color:%236366F1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='256' height='256' rx='48' fill='url(%23bg)'/%3E%3Cg transform='translate(128,128)'%3E%3Ccircle cx='0' cy='0' r='90' fill='none' stroke='url(%23gatewayGrad)' stroke-width='8' stroke-dasharray='40 12'/%3E%3Ccircle cx='0' cy='0' r='60' fill='none' stroke='url(%23nodeGrad)' stroke-width='6'/%3E%3Cg fill='url(%23nodeGrad)'%3E%3Cpolygon points='0,-95 -12,-80 12,-80'/%3E%3Cpolygon points='95,0 80,-12 80,12'/%3E%3Cpolygon points='0,95 -12,80 12,80'/%3E%3Cpolygon points='-95,0 -80,-12 -80,12'/%3E%3C/g%3E%3Ccircle cx='0' cy='0' r='18' fill='url(%23nodeGrad)'/%3E%3Ccircle cx='0' cy='0' r='10' fill='%231E1B4B'/%3E%3Ccircle cx='0' cy='0' r='6' fill='url(%23nodeGrad)'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='-35' cy='-30' r='8'/%3E%3Ccircle cx='35' cy='-30' r='8'/%3E%3Ccircle cx='-45' cy='10' r='8'/%3E%3Ccircle cx='45' cy='10' r='8'/%3E%3Ccircle cx='-30' cy='45' r='8'/%3E%3Ccircle cx='30' cy='45' r='8'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(255,255,255,0.15);
+      --text: #fff;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      --primary: #6366f1;
+      --primary-light: rgba(99,102,241,0.15);
+      --green: #22c55e;
+      --green-bg: rgba(34,197,94,0.08);
+      --green-border: rgba(34,197,94,0.2);
+      --red: #ef4444;
+      --red-bg: rgba(239,68,68,0.08);
+      --red-border: rgba(239,68,68,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Header */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: rgba(9,9,11,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 60px;
+      display: flex;
+      align-items: center;
+    }
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .logo svg { height: 28px; }
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .lang-toggle a {
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .lang-toggle a:hover { color: var(--text); }
+    .lang-toggle a.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 9rem 0 6rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary-light);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #a5b4fc;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: #6366f1;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.03em;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.8rem 1.75rem;
+      border-radius: 10px;
+      transition: all 0.15s;
+    }
+    .btn-primary:hover { background: #5558e3; transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border-accent);
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.95rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      transition: all 0.15s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.3); }
+    .btn-outline svg { width: 16px; height: 16px; }
+
+    /* Stats bar */
+    .stats {
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+
+    /* What is */
+    .what-is {
+      padding: 5rem 0;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      line-height: 1.7;
+    }
+    .what-is-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .what-is-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+    .what-is-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .what-is-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+    .what-is-card ul {
+      list-style: none;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .what-is-card li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .what-is-card li svg {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      color: var(--green);
+    }
+
+    /* How it works */
+    .how-it-works {
+      padding: 5rem 0;
+      background: rgba(255,255,255,0.02);
+    }
+    .how-it-works .section-title { text-align: center; }
+    .how-it-works .section-subtitle { text-align: center; margin: 0 auto; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
+    .step {
+      text-align: center;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--primary);
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .step h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .step p {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Comparison */
+    .comparison {
+      padding: 5rem 0;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .comparison-card {
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    .comparison-card.bad {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+    .comparison-card.good {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+    .comparison-card .card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .comparison-card.bad .card-title { color: #fca5a5; }
+    .comparison-card.good .card-title { color: #86efac; }
+    .comparison-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .provider-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .provider-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+    .comparison-card.bad .provider-item {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.15);
+    }
+    .comparison-card.bad .provider-item .provider-icon {
+      background: rgba(239,68,68,0.25);
+      color: #fca5a5;
+    }
+    .comparison-card.good .provider-item {
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.15);
+    }
+    .comparison-card.good .provider-item .provider-icon {
+      background: rgba(34,197,94,0.2);
+      color: #86efac;
+    }
+    .provider-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .provider-item span { color: #d4d4d8; }
+    .provider-badge {
+      margin-left: auto;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+    }
+    .comparison-card.bad .provider-badge {
+      background: rgba(239,68,68,0.2);
+      color: #fca5a5;
+    }
+    .comparison-card.good .provider-badge {
+      background: rgba(34,197,94,0.2);
+      color: #86efac;
+    }
+
+    /* Four ways */
+    .four-ways {
+      padding: 5rem 0;
+      background: rgba(255,255,255,0.02);
+    }
+    .four-ways .section-title { text-align: center; }
+    .four-ways .section-subtitle { text-align: center; margin: 0 auto 3rem; }
+    .ways-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .way-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .way-card:hover { border-color: var(--border-accent); }
+    .way-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .way-card p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 0.85rem;
+    }
+    .way-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* Quick start */
+    .quick-start {
+      padding: 5rem 0;
+    }
+    .quick-start-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      align-items: start;
+    }
+    .quick-start-step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .quick-start-step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .quick-start-step h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .quick-start-step p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .code-block {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      color: #e4e4e7;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .code-block .comment { color: #6b7280; }
+    .code-block .keyword { color: #c084fc; }
+    .code-block .string { color: #86efac; }
+
+    /* Providers preview */
+    .providers-preview {
+      padding: 5rem 0;
+      background: rgba(255,255,255,0.02);
+      text-align: center;
+    }
+    .providers-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 2.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .provider-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .provider-chip:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+
+    /* CTA */
+    .cta {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.12) 100%);
+      text-align: center;
+    }
+    .cta h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .cta p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+    .cta-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .cta-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .cta-badge svg { width: 14px; height: 14px; color: var(--green); }
+
+    /* Footer */
+    footer {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .footer-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-links a svg { width: 15px; height: 15px; }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .what-is-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .ways-grid { grid-template-columns: 1fr; }
+      .quick-start-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <a href="/zh.html" class="logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' width='32' height='32'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231E1B4B'/%3E%3Cstop offset='100%25' style='stop-color:%23312E81'/%3E%3C/linearGradient%3E%3ClinearGradient id='nodeGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2306B6D4'/%3E%3Cstop offset='100%25' style='stop-color:%233B82F6'/%3E%3C/linearGradient%3E%3ClinearGradient id='gatewayGrad' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B5CF6'/%3E%3Cstop offset='100%25' style='stop-color:%236366F1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='256' height='256' rx='48' fill='url(%23bg)'/%3E%3Cg transform='translate(128,128)'%3E%3Ccircle cx='0' cy='0' r='90' fill='none' stroke='url(%23gatewayGrad)' stroke-width='8' stroke-dasharray='40 12'/%3E%3Ccircle cx='0' cy='0' r='60' fill='none' stroke='url(%23nodeGrad)' stroke-width='6'/%3E%3Cg fill='url(%23nodeGrad)'%3E%3Cpolygon points='0,-95 -12,-80 12,-80'/%3E%3Cpolygon points='95,0 80,-12 80,12'/%3E%3Cpolygon points='0,95 -12,80 12,80'/%3E%3Cpolygon points='-95,0 -80,-12 -80,12'/%3E%3C/g%3E%3Ccircle cx='0' cy='0' r='18' fill='url(%23nodeGrad)'/%3E%3Ccircle cx='0' cy='0' r='10' fill='%231E1B4B'/%3E%3Ccircle cx='0' cy='0' r='6' fill='url(%23nodeGrad)'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='-35' cy='-30' r='8'/%3E%3Ccircle cx='35' cy='-30' r='8'/%3E%3Ccircle cx='-45' cy='10' r='8'/%3E%3Ccircle cx='45' cy='10' r='8'/%3E%3Ccircle cx='-30' cy='45' r='8'/%3E%3Ccircle cx='30' cy='45' r='8'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E" alt="OminiConnect" style="height:32px;border-radius:8px" />
+      <span style="font-weight:700;font-size:1rem">OminiConnect</span>
+    </a>
+    <div class="lang-toggle">
+      <a href="/index.html">EN</a>
+      <a href="/zh.html" class="active">中文</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      基于 Nango · 700+ 服务集成
+    </div>
+    <h1><span>一个 API，</span><br><span>连接所有 AI 代理</span></h1>
+    <p>OminiConnect 为 AI 代理和自动化工作流提供统一访问 700+ API 的接口。无需为每个服务编写定制代码——一次连接，随时使用。</p>
+    <div class="hero-actions">
+      <a href="https://github.com/allenpeng0705/OminiConnect" target="_blank" rel="noopener" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.06 12.06 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="#quick-start" class="btn-outline">
+        快速开始
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num">700+</div>
+        <div class="stat-label">已集成服务商</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1</div>
+        <div class="stat-label">统一 API 接口</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">MCP</div>
+        <div class="stat-label">原生支持</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">OAuth2 · API Key · Basic</div>
+        <div class="stat-label">支持的认证方式</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What is OminiConnect -->
+<section class="what-is" id="what-is">
+  <div class="container">
+    <p class="section-label">OminiConnect 是什么</p>
+    <h2 class="section-title">让 AI 代理轻松访问<br>真实世界 API 的最简方案</h2>
+    <p class="section-subtitle">大多数 AI 项目在集成第三方服务上花费数周时间。OminiConnect 通过在 700+ 服务之上提供统一 API 层来解决这个问题——GitHub、Slack、Notion、Salesforce 等等。</p>
+
+    <div class="what-is-grid">
+      <div class="what-is-card">
+        <h3>API 代理</h3>
+        <p>通过 OminiConnect 调用任何服务商 API，使用统一接口。自动处理认证、Token 刷新和响应解析。</p>
+        <ul>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            直接 REST 调用 700+ 服务商
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            自动 OAuth Token 管理
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            跨服务商响应格式统一
+          </li>
+        </ul>
+      </div>
+      <div class="what-is-card">
+        <h3>工具注册表</h3>
+        <p>通过标准化工具架构发现每个服务商的功能。每个工具有清晰的描述、输入参数和所需 OAuth 范围。</p>
+        <ul>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            每个服务商标准化工具定义
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            执行前检查 OAuth 范围
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            兼容 MCP（模型上下文协议）
+          </li>
+        </ul>
+      </div>
+      <div class="what-is-card">
+        <h3>AI 委托</h3>
+        <p>发送自然语言请求，由 OminiConnect 的 LLM 选择合适工具、依次执行并返回最终结果。</p>
+        <ul>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            自然语言交互接口
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            自动多步骤编排
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            基于 LiteLLM，灵活切换模型
+          </li>
+        </ul>
+      </div>
+      <div class="what-is-card">
+        <h3>凭证与 Token 管理器</h3>
+        <p>在一个安全的保管库中管理 OAuth2 令牌、API 密钥和 Basic 认证凭证。令牌自动刷新——不再有凭证过期导致工作流中断。</p>
+        <ul>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            支持 OAuth2、API 密钥、Basic 认证
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            自动刷新 Token，凭证永不过期
+          </li>
+          <li>
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            基于 Nango，支持 700+ 服务商
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how-it-works">
+  <div class="container">
+    <p class="section-label">工作原理</p>
+    <h2 class="section-title">几分钟即可运行</h2>
+    <p class="section-subtitle">三步走：从零到完全连接的 AI 代理，访问 700+ API。</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>连接你的账号</h4>
+        <p>使用 OminiConnect 门户通过 OAuth 连接你的账号——GitHub、Slack、Notion，以及其他 696 个服务。一次配置，长期有效。</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>选择集成方式</h4>
+        <p>直接使用统一代理、浏览工具注册表，或发送自然语言请求。根据你的架构选择适合的方式。</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>用你熟悉的 SDK 开发</h4>
+        <p>Python、JavaScript、Go、Swift、Flutter、Rust，或者纯 REST。调用一个 API，获取任意已连接服务商的数据。</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>AI 代理对话 OminiConnect</h4>
+        <p>你的 AI 代理（Claude、Cursor、任意 LLM）通过 OminiConnect 的 MCP 端点或 REST API 发现和调用工具。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison -->
+<section class="comparison">
+  <div class="container">
+    <p class="section-label">问题所在</p>
+    <h2 class="section-title">700 个集成，还是一个 OminiConnect？</h2>
+
+    <div class="comparison-grid">
+      <div class="comparison-card bad">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#ef4444" stroke-width="1.5"/><path d="M7 7l6 6M13 7l-6 6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/></svg>
+          没有 OminiConnect
+        </div>
+        <p>每个服务商都需要独立集成：定制认证代码、限流处理、错误重试、响应解析——每家服务都不同。</p>
+        <div class="provider-list">
+          <div class="provider-item"><div class="provider-icon">G</div><span>GitHub</span><span class="provider-badge">定制</span></div>
+          <div class="provider-item"><div class="provider-icon">S</div><span>Slack</span><span class="provider-badge">定制</span></div>
+          <div class="provider-item"><div class="provider-icon">N</div><span>Notion</span><span class="provider-badge">定制</span></div>
+          <div class="provider-item"><div class="provider-icon">S</div><span>Salesforce</span><span class="provider-badge">定制</span></div>
+          <div class="provider-item"><div class="provider-icon" style="font-size:0.6rem">+696</div><span>其他服务商</span><span class="provider-badge">定制</span></div>
+        </div>
+        <p style="margin-top:1rem;margin-bottom:0;font-size:0.8rem;text-align:center">每个集成 = 上百行定制代码</p>
+      </div>
+
+      <div class="comparison-card good">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#22c55e" stroke-width="1.5"/><path d="M6 10l3 3 5-6" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          使用 OminiConnect
+        </div>
+        <p>一个 API。OminiConnect 处理认证、转发请求，在全部 700+ 服务商上返回统一格式的响应。</p>
+        <div class="provider-list">
+          <div class="provider-item"><div class="provider-icon" style="background:#6366f1;color:#fff;font-size:0.65rem">AI</div><span>你的 AI 代理</span></div>
+          <div class="provider-item" style="justify-content:center"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="color:#6366f1"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="provider-item" style="justify-content:center;background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.3)">
+            <svg width="20" height="20" viewBox="0 0 120 32" fill="none"><rect width="28" height="28" rx="7" fill="#6366f1"/><path d="M7 16h14M14 9v14" stroke="white" stroke-width="2.5" stroke-linecap="round"/><text x="36" y="22" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="white">OminiConnect</text></svg>
+          </div>
+          <div class="provider-item" style="flex-wrap:wrap;gap:0.5rem;justify-content:center">
+            <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:#86efac;font-weight:500">GitHub</span>
+            <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:#86efac;font-weight:500">Slack</span>
+            <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:#86efac;font-weight:500">Notion</span>
+            <span style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.15);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:#86efac;font-weight:500">+696</span>
+          </div>
+        </div>
+        <p style="margin-top:1rem;margin-bottom:0;font-size:0.8rem;text-align:center;color:#86efac">一个 API，700+ 集成</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Four ways to use -->
+<section class="four-ways">
+  <div class="container">
+    <p class="section-label">集成模式</p>
+    <h2 class="section-title">使用 OminiConnect 的四种方式</h2>
+    <p class="section-subtitle">选择最适合你架构的集成模式。</p>
+
+    <div class="ways-grid">
+      <div class="way-card">
+        <h4>AI 代理委托</h4>
+        <p>发送自然语言请求，OminiConnect 的 LLM 自动选择工具、执行并返回结果。完全委托——你只需专注对话。</p>
+        <span class="way-tag" style="background:rgba(99,102,241,0.15);color:#a5b4fc">完全委托</span>
+      </div>
+      <div class="way-card">
+        <h4>工具注册表 + 你的 LLM</h4>
+        <p>通过 API 浏览可用工具。你的 LLM 选择合适的工具，调用 OminiConnect 执行。你保持对 AI 的控制权。</p>
+        <span class="way-tag" style="background:rgba(34,197,94,0.12);color:#86efac">混合模式</span>
+      </div>
+      <div class="way-card">
+        <h4>统一 API 代理</h4>
+        <p>直接通过 OminiConnect 调用任意服务商 API。700+ 服务商使用同一套接口，无需为每个服务写定制代码。</p>
+        <span class="way-tag" style="background:rgba(245,158,11,0.12);color:#fcd34d">API 访问</span>
+      </div>
+      <div class="way-card">
+        <h4>凭证管理器</h4>
+        <p>一次性连接账号。OminiConnect 安全存储所有凭证（OAuth2 令牌、API 密钥、Basic 认证）并自动刷新令牌。基于 Nango 构建。</p>
+        <span class="way-tag" style="background:rgba(236,72,153,0.12);color:#f9a8d4">认证中心</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SDK Section -->
+<section class="sdk-section" style="padding:5rem 0">
+  <div class="container">
+    <p class="section-label">SDK</p>
+    <h2 class="section-title" style="text-align:center">主流语言官方 SDK</h2>
+    <p class="section-subtitle" style="max-width:640px;margin:0 auto 2rem;text-align:center">Python、JavaScript、Go、Rust、Flutter、Swift 官方库——以及用于任何平台的完整 REST API。</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem">
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">🐍</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">Python</div>
+        <code style="font-size:0.72rem;color:#93c5fd;background:rgba(59,130,246,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">pip install ominiconnect</code>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">📜</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">JavaScript / TypeScript</div>
+        <code style="font-size:0.72rem;color:#fcd34d;background:rgba(245,158,11,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">npm install @ominiconnect/sdk</code>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">🔵</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">Go</div>
+        <code style="font-size:0.72rem;color:#67e8f9;background:rgba(6,182,212,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">go get .../ominiconnect</code>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">🦀</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">Rust</div>
+        <code style="font-size:0.72rem;color:#fdba74;background:rgba(249,115,22,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">cargo add ominiconnect</code>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">🦋</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">Flutter</div>
+        <code style="font-size:0.72rem;color:#6ee7b7;background:rgba(16,185,129,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">flutter pub add ominiconnect</code>
+      </div>
+      <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.25rem;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:0.5rem">🍎</div>
+        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem">Swift / iOS</div>
+        <code style="font-size:0.72rem;color:#fca5a5;background:rgba(239,68,68,0.1);padding:0.15rem 0.5rem;border-radius:4px;display:block;margin-top:0.5rem">Swift Package Manager</code>
+      </div>
+    </div>
+
+    <details style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;font-size:0.95rem;list-style:none;display:flex;align-items:center;gap:0.75rem">
+        <span style="font-size:1.2rem">📖</span> <strong>代码示例</strong> — Python、JavaScript、Go、Rust、Flutter、REST API
+      </summary>
+      <div style="padding:0 1.25rem 1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🐍 Python — 初始化 & 列出已连接服务商</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">from ominiconnect import OminiConnect
+
+client = OminiConnect(api_key="sk_...")
+
+connectors = client.connectors.list()
+print(connectors)</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🐍 Python — 执行工具</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">result = client.tools.execute(
+    "github_list_repos",
+    arguments={"limit": 10}
+)
+print(result["body"])</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">📜 JavaScript — 初始化 & 列出已连接服务商</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">import { OminiConnect } from '@ominiconnect/sdk';
+const client = new OminiConnect({ apiKey: 'sk_...' });
+const connectors = await client.connectors.list();
+console.log(connectors);</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">📜 JavaScript — 执行工具</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">const result = await client.tools.execute(
+    'github_list_repos',
+    { limit: 10 }
+);
+console.log(result.body);</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🔵 Go — 调用 API（Maton 风格）</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">client := ominiconnect.New("sk_...", nil)
+connectors, _ := client.Connectors.List()
+fmt.Println(connectors)</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🦀 Rust — 初始化 & 列出已连接服务商</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">let client = Client::new("sk_...", None);
+let connectors = client.connectors().list().await?;
+println!("{:?}", connectors);</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🦋 Flutter — 初始化 & 列出已连接服务商</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">import 'package:ominiconnect/ominiconnect.dart';
+final client = OminiConnect(apiKey: 'sk_...');
+final connectors = await client.connectors.list();</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem">🌐 REST — tools/execute</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto"><span class="keyword">POST</span> /api/tools/execute
+{
+  "tool_slug": "github_list_repos",
+  "platform": "github",
+  "arguments": {"limit": 10}
+}
+
+<span class="comment">// 响应: {ok: true, body: [...]}</span></pre>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- AI Delegation / LLM API -->
+<section class="ai-delegation" style="padding:5rem 0;background:rgba(255,255,255,0.02)">
+  <div class="container">
+    <p class="section-label">自然语言 API</p>
+    <h2 class="section-title" style="text-align:center">告诉 OminiConnect 你想要什么——它自动选择工具</h2>
+    <p class="section-subtitle" style="max-width:620px;margin:0 auto 3rem;text-align:center">无需操心该调用哪个 API 端点。只需用自然语言描述你的需求——OminiConnect 会选择正确的工具、传入正确的参数、返回结果。</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;margin-bottom:2.5rem">
+      <div>
+        <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem">
+          <div style="font-size:2rem;margin-bottom:0.75rem">🗣️</div>
+          <h4 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem">自然语言输入</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);font-style:italic">"列出我最近更新的 GitHub 仓库"</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="color:var(--primary)"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:1.5rem">
+          <div style="font-size:2rem;margin-bottom:0.75rem">⚙️</div>
+          <h4 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem">OminiConnect 选择工具</h4>
+          <p style="font-size:0.85rem;color:var(--text-muted)">工具: <code style="color:#86efac;font-size:0.8rem">github_list_repos</code> 参数 <code style="color:#86efac;font-size:0.8rem">{sort: "updated"}</code></p>
+        </div>
+      </div>
+
+      <div>
+        <h4 style="font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;color:var(--text-muted)">🐍 Python SDK</h4>
+        <pre style="margin:0 0 1.25rem;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">resp = client.llm.execute(
+    <span class="string">"列出我最近更新的 GitHub 仓库"</span>
+)
+print(resp.result)
+<span class="comment"># {'ok': True, 'body': [...], 'tool': 'github_list_repos'}</span></pre>
+
+        <h4 style="font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;color:var(--text-muted)">📜 JavaScript SDK</h4>
+        <pre style="margin:0 0 1.25rem;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">const resp = await client.llm.execute(
+    <span class="string">'列出我最近更新的 GitHub 仓库'</span>
+);
+console.log(resp.result);
+<span class="comment">// {ok: true, body: [...], tool: 'github_list_repos'}</span></pre>
+
+        <h4 style="font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;color:var(--text-muted)">🌐 REST API</h4>
+        <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto"><span class="keyword">POST</span> /api/llm
+{
+  "query": <span class="string">"列出我最近更新的 GitHub 仓库"</span>
+}
+<span class="comment">// 响应: {ok: true, tool: "github_list_repos", result: {...}}</span></pre>
+      </div>
+    </div>
+
+    <details style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:600;font-size:0.9rem;list-style:none;display:flex;align-items:center;gap:0.75rem">
+        <span style="font-size:1rem">📡</span> 更多 LLM API 示例 — 列出可用工具、Go、Rust、cURL
+      </summary>
+      <div style="padding:0 1.25rem 1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+        <div>
+          <h4 style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem">🐍 Python — 为 LLM 列出可用工具</h4>
+          <pre style="margin:0;padding:0.875rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.75rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">catalog = client.llm.listAvailableTools()
+print(catalog.platforms["github"]["tools"][0])
+<span class="comment"># {slug, name, description, inputSchema, scopes, ...}</span></pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem">🔵 Go — 自然语言执行</h4>
+          <pre style="margin:0;padding:0.875rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.75rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">result, err := client.Llm().Execute(
+    ctx,
+    <span class="string">"列出我的仓库"</span>,
+    nil,
+)
+fmt.Println(result.Result)</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem">🦀 Rust — 自然语言执行</h4>
+          <pre style="margin:0;padding:0.875rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.75rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">let result = client.llm()
+    .execute(<span class="string">"列出我的仓库"</span>, None)
+    .await?;
+println!("{:?}", result.result);</pre>
+        </div>
+        <div>
+          <h4 style="font-size:0.82rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem">🌐 cURL — 自然语言请求</h4>
+          <pre style="margin:0;padding:0.875rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.75rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">curl -X POST http://localhost:9000/api/llm \
+  -H "Authorization: Bearer sk_..." \
+  -H "Content-Type: application/json" \
+  -d '{"query": "列出我的 GitHub 仓库"}'</pre>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- AI Agent Demo -->
+<section class="agent-demo" style="padding:5rem 0">
+  <div class="container">
+    <p class="section-label">MCP — 工具发现</p>
+    <h2 class="section-title" style="text-align:center">或让 AI 代理通过 MCP 自动发现工具</h2>
+    <p class="section-subtitle" style="max-width:600px;margin:0 auto 3rem;text-align:center">OminiConnect 支持 MCP（模型上下文协议）。任何 MCP 兼容的 AI 代理都能自动发现并调用你连接的工具。</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start">
+      <div>
+        <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted)">步骤 1 — 代理询问：我的工具有哪些？</h4>
+        <div class="code-block" style="margin-bottom:1.5rem"><span class="comment">// POST /api/mcp</span>
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": <span class="string">"tools/list"</span>,
+  "params": {}
+}
+<span class="comment">// 返回：可用工具列表，包含描述和输入模式</span></div>
+
+        <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted)">步骤 2 — 代理调用工具</h4>
+        <div class="code-block"><span class="comment">// POST /api/mcp</span>
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": <span class="string">"tools/call"</span>,
+  "params": {
+    "name": <span class="string">"github_list_repos"</span>,
+    "arguments": {<span class="string">"sort"</span>: <span class="string">"updated"</span>, <span class="string">"per_page"</span>: <span class="string">5</span>}
+  }
+}
+<span class="comment">// 响应：仓库数据</span></div>
+      </div>
+
+      <div>
+        <h4 style="font-size:0.9rem;font-weight:700;margin-bottom:1rem;color:var(--text-muted)">与你使用的 AI 代理集成</h4>
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#6366f1"><path d="M18.5 2h-13C4.12 2 3 3.12 3 4.5v15C3 20.88 4.12 22 5.5 22h13c1.38 0 2.5-1.12 2.5-2.5v-15C21 3.12 19.88 2 18.5 2zM12 17.5c-2.99 0-5.5-2.49-5.5-5.5S9.01 6.5 12 6.5s5.5 2.49 5.5 5.5-2.51 5.5-5.5 5.5zm5-5.5H12m0 0V7.5"/></svg>
+            <span style="font-weight:700">Claude Desktop</span>
+            <span style="font-size:0.7rem;background:rgba(99,102,241,0.15);color:#a5b4fc;padding:0.2rem 0.5rem;border-radius:4px;font-weight:600">MCP 原生</span>
+          </div>
+          <p style="font-size:0.825rem;color:var(--text-muted);line-height:1.6">将 OminiConnect 添加到 Claude Desktop 配置，它会自动将你连接的所有平台发现为工具。</p>
+        </div>
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#06b6d4"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span style="font-weight:700">Cursor / Windsurf</span>
+            <span style="font-size:0.7rem;background:rgba(6,182,212,0.15);color:#67e8f9;padding:0.2rem 0.5rem;border-radius:4px;font-weight:600">MCP 原生</span>
+          </div>
+          <p style="font-size:0.825rem;color:var(--text-muted);line-height:1.6">将 Cursor 或 Windsurf 指向 OminiConnect 的 MCP 端点，在 AI 自动补全和聊天中使用你的已连接工具。</p>
+        </div>
+        <div style="background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#22c55e"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/></svg>
+            <span style="font-weight:700">任意 AI 框架</span>
+            <span style="font-size:0.7rem;background:rgba(34,197,94,0.15);color:#86efac;padding:0.2rem 0.5rem;border-radius:4px;font-weight:600">LangChain · LlamaIndex · 自定义</span>
+          </div>
+          <p style="font-size:0.825rem;color:var(--text-muted);line-height:1.6">通过 REST 从任何 AI 框架调用 tools/execute 或 llm/execute。MCP 客户端库也可以原生使用。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick start -->
+<section class="quick-start" id="quick-start">
+  <div class="container">
+    <p class="section-label">快速开始</p>
+    <h2 class="section-title">开始使用 OminiConnect</h2>
+    <p class="section-subtitle">获取 API Key → 连接服务商 → 发出第一个请求——全部在 5 分钟内完成。</p>
+
+    <div class="quick-start-grid">
+      <div>
+        <div class="quick-start-step">
+          <div class="quick-start-step-num">1</div>
+          <div>
+            <h4>注册并获取 API Key</h4>
+            <p>在 OminiConnect 门户注册账号，复制你的 API Key。</p>
+          </div>
+        </div>
+        <div class="quick-start-step">
+          <div class="quick-start-step-num">2</div>
+          <div>
+            <h4>连接一个服务商</h4>
+            <p>进入 Integrations 页面，选择服务商（如 GitHub），完成 OAuth 或输入 API 密钥。</p>
+          </div>
+        </div>
+        <div class="quick-start-step">
+          <div class="quick-start-step-num">3</div>
+          <div>
+            <h4>发出第一个 API 调用</h4>
+            <p>使用 REST API 或 SDK 通过 OminiConnect 调用该服务商。</p>
+          </div>
+        </div>
+        <div class="quick-start-step">
+          <div class="quick-start-step-num">4</div>
+          <div>
+            <h4>连接你的 AI 代理</h4>
+            <p>将 AI 代理指向 OminiConnect 的 MCP 端点——它会自动发现并使用你已连接的工具。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem">
+          <h4 style="font-size:0.95rem;font-weight:700;margin-bottom:1rem">Python — 列出已连接的服务商</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">from ominiconnect import OminiConnect
+
+client = OminiConnect(api_key="sk_...")
+connectors = client.connectors.list()
+print(connectors)</pre>
+        </div>
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem;margin-top:1rem">
+          <h4 style="font-size:0.95rem;font-weight:700;margin-bottom:1rem">Python — 执行工具</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">result = client.tools.execute(
+    "github_list_repos",
+    platform="github",
+    arguments={"limit": 10}
+)
+print(result.body)</pre>
+        </div>
+        <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.5rem;margin-top:1rem">
+          <h4 style="font-size:0.95rem;font-weight:700;margin-bottom:1rem">cURL — 直接代理调用</h4>
+          <pre style="margin:0;padding:1rem;background:rgba(0,0,0,0.5);border-radius:8px;font-size:0.78rem;color:#e4e4e7;font-family:ui-monospace,monospace;overflow:auto">curl -X POST https://api.ominiconnect.com/api/proxy/github \
+  -H "Authorization: Bearer sk_..." \
+  -H "Content-Type: application/json" \
+  -d '{"endpoint": "/user/repos", "method": "GET"}'</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Providers preview -->
+<section class="providers-preview">
+  <div class="container">
+    <p class="section-label">支持的服务商</p>
+    <h2 class="section-title" style="font-size:1.8rem">700+ 集成，持续增加中</h2>
+    <p class="section-subtitle" style="margin: 0 auto 2rem;max-width:500px">包括 GitHub、Slack、Notion、Salesforce、Google Workspace、Microsoft 365，以及其他 695 个服务商。</p>
+
+    <div class="providers-cloud">
+      <span class="provider-chip">GitHub</span>
+      <span class="provider-chip">Slack</span>
+      <span class="provider-chip">Notion</span>
+      <span class="provider-chip">Salesforce</span>
+      <span class="provider-chip">Google Workspace</span>
+      <span class="provider-chip">Microsoft 365</span>
+      <span class="provider-chip">HubSpot</span>
+      <span class="provider-chip">Jira</span>
+      <span class="provider-chip">Linear</span>
+      <span class="provider-chip">Stripe</span>
+      <span class="provider-chip">Twilio</span>
+      <span class="provider-chip">Shopify</span>
+      <span class="provider-chip">Discord</span>
+      <span class="provider-chip">WhatsApp</span>
+      <span class="provider-chip">飞书</span>
+      <span class="provider-chip">钉钉</span>
+      <span class="provider-chip">企业微信</span>
+      <span class="provider-chip">+680 更多</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="container">
+    <h2>准备好简化你的 AI 集成了吗？</h2>
+    <p>前往 GitHub 查看开源项目，几分钟即可开始。</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="https://github.com/allenpeng0705/OminiConnect" target="_blank" rel="noopener" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.06 12.06 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub 仓库
+      </a>
+    </div>
+    <div class="cta-badges">
+      <span class="cta-badge"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>开源项目</span>
+      <span class="cta-badge"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>无需信用卡</span>
+      <span class="cta-badge"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>700+ 集成</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-brand">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' width='24' height='24'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231E1B4B'/%3E%3Cstop offset='100%25' style='stop-color:%23312E81'/%3E%3C/linearGradient%3E%3ClinearGradient id='nodeGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2306B6D4'/%3E%3Cstop offset='100%25' style='stop-color:%233B82F6'/%3E%3C/linearGradient%3E%3ClinearGradient id='gatewayGrad' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%238B5CF6'/%3E%3Cstop offset='100%25' style='stop-color:%236366F1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='256' height='256' rx='48' fill='url(%23bg)'/%3E%3Cg transform='translate(128,128)'%3E%3Ccircle cx='0' cy='0' r='90' fill='none' stroke='url(%23gatewayGrad)' stroke-width='8' stroke-dasharray='40 12'/%3E%3Ccircle cx='0' cy='0' r='60' fill='none' stroke='url(%23nodeGrad)' stroke-width='6'/%3E%3Cg fill='url(%23nodeGrad)'%3E%3Cpolygon points='0,-95 -12,-80 12,-80'/%3E%3Cpolygon points='95,0 80,-12 80,12'/%3E%3Cpolygon points='0,95 -12,80 12,80'/%3E%3Cpolygon points='-95,0 -80,-12 -80,12'/%3E%3C/g%3E%3Ccircle cx='0' cy='0' r='18' fill='url(%23nodeGrad)'/%3E%3Ccircle cx='0' cy='0' r='10' fill='%231E1B4B'/%3E%3Ccircle cx='0' cy='0' r='6' fill='url(%23nodeGrad)'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='-35' cy='-30' r='8'/%3E%3Ccircle cx='35' cy='-30' r='8'/%3E%3Ccircle cx='-45' cy='10' r='8'/%3E%3Ccircle cx='45' cy='10' r='8'/%3E%3Ccircle cx='-30' cy='45' r='8'/%3E%3Ccircle cx='30' cy='45' r='8'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E" alt="OminiConnect" style="height:24px;border-radius:6px" />
+      OminiConnect
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/allenpeng0705/OminiConnect" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.06 12.06 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://github.com/allenpeng0705/OminiConnect/blob/main/docs/README.md" target="_blank" rel="noopener">文档</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
