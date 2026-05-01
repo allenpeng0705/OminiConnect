@@ -590,10 +590,12 @@ pub async fn execute(
             } else if connector_clone.platform == "maton"
                 || connector_clone.platform == "qqmail"
                 || connector_clone.platform == "github"
+                || connector_clone.platform == "qcc"
             {
                 execute_api_key(
                     &connector_clone,
                     &tool_clone.method,
+                    &tool_clone,
                     &native_path_clone,
                     query_string_clone,
                     body_json_clone,
@@ -696,10 +698,12 @@ pub async fn execute(
     } else if connector.platform == "maton"
         || connector.platform == "qqmail"
         || connector.platform == "github"
+        || connector.platform == "qcc"
     {
         exec_result = execute_api_key(
             &connector,
             &tool.method,
+            &tool,
             &native_path,
             query_string,
             body_json,
@@ -893,10 +897,11 @@ async fn execute_nango(
     }
 }
 
-/// Execute for API-key / PAT platforms (maton, qqmail, github with native engine — same pattern as `api/proxy.rs`).
+/// Execute for API-key / PAT platforms (maton, qqmail, github, qcc with native engine — same pattern as `api/proxy.rs`).
 async fn execute_api_key(
     connector: &ConnectorConfig,
     method: &HttpMethod,
+    tool: &Tool,
     native_path: &str,
     query_string: Option<String>,
     body_json: Option<String>,
@@ -916,18 +921,34 @@ async fn execute_api_key(
         return tool_error(StatusCode::UNAUTHORIZED, "API key or PAT not configured");
     }
 
-    let base_url = match get_platform_base_url(&connector.platform) {
-        Some(url) => url,
-        None => {
-            return tool_error(
-                StatusCode::BAD_GATEWAY,
-                "unsupported platform for direct API access",
-            )
+    // Handle QCC MCP specially: rewrite to SSE endpoint and always POST
+    let is_qcc = connector.platform == "qcc";
+    let base_url = if is_qcc {
+        if access_token.is_empty() {
+            return tool_error(StatusCode::UNAUTHORIZED, "QCC API key not configured");
+        }
+        // Tool endpoint format: "qcc_company_get_shareholder_info" → server "company"
+        let (server, _) = qcc_tool_to_server_endpoint(&tool.endpoint);
+        format!("https://agent.qcc.com/mcp/{}/stream", server)
+    } else {
+        match get_platform_base_url(&connector.platform) {
+            Some(url) => url.to_string(),
+            None => {
+                return tool_error(
+                    StatusCode::BAD_GATEWAY,
+                    "unsupported platform for direct API access",
+                )
+            }
         }
     };
-    let full_url = match &query_string {
-        Some(q) => format!("{}/{}?{}", base_url, native_path, q),
-        None => format!("{}/{}", base_url, native_path),
+
+    let full_url = if is_qcc {
+        base_url
+    } else {
+        match &query_string {
+            Some(q) => format!("{}/{}?{}", base_url, native_path, q),
+            None => format!("{}/{}", base_url, native_path),
+        }
     };
 
     let client = match reqwest::Client::builder()
@@ -943,7 +964,9 @@ async fn execute_api_key(
         }
     };
 
-    let mut req_builder = client.request(method.as_reqwest_method(), &full_url);
+    let reqwest_method = if is_qcc { reqwest::Method::POST } else { method.as_reqwest_method() };
+
+    let mut req_builder = client.request(reqwest_method, &full_url);
     req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
     req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
@@ -951,6 +974,15 @@ async fn execute_api_key(
         req_builder = req_builder
             .header("Content-Type", "application/json")
             .body(reqwest::Body::from(body));
+    } else if is_qcc {
+        // QCC MCP requires a JSON body for all requests
+        let qcc_body = body_json.unwrap_or_else(|| {
+            // For tools/list, send an empty params object
+            serde_json::json!({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}).to_string()
+        });
+        req_builder = req_builder
+            .header("Content-Type", "application/json")
+            .body(reqwest::Body::from(qcc_body));
     }
 
     match req_builder.send().await {
@@ -1096,8 +1128,24 @@ fn get_platform_base_url(platform: &str) -> Option<&'static str> {
         "zoom" => "https://api.zoom.us/v2",
         "stripe" => "https://api.stripe.com/v1",
         "shopify" => "https://{shop}.myshopify.com/admin/api",
+        "qcc" => "https://agent.qcc.com",
         _ => return None,
     })
+}
+
+/// Map QCC tool endpoint (e.g. "qcc_company_get_shareholder_info") to MCP server name.
+/// Returns (server_name, remaining_path) where server_name is "company", "risk", etc.
+fn qcc_tool_to_server_endpoint(endpoint: &str) -> (String, String) {
+    // endpoint format: "qcc_{server}_{action}" e.g. "qcc_company_get_shareholder_info"
+    let parts: Vec<&str> = endpoint.split('_').collect();
+    if parts.len() >= 3 && parts[0] == "qcc" {
+        let server = parts[1].to_string();
+        let remaining = parts[2..].join("_");
+        (server, remaining)
+    } else {
+        // Fallback: treat entire endpoint as server
+        (endpoint.to_string(), String::new())
+    }
 }
 
 /// Router for tools API.

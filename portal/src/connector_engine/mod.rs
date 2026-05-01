@@ -167,5 +167,5 @@ pub async fn test_connector_by_engine(
 }
 
 pub fn is_api_key_platform(platform: &str) -> bool {
-    platform == "maton" || platform == "qqmail" || platform == "github"
+    platform == "maton" || platform == "qqmail" || platform == "github" || platform == "qcc"
 }
