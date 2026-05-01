@@ -43,23 +43,25 @@ In the UI, go to **Connectors** → pick a platform (GitHub, LinkedIn, etc.) →
 
 ### 3. Give an AI agent access
 
-```python
-from ominiconnect import OminiConnect
+Connect via MCP or REST:
 
-client = OminiConnect(api_key="your-portal-api-key")
+**MCP (recommended)** — any MCP-compatible AI client (Claude Desktop, Cursor, etc.) can discover and call tools through OminiConnect.
 
-# List connected platforms
-print(client.connectors.list())
+**REST API** — call tools directly:
 
-# Use tools (discoverable + scope-checked)
-tools = client.tools.list(platform="github")
-result = client.tools.execute(
-    "github_list_repos",
-    arguments={"sort": "updated"}
-)
+```bash
+# List available tools for GitHub
+curl -H "Authorization: Bearer $AGENT_API_KEY" \
+  http://localhost:9000/api/tools?platform=github
+
+# Execute a tool
+curl -X POST -H "Authorization: Bearer $AGENT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"slug": "github_list_repos", "arguments": {"sort": "updated"}}' \
+  http://localhost:9000/api/tools/execute
 ```
 
-Or use MCP directly — any MCP-compatible AI client can discover and call tools through OminiConnect without any code changes.
+See `docs/API.md` for full API reference.
 
 ---
 
@@ -119,23 +121,20 @@ Connect Feishu, DingTalk, or WeChat Work. Agents help employees query internal t
 | `POST` | `/api/mcp` | MCP JSON-RPC — `tools/list`, `tools/call` |
 | `GET` | `/api/mcp/sse` | SSE stream for async push to MCP clients |
 
-Full API reference: see `docs/API.md` (coming soon).
+Full API reference: see `docs/API.md`.
 
 ---
 
 ## SDKs
 
-| Language | Install | Docs |
-|----------|---------|------|
-| Python | `pip install ominiconnect` | [sdk/python](./sdk/python) |
-| JavaScript/TypeScript | `npm install @ominiconnect/sdk` | [sdk/js](./sdk/js) |
-| Go | `go get github.com/ominiconnect/go-sdk/ominiconnect` | [sdk/go](./sdk/go) |
-| Rust | `cargo add omini-connect-sdk` | [sdk/rust](./sdk/rust) |
-| iOS (Swift) | Swift Package Manager | [sdk/ios](./sdk/ios) |
-| Android (Kotlin) | Gradle dependency | [sdk/android](./sdk/android) |
-| Flutter (Dart) | `flutter pub add ominiconnect` | [sdk/flutter](./sdk/flutter) |
+| Language | Status | Docs |
+|----------|--------|------|
+| Python | Coming soon | — |
+| JavaScript/TypeScript | Coming soon | — |
+| Go | Coming soon | — |
+| Rust | Coming soon | — |
 
-See [sdk/README.md](./sdk/README.md) for full SDK documentation.
+SDKs are planned. For now, use the REST API directly or connect via MCP.
 
 ---
 
