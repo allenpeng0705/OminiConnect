@@ -7,6 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [googleEnabled, setGoogleEnabled] = useState(false);
   const navigate = useNavigate();
 
@@ -19,11 +20,14 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       await login(email, password);
       navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -67,8 +71,8 @@ export default function Login() {
             style={{ width: '100%', padding: '0.62rem 0.7rem', border: '1px solid #cbd5e1', borderRadius: '8px', boxSizing: 'border-box' }}
           />
         </div>
-        <button type="submit" style={{ width: '100%', padding: '0.72rem', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.95rem', fontWeight: 600 }}>
-          Login
+        <button type="submit" disabled={loading} style={{ width: '100%', padding: '0.72rem', background: loading ? '#7c3aed' : '#4f46e5', color: 'white', border: 'none', borderRadius: '8px', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.95rem', fontWeight: 600 }}>
+          {loading ? 'Signing in...' : 'Login'}
         </button>
         {googleEnabled && (
           <button

@@ -69,6 +69,14 @@ const ALL: BuiltinPlatform[] = [
     logo_url: '/images/template-logos/maton.png',
     showOnDashboard: true,
   },
+  {
+    id: 'qcc',
+    name: '企查查',
+    color: '#FF6B00',
+    type: 'api_key',
+    logo_url: '/images/template-logos/qcc.svg',
+    showOnDashboard: true,
+  },
 ];
 
 /** Longer `id` first (e.g. wechatwork before any future shorter prefix). */

@@ -907,7 +907,7 @@ async fn execute_api_key(
     body_json: Option<String>,
 ) -> Response {
     let access_token = match connector.platform.as_str() {
-        "maton" | "github" => {
+        "maton" | "github" | "qcc" => {
             let t = connector.client_secret.trim();
             if t.is_empty() {
                 connector.client_id.trim().to_string()
@@ -972,17 +972,34 @@ async fn execute_api_key(
 
     if let Some(body) = body_json {
         req_builder = req_builder
-            .header("Content-Type", "application/json")
-            .body(reqwest::Body::from(body));
+            .header("Content-Type", "application/json");
+        if is_qcc {
+            // Transform QCC tool arguments into JSON-RPC format
+            let (_, method_name) = qcc_tool_to_server_endpoint(&tool.endpoint);
+            let rpc_body = serde_json::json!({
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": method_name,
+                    "arguments": serde_json::from_str::<serde_json::Value>(&body).unwrap_or(serde_json::json!({}))
+                }
+            });
+            req_builder = req_builder.body(reqwest::Body::from(rpc_body.to_string()));
+        } else {
+            req_builder = req_builder.body(reqwest::Body::from(body));
+        }
     } else if is_qcc {
-        // QCC MCP requires a JSON body for all requests
-        let qcc_body = body_json.unwrap_or_else(|| {
-            // For tools/list, send an empty params object
-            serde_json::json!({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}).to_string()
+        // No body provided — use tools/list as fallback for discovery
+        let rpc_body = serde_json::json!({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/list",
+            "params": {}
         });
         req_builder = req_builder
             .header("Content-Type", "application/json")
-            .body(reqwest::Body::from(qcc_body));
+            .body(reqwest::Body::from(rpc_body.to_string()));
     }
 
     match req_builder.send().await {
@@ -1133,17 +1150,17 @@ fn get_platform_base_url(platform: &str) -> Option<&'static str> {
     })
 }
 
-/// Map QCC tool endpoint (e.g. "qcc_company_get_shareholder_info") to MCP server name.
-/// Returns (server_name, remaining_path) where server_name is "company", "risk", etc.
+/// Map QCC tool endpoint (e.g. "qcc_company_get_shareholder_info") to MCP server name and method.
+/// Returns (server_name, method_name) e.g. ("company", "get_shareholder_info")
 fn qcc_tool_to_server_endpoint(endpoint: &str) -> (String, String) {
     // endpoint format: "qcc_{server}_{action}" e.g. "qcc_company_get_shareholder_info"
     let parts: Vec<&str> = endpoint.split('_').collect();
     if parts.len() >= 3 && parts[0] == "qcc" {
         let server = parts[1].to_string();
-        let remaining = parts[2..].join("_");
-        (server, remaining)
+        let method = parts[2..].join("_");
+        (server, method)
     } else {
-        // Fallback: treat entire endpoint as server
+        // Fallback
         (endpoint.to_string(), String::new())
     }
 }

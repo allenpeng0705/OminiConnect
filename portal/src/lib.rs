@@ -4,6 +4,7 @@
 
 pub mod api;
 pub mod app;
+pub mod argument_extractor;
 pub mod auth;
 pub mod connector_engine;
 pub mod connector_scope;

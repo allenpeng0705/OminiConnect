@@ -16,6 +16,7 @@ mod oauth;
 mod panda;
 mod portal_env;
 mod telemetry;
+mod argument_extractor;
 mod tools;
 mod websocket;
 

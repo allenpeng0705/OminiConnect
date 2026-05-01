@@ -393,7 +393,7 @@ export default function ConnectorConfig() {
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Failed to open connection wizard');
         }
-        navigate('/');
+        navigate('/dashboard');
         return;
       }
 
@@ -413,7 +413,7 @@ export default function ConnectorConfig() {
           });
           const ok = await persistConnectorConfig(result.connection_id);
           if (!ok) return;
-          navigate('/');
+          navigate('/dashboard');
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Failed to create connection in Nango');
           return;
@@ -427,12 +427,12 @@ export default function ConnectorConfig() {
           } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to open connection wizard');
           }
-          navigate('/');
+          navigate('/dashboard');
           return;
         } else {
           // engine=nango with credentials provided — saved via persistConnectorConfig above
         }
-        navigate('/');
+        navigate('/dashboard');
       }
       return;
     }
@@ -475,7 +475,7 @@ export default function ConnectorConfig() {
     if (!confirm('Remove this connector?')) return;
     try {
       await deleteConnector(platform);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed');
     }

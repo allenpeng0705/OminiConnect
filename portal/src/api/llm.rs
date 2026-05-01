@@ -313,7 +313,8 @@ pub async fn execute(
     let explanation = build_explanation(&body.query, selected_tool, *scope_sat);
 
     // Extract arguments from query
-    let arguments = extract_arguments(&body.query, selected_tool);
+    let extract_result = crate::argument_extractor::extract_arguments(&body.query, selected_tool);
+    let arguments = extract_result.arguments;
 
     if !scope_ok {
         let resp = LlmExecuteResponse {
@@ -520,19 +521,9 @@ pub async fn explain(
         .unwrap_or_default();
     let scope_sat = check_scope_satisfied(&tool.scopes, &granted);
 
-    let arguments = extract_arguments(&query.query, tool);
-    let missing: Vec<String> = tool
-        .input_schema
-        .required
-        .iter()
-        .filter(|r| {
-            arguments
-                .as_object()
-                .map(|o| !o.contains_key(*r))
-                .unwrap_or(true)
-        })
-        .cloned()
-        .collect();
+    let extract_result = crate::argument_extractor::extract_arguments(&query.query, tool);
+    let arguments = extract_result.arguments;
+    let missing = extract_result.missing_required;
 
     let explanation = build_explanation(&query.query, tool, scope_sat);
 
@@ -684,6 +675,9 @@ fn score_keyword_match(tokens: &[&str], tool: &crate::tools::Tool) -> f64 {
     )
     .to_lowercase();
 
+    // Check if this looks like a Chinese query (no whitespace tokens)
+    let is_chinese_query = tokens.iter().any(|t| is_likely_chinese(t));
+
     for token in tokens {
         if STOP_WORDS.contains(token) {
             continue;
@@ -693,17 +687,42 @@ fn score_keyword_match(tokens: &[&str], tool: &crate::tools::Tool) -> f64 {
         }
         if searchable.contains(*token) {
             matches += 1;
+        } else if is_chinese_query {
+            // For Chinese: check if any searchable term (especially Chinese name) is a substring of query
+            // e.g., token "股东信息" is not in tokens but appears in searchable as tool name
+            // Instead, check if searchable Chinese terms appear in the query
+            for term in [tool.name.as_str(), &tool.description, tool.provider.as_str()] {
+                let term_lower = term.to_lowercase();
+                if term_lower.len() >= 3 && query_contains_term(token, &term_lower) {
+                    matches += 1;
+                    break;
+                }
+            }
         }
     }
 
     (matches as f64) / (total as f64)
 }
 
-fn score_example_queries(query_lower: &str, tool: &crate::tools::Tool) -> f64 {
+/// Check if the query (represented by the token) contains a specific term from searchable text.
+fn query_contains_term(token: &str, term: &str) -> bool {
+    // For Chinese: check if the term appears as substring in the original token
+    // We use a simpler approach: if the query token is Chinese and contains key Chinese chars from term
+    let query_chars: HashSet<char> = token.chars().collect();
+    let term_chars: HashSet<char> = term.chars().filter(|c| !c.is_ascii()).collect();
+    if term_chars.is_empty() {
+        return false;
+    }
+    // Count how many term chars appear in query
+    let overlap: usize = term_chars.intersection(&query_chars).count();
+    overlap >= term_chars.len() / 2 && overlap >= 2
+}
+
+fn score_example_queries(query: &str, tool: &crate::tools::Tool) -> f64 {
     if tool.example_queries.is_empty() {
         // Fall back to name matching
         let name_words = tool.name.to_lowercase();
-        let query_words: HashSet<_> = query_lower.split_whitespace().collect();
+        let query_words: HashSet<_> = query.split_whitespace().collect();
         let name_set: HashSet<_> = name_words.split_whitespace().collect();
         let intersection: Vec<_> = query_words.intersection(&name_set).collect();
         if intersection.is_empty() {
@@ -712,13 +731,63 @@ fn score_example_queries(query_lower: &str, tool: &crate::tools::Tool) -> f64 {
         return (intersection.len() as f64) / (name_set.len().max(1) as f64);
     }
 
+    // If query looks like Chinese, use placeholder-based pattern matching
+    if is_likely_chinese(query) {
+        return score_chinese_examples(query, &tool.example_queries);
+    }
+
+    let query_lower = query.to_lowercase();
     let mut max_sim: f64 = 0.0;
     for example in &tool.example_queries {
         let example_lower = example.to_lowercase();
-        let sim = similarity(query_lower, &example_lower);
+        let sim = similarity(&query_lower, &example_lower);
         max_sim = max_sim.max(sim);
     }
     max_sim
+}
+
+/// Score Chinese query against example_queries using placeholder pattern matching.
+/// Example queries contain placeholders like "某公司" which we substitute with the actual
+/// entity from the query to compare structure.
+fn score_chinese_examples(query: &str, example_queries: &[String]) -> f64 {
+    let placeholders = ["某公司", "某企业", "该公司", "该企业", "某个公司", "某个企业"];
+    let query_lower = query.to_lowercase();
+
+    let mut max_score: f64 = 0.0;
+
+    for example in example_queries {
+        // Find which placeholder this example uses
+        let placeholder = match placeholders.iter().find(|p| example.contains(*p)) {
+            Some(p) => *p,
+            None => continue,
+        };
+        let parts: Vec<&str> = example.splitn(2, placeholder).collect();
+        if parts.len() != 2 {
+            continue;
+        }
+        let prefix = parts[0];
+        let suffix = parts[1];
+
+        // Try full prefix+suffix match
+        if !prefix.is_empty()
+            && query_lower.starts_with(&prefix.to_lowercase())
+            && query_lower.ends_with(&suffix.to_lowercase())
+        {
+            let prefix_match = prefix.len() as f64 / prefix.len().max(1) as f64;
+            let suffix_match = suffix.len() as f64 / suffix.len().max(1) as f64;
+            max_score = max_score.max((prefix_match + suffix_match) / 2.0);
+            continue;
+        }
+
+        // Try suffix-only match (handles queries with different action verbs like 查看/了解)
+        if query_lower.ends_with(&suffix.to_lowercase()) && !suffix.is_empty() {
+            // Score based on suffix length relative to query length
+            let suffix_ratio = suffix.len() as f64 / query_lower.len().max(1) as f64;
+            max_score = max_score.max(suffix_ratio.min(1.0));
+        }
+    }
+
+    max_score
 }
 
 /// Simple word overlap similarity.
@@ -787,18 +856,26 @@ fn detect_platform_from_query<'a>(
 
 /// Extract arguments from query based on tool's input schema.
 fn extract_arguments(query: &str, tool: &crate::tools::Tool) -> serde_json::Value {
-    let mut args = serde_json::Map::new();
     let query_lower = query.to_lowercase();
 
-    // Try to extract common parameters from query
-    for (param_name, param_spec) in &tool.input_schema.properties {
-        let param_lower = param_name.to_lowercase();
+    // Use the new schema-guided extraction
+    let result = crate::argument_extractor::extract_arguments(query, tool);
+    let mut args = match result.arguments {
+        serde_json::Value::Object(m) => m,
+        _ => serde_json::Map::new(),
+    };
 
-        // Check if query mentions this parameter
-        if query_lower.contains(&param_lower) {
-            // Try to extract value after the parameter name
-            if let Some(value) = extract_value_after_word(&query_lower, &param_lower) {
-                args.insert(param_name.clone(), serde_json::Value::String(value));
+    // Handle Chinese queries using example_queries pattern matching
+    if is_likely_chinese(query) {
+        if let Some(value) = extract_chinese_entity(query, &tool.example_queries) {
+            // Find first string property and set it
+            for (param_name, param_spec) in &tool.input_schema.properties {
+                if param_spec.get("type").and_then(|t| t.as_str()) == Some("string") {
+                    if !args.contains_key(param_name) {
+                        args.insert(param_name.clone(), serde_json::Value::String(value.clone()));
+                        break;
+                    }
+                }
             }
         }
     }
@@ -827,6 +904,88 @@ fn extract_arguments(query: &str, tool: &crate::tools::Tool) -> serde_json::Valu
     }
 
     serde_json::Value::Object(args)
+}
+
+/// Detect if a string is likely Chinese (contains significant proportion of CJK characters).
+fn is_likely_chinese(s: &str) -> bool {
+    let cjk_count = s.chars().filter(|c| {
+        let cp = *c as u32;
+        (0x4E00..=0x9FFF).contains(&cp) // CJK Unified Ideographs
+            || (0x3400..=0x4DBF).contains(&cp) // CJK Extension A
+            || (0xF900..=0xFAFF).contains(&cp) // CJK Compatibility
+    }).count();
+    cjk_count > s.len() / 4
+}
+
+/// For Chinese queries, extract entity from query by matching against example query patterns.
+/// Example: "查询比亚迪的股东信息" matched against "查询某公司的股东信息" → extracts "比亚迪".
+/// Also handles queries whose action verb differs from the example (e.g., "查看小米的主要人员" → "小米").
+fn extract_chinese_entity(query: &str, example_queries: &[String]) -> Option<String> {
+    // Common placeholder patterns in example queries
+    let placeholders = ["某公司", "某企业", "该公司", "该企业", "某个公司", "某个企业"];
+
+    for example in example_queries {
+        // Find which placeholder this example uses
+        let placeholder = match placeholders.iter().find(|p| example.contains(*p)) {
+            Some(p) => *p,
+            None => continue,
+        };
+        let parts: Vec<&str> = example.splitn(2, placeholder).collect();
+        if parts.len() != 2 {
+            continue;
+        }
+        let prefix = parts[0]; // e.g., "查询" or "" for patterns starting with placeholder
+        let suffix = parts[1]; // e.g., "的股东信息"
+
+        // Must end with suffix
+        if !query.ends_with(suffix) {
+            continue;
+        }
+
+        let entity_candidate: &str;
+        if !prefix.is_empty() && query.starts_with(prefix) {
+            // Exact prefix+suffix match: straightforward extraction
+            entity_candidate = &query[prefix.len()..query.len() - suffix.len()];
+        } else if prefix.is_empty() {
+            // Example starts with placeholder (no prefix): entity is at start of query
+            let end = query.len() - suffix.len();
+            entity_candidate = &query[..end];
+        } else {
+            // Prefix doesn't match: query may have a different action verb
+            // e.g., query="查看小米的主要人员", example="查询某公司的主要人员"
+            // Strategy: find the entity by matching suffix position and using example prefix length as hint
+            // Find position of suffix in query
+            if let Some(suffix_pos) = query.find(suffix) {
+                // entity is before suffix; use example prefix length as minimum offset
+                let min_start = prefix.len();
+                // entity starts after any leading verb/action in query (try skipping 1-3 chars)
+                let query_prefix_len = suffix_pos; // length of query before suffix
+                if query_prefix_len > min_start {
+                    // Try to find where the entity starts by looking for natural boundaries
+                    // Heuristic: skip 1-3 chars (typical verb length) and take rest
+                    let entity = &query[min_start..suffix_pos];
+                    let trimmed = entity.trim().trim_end_matches('的');
+                    if !trimmed.is_empty() && trimmed.len() >= 2 {
+                        return Some(trimmed.to_string());
+                    }
+                } else if query_prefix_len > 0 {
+                    // Entity shorter than example prefix: take what's there
+                    let entity = &query[..suffix_pos];
+                    let trimmed = entity.trim().trim_end_matches('的');
+                    if !trimmed.is_empty() && trimmed.len() >= 2 {
+                        return Some(trimmed.to_string());
+                    }
+                }
+            }
+            continue;
+        }
+
+        let trimmed = entity_candidate.trim().trim_end_matches('的');
+        if !trimmed.is_empty() && trimmed.len() >= 2 {
+            return Some(trimmed.to_string());
+        }
+    }
+    None
 }
 
 fn extract_value_after_word(query: &str, word: &str) -> Option<String> {
@@ -2032,6 +2191,14 @@ When the user asks you to do something:
 2. Select the single best tool
 3. Extract only arguments supported by that tool schema
 4. Provide correctly typed JSON arguments
+
+IMPORTANT - Argument Extraction:
+- For owner/org parameters ("Tesla's repos"), the entity BEFORE "'s" is usually the owner value.
+- For slash formats ("openai/gpt-4"), the part BEFORE "/" is typically owner/org, AFTER "/" is typically repo/name.
+- Match entities against parameter DESCRIPTIONS to disambiguate: e.g., "Tesla" matches a param with "owner" or "organization" in its description.
+- For enum parameters ("sorted by updated"), match the exact enum value from the schema.
+- Never fabricate parameter values; if no entity found for a required param, leave it out and explain.
+- Map natural language to schema EXACTLY: "repos" -> "repository", "my" possessive -> owner.
 
 IMPORTANT:
 - Never invent parameter names not in the schema.
