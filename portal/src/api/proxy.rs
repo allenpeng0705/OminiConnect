@@ -278,6 +278,7 @@ pub(crate) fn get_platform_base_url(platform: &str) -> &'static str {
         "github" | "github-pat" => "https://api.github.com",
         "maton" => "https://api.maton.ai",
         "qqmail" => "https://api.exmail.qq.com",
+        "mcp-nationalparks" => "https://developer.nps.gov/api/v1",
         _ => "",
     }
 }

@@ -1,0 +1,176 @@
+# National Parks MCP Server
+# Curated subset of NPS API tools exposed via MCP protocol.
+# See: https://github.com/KyrieTangSheng/mcp-server-nationalparks
+#
+# === TOOL LIST ===
+# 1. nationalparks_find_parks      - Search for national parks
+# 2. nationalparks_get_park        - Get park details
+# 3. nationalparks_get_alerts      - Get park alerts
+# 4. nationalparks_get_campgrounds - Get campgrounds
+# 5. nationalparks_get_events      - Get park events
+
+- slug: nationalparks_find_parks
+  name: Find Parks
+  description: |
+    Search for U.S. National Parks by state, keyword, or activity.
+    Returns park names, codes, states, descriptions, and available activities.
+  provider: mcp-nationalparks
+  endpoint: /parks
+  method: GET
+  scopes: []
+  tags:
+    - national-parks
+    - search
+    - read
+    - mcp
+  input_schema:
+    type: object
+    description: Parameters for searching national parks
+    properties:
+      stateCode:
+        type: string
+        description: "Filter by state code (e.g., 'CA' for California, 'CA,OR,WA' for multiple)"
+      q:
+        type: string
+        description: "Search term to filter parks by name or description"
+      limit:
+        type: integer
+        description: "Maximum number of parks to return"
+        default: 10
+      start:
+        type: integer
+        description: "Start position for pagination"
+      activities:
+        type: string
+        description: "Filter by available activities (e.g., 'hiking,camping')"
+    required: []
+
+- slug: nationalparks_get_park
+  name: Get Park Details
+  description: |
+    Get detailed information about a specific national park by its park code.
+    Returns descriptions, hours, fees, contacts, and activities.
+  provider: mcp-nationalparks
+  endpoint: /parks/{parkCode}
+  method: GET
+  scopes: []
+  tags:
+    - national-parks
+    - details
+    - read
+    - mcp
+  input_schema:
+    type: object
+    description: Parameters for getting park details
+    properties:
+      parkCode:
+        type: string
+        description: "The park code (e.g., 'yose' for Yosemite, 'grca' for Grand Canyon)"
+    required:
+      - parkCode
+
+- slug: nationalparks_get_alerts
+  name: Get Park Alerts
+  description: |
+    Get current alerts for national parks including closures, hazards, and important notices.
+    Alerts are organized by park.
+  provider: mcp-nationalparks
+  endpoint: /alerts
+  method: GET
+  scopes: []
+  tags:
+    - national-parks
+    - alerts
+    - safety
+    - read
+    - mcp
+  input_schema:
+    type: object
+    description: Parameters for getting park alerts
+    properties:
+      parkCode:
+        type: string
+        description: "Filter alerts by park code (e.g., 'yose', 'yose,grca' for multiple)"
+      limit:
+        type: integer
+        description: "Maximum number of alerts to return"
+        default: 10
+      start:
+        type: integer
+        description: "Start position for pagination"
+      q:
+        type: string
+        description: "Search term to filter alerts by title or description"
+    required: []
+
+- slug: nationalparks_get_campgrounds
+  name: Get Campgrounds
+  description: |
+    Get information about campgrounds in national parks including amenities, fees, and reservation details.
+  provider: mcp-nationalparks
+  endpoint: /campgrounds
+  method: GET
+  scopes: []
+  tags:
+    - national-parks
+    - campgrounds
+    - camping
+    - read
+    - mcp
+  input_schema:
+    type: object
+    description: Parameters for getting campgrounds
+    properties:
+      parkCode:
+        type: string
+        description: "Filter by park code (e.g., 'yose' for Yosemite)"
+      limit:
+        type: integer
+        description: "Maximum number of campgrounds to return"
+        default: 10
+      start:
+        type: integer
+        description: "Start position for pagination"
+      q:
+        type: string
+        description: "Search term to filter campgrounds by name or description"
+    required: []
+
+- slug: nationalparks_get_events
+  name: Get Park Events
+  description: |
+    Find upcoming events at national parks including ranger programs, workshops, and guided activities.
+  provider: mcp-nationalparks
+  endpoint: /events
+  method: GET
+  scopes: []
+  tags:
+    - national-parks
+    - events
+    - activities
+    - read
+    - mcp
+  input_schema:
+    type: object
+    description: Parameters for getting park events
+    properties:
+      parkCode:
+        type: string
+        description: "Filter events by park code"
+      limit:
+        type: integer
+        description: "Maximum number of events to return"
+        default: 10
+      start:
+        type: integer
+        description: "Start position for pagination"
+      dateStart:
+        type: string
+        description: "Filter events from this date (format: YYYY-MM-DD)"
+      dateEnd:
+        type: string
+        description: "Filter events up to this date (format: YYYY-MM-DD)"
+      q:
+        type: string
+        description: "Search term to filter events by title or description"
+    required: []

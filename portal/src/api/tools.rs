@@ -966,8 +966,15 @@ async fn execute_api_key(
 
     let reqwest_method = if is_qcc { reqwest::Method::POST } else { method.as_reqwest_method() };
 
+    // NPS uses X-API-Key header, most others use Bearer
+    let is_nps = connector.platform == "mcp-nationalparks";
+
     let mut req_builder = client.request(reqwest_method, &full_url);
-    req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+    if is_nps {
+        req_builder = req_builder.header("X-Api-Key", access_token.clone());
+    } else {
+        req_builder = req_builder.header(AUTHORIZATION.as_str(), format!("Bearer {}", access_token));
+    }
     req_builder = req_builder.header("User-Agent", "OminiConnect/1.0");
 
     if let Some(body) = body_json {
@@ -1146,6 +1153,7 @@ fn get_platform_base_url(platform: &str) -> Option<&'static str> {
         "stripe" => "https://api.stripe.com/v1",
         "shopify" => "https://{shop}.myshopify.com/admin/api",
         "qcc" => "https://agent.qcc.com",
+        "mcp-nationalparks" => "https://developer.nps.gov/api/v1",
         _ => return None,
     })
 }

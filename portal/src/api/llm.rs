@@ -1806,15 +1806,22 @@ async fn execute_tool_direct(
         query_string.as_ref().map(|s| s.as_str()).unwrap_or("")
     );
 
-    // Use client_secret as Bearer token (PAT for GitHub)
+    // Use client_secret as Bearer token (PAT for GitHub), or X-Api-Key for NPS
     let token = if !connector.client_secret.is_empty() {
         connector.client_secret.clone()
     } else {
         connector.client_id.clone()
     };
-    let auth_headers = reqwest::header::HeaderMap::from_iter([
-        (reqwest::header::AUTHORIZATION, format!("Bearer {}", token).parse().unwrap()),
-    ]);
+    let is_nps = tool_def.provider == "mcp-nationalparks";
+    let auth_headers = if is_nps {
+        reqwest::header::HeaderMap::from_iter([
+            ("X-Api-Key".parse().unwrap(), token.parse().unwrap()),
+        ])
+    } else {
+        reqwest::header::HeaderMap::from_iter([
+            (reqwest::header::AUTHORIZATION, format!("Bearer {}", token).parse().unwrap()),
+        ])
+    };
 
     // Make the HTTP request
     let client = reqwest::Client::new();

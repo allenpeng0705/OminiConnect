@@ -736,10 +736,14 @@ fn providers_catalog_from_data_root(root: serde_json::Value) -> Vec<serde_json::
         .unwrap_or_default()
 }
 
-/// Load provider scopes from Nango's providers.scopes.yaml file.
+/// Load provider scopes from two sources:
+/// 1. Nango's providers.scopes.yaml (primary - curated scope lists)
+/// 2. providers.yaml default_scopes field (fallback for providers missing from #1)
 /// Returns a map of provider name -> list of available scopes.
 fn load_provider_scopes() -> std::collections::HashMap<String, Vec<String>> {
     let mut scopes = std::collections::HashMap::new();
+
+    // Source 1: providers.scopes.yaml (primary)
     let manifest_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let scopes_yaml_path =
         manifest_dir.join("../../third_party/nango/packages/providers/providers.scopes.yaml");
@@ -756,6 +760,7 @@ fn load_provider_scopes() -> std::collections::HashMap<String, Vec<String>> {
                             }
                         }
                     }
+                    // Only insert non-empty scope lists from primary source
                     if !scopes_list.is_empty() {
                         scopes.insert(name, scopes_list);
                     }
@@ -763,6 +768,43 @@ fn load_provider_scopes() -> std::collections::HashMap<String, Vec<String>> {
             }
         }
     }
+
+    // Source 2: providers.yaml default_scopes (fallback)
+    let providers_yaml_path =
+        manifest_dir.join("../../third_party/nango/packages/providers/providers.yaml");
+    if let Ok(content) = std::fs::read_to_string(&providers_yaml_path) {
+        if let Ok(parsed) = serde_yaml::from_str::<serde_yaml::Value>(&content) {
+            if let Some(obj) = parsed.as_mapping() {
+                for (k, v) in obj {
+                    let name = k.as_str().unwrap_or_default().to_string();
+                    // Only add if not already in scopes map
+                    if !scopes.contains_key(&name) {
+                        if let Some(v_obj) = v.as_mapping() {
+                            if let Some(default_scopes) = v_obj.get(&serde_yaml::Value::String("default_scopes".to_string())) {
+                                let mut scopes_list = Vec::new();
+                                if let Some(arr) = default_scopes.as_sequence() {
+                                    for scope_val in arr {
+                                        if let Some(s) = scope_val.as_str() {
+                                            scopes_list.push(s.to_string());
+                                        }
+                                    }
+                                }
+                                if !scopes_list.is_empty() {
+                                    tracing::debug!(
+                                        "Loaded fallback scopes for {}: {:?}",
+                                        name.clone(),
+                                        scopes_list.clone()
+                                    );
+                                    scopes.insert(name, scopes_list);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     scopes
 }
 

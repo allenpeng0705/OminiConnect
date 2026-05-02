@@ -639,6 +639,60 @@ mod tests {
     }
 
     #[test]
+    fn test_nps_find_parks() {
+        // Test argument extraction for National Parks MCP tool
+        let tool = Tool {
+            slug: "nationalparks_find_parks".to_string(),
+            name: "Find Parks".to_string(),
+            description: "Search for U.S. National Parks".to_string(),
+            provider: "mcp-nationalparks".to_string(),
+            endpoint: "/parks".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("Parameters for searching national parks".to_string()),
+                properties: {
+                    let mut p = std::collections::HashMap::new();
+                    p.insert("stateCode".to_string(), serde_json::json!({
+                        "type": "string",
+                        "description": "Filter by state code (e.g., 'CA' for California)"
+                    }));
+                    p.insert("q".to_string(), serde_json::json!({
+                        "type": "string",
+                        "description": "Search term to filter parks by name or description"
+                    }));
+                    p.insert("limit".to_string(), serde_json::json!({
+                        "type": "integer",
+                        "description": "Maximum number of parks to return",
+                        "default": 10
+                    }));
+                    p
+                },
+                required: vec![],
+            },
+            output_schema: None,
+            scopes: vec![],
+            tags: vec!["mcp".to_string(), "national-parks".to_string()],
+            icon_url: None,
+            example_queries: vec![],
+        };
+
+        // Test that literal stateCode param name in query matches
+        let result = extract_arguments("find parks with stateCode CA", &tool);
+        assert_eq!(
+            result.arguments.get("stateCode").unwrap().as_str().unwrap(),
+            "ca"
+        );
+
+        // Test query param matches literal param name "q"
+        let result = extract_arguments("find parks with q camping", &tool);
+        assert_eq!(
+            result.arguments.get("q").unwrap().as_str().unwrap(),
+            "camping"
+        );
+    }
+
+    #[test]
     fn test_confidence_with_required() {
         let tool = make_tool_with_owner();
         let result = extract_arguments("list Tesla's repositories", &tool);

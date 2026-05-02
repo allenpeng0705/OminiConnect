@@ -36,6 +36,15 @@ interface PlatformConfig {
 const PLATFORMS: PlatformConfig[] = BUILTIN_OMINI_PLATFORMS;
 const PAGE = 20;
 
+/** Most Popular providers — shown in a special category at the top of Global Services. */
+const MOST_POPULAR_KEYS = new Set([
+  'github', 'linkedin', 'facebook', 'x', 'slack', 'notion', 'jira', 'asana',
+  'trello', 'linear', 'salesforce', 'hubspot', 'zendesk', 'intercom',
+  'google_ads', 'mailchimp', 'klaviyo', 'dropbox', 'box', 'googledrive',
+  'shopify', 'stripe', 'paypal', 'zoom', 'twilio', 'sendgrid',
+  'segment', 'mixpanel', 'amplitude', 'vercel', 'datadog', 'newrelic', 'pagerduty',
+]);
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [connectors, setConnectors] = useState<ConnectorInfo[]>([]);
@@ -121,16 +130,30 @@ export default function Dashboard() {
   // Grouped structure for "All" (no single category selected)
   const groupedByCategory = useMemo(() => {
     if (selectedCategory) return [];
+    const mostPopular: IntegrationCatalogRow[] = [];
     const groups = new Map<string, IntegrationCatalogRow[]>();
     for (const row of categoryFiltered) {
-      // Assign to first category only to avoid duplicates
-      const cat = row.categories?.[0] ?? 'Other';
-      if (!groups.has(cat)) groups.set(cat, []);
-      groups.get(cat)!.push(row);
+      // Assign Most Popular providers to the special group
+      const key = row.name.toLowerCase();
+      if (MOST_POPULAR_KEYS.has(key)) {
+        mostPopular.push(row);
+      } else {
+        // Assign to first category only to avoid duplicates
+        const cat = row.categories?.[0] ?? 'Other';
+        if (!groups.has(cat)) groups.set(cat, []);
+        groups.get(cat)!.push(row);
+      }
     }
-    return Array.from(groups.entries())
+    const result: { category: string; providers: IntegrationCatalogRow[] }[] = [];
+    if (mostPopular.length > 0) {
+      result.push({ category: 'Most Popular', providers: mostPopular });
+    }
+    // Sort remaining categories alphabetically
+    const sortedGroups = Array.from(groups.entries())
       .map(([category, providers]) => ({ category, providers }))
       .sort((a, b) => a.category.localeCompare(b.category));
+    result.push(...sortedGroups);
+    return result;
   }, [categoryFiltered, selectedCategory]);
 
   /** Reset per-category pagination when filter or grouping changes. */
