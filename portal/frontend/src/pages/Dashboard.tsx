@@ -90,9 +90,13 @@ export default function Dashboard() {
   }, []);
 
   /** Hide Nango rows that duplicate Omini-only home cards (Maton, QQ Mail). Other providers use Global Services. */
+  const connectedProviderKeys = useMemo(
+    () => new Set(connectors.filter((c) => c.configured || c.connected).map((c) => c.provider_key?.split('__')[0].trim().toLowerCase()).filter(Boolean)),
+    [connectors]
+  );
   const globalCatalogRows = useMemo(
-    () => filterCatalogExcludingBuiltinDupes(catalogRows),
-    [catalogRows]
+    () => filterCatalogExcludingBuiltinDupes(catalogRows).filter((r) => !connectedProviderKeys.has(r.name.toLowerCase())),
+    [catalogRows, connectedProviderKeys]
   );
 
   const catalogFiltered = useMemo(() => {
