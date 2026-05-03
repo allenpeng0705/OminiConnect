@@ -827,7 +827,7 @@ impl ToolExecutionRepository for SqlxToolExecutionRepo {
 // Custom tools repository (user-registered tools)
 // ------------------------------------------------------------------------------------------------
 
-use crate::tools::{HttpMethod, InputSchema, Tool};
+use crate::tools::{HttpMethod, InputSchema, Tool, ToolProtocol};
 
 #[derive(Debug, Clone)]
 pub struct CustomTool {
@@ -873,6 +873,7 @@ impl From<CustomTool> for Tool {
             provider: ct.provider,
             endpoint: ct.endpoint,
             method: ct.method,
+            protocol: ToolProtocol::Rest,
             input_schema: ct.input_schema,
             output_schema: None,
             scopes: ct.scopes,

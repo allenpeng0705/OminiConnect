@@ -229,6 +229,68 @@ function generateToolsFromOpenAPI(
 
 ---
 
+## Protocol Types
+
+OminiConnect supports multiple protocol types for tool execution. Each tool specifies its protocol in the YAML definition.
+
+### Supported Protocols
+
+| Protocol | Description | Use Case |
+|----------|-------------|----------|
+| `rest` (default) | Standard REST API | GitHub, Slack, Notion, most providers |
+| `mcp` | JSON-RPC over HTTP (MCP-style) | QCC (企查查) |
+| `graphql` | GraphQL endpoint | Future providers |
+| `websocket` | WebSocket-based protocol | Future providers |
+
+### Adding a New Protocol
+
+1. **Add protocol enum to `src/tools.rs`**:
+   ```rust
+   pub enum ToolProtocol {
+       Rest,
+       Mcp,
+       GraphQL,
+       WebSocket,
+   }
+   ```
+
+2. **Add `protocol` field to `Tool` struct** (with `#[serde(default)]`):
+   ```rust
+   #[serde(default)]
+   pub protocol: ToolProtocol,
+   ```
+
+3. **Implement protocol handler in `src/api/llm.rs`**:
+   ```rust
+   match tool_def.protocol {
+       ToolProtocol::Mcp => execute_mcp_tool(...).await,
+       ToolProtocol::GraphQL => execute_graphql_tool(...).await,
+       ToolProtocol::WebSocket => execute_websocket_tool(...).await,
+       _ => execute_rest_tool(...).await,
+   }
+   ```
+
+4. **Update tool YAML files**:
+   ```yaml
+   - slug: qcc_company_get_company_registration_info
+     name: 企业工商信息
+     provider: qcc
+     endpoint: qcc_company_get_company_registration_info
+     method: POST
+     protocol: mcp
+     scopes: []
+   ```
+
+### Example: QCC MCP Integration
+
+QCC uses MCP (Model Context Protocol) with JSON-RPC over HTTP SSE. The tool YAML specifies `protocol: mcp`, and the handler:
+1. Extracts server name from endpoint (e.g., `qcc_company_get_xxx` → `company`)
+2. Constructs SSE URL: `https://agent.qcc.com/mcp/{server}/stream`
+3. Wraps arguments in JSON-RPC 2.0 `tools/call` format
+4. Sends as POST with Bearer token auth
+
+---
+
 ## Implementation Plan
 
 ### Phase 1: Core Infrastructure ✅ (Done)

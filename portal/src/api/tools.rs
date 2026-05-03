@@ -1130,7 +1130,7 @@ pub fn tool_error(status: StatusCode, message: &str) -> Response {
     response
 }
 
-fn get_platform_base_url(platform: &str) -> Option<&'static str> {
+pub(crate) fn get_platform_base_url(platform: &str) -> Option<&'static str> {
     Some(match platform {
         "github" => "https://api.github.com",
         "feishu" => "https://open.feishu.cn/open-apis",

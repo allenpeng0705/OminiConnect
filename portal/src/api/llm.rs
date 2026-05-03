@@ -26,8 +26,9 @@ use http_body_util::BodyExt;
 use jsonschema::{self, draft7};
 use serde::{Deserialize, Serialize};
 
-use crate::api::tools::{auth_user, check_scope_satisfied, tool_error, ScopeSatisfied, substitute_path_params, build_params};
+use crate::api::tools::{check_scope_satisfied, tool_error, ScopeSatisfied, substitute_path_params, build_params, get_platform_base_url};
 use crate::app::AppState;
+use crate::auth::middleware::try_auth;
 
 /// Stop words to remove from queries for matching.
 const STOP_WORDS: &[&str] = &[
@@ -47,6 +48,13 @@ pub struct LlmExecuteRequest {
     /// Optional context (currently unused, for future expansion).
     #[serde(default)]
     pub context: Option<serde_json::Value>,
+    /// Per-request LLM config (overrides server-side config if provided).
+    #[serde(default)]
+    pub llm_url: Option<String>,
+    #[serde(default)]
+    pub llm_api_key: Option<String>,
+    #[serde(default)]
+    pub llm_model: Option<String>,
 }
 
 /// Response for LLM execution.
@@ -132,9 +140,12 @@ pub async fn execute(
     headers: HeaderMap,
     Json(body): Json<LlmExecuteRequest>,
 ) -> Response {
-    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
-        Ok(u) => u,
-        Err(e) => return e,
+    // Try session cookie first, then API key
+    let owner = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return tool_error(StatusCode::UNAUTHORIZED, "missing authorization header");
+        }
     };
 
     // Get user's connected platforms and scopes
@@ -163,10 +174,13 @@ pub async fn execute(
     let llm_available = state.llm_config.is_available()
         || state.panda_ai_gateway.as_ref().map(|p| p.is_enabled()).unwrap_or(false);
 
-    // If LLM is available, use LLM-based execution
-    if llm_available {
+    // Check if per-request LLM credentials are provided
+    let has_per_request_llm = body.llm_url.is_some() && body.llm_api_key.is_some();
+
+    // If LLM is available (or per-request credentials provided), use LLM-based execution
+    if llm_available || has_per_request_llm {
         tracing::info!("Using LLM-based execution for query: {}", body.query);
-        match llm_execute(&state, &owner, &body.query, &user_connectors).await {
+        match llm_execute(&state, &owner, &body.query, &user_connectors, has_per_request_llm, &body.llm_url, &body.llm_api_key, &body.llm_model).await {
             Ok(resp) => return ok_json(resp),
             Err(e) => return e,
         }
@@ -400,9 +414,11 @@ pub async fn list_tools(
     Query(query): Query<LlmToolsQuery>,
     headers: HeaderMap,
 ) -> Response {
-    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
-        Ok(u) => u,
-        Err(e) => return e,
+    let owner = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return tool_error(StatusCode::UNAUTHORIZED, "missing authorization header");
+        }
     };
 
     let user_connectors = match get_user_connectors(&state, &owner).await {
@@ -487,9 +503,11 @@ pub async fn explain(
     headers: HeaderMap,
     Query(query): Query<LlmExplainQuery>,
 ) -> Response {
-    let (owner, _agent_id, _allowed_tools) = match auth_user(&state, &headers).await {
-        Ok(u) => u,
-        Err(e) => return e,
+    let owner = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return tool_error(StatusCode::UNAUTHORIZED, "missing authorization header");
+        }
     };
 
     let user_connectors = match get_user_connectors(&state, &owner).await {
@@ -555,9 +573,11 @@ pub async fn telemetry(
     Query(query): Query<LlmTelemetryQuery>,
     headers: HeaderMap,
 ) -> Response {
-    let _ = match auth_user(&state, &headers).await {
-        Ok(u) => u,
-        Err(e) => return e,
+    let _ = match try_auth(&state, &headers).await {
+        Some(auth) => auth.username,
+        None => {
+            return tool_error(StatusCode::UNAUTHORIZED, "missing authorization header");
+        }
     };
 
     let snapshot = {
@@ -1135,6 +1155,10 @@ async fn llm_execute(
     owner: &str,
     query: &str,
     user_connectors: &HashMap<String, Vec<String>>,
+    has_per_request_llm: bool,
+    llm_url: &Option<String>,
+    llm_api_key: &Option<String>,
+    llm_model: &Option<String>,
 ) -> Result<LlmExecuteResponse, Response> {
     // Build the list of tools for the LLM and platform->provider mapping
     let (tools, _platform_provider_map) = build_llm_tools(state, owner, user_connectors, query).await?;
@@ -1221,23 +1245,53 @@ async fn llm_execute(
                     "Panda AI Gateway not enabled",
                 ));
             }
-        } else if state.llm_config.is_available() {
+        } else if state.llm_config.is_available() || has_per_request_llm {
             tracing::info!("Using LiteLLM directly for LLM call");
+            let model = llm_model.clone().unwrap_or_else(|| state.llm_config.default_model.clone());
+            let url = llm_url.clone().unwrap_or_else(|| state.llm_config.url.clone());
+            let api_key = llm_api_key.clone().unwrap_or_else(|| state.llm_config.api_key.clone().unwrap_or_default());
             let chat_request = crate::llm::ChatRequest {
-                model: state.llm_config.default_model.clone(),
+                model,
                 messages: messages.clone(),
                 tools: Some(tools_for_llm.clone()),
                 stream: false,
                 temperature: Some(0.0),
                 top_p: Some(1.0),
             };
-            state.llm_client.chat(chat_request).await.map_err(|e| {
-                tracing::error!("LiteLLM error: {}", e);
-                tool_error(
-                    StatusCode::BAD_GATEWAY,
-                    &format!("LLM call failed: {}", e),
-                )
-            })?
+            let chat_url = format!("{}/chat/completions", url.trim_end_matches('/'));
+            let json_body = serde_json::to_string(&chat_request).map_err(|e| {
+                tool_error(StatusCode::INTERNAL_SERVER_ERROR, &format!("Failed to serialize request: {}", e))
+            })?;
+            let output = std::process::Command::new("curl")
+                .args(&[
+                    "-s", "-X", "POST",
+                    &chat_url,
+                    "-H", &format!("Authorization: Bearer {}", api_key),
+                    "-H", "Content-Type: application/json",
+                    "-d", &json_body,
+                ])
+                .output()
+                .map_err(|e| {
+                    tool_error(StatusCode::BAD_GATEWAY, &format!("curl failed: {}", e))
+                })?;
+            let body = String::from_utf8_lossy(&output.stdout);
+            // Check if body contains an error response (e.g., MiniMax error format)
+            if let Ok(err_resp) = serde_json::from_str::<serde_json::Value>(&body) {
+                if err_resp.get("type").and_then(|t| t.as_str()) == Some("error") {
+                    let msg = err_resp.get("error")
+                        .and_then(|e| e.get("message"))
+                        .and_then(|m| m.as_str())
+                        .unwrap_or("LLM API error");
+                    return Err(tool_error(StatusCode::BAD_GATEWAY, msg));
+                }
+            }
+            if !output.status.success() {
+                let code = output.status.code().unwrap_or(500) as u16;
+                return Err(tool_error(StatusCode::BAD_GATEWAY, &format!("LLM HTTP error {}: {}", code, body)));
+            }
+            let llm_response: crate::llm::ChatResponse = serde_json::from_slice(&output.stdout)
+                .map_err(|e| tool_error(StatusCode::BAD_GATEWAY, &format!("Failed to parse LLM response: {}: {}", e, body)))?;
+            llm_response
         } else {
             return Err(tool_error(
                 StatusCode::SERVICE_UNAVAILABLE,
@@ -1715,12 +1769,12 @@ async fn execute_tool_direct(
     tool_def: &crate::tools::Tool,
     arguments: serde_json::Value,
 ) -> Result<serde_json::Value, Response> {
-    use crate::api::proxy::get_platform_base_url;
-
-    let base_url = get_platform_base_url(&tool_def.provider);
-    if base_url.is_empty() {
-        return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
-    }
+    let base_url = match get_platform_base_url(&tool_def.provider) {
+        Some(url) => url,
+        None => {
+            return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
+        }
+    };
 
     // Build the path by substituting path parameters
     let path = substitute_path_params(&tool_def.endpoint, &arguments);
@@ -1729,7 +1783,9 @@ async fn execute_tool_direct(
     let (query_string, body_json) = build_params(&tool_def.method, &arguments, &tool_def.endpoint);
 
     // Determine auth approach based on engine
-    if connector.engine == "nango" {
+    let is_nango = connector.engine == "nango";
+
+    if is_nango {
         // Use Nango's proxy with provider_key and connection_ref
         let Some((nango_base, nango_secret)) = crate::nango::nango_credentials() else {
             return Err(tool_error(StatusCode::SERVICE_UNAVAILABLE, "NANGO_BASE_URL and NANGO_SECRET_KEY must be set"));
@@ -1794,10 +1850,100 @@ async fn execute_tool_direct(
     }
 
     // For non-nango engines (PAT-based like github), use direct API call with Bearer token
-    let base_url = get_platform_base_url(&tool_def.provider);
-    if base_url.is_empty() {
-        return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
+    // For tools with MCP protocol, use MCP handler
+    if tool_def.protocol == crate::tools::ToolProtocol::Mcp {
+        // QCC uses MCP over SSE - construct the SSE endpoint URL
+        // endpoint format: "qcc_{server}_{action}" e.g. "qcc_company_get_shareholder_info"
+        let parts: Vec<&str> = tool_def.endpoint.split('_').collect();
+        let server = if parts.len() >= 3 && parts[0] == "qcc" {
+            parts[1].to_string()
+        } else {
+            return Err(tool_error(StatusCode::BAD_REQUEST, "Invalid QCC endpoint format"));
+        };
+
+        let qcc_url = format!("https://agent.qcc.com/mcp/{}/stream", server);
+
+        // Use client_secret as Bearer token for QCC, fallback to client_id
+        let token = if !connector.client_secret.is_empty() {
+            connector.client_secret.clone()
+        } else if !connector.client_id.is_empty() {
+            connector.client_id.clone()
+        } else {
+            return Err(tool_error(StatusCode::UNAUTHORIZED, "QCC API key not configured"));
+        };
+
+        let client = reqwest::Client::new();
+
+        // Transform arguments into JSON-RPC format
+        let body = body_json.unwrap_or_default();
+        let rpc_body = if let Ok(args) = serde_json::from_str::<serde_json::Value>(&body) {
+            let method_name = if parts.len() >= 3 {
+                parts[2..].join("_")
+            } else {
+                String::new()
+            };
+            serde_json::json!({
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": method_name,
+                    "arguments": args
+                }
+            }).to_string()
+        } else {
+            // Fallback to tools/list
+            serde_json::json!({
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/list",
+                "params": {}
+            }).to_string()
+        };
+
+        let resp = client.post(&qcc_url)
+            .header("Authorization", format!("Bearer {}", token))
+            .header("Content-Type", "application/json")
+            .header("User-Agent", "OminiConnect/1.0")
+            .body(rpc_body)
+            .send().await.map_err(|e| {
+                tracing::error!("QCC MCP request failed: {}", e);
+                tool_error(StatusCode::BAD_GATEWAY, &format!("QCC request failed: {}", e))
+            })?;
+
+        let status = resp.status();
+        let body = resp.text().await.unwrap_or_default();
+
+        if !status.is_success() {
+            return Ok(serde_json::json!({
+                "error": "api_error",
+                "status": status.as_u16(),
+                "message": body
+            }));
+        }
+
+        // Parse QCC MCP response (JSON-RPC format)
+        if let Ok(resp_json) = serde_json::from_str::<serde_json::Value>(&body) {
+            if let Some(result) = resp_json.get("result") {
+                return Ok(result.clone());
+            }
+            if let Some(error) = resp_json.get("error") {
+                return Ok(serde_json::json!({
+                    "error": "qcc_error",
+                    "details": error
+                }));
+            }
+        }
+
+        return Ok(serde_json::json!({ "raw": body }));
     }
+
+    let base_url = match get_platform_base_url(&tool_def.provider) {
+        Some(url) => url,
+        None => {
+            return Err(tool_error(StatusCode::BAD_REQUEST, "Unknown platform"));
+        }
+    };
 
     // Build the full URL
     let full_url = format!("{}{}{}",
@@ -1835,7 +1981,8 @@ async fn execute_tool_direct(
 
     let mut request = client.request(method, &full_url)
         .headers(auth_headers)
-        .header(reqwest::header::CONTENT_TYPE, "application/json");
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .header("User-Agent", "OminiConnect/1.0");
 
     if let Some(body) = body_json {
         request = request.body(body);
@@ -2299,6 +2446,7 @@ mod tests {
             provider: "github".to_string(),
             endpoint: "/user/repos".to_string(),
             method: HttpMethod::GET,
+            protocol: crate::tools::ToolProtocol::Rest,
             input_schema: InputSchema::default(),
             output_schema: None,
             scopes: vec![],

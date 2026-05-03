@@ -24,6 +24,27 @@ impl Default for HttpMethod {
     }
 }
 
+/// Protocol types for tool execution.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum ToolProtocol {
+    /// Standard REST API (default)
+    Rest,
+    /// JSON-RPC over SSE (MCP style), e.g. QCC
+    #[serde(rename = "mcp")]
+    Mcp,
+    /// GraphQL endpoint
+    GraphQL,
+    /// WebSocket-based protocol
+    WebSocket,
+}
+
+impl Default for ToolProtocol {
+    fn default() -> Self {
+        ToolProtocol::Rest
+    }
+}
+
 /// Input schema for tool parameters (stored as raw JSON Schema).
 /// The schema_type is always "object" for tool parameters.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -56,6 +77,9 @@ pub struct Tool {
     /// HTTP method.
     #[serde(default)]
     pub method: HttpMethod,
+    /// Protocol to use for execution. Defaults to Rest.
+    #[serde(default)]
+    pub protocol: ToolProtocol,
     /// JSON Schema for input parameters.
     #[serde(default)]
     pub input_schema: InputSchema,

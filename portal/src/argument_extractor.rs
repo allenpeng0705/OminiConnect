@@ -550,6 +550,7 @@ mod tests {
             provider: "github".to_string(),
             endpoint: "/repos/{owner}/{repo}".to_string(),
             method: HttpMethod::GET,
+            protocol: crate::tools::ToolProtocol::Rest,
             input_schema: InputSchema {
                 schema_type: Some("object".to_string()),
                 description: Some("Parameters".to_string()),
@@ -648,6 +649,7 @@ mod tests {
             provider: "mcp-nationalparks".to_string(),
             endpoint: "/parks".to_string(),
             method: HttpMethod::GET,
+            protocol: crate::tools::ToolProtocol::Rest,
             input_schema: InputSchema {
                 schema_type: Some("object".to_string()),
                 description: Some("Parameters for searching national parks".to_string()),

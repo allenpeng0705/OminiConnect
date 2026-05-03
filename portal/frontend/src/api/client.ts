@@ -295,3 +295,65 @@ export async function getIntegrationCatalog(search?: string): Promise<Integratio
   }
   return res.json();
 }
+
+// ============================================================================
+// LLM / Natural Language Testing
+// ============================================================================
+
+export interface LlmExecuteResponse {
+  ok: boolean;
+  tool?: string;
+  tool_name?: string;
+  arguments?: Record<string, unknown>;
+  explanation?: string;
+  result?: unknown;
+  error?: string;
+  message?: string;
+  candidates?: { tool: string; tool_name: string; score: number }[];
+  available_tools_hint?: string;
+}
+
+export interface LlmTool {
+  slug: string;
+  name: string;
+  description: string;
+  provider: string;
+}
+
+export interface LlmExecuteRequest {
+  query: string;
+  platform?: string;
+  context?: Record<string, unknown>;
+  llm_url?: string;
+  llm_api_key?: string;
+  llm_model?: string;
+}
+
+export async function executeLlmQuery(req: LlmExecuteRequest): Promise<LlmExecuteResponse> {
+  const res = await apiFetch('/api/llm', {
+    method: 'POST',
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) {
+    let detail = res.statusText || 'LLM request failed';
+    try {
+      const j = (await res.json()) as { error?: unknown };
+      if (typeof j?.error === 'string' && j.error.trim()) {
+        detail = j.error.trim();
+      }
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
+export async function getLlmTools(platform?: string): Promise<LlmTool[]> {
+  const q = platform ? `?platform=${encodeURIComponent(platform)}` : '';
+  const res = await apiFetch(`/api/llm/tools${q}`);
+  if (!res.ok) {
+    throw new Error('Failed to load LLM tools');
+  }
+  return res.json();
+}

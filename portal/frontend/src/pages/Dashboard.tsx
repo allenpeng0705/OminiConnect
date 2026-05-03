@@ -5,6 +5,7 @@ import CatalogProviderListItem from '../components/CatalogProviderListItem';
 import CategoryFilterBar from '../components/CategoryFilterBar';
 import ViewToggle from '../components/ViewToggle';
 import IntegrationProviderLogo from '../components/IntegrationProviderLogo';
+import TestPanel from '../components/TestPanel';
 import { getConnectors, getConnectorStatus, getIntegrationCatalog, getMe, logout, createNangoConnectSession, type IntegrationCatalogRow } from '../api/client';
 import { findConnectorPlatformForCatalogProvider } from '../lib/connectorCatalogEntry';
 import { normalizeCatalogResponse, providerSearchBlob } from '../lib/integrationCatalogNormalize';
@@ -287,6 +288,9 @@ export default function Dashboard() {
       </header>
 
       <main style={{ padding: '2rem' }}>
+        {/* Test Panel */}
+        <TestPanel connectedPlatforms={connectors.map(c => c.platform)} />
+
         {/* Connected Services */}
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.125rem', color: '#333', marginBottom: '1rem' }}>Connected Services</h2>
