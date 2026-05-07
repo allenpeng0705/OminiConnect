@@ -34,20 +34,21 @@ pub struct McpRequest {
 }
 
 /// MCP JSON-RPC response.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct McpResponse {
-    jsonrpc: String,
-    id: serde_json::Value,
+    #[serde(rename = "jsonrpc")]
+    pub jsonrpc: String,
+    pub id: serde_json::Value,
     #[serde(skip_serializing_if = "Option::is_none")]
-    result: Option<serde_json::Value>,
+    pub result: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    error: Option<McpError>,
+    pub error: Option<McpError>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct McpError {
-    code: i32,
-    message: String,
+    pub code: i32,
+    pub message: String,
 }
 
 impl McpResponse {
@@ -387,4 +388,262 @@ pub fn router() -> Router<Arc<AppState>> {
     Router::new()
         .route("/mcp", post(handle_mcp))
         .route("/mcp/sse", get(handle_mcp_sse))
+}
+
+// ─── Unit tests ────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::tools::{HttpMethod, InputSchema, Tool, ToolProtocol};
+
+    fn make_test_tool(slug: &str, provider: &str, scopes: Vec<&str>) -> Tool {
+        Tool {
+            slug: slug.to_string(),
+            name: slug.to_string(),
+            description: "Test tool description".to_string(),
+            provider: provider.to_string(),
+            endpoint: "/test".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("test params".to_string()),
+                properties: [(
+                    "param1".to_string(),
+                    serde_json::json!({
+                        "type": "string",
+                        "description": "A parameter"
+                    }),
+                )]
+                .into_iter()
+                .collect(),
+                required: vec!["param1".to_string()],
+            },
+            output_schema: None,
+            scopes: scopes.into_iter().map(String::from).collect(),
+            tags: vec!["test".to_string()],
+            icon_url: None,
+            example_queries: vec!["test query".to_string()],
+            protocol: ToolProtocol::Rest,
+        }
+    }
+
+    #[test]
+    fn test_mcp_response_success() {
+        let response = McpResponse::success(
+            serde_json::json!(1),
+            serde_json::json!({ "tools": [] }),
+        );
+
+        assert_eq!(response.jsonrpc, "2.0");
+        assert_eq!(response.id, serde_json::json!(1));
+        assert!(response.result.is_some());
+        assert!(response.error.is_none());
+    }
+
+    #[test]
+    fn test_mcp_response_error() {
+        let response = McpResponse::error(serde_json::json!(1), -32601, "Method not found".to_string());
+
+        assert_eq!(response.jsonrpc, "2.0");
+        assert_eq!(response.id, serde_json::json!(1));
+        assert!(response.result.is_none());
+        assert!(response.error.is_some());
+        let err = response.error.unwrap();
+        assert_eq!(err.code, -32601);
+        assert_eq!(err.message, "Method not found");
+    }
+
+    #[test]
+    fn test_mcp_response_serde() {
+        let response = McpResponse::success(
+            serde_json::json!(42),
+            serde_json::json!({ "result": "ok" }),
+        );
+
+        let json = serde_json::to_string(&response).unwrap();
+        assert!(json.contains("\"jsonrpc\":\"2.0\""));
+        assert!(json.contains("\"id\":42"));
+        assert!(json.contains("\"result\":"));
+
+        let decoded: McpResponse = serde_json::from_str(&json).unwrap();
+        assert_eq!(decoded.id, serde_json::json!(42));
+    }
+
+    #[test]
+    fn test_mcp_response_error_serde() {
+        let response = McpResponse::error(
+            serde_json::json!("id-123"),
+            -32602,
+            "Invalid params".to_string(),
+        );
+
+        let json = serde_json::to_string(&response).unwrap();
+        assert!(json.contains("\"error\":"));
+        assert!(json.contains("\"code\":-32602"));
+        assert!(json.contains("\"message\":\"Invalid params\""));
+
+        let decoded: McpResponse = serde_json::from_str(&json).unwrap();
+        assert!(decoded.error.is_some());
+        assert_eq!(decoded.error.unwrap().code, -32602);
+    }
+
+    #[test]
+    fn test_mcp_tool_from_tool() {
+        let tool = make_test_tool("test_tool", "github", vec!["repo"]);
+
+        let mcpt = McpTool::from(&tool);
+
+        assert_eq!(mcpt.name, "test_tool");
+        assert_eq!(mcpt.description, "Test tool description");
+        assert!(mcpt.input_schema.is_object());
+        let props = mcpt.input_schema.get("properties").unwrap();
+        assert!(props.get("param1").is_some());
+        let required = mcpt.input_schema.get("required").unwrap();
+        assert!(required.as_array().unwrap().contains(&serde_json::json!("param1")));
+        assert!(mcpt.scope_satisfied.is_none()); // Not set by From
+    }
+
+    #[test]
+    fn test_mcp_tool_from_tool_empty_scopes() {
+        // Tool with no required params
+        let tool = Tool {
+            slug: "no_scope_tool".to_string(),
+            name: "No Scope Tool".to_string(),
+            description: "Tool with no required params".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/test".to_string(),
+            method: HttpMethod::GET,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: Some("".to_string()),
+                properties: HashMap::new(),
+                required: vec![],
+            },
+            output_schema: None,
+            scopes: vec![],
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+            protocol: ToolProtocol::Rest,
+        };
+
+        let mcpt = McpTool::from(&tool);
+
+        assert_eq!(mcpt.name, "no_scope_tool");
+        let required = mcpt.input_schema.get("required").unwrap();
+        assert!(required.as_array().unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_mcp_request_parse() {
+        let json = r#"{
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/list",
+            "params": {}
+        }"#;
+
+        let request: McpRequest = serde_json::from_str(json).unwrap();
+        assert_eq!(request.jsonrpc, "2.0");
+        assert_eq!(request.id, serde_json::json!(1));
+        assert_eq!(request.method, "tools/list");
+        assert!(request.params.is_object());
+    }
+
+    #[test]
+    fn test_mcp_request_parse_with_params() {
+        let json = r#"{
+            "jsonrpc": "2.0",
+            "id": "abc",
+            "method": "tools/call",
+            "params": {
+                "name": "github_list_repos",
+                "arguments": {"sort": "updated"}
+            }
+        }"#;
+
+        let request: McpRequest = serde_json::from_str(json).unwrap();
+        assert_eq!(request.method, "tools/call");
+        let params = request.params.as_object().unwrap();
+        assert_eq!(params.get("name").unwrap().as_str(), Some("github_list_repos"));
+        assert!(params.get("arguments").is_some());
+    }
+
+    #[test]
+    fn test_mcp_request_missing_params() {
+        let json = r#"{
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/list"
+        }"#;
+
+        let request: McpRequest = serde_json::from_str(json).unwrap();
+        assert!(request.params.is_null() || request.params.is_object());
+    }
+
+    #[test]
+    fn test_mcp_error_codes() {
+        // Standard JSON-RPC error codes
+        // -32600: Invalid Request
+        // -32601: Method not found
+        // -32602: Invalid params
+        // -32603: Internal error
+
+        let response = McpResponse::error(serde_json::json!(1), -32600, "Invalid request".to_string());
+        assert_eq!(response.error.as_ref().unwrap().code, -32600);
+
+        let response = McpResponse::error(serde_json::json!(1), -32601, "Method not found".to_string());
+        assert_eq!(response.error.as_ref().unwrap().code, -32601);
+
+        let response = McpResponse::error(serde_json::json!(1), -32602, "Invalid params".to_string());
+        assert_eq!(response.error.as_ref().unwrap().code, -32602);
+
+        let response = McpResponse::error(serde_json::json!(1), -32603, "Internal error".to_string());
+        assert_eq!(response.error.as_ref().unwrap().code, -32603);
+    }
+
+    #[test]
+    fn test_mcp_tool_with_complex_input_schema() {
+        let tool = Tool {
+            slug: "complex_tool".to_string(),
+            name: "Complex Tool".to_string(),
+            description: "Tool with complex params".to_string(),
+            provider: "github".to_string(),
+            endpoint: "/complex".to_string(),
+            method: HttpMethod::POST,
+            input_schema: InputSchema {
+                schema_type: Some("object".to_string()),
+                description: None,
+                properties: [
+                    ("string_param".to_string(), serde_json::json!({"type": "string"})),
+                    ("number_param".to_string(), serde_json::json!({"type": "number"})),
+                    ("array_param".to_string(), serde_json::json!({"type": "array", "items": {"type": "string"}})),
+                    ("object_param".to_string(), serde_json::json!({
+                        "type": "object",
+                        "properties": {
+                            "nested": {"type": "string"}
+                        }
+                    })),
+                ]
+                .into_iter()
+                .collect(),
+                required: vec!["string_param".to_string()],
+            },
+            output_schema: None,
+            scopes: vec![],
+            tags: vec![],
+            icon_url: None,
+            example_queries: vec![],
+            protocol: ToolProtocol::Rest,
+        };
+
+        let mcpt = McpTool::from(&tool);
+        let props = mcpt.input_schema.get("properties").unwrap().as_object().unwrap();
+
+        assert!(props.contains_key("string_param"));
+        assert!(props.contains_key("number_param"));
+        assert!(props.contains_key("array_param"));
+        assert!(props.contains_key("object_param"));
+    }
 }
