@@ -1280,4 +1280,100 @@ mod tests {
         assert_eq!(decoded.slug, "github_list_repos");
         assert_eq!(decoded.scope_satisfied, ScopeSatisfied::Yes);
     }
+
+    #[test]
+    fn test_substitute_path_params_basic() {
+        let endpoint = "/repos/{owner}/{repo}/issues";
+        let args = serde_json::json!({
+            "owner": "octocat",
+            "repo": "hello-world"
+        });
+        let result = substitute_path_params(endpoint, &args);
+        assert_eq!(result, "/repos/octocat/hello-world/issues");
+    }
+
+    #[test]
+    fn test_substitute_path_params_no_params() {
+        let endpoint = "/user/repos";
+        let args = serde_json::json!({"sort": "updated"});
+        let result = substitute_path_params(endpoint, &args);
+        assert_eq!(result, "/user/repos");
+    }
+
+    #[test]
+    fn test_substitute_path_params_partial() {
+        let endpoint = "/repos/{owner}/issues";
+        let args = serde_json::json!({
+            "owner": "octocat",
+            "repo": "hello-world"  // not in path
+        });
+        let result = substitute_path_params(endpoint, &args);
+        assert_eq!(result, "/repos/octocat/issues");
+    }
+
+    #[test]
+    fn test_substitute_path_params_empty_args() {
+        let endpoint = "/repos/{owner}/issues";
+        let args = serde_json::json!({});
+        let result = substitute_path_params(endpoint, &args);
+        assert_eq!(result, "/repos/{owner}/issues"); // unchanged
+    }
+
+    #[test]
+    fn test_build_params_get_query() {
+        let method = HttpMethod::GET;
+        let endpoint = "/user/repos";
+        let args = serde_json::json!({"sort": "updated", "per_page": 30});
+
+        let (query, body) = build_params(&method, &args, endpoint);
+
+        assert!(body.is_none());
+        let q = query.unwrap();
+        assert!(q.contains("sort=updated"));
+        assert!(q.contains("per_page=30"));
+    }
+
+    #[test]
+    fn test_build_params_post_body() {
+        let method = HttpMethod::POST;
+        let endpoint = "/repos/{owner}/{repo}/issues";
+        let args = serde_json::json!({
+            "owner": "octocat",
+            "repo": "hello-world",
+            "title": "Bug found",
+            "body": "Description here"
+        });
+
+        let (query, body) = build_params(&method, &args, endpoint);
+
+        assert!(query.is_none());
+        let b = body.unwrap();
+        let parsed: serde_json::Value = serde_json::from_str(&b).unwrap();
+        assert_eq!(parsed["title"], "Bug found");
+        assert_eq!(parsed["body"], "Description here");
+        // path params should not be in body
+        assert!(!b.contains("octocat"));
+        assert!(!b.contains("hello-world"));
+    }
+
+    #[test]
+    fn test_build_params_get_empty() {
+        let method = HttpMethod::GET;
+        let endpoint = "/user/repos";
+        let args = serde_json::json!({});
+
+        let (query, body) = build_params(&method, &args, endpoint);
+
+        assert!(query.is_none());
+        assert!(body.is_none());
+    }
+
+    #[test]
+    fn test_http_method_as_reqwest() {
+        assert_eq!(HttpMethod::GET.as_reqwest_method(), reqwest::Method::GET);
+        assert_eq!(HttpMethod::POST.as_reqwest_method(), reqwest::Method::POST);
+        assert_eq!(HttpMethod::PUT.as_reqwest_method(), reqwest::Method::PUT);
+        assert_eq!(HttpMethod::DELETE.as_reqwest_method(), reqwest::Method::DELETE);
+        assert_eq!(HttpMethod::PATCH.as_reqwest_method(), reqwest::Method::PATCH);
+    }
 }

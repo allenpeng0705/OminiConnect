@@ -2467,7 +2467,7 @@ mod tests {
     /// Test that score_tool rewards action verb matches.
     #[test]
     fn test_score_tool_action_match() {
-        use crate::tools::{Tool, HttpMethod, InputSchema};
+        use crate::tools::{Tool, HttpMethod, InputSchema, ToolProtocol};
 
         let tool = Tool {
             slug: "github_list_repos".to_string(),
@@ -2482,6 +2482,7 @@ mod tests {
             tags: vec![],
             icon_url: None,
             example_queries: vec![],
+            protocol: ToolProtocol::Rest,
         };
 
         // Query with "list" should match GET method tools
@@ -2523,7 +2524,7 @@ mod tests {
     /// Test extract_arguments extracts sort parameter.
     #[test]
     fn test_extract_arguments_sort() {
-        use crate::tools::{Tool, HttpMethod, InputSchema};
+        use crate::tools::{Tool, HttpMethod, InputSchema, ToolProtocol};
 
         let tool = Tool {
             slug: "github_list_repos".to_string(),
@@ -2552,6 +2553,7 @@ mod tests {
             tags: vec![],
             icon_url: None,
             example_queries: vec![],
+            protocol: ToolProtocol::Rest,
         };
 
         let query = "list repositories sorted by updated";
@@ -2563,7 +2565,7 @@ mod tests {
     /// Test extract_arguments handles per_page for "all" keyword.
     #[test]
     fn test_extract_arguments_per_page_all() {
-        use crate::tools::{Tool, HttpMethod, InputSchema};
+        use crate::tools::{Tool, HttpMethod, InputSchema, ToolProtocol};
 
         let tool = Tool {
             slug: "github_list_repos".to_string(),
@@ -2591,6 +2593,7 @@ mod tests {
             tags: vec![],
             icon_url: None,
             example_queries: vec![],
+            protocol: ToolProtocol::Rest,
         };
 
         let query = "list all repositories";

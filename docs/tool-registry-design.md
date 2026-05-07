@@ -46,11 +46,13 @@ interface Tool {
   provider: string;                // Proxy :platform (often matches Nango provider key when not a slug)
   endpoint: string;               // "/user/repos" — may include {placeholders} for path params
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  protocol: "rest" | "mcp" | "graphql" | "websocket";  // Execution protocol (default: "rest")
   inputSchema: JSONSchema;         // OpenAPI parameter schema
   outputSchema?: JSONSchema;       // Response schema
   scopes: string[];               // Required OAuth scopes
-  tags?: string[];                // ["code", "repository"]
+  tags?: string[];                // ["code", "repository"] — used for auto-detect
   icon_url?: string;               // Provider logo
+  example_queries?: string[];      // Natural language examples for LLM selection
 }
 ```
 
@@ -294,7 +296,7 @@ QCC uses MCP (Model Context Protocol) with JSON-RPC over HTTP SSE. The tool YAML
 ## Implementation Plan
 
 ### Phase 1: Core Infrastructure ✅ (Done)
-1. ✅ Create tool types (`src/tools.rs`): `Tool`, `Toolkit`, `ToolRegistry`, `HttpMethod`
+1. ✅ Create tool types (`src/tools.rs`): `Tool`, `Toolkit`, `ToolRegistry`, `HttpMethod`, `ToolProtocol`
 2. ✅ Fixed YAML directory: `tools/registry/*.yaml`, loaded at startup with fail-fast validation
 3. ✅ Created `github.yaml` with 9 allowlisted tools (list repos, list issues, get user, etc.)
 4. ✅ Implemented `GET /api/tools?platform=xxx` endpoint (Bearer auth, returns toolkits + tools)
@@ -303,7 +305,7 @@ QCC uses MCP (Model Context Protocol) with JSON-RPC over HTTP SSE. The tool YAML
 **Files created:**
 - `src/tools.rs` - Tool types and registry loader
 - `src/api/tools.rs` - API handlers (list, execute)
-- `tools/registry/github.yaml` - GitHub tool definitions (9 tools)
+- `portal/tools/registry/github.yaml` - GitHub tool definitions (9 tools)
 
 ### Phase 2: Tool Generation ✅ (Done)
 1. ✅ Built OpenAPI → tool generator (`tools/generator/src/main.rs`) with allowlist support:
@@ -327,7 +329,41 @@ QCC uses MCP (Model Context Protocol) with JSON-RPC over HTTP SSE. The tool YAML
    - All 886 provider YAML files enriched with improved descriptions
    - Each description: 2-3 sentences, action-verb-first, specific about entity type and data returned/created
    - No endpoint paths in descriptions
-   - All other fields (slug, name, endpoint, method, scopes, tags, input_schema) preserved exactly
+   - All other fields (slug, name, endpoint, method, scopes, tags, input_schema, example_queries) preserved exactly
+
+---
+
+## Testing
+
+### Test Coverage (as of 2026-05-07)
+
+Overall: **12.54%** (886/778 functions covered)
+
+| Module | Coverage | Notes |
+|--------|----------|-------|
+| `argument_extractor.rs` | **88.74%** | Well tested — parameter extraction logic |
+| `tools.rs` | **60.59%** | Good — Tool/Toolkit/Registry types |
+| `llm.rs` (top-level) | 29.61% | Partial — LiteLLM client |
+| `api/llm.rs` | 16.28% | Partial — provider detection, tool scoring |
+| `api/tools.rs` | 10.06% | Partial — scope checking |
+| `nango.rs` | 5.86% | Minimal |
+| Most other modules | 0% | Not tested (API handlers, auth, db, proxy) |
+
+### Unit Tests (41 passing)
+- `tools.rs` - 10 tests (registry, serde, HTTP method)
+- `api/llm.rs` - 9 tests (tokenize, similarity, detect_platform, extract_arguments)
+- `api/tools.rs` - 7 tests (scope checking)
+- `argument_extractor.rs` - 7 tests (extraction logic)
+- `llm.rs` - 3 tests (LiteLLM config)
+- `nango.rs` - 2 tests (scope enrichment, providers endpoint)
+- `panda.rs` - 2 tests (config defaults)
+
+### Testing Priorities for Improvement
+1. **High-value**: Add tests for `api/proxy.rs` — path substitution, query/body routing
+2. **High-value**: Add tests for `api/mcp.rs` — JSON-RPC request/response handling
+3. **Medium**: Add tests for `api/tools.rs` execute flow
+4. **Medium**: Add tests for `db/mod.rs` — CustomTool → Tool conversion
+5. **Low**: Add integration tests for full tool execution flow
 
 ---
 
@@ -335,11 +371,12 @@ QCC uses MCP (Model Context Protocol) with JSON-RPC over HTTP SSE. The tool YAML
 
 1. **Tool slug format**: use one convention — e.g. lowercase snake `github_list_repos` (matches JSON examples above; avoid UPPER_SCREAMING unless you switch all examples)
 2. **Toolkit grouping**: Tools grouped by provider
-3. **Scope-based filtering**: Only show tools user has scopes for
-4. **SessionContext for execution**: Track which tools were called in a session
+3. **Scope-based filtering**: Only show tools user has scopes for (with `scope_satisfied` flag)
+4. **example_queries**: Natural language examples for LLM tool selection
 
 ## Composio Patterns to Adapt
 
 1. **Input parameters**: Use JSON Schema (like Composio)
 2. **Tool execution**: Leverage existing proxy, don't reinvent auth
 3. **No version control initially**: Start simple, add versions if needed
+4. **Protocol abstraction**: Different execution handlers for rest/mcp/graphql/websocket

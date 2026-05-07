@@ -278,6 +278,7 @@ mod tests {
             tags: vec![],
             icon_url: None,
             example_queries: vec![],
+            protocol: ToolProtocol::Rest,
         }
     }
 
@@ -358,6 +359,7 @@ mod tests {
                 "create a github issue".to_string(),
                 "open an issue".to_string(),
             ],
+            protocol: ToolProtocol::Rest,
         };
 
         assert_eq!(tool.slug, "github_create_issue");
@@ -406,5 +408,28 @@ mod tests {
     fn test_tool_registry_toolkits_empty() {
         let reg = ToolRegistry::empty();
         assert!(reg.toolkits().is_empty());
+    }
+
+    #[test]
+    fn test_tool_protocol_default() {
+        assert_eq!(ToolProtocol::default(), ToolProtocol::Rest);
+    }
+
+    #[test]
+    fn test_tool_protocol_serde() {
+        let json_rest = serde_json::to_string(&ToolProtocol::Rest).unwrap();
+        assert_eq!(json_rest, "\"rest\"");
+        let json_mcp = serde_json::to_string(&ToolProtocol::Mcp).unwrap();
+        assert_eq!(json_mcp, "\"mcp\"");
+        let json_graphql = serde_json::to_string(&ToolProtocol::GraphQL).unwrap();
+        assert_eq!(json_graphql, "\"graphql\"");
+        let json_ws = serde_json::to_string(&ToolProtocol::WebSocket).unwrap();
+        assert_eq!(json_ws, "\"websocket\"");
+
+        // Deserialize
+        let decoded_rest: ToolProtocol = serde_json::from_str("\"rest\"").unwrap();
+        assert_eq!(decoded_rest, ToolProtocol::Rest);
+        let decoded_mcp: ToolProtocol = serde_json::from_str("\"mcp\"").unwrap();
+        assert_eq!(decoded_mcp, ToolProtocol::Mcp);
     }
 }
